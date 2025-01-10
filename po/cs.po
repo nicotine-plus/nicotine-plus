@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 06:46+0200\n"
-"PO-Revision-Date: 2025-01-02 14:00+0000\n"
+"PO-Revision-Date: 2025-01-10 09:00+0000\n"
 "Last-Translator: slrslr <adm@prnet.info>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
@@ -170,7 +170,7 @@ msgstr ""
 #: pynicotine/buddies.py:307 pynicotine/plugins/core_commands/__init__.py:337
 #, python-format
 msgid "%(user)s is away"
-msgstr "%(user)s je pryč"
+msgstr "%(user)s je nepřítomen(a)"
 
 #: pynicotine/buddies.py:310 pynicotine/plugins/core_commands/__init__.py:335
 #, python-format
@@ -737,7 +737,7 @@ msgstr "%s opustil(a) místnost"
 #: pynicotine/gtkgui/chatrooms.py:1085
 #, python-format
 msgid "%s has gone away"
-msgstr "%s odešel(a)"
+msgstr "%s je nepřítomen(a)"
 
 #: pynicotine/gtkgui/chatrooms.py:1088
 #, python-format
@@ -1253,7 +1253,7 @@ msgstr "Trvale viditelný boční panel"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1760
 msgid "Top"
-msgstr "Vrchol"
+msgstr "Nahoře"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1761
 msgid "Bottom"
@@ -1281,7 +1281,7 @@ msgstr "Online"
 #: pynicotine/gtkgui/widgets/trayicon.py:100
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:33
 msgid "Away"
-msgstr "Pryč"
+msgstr "Nepřítomen(a)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1912
 #: pynicotine/gtkgui/mainwindow.py:952
@@ -1309,7 +1309,7 @@ msgstr "Online (lišta)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1921
 msgid "Away (Tray)"
-msgstr "Pryč (lišta)"
+msgstr "Nepřítomen(a) (lišta tray)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1922
 msgid "Offline (Tray)"
@@ -1374,7 +1374,7 @@ msgstr "Titulek"
 #: pynicotine/gtkgui/dialogs/preferences.py:2774
 #, python-format
 msgid "Now Playing (typically \"%(artist)s - %(title)s\")"
-msgstr "Právě hraje (typicky \"%(artist)s - %(title)s\")"
+msgstr "Nyní se přehrává (typicky \"%(artist)s - %(title)s\")"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2775
 #: pynicotine/gtkgui/dialogs/preferences.py:2783
@@ -1472,7 +1472,7 @@ msgstr "Chaty"
 #: pynicotine/gtkgui/dialogs/preferences.py:2997
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:16
 msgid "Now Playing"
-msgstr "Nyní hraje"
+msgstr "Nyní se přehrává"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2998
 #: pynicotine/gtkgui/ui/settings/log.ui:64
@@ -2544,27 +2544,22 @@ msgid "Cannot access log file %(path)s: %(error)s"
 msgstr "Nelze přistupovat k souboru protokolu %(path)s: %(error)s"
 
 #: pynicotine/networkfilter.py:40
-#, fuzzy
 msgid "Andorra"
 msgstr "Andorra"
 
 #: pynicotine/networkfilter.py:41
-#, fuzzy
 msgid "United Arab Emirates"
 msgstr "Spojené arabské emiráty"
 
 #: pynicotine/networkfilter.py:42
-#, fuzzy
 msgid "Afghanistan"
 msgstr "Afghánistán"
 
 #: pynicotine/networkfilter.py:43
-#, fuzzy
 msgid "Antigua & Barbuda"
 msgstr "Antigua & Barbuda"
 
 #: pynicotine/networkfilter.py:44
-#, fuzzy
 msgid "Anguilla"
 msgstr "Anguilla"
 
@@ -2573,247 +2568,198 @@ msgid "Albania"
 msgstr "Albánie"
 
 #: pynicotine/networkfilter.py:46
-#, fuzzy
 msgid "Armenia"
 msgstr "Arménie"
 
 #: pynicotine/networkfilter.py:47
-#, fuzzy
 msgid "Angola"
 msgstr "Angola"
 
 #: pynicotine/networkfilter.py:48
-#, fuzzy
 msgid "Antarctica"
 msgstr "Antarktida"
 
 #: pynicotine/networkfilter.py:49
-#, fuzzy
 msgid "Argentina"
 msgstr "Argentina"
 
 #: pynicotine/networkfilter.py:50
-#, fuzzy
 msgid "American Samoa"
 msgstr "Americká Samoa"
 
 #: pynicotine/networkfilter.py:51
-#, fuzzy
 msgid "Austria"
 msgstr "Rakousko"
 
 #: pynicotine/networkfilter.py:52
-#, fuzzy
 msgid "Australia"
 msgstr "Austrálie"
 
 #: pynicotine/networkfilter.py:53
-#, fuzzy
 msgid "Aruba"
 msgstr "Aruba"
 
 #: pynicotine/networkfilter.py:54
-#, fuzzy
 msgid "Åland Islands"
 msgstr "Ålandské ostrovy"
 
 #: pynicotine/networkfilter.py:55
-#, fuzzy
 msgid "Azerbaijan"
 msgstr "Ázerbájdžán"
 
 #: pynicotine/networkfilter.py:56
-#, fuzzy
 msgid "Bosnia & Herzegovina"
 msgstr "Bosna a Hercegovina"
 
 #: pynicotine/networkfilter.py:57
-#, fuzzy
 msgid "Barbados"
 msgstr "Barbados"
 
 #: pynicotine/networkfilter.py:58
-#, fuzzy
 msgid "Bangladesh"
 msgstr "Bangladéš"
 
 #: pynicotine/networkfilter.py:59
-#, fuzzy
 msgid "Belgium"
 msgstr "Belgie"
 
 #: pynicotine/networkfilter.py:60
-#, fuzzy
 msgid "Burkina Faso"
 msgstr "Burkina Faso"
 
 #: pynicotine/networkfilter.py:61
-#, fuzzy
 msgid "Bulgaria"
 msgstr "Bulharsko"
 
 #: pynicotine/networkfilter.py:62
-#, fuzzy
 msgid "Bahrain"
 msgstr "Bahrajn"
 
 #: pynicotine/networkfilter.py:63
-#, fuzzy
 msgid "Burundi"
 msgstr "Burundi"
 
 #: pynicotine/networkfilter.py:64
-#, fuzzy
 msgid "Benin"
 msgstr "Benin"
 
 #: pynicotine/networkfilter.py:65
-#, fuzzy
 msgid "Saint Barthelemy"
-msgstr "Svatý Bartoloměje"
+msgstr "Svatý Bartoloměj"
 
 #: pynicotine/networkfilter.py:66
-#, fuzzy
 msgid "Bermuda"
 msgstr "Bermudy"
 
 #: pynicotine/networkfilter.py:67
-#, fuzzy
 msgid "Brunei Darussalam"
 msgstr "Brunei Darussalam"
 
 #: pynicotine/networkfilter.py:68
-#, fuzzy
 msgid "Bolivia"
 msgstr "Bolívie"
 
 #: pynicotine/networkfilter.py:69
-#, fuzzy
 msgid "Bonaire, Sint Eustatius and Saba"
 msgstr "Bonaire, Sint Eustatius a Saba"
 
 #: pynicotine/networkfilter.py:70
-#, fuzzy
 msgid "Brazil"
 msgstr "Brazílie"
 
 #: pynicotine/networkfilter.py:71
-#, fuzzy
 msgid "Bahamas"
 msgstr "Bahamy"
 
 #: pynicotine/networkfilter.py:72
-#, fuzzy
 msgid "Bhutan"
 msgstr "Bhútán"
 
 #: pynicotine/networkfilter.py:73
-#, fuzzy
 msgid "Bouvet Island"
 msgstr "Ostrov Bouvet"
 
 #: pynicotine/networkfilter.py:74
-#, fuzzy
 msgid "Botswana"
 msgstr "Botswana"
 
 #: pynicotine/networkfilter.py:75
-#, fuzzy
 msgid "Belarus"
 msgstr "Bělorusko"
 
 #: pynicotine/networkfilter.py:76
-#, fuzzy
 msgid "Belize"
 msgstr "Belize"
 
 #: pynicotine/networkfilter.py:77
-#, fuzzy
 msgid "Canada"
 msgstr "Kanada"
 
 #: pynicotine/networkfilter.py:78
-#, fuzzy
 msgid "Cocos (Keeling) Islands"
-msgstr "Kokosové (Kýlovací) ostrovy"
+msgstr "Kokosové (Keelingovy) ostrovy"
 
 #: pynicotine/networkfilter.py:79
-#, fuzzy
 msgid "Democratic Republic of Congo"
 msgstr "Konžská demokratická republika"
 
 #: pynicotine/networkfilter.py:80
-#, fuzzy
 msgid "Central African Republic"
 msgstr "Středoafrická republika"
 
 #: pynicotine/networkfilter.py:81
-#, fuzzy
 msgid "Congo"
 msgstr "Kongo"
 
 #: pynicotine/networkfilter.py:82
-#, fuzzy
 msgid "Switzerland"
 msgstr "Švýcarsko"
 
 #: pynicotine/networkfilter.py:83
-#, fuzzy
 msgid "Ivory Coast"
 msgstr "Pobřeží slonoviny"
 
 #: pynicotine/networkfilter.py:84
-#, fuzzy
 msgid "Cook Islands"
 msgstr "Cookovy ostrovy"
 
 #: pynicotine/networkfilter.py:85
-#, fuzzy
 msgid "Chile"
 msgstr "Chile"
 
 #: pynicotine/networkfilter.py:86
-#, fuzzy
 msgid "Cameroon"
 msgstr "Kamerun"
 
 #: pynicotine/networkfilter.py:87
-#, fuzzy
 msgid "China"
 msgstr "Čína"
 
 #: pynicotine/networkfilter.py:88
-#, fuzzy
 msgid "Colombia"
 msgstr "Kolumbie"
 
 #: pynicotine/networkfilter.py:89
-#, fuzzy
 msgid "Costa Rica"
 msgstr "Kostarika"
 
 #: pynicotine/networkfilter.py:90
-#, fuzzy
 msgid "Cuba"
 msgstr "Kuba"
 
 #: pynicotine/networkfilter.py:91
-#, fuzzy
 msgid "Cabo Verde"
 msgstr "Cabo Verde"
 
 #: pynicotine/networkfilter.py:92
-#, fuzzy
 msgid "Curaçao"
 msgstr "Curaçao"
 
 #: pynicotine/networkfilter.py:93
-#, fuzzy
 msgid "Christmas Island"
 msgstr "Vánoční ostrov"
 
 #: pynicotine/networkfilter.py:94
-#, fuzzy
 msgid "Cyprus"
 msgstr "Kypr"
 
@@ -2822,357 +2768,286 @@ msgid "Czechia"
 msgstr "Česko"
 
 #: pynicotine/networkfilter.py:96
-#, fuzzy
 msgid "Germany"
 msgstr "Německo"
 
 #: pynicotine/networkfilter.py:97
-#, fuzzy
 msgid "Djibouti"
 msgstr "Džibutsko"
 
 #: pynicotine/networkfilter.py:98
-#, fuzzy
 msgid "Denmark"
 msgstr "Dánsko"
 
 #: pynicotine/networkfilter.py:99
-#, fuzzy
 msgid "Dominica"
-msgstr "Dominika"
+msgstr "Dominikánská republika"
 
 #: pynicotine/networkfilter.py:100
-#, fuzzy
 msgid "Dominican Republic"
 msgstr "Dominikánská republika"
 
 #: pynicotine/networkfilter.py:101
-#, fuzzy
 msgid "Algeria"
 msgstr "Alžírsko"
 
 #: pynicotine/networkfilter.py:102
-#, fuzzy
 msgid "Ecuador"
 msgstr "Ekvádor"
 
 #: pynicotine/networkfilter.py:103
-#, fuzzy
 msgid "Estonia"
 msgstr "Estonsko"
 
 #: pynicotine/networkfilter.py:104
-#, fuzzy
 msgid "Egypt"
 msgstr "Egypt"
 
 #: pynicotine/networkfilter.py:105
-#, fuzzy
 msgid "Western Sahara"
 msgstr "Západní Sahara"
 
 #: pynicotine/networkfilter.py:106
-#, fuzzy
 msgid "Eritrea"
 msgstr "Eritrea"
 
 #: pynicotine/networkfilter.py:107
-#, fuzzy
 msgid "Spain"
 msgstr "Španělsko"
 
 #: pynicotine/networkfilter.py:108
-#, fuzzy
 msgid "Ethiopia"
 msgstr "Etiopie"
 
 #: pynicotine/networkfilter.py:109
-#, fuzzy
 msgid "Europe"
 msgstr "Evropa"
 
 #: pynicotine/networkfilter.py:110
-#, fuzzy
 msgid "Finland"
 msgstr "Finsko"
 
 #: pynicotine/networkfilter.py:111
-#, fuzzy
 msgid "Fiji"
 msgstr "Fidži"
 
 #: pynicotine/networkfilter.py:112
-#, fuzzy
 msgid "Falkland Islands (Malvinas)"
-msgstr "Falklandské ostrovy (Malvíně)"
+msgstr "Falklandské ostrovy (Malvíny)"
 
 #: pynicotine/networkfilter.py:113
-#, fuzzy
 msgid "Micronesia"
 msgstr "Mikronésie"
 
 #: pynicotine/networkfilter.py:114
-#, fuzzy
 msgid "Faroe Islands"
 msgstr "Faerské ostrovy"
 
 #: pynicotine/networkfilter.py:115
-#, fuzzy
 msgid "France"
 msgstr "Francie"
 
 #: pynicotine/networkfilter.py:116
-#, fuzzy
 msgid "Gabon"
 msgstr "Gabon"
 
 #: pynicotine/networkfilter.py:117
-#, fuzzy
 msgid "Great Britain"
 msgstr "Velká Británie"
 
 #: pynicotine/networkfilter.py:118
-#, fuzzy
 msgid "Grenada"
 msgstr "Grenada"
 
 #: pynicotine/networkfilter.py:119
-#, fuzzy
 msgid "Georgia"
 msgstr "Gruzie"
 
 #: pynicotine/networkfilter.py:120
-#, fuzzy
 msgid "French Guiana"
 msgstr "Francouzská Guyana"
 
 #: pynicotine/networkfilter.py:121
-#, fuzzy
 msgid "Guernsey"
 msgstr "Guernsey"
 
 #: pynicotine/networkfilter.py:122
-#, fuzzy
 msgid "Ghana"
 msgstr "Ghana"
 
 #: pynicotine/networkfilter.py:123
-#, fuzzy
 msgid "Gibraltar"
 msgstr "Gibraltar"
 
 #: pynicotine/networkfilter.py:124
-#, fuzzy
 msgid "Greenland"
 msgstr "Grónsko"
 
 #: pynicotine/networkfilter.py:125
-#, fuzzy
 msgid "Gambia"
 msgstr "Gambie"
 
 #: pynicotine/networkfilter.py:126
-#, fuzzy
 msgid "Guinea"
 msgstr "Guinea"
 
 #: pynicotine/networkfilter.py:127
-#, fuzzy
 msgid "Guadeloupe"
 msgstr "Guadeloupe"
 
 #: pynicotine/networkfilter.py:128
-#, fuzzy
 msgid "Equatorial Guinea"
 msgstr "Rovníková Guinea"
 
 #: pynicotine/networkfilter.py:129
-#, fuzzy
 msgid "Greece"
 msgstr "Řecko"
 
 #: pynicotine/networkfilter.py:130
-#, fuzzy
 msgid "South Georgia & South Sandwich Islands"
 msgstr "Jižní Georgie a Jižní Sandwichovy ostrovy"
 
 #: pynicotine/networkfilter.py:131
-#, fuzzy
 msgid "Guatemala"
 msgstr "Guatemala"
 
 #: pynicotine/networkfilter.py:132
-#, fuzzy
 msgid "Guam"
 msgstr "Guam"
 
 #: pynicotine/networkfilter.py:133
-#, fuzzy
 msgid "Guinea-Bissau"
 msgstr "Guinea-Bissau"
 
 #: pynicotine/networkfilter.py:134
-#, fuzzy
 msgid "Guyana"
 msgstr "Guyana"
 
 #: pynicotine/networkfilter.py:135
-#, fuzzy
 msgid "Hong Kong"
 msgstr "Hongkong"
 
 #: pynicotine/networkfilter.py:136
-#, fuzzy
 msgid "Heard & McDonald Islands"
 msgstr "Heardovy a McDonaldovy ostrovy"
 
 #: pynicotine/networkfilter.py:137
-#, fuzzy
 msgid "Honduras"
 msgstr "Honduras"
 
 #: pynicotine/networkfilter.py:138
-#, fuzzy
 msgid "Croatia"
 msgstr "Chorvatsko"
 
 #: pynicotine/networkfilter.py:139
-#, fuzzy
 msgid "Haiti"
 msgstr "Haiti"
 
 #: pynicotine/networkfilter.py:140
-#, fuzzy
 msgid "Hungary"
 msgstr "Maďarsko"
 
 #: pynicotine/networkfilter.py:141
-#, fuzzy
 msgid "Indonesia"
 msgstr "Indonésie"
 
 #: pynicotine/networkfilter.py:142
-#, fuzzy
 msgid "Ireland"
 msgstr "Irsko"
 
 #: pynicotine/networkfilter.py:143
-#, fuzzy
 msgid "Israel"
 msgstr "Izrael"
 
 #: pynicotine/networkfilter.py:144
-#, fuzzy
 msgid "Isle of Man"
 msgstr "Ostrov Man"
 
 #: pynicotine/networkfilter.py:145
-#, fuzzy
 msgid "India"
 msgstr "Indie"
 
 #: pynicotine/networkfilter.py:146
-#, fuzzy
 msgid "British Indian Ocean Territory"
-msgstr "Britské území Indického oceánu"
+msgstr "Britské území v Indickém oceánu"
 
 #: pynicotine/networkfilter.py:147
-#, fuzzy
 msgid "Iraq"
 msgstr "Irák"
 
 #: pynicotine/networkfilter.py:148
-#, fuzzy
 msgid "Iran"
 msgstr "Írán"
 
 #: pynicotine/networkfilter.py:149
-#, fuzzy
 msgid "Iceland"
 msgstr "Island"
 
 #: pynicotine/networkfilter.py:150
-#, fuzzy
 msgid "Italy"
 msgstr "Itálie"
 
 #: pynicotine/networkfilter.py:151
-#, fuzzy
 msgid "Jersey"
 msgstr "Jersey"
 
 #: pynicotine/networkfilter.py:152
-#, fuzzy
 msgid "Jamaica"
 msgstr "Jamajka"
 
 #: pynicotine/networkfilter.py:153
-#, fuzzy
 msgid "Jordan"
 msgstr "Jordánsko"
 
 #: pynicotine/networkfilter.py:154
-#, fuzzy
 msgid "Japan"
 msgstr "Japonsko"
 
 #: pynicotine/networkfilter.py:155
-#, fuzzy
 msgid "Kenya"
 msgstr "Keňa"
 
 #: pynicotine/networkfilter.py:156
-#, fuzzy
 msgid "Kyrgyzstan"
 msgstr "Kyrgyzstán"
 
 #: pynicotine/networkfilter.py:157
-#, fuzzy
 msgid "Cambodia"
 msgstr "Kambodža"
 
 #: pynicotine/networkfilter.py:158
-#, fuzzy
 msgid "Kiribati"
 msgstr "Kiribati"
 
 #: pynicotine/networkfilter.py:159
-#, fuzzy
 msgid "Comoros"
 msgstr "Komory"
 
 #: pynicotine/networkfilter.py:160
-#, fuzzy
 msgid "Saint Kitts & Nevis"
-msgstr "Svatý Kryštmsek & Nevis"
+msgstr "Svatý Kryštof a Nevis"
 
 #: pynicotine/networkfilter.py:161
-#, fuzzy
 msgid "North Korea"
 msgstr "Severní Korea"
 
 #: pynicotine/networkfilter.py:162
-#, fuzzy
 msgid "South Korea"
 msgstr "Jižní Korea"
 
 #: pynicotine/networkfilter.py:163
-#, fuzzy
 msgid "Kuwait"
 msgstr "Kuvajt"
 
 #: pynicotine/networkfilter.py:164
-#, fuzzy
 msgid "Cayman Islands"
 msgstr "Kajmanské ostrovy"
 
 #: pynicotine/networkfilter.py:165
-#, fuzzy
 msgid "Kazakhstan"
 msgstr "Kazachstán"
 
 #: pynicotine/networkfilter.py:166
-#, fuzzy
 msgid "Laos"
 msgstr "Laos"
 
@@ -3181,487 +3056,390 @@ msgid "Lebanon"
 msgstr "Libanon"
 
 #: pynicotine/networkfilter.py:168
-#, fuzzy
 msgid "Saint Lucia"
 msgstr "Svatá Lucie"
 
 #: pynicotine/networkfilter.py:169
-#, fuzzy
 msgid "Liechtenstein"
 msgstr "Lichtenštejnsko"
 
 #: pynicotine/networkfilter.py:170
-#, fuzzy
 msgid "Sri Lanka"
 msgstr "Srí Lanka"
 
 #: pynicotine/networkfilter.py:171
-#, fuzzy
 msgid "Liberia"
 msgstr "Libérie"
 
 #: pynicotine/networkfilter.py:172
-#, fuzzy
 msgid "Lesotho"
-msgstr "Lesotho"
+msgstr "Lesoto"
 
 #: pynicotine/networkfilter.py:173
-#, fuzzy
 msgid "Lithuania"
 msgstr "Litva"
 
 #: pynicotine/networkfilter.py:174
-#, fuzzy
 msgid "Luxembourg"
 msgstr "Lucembursko"
 
 #: pynicotine/networkfilter.py:175
-#, fuzzy
 msgid "Latvia"
 msgstr "Lotyšsko"
 
 #: pynicotine/networkfilter.py:176
-#, fuzzy
 msgid "Libya"
 msgstr "Libye"
 
 #: pynicotine/networkfilter.py:177
-#, fuzzy
 msgid "Morocco"
 msgstr "Maroko"
 
 #: pynicotine/networkfilter.py:178
-#, fuzzy
 msgid "Monaco"
 msgstr "Monako"
 
 #: pynicotine/networkfilter.py:179
-#, fuzzy
 msgid "Moldova"
 msgstr "Moldavsko"
 
 #: pynicotine/networkfilter.py:180
-#, fuzzy
 msgid "Montenegro"
 msgstr "Černá Hora"
 
 #: pynicotine/networkfilter.py:181
-#, fuzzy
 msgid "Saint Martin"
-msgstr "Saint-Martin"
+msgstr "Svatý Martin"
 
 #: pynicotine/networkfilter.py:182
-#, fuzzy
 msgid "Madagascar"
 msgstr "Madagaskar"
 
 #: pynicotine/networkfilter.py:183
-#, fuzzy
 msgid "Marshall Islands"
 msgstr "Marshallovy ostrovy"
 
 #: pynicotine/networkfilter.py:184
-#, fuzzy
 msgid "North Macedonia"
 msgstr "Severní Makedonie"
 
 #: pynicotine/networkfilter.py:185
-#, fuzzy
 msgid "Mali"
 msgstr "Mali"
 
 #: pynicotine/networkfilter.py:186
-#, fuzzy
 msgid "Myanmar"
 msgstr "Myanmar"
 
 #: pynicotine/networkfilter.py:187
-#, fuzzy
 msgid "Mongolia"
 msgstr "Mongolsko"
 
 #: pynicotine/networkfilter.py:188
-#, fuzzy
 msgid "Macau"
 msgstr "Macao"
 
 #: pynicotine/networkfilter.py:189
-#, fuzzy
 msgid "Northern Mariana Islands"
 msgstr "Severní Mariany"
 
 #: pynicotine/networkfilter.py:190
-#, fuzzy
 msgid "Martinique"
 msgstr "Martinik"
 
 #: pynicotine/networkfilter.py:191
-#, fuzzy
 msgid "Mauritania"
 msgstr "Mauritánie"
 
 #: pynicotine/networkfilter.py:192
-#, fuzzy
 msgid "Montserrat"
 msgstr "Montserrat"
 
 #: pynicotine/networkfilter.py:193
-#, fuzzy
 msgid "Malta"
 msgstr "Malta"
 
 #: pynicotine/networkfilter.py:194
-#, fuzzy
 msgid "Mauritius"
 msgstr "Mauricius"
 
 #: pynicotine/networkfilter.py:195
-#, fuzzy
 msgid "Maldives"
 msgstr "Maledivy"
 
 #: pynicotine/networkfilter.py:196
-#, fuzzy
 msgid "Malawi"
 msgstr "Malawi"
 
 #: pynicotine/networkfilter.py:197
-#, fuzzy
 msgid "Mexico"
 msgstr "Mexiko"
 
 #: pynicotine/networkfilter.py:198
-#, fuzzy
 msgid "Malaysia"
 msgstr "Malajsie"
 
 #: pynicotine/networkfilter.py:199
-#, fuzzy
 msgid "Mozambique"
 msgstr "Mosambik"
 
 #: pynicotine/networkfilter.py:200
-#, fuzzy
 msgid "Namibia"
 msgstr "Namibie"
 
 #: pynicotine/networkfilter.py:201
-#, fuzzy
 msgid "New Caledonia"
 msgstr "Nová Kaledonie"
 
 #: pynicotine/networkfilter.py:202
-#, fuzzy
 msgid "Niger"
 msgstr "Niger"
 
 #: pynicotine/networkfilter.py:203
-#, fuzzy
 msgid "Norfolk Island"
 msgstr "Norfolk"
 
 #: pynicotine/networkfilter.py:204
-#, fuzzy
 msgid "Nigeria"
 msgstr "Nigérie"
 
 #: pynicotine/networkfilter.py:205
-#, fuzzy
 msgid "Nicaragua"
 msgstr "Nikaragua"
 
 #: pynicotine/networkfilter.py:206
-#, fuzzy
 msgid "Netherlands"
 msgstr "Nizozemsko"
 
 #: pynicotine/networkfilter.py:207
-#, fuzzy
 msgid "Norway"
 msgstr "Norsko"
 
 #: pynicotine/networkfilter.py:208
-#, fuzzy
 msgid "Nepal"
 msgstr "Nepál"
 
 #: pynicotine/networkfilter.py:209
-#, fuzzy
 msgid "Nauru"
 msgstr "Nauru"
 
 #: pynicotine/networkfilter.py:210
-#, fuzzy
 msgid "Niue"
 msgstr "Niue"
 
 #: pynicotine/networkfilter.py:211
-#, fuzzy
 msgid "New Zealand"
 msgstr "Nový Zéland"
 
 #: pynicotine/networkfilter.py:212
-#, fuzzy
 msgid "Oman"
 msgstr "Omán"
 
 #: pynicotine/networkfilter.py:213
-#, fuzzy
 msgid "Panama"
 msgstr "Panama"
 
 #: pynicotine/networkfilter.py:214
-#, fuzzy
 msgid "Peru"
 msgstr "Peru"
 
 #: pynicotine/networkfilter.py:215
-#, fuzzy
 msgid "French Polynesia"
 msgstr "Francouzská Polynésie"
 
 #: pynicotine/networkfilter.py:216
-#, fuzzy
 msgid "Papua New Guinea"
-msgstr "Papua-Nová Guinea"
+msgstr "Papua Nová Guinea"
 
 #: pynicotine/networkfilter.py:217
-#, fuzzy
 msgid "Philippines"
 msgstr "Filipíny"
 
 #: pynicotine/networkfilter.py:218
-#, fuzzy
 msgid "Pakistan"
 msgstr "Pákistán"
 
 #: pynicotine/networkfilter.py:219
-#, fuzzy
 msgid "Poland"
 msgstr "Polsko"
 
 #: pynicotine/networkfilter.py:220
-#, fuzzy
 msgid "Saint Pierre & Miquelon"
-msgstr "Svatý Pierre & Miquelon"
+msgstr "Saint Pierre a Miquelon"
 
 #: pynicotine/networkfilter.py:221
-#, fuzzy
 msgid "Pitcairn"
 msgstr "Pitcairn"
 
 #: pynicotine/networkfilter.py:222
-#, fuzzy
 msgid "Puerto Rico"
 msgstr "Portoriko"
 
 #: pynicotine/networkfilter.py:223
-#, fuzzy
 msgid "State of Palestine"
 msgstr "Stát Palestina"
 
 #: pynicotine/networkfilter.py:224
-#, fuzzy
 msgid "Portugal"
 msgstr "Portugalsko"
 
 #: pynicotine/networkfilter.py:225
-#, fuzzy
 msgid "Palau"
 msgstr "Palau"
 
 #: pynicotine/networkfilter.py:226
-#, fuzzy
 msgid "Paraguay"
 msgstr "Paraguay"
 
 #: pynicotine/networkfilter.py:227
-#, fuzzy
 msgid "Qatar"
 msgstr "Katar"
 
 #: pynicotine/networkfilter.py:228
-#, fuzzy
 msgid "Réunion"
 msgstr "Réunion"
 
 #: pynicotine/networkfilter.py:229
-#, fuzzy
 msgid "Romania"
 msgstr "Rumunsko"
 
 #: pynicotine/networkfilter.py:230
-#, fuzzy
 msgid "Serbia"
 msgstr "Srbsko"
 
 #: pynicotine/networkfilter.py:231
-#, fuzzy
 msgid "Russia"
 msgstr "Rusko"
 
 #: pynicotine/networkfilter.py:232
-#, fuzzy
 msgid "Rwanda"
 msgstr "Rwanda"
 
 #: pynicotine/networkfilter.py:233
-#, fuzzy
 msgid "Saudi Arabia"
 msgstr "Saúdská Arábie"
 
 #: pynicotine/networkfilter.py:234
-#, fuzzy
 msgid "Solomon Islands"
 msgstr "Šalamounovy ostrovy"
 
 #: pynicotine/networkfilter.py:235
-#, fuzzy
 msgid "Seychelles"
 msgstr "Seychely"
 
 #: pynicotine/networkfilter.py:236
-#, fuzzy
 msgid "Sudan"
 msgstr "Súdán"
 
 #: pynicotine/networkfilter.py:237
-#, fuzzy
 msgid "Sweden"
 msgstr "Švédsko"
 
 #: pynicotine/networkfilter.py:238
-#, fuzzy
 msgid "Singapore"
 msgstr "Singapur"
 
 #: pynicotine/networkfilter.py:239
-#, fuzzy
 msgid "Saint Helena"
 msgstr "Svatá Helena"
 
 #: pynicotine/networkfilter.py:240
-#, fuzzy
 msgid "Slovenia"
 msgstr "Slovinsko"
 
 #: pynicotine/networkfilter.py:241
-#, fuzzy
 msgid "Svalbard & Jan Mayen Islands"
-msgstr "Špicberky a Ostrovy Jana Mayen"
+msgstr "Špicberky a Jan Mayen"
 
 #: pynicotine/networkfilter.py:242
-#, fuzzy
 msgid "Slovak Republic"
 msgstr "Slovensko"
 
 #: pynicotine/networkfilter.py:243
-#, fuzzy
 msgid "Sierra Leone"
 msgstr "Sierra Leone"
 
 #: pynicotine/networkfilter.py:244
-#, fuzzy
 msgid "San Marino"
 msgstr "San Marino"
 
 #: pynicotine/networkfilter.py:245
-#, fuzzy
 msgid "Senegal"
 msgstr "Senegal"
 
 #: pynicotine/networkfilter.py:246
-#, fuzzy
 msgid "Somalia"
 msgstr "Somálsko"
 
 #: pynicotine/networkfilter.py:247
-#, fuzzy
 msgid "Suriname"
 msgstr "Surinam"
 
 #: pynicotine/networkfilter.py:248
-#, fuzzy
 msgid "South Sudan"
 msgstr "Jižní Súdán"
 
 #: pynicotine/networkfilter.py:249
-#, fuzzy
 msgid "Sao Tome & Principe"
-msgstr "Sao Tome & Principe"
+msgstr "Svatý Tomáš a Princův ostrov"
 
 #: pynicotine/networkfilter.py:250
-#, fuzzy
 msgid "El Salvador"
 msgstr "Salvador"
 
 #: pynicotine/networkfilter.py:251
-#, fuzzy
 msgid "Sint Maarten"
-msgstr "Sint Maarten"
+msgstr "Svatý Martin"
 
 #: pynicotine/networkfilter.py:252
-#, fuzzy
 msgid "Syria"
 msgstr "Sýrie"
 
 #: pynicotine/networkfilter.py:253
-#, fuzzy
 msgid "Eswatini"
 msgstr "Eswatini"
 
 #: pynicotine/networkfilter.py:254
-#, fuzzy
 msgid "Turks & Caicos Islands"
 msgstr "Ostrovy Turks a Caicos"
 
 #: pynicotine/networkfilter.py:255
-#, fuzzy
 msgid "Chad"
 msgstr "Čad"
 
 #: pynicotine/networkfilter.py:256
-#, fuzzy
 msgid "French Southern Territories"
 msgstr "Francouzská jižní území"
 
 #: pynicotine/networkfilter.py:257
-#, fuzzy
 msgid "Togo"
 msgstr "Togo"
 
 #: pynicotine/networkfilter.py:258
-#, fuzzy
 msgid "Thailand"
 msgstr "Thajsko"
 
 #: pynicotine/networkfilter.py:259
-#, fuzzy
 msgid "Tajikistan"
 msgstr "Tádžikistán"
 
 #: pynicotine/networkfilter.py:260
-#, fuzzy
 msgid "Tokelau"
 msgstr "Tokelau"
 
 #: pynicotine/networkfilter.py:261
-#, fuzzy
 msgid "Timor-Leste"
 msgstr "Východní Timor"
 
 #: pynicotine/networkfilter.py:262
-#, fuzzy
 msgid "Turkmenistan"
 msgstr "Turkmenistán"
 
 #: pynicotine/networkfilter.py:263
-#, fuzzy
 msgid "Tunisia"
 msgstr "Tunisko"
 
 #: pynicotine/networkfilter.py:264
-#, fuzzy
 msgid "Tonga"
 msgstr "Tonga"
 
@@ -3670,87 +3448,70 @@ msgid "Türkiye"
 msgstr "Turecko"
 
 #: pynicotine/networkfilter.py:266
-#, fuzzy
 msgid "Trinidad & Tobago"
-msgstr "Trinidad & Tobago"
+msgstr "Trinidad a Tobago"
 
 #: pynicotine/networkfilter.py:267
-#, fuzzy
 msgid "Tuvalu"
 msgstr "Tuvalu"
 
 #: pynicotine/networkfilter.py:268
-#, fuzzy
 msgid "Taiwan"
 msgstr "Tchaj-wan"
 
 #: pynicotine/networkfilter.py:269
-#, fuzzy
 msgid "Tanzania"
 msgstr "Tanzanie"
 
 #: pynicotine/networkfilter.py:270
-#, fuzzy
 msgid "Ukraine"
 msgstr "Ukrajina"
 
 #: pynicotine/networkfilter.py:271
-#, fuzzy
 msgid "Uganda"
 msgstr "Uganda"
 
 #: pynicotine/networkfilter.py:272
-#, fuzzy
 msgid "U.S. Minor Outlying Islands"
-msgstr "Menší odcházející ostrovy USA"
+msgstr "Menší odlehlé ostrovy USA"
 
 #: pynicotine/networkfilter.py:273
-#, fuzzy
 msgid "United States"
 msgstr "Spojené státy americké"
 
 #: pynicotine/networkfilter.py:274
-#, fuzzy
 msgid "Uruguay"
 msgstr "Uruguay"
 
 #: pynicotine/networkfilter.py:275
-#, fuzzy
 msgid "Uzbekistan"
 msgstr "Uzbekistán"
 
 #: pynicotine/networkfilter.py:276
-#, fuzzy
 msgid "Holy See (Vatican City State)"
 msgstr "Svatý stolec (Vatikánský městský stát)"
 
 #: pynicotine/networkfilter.py:277
-#, fuzzy
 msgid "Saint Vincent & The Grenadines"
 msgstr "Svatý Vincenc a Grenadiny"
 
 #: pynicotine/networkfilter.py:278
-#, fuzzy
 msgid "Venezuela"
 msgstr "Venezuela"
 
 #: pynicotine/networkfilter.py:279
-#, fuzzy
 msgid "British Virgin Islands"
 msgstr "Britské Panenské ostrovy"
 
 #: pynicotine/networkfilter.py:280
-#, fuzzy
 msgid "U.S. Virgin Islands"
 msgstr "Americké Panenské ostrovy"
 
 #: pynicotine/networkfilter.py:281
-#, fuzzy
 msgid "Viet Nam"
 msgstr "Vietnam"
 
 #: pynicotine/networkfilter.py:282
-#, fuzzy
 msgid "Vanuatu"
 msgstr "Vanuatu"
 
@@ -3759,32 +3520,26 @@ msgid "Wallis & Futuna"
 msgstr "Wallis & Futuna"
 
 #: pynicotine/networkfilter.py:284
-#, fuzzy
 msgid "Samoa"
 msgstr "Samoa"
 
 #: pynicotine/networkfilter.py:285
-#, fuzzy
 msgid "Yemen"
 msgstr "Jemen"
 
 #: pynicotine/networkfilter.py:286
-#, fuzzy
 msgid "Mayotte"
 msgstr "Mayotte"
 
 #: pynicotine/networkfilter.py:287
-#, fuzzy
 msgid "South Africa"
 msgstr "Jihoafrická republika"
 
 #: pynicotine/networkfilter.py:288
-#, fuzzy
 msgid "Zambia"
 msgstr "Zambie"
 
 #: pynicotine/networkfilter.py:289
-#, fuzzy
 msgid "Zimbabwe"
 msgstr "Zimbabwe"
 
@@ -3803,7 +3558,7 @@ msgstr "Last.fm: Uveďte prosím uživatelské jméno Last.fm a klíč API"
 #: pynicotine/nowplaying.py:276 pynicotine/nowplaying.py:284
 #: pynicotine/nowplaying.py:298 pynicotine/nowplaying.py:313
 msgid "Now Playing Error"
-msgstr "Chyba v Nyní hraje"
+msgstr "Chyba v Nyní se přehrává"
 
 #: pynicotine/nowplaying.py:140
 #, python-format
@@ -3870,7 +3625,7 @@ msgstr "Odpojit od serveru"
 
 #: pynicotine/plugins/core_commands/__init__.py:58
 msgid "Toggle away status"
-msgstr "Přepnou stav přítomnosti"
+msgstr "Přepnou stav nepřítomnosti"
 
 #: pynicotine/plugins/core_commands/__init__.py:62
 msgid "Manage plugins"
@@ -5636,62 +5391,52 @@ msgid "Log chatrooms by default"
 msgstr "Protokolovat chatovací místnosti ve výchozím nastavení"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:106
-#, fuzzy
 msgid "Log private chat by default"
 msgstr "Protokolování soukromého chatu ve výchozím nastavení"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:130
-#, fuzzy
 msgid "Log transfers to file"
 msgstr "Protokolovat přenosy do souboru"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:154
-#, fuzzy
 msgid "Log debug messages to file"
-msgstr "Protokol ladicích zpráv do souboru"
+msgstr "Protokolovat ladicí zprávy do souboru"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:178
 msgid "Log timestamp format:"
 msgstr "Formát časových značek protokolu:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:216
-#, fuzzy
 msgid "Folder Locations"
 msgstr "Umístění složek"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:233
-#, fuzzy
 msgid "Chatroom logs folder:"
 msgstr "Složka protokolů chatovací místnosti:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:249
-#, fuzzy
 msgid "Private chat logs folder:"
 msgstr "Složka soukromých protokolů chatu:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:265
-#, fuzzy
 msgid "Transfer logs folder:"
-msgstr "Složka Přenos protokolů:"
+msgstr "Složka protokolů přenosů:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:281
-#, fuzzy
 msgid "Debug logs folder:"
-msgstr "Složka protokoly ladění:"
+msgstr "Složka protokolů ladění:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:39
-#, fuzzy
 msgid ""
 "Log in to an existing Soulseek account or create a new one. Usernames are "
 "case-sensitive and unique."
 msgstr ""
 "Přihlaste se k existujícímu účtu Soulseek nebo si vytvořte nový. Uživatelská "
-"jména jsou citlivá na malá a jedinečná."
+"jména jsou citlivá na velikost písmen a jsou jedinečná."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:118
-#, fuzzy
 msgid "Public IP address:"
-msgstr "Blokovat IP adresu"
+msgstr "Veřejná IP adresa:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:159
 msgid "Listening port:"
@@ -5702,127 +5447,107 @@ msgid "Automatically forward listening port (UPnP/NAT-PMP)"
 msgstr "Automaticky přesměrovat port naslouchání (UPnP/NAT-PMP)"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:211
-#, fuzzy
 msgid "Away Status"
-msgstr "Stav pryč"
+msgstr "Stav nepřítomnosti"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:228
-#, fuzzy
 msgid "Minutes of inactivity before going away (0 to disable):"
-msgstr "Minuty nečinnosti před odchodem (0 pro deaktivaci):"
+msgstr "Minuty nečinnosti před stavem nepřítomen(a) (0 pro deaktivaci):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:253
-#, fuzzy
 msgid "Auto-reply message when away:"
-msgstr "Automatická odpověď na zprávu, když je pryč:"
+msgstr "Automatická odpověď při nepřítomnosti:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:299
-#, fuzzy
 msgid "Auto-connect to server on startup"
 msgstr "Automatické připojení k serveru při spuštění"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:323
-#, fuzzy
 msgid "Soulseek server:"
 msgstr "Soulseek server:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:347
-#, fuzzy
 msgid ""
 "Binds connections to a specific network interface, useful for e.g. ensuring "
 "a VPN is used at all times. Leave empty to use any available interface. Only "
 "change this value if you know what you are doing."
 msgstr ""
-"Váže připojení ke konkrétnímu síťovému rozhraní, které je užitečné např. pro "
+"Váže připojení ke konkrétnímu síťovému rozhraní, což je užitečné např. pro "
 "zajištění používání VPN za všech okolností. Pokud chcete použít libovolné "
 "dostupné rozhraní, ponechte prázdné. Tuto hodnotu změňte pouze v případě, že "
 "víte, co děláte."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:351
-#, fuzzy
 msgid "Network interface:"
-msgstr "Síťové filtry"
+msgstr "Síťové rozhraní:"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:28
-#, fuzzy
 msgid ""
 "Now Playing allows you to display what your media player is playing by using "
 "the /now command in chat."
 msgstr ""
-"Funkce Přehrávání nyní umožňuje zobrazit, co přehrávač médií hraje, pomocí "
-"příkazu /now v chatu."
+"Funkce Nyní se přehrává umožňuje zobrazit, co přehrávač médií právě "
+"přehrává, pomocí příkazu /now v chatu."
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:61
-#, fuzzy
 msgid "Other"
-msgstr "Jiný"
+msgstr "Jiné"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:99
-#, fuzzy
 msgid "Now Playing Format"
-msgstr "Nyní hraje formát"
+msgstr "Formát Nyní se přehrává"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:124
-#, fuzzy
 msgid "Now Playing message format:"
-msgstr "Nyní přehrávání formátu zprávy:"
+msgstr "Formát zprávy Nyní se přehrává:"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:155
 msgid "Test Configuration"
 msgstr "Test nastavení"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:48
-#, fuzzy
 msgid "Enable plugins"
 msgstr "Povolit pluginy"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:95
-#, fuzzy
 msgid "Add Plugins"
-msgstr "_Add Pluginy"
+msgstr "Přidat pluginy"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:111
-#, fuzzy
 msgid "_Add Plugins"
-msgstr "_Add Pluginy"
+msgstr "_Přidat pluginy"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:132
-#, fuzzy
 msgid "Settings"
-msgstr "Získání stavu"
+msgstr "Nastavení"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:148
-#, fuzzy
 msgid "_Settings"
-msgstr "Získání stavu"
+msgstr "_Nastavení"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:216
 msgid "Version:"
 msgstr "Verze:"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:241
-#, fuzzy
 msgid "Created by:"
-msgstr "Vytvořil"
+msgstr "Vytvořil(a):"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:51
-#, fuzzy
 msgid "Enable search history"
 msgstr "Povolit historii vyhledávání"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:70
-#, fuzzy
 msgid ""
 "Privately shared files that have been made visible to everyone will be "
 "prefixed with '[PRIVATE]', and cannot be downloaded until the uploader gives "
 "explicit permission. Ask them kindly."
 msgstr ""
-"Ostatní klienti mohou nabídnout možnost odesílat soukromě sdílené soubory v "
-"reakci na žádosti o vyhledávání. Tyto soubory mají předponu \"[PRIVATE "
-"FILE]\" a nelze je stáhnout, pokud uploader nepovolí výslovné oprávnění."
+"Soukromě sdílené soubory, které byly zviditelněny pro všechny, budou mít "
+"předponu „[SOUKROMÉ]“ a nebude možné je stáhnout, dokud k tomu nahrávající "
+"nedá výslovné svolení. Požádejte je o ně laskavě."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:76
-#, fuzzy
 msgid "Show privately shared files in search results"
 msgstr "Zobrazení soukromě sdílených souborů ve výsledcích vyhledávání"
 
@@ -5831,76 +5556,62 @@ msgid "Limit number of results per search:"
 msgstr "Omezit počet výsledků vyhledávání:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:149
-#, fuzzy
 msgid "Result Filter Help"
 msgstr "Nápověda k filtrování výsledků"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:177
-#, fuzzy
 msgid "Enable search result filters by default"
-msgstr "Povolení filtrů výsledků hledání ve výchozím nastavení"
+msgstr "Povolení filtrů výsledků hledání ve výchozím stavu"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:211
-#, fuzzy
 msgid "Include:"
 msgstr "Zahrnovat:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:236
-#, fuzzy
 msgid "Exclude:"
 msgstr "Vyloučit:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:261
-#, fuzzy
 msgid "File Type:"
 msgstr "Typ souboru:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:288
-#, fuzzy
 msgid "Size:"
 msgstr "Velikost:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:315
-#, fuzzy
 msgid "Bitrate:"
 msgstr "Datový tok:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:342
-#, fuzzy
 msgid "Duration:"
 msgstr "Doba trvání:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:369
-#, fuzzy
 msgid "Country Code:"
 msgstr "Kód země:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:407
-#, fuzzy
 msgid "Only show results from users with an available upload slot."
-msgstr ""
-"Zorazděte pouze výsledky od uživatelů s dostupným slotem pro nahrávání."
+msgstr "Zorazení pouze výsledků od uživatelů s dostupným slotem pro nahrávání."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:430
-#, fuzzy
 msgid "Network Searches"
 msgstr "Síťová vyhledávání"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:452
-#, fuzzy
 msgid "Respond to search requests from other users"
-msgstr "Reakce na žádosti o vyhledávání od ostatních uživatelů"
+msgstr "Odpovídat na žádosti o vyhledávání od ostatních uživatelů"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:486
-#, fuzzy
 msgid "Searches shorter than this number of characters will be ignored:"
-msgstr "Hledání kratší než tento počet znaků bude ignorováno:"
+msgstr "Vyhledávání kratší než tento počet znaků budou ignorována:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:511
-#, fuzzy
 msgid "Maximum search results to send per search request:"
 msgstr ""
-"Maximální počet výsledků vyhledávání pro odeslání na žádost o vyhledávání:"
+"Maximální počet výsledků vyhledávání, které budou vráceny při žádosti o "
+"vyhledání:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:578
 msgid "Clear Search History"
@@ -5928,9 +5639,8 @@ msgid "Visible to everyone:"
 msgstr "Viditelné každým:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:82
-#, fuzzy
 msgid "Buddy shares"
-msgstr "Seznam kamarádů"
+msgstr "Sdílení kamarádů"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:89
 msgid "Trusted shares"
@@ -5941,9 +5651,8 @@ msgid "Autoclear finished/cancelled uploads from transfer list"
 msgstr "Automaticky vyčistit dokončená/zrušená nahrávání ze seznamu přenosů"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:88
-#, fuzzy
 msgid "Double-click action for uploads:"
-msgstr "Akce poklepat na nahrávání:"
+msgstr "Akce dvojitého kliknutí pro nahrávání:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:122
 msgid "Limit upload speed:"
@@ -5959,20 +5668,21 @@ msgstr "Přenosy celkem"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:217
 #: pynicotine/gtkgui/ui/userinfo.ui:257
-#, fuzzy
 msgid "Upload Slots"
-msgstr "Nahrát sloty"
+msgstr "Sloty nahrávání"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:231
-#, fuzzy
 msgid ""
 "Round Robin: Files will be uploaded in cyclical fashion to the users waiting "
 "in queue.\n"
 "First In, First Out: Files will be uploaded in the order they were queued."
-msgstr "Soubory budou nahrány cyklicky uživatelům čekajícím ve frontě."
+msgstr ""
+"Round Robin: Soubory budou cyklicky nahrávány uživatelům čekajícím ve frontě."
+"\n"
+"Kdo dřív přijde, ten dřív odejde: Soubory budou nahrávány v pořadí, v jakém "
+"byly zařazeny do fronty."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:236
-#, fuzzy
 msgid "Upload queue type:"
 msgstr "Typ fronty nahrávání:"
 
@@ -5989,7 +5699,6 @@ msgid "Prioritize all buddies"
 msgstr "Dávat prioritu všem kamarádům"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:308
-#, fuzzy
 msgid "Queue Limits"
 msgstr "Limity fronty"
 
@@ -6004,9 +5713,8 @@ msgstr ""
 "stahování (MiB):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:371
-#, fuzzy
 msgid "Limits do not apply to buddies"
-msgstr "Limity fronty se nevztahují na uživatele v seznamu kamarádů"
+msgstr "Limity fronty se nevztahují na kamarády"
 
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:24
 msgid ""
@@ -6017,9 +5725,8 @@ msgstr ""
 "použity v případech, kde nebyl nastaven protokol."
 
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:38
-#, fuzzy
 msgid "File manager command:"
-msgstr "Příkaz Správce souborů ($ pro cestu k souboru):"
+msgstr "Příkaz Správce souborů:"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:5
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:21
@@ -6027,7 +5734,6 @@ msgid "Reset Picture"
 msgstr "Vynulovat obrázek"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:40
-#, fuzzy
 msgid "Self Description"
 msgstr "Vlastní popis"
 
@@ -6040,19 +5746,16 @@ msgstr ""
 "užitečné tipy, instrukce ke stažení vašeho sdílení."
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:89
-#, fuzzy
 msgid "Picture:"
-msgstr "Obraz:"
+msgstr "Obrázek:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:46
-#, fuzzy
 msgid "Prefer dark mode"
-msgstr "Preferujte tmavý režim"
+msgstr "Preferovat tmavý režim"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:70
-#, fuzzy
 msgid "Use header bar"
-msgstr "Použití _Header baru"
+msgstr "Použít záhlaví"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:98
 msgid "Display tray icon"
@@ -6063,57 +5766,48 @@ msgid "Minimize to tray on startup"
 msgstr "Minimalizovat po startu do lišty tray"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:156
-#, fuzzy
 msgid "Language (requires a restart):"
-msgstr "Rozsah naslouchajícího portu (vyžaduje restartování):"
+msgstr "Jazyk (vyžaduje restartování):"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:172
-#, fuzzy
 msgid "When closing window:"
-msgstr "Při zavírání Nicotine+:"
+msgstr "Při zavírání okna:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:191
 msgid "Notifications"
 msgstr "Oznámení"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:209
-#, fuzzy
 msgid "Enable sound for notifications"
-msgstr "Povolení zvuku pro automaticky otevíraná okna oznámení"
+msgstr "Povolení zvuku oznámení"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:233
 msgid "Show notification for private chats and mentions in the window title"
 msgstr "Zobrazit oznámení soukromých chatů a zmínek v titulku okna"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:265
-#, fuzzy
 msgid "Show notifications for:"
-msgstr "Zobrazení ikon oznámení na kartách"
+msgstr "Zobrazit oznámení pro:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:292
-#, fuzzy
 msgid "Finished file downloads"
-msgstr "Stažený soubor"
+msgstr "Dokončená stahování souborů"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:304
-#, fuzzy
 msgid "Finished folder downloads"
-msgstr "Stažená složka"
+msgstr "Dokončená stahování složek"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:316
-#, fuzzy
 msgid "Private messages"
-msgstr "Soukromá zpráva z %s"
+msgstr "Soukromé zprávy"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:328
-#, fuzzy
 msgid "Chat room messages"
-msgstr "Zpráva chatovací místnosti:"
+msgstr "Zprávy chatovací místnosti"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:340
-#, fuzzy
 msgid "Chat room mentions"
-msgstr "Dokončení"
+msgstr "Zmínky chatovací místnosti"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:352
 msgid "Wishlist results found"
@@ -6124,24 +5818,20 @@ msgid "Restore the previously active main tab at startup"
 msgstr "Obnovení naposledy aktivní hlavní karty při spuštění"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:419
-#, fuzzy
 msgid "Close-buttons on secondary tabs"
-msgstr "Zavřít tlačítka na sekundárních kartách"
+msgstr "Tlačítka pro zavření na druhotných kartách"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:443
-#, fuzzy
 msgid "Regular tab label color:"
-msgstr "Pravidelná barva popisku karty:"
+msgstr "Barva popisku běžné karty:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:483
-#, fuzzy
 msgid "Changed tab label color:"
-msgstr "Změněná barva popisku karty:"
+msgstr "Barva popisku změněné karty:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:523
-#, fuzzy
 msgid "Highlighted tab label color:"
-msgstr "Zvýrazněná barva popisku karty:"
+msgstr "Barva popisku zvýrazněné karty:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:564
 msgid "Buddy list position:"
@@ -6152,28 +5842,22 @@ msgid "Visible main tabs:"
 msgstr "Viditelné hlavní karty:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:745
-#, fuzzy
 msgid "Tab bar positions:"
-msgstr "Pozice panelu tabulátoru:"
+msgstr "Pozice panelu karty:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:780
 msgid "Main tabs"
 msgstr "Hlavní karty"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:938
-#, fuzzy
 msgid "Show reverse file paths (requires a restart)"
-msgstr ""
-"Zobrazení cest k reverzním souborům v zobrazeních vyhledávání a přenosu "
-"(vyžaduje restartování)"
+msgstr "Zobrazení obrácených cest k souborům (vyžaduje restartování)"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:962
-#, fuzzy
 msgid "Show exact file sizes (requires a restart)"
-msgstr "Síťové rozhraní (vyžaduje restartování):"
+msgstr "Zobrazení přesných velikostí souborů (vyžaduje restartování)"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:986
-#, fuzzy
 msgid "List text color:"
 msgstr "Barva textu seznamu:"
 
@@ -6182,131 +5866,106 @@ msgid "Enable colored usernames"
 msgstr "Povolit barevná uživatelská jména"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1071
-#, fuzzy
 msgid "Chat username appearance:"
 msgstr "Vzhled uživatelského jména chatu:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1088
-#, fuzzy
 msgid "Remote text color:"
-msgstr "Vzdálená barva textu:"
+msgstr "Barva vzdáleného textu:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1128
-#, fuzzy
 msgid "Local text color:"
-msgstr "Místní barva textu:"
+msgstr "Barva místního textu:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1168
-#, fuzzy
 msgid "Command output text color:"
-msgstr "Vzdálená barva textu:"
+msgstr "Barva textu výstupu příkazu:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1208
-#, fuzzy
 msgid "/me action text color:"
-msgstr "/me akce barva textu:"
+msgstr "Barva textu akce /me:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1248
-#, fuzzy
 msgid "Highlighted text color:"
-msgstr "Zvýrazněná barva textu:"
+msgstr "Barva zvýrazněného textu:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1288
-#, fuzzy
 msgid "URL link text color:"
 msgstr "Barva textu odkazu URL:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1331
-#, fuzzy
 msgid "User Statuses"
-msgstr "Spojené státy americké"
+msgstr "Uživatelské stavy"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1348
-#, fuzzy
 msgid "Online color:"
-msgstr "Online barva textu:"
+msgstr "Barva online:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1388
-#, fuzzy
 msgid "Away color:"
-msgstr "Barva textu pryč:"
+msgstr "Barva nepřítomnosti:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1428
-#, fuzzy
 msgid "Offline color:"
-msgstr "Offline barva textu:"
+msgstr "Barva offline:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1471
-#, fuzzy
 msgid "Text Entries"
 msgstr "Textové položky"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1488
-#, fuzzy
 msgid "Text entry background color:"
-msgstr "Barva pozadí položky textu:"
+msgstr "Barva pozadí textové položky:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1528
-#, fuzzy
 msgid "Text entry text color:"
-msgstr "Barva textu pro zadávání textu:"
+msgstr "Barva textu textové položky:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1571
-#, fuzzy
 msgid "Fonts"
-msgstr "Fonty"
+msgstr "Písma"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1588
-#, fuzzy
 msgid "Global font:"
 msgstr "Globální písmo:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1633
-#, fuzzy
 msgid "List font:"
 msgstr "Písmo seznamu:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1678
-#, fuzzy
 msgid "Text view font:"
 msgstr "Písmo zobrazení textu:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1723
-#, fuzzy
 msgid "Chat font:"
 msgstr "Písmo chatu:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1768
-#, fuzzy
 msgid "Transfers font:"
-msgstr "Přenáší písmo:"
+msgstr "Písmo přenosů:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1813
-#, fuzzy
 msgid "Search font:"
-msgstr "Hledat písmo:"
+msgstr "Písmo vyhledávání:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1858
-#, fuzzy
 msgid "Browse font:"
-msgstr "Procházet písmo:"
+msgstr "Písmo procházení:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1907
-#, fuzzy
 msgid "Icons"
 msgstr "Ikony"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1924
-#, fuzzy
 msgid "Icon theme folder:"
-msgstr "Neúplná složka souboru:"
+msgstr "Složka šablony ikon:"
 
 #: pynicotine/gtkgui/ui/uploads.ui:86
 msgid "Abort User(s)"
 msgstr "Zrušit uživatele"
 
 #: pynicotine/gtkgui/ui/uploads.ui:116
-#, fuzzy
 msgid "Ban User(s)"
 msgstr "Zakázat uživatele"
 
@@ -6315,57 +5974,48 @@ msgid "Clear All Finished/Cancelled Uploads"
 msgstr "Vyčistit dokončená/zrušená nahrávání"
 
 #: pynicotine/gtkgui/ui/uploads.ui:169 pynicotine/gtkgui/ui/uploads.ui:184
-#, fuzzy
 msgid "Message All"
-msgstr "Zprávy"
+msgstr "Zpráva všem"
 
 #: pynicotine/gtkgui/ui/uploads.ui:199
 msgid "Clear Specific Uploads"
 msgstr "Vyčistit určitá nahrávání"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:161
-#, fuzzy
 msgid "Save Shares List to Disk"
-msgstr "_Save Seznam sdílených složek na disk"
+msgstr "Uložit seznam sdílení na disk"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:178
 msgid "Refresh Files"
 msgstr "Obnovit soubory"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:101
-#, fuzzy
 msgid "Edit Profile"
-msgstr "Sdílené složky"
+msgstr "Upravit profil"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:149
-#, fuzzy
 msgid "Shared Files"
 msgstr "Sdílené soubory"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:176
-#, fuzzy
 msgid "Shared Folders"
 msgstr "Sdílené složky"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:203
-#, fuzzy
 msgid "Upload Speed"
 msgstr "Rychlost nahrávání"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:230
-#, fuzzy
 msgid "Free Upload Slots"
 msgstr "Volné sloty pro nahrávání"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:284
-#, fuzzy
 msgid "Queued Uploads"
 msgstr "Nahrávání ve frontě"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:355
-#, fuzzy
 msgid "Edit Interests"
-msgstr "Zájmy"
+msgstr "Upravit zájmy"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:610
 msgid "_Gift Privileges…"
@@ -6376,9 +6026,8 @@ msgid "_Refresh Profile"
 msgstr "_Obnovit profil"
 
 #: pynicotine/plugins/core_commands/PLUGININFO:3
-#, fuzzy
 msgid "Nicotine+ Commands"
-msgstr "Nicotine+ tím"
+msgstr "Příkazy Nicotine+"
 
 #, fuzzy
 #~ msgid "Nicotine+"
