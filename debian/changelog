@@ -1,8 +1,8 @@
-nicotine (3.3.8-dev1) oracular; urgency=medium
+nicotine (3.3.8-rc1) oracular; urgency=medium
 
-  * Development version 1.
+  * Release candidate 1.
 
- -- Mat <mail@mathias.is>  Wed, 18 Dec 2024 05:27:16 +0200
+ -- Mat <mail@mathias.is>  Sun, 12 Jan 2024 15:00:07 +0200
 
 nicotine (3.3.7-1) oracular; urgency=medium
 
