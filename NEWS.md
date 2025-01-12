@@ -10,17 +10,24 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 ### Changes
 
  * Added isolated mode (`nicotine --isolated`) for standalone environments (e.g. Docker containers)
+ * Added Czech translation (thank you @slrslr)
  * Show number of scanned folders while rescanning shares
  * Skip unit tests requiring network connection by default
 
 ### Corrections
 
+ * Fixed libadwaita being enabled by accident in Budgie desktop environment
+ * Windows: Fixed a crash on systems with outdated Vulkan drivers
+ * Windows: Fixed broken window size when restoring from tray
  * macOS: Fixed a crash on startup with Apple Silicon build
 
 ### Issues closed on GitHub
 
  * App told me to report this. ([#3218](https://github.com/nicotine-plus/nicotine-plus/issues/3218))
  * Nicotine 3.3.7 issue with Sonoma 14.7.2 : impossible to start app ! ([#3227](https://github.com/nicotine-plus/nicotine-plus/issues/3227))
+ * Remember and restore window size and position when opening an application from the tray ([#3236](https://github.com/nicotine-plus/nicotine-plus/issues/3236))
+ * Progress indication when (re-)scanning shares ([#3246](https://github.com/nicotine-plus/nicotine-plus/issues/3246))
+ * Czech language translation status ([#3248](https://github.com/nicotine-plus/nicotine-plus/issues/3248))
 
 
 ## Version 3.3.7 (December 15, 2024)
