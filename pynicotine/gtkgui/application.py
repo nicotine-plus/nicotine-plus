@@ -892,7 +892,7 @@ class Application:
         from traceback import format_tb
 
         # Check if exception occurred in a plugin
-        if core.pluginhandler is not None:
+        if exc_traceback is not None and core.pluginhandler is not None:
             traceback = exc_traceback
 
             while traceback.tb_next:
