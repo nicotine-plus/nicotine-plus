@@ -636,7 +636,7 @@ class Downloads(Transfers):
         # Remove parent folders of the requested folder from path
         parent_folder_path = root_folder_path if root_folder_path else folder_path
         removed_parent_folders = parent_folder_path.rpartition("\\")[0]
-        target_folders = folder_path.replace(removed_parent_folders, "").lstrip("\\").replace("\\", os.sep)
+        target_folders = folder_path.replace(removed_parent_folders, "", 1).lstrip("\\").replace("\\", os.sep)
 
         # Check if a custom download location was specified
         if not download_folder_path:
