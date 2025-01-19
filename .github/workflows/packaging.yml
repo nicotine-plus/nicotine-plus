@@ -55,11 +55,15 @@ jobs:
           cache-key: flatpak-builder-${{ github.sha }}
 
   snap:
-    runs-on: ubuntu-latest
     timeout-minutes: 15
     strategy:
       matrix:
-        arch: [x86_64]
+        include:
+          - arch: x86_64
+            platform: ubuntu-latest
+          - arch: arm64
+            platform: ubuntu-24.04-arm
+    runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
