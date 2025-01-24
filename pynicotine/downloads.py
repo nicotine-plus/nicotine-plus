@@ -526,11 +526,6 @@ class Downloads(Transfers):
             return
 
         incomplete_download_folder_path = self.get_incomplete_download_folder()
-
-        if not incomplete_download_folder_path.startswith(config.data_folder_path):
-            # Only delete incomplete downloads inside Nicotine+'s data folder
-            return
-
         allowed_incomplete_file_paths = {
             encode_path(self.get_incomplete_download_file_path(transfer.username, transfer.virtual_path))
             for transfer in self.transfers.values()
