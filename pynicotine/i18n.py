@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -42,6 +42,7 @@ LANGUAGES = (
     ("pt_BR", "Português (Brasil)"),
     ("pt_PT", "Português (Portugal)"),
     ("ru", "Русский"),
+    ("ta", "தமிழ்"),
     ("tr", "Türkçe"),
     ("uk", "Українська"),
     ("zh_CN", "汉语")

@@ -304,6 +304,9 @@
  - mitramai (2021)
  - Markus Magnuson (alimony) (2003–2004)
 
+### Tamil
+ - தமிழ்நேரம் (2025)
+
 ### Turkish
  - Oğuz Ersen (2021–2024)
 
@@ -488,6 +491,7 @@
  - zniavre
  - ZTetriminos
  - Žygimantas Beručka
+ - தமிழ்நேரம்
 
 
 ## License

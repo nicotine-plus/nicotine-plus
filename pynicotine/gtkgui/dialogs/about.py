@@ -336,6 +336,9 @@ class About(Dialog):
          "\n •  mitramai (2021)"
          "\n •  Markus Magnuson (alimony) (2003–2004)"),
 
+        ("<b>Tamil</b>"
+         "\n •  தமிழ்நேரம் (2025)"),
+
         ("<b>Turkish</b>"
          "\n •  Oğuz Ersen (2021–2024)"),
 
