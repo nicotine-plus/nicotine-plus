@@ -17,6 +17,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 
 ### Corrections
 
+ * Fixed incorrect download folder names in rare cases
  * Fixed libadwaita being enabled by accident in Budgie desktop environment
  * Windows: Fixed a crash on systems with outdated Vulkan drivers
  * Windows: Fixed broken window size when restoring from tray
@@ -29,6 +30,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Remember and restore window size and position when opening an application from the tray ([#3236](https://github.com/nicotine-plus/nicotine-plus/issues/3236))
  * Progress indication when (re-)scanning shares ([#3246](https://github.com/nicotine-plus/nicotine-plus/issues/3246))
  * Czech language translation status ([#3248](https://github.com/nicotine-plus/nicotine-plus/issues/3248))
+ * removed_parent_folders should only remove first occurence ([#3255](https://github.com/nicotine-plus/nicotine-plus/issues/3255))
 
 
 ## Version 3.3.7 (December 15, 2024)
