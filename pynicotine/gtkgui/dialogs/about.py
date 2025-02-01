@@ -279,7 +279,7 @@ class About(Dialog):
          "\n •  dbazza (2003–2004)"),
 
         ("<b>Latvian</b>"
-         "\n •  Pagal3 (2022–2024)"),
+         "\n •  Pagal3 (2022–2025)"),
 
         ("<b>Lithuanian</b>"
          "\n •  mantas (2020)"
@@ -343,7 +343,7 @@ class About(Dialog):
          "\n •  Oğuz Ersen (2021–2024)"),
 
         ("<b>Ukrainian</b>"
-         "\n •  Oleg Gritsun (2024)"
+         "\n •  Oleg Gritsun (2024–2025)"
          "\n •  uniss2209 (2022)")]
 
     LICENSE = [

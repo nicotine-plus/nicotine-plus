@@ -247,7 +247,7 @@
  - dbazza (2003–2004)
 
 ### Latvian
- - Pagal3 (2022–2024)
+ - Pagal3 (2022–2025)
 
 ### Lithuanian
  - mantas (2020)
@@ -311,7 +311,7 @@
  - Oğuz Ersen (2021–2024)
 
 ### Ukrainian
- - Oleg Gritsun (2024)
+ - Oleg Gritsun (2024–2025)
  - uniss2209 (2022)
 
 
@@ -416,6 +416,7 @@
  - Markus Magnuson
  - Mat
  - mathsped
+ - Matthaiks
  - Maxime Leroy
  - Mehavoid
  - MELERIX
