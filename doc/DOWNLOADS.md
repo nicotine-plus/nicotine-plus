@@ -139,8 +139,8 @@ using them.
     — [`SHA256`](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-x86_64-installer.zip.sha256)  
    for macOS 13 Ventura or later
 
- - [Download macOS Apple Silicon Installer](https://github.com/nicotine-plus/nicotine-plus/releases/download/3.3.6/macos-arm64-installer.zip)
-    — [`SHA256`](https://github.com/nicotine-plus/nicotine-plus/releases/download/3.3.6/macos-arm64-installer.zip.sha256)  
+ - [Download macOS Apple Silicon Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-arm64-installer.zip)
+    — [`SHA256`](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-arm64-installer.zip.sha256)  
    for macOS 14 Sonoma or later
 
 ### Package Managers
