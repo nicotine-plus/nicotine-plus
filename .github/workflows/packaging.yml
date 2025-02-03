@@ -39,20 +39,30 @@ jobs:
     timeout-minutes: 15
     strategy:
       matrix:
-        arch: [x86_64]
+        include:
+          - arch: x86_64
+            platform: ubuntu-latest
     container:
-      image: bilelmoussaoui/flatpak-github-actions:gnome-47
+      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-47
       options: --privileged
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Build Flatpak package
-        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        uses: flathub-infra/flatpak-github-actions/flatpak-builder@master
         with:
-          bundle: flatpak-package.flatpak
+          bundle: org.nicotine_plus.Nicotine-${{ matrix.arch }}.flatpak
           manifest-path: build-aux/flatpak/org.nicotine_plus.Nicotine.json
           cache-key: flatpak-builder-${{ github.sha }}
+          arch: ${{ matrix.arch }}
+          upload-artifact: false
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: flatpak-${{ matrix.arch }}-package
+          path: org.nicotine_plus.Nicotine-${{ matrix.arch }}.flatpak
 
   snap:
     timeout-minutes: 15
