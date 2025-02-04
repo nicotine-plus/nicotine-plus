@@ -178,7 +178,13 @@ class CLI:
             return
 
         import termios  # pylint: disable=import-error
-        termios.tcsetattr(sys.stdin, termios.TCSANOW, self._tty_attributes)
+
+        try:
+            termios.tcsetattr(sys.stdin, termios.TCSANOW, self._tty_attributes)
+
+        except termios.error:
+            # stdin is gone
+            pass
 
         self._tty_attributes = None
 
