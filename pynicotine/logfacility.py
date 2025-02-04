@@ -77,6 +77,8 @@ class Logger:
         UnknownPeerMessage
     }
 
+    READ_BLOCK_SIZE = 4096
+
     def __init__(self):
 
         current_date_time = time.strftime("%Y-%m-%d_%H-%M-%S")
@@ -220,6 +222,37 @@ class Logger:
     def open_log(self, folder_path, basename):
         self._log_file_operation(folder_path, basename, self.open_log_callback)
 
+    def _get_log_lines(self, log_file, num_lines):
+
+        file_handle = log_file.handle
+        file_handle.seek(0, os.SEEK_END)
+
+        blocks = deque()
+        read_offset = file_handle.tell()
+        lines_left = num_lines + 1
+
+        while lines_left > 0:
+            read_offset -= self.READ_BLOCK_SIZE
+            read_size = self.READ_BLOCK_SIZE
+
+            if read_offset < 0:
+                # Reached beginning of file, read remaining data
+                read_size += read_offset
+                read_offset = 0
+
+            file_handle.seek(read_offset)
+            block = file_handle.read(read_size)
+            blocks.appendleft(block)
+
+            if read_offset <= 0:
+                # Fewer lines in file than our limit, stop here
+                break
+
+            lines_left -= block.count(b'\n')
+
+        file_handle.seek(0, os.SEEK_END)
+        return b''.join(blocks).splitlines()[-num_lines:]
+
     def read_log(self, folder_path, basename, num_lines):
 
         lines = None
@@ -229,11 +262,7 @@ class Logger:
             log_file = self._get_log_file(folder_path, basename, should_create_file=False)
 
             if log_file is not None:
-                # Read the number of lines specified from the beginning of the file,
-                # then go back to the end of the file to append new lines
-                log_file.handle.seek(0)
-                lines = deque(log_file.handle, num_lines)
-                log_file.handle.seek(0, os.SEEK_END)
+                lines = self._get_log_lines(log_file, num_lines)
 
         except Exception as error:
             self._add(_("Cannot access log file %(path)s: %(error)s"), {

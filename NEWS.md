@@ -12,6 +12,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Added isolated mode (`nicotine --isolated`) for standalone environments (e.g. Docker containers)
  * Added Czech translation (thank you @slrslr)
  * Added Tamil translation (thank you @TamilNeram)
+ * Optimized reading of large chat logs
  * Show number of scanned folders while rescanning shares
  * Skip unit tests requiring network connection by default
 
