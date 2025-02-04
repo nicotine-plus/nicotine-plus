@@ -17,6 +17,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 
 ### Corrections
 
+ * Fixed a crash when closing font chooser dialogs in older GTK 4 versions
  * Fixed incorrect download folder names in rare cases
  * Fixed libadwaita being enabled by accident in Budgie desktop environment
  * Windows: Fixed a crash on systems with outdated Vulkan drivers
