@@ -98,6 +98,13 @@ def check_gtk_version(gtk_api_version):
         gi.require_version("GdkWin32", f"{gtk_api_version}.0")
         from gi.repository import GdkWin32  # noqa: F401  # pylint:disable=no-name-in-module,unused-import
 
+    if hasattr(gi, "_ossighelper"):
+        # PyGObject sets up a signal helper that wakes up the GLib mainloop when the application
+        # receives OS signals. Disable it, since its use of socketpairs currently causes crashes
+        # on Windows while a proxy is enabled. We always keep the loop active anyway
+        # (on_process_thread_events in application.py).
+        gi._ossighelper._wakeup_fd_is_active = True  # pylint:disable=protected-access
+
     gtk_version = f"{Gtk.get_major_version()}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
     log.add(_("Loading %(program)s %(version)s"), {"program": "GTK", "version": gtk_version})
 

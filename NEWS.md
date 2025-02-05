@@ -22,6 +22,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Fixed incorrect download folder names in rare cases
  * Fixed libadwaita being enabled by accident in Budgie desktop environment
  * Windows: Fixed a crash on systems with outdated Vulkan drivers
+ * Windows: Fixed a crash when Proxifier is enabled
  * Windows: Fixed broken window size when restoring from tray
  * macOS: Fixed a crash on startup with Apple Silicon build
 
