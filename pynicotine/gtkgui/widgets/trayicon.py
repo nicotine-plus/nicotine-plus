@@ -540,10 +540,15 @@ class StatusNotifierImplementation(BaseImplementation):
         if not icon_path:
             return False
 
+        icon_path_encoded = encode_path(icon_path)
+
+        if not os.path.isdir(icon_path_encoded):
+            return False
+
         icon_scheme = f"{pynicotine.__application_id__}-{icon_name}.".encode()
 
         try:
-            with os.scandir(encode_path(icon_path)) as entries:
+            with os.scandir(icon_path_encoded) as entries:
                 for entry in entries:
                     if entry.is_file() and entry.name.startswith(icon_scheme):
                         return True
