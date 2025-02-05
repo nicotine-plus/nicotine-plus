@@ -38,7 +38,7 @@
             <property name="margin-start">6</property>
             <property name="max-width-chars">30</property>
             <property name="placeholder-text" translatable="yes">Add something you like…</property>
-            <property name="primary-icon-name">face-smile-big-symbolic</property>
+            <property name="primary-icon-name">emblem-default-symbolic</property>
             <property name="visible">True</property>
             <property name="width-chars">15</property>
             <signal name="activate" handler="on_add_thing_i_like"/>

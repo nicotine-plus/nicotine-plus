@@ -727,7 +727,7 @@ class MainWindow(Window):
             ("private", _("Private Chat"), "mail-unread-symbolic"),
             ("userlist", _("Buddies"), "system-users-symbolic"),
             ("chatrooms", _("Chat Rooms"), "user-available-symbolic"),
-            ("interests", _("Interests"), "face-smile-big-symbolic")
+            ("interests", _("Interests"), "emblem-default-symbolic")
         ):
             tab = self.tabs[tab_id]
             self.notebook.append_page(tab.page, tab_text, focus_callback=tab.on_focus)
