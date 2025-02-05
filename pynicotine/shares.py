@@ -114,6 +114,7 @@ class Database:
     LENGTH_DATA_SIZE = 8
     PACK_LENGTHS = Struct("!II").pack
     UNPACK_LENGTHS = Struct("!II").unpack_from
+    PICKLE_PROTOCOL = min(HIGHEST_PROTOCOL, 5)  # Use version 5 when available
 
     def __init__(self, file_path, overwrite=True):
 
@@ -199,7 +200,7 @@ class Database:
     def __setitem__(self, key, value):
 
         encoded_key = key.encode("utf-8")
-        pickled_value = dumps(value, protocol=HIGHEST_PROTOCOL)
+        pickled_value = dumps(value, protocol=self.PICKLE_PROTOCOL)
 
         key_length = len(encoded_key)
         length_data = self.PACK_LENGTHS(key_length, len(pickled_value))
