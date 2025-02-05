@@ -243,8 +243,13 @@ class TreeView:
             self._column_ids[column_id] = column_index
             self._data_types.append(data_type)
 
-            if data_type in int_types:
-                self._column_gvalues[column_index] = GObject.Value(data_type)
+            if data_type not in int_types:
+                continue
+
+            self._column_gvalues[column_index] = value = GObject.Value(data_type)
+
+            # Optimization: bypass PyGObject's set_value override
+            value.set_value = value.set_uint if data_type == GObject.TYPE_UINT else value.set_uint64
 
         self._column_numbers = list(self._column_ids.values())
 
