@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import io
 import os
 import sys
 import time
@@ -76,8 +77,6 @@ class Logger:
         EmbeddedMessage,
         UnknownPeerMessage
     }
-
-    READ_BLOCK_SIZE = 4096
 
     def __init__(self):
 
@@ -232,8 +231,8 @@ class Logger:
         lines_left = num_lines + 1
 
         while lines_left > 0:
-            read_offset -= self.READ_BLOCK_SIZE
-            read_size = self.READ_BLOCK_SIZE
+            read_size = io.DEFAULT_BUFFER_SIZE
+            read_offset -= read_size
 
             if read_offset < 0:
                 # Reached beginning of file, read remaining data
