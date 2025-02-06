@@ -16,12 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import io
 import os
 import sys
 import time
 
 from collections import deque
-from itertools import islice
 
 from pynicotine.config import config
 from pynicotine.events import events
@@ -35,14 +35,14 @@ from pynicotine.utils import open_file_path
 
 
 class LogFile:
-    __slots__ = ("path", "handle", "last_active", "last_read_line", "read_buffer")
+    __slots__ = ("path", "handle", "last_active", "read_buffer", "read_offset")
 
     def __init__(self, path):
         self.path = path
         self.handle = None
         self.last_active = 0.0
-        self.last_read_line = None
         self.read_buffer = deque()
+        self.read_offset = None
 
 
 class LogLevel:
@@ -61,8 +61,6 @@ class Logger:
     __slots__ = ("debug_file_name", "downloads_file_name", "uploads_file_name", "debug_folder_path",
                  "transfer_folder_path", "room_folder_path", "private_chat_folder_path",
                  "_log_levels", "_log_files")
-
-    NUM_BUFFER_PAGES = 10
 
     PREFIXES = {
         LogLevel.DOWNLOAD: "Download",
@@ -159,13 +157,13 @@ class Logger:
 
         log_file.handle = open(file_path_encoded, "ab+")  # pylint: disable=consider-using-with
 
-        if log_file.last_read_line is None:
+        if log_file.read_offset is None:
             # Disable file access for outsiders
             os.chmod(file_path_encoded, 0o600)
 
             # EOF at startup datum is the initial reading position
-            log_file.handle.seek(0)
-            log_file.last_read_line = sum(1 for _ in log_file.handle) + 1
+            log_file.handle.seek(0, os.SEEK_END)
+            log_file.read_offset = log_file.handle.tell()
 
         log_file.last_active = time.monotonic()
 
@@ -214,7 +212,6 @@ class Logger:
 
     def _shut_log_file(self, log_file):
         self._close_handle(log_file)
-        log_file.read_buffer.clear()
         del self._log_files[log_file.path]
 
     def _shut_log_files(self):
@@ -243,6 +240,26 @@ class Logger:
     def open_log(self, folder_path, basename):
         self._log_file_operation(folder_path, basename, self.open_log_callback)
 
+    def _get_log_lines(self, log_file):
+
+        read_size = io.DEFAULT_BUFFER_SIZE
+        log_file.read_offset -= read_size
+
+        if log_file.read_offset < 0:
+            # Reached beginning of file, read remaining data
+            read_size += log_file.read_offset
+            log_file.read_offset = 0
+
+        log_file.handle.seek(log_file.read_offset)
+        block = log_file.handle.read(read_size)
+        lines = deque(block.splitlines())
+
+        if lines and log_file.read_offset > 0:
+            # Discard partial fragment
+            log_file.read_offset += len(lines.popleft()) + len(b'\n')
+
+        return lines
+
     def read_log(self, folder_path, basename, num_lines):
 
         lines = deque()
@@ -251,18 +268,10 @@ class Logger:
         try:
             log_file = self._get_log_file(folder_path, basename, should_create_file=False)
 
-            if log_file and log_file.last_read_line > 1 and len(log_file.read_buffer) < num_lines:
-                # Not enough in read_buffer, get more pages of lines from file
-                old_read_line = log_file.last_read_line - 1
-                log_file.last_read_line = old_read_line - num_lines * self.NUM_BUFFER_PAGES
+            while log_file and log_file.read_offset and len(log_file.read_buffer) < num_lines:
+                log_file.read_buffer.extend(self._get_log_lines(log_file))
 
-                if log_file.last_read_line <= 0:
-                    # Reached beginning of file
-                    log_file.last_read_line = 0
-                    log_file.read_buffer.clear()
-
-                log_file.handle.seek(0)
-                log_file.read_buffer.extend(islice(log_file.handle, log_file.last_read_line, old_read_line))
+            if log_file and log_file.handle:
                 log_file.handle.seek(0, os.SEEK_END)
 
         except Exception as error:

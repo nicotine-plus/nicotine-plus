@@ -497,7 +497,7 @@ class ChatView(TextView):
                 if end > start:
                     timestamp_string = line[:start - 2]
                     username = line[start:end]
-                    message = line[end + 2:-1]
+                    message = line[end + 2:]  # :-1 if endswith \n
 
                     if username == login_username:
                         message_type = "local"
