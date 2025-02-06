@@ -285,8 +285,13 @@ class UserBrowse:
         if user == config.sections["server"]["login"]:
             self.folder_popup_menu.add_items(
                 ("#" + _("Upload Folder & Subfolders…"), self.on_upload_folder_recursive_to),
-                ("", None),
-                ("#" + _("Open in File _Manager"), self.on_file_manager),
+                ("", None)
+            )
+            if not self.window.application.isolated_mode:
+                self.folder_popup_menu.add_items(
+                    ("#" + _("Open in File _Manager"), self.on_file_manager)
+                )
+            self.folder_popup_menu.add_items(
                 ("#" + _("F_ile Properties"), self.on_file_properties, True),
                 ("", None),
                 ("#" + _("Copy _Folder Path"), self.on_copy_folder_path),
@@ -362,9 +367,14 @@ class UserBrowse:
             self.file_popup_menu.add_items(
                 ("#" + _("Up_load File(s)…"), self.on_upload_files_to),
                 ("#" + _("Upload Folder…"), self.on_upload_folder_to),
-                ("", None),
-                ("#" + _("_Open File"), self.on_open_file),
-                ("#" + _("Open in File _Manager"), self.on_file_manager),
+                ("", None)
+            )
+            if not self.window.application.isolated_mode:
+                self.file_popup_menu.add_items(
+                    ("#" + _("_Open File"), self.on_open_file),
+                    ("#" + _("Open in File _Manager"), self.on_file_manager)
+                )
+            self.file_popup_menu.add_items(
                 ("#" + _("F_ile Properties"), self.on_file_properties),
                 ("", None),
                 ("#" + _("Copy _File Path"), self.on_copy_file_path),
@@ -691,7 +701,7 @@ class UserBrowse:
 
             if index == len(folder_path_split) - 1:
                 button = Gtk.MenuButton(visible=True)
-                button.set_menu_model(self.folder_popup_menu.model)
+                self.folder_popup_menu.set_menu_button(button)
                 add_css_class(button_label, "heading")
 
                 if GTK_API_VERSION >= 4:

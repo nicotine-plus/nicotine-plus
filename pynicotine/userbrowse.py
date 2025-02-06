@@ -133,6 +133,7 @@ class UserBrowse:
             ).start()
 
         self._show_user(username, path=path, switch_page=switch_page)
+        core.users.watch_user(username, context="userbrowse")
 
     def request_user_shares(self, username):
         core.send_message_to_peer(username, SharedFileListRequest())

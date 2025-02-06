@@ -22,6 +22,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
 from itertools import islice
 
 from gi.repository import GObject
@@ -245,12 +247,17 @@ class Transfers:
             inner_button = next(iter(self.grouping_button))
             add_css_class(widget=inner_button, css_class="image-button")
 
+            # Workaround for GTK bug where clicks stop working after clicking inside popover once
+            if os.environ.get("GDK_BACKEND") == "broadway":
+                popover = list(self.grouping_button)[-1]
+                popover.set_has_arrow(False)
+
         self.expand_button.connect("toggled", self.on_expand_tree)
         self.expand_button.set_active(config.sections["transfers"][f"{transfer_type}sexpanded"])
 
         self.popup_menu_users = UserPopupMenu(window.application, tab_name="transfers")
         self.popup_menu_clear = PopupMenu(window.application)
-        self.clear_all_button.set_menu_model(self.popup_menu_clear.model)
+        self.popup_menu_clear.set_menu_button(self.clear_all_button)
 
         self.popup_menu_copy = PopupMenu(window.application)
         self.popup_menu_copy.add_items(
@@ -262,9 +269,12 @@ class Transfers:
         self.popup_menu = FilePopupMenu(
             window.application, parent=self.tree_view.widget, callback=self.on_popup_menu
         )
+        if not self.window.application.isolated_mode:
+            self.popup_menu.add_items(
+                ("#" + _("_Open File"), self.on_open_file),
+                ("#" + _("Open in File _Manager"), self.on_open_file_manager)
+            )
         self.popup_menu.add_items(
-            ("#" + _("_Open File"), self.on_open_file),
-            ("#" + _("Open in File _Manager"), self.on_open_file_manager),
             ("#" + _("F_ile Properties"), self.on_file_properties),
             ("", None),
             ("#" + self.retry_label, self.on_retry_transfer),
@@ -1039,6 +1049,10 @@ class Transfers:
 
         self.select_transfers()
         action = config.sections["transfers"][f"{self.type}_doubleclick"]
+
+        if self.window.application.isolated_mode and action in {1, 2}:
+            # External applications not available in isolated_mode mode
+            return
 
         if action == 1:    # Open File
             self.on_open_file()

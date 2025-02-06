@@ -129,20 +129,19 @@ def set_use_header_bar(enabled):
     GTK_SETTINGS.props.gtk_dialogs_use_header = enabled
 
 
-def set_default_font_size():
+def set_default_font():
 
-    if sys.platform not in {"darwin", "win32"}:
+    if sys.platform == "win32":
+        # Using larger font size than the default to match modern Windows apps
+        GTK_SETTINGS.props.gtk_font_name = "Segoe UI 10"
+
+    elif sys.platform == "darwin":
+        # Using Helvetica Neue instead of the default font due to rendering
+        # issues with the latter
+        GTK_SETTINGS.props.gtk_font_name = "Helvetica Neue 13"
+
+    else:
         return
-
-    font = GTK_SETTINGS.props.gtk_font_name
-
-    if not font:
-        return
-
-    # Increase default font size to match newer apps on Windows and macOS
-    font_name, _separator, font_size = font.rpartition(" ")
-    font_size = str(int(font_size) + 1)
-    GTK_SETTINGS.props.gtk_font_name = " ".join((font_name, font_size))
 
     if GTK_API_VERSION == 3:
         return
@@ -155,17 +154,25 @@ def set_default_font_size():
         pass
 
 
-def set_visual_settings():
+def set_visual_settings(isolated_mode=False):
 
-    if sys.platform == "darwin":
+    if isolated_mode:
+        # Hide minimize/maximize buttons in isolated mode (e.g. Broadway backend)
+        GTK_SETTINGS.props.gtk_decoration_layout = ":close"
+        GTK_SETTINGS.props.gtk_titlebar_right_click = "none"
+
+    elif sys.platform == "darwin":
         # Left align window controls on macOS
         GTK_SETTINGS.props.gtk_decoration_layout = "close,minimize,maximize:"
 
-    elif os.environ.get("GDK_BACKEND") == "broadway":
-        # Hide minimize/maximize buttons in Broadway backend
-        GTK_SETTINGS.props.gtk_decoration_layout = ":close"
+    if os.environ.get("GDK_BACKEND") == "broadway":
+        # Animations use a lot of CPU in Broadway, disable them
+        GTK_SETTINGS.props.gtk_enable_animations = False
 
-    set_default_font_size()
+        if GTK_API_VERSION >= 4:
+            GTK_SETTINGS.props.gtk_cursor_blink = False
+
+    set_default_font()
     set_dark_mode(config.sections["ui"]["dark_mode"])
     set_use_header_bar(config.sections["ui"]["header_bar"])
 
@@ -194,6 +201,10 @@ def set_global_css():
             with open(encode_path(os.path.join(css_folder_path, "style_gtk4_darwin.css")), "rb") as file_handle:
                 css += file_handle.read()
 
+        elif os.environ.get("GDK_BACKEND") == "broadway":
+            with open(encode_path(os.path.join(css_folder_path, "style_gtk4_broadway.css")), "rb") as file_handle:
+                css += file_handle.read()
+
         if LIBADWAITA_API_VERSION:
             with open(encode_path(os.path.join(css_folder_path, "style_libadwaita.css")), "rb") as file_handle:
                 css += file_handle.read()
@@ -213,8 +224,8 @@ def set_global_css():
     add_provider_func(display, CUSTOM_CSS_PROVIDER, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
 
-def set_global_style():
-    set_visual_settings()
+def set_global_style(isolated_mode=False):
+    set_visual_settings(isolated_mode)
     set_global_css()
     update_custom_css()
 

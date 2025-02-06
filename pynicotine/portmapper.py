@@ -25,6 +25,8 @@ import time
 from threading import Thread
 from urllib.parse import urlsplit
 
+import pynicotine
+
 from pynicotine.config import config
 from pynicotine.events import events
 from pynicotine.logfacility import log
@@ -96,9 +98,13 @@ class NATPMP(BaseImplementation):
         def sendto(self, sock, addr, num_attempt):
 
             msg = bytes(self)
+            ip_address, port = addr
             sock.sendto(msg, addr)
 
-            log.add_debug(f"NAT-PMP: Portmap request attempt {num_attempt} of {NATPMP.REQUEST_ATTEMPTS}: {msg}")
+            log.add_debug(
+                "NAT-PMP: Portmap request attempt %s of %s to gateway %s, port %s: %s",
+                (num_attempt, NATPMP.REQUEST_ATTEMPTS, ip_address, port, msg)
+            )
 
         def __bytes__(self):
 
@@ -148,6 +154,8 @@ class NATPMP(BaseImplementation):
     def _request_port_mapping(self, public_port, private_port, lease_duration):
 
         with socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP) as sock:
+            log.add_debug("NAT-PMP: Binding socket to local IP address %s", self.local_ip_address)
+
             sock.bind((self.local_ip_address, 0))
             request = self.PortmapRequest(public_port, private_port, lease_duration)
             timeout = self.REQUEST_INIT_TIMEOUT
@@ -163,7 +171,7 @@ class NATPMP(BaseImplementation):
                 except socket.timeout:
                     timeout *= 2
 
-        log.add_debug(f"NAT-PMP: Giving up, all {self.REQUEST_ATTEMPTS} portmap requests timed out")
+        log.add_debug("NAT-PMP: Giving up, all %s portmap requests timed out", self.REQUEST_ATTEMPTS)
 
         return None
 
@@ -198,6 +206,11 @@ class UPnP(BaseImplementation):
     __slots__ = ("_service",)
 
     NAME = "UPnP"
+    USER_AGENT = (
+        f"Python/{sys.version.split()[0]} "
+        "UPnP/2.0 "
+        f"{pynicotine.__application_name__}/{pynicotine.__version__}"
+    )
     MULTICAST_HOST = "239.255.255.250"
     MULTICAST_PORT = 1900
     MULTICAST_TTL = 2         # Should default to 2 according to UPnP specification
@@ -237,7 +250,8 @@ class UPnP(BaseImplementation):
                 "HOST": f"{UPnP.MULTICAST_HOST}:{UPnP.MULTICAST_PORT}",
                 "ST": search_target,
                 "MAN": '"ssdp:discover"',
-                "MX": str(UPnP.MX_RESPONSE_DELAY)
+                "MX": str(UPnP.MX_RESPONSE_DELAY),
+                "USER-AGENT": UPnP.USER_AGENT
             }
 
         def sendto(self, sock, addr):
@@ -245,7 +259,7 @@ class UPnP(BaseImplementation):
             msg = bytes(self)
             sock.sendto(msg, addr)
 
-            log.add_debug("UPnP: SSDP request: %s", msg)
+            log.add_debug("UPnP: SSDP request sent: %s", msg)
 
         def __bytes__(self):
 
@@ -284,12 +298,30 @@ class UPnP(BaseImplementation):
                 for service in xml.findall(".//{urn:schemas-upnp-org:device-1-0}service"):
                     found_service_type = service.find(".//{urn:schemas-upnp-org:device-1-0}serviceType").text
 
-                    if found_service_type in {"urn:schemas-upnp-org:service:WANIPConnection:1",
-                                              "urn:schemas-upnp-org:service:WANPPPConnection:1",
-                                              "urn:schemas-upnp-org:service:WANIPConnection:2"}:
+                    if found_service_type in {
+                        "urn:schemas-upnp-org:service:WANIPConnection:2",
+                        "urn:schemas-upnp-org:service:WANIPConnection:1",
+                        "urn:schemas-upnp-org:service:WANPPPConnection:1"
+                    }:
                         # We found a router with UPnP enabled
-                        service_type = found_service_type
+                        location_url_parts = urlsplit(location_url)
+                        location_url_base = f"{location_url_parts.scheme}://{location_url_parts.netloc}/"
                         control_url = service.find(".//{urn:schemas-upnp-org:device-1-0}controlURL").text
+
+                        # Relative URL
+                        if control_url.startswith("/"):
+                            control_url = location_url_base + control_url.lstrip("/")
+
+                        # Absolute URL (allowed in UPnP 1.0)
+                        elif not control_url.startswith(location_url_base):
+                            log.add_debug(
+                                "UPnP: Invalid control URL %s for service %s, ignoring",
+                                (control_url, found_service_type)
+                            )
+                            control_url = None
+                            continue
+
+                        service_type = found_service_type
                         break
 
             except Exception as error:
@@ -316,9 +348,7 @@ class UPnP(BaseImplementation):
 
             locations.add(location)
 
-            url_parts = urlsplit(location)
             service_type, control_url = UPnP.SSDP.get_service_control_url(location)
-            control_url = f"{url_parts.scheme}://{url_parts.netloc}{control_url}"
 
             if service_type is None or control_url is None:
                 log.add_debug("UPnP: No router with UPnP enabled in device search response, ignoring")
@@ -341,35 +371,29 @@ class UPnP(BaseImplementation):
 
             # Create a UDP socket and set its timeout
             with socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP) as sock:
+                log.add_debug("UPnP: Binding socket to local IP address %s", private_ip)
+
                 sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_IF, socket.inet_aton(private_ip))
                 sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, struct.pack("B", UPnP.MULTICAST_TTL))
                 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
                 sock.settimeout(UPnP.MX_RESPONSE_DELAY + 0.1)  # Larger timeout in case data arrives at the last moment
                 sock.bind((private_ip, 0))
 
-                # Protocol 1
-                wan_ip1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:1")
-                wan_ppp1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANPPPConnection:1")
-                wan_igd1 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:1")
-
-                wan_ip1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
-                log.add_debug("UPnP: Sent M-SEARCH IP request 1")
-
-                wan_ppp1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
-                log.add_debug("UPnP: Sent M-SEARCH PPP request 1")
-
-                wan_igd1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
-                log.add_debug("UPnP: Sent M-SEARCH IGD request 1")
-
                 # Protocol 2
-                wan_ip2 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:2")
                 wan_igd2 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:2")
-
-                wan_ip2.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
-                log.add_debug("UPnP: Sent M-SEARCH IP request 2")
+                wan_ip2 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:2")
 
                 wan_igd2.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
-                log.add_debug("UPnP: Sent M-SEARCH IGD request 2")
+                wan_ip2.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+
+                # Protocol 1
+                wan_igd1 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:1")
+                wan_ip1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:1")
+                wan_ppp1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANPPPConnection:1")
+
+                wan_igd1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                wan_ip1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                wan_ppp1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
 
                 locations = set()
                 services = {}
@@ -426,6 +450,7 @@ class UPnP(BaseImplementation):
         headers = {
             "Host": urlsplit(control_url).netloc,
             "Content-Type": "text/xml; charset=utf-8",
+            "USER-AGENT": self.USER_AGENT,
             "SOAPACTION": f'"{service_type}#AddPortMapping"'
         }
 

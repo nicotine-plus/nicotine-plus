@@ -22,6 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import operator
+import os
 import re
 
 from itertools import islice
@@ -100,7 +101,7 @@ class Searches(IconNotebook):
             ("O" + self.modes["user"], "win.search-mode", "user")
         )
         mode_menu.update_model()
-        window.search_mode_button.set_menu_model(mode_menu.model)
+        mode_menu.set_menu_button(window.search_mode_button)
         window.search_mode_label.set_label(self.modes["global"])
 
         if GTK_API_VERSION >= 4:
@@ -647,6 +648,15 @@ class Search:
         menu = create_grouping_menu(self.window, config.sections["searches"]["group_searches"], self.on_group)
         self.grouping_button.set_menu_model(menu)
 
+        if GTK_API_VERSION >= 4:
+            inner_button = next(iter(self.grouping_button))
+            add_css_class(widget=inner_button, css_class="image-button")
+
+        # Workaround for GTK bug where clicks stop working after clicking inside popover once
+        if GTK_API_VERSION >= 4 and os.environ.get("GDK_BACKEND") == "broadway":
+            popover = list(self.grouping_button)[-1]
+            popover.set_has_arrow(False)
+
         self.expand_button.set_active(config.sections["searches"]["expand_searches"])
 
         # Filter button widgets
@@ -1096,11 +1106,7 @@ class Search:
         history.insert(0, value)
         config.write_configuration()
 
-        # If called after selecting a filter history item from the dropdown, GTK 4 crashes
-        # when resetting the dropdown model (in freeze() and unfreeze()). Add a slight delay
-        # to allow the selected item signal to complete before we add an item.
-
-        GLib.idle_add(self.searches.add_filter_history_item, filter_id, value)
+        self.searches.add_filter_history_item(filter_id, value)
 
     @staticmethod
     def _split_operator(condition):
@@ -1680,6 +1686,13 @@ class Search:
 
         if popover is not None:
             popover.set_visible(False)
+
+        if GTK_API_VERSION >= 4:
+            self.grouping_button.set_has_frame(active)
+        else:
+            self.grouping_button.set_relief(
+                Gtk.ReliefStyle.NORMAL if active else Gtk.ReliefStyle.NONE
+            )
 
         config.sections["searches"]["group_searches"] = mode
         self.tree_view.set_show_expanders(active)

@@ -134,7 +134,7 @@ class NetworkPage:
                 "port": core.users.public_port or unknown_label
             })
             self.check_port_status_label.set_markup(f"<a href='{url}' title='{url}'>{port_status_text}</a>")
-            self.check_port_status_label.set_visible(True)
+            self.check_port_status_label.set_visible(not self.application.isolated_mode)
         else:
             self.current_port_label.set_text(unknown_label)
             self.check_port_status_label.set_visible(False)
@@ -273,38 +273,47 @@ class DownloadsPage:
         self.sent_files_permission_combobox = ComboBox(
             container=self.sent_files_permission_container,
             items=(
-                (_("No one"), None),
-                (_("Everyone"), None),
-                (_("Buddies"), None),
-                (_("Trusted buddies"), None)
+                (_("No one"), 0),
+                (_("Everyone"), 1),
+                (_("Buddies"), 2),
+                (_("Trusted buddies"), 3)
             )
         )
 
+        items = [
+            (_("Nothing"), 0)
+        ]
+        if not self.application.isolated_mode:
+            items += [
+                (_("Open File"), 1),
+                (_("Open in File Manager"), 2)
+            ]
+        items += [
+            (_("Search"), 3),
+            (_("Abort"), 4),
+            (_("Remove"), 5),
+            (_("Retry"), 6),
+            (_("Browse Folder"), 7)
+        ]
         self.download_double_click_combobox = ComboBox(
             container=self.download_double_click_label.get_parent(), label=self.download_double_click_label,
-            items=(
-                (_("Nothing"), None),
-                (_("Open File"), None),
-                (_("Open in File Manager"), None),
-                (_("Search"), None),
-                (_("Pause"), None),
-                (_("Remove"), None),
-                (_("Resume"), None),
-                (_("Browse Folder"), None)
-            )
+            items=items
         )
 
         self.download_folder_button = FileChooserButton(
             self.download_folder_label.get_parent(), window=application.preferences,
-            label=self.download_folder_label, end_button=self.download_folder_default_button, chooser_type="folder"
+            label=self.download_folder_label, end_button=self.download_folder_default_button, chooser_type="folder",
+            show_open_external_button=not self.application.isolated_mode
         )
         self.incomplete_folder_button = FileChooserButton(
             self.incomplete_folder_label.get_parent(), window=application.preferences,
-            label=self.incomplete_folder_label, end_button=self.incomplete_folder_default_button, chooser_type="folder"
+            label=self.incomplete_folder_label, end_button=self.incomplete_folder_default_button, chooser_type="folder",
+            show_open_external_button=not self.application.isolated_mode
         )
         self.received_folder_button = FileChooserButton(
             self.received_folder_label.get_parent(), window=application.preferences,
-            label=self.received_folder_label, end_button=self.received_folder_default_button, chooser_type="folder"
+            label=self.received_folder_label, end_button=self.received_folder_default_button, chooser_type="folder",
+            show_open_external_button=not self.application.isolated_mode
         )
 
         self.filter_syntax_description = _("<b>Syntax</b>: Case-insensitive. If enabled, Python regular expressions "
@@ -408,7 +417,7 @@ class DownloadsPage:
             "transfers": {
                 "autoclear_downloads": self.autoclear_downloads_toggle.get_active(),
                 "remotedownloads": self.accept_sent_files_toggle.get_active(),
-                "uploadallowed": self.sent_files_permission_combobox.get_selected_pos(),
+                "uploadallowed": self.sent_files_permission_combobox.get_selected_id(),
                 "incompletedir": self.incomplete_folder_button.get_path(),
                 "downloaddir": self.download_folder_button.get_path(),
                 "uploaddir": self.received_folder_button.get_path(),
@@ -420,7 +429,7 @@ class DownloadsPage:
                 "usernamesubfolders": self.enable_username_subfolders_toggle.get_active(),
                 "afterfinish": self.file_finished_command_entry.get_text().strip(),
                 "afterfolder": self.folder_finished_command_entry.get_text().strip(),
-                "download_doubleclick": self.download_double_click_combobox.get_selected_pos()
+                "download_doubleclick": self.download_double_click_combobox.get_selected_id()
             }
         }
 
@@ -795,25 +804,31 @@ class UploadsPage:
 
         self.application = application
 
+        items = [
+            (_("Nothing"), 0)
+        ]
+        if not self.application.isolated_mode:
+            items += [
+                (_("Open File"), 1),
+                (_("Open in File Manager"), 2)
+            ]
+        items += [
+            (_("Search"), 3),
+            (_("Abort"), 4),
+            (_("Remove"), 5),
+            (_("Retry"), 6),
+            (_("Browse Folder"), 7)
+        ]
         self.upload_double_click_combobox = ComboBox(
             container=self.upload_double_click_label.get_parent(), label=self.upload_double_click_label,
-            items=(
-                (_("Nothing"), None),
-                (_("Open File"), None),
-                (_("Open in File Manager"), None),
-                (_("Search"), None),
-                (_("Abort"), None),
-                (_("Remove"), None),
-                (_("Retry"), None),
-                (_("Browse Folder"), None)
-            )
+            items=items
         )
 
         self.upload_queue_type_combobox = ComboBox(
             container=self.upload_queue_type_label.get_parent(), label=self.upload_queue_type_label,
             items=(
-                (_("Round Robin"), None),
-                (_("First In, First Out"), None)
+                (_("Round Robin"), 0),
+                (_("First In, First Out"), 1)
             )
         )
 
@@ -877,13 +892,13 @@ class UploadsPage:
                 "use_upload_speed_limit": use_speed_limit,
                 "uploadlimit": self.speed_spinner.get_value_as_int(),
                 "uploadlimitalt": self.alt_speed_spinner.get_value_as_int(),
-                "fifoqueue": bool(self.upload_queue_type_combobox.get_selected_pos()),
+                "fifoqueue": bool(self.upload_queue_type_combobox.get_selected_id()),
                 "limitby": self.limit_total_transfers_radio.get_active(),
                 "queuelimit": self.max_queued_size_spinner.get_value_as_int(),
                 "filelimit": self.max_queued_files_spinner.get_value_as_int(),
                 "friendsnolimits": self.no_buddy_limits_toggle.get_active(),
                 "preferfriends": self.prioritize_buddies_toggle.get_active(),
-                "upload_doubleclick": self.upload_double_click_combobox.get_selected_pos()
+                "upload_doubleclick": self.upload_double_click_combobox.get_selected_id()
             }
         }
 
@@ -904,7 +919,8 @@ class UserProfilePage:
         self.description_view = TextView(self.description_view_container, parse_urls=False)
         self.select_picture_button = FileChooserButton(
             self.select_picture_label.get_parent(), window=application.preferences, label=self.select_picture_label,
-            end_button=self.reset_picture_button, chooser_type="image", is_flat=True
+            end_button=self.reset_picture_button, chooser_type="image", is_flat=True,
+            show_open_external_button=not self.application.isolated_mode
         )
 
         self.options = {
@@ -1321,6 +1337,7 @@ class ChatsPage:
             self.timestamp_private_chat_entry,
             self.timestamp_room_entry,
             self.tts_command_label,
+            self.tts_container,
             self.tts_private_message_entry,
             self.tts_room_message_entry,
         ) = self.widgets = ui.load(scope=self, path="settings/chats.ui")
@@ -1430,6 +1447,8 @@ class ChatsPage:
 
         self.enable_spell_checker_toggle.get_parent().set_visible(SpellChecker.is_available())
         self.enable_ctcp_toggle.set_active(not config.sections["server"]["ctcpmsgs"])
+        self.format_codes_label.set_visible(not self.application.isolated_mode)
+        self.tts_container.set_margin_top(24 if self.application.isolated_mode else 0)
 
         self.censored_patterns = config.sections["words"]["censored"][:]
         self.replacements = config.sections["words"]["autoreplaced"].copy()
@@ -1723,9 +1742,9 @@ class UserInterfacePage:
         self.close_action_combobox = ComboBox(
             container=self.close_action_label.get_parent(), label=self.close_action_label,
             items=(
-                (_("Quit Nicotine+"), None),
-                (_("Show confirmation dialog"), None),
-                (_("Run in the background"), None)
+                (_("Quit Nicotine+"), 0),
+                (_("Show confirmation dialog"), 1),
+                (_("Run in the background"), 2)
             )
         )
 
@@ -1921,7 +1940,8 @@ class UserInterfacePage:
 
         self.icon_theme_button = FileChooserButton(
             self.icon_theme_label.get_parent(), window=application.preferences,
-            label=self.icon_theme_label, end_button=self.icon_theme_clear_button, chooser_type="folder"
+            label=self.icon_theme_label, end_button=self.icon_theme_clear_button, chooser_type="folder",
+            show_open_external_button=not self.application.isolated_mode
         )
 
         self.options = {
@@ -1991,6 +2011,7 @@ class UserInterfacePage:
 
         self.application.preferences.set_widgets_data(self.options)
 
+        self.close_action_label.get_parent().set_visible(not self.application.isolated_mode)
         self.tray_options_container.set_visible(self.application.tray_icon.available)
 
         for page_id, enabled in config.sections["ui"]["modes_visible"].items():
@@ -2019,7 +2040,7 @@ class UserInterfacePage:
             },
             "ui": {
                 "dark_mode": self.dark_mode_toggle.get_active(),
-                "exitdialog": self.close_action_combobox.get_selected_pos(),
+                "exitdialog": self.close_action_combobox.get_selected_id(),
                 "trayicon": self.tray_icon_toggle.get_active(),
                 "startup_hidden": self.minimize_tray_startup_toggle.get_active(),
                 "language": self.language_combobox.get_selected_id(),
@@ -2161,6 +2182,7 @@ class LoggingPage:
             self.container,
             self.debug_log_folder_default_button,
             self.debug_log_folder_label,
+            self.folder_locations_container,
             self.format_codes_label,
             self.log_chatroom_toggle,
             self.log_debug_toggle,
@@ -2185,22 +2207,22 @@ class LoggingPage:
         self.private_chat_log_folder_button = FileChooserButton(
             self.private_chat_log_folder_label.get_parent(), window=application.preferences,
             label=self.private_chat_log_folder_label, end_button=self.private_chat_log_folder_default_button,
-            chooser_type="folder"
+            chooser_type="folder", show_open_external_button=not self.application.isolated_mode
         )
         self.chatroom_log_folder_button = FileChooserButton(
             self.chatroom_log_folder_label.get_parent(), window=application.preferences,
             label=self.chatroom_log_folder_label, end_button=self.chatroom_log_folder_default_button,
-            chooser_type="folder"
+            chooser_type="folder", show_open_external_button=not self.application.isolated_mode
         )
         self.transfer_log_folder_button = FileChooserButton(
             self.transfer_log_folder_label.get_parent(), window=application.preferences,
             label=self.transfer_log_folder_label, end_button=self.transfer_log_folder_default_button,
-            chooser_type="folder"
+            chooser_type="folder", show_open_external_button=not self.application.isolated_mode
         )
         self.debug_log_folder_button = FileChooserButton(
             self.debug_log_folder_label.get_parent(), window=application.preferences,
             label=self.debug_log_folder_label, end_button=self.debug_log_folder_default_button,
-            chooser_type="folder"
+            chooser_type="folder", show_open_external_button=not self.application.isolated_mode
         )
 
         self.options = {
@@ -2227,7 +2249,11 @@ class LoggingPage:
         self.__dict__.clear()
 
     def set_settings(self):
+
         self.application.preferences.set_widgets_data(self.options)
+
+        self.format_codes_label.set_visible(not self.application.isolated_mode)
+        self.folder_locations_container.set_margin_top(24 if self.application.isolated_mode else 0)
 
     def get_settings(self):
 
@@ -2609,6 +2635,12 @@ class NowPlayingPage:
         ) = self.widgets = ui.load(scope=self, path="settings/nowplaying.ui")
 
         self.application = application
+        self.enable_mpris = (
+            not self.application.isolated_mode
+            and sys.platform not in {"win32", "darwin"}
+            and "SNAP_NAME" not in os.environ
+        )
+        self.enable_other = not self.application.isolated_mode
 
         self.format_message_combobox = ComboBox(
             container=self.format_message_label.get_parent(), label=self.format_message_label,
@@ -2646,8 +2678,8 @@ class NowPlayingPage:
             self.get_format                # Callback to retrieve format text
         )
 
-        self.mpris_radio.set_visible(
-            sys.platform not in {"win32", "darwin"} and "SNAP_NAME" not in os.environ)
+        self.mpris_radio.set_visible(self.enable_mpris)
+        self.other_radio.set_visible(self.enable_other)
 
     def destroy(self):
         self.format_message_combobox.destroy()
@@ -2679,20 +2711,16 @@ class NowPlayingPage:
 
     def get_player(self):
 
-        if self.lastfm_radio.get_active():
-            player = "lastfm"
+        player = "lastfm"
 
-        elif self.mpris_radio.get_active():
+        if self.enable_mpris and self.mpris_radio.get_active():
             player = "mpris"
+
+        elif self.enable_other and self.other_radio.get_active():
+            player = "other"
 
         elif self.listenbrainz_radio.get_active():
             player = "listenbrainz"
-
-        elif self.other_radio.get_active():
-            player = "other"
-
-        if player == "mpris" and (sys.platform in {"win32", "darwin"} or "SNAP_NAME" in os.environ):
-            player = "lastfm"
 
         return player
 
@@ -2704,20 +2732,17 @@ class NowPlayingPage:
 
     def set_player(self, player):
 
-        if player == "mpris" and (sys.platform in {"win32", "darwin"} or "SNAP_NAME" in os.environ):
-            player = "lastfm"
+        if player == "mpris" and self.enable_mpris:
+            self.mpris_radio.set_active(True)
 
-        if player == "lastfm":
-            self.lastfm_radio.set_active(True)
+        elif player == "other" and self.enable_other:
+            self.other_radio.set_active(True)
 
         elif player == "listenbrainz":
             self.listenbrainz_radio.set_active(True)
 
-        elif player == "other":
-            self.other_radio.set_active(True)
-
         else:
-            self.mpris_radio.set_active(True)
+            self.lastfm_radio.set_active(True)
 
     def update_now_playing_info(self, *_args):
 
@@ -2797,6 +2822,7 @@ class PluginsPage:
     def __init__(self, application):
 
         (
+            self.add_plugins_button,
             self.container,
             self.enable_plugins_toggle,
             self.plugin_authors_label,
@@ -2841,6 +2867,7 @@ class PluginsPage:
                 "plugin_id": {"data_type": GObject.TYPE_STRING, "iterator_key": True}
             }
         )
+        self.add_plugins_button.set_visible(not self.application.isolated_mode)
 
     def destroy(self):
 
@@ -2959,23 +2986,6 @@ class PluginsPage:
 
 class Preferences(Dialog):
 
-    PAGE_IDS = [
-        ("network", NetworkPage, _("Network"), "network-wireless-symbolic"),
-        ("user-interface", UserInterfacePage, _("User Interface"), "view-grid-symbolic"),
-        ("shares", SharesPage, _("Shares"), "folder-symbolic"),
-        ("downloads", DownloadsPage, _("Downloads"), "folder-download-symbolic"),
-        ("uploads", UploadsPage, _("Uploads"), "emblem-shared-symbolic"),
-        ("searches", SearchesPage, _("Searches"), "system-search-symbolic"),
-        ("user-profile", UserProfilePage, _("User Profile"), "avatar-default-symbolic"),
-        ("chats", ChatsPage, _("Chats"), "insert-text-symbolic"),
-        ("now-playing", NowPlayingPage, _("Now Playing"), "folder-music-symbolic"),
-        ("logging", LoggingPage, _("Logging"), "folder-documents-symbolic"),
-        ("banned-users", BannedUsersPage, _("Banned Users"), "action-unavailable-symbolic"),
-        ("ignored-users", IgnoredUsersPage, _("Ignored Users"), "microphone-sensitivity-muted-symbolic"),
-        ("url-handlers", UrlHandlersPage, _("URL Handlers"), "insert-link-symbolic"),
-        ("plugins", PluginsPage, _("Plugins"), "application-x-addon-symbolic")
-    ]
-
     def __init__(self, application):
 
         self.application = application
@@ -3012,8 +3022,30 @@ class Preferences(Dialog):
             self.viewport.set_focus_vadjustment(self.content.get_vadjustment())
 
         self.pages = {}
+        self.page_ids = [
+            ("network", NetworkPage, _("Network"), "network-wireless-symbolic"),
+            ("user-interface", UserInterfacePage, _("User Interface"), "view-grid-symbolic"),
+            ("shares", SharesPage, _("Shares"), "folder-symbolic"),
+            ("downloads", DownloadsPage, _("Downloads"), "folder-download-symbolic"),
+            ("uploads", UploadsPage, _("Uploads"), "emblem-shared-symbolic"),
+            ("searches", SearchesPage, _("Searches"), "system-search-symbolic"),
+            ("user-profile", UserProfilePage, _("User Profile"), "avatar-default-symbolic"),
+            ("chats", ChatsPage, _("Chats"), "insert-text-symbolic"),
+            ("now-playing", NowPlayingPage, _("Now Playing"), "folder-music-symbolic"),
+            ("logging", LoggingPage, _("Logging"), "folder-documents-symbolic"),
+            ("banned-users", BannedUsersPage, _("Banned Users"), "action-unavailable-symbolic"),
+            ("ignored-users", IgnoredUsersPage, _("Ignored Users"), "microphone-sensitivity-muted-symbolic"),
+            ("url-handlers", UrlHandlersPage, _("URL Handlers"), "insert-link-symbolic"),
+            ("plugins", PluginsPage, _("Plugins"), "application-x-addon-symbolic")
+        ]
 
-        for _page_id, _page_class, label, icon_name in self.PAGE_IDS:
+        for item in self.page_ids[:]:
+            page_id, _page_class, label, icon_name = item
+
+            if self.application.isolated_mode and page_id == "url-handlers":
+                self.page_ids.remove(item)
+                continue
+
             box = Gtk.Box(margin_top=8, margin_bottom=8, margin_start=12, margin_end=12, spacing=12, visible=True)
             icon = Gtk.Image(icon_name=icon_name, visible=True)
             label = Gtk.Label(label=label, xalign=0, visible=True)
@@ -3042,7 +3074,7 @@ class Preferences(Dialog):
         if page_id is None:
             return
 
-        for index, (n_page_id, _page_class, _label, _icon_name) in enumerate(self.PAGE_IDS):
+        for index, (n_page_id, _page_class, _label, _icon_name) in enumerate(self.page_ids):
             if n_page_id != page_id:
                 continue
 
@@ -3097,14 +3129,10 @@ class Preferences(Dialog):
                 widget.set_active(value)
 
         elif isinstance(widget, ComboBox):
-            if isinstance(value, str):
-                if widget.entry is not None:
-                    widget.set_text(value)
-                else:
-                    widget.set_selected_id(value)
-
-            elif isinstance(value, int):
-                widget.set_selected_pos(value)
+            if widget.entry is not None:
+                widget.set_text(value)
+            else:
+                widget.set_selected_id(value)
 
         elif isinstance(widget, Gtk.FontButton):
             widget.set_font(value)
@@ -3429,7 +3457,7 @@ class Preferences(Dialog):
         if row is None:
             return
 
-        page_id, page_class, _label, _icon_name = self.PAGE_IDS[row.get_index()]
+        page_id, page_class, _label, _icon_name = self.page_ids[row.get_index()]
         old_page = self.viewport.get_child()
 
         if old_page:

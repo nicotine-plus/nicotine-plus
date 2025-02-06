@@ -39,27 +39,41 @@ jobs:
     timeout-minutes: 15
     strategy:
       matrix:
-        arch: [x86_64]
+        include:
+          - arch: x86_64
+            platform: ubuntu-latest
     container:
-      image: bilelmoussaoui/flatpak-github-actions:gnome-47
+      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-47
       options: --privileged
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Build Flatpak package
-        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        uses: flathub-infra/flatpak-github-actions/flatpak-builder@master
         with:
-          bundle: flatpak-package.flatpak
+          bundle: org.nicotine_plus.Nicotine-${{ matrix.arch }}.flatpak
           manifest-path: build-aux/flatpak/org.nicotine_plus.Nicotine.json
           cache-key: flatpak-builder-${{ github.sha }}
+          arch: ${{ matrix.arch }}
+          upload-artifact: false
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: flatpak-${{ matrix.arch }}-package
+          path: org.nicotine_plus.Nicotine-${{ matrix.arch }}.flatpak
 
   snap:
-    runs-on: ubuntu-latest
     timeout-minutes: 15
     strategy:
       matrix:
-        arch: [x86_64]
+        include:
+          - arch: x86_64
+            platform: ubuntu-latest
+          - arch: arm64
+            platform: ubuntu-24.04-arm
+    runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -116,7 +130,14 @@ jobs:
         run: python3 packaging/windows/dependencies.py
 
       - name: Freeze application
-        run: python3 packaging/windows/setup.py bdist_msi
+        run: |
+          python3 packaging/windows/setup.py build_exe
+
+          # Workaround for https://github.com/nicotine-plus/nicotine-plus/issues/3183
+          cp packaging/windows/build/package/Nicotine+/lib/libgcc*.dll packaging/windows/build/package/Nicotine+/
+          cp packaging/windows/build/package/Nicotine+/lib/libwinpthread*.dll packaging/windows/build/package/Nicotine+/
+
+          python3 packaging/windows/setup.py bdist_msi --skip-build
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v4
@@ -135,7 +156,7 @@ jobs:
       matrix:
         include:
           - arch: x86_64
-            platform: macos-12
+            platform: macos-13
           - arch: arm64
             platform: macos-14
     runs-on: ${{ matrix.platform }}

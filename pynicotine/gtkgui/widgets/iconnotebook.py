@@ -339,7 +339,7 @@ class IconNotebook:
         self.popup_menu_pages = PopupMenu(self.window.application)
         self.update_pages_menu_button()
 
-        self.pages_button.set_menu_model(self.popup_menu_pages.model)
+        self.popup_menu_pages.set_menu_button(self.pages_button)
 
     def destroy(self):
 

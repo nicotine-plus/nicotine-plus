@@ -91,7 +91,7 @@
                             <property name="spacing">6</property>
                             <property name="visible">True</property>
                             <child>
-                              <object class="GtkButton" id="_add_plugins_button">
+                              <object class="GtkButton" id="add_plugins_button">
                                 <property name="tooltip-text" translatable="yes">Add Plugins</property>
                                 <property name="visible">True</property>
                                 <signal name="clicked" handler="on_add_plugins"/>
@@ -109,7 +109,7 @@
                                       <object class="GtkLabel">
                                         <property name="ellipsize">end</property>
                                         <property name="label" translatable="yes">_Add Plugins</property>
-                                        <property name="mnemonic-widget">_add_plugins_button</property>
+                                        <property name="mnemonic-widget">add_plugins_button</property>
                                         <property name="use-underline">True</property>
                                         <property name="visible">True</property>
                                       </object>

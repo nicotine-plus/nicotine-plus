@@ -215,13 +215,13 @@ class DownloadsTest(TestCase):
         destination_default = core.downloads.get_folder_destination(username, folder_path)
 
         core.downloads._requested_folders[username][folder_path] = RequestedFolder(
-            username=username, folder_path=folder_path, download_folder_path="test"
+            username=username, folder_path=folder_path, download_folder_path="Hello Test Path"
         )
         destination_custom = core.downloads.get_folder_destination(username, folder_path)
         core.downloads._requested_folders.clear()
 
         destination_custom_second = core.downloads.get_folder_destination(
-            username, folder_path, download_folder_path="test2")
+            username, folder_path, download_folder_path="Hello Test Path 2")
 
         config.sections["transfers"]["usernamesubfolders"] = True
         destination_user = core.downloads.get_folder_destination(username, folder_path)
@@ -229,15 +229,15 @@ class DownloadsTest(TestCase):
         folder_path = "Hello"
         destination_root = core.downloads.get_folder_destination(username, folder_path)
 
-        folder_path = "Hello\\Path\\Depth\\Test"
+        folder_path = "Hello\\Path\\Depth\\Hello Depth Test Path"
         destination_depth = core.downloads.get_folder_destination(username, folder_path)
 
         self.assertEqual(destination_default, os.path.join(config.data_folder_path, "Path"))
-        self.assertEqual(destination_custom, os.path.join("test", "Path"))
-        self.assertEqual(destination_custom_second, os.path.join("test2", "Path"))
+        self.assertEqual(destination_custom, os.path.join("Hello Test Path", "Path"))
+        self.assertEqual(destination_custom_second, os.path.join("Hello Test Path 2", "Path"))
         self.assertEqual(destination_user, os.path.join(config.data_folder_path, "newuser", "Path"))
         self.assertEqual(destination_root, os.path.join(config.data_folder_path, "newuser", "Hello"))
-        self.assertEqual(destination_depth, os.path.join(config.data_folder_path, "newuser", "Test"))
+        self.assertEqual(destination_depth, os.path.join(config.data_folder_path, "newuser", "Hello Depth Test Path"))
 
     def test_download_subfolders(self):
         """Verify that subfolders are downloaded to the correct location."""

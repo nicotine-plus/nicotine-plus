@@ -45,8 +45,16 @@ LIBADWAITA_API_VERSION = 0
 if GTK_API_VERSION >= 4:
     try:
         if "NICOTINE_LIBADWAITA" not in os.environ:
+            # Only attempt to use libadwaita in a standard GNOME session or Ubuntu's
+            # GNOME session (identified as 'GNOME' and 'ubuntu:GNOME'). Filter out
+            # other desktop environments that specify GNOME as a fallback, such as
+            # Budgie (identified as 'Budgie:GNOME').
+            current_desktop = os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
+
             os.environ["NICOTINE_LIBADWAITA"] = str(int(
-                sys.platform in {"win32", "darwin"} or "gnome" in os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
+                sys.platform in {"win32", "darwin"}
+                or current_desktop == "gnome"
+                or ("ubuntu" in current_desktop and "gnome" in current_desktop)
             ))
 
         if os.environ.get("NICOTINE_LIBADWAITA") == "1":
@@ -61,7 +69,7 @@ if GTK_API_VERSION >= 4:
 
 class Application:
 
-    def __init__(self, start_hidden, ci_mode, multi_instance):
+    def __init__(self, start_hidden, ci_mode, isolated_mode, multi_instance):
 
         self._instance = Gtk.Application(application_id=pynicotine.__application_id__)
         GLib.set_application_name(pynicotine.__application_name__)
@@ -72,6 +80,7 @@ class Application:
 
         self.start_hidden = start_hidden
         self.ci_mode = ci_mode
+        self.isolated_mode = isolated_mode
 
         self.window = None
         self.about = None
@@ -271,31 +280,6 @@ class Application:
         # Disable Alt+1-9 accelerators for numpad keys to avoid conflict with Alt codes
         self._set_accels_for_action("app.disabled", numpad_accels)
 
-        if GTK_API_VERSION == 3 or sys.platform != "darwin":
-            return
-
-        # Add some missing macOS shortcuts here until they are fixed upstream
-        for widget in (Gtk.Text, Gtk.TextView):
-            for accelerator, step, count, extend in (
-                ("<Meta>Left|<Meta>KP_Left", Gtk.MovementStep.DISPLAY_LINE_ENDS, -1, False),
-                ("<Shift><Meta>Left|<Shift><Meta>KP_Left", Gtk.MovementStep.DISPLAY_LINE_ENDS, -1, True),
-                ("<Meta>Right|<Meta>KP_Right", Gtk.MovementStep.DISPLAY_LINE_ENDS, 1, False),
-                ("<Shift><Meta>Right|<Shift><Meta>KP_Right", Gtk.MovementStep.DISPLAY_LINE_ENDS, 1, True),
-                ("<Alt>Left|<Alt>KP_Left", Gtk.MovementStep.WORDS, -1, False),
-                ("<Alt>Right|<Alt>KP_Right", Gtk.MovementStep.WORDS, 1, False)
-            ):
-                widget.add_shortcut(
-                    Gtk.Shortcut(
-                        trigger=Gtk.ShortcutTrigger.parse_string(accelerator),
-                        action=Gtk.SignalAction(signal_name="move-cursor"),
-                        arguments=GLib.Variant.new_tuple(
-                            GLib.Variant.new_int32(step),
-                            GLib.Variant.new_int32(count),
-                            GLib.Variant.new_boolean(extend)
-                        )
-                    )
-                )
-
     def _update_user_status(self, *_args):
 
         status = core.users.login_status
@@ -383,10 +367,15 @@ class Application:
             ("#" + _("_Keyboard Shortcuts"), "app.keyboard-shortcuts"),
             ("#" + _("_Setup Assistant"), "app.setup-assistant"),
             ("#" + _("_Transfer Statistics"), "app.transfer-statistics"),
-            ("", None),
-            ("#" + _("Report a _Bug"), "app.report-bug"),
-            ("#" + _("Improve T_ranslations"), "app.improve-translations"),
-            ("", None),
+            ("", None)
+        )
+        if not self.isolated_mode:
+            menu.add_items(
+                ("#" + _("Report a _Bug"), "app.report-bug"),
+                ("#" + _("Improve T_ranslations"), "app.improve-translations"),
+                ("", None)
+            )
+        menu.add_items(
             ("^" + _("_About Nicotine+"), "app.about")
         )
 
@@ -831,6 +820,11 @@ class Application:
 
         self.window.present()
 
+        # Workaround for broken window size when restoring maximized window from tray icon
+        if sys.platform == "win32" and self.window.is_maximized():
+            self.window.unmaximize()
+            self.window.maximize()
+
     def on_away_accelerator(self, action, *_args):
         """Ctrl+H: Away/Online toggle."""
 
@@ -898,7 +892,7 @@ class Application:
         from traceback import format_tb
 
         # Check if exception occurred in a plugin
-        if core.pluginhandler is not None:
+        if exc_traceback is not None and core.pluginhandler is not None:
             traceback = exc_traceback
 
             while traceback.tb_next:
@@ -930,7 +924,7 @@ class Application:
         core.quit()
 
         # Process 'quit' event after slight delay in case thread event loop is stuck
-        GLib.idle_add(lambda: events.process_thread_events() == -1)
+        GLib.idle_add(lambda: events.process_thread_events() == -1, priority=GLib.PRIORITY_HIGH_IDLE)
 
         # Log exception in terminal
         self._raise_exception(exc_value)
@@ -942,7 +936,7 @@ class Application:
             return
 
         # Raise exception in the main thread
-        GLib.idle_add(self._raise_exception, exc_value)
+        GLib.idle_add(self._raise_exception, exc_value, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def on_process_thread_events(self):
         return events.process_thread_events()

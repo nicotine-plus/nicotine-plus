@@ -138,13 +138,29 @@ def add_pixbuf_loaders():
 
 def _add_typelibs_callback(full_path, short_path, _callback_data=None):
 
+    from xml.etree import ElementTree
+
+    ElementTree.register_namespace("", "http://www.gtk.org/introspection/core/1.0")
+    ElementTree.register_namespace("c", "http://www.gtk.org/introspection/c/1.0")
+    ElementTree.register_namespace("glib", "http://www.gtk.org/introspection/glib/1.0")
+
     temp_file_gir = os.path.join(TEMP_PATH, short_path)
     temp_file_typelib = os.path.join(TEMP_PATH, short_path.replace(".gir", ".typelib"))
 
     with open(temp_file_gir, "w", encoding="utf-8") as temp_file_handle, \
          open(full_path, "r", encoding="utf-8") as real_file_handle:
-        data = real_file_handle.read()
-        data = data.replace('shared-library="lib', 'shared-library="@loader_path/lib')
+        xml = ElementTree.fromstring(real_file_handle.read())
+
+        for namespace in xml.findall(".//{*}namespace[@shared-library]"):
+            paths = []
+
+            for path in namespace.attrib["shared-library"].split(","):
+                updated_path = os.path.join("@loader_path", os.path.basename(path))
+                paths.append(updated_path)
+
+            namespace.attrib["shared-library"] = ",".join(paths)
+
+        data = ElementTree.tostring(xml, encoding="unicode")
         temp_file_handle.write(data)
 
     subprocess.check_call(["g-ir-compiler", f"--output={temp_file_typelib}", temp_file_gir])
@@ -195,7 +211,7 @@ def add_gtk():
 
     if sys.platform == "win32":
         # gdbus required for single-instance application (Windows)
-        add_file(file_path=os.path.join(LIB_PATH, "gdbus.exe"), output_path="gdbus.exe")
+        add_file(file_path=os.path.join(LIB_PATH, "gdbus.exe"), output_path="lib/gdbus.exe")
 
     # This also includes all dlls required by GTK
     add_files(

@@ -3005,9 +3005,7 @@ class PierceFireWall(PeerInitMessage):
         return self.pack_uint32(self.token)
 
     def parse_network_message(self, message):
-        if message:
-            # A token is not guaranteed to be sent (buggy client?)
-            _pos, self.token = self.unpack_uint32(message)
+        _pos, self.token = self.unpack_uint32(message)
 
 
 class PeerInit(PeerInitMessage):

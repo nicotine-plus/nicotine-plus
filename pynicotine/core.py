@@ -64,7 +64,7 @@ class Core:
 
         self.enabled_components = set()
 
-    def init_components(self, enabled_components=None):
+    def init_components(self, enabled_components=None, isolated_mode=False):
 
         # Enable all components by default
         if enabled_components is None:
@@ -87,7 +87,7 @@ class Core:
             from pynicotine.cli import cli
             cli.enable_logging()
 
-        config.load_config()
+        config.load_config(isolated_mode)
         events.enable()
 
         for event_name, callback in (
@@ -186,7 +186,7 @@ class Core:
 
         if "pluginhandler" in enabled_components:
             from pynicotine.pluginsystem import PluginHandler
-            self.pluginhandler = PluginHandler()
+            self.pluginhandler = PluginHandler(isolated_mode)
 
     def _init_signal_handler(self):
         """Handle Ctrl+C and "kill" exit gracefully."""

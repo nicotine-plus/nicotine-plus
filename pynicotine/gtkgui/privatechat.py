@@ -26,6 +26,7 @@ from gi.repository import GLib
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.chatcommandhelp import ChatCommandHelp
 from pynicotine.gtkgui.popovers.chathistory import ChatHistory
 from pynicotine.gtkgui.widgets import ui
@@ -36,6 +37,7 @@ from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import ChatView
+from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 
@@ -343,6 +345,10 @@ class PrivateChat:
         self.log_toggle.set_active(user in config.sections["logging"]["private_chats"])
         self.toggle_chat_buttons()
 
+        if GTK_API_VERSION >= 4:
+            inner_button = next(iter(self.help_button))
+            add_css_class(widget=inner_button, css_class="image-button")
+
         self.popup_menu_user_chat = UserPopupMenu(
             self.window.application, parent=self.chat_view.widget, connect_events=False,
             username=user, tab_name="privatechat"
@@ -366,8 +372,13 @@ class PrivateChat:
             ("#" + _("Copy"), self.chat_view.on_copy_text),
             ("#" + _("Copy Link"), self.chat_view.on_copy_link),
             ("#" + _("Copy All"), self.chat_view.on_copy_all_text),
-            ("", None),
-            ("#" + _("View Chat Log"), self.on_view_chat_log),
+            ("", None)
+        )
+        if not self.window.application.isolated_mode:
+            self.popup_menu.add_items(
+                ("#" + _("View Chat Log"), self.on_view_chat_log)
+            )
+        self.popup_menu.add_items(
             ("#" + _("Delete Chat Log…"), self.on_delete_chat_log),
             ("", None),
             ("#" + _("Clear Message View"), self.on_clear_messages),

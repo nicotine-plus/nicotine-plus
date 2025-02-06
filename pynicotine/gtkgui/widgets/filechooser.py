@@ -262,11 +262,12 @@ class FileChooserSave(FileChooser):
 class FileChooserButton:
 
     def __init__(self, container, window, label=None, end_button=None, chooser_type="file",
-                 is_flat=False, selected_function=None):
+                 is_flat=False, show_open_external_button=True, selected_function=None):
 
         self.window = window
         self.chooser_type = chooser_type
         self.selected_function = selected_function
+        self.show_open_external_button = show_open_external_button
         self.path = ""
 
         widget = Gtk.Box(visible=True)
@@ -396,7 +397,7 @@ class FileChooserButton:
 
         self.chooser_button.set_tooltip_text(os.path.expandvars(path))  # Show path without env variables
         self.label.set_label(os.path.basename(path))
-        self.open_folder_button.set_visible(True)
+        self.open_folder_button.set_visible(self.show_open_external_button)
 
     def clear(self):
 

@@ -86,8 +86,8 @@ class BaseImplementation:
 
         self._create_item()
 
-        self.downloads_item = self._create_item("placeholder", self.application.on_downloads)
-        self.uploads_item = self._create_item("placeholder", self.application.on_uploads)
+        self.downloads_item = self._create_item(_("Downloads"), self.application.on_downloads)
+        self.uploads_item = self._create_item(_("Uploads"), self.application.on_uploads)
 
         self._create_item()
 
@@ -540,10 +540,15 @@ class StatusNotifierImplementation(BaseImplementation):
         if not icon_path:
             return False
 
+        icon_path_encoded = encode_path(icon_path)
+
+        if not os.path.isdir(icon_path_encoded):
+            return False
+
         icon_scheme = f"{pynicotine.__application_id__}-{icon_name}.".encode()
 
         try:
-            with os.scandir(encode_path(icon_path)) as entries:
+            with os.scandir(icon_path_encoded) as entries:
                 for entry in entries:
                     if entry.is_file() and entry.name.startswith(icon_scheme):
                         return True
@@ -1117,7 +1122,7 @@ class StatusIconImplementation(BaseImplementation):
         self.tray_icon.connect("popup-menu", self.on_status_icon_popup)
 
         self.gtk_menu = self._build_gtk_menu()
-        GLib.idle_add(self._update_icon)
+        GLib.idle_add(self._update_icon, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def on_status_icon_popup(self, _status_icon, button, _activate_time):
 

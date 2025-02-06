@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -201,6 +201,7 @@ class About(Dialog):
          "\n •  ButterflyOfFire (2024)"),
 
         ("<b>Catalan</b>"
+         "\n •  Aniol (2024–2025)"
          "\n •  Maite Guix (2022)"),
 
         ("<b>Chinese (Simplified)</b>"
@@ -210,7 +211,7 @@ class About(Dialog):
          "\n •  hadwin (2022)"),
 
         ("<b>Czech</b>"
-         "\n •  slrslr (2024)"
+         "\n •  slrslr (2024–2025)"
          "\n •  burnmail123 (2021–2023)"),
 
         ("<b>Danish</b>"
@@ -278,7 +279,7 @@ class About(Dialog):
          "\n •  dbazza (2003–2004)"),
 
         ("<b>Latvian</b>"
-         "\n •  Pagal3 (2022–2024)"),
+         "\n •  Pagal3 (2022–2025)"),
 
         ("<b>Lithuanian</b>"
          "\n •  mantas (2020)"
@@ -335,11 +336,14 @@ class About(Dialog):
          "\n •  mitramai (2021)"
          "\n •  Markus Magnuson (alimony) (2003–2004)"),
 
+        ("<b>Tamil</b>"
+         "\n •  தமிழ்நேரம் (2025)"),
+
         ("<b>Turkish</b>"
          "\n •  Oğuz Ersen (2021–2024)"),
 
         ("<b>Ukrainian</b>"
-         "\n •  Oleg Gritsun (2024)"
+         "\n •  Oleg Gritsun (2024–2025)"
          "\n •  uniss2209 (2022)")]
 
     LICENSE = [

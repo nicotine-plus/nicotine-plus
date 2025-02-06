@@ -6,6 +6,6 @@ Depends: @
 Restrictions: isolation-container
 
 # Perform integration and unit tests...
-Test-Command: pytest-3 -k "not test_update_check"
+Test-Command: pytest-3
 Depends: @
 Restrictions: isolation-container

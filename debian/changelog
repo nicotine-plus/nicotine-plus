@@ -1,8 +1,14 @@
-nicotine (3.3.7-rc1) oracular; urgency=medium
+nicotine (3.3.8-rc1) oracular; urgency=medium
 
   * Release candidate 1.
 
- -- Mat <mail@mathias.is>  Sun, 17 Nov 2024 15:45:34 +0200
+ -- Mat <mail@mathias.is>  Sun, 12 Jan 2024 15:00:07 +0200
+
+nicotine (3.3.7-1) oracular; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Sun, 15 Dec 2024 15:30:45 +0200
 
 nicotine (3.3.6-1) noble; urgency=medium
 

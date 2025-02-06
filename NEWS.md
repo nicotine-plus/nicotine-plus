@@ -5,7 +5,39 @@ The current stable version of Nicotine+ is available at [DOWNLOADS.md](doc/DOWNL
 You can run the latest unstable build of Nicotine+ to test recent changes and bug fixes, see [TESTING.md](doc/TESTING.md).
 
 
-## Version 3.3.7 (Release Candidate 1)
+## Version 3.3.8 (Release Candidate 1)
+
+### Changes
+
+ * Added isolated mode (`nicotine --isolated`) for standalone environments (e.g. Docker containers)
+ * Added Czech translation (thank you @slrslr)
+ * Added Tamil translation (thank you @TamilNeram)
+ * Optimized reading of large chat logs
+ * Show number of scanned folders while rescanning shares
+ * Skip unit tests requiring network connection by default
+
+### Corrections
+
+ * Fixed a crash when closing font chooser dialogs in older GTK 4 versions
+ * Fixed broken tray icons in the Flatpak package
+ * Fixed incorrect download folder names in rare cases
+ * Fixed libadwaita being enabled by accident in Budgie desktop environment
+ * Windows: Fixed a crash on systems with outdated Vulkan drivers
+ * Windows: Fixed a crash when Proxifier is enabled
+ * Windows: Fixed broken window size when restoring from tray
+ * macOS: Fixed a crash on startup with Apple Silicon build
+
+### Issues closed on GitHub
+
+ * App told me to report this. ([#3218](https://github.com/nicotine-plus/nicotine-plus/issues/3218))
+ * Nicotine 3.3.7 issue with Sonoma 14.7.2 : impossible to start app ! ([#3227](https://github.com/nicotine-plus/nicotine-plus/issues/3227))
+ * Remember and restore window size and position when opening an application from the tray ([#3236](https://github.com/nicotine-plus/nicotine-plus/issues/3236))
+ * Progress indication when (re-)scanning shares ([#3246](https://github.com/nicotine-plus/nicotine-plus/issues/3246))
+ * Czech language translation status ([#3248](https://github.com/nicotine-plus/nicotine-plus/issues/3248))
+ * removed_parent_folders should only remove first occurence ([#3255](https://github.com/nicotine-plus/nicotine-plus/issues/3255))
+
+
+## Version 3.3.7 (December 15, 2024)
 
 ### Changes
 
@@ -13,6 +45,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Automatically reconnect to the server when changing listening port
  * Always show number of upload slots on user profiles
  * Windows: Update Python from 3.11 to 3.12
+ * macOS: Drop support for macOS Monterey due to reaching EOL
 
 ### Corrections
 
@@ -20,6 +53,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Fixed a crash when upgrading from Nicotine+ 1.4.1 and earlier
  * Fixed broken upload stats caused by Soulseek NS clients resuming >2 GB downloads
  * Fixed an issue where picking an emoji would clear existing text
+ * Improved file transfer speeds in some cases
  * Windows: Reverted switch to Clang environment due to rare crashes
 
 ### Issues closed on GitHub
@@ -37,6 +71,8 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * \[3.3.7.dev1\] Windows Nightly builds libgcc_s_seh-1.dll is missing ([#3183](https://github.com/nicotine-plus/nicotine-plus/issues/3183))
  * \[Bug\]: Transfer Statistics Total Uploaded Size jumps to 32 EiB ([#3185](https://github.com/nicotine-plus/nicotine-plus/issues/3185))
  * Picking an emoji clears text in chat entry, rather than being appended to it ([#3197](https://github.com/nicotine-plus/nicotine-plus/issues/3197))
+ * User logs off but items in queue slowly tick away from saying queued to logged off ([#3209](https://github.com/nicotine-plus/nicotine-plus/issues/3209))
+ * Nicotine+ not working on Windows 10 since v3.3.6 ([#3210](https://github.com/nicotine-plus/nicotine-plus/issues/3210))
 
 
 ## Version 3.3.6 (October 15, 2024)

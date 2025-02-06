@@ -26,19 +26,30 @@ def install_brew():
 
     packages = ["gettext",
                 "gobject-introspection",
-                "glib",
                 "gtk4",
                 "libadwaita",
                 "librsvg"]
 
-    subprocess.check_call(["brew", "install"] + packages)
+    subprocess.check_call(["brew", "install", "--quiet"] + packages)
 
 
 def install_pypi():
     """Install dependencies from PyPi."""
 
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "--no-binary", ":all:",
-                           "-e", ".[packaging,tests]", "build", "setuptools", "wheel"])
+    subprocess.check_call([
+        sys.executable, "-m", "pip", "install",
+
+        # For consistency, avoid including pre-built binaries from PyPI
+        # in the application.
+        "--no-binary", "cx_Freeze",
+        "--no-binary", "PyGObject",
+        "--no-binary", "pycairo",
+
+        "-e", ".[packaging,tests]",
+        "build",
+        "setuptools",
+        "wheel"
+    ])
 
 
 if __name__ == "__main__":

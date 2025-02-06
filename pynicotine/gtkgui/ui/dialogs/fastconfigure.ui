@@ -563,7 +563,7 @@
         <child>
           <object class="GtkImage">
             <property name="halign">center</property>
-            <property name="icon-name">object-select-symbolic</property>
+            <property name="icon-name">emblem-default-symbolic</property>
             <property name="pixel-size">64</property>
             <property name="visible">True</property>
           </object>

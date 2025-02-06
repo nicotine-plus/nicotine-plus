@@ -325,6 +325,8 @@ should do when releasing a new version of Nicotine+.
     python3 packaging/release/generate_sha256_checksums.py
     ```
     - Attach the resulting files to the new release.
+    - Once the release is published, verify that GitHub Actions successfully
+      uploads it to [PyPI](https://pypi.org/project/nicotine-plus/).
 
  8. Generate a stable PPA release for Ubuntu / Debian. First, ensure that the
     [repository mirror](https://code.launchpad.net/~nicotine-team/nicotine+/+git/nicotine+)
@@ -334,13 +336,6 @@ should do when releasing a new version of Nicotine+.
     tagged on GitHub. Then, generate stable builds by pressing
     *Request build(s)*.
 
- 9. Create a new release on [PyPI](https://pypi.org/project/nicotine-plus/)
-    by running
+ 9. Create a new release on [Flathub](https://github.com/flathub/org.nicotine_plus.Nicotine).
 
-    ```sh
-    python3 packaging/pypi/upload_pypi_release.py
-    ```
-
- 10. Create a new release on [Flathub](https://github.com/flathub/org.nicotine_plus.Nicotine).
-
- 11. Create a new release on the [Snap Store](https://snapcraft.io/nicotine-plus).
+ 10. Create a new release on the [Snap Store](https://snapcraft.io/nicotine-plus).

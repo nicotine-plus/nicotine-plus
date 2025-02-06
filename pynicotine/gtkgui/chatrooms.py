@@ -44,6 +44,7 @@ from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import ChatView
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
+from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.logfacility import log
@@ -526,6 +527,10 @@ class ChatRoom:
         self.log_toggle.set_active(room in config.sections["logging"]["rooms"])
         self.toggle_chat_buttons()
 
+        if GTK_API_VERSION >= 4:
+            inner_button = next(iter(self.help_button))
+            add_css_class(widget=inner_button, css_class="image-button")
+
         self.users_list_view = TreeView(
             self.window, parent=self.users_list_container, name="chat_room", secondary_name=room,
             persistent_sort=True, activate_row_callback=self.on_row_activated,
@@ -614,8 +619,13 @@ class ChatRoom:
             ("#" + _("Copy"), self.chat_view.on_copy_text),
             ("#" + _("Copy Link"), self.chat_view.on_copy_link),
             ("#" + _("Copy All"), self.chat_view.on_copy_all_text),
-            ("", None),
-            ("#" + _("View Room Log"), self.on_view_room_log),
+            ("", None)
+        )
+        if not self.window.application.isolated_mode:
+            self.popup_menu_chat_view.add_items(
+                ("#" + _("View Room Log"), self.on_view_room_log)
+            )
+        self.popup_menu_chat_view.add_items(
             ("#" + _("Delete Room Log…"), self.on_delete_room_log),
             ("", None),
             ("#" + _("Clear Message View"), self.on_clear_messages),

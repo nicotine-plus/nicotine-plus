@@ -169,6 +169,7 @@
  - ButterflyOfFire (2024)
 
 ### Catalan
+ - Aniol (2024–2025)
  - Maite Guix (2022)
 
 ### Chinese (Simplified)
@@ -178,7 +179,7 @@
  - hadwin (2022)
 
 ### Czech
- - slrslr (2024)
+ - slrslr (2024–2025)
  - burnmail123 (2021–2023)
 
 ### Danish
@@ -246,7 +247,7 @@
  - dbazza (2003–2004)
 
 ### Latvian
- - Pagal3 (2022–2024)
+ - Pagal3 (2022–2025)
 
 ### Lithuanian
  - mantas (2020)
@@ -303,11 +304,14 @@
  - mitramai (2021)
  - Markus Magnuson (alimony) (2003–2004)
 
+### Tamil
+ - தமிழ்நேரம் (2025)
+
 ### Turkish
  - Oğuz Ersen (2021–2024)
 
 ### Ukrainian
- - Oleg Gritsun (2024)
+ - Oleg Gritsun (2024–2025)
  - uniss2209 (2022)
 
 
@@ -321,6 +325,7 @@
  - Alexey Vyskubov
  - Allan Nordhøy
  - Amun-Ra
+ - Aniol
  - Artem
  - AtticFinder65536
  - Attila Fidan
@@ -351,6 +356,7 @@
  - Eryk Michalak
  - Everly
  - Felipe Nogaroto Gonzalez
+ - fkobi
  - Gabriele
  - gahag
  - gallegonovato
@@ -410,6 +416,7 @@
  - Markus Magnuson
  - Mat
  - mathsped
+ - Matthaiks
  - Maxime Leroy
  - Mehavoid
  - MELERIX
@@ -485,6 +492,7 @@
  - zniavre
  - ZTetriminos
  - Žygimantas Beručka
+ - தமிழ்நேரம்
 
 
 ## License
