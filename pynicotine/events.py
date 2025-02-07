@@ -276,7 +276,19 @@ class Events:
             callbacks.reverse()
 
         for function in callbacks:
-            function(*args, **kwargs)
+            try:
+                function(*args, **kwargs)
+
+            except Exception as error:
+                from pynicotine import core
+                module_name = function.__module__.split(".", 1)[0]
+
+                if module_name not in core.pluginhandler.enabled_plugins:
+                    core.quit()
+                    raise error
+
+                # Exception occurred in a plugin, log a message and continue
+                core.pluginhandler.show_plugin_error(module_name, error)
 
     def emit_main_thread(self, event_name, *args, **kwargs):
         self._thread_events.append(ThreadEvent(event_name, args, kwargs))

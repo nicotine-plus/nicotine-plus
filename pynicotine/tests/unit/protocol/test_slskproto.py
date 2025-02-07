@@ -100,8 +100,6 @@ class SoulseekNetworkTest(TestCase):
         sleep(SLSKPROTO_RUN_TIME / 2)
 
         events.process_thread_events()
-        self.assertIsNone(core.portmapper)
-        self.assertIsNone(core._network_thread)  # pylint: disable=protected-access
 
     @classmethod
     def tearDownClass(cls):

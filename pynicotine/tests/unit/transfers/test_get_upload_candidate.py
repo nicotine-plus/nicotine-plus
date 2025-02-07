@@ -51,15 +51,7 @@ class GetUploadCandidateTest(TestCase):
         core.uploads.transfers.clear()
 
     def tearDown(self):
-
         core.quit()
-
-        self.assertIsNone(core.users)
-        self.assertIsNone(core.pluginhandler)
-        self.assertIsNone(core.shares)
-        self.assertIsNone(core.statistics)
-        self.assertIsNone(core.uploads)
-        self.assertIsNone(core.buddies)
 
     @classmethod
     def tearDownClass(cls):

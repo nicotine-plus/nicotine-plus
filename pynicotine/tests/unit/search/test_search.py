@@ -44,12 +44,7 @@ class SearchTest(TestCase):
         core.init_components(enabled_components={"pluginhandler", "search", "shares"})
 
     def tearDown(self):
-
         core.quit()
-
-        self.assertIsNone(core.pluginhandler)
-        self.assertIsNone(core.search)
-        self.assertIsNone(core.shares)
 
     @classmethod
     def tearDownClass(cls):

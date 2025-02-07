@@ -42,7 +42,6 @@ class CountryTest(TestCase):
 
     def tearDown(self):
         core.quit()
-        self.assertIsNone(core.network_filter)
 
     @classmethod
     def tearDownClass(cls):

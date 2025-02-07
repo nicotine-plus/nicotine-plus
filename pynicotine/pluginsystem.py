@@ -667,6 +667,22 @@ class PluginHandler:
                     # Builtin module
                     continue
 
+            # Remove any event callbacks registered by the plugin
+            for callbacks in events._callbacks.values():  # pylint: disable=protected-access
+                for function in callbacks[:]:
+                    if function.__module__ is not None and function.__module__.split(".", 1)[0] == plugin_name:
+                        callbacks.remove(function)
+
+            # Remove any event callbacks scheduled by the plugin
+            for event_id, event in events._scheduler_events.copy().items():  # pylint: disable=protected-access
+                function = event.callback
+
+                if function is None:
+                    continue
+
+                if function.__module__ is not None and function.__module__.split(".", 1)[0] == plugin_name:
+                    events.cancel_scheduled(event_id)
+
             if is_permanent and plugin_name in config.sections["plugins"]["enabled"]:
                 config.sections["plugins"]["enabled"].remove(plugin_name)
 
@@ -729,16 +745,16 @@ class PluginHandler:
         return plugin_info
 
     @staticmethod
-    def show_plugin_error(plugin_name, exc_type, exc_value, exc_traceback):
+    def show_plugin_error(plugin_name, error):
 
         from traceback import format_tb
 
         log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
                   "Trace: %(trace)s"), {
             "module": plugin_name,
-            "errortype": exc_type,
-            "error": exc_value,
-            "trace": "".join(format_tb(exc_traceback))
+            "errortype": type(error),
+            "error": error,
+            "trace": "".join(format_tb(error.__traceback__))
         })
 
     def plugin_settings(self, plugin_name, plugin):
@@ -911,8 +927,8 @@ class PluginHandler:
                             command_found = True
                             break
 
-            except Exception:
-                self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
+            except Exception as error:
+                self.show_plugin_error(module, error)
                 plugin = None
                 break
 
@@ -940,8 +956,8 @@ class PluginHandler:
             try:
                 return_value = getattr(plugin, function_name)(*args)
 
-            except Exception:
-                self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
+            except Exception as error:
+                self.show_plugin_error(module, error)
                 continue
 
             if return_value is None:

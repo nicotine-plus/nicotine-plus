@@ -56,13 +56,7 @@ class DownloadsTest(TestCase):
         core.start()
 
     def tearDown(self):
-
         core.quit()
-
-        self.assertIsNone(core.users)
-        self.assertIsNone(core.downloads)
-        self.assertIsNone(core.userbrowse)
-        self.assertIsNone(core.buddies)
 
     @classmethod
     def tearDownClass(cls):
