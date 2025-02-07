@@ -892,7 +892,7 @@ class Application:
         from traceback import format_tb
 
         # Check if exception occurred in a plugin
-        if exc_traceback is not None and core.pluginhandler is not None:
+        if exc_traceback is not None:
             traceback = exc_traceback
 
             while traceback.tb_next:
@@ -928,10 +928,10 @@ class Application:
         # Log exception in terminal
         self._raise_exception(exc_value)
 
-    def on_critical_error(self, _exc_type, exc_value, _exc_traceback):
+    def on_critical_error(self, exc_type, exc_value, exc_traceback):
 
         if threading.current_thread() is threading.main_thread():
-            self._on_critical_error(_exc_type, exc_value, _exc_traceback)
+            self._on_critical_error(exc_type, exc_value, exc_traceback)
             return
 
         # Raise exception in the main thread
