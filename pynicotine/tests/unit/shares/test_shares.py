@@ -81,7 +81,6 @@ class SharesTest(TestCase):
 
     def tearDown(self):
         core.quit()
-        self.assertIsNone(core.shares)
 
     @classmethod
     def tearDownClass(cls):

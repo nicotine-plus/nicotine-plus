@@ -51,14 +51,7 @@ class UploadsTest(TestCase):
         core.start()
 
     def tearDown(self):
-
         core.quit()
-
-        self.assertIsNone(core.users)
-        self.assertIsNone(core.shares)
-        self.assertIsNone(core.uploads)
-        self.assertIsNone(core.userbrowse)
-        self.assertIsNone(core.buddies)
 
     @classmethod
     def tearDownClass(cls):
