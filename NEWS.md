@@ -35,6 +35,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Progress indication when (re-)scanning shares ([#3246](https://github.com/nicotine-plus/nicotine-plus/issues/3246))
  * Czech language translation status ([#3248](https://github.com/nicotine-plus/nicotine-plus/issues/3248))
  * removed_parent_folders should only remove first occurence ([#3255](https://github.com/nicotine-plus/nicotine-plus/issues/3255))
+ * Crash after update to newer version and found that older versions also crash now ([#3265](https://github.com/nicotine-plus/nicotine-plus/issues/3265))
 
 
 ## Version 3.3.7 (December 15, 2024)
