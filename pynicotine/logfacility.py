@@ -254,9 +254,10 @@ class Logger:
         block = log_file.handle.read(read_size)
         lines = deque(block.splitlines())
 
-        if lines and log_file.read_offset > 0:
-            # Discard partial fragment
-            log_file.read_offset += len(lines.popleft()) + len(b'\n')
+        if log_file.read_offset > 0:
+            # Discard partial fragment of last read line - FIXME
+            log_file.read_offset += (len(lines.pop()) + len(b'\n'))
+            lines.append(b'|--- DEBUG !!! block join !!! FIXME ---|')
 
         return lines
 
