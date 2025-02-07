@@ -902,8 +902,7 @@ class Application:
                     plugin_path = core.pluginhandler.get_plugin_path(plugin_name)
 
                     if file_path.startswith(plugin_path):
-                        core.pluginhandler.show_plugin_error(
-                            plugin_name, exc_type, exc_value, exc_traceback)
+                        core.pluginhandler.show_plugin_error(plugin_name, exc_value)
                         return
 
                 traceback = traceback.tb_next
