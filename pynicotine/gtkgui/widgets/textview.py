@@ -407,7 +407,7 @@ class ChatView(TextView):
         Accelerator("Down", self.widget, self.on_page_down_accelerator)
         Accelerator("Page_Down", self.widget, self.on_page_down_accelerator)
         Accelerator("Page_Up", self.widget, self.on_page_up_accelerator)
-        self.scrollable.connect("edge-overshot", self.on_edge_overshot)  # or "edge-reached"
+        self.scrollable.connect("edge-reached", self.on_edge_overshot)  # or "edge-overshot"
 
     def add_line(self, message, prepend=False, timestamp_format=None, message_type=None,
                  timestamp=None, timestamp_string=None, roomname=None, username=None):
@@ -476,8 +476,8 @@ class ChatView(TextView):
 
     @staticmethod
     def decode_log_lines(log_lines, login_username=None):
-        """Split encoded text strings into individual elements as
-        required when reading raw chat log lines from disk."""
+        """Split encoded text bytestream into individual elements
+        as required when reading raw chat log lines from disk."""
 
         login_username_lower = login_username.lower() if login_username else None
 
@@ -497,7 +497,7 @@ class ChatView(TextView):
                 if end > start:
                     timestamp_string = line[:start - 2]
                     username = line[start:end]
-                    message = line[end + 2:]  # :-1 if endswith \n
+                    message = line[end + 2:-1]
 
                     if username == login_username:
                         message_type = "local"
@@ -512,13 +512,11 @@ class ChatView(TextView):
                 start = line.find(" * ")
 
                 timestamp_string = line[:start]
+                username = None  # indeterminate
                 message = line[start + 1:-1]
                 message_type = "action"
 
-            if message is None:
-                message = line[:-1]
-
-            yield timestamp_string, username, message, message_type
+            yield timestamp_string, username, message or line[:-1], message_type
 
     def clear(self):
 

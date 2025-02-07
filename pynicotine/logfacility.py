@@ -41,7 +41,7 @@ class LogFile:
         self.path = path
         self.handle = None
         self.last_active = 0.0
-        self.read_buffer = deque()
+        self.read_buffer = deque([b''])
         self.read_offset = None
 
 
@@ -251,12 +251,13 @@ class Logger:
             log_file.read_offset = 0
 
         log_file.handle.seek(log_file.read_offset)
-        block = log_file.handle.read(read_size)
-        lines = deque(block.splitlines())
+        lines = deque(log_file.handle.read(read_size).splitlines(keepends=True))
 
-        if lines and log_file.read_offset > 0:
-            # Discard partial fragment
-            log_file.read_offset += len(lines.popleft()) + len(b'\n')
+        # FIXME: Align line breaks
+        if lines[-1].endswith(b'\n'):
+            lines.append(log_file.read_buffer.pop())
+        else:
+            lines[-1] += log_file.read_buffer.pop()
 
         return lines
 
