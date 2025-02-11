@@ -354,7 +354,7 @@ class Uploads(Transfers):
         if not already_exists:
             core.statistics.append_stat_value("completed_uploads", 1)
 
-            real_path = core.shares.virtual2real(virtual_path)
+            real_path = core.shares.virtual2real(virtual_path, check_lowercase=transfer.is_path_mismatched)
             core.pluginhandler.upload_finished_notification(username, virtual_path, real_path)
 
             log.add_upload(
@@ -550,7 +550,7 @@ class Uploads(Transfers):
                 continue
 
             virtual_path = upload_candidate.virtual_path
-            real_path = core.shares.virtual2real(virtual_path)
+            real_path = core.shares.virtual2real(virtual_path, check_lowercase=upload_candidate.is_path_mismatched)
             is_file_shared, _new_size = core.shares.file_is_shared(username, virtual_path, real_path)
 
             if not is_file_shared:
@@ -847,6 +847,17 @@ class Uploads(Transfers):
         virtual_path = msg.file
         real_path = core.shares.virtual2real(virtual_path)
         allowed, reason, size = self._check_queue_upload_allowed(username, msg.addr, virtual_path, real_path, msg)
+        is_path_mismatched = False
+
+        if reason == TransferRejectReason.FILE_NOT_SHARED and virtual_path in core.shares.lowercase_mapping:
+            # Soulseek NS client erroneously converted the virtual path to lowercase.
+            # Retrieve the real path anyway.
+            real_path = core.shares.file_path_index[core.shares.lowercase_mapping[virtual_path]]
+            allowed, size = core.shares.file_is_shared(username, virtual_path, real_path)
+            is_path_mismatched = True
+
+            if allowed:
+                reason = None
 
         log.add_transfer("Upload request for file %s from user: %s, allowed: %s, "
                          "reason: %s", (virtual_path, username, allowed, reason))
@@ -872,6 +883,8 @@ class Uploads(Transfers):
         else:
             transfer = Transfer(username, virtual_path, folder_path, size)
             self._append_transfer(transfer)
+
+        transfer.is_path_mismatched = is_path_mismatched
 
         self._enqueue_transfer(transfer)
         self._update_transfer(transfer)
@@ -1056,7 +1069,7 @@ class Uploads(Transfers):
         log.add_transfer("Initializing upload with token %s for file %s to user %s",
                          (token, virtual_path, username))
 
-        real_path = core.shares.virtual2real(virtual_path)
+        real_path = core.shares.virtual2real(virtual_path, check_lowercase=upload.is_path_mismatched)
 
         try:
             # Open File

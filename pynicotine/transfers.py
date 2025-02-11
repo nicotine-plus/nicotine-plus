@@ -67,7 +67,8 @@ class Transfer:
                  "current_byte_offset", "last_byte_offset", "transferred_bytes_total",
                  "speed", "avg_speed", "time_elapsed", "time_left", "modifier",
                  "queue_position", "file_attributes", "iterator", "status",
-                 "legacy_attempt", "retry_attempt", "size_changed", "request_timer_id")
+                 "legacy_attempt", "retry_attempt", "size_changed", "is_path_mismatched",
+                 "request_timer_id")
 
     def __init__(self, username, virtual_path=None, folder_path=None, size=0, file_attributes=None,
                  status=None, current_byte_offset=None):
@@ -96,6 +97,7 @@ class Transfer:
         self.legacy_attempt = False
         self.retry_attempt = False
         self.size_changed = False
+        self.is_path_mismatched = False
 
         if file_attributes is None:
             self.file_attributes = {}
