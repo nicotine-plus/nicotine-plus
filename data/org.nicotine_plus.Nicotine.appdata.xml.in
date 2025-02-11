@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2020-2024 Nicotine+ Contributors -->
+<!-- Copyright 2020-2025 Nicotine+ Contributors -->
 <component type="desktop-application">
   <id>org.nicotine_plus.Nicotine</id>
   <launchable type="desktop-id">org.nicotine_plus.Nicotine.desktop</launchable>
@@ -13,9 +13,10 @@
       network.
     </p>
     <p>
-      Nicotine+ aims to be a lightweight, pleasant, free and open
-      source (FOSS) alternative to the official Soulseek client, while
-      also providing a comprehensive set of features.
+      Nicotine+ is a lightweight, pleasant, free and open source
+      (FOSS) alternative to the official Soulseek client, while also
+      being fully compliant with the network protocol. It is written
+      in Python and uses GTK for its graphical user interface.
     </p>
   </description>
   <branding>

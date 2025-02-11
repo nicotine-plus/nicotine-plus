@@ -6,11 +6,9 @@
 Nicotine+ is a graphical client for the [Soulseek](https://www.slsknet.org/news/)
 peer-to-peer network.
 
-Nicotine+ aims to be a lightweight, pleasant, free and open source (FOSS)
-alternative to the official Soulseek client, while also providing a
-comprehensive set of features.
-
-Nicotine+ is written in Python and uses GTK for its graphical user interface.
+Nicotine+ is a lightweight, pleasant, free and open source (FOSS) alternative to
+the official Soulseek client, while also being fully compliant with the network
+protocol. It is written in Python and uses GTK for its graphical user interface.
 
 Check out the [screenshots](data/screenshots/SCREENSHOTS.md)
 and [source code](https://github.com/nicotine-plus/nicotine-plus).
