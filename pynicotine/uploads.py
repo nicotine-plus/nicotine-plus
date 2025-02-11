@@ -375,7 +375,7 @@ class Uploads(Transfers):
         if not already_exists:
             core.statistics.append_stat_value("completed_uploads", 1)
 
-            real_path = core.shares.virtual2real(virtual_path)
+            real_path = core.shares.virtual2real(virtual_path, is_lowercase_path=transfer.is_lowercase_path)
             core.pluginhandler.upload_finished_notification(username, virtual_path, real_path)
 
             log.add_upload(
@@ -575,7 +575,7 @@ class Uploads(Transfers):
                 continue
 
             virtual_path = upload_candidate.virtual_path
-            real_path = core.shares.virtual2real(virtual_path)
+            real_path = core.shares.virtual2real(virtual_path, is_lowercase_path=upload_candidate.is_lowercase_path)
             is_file_shared, _new_size = core.shares.file_is_shared(username, virtual_path, real_path)
 
             if not is_file_shared:
@@ -872,6 +872,20 @@ class Uploads(Transfers):
         virtual_path = msg.file
         real_path = core.shares.virtual2real(virtual_path)
         allowed, reason, size = self._check_queue_upload_allowed(username, msg.addr, virtual_path, real_path, msg)
+        is_lowercase_path = False
+
+        if reason == TransferRejectReason.FILE_NOT_SHARED:
+            real_path_index = core.shares.get_lowercase_path_index(virtual_path)
+
+            if real_path_index is not None:
+                # Soulseek NS client erroneously converted the virtual path to lowercase.
+                # Retrieve the real path anyway.
+                real_path = core.shares.file_path_index[real_path_index]
+                allowed, size = core.shares.file_is_shared(username, virtual_path, real_path)
+                is_lowercase_path = True
+
+                if allowed:
+                    reason = None
 
         log.add_transfer("Upload request for file %s from user: %s, allowed: %s, "
                          "reason: %s", (virtual_path, username, allowed, reason))
@@ -897,6 +911,8 @@ class Uploads(Transfers):
         else:
             transfer = Transfer(username, virtual_path, folder_path, size)
             self._append_transfer(transfer)
+
+        transfer.is_lowercase_path = is_lowercase_path
 
         self._enqueue_transfer(transfer)
         self._update_transfer(transfer)
@@ -1081,7 +1097,7 @@ class Uploads(Transfers):
         log.add_transfer("Initializing upload with token %s for file %s to user %s",
                          (token, virtual_path, username))
 
-        real_path = core.shares.virtual2real(virtual_path)
+        real_path = core.shares.virtual2real(virtual_path, is_lowercase_path=upload.is_lowercase_path)
 
         try:
             # Open File
