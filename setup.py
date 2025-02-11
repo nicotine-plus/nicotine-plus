@@ -60,41 +60,59 @@ def build_translations():
                                        "-o", entry.path[:-3]])
 
 
+def convert_icons():
+    """Converts vector application icons to raster format."""
+
+    for icon_size in (
+        "16x16", "24x24", "32x32", "48x48", "64x64", "128x128", "256x256",
+        "16x16@2", "24x24@2", "32x32@2", "48x48@2", "64x64@2", "128x128@2", "256x256@2"
+    ):
+        input_file_path = os.path.join(
+            "pynicotine", "gtkgui", "icons", "hicolor", icon_size, "apps", "org.nicotine_plus.Nicotine.svg"
+        )
+        output_folder_path = os.path.join("build", "icons", icon_size)
+        output_file_path = os.path.join(output_folder_path, "org.nicotine_plus.Nicotine.png")
+
+        os.makedirs(output_folder_path, exist_ok=True)
+        subprocess.check_call(["rsvg-convert", input_file_path, "-o", output_file_path])
+
+
 if __name__ == "__main__":
     build_translations()
+    convert_icons()
     setup(
         data_files=[
             ("share/applications", ["data/org.nicotine_plus.Nicotine.desktop"]),
             ("share/metainfo", ["data/org.nicotine_plus.Nicotine.appdata.xml"]),
             ("share/man/man1", ["data/nicotine.1"]),
             ("share/icons/hicolor/16x16/apps",
-                ["pynicotine/gtkgui/icons/hicolor/16x16/apps/org.nicotine_plus.Nicotine.svg"]),
+                ["build/icons/16x16/org.nicotine_plus.Nicotine.png"]),
             ("share/icons/hicolor/16x16@2/apps",
-                ["pynicotine/gtkgui/icons/hicolor/16x16@2/apps/org.nicotine_plus.Nicotine.svg"]),
+                ["build/icons/16x16@2/org.nicotine_plus.Nicotine.png"]),
             ("share/icons/hicolor/24x24/apps",
-                ["pynicotine/gtkgui/icons/hicolor/24x24/apps/org.nicotine_plus.Nicotine.svg"]),
+                ["build/icons/24x24/org.nicotine_plus.Nicotine.png"]),
             ("share/icons/hicolor/24x24@2/apps",
-                ["pynicotine/gtkgui/icons/hicolor/24x24@2/apps/org.nicotine_plus.Nicotine.svg"]),
+                ["build/icons/24x24@2/org.nicotine_plus.Nicotine.png"]),
             ("share/icons/hicolor/32x32/apps",
-                ["pynicotine/gtkgui/icons/hicolor/32x32/apps/org.nicotine_plus.Nicotine.svg"]),
+                ["build/icons/32x32/org.nicotine_plus.Nicotine.png"]),
             ("share/icons/hicolor/32x32@2/apps",
-                ["pynicotine/gtkgui/icons/hicolor/32x32@2/apps/org.nicotine_plus.Nicotine.svg"]),
+                ["build/icons/32x32@2/org.nicotine_plus.Nicotine.png"]),
             ("share/icons/hicolor/48x48/apps",
-                ["pynicotine/gtkgui/icons/hicolor/48x48/apps/org.nicotine_plus.Nicotine.svg"]),
+                ["build/icons/48x48/org.nicotine_plus.Nicotine.png"]),
             ("share/icons/hicolor/48x48@2/apps",
-                ["pynicotine/gtkgui/icons/hicolor/48x48@2/apps/org.nicotine_plus.Nicotine.svg"]),
+                ["build/icons/48x48@2/org.nicotine_plus.Nicotine.png"]),
             ("share/icons/hicolor/64x64/apps",
-                ["pynicotine/gtkgui/icons/hicolor/64x64/apps/org.nicotine_plus.Nicotine.svg"]),
+                ["build/icons/64x64/org.nicotine_plus.Nicotine.png"]),
             ("share/icons/hicolor/64x64@2/apps",
-                ["pynicotine/gtkgui/icons/hicolor/64x64@2/apps/org.nicotine_plus.Nicotine.svg"]),
+                ["build/icons/64x64@2/org.nicotine_plus.Nicotine.png"]),
             ("share/icons/hicolor/128x128/apps",
-                ["pynicotine/gtkgui/icons/hicolor/128x128/apps/org.nicotine_plus.Nicotine.svg"]),
+                ["build/icons/128x128/org.nicotine_plus.Nicotine.png"]),
             ("share/icons/hicolor/128x128@2/apps",
-                ["pynicotine/gtkgui/icons/hicolor/128x128@2/apps/org.nicotine_plus.Nicotine.svg"]),
+                ["build/icons/128x128@2/org.nicotine_plus.Nicotine.png"]),
             ("share/icons/hicolor/256x256/apps",
-                ["pynicotine/gtkgui/icons/hicolor/256x256/apps/org.nicotine_plus.Nicotine.svg"]),
+                ["build/icons/256x256/org.nicotine_plus.Nicotine.png"]),
             ("share/icons/hicolor/256x256@2/apps",
-                ["pynicotine/gtkgui/icons/hicolor/256x256@2/apps/org.nicotine_plus.Nicotine.svg"]),
+                ["build/icons/256x256@2/org.nicotine_plus.Nicotine.png"]),
             ("share/icons/hicolor/scalable/apps",
                 ["pynicotine/gtkgui/icons/hicolor/scalable/apps/org.nicotine_plus.Nicotine.svg"]),
             ("share/icons/hicolor/scalable/apps",

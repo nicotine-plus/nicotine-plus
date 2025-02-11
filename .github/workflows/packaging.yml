@@ -117,6 +117,7 @@ jobs:
             ${{ matrix.prefix }}-gettext-tools
             ${{ matrix.prefix }}-gtk4
             ${{ matrix.prefix }}-libadwaita
+            ${{ matrix.prefix }}-librsvg
             ${{ matrix.prefix }}-python-build
             ${{ matrix.prefix }}-python-cx-freeze
             ${{ matrix.prefix }}-python-gobject

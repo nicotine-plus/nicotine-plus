@@ -29,7 +29,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install gettext gir1.2-gtk-3.0 libgirepository1.0-dev libgtk-3-bin
+          sudo apt install gettext gir1.2-gtk-3.0 libgirepository1.0-dev libgtk-3-bin librsvg2-bin
           python -m pip install build setuptools wheel .[tests]
 
       - name: PEP 8 style checks
@@ -84,8 +84,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          dnf -y install gettext gtk${{ matrix.gtk }} pylint python3 python3-build \
-            python3-gobject python3-pycodestyle python3-setuptools python3-wheel
+          dnf -y install gettext gtk${{ matrix.gtk }} librsvg2-tools pylint python3 \
+            python3-build python3-gobject python3-pycodestyle python3-setuptools python3-wheel
 
       - name: PEP 8 style checks
         run: python3 -m pycodestyle
@@ -119,7 +119,7 @@ jobs:
           zypper refresh
           zypper -n install dejavu-fonts gettext-tools python312-build python312-gobject \
             python312-gobject-Gdk python312-pycodestyle python312-pylint \
-            python312-setuptools python312-wheel typelib-1_0-Gtk-4_0
+            python312-setuptools python312-wheel rsvg-convert typelib-1_0-Gtk-4_0
 
       - name: PEP 8 style checks
         run: python3.12 -m pycodestyle
@@ -152,7 +152,7 @@ jobs:
         run: |
           apk update
           apk add font-dejavu gettext gtk4.0 py3-build py3-gobject3 py3-pycodestyle \
-            py3-pylint py3-setuptools py3-wheel
+            py3-pylint py3-setuptools py3-wheel rsvg-convert
 
       - name: PEP 8 style checks
         run: python3 -m pycodestyle
@@ -196,6 +196,7 @@ jobs:
             ${{ matrix.prefix }}-gettext-tools
             ${{ matrix.prefix }}-gtk4
             ${{ matrix.prefix }}-libadwaita
+            ${{ matrix.prefix }}-librsvg
             ${{ matrix.prefix }}-python-build
             ${{ matrix.prefix }}-python-cx-freeze
             ${{ matrix.prefix }}-python-gobject

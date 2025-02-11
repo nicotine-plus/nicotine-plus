@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install gettext
+          sudo apt install gettext librsvg2-bin
           python -m pip install build
 
       - name: Build package

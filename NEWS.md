@@ -15,6 +15,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Optimized reading of large chat logs
  * Show number of scanned folders while rescanning shares
  * Skip unit tests requiring network connection by default
+ * Require `rsvg-convert` when building Nicotine+
 
 ### Corrections
 

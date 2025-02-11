@@ -31,6 +31,7 @@ def install_pacman():
                 f"{prefix}-gettext-tools",
                 f"{prefix}-gtk4",
                 f"{prefix}-libadwaita",
+                f"{prefix}-librsvg",
                 f"{prefix}-python-build",
                 f"{prefix}-python-cx-freeze",
                 f"{prefix}-python-gobject",
