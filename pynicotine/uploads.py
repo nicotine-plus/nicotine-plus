@@ -849,15 +849,21 @@ class Uploads(Transfers):
         allowed, reason, size = self._check_queue_upload_allowed(username, msg.addr, virtual_path, real_path, msg)
         is_path_mismatched = False
 
-        if reason == TransferRejectReason.FILE_NOT_SHARED and virtual_path in core.shares.lowercase_mapping:
-            # Soulseek NS client erroneously converted the virtual path to lowercase.
-            # Retrieve the real path anyway.
-            real_path = core.shares.file_path_index[core.shares.lowercase_mapping[virtual_path]]
-            allowed, size = core.shares.file_is_shared(username, virtual_path, real_path)
-            is_path_mismatched = True
+        if reason == TransferRejectReason.FILE_NOT_SHARED:
+            virtual_folder_path, basename = virtual_path.rsplit("\\", 1)
 
-            if allowed:
-                reason = None
+            if virtual_folder_path in core.shares.share_dbs["lower"]:
+                index = core.shares.share_dbs["lower"][virtual_folder_path].get(basename)
+
+                if index is not None:
+                    # Soulseek NS client erroneously converted the virtual path to lowercase.
+                    # Retrieve the real path anyway.
+                    real_path = core.shares.file_path_index[index]
+                    allowed, size = core.shares.file_is_shared(username, virtual_path, real_path)
+                    is_path_mismatched = True
+
+                    if allowed:
+                        reason = None
 
         log.add_transfer("Upload request for file %s from user: %s, allowed: %s, "
                          "reason: %s", (virtual_path, username, allowed, reason))
