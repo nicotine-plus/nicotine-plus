@@ -589,14 +589,12 @@ class Search:
 
         results = None
 
-        try:
-            # Start with the word with the least results to reduce memory usage
-            start_word = min(included_words, key=lambda x: len(word_index[x]), default=None)
+        for word in included_words:
+            if word not in word_index:
+                # No results
+                return results
 
-        except KeyError:
-            # No results
-            return results
-
+        start_word = next(iter(included_words), None)
         has_single_word = (sum(len(words) for words in (included_words, excluded_words, partial_words)) == 1)
         included_words.discard(start_word)
 
