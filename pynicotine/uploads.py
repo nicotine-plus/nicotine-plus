@@ -472,6 +472,10 @@ class Uploads(Transfers):
         upload_candidate = None
         privileged_users = set()
 
+        if not self._user_update_counters:
+            # No queued uploads to start right now
+            return upload_candidate, has_active_uploads
+
         for username in self._user_update_counters:
             if self.is_privileged(username):
                 privileged_users.add(username)
