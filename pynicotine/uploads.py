@@ -1195,7 +1195,7 @@ class Uploads(Transfers):
                             len(queued_uploads) for queued_uploads in privileged_queued_users.values())
                         num_queued_users = len(self.queued_users)
 
-                    queue_position += position * num_queued_users
+                    queue_position += position + num_queued_users
                     break
 
         if queue_position > 0:
