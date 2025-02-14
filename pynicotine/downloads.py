@@ -351,10 +351,13 @@ class Downloads(Transfers):
 
     def _dequeue_transfer(self, transfer):
 
-        super()._dequeue_transfer(transfer)
+        if not super()._dequeue_transfer(transfer):
+            return False
 
         if transfer in self._pending_queue_messages:
             del self._pending_queue_messages[transfer]
+
+        return True
 
     def _file_downloaded_actions(self, username, file_path):
 
