@@ -78,6 +78,7 @@ class TabLabel:
 
         self.start_icon = Gtk.Image(visible=False)
         self.end_icon = Gtk.Image(visible=False)
+        self.changed_icon_name = None
 
         self._pack_children()
 
@@ -182,7 +183,7 @@ class TabLabel:
 
         icon_name = "nplus-tab-highlight" if self.is_important else "nplus-tab-changed"
 
-        if self.end_icon.get_icon_name() == icon_name:
+        if icon_name == self.changed_icon_name:
             return
 
         if self.is_important:
@@ -194,6 +195,7 @@ class TabLabel:
 
         add_css_class(self.label, "bold")
 
+        self.changed_icon_name = icon_name
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
 
         self.end_icon.set_from_icon_name(icon_name, *icon_args)
@@ -202,7 +204,7 @@ class TabLabel:
 
     def remove_changed(self):
 
-        if not self.end_icon.get_icon_name():
+        if self.changed_icon_name is None:
             return
 
         self.is_important = False
@@ -211,10 +213,10 @@ class TabLabel:
         remove_css_class(self.box, "notebook-tab-highlight")
         remove_css_class(self.label, "bold")
 
-        icon_name = None
+        self.changed_icon_name = None
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
 
-        self.end_icon.set_from_icon_name(icon_name, *icon_args)
+        self.end_icon.set_from_icon_name(self.changed_icon_name, *icon_args)
         self.end_icon.set_visible(False)
         remove_css_class(self.end_icon, "colored-icon")
 
