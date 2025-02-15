@@ -8,13 +8,19 @@ env:
 jobs:
 
   python:
-    runs-on: ubuntu-20.04
     timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
-        python: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', '3.12', '3.13',
-                 'pypy-3.6', 'pypy-3.7', 'pypy-3.8', 'pypy-3.9', 'pypy-3.10']
+        python: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13',
+                 'pypy-3.6', 'pypy-3.10', 'pypy-3.11']
+        gtk: [4]
+        platform: ['ubuntu-24.04']
+        include:
+          - python: '3.7'
+            gtk: 3
+            platform: ubuntu-22.04
+    runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -29,7 +35,8 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install gettext gir1.2-gtk-3.0 libgirepository1.0-dev libgtk-3-bin
+          sudo apt install gettext gir1.2-gtk-${{ matrix.gtk }}.0 libcairo2-dev \
+            libgirepository1.0-dev libgtk-${{ matrix.gtk }}-bin
           python -m pip install build setuptools wheel .[tests]
 
       - name: PEP 8 style checks
@@ -74,7 +81,7 @@ jobs:
       fail-fast: false
       matrix:
         container: ['fedora:rawhide']
-        gtk: [3, 4]
+        gtk: [4, 3]
         platform: ['ubuntu-latest', 'ubuntu-24.04-arm']
     runs-on: ${{ matrix.platform }}
     container: ${{ matrix.container }}
