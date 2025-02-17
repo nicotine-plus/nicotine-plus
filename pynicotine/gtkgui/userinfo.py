@@ -138,7 +138,7 @@ class UserInfos(IconNotebook):
         self.window.userinfo_entry.set_text("")
         core.userinfo.show_user(username)
 
-    def show_user(self, user, switch_page=True, **_unused):
+    def show_user(self, user, refresh=False, switch_page=True):
 
         page = self.pages.get(user)
 
@@ -148,6 +148,9 @@ class UserInfos(IconNotebook):
             self.append_page(page.container, user, focus_callback=page.on_focus,
                              close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
+
+        if refresh:
+            page.set_indeterminate_progress()
 
         if switch_page:
             self.set_current_page(page.container)
@@ -313,6 +316,7 @@ class UserInfo:
         self.picture_data = None
         self.picture_surface = None
         self.indeterminate_progress = False
+        self.refreshing = False
 
         # Set up likes list
         self.likes_list_view = TreeView(
@@ -494,7 +498,7 @@ class UserInfo:
 
     def peer_connection_error(self):
 
-        if self.refresh_button.get_sensitive():
+        if not self.refreshing:
             return
 
         self.info_bar.show_error_message(
@@ -513,6 +517,9 @@ class UserInfo:
 
     def user_info_progress(self, position, total):
 
+        if not self.refreshing:
+            return
+
         self.indeterminate_progress = False
 
         if total <= 0 or position <= 0:
@@ -528,7 +535,7 @@ class UserInfo:
 
     def set_indeterminate_progress(self):
 
-        self.indeterminate_progress = True
+        self.indeterminate_progress = self.refreshing = True
 
         self.progress_bar.get_parent().set_reveal_child(True)
         self.progress_bar.pulse()
@@ -540,7 +547,7 @@ class UserInfo:
 
     def set_finished(self):
 
-        self.indeterminate_progress = False
+        self.indeterminate_progress = self.refreshing = False
 
         self.userinfos.request_tab_changed(self.container)
         self.progress_bar.set_fraction(1.0)
@@ -586,6 +593,9 @@ class UserInfo:
     # Network Messages #
 
     def user_info_response(self, msg):
+
+        if not self.refreshing:
+            return
 
         if msg is None:
             return
@@ -665,7 +675,7 @@ class UserInfo:
         if not self.indeterminate_progress and progress_bar.get_fraction() <= 0.0:
             self.set_indeterminate_progress()
 
-        if core.users.login_status == UserStatus.OFFLINE:
+        if core.users.login_status == UserStatus.OFFLINE and self.user != config.sections["server"]["login"]:
             self.peer_connection_error()
 
     def on_hide_progress_bar(self, progress_bar):
@@ -825,7 +835,6 @@ class UserInfo:
         self.hide_picture()
 
     def on_refresh(self, *_args):
-        self.set_indeterminate_progress()
         core.userinfo.show_user(self.user, refresh=True)
 
     def on_focus(self, *_args):

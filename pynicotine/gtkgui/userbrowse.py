@@ -142,7 +142,7 @@ class UserBrowses(IconNotebook):
         else:
             core.userbrowse.browse_user(entry_text)
 
-    def show_user(self, user, path=None, switch_page=True):
+    def show_user(self, user, path=None, new_request=False, switch_page=True):
 
         page = self.pages.get(user)
 
@@ -152,6 +152,10 @@ class UserBrowses(IconNotebook):
             self.append_page(page.container, user, focus_callback=page.on_focus,
                              close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
+
+        if new_request:
+            page.clear_model()
+            page.set_indeterminate_progress()
 
         page.queued_path = path
         page.browse_queued_path()
@@ -236,6 +240,7 @@ class UserBrowse:
         self.window = userbrowses.window
         self.user = user
         self.indeterminate_progress = False
+        self.refreshing = False
         self.local_permission_level = None
         self.queued_path = None
 
@@ -581,6 +586,9 @@ class UserBrowse:
 
     def shared_file_list(self, msg):
 
+        if not self.refreshing:
+            return
+
         is_empty = (not msg.list and not msg.privatelist)
         self.local_permission_level = msg.permission_level
 
@@ -600,7 +608,7 @@ class UserBrowse:
 
     def peer_connection_error(self):
 
-        if self.refresh_button.get_sensitive():
+        if not self.refreshing:
             return
 
         self.info_bar.show_error_message(
@@ -620,6 +628,9 @@ class UserBrowse:
 
     def shared_file_list_progress(self, position, total):
 
+        if not self.refreshing:
+            return
+
         self.indeterminate_progress = False
 
         if total <= 0 or position <= 0:
@@ -636,7 +647,7 @@ class UserBrowse:
 
     def set_indeterminate_progress(self):
 
-        self.indeterminate_progress = True
+        self.indeterminate_progress = self.refreshing = True
 
         self.progress_bar.get_parent().set_reveal_child(True)
         self.progress_bar.pulse()
@@ -657,7 +668,7 @@ class UserBrowse:
 
     def set_finished(self):
 
-        self.indeterminate_progress = False
+        self.indeterminate_progress = self.refreshing = False
 
         self.userbrowses.request_tab_changed(self.container)
         self.progress_bar.set_fraction(1.0)
@@ -1364,7 +1375,7 @@ class UserBrowse:
         if not self.indeterminate_progress and progress_bar.get_fraction() <= 0.0:
             self.set_indeterminate_progress()
 
-        if core.users.login_status == UserStatus.OFFLINE:
+        if core.users.login_status == UserStatus.OFFLINE and self.user != config.sections["server"]["login"]:
             self.peer_connection_error()
 
     def on_hide_progress_bar(self, progress_bar):
@@ -1438,18 +1449,14 @@ class UserBrowse:
 
     def on_refresh(self, *_args):
 
-        if not self.refresh_button.get_sensitive():
-            # Refresh is already in progress
+        if self.refreshing:
             return
 
         # Remember selection after refresh
         self.select_files()
         file_path = self.get_selected_file_path()
 
-        self.clear_model()
-        self.set_indeterminate_progress()
-
-        if self.local_permission_level:
+        if self.user == config.sections["server"]["login"]:
             core.userbrowse.browse_local_shares(
                 path=file_path, permission_level=self.local_permission_level, new_request=True)
         else:
