@@ -290,9 +290,9 @@ class DownloadsPage:
             ]
         items += [
             (_("Search"), 3),
-            (_("Abort"), 4),
+            (_("Pause"), 4),
             (_("Remove"), 5),
-            (_("Retry"), 6),
+            (_("Resume"), 6),
             (_("Browse Folder"), 7)
         ]
         self.download_double_click_combobox = ComboBox(
