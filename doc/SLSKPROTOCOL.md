@@ -2292,21 +2292,21 @@ a peer. In Nicotine+, these messages are defined in slskmessages.py.
     token (indirect connection request)
 2.  User A sends [GetPeerAddress](#server-code-3) to the Server with the same token and connection type
 3.  The Server responds to User A with [GetPeerAddress](#server-code-3).
-5.  User A sends a [PeerInit](#peer-init-code-1) to User B (direct connection
+4.  User A sends a [PeerInit](#peer-init-code-1) to User B (direct connection
     request) using the IP received in the previous step.
-6.  The Server sends a [ConnectToPeer](#server-code-18) response to User B with
+5.  The Server sends a [ConnectToPeer](#server-code-18) response to User B with
     the same token.  
     If User B receives the *PeerInit* message, a connection is established, and
     user A is free to send peer messages.  
     Otherwise, once User B receives the *ConnectToPeer* message from the
     Server, User B proceeds with step 4.
-7.  User B sends a [PierceFireWall](#peer-init-code-0) to User A with the token
+6.  User B sends a [PierceFireWall](#peer-init-code-0) to User A with the token
     included in the *ConnectToPeer* message.  
     If this succeeds, a connection is established, and User A is free to send
     peer messages.  
     If this fails, no connection is possible, and User B proceeds with step 5.
-8.  User B sends a [CantConnectToPeer](#server-code-1001) to the Server.
-9.  The Server sends a [CantConnectToPeer](#server-code-1001) response to
+7.  User B sends a [CantConnectToPeer](#server-code-1001) to the Server.
+8.  The Server sends a [CantConnectToPeer](#server-code-1001) response to
     User A.
 
 
