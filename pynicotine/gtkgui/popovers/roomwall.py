@@ -86,8 +86,13 @@ class RoomWall(Popover):
         self.message_view.clear()
         self._update_message_list()
 
+        tickers = core.chatrooms.joined_rooms[self.room].tickers
         login_username = core.users.login_username
-        message = core.chatrooms.joined_rooms[self.room].tickers.get(login_username, "")
+        message = tickers.get(login_username, "")
 
         self.message_entry.set_text(message)
         self.message_entry.select_region(0, -1)
+
+        if not tickers:
+            # Focus message entry instead of list when no tickers are present
+            self.message_entry.grab_focus()
