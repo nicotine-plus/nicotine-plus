@@ -34,8 +34,8 @@
                 <child>
                   <object class="GtkScrolledWindow" id="message_view_container">
                     <property name="hexpand">True</property>
+                    <property name="min-content-height">175</property>
                     <property name="propagate-natural-height">True</property>
-                    <property name="propagate-natural-width">True</property>
                     <property name="visible">True</property>
                   </object>
                 </child>
@@ -46,10 +46,12 @@
         <child>
           <object class="GtkEntry" id="message_entry">
             <property name="hexpand">True</property>
+            <property name="max-width-chars">150</property>
             <property name="placeholder-text" translatable="yes">Set wall message…</property>
             <property name="primary-icon-name">user-available-symbolic</property>
             <property name="secondary-icon-name">edit-clear-symbolic</property>
             <property name="visible">True</property>
+            <property name="width-chars">15</property>
             <signal name="activate" handler="on_set_room_wall_message"/>
             <signal name="icon-press" handler="on_icon_pressed"/>
           </object>

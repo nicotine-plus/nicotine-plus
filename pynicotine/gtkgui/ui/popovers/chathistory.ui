@@ -17,6 +17,7 @@
         <child>
           <object class="GtkSearchEntry" id="search_entry">
             <property name="hexpand">True</property>
+            <property name="max-width-chars">150</property>
             <property name="placeholder-text" translatable="yes">Search chat history…</property>
             <property name="visible">True</property>
             <property name="width-chars">15</property>
@@ -33,8 +34,8 @@
                 <child>
                   <object class="GtkScrolledWindow" id="list_container">
                     <property name="hexpand">True</property>
+                    <property name="min-content-height">175</property>
                     <property name="propagate-natural-height">True</property>
-                    <property name="propagate-natural-width">True</property>
                     <property name="visible">True</property>
                     <style>
                       <class name="colored-icon"/>
