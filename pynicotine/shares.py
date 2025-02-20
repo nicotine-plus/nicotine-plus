@@ -29,6 +29,7 @@ import time
 
 from collections import defaultdict
 from collections import deque
+from itertools import chain
 from os import SEEK_END
 from os import SEEK_SET
 from pickle import HIGHEST_PROTOCOL
@@ -363,11 +364,11 @@ class Scanner:
             self.share_dbs, self.share_db_paths, destinations={"public_files", "buddy_files", "trusted_files"}
         )
 
-        file_path_index = (
-            list(self.share_dbs["public_files"])
-            + list(self.share_dbs["buddy_files"])
-            + list(self.share_dbs["trusted_files"])
-        )
+        file_path_index = tuple(chain(
+            self.share_dbs["public_files"],
+            self.share_dbs["buddy_files"],
+            self.share_dbs["trusted_files"]
+        ))
         self.queue.put(file_path_index)
 
         Shares.close_shares(self.share_dbs)
@@ -1085,14 +1086,17 @@ class Shares:
                     break
 
                 if isinstance(item, tuple):
-                    template, args = item
+                    try:
+                        template, args = item
+
+                    except ValueError:
+                        self.file_path_index = item
+                        continue
+
                     log.add(template, args)
 
                 elif isinstance(item, SharedFileListResponse):
                     self.compressed_shares[item.permission_level] = item
-
-                elif isinstance(item, list):
-                    self.file_path_index = tuple(item)
 
                 elif isinstance(item, int):
                     if emit_event is not None:
