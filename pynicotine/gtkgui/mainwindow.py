@@ -26,6 +26,7 @@ import os
 import sys
 import time
 
+from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -72,6 +73,7 @@ class MainWindow(Window):
         self.auto_away = False
         self.away_timer_id = None
         self.away_cooldown_time = 0
+        self.is_fullscreen = False
         self.gesture_click = None
         self.window_active_handler = None
         self.window_visible_handler = None
@@ -360,11 +362,13 @@ class MainWindow(Window):
         self.window_active_handler = self.widget.connect("notify::is-active", self.on_window_active_changed)
         self.window_visible_handler = self.widget.connect("notify::visible", self.on_window_visible_changed)
 
-        # System window close (X)
+        # System window close (X) and fullscreen
         if GTK_API_VERSION >= 4:
             self.widget.connect("close-request", self.on_close_window_request)
+            self.widget.connect("notify::fullscreened", self.on_window_fullscreen_changed_gtk4)
         else:
             self.widget.connect("delete-event", self.on_close_window_request)
+            self.widget.connect("window-state-event", self.on_window_state_changed_gtk3)
 
         self.application.add_window(self.widget)
 
@@ -385,6 +389,18 @@ class MainWindow(Window):
         self.on_cancel_auto_away()
 
         self.set_urgency_hint(False)
+
+    def on_window_fullscreen_changed_gtk4(self, *_args):
+        self.is_fullscreen = self.widget.is_fullscreen()
+        self.toggle_fullscreen_toolbar()
+
+    def on_window_state_changed_gtk3(self, _window, event):
+
+        if not event.changed_mask & Gdk.WindowState.FULLSCREEN:
+            return
+
+        self.is_fullscreen = event.new_window_state & Gdk.WindowState.FULLSCREEN
+        self.toggle_fullscreen_toolbar()
 
     def on_window_visible_changed(self, *_args):
         self.application.tray_icon.update()
@@ -541,12 +557,14 @@ class MainWindow(Window):
 
     # Headerbar/Toolbar #
 
-    def show_header_bar(self, page_id):
+    def show_header_bar(self, page_id, leaving_fullscreen=False):
         """Set a headerbar for the main window (client side decorations
         enabled)"""
 
-        if self.widget.get_titlebar() != self.header_bar:
-            self.widget.set_titlebar(self.header_bar)
+        if leaving_fullscreen or self.widget.get_titlebar() != self.header_bar:
+            if not leaving_fullscreen:
+                self.widget.set_titlebar(self.header_bar)
+
             self.widget.set_show_menubar(False)
 
             if GTK_API_VERSION == 3:
@@ -602,7 +620,7 @@ class MainWindow(Window):
             toolbar_content.add(title_widget)
             toolbar_content.add(end_widget)
 
-    def show_toolbar(self, page_id):
+    def show_toolbar(self, page_id, entering_fullscreen=False):
         """Show the non-CSD toolbar."""
 
         if not self.widget.get_show_menubar():
@@ -613,7 +631,7 @@ class MainWindow(Window):
                 # Don't override builtin accelerator for menu bar
                 self.lookup_action("main-menu").set_enabled(False)
 
-            if self.widget.get_titlebar():
+            if not entering_fullscreen and self.widget.get_titlebar():
                 self.widget.unrealize()
                 self.widget.set_titlebar(None)
                 self.widget.map()
@@ -645,7 +663,7 @@ class MainWindow(Window):
         This is used when changing the active notebook tab.
         """
 
-        if config.sections["ui"]["header_bar"]:
+        if config.sections["ui"]["header_bar"] and not self.is_fullscreen:
             self.hide_current_header_bar()
             self.show_header_bar(page_id)
         else:
@@ -683,6 +701,19 @@ class MainWindow(Window):
         # Show active dialogs again after a slight delay
         if active_dialogs:
             GLib.idle_add(self._show_dialogs, active_dialogs, priority=GLib.PRIORITY_HIGH_IDLE)
+
+    def toggle_fullscreen_toolbar(self):
+
+        if not config.sections["ui"]["header_bar"]:
+            return
+
+        if self.is_fullscreen:
+            self.hide_current_header_bar()
+            self.show_toolbar(self.current_page_id, entering_fullscreen=True)
+            return
+
+        self.hide_current_toolbar()
+        self.show_header_bar(self.current_page_id, leaving_fullscreen=True)
 
     def on_change_focus_view(self, *_args):
         """F6 - move focus between header bar/toolbar and main content."""
