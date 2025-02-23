@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2025 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
