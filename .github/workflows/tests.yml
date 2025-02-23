@@ -224,9 +224,6 @@ jobs:
       - name: Integration and unit tests
         run: python3 -m unittest -v
 
-      - name: Build
-        run: python3 -m build
-
       - name: Build without isolation
         run: python3 -m build --no-isolation
 
