@@ -27,8 +27,6 @@ import re
 import sys
 import time
 
-from operator import itemgetter
-
 from gi.repository import Gdk
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -1737,7 +1735,7 @@ class UserInterfacePage:
 
         languages = [(_("System default"), "")]
         languages += [
-            (language_name, language_code) for language_code, language_name in sorted(LANGUAGES, key=itemgetter(1))
+            (language_name, language_code) for language_code, language_name in sorted(LANGUAGES)
         ]
 
         self.language_combobox = ComboBox(
