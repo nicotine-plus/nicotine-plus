@@ -143,10 +143,14 @@ class Dialog(Window):
             action_area.add(action_area_end)          # pylint: disable=no-member
 
         for button in buttons_start:
+            # Cancel button is to the left in header bars, but always to the right in action areas.
+            # This matches built-in GTK dialogs (color and font choosers).
+            action_area = action_area_end if button.get_label() == _("_Cancel") else action_area_start
+
             if GTK_API_VERSION >= 4:
-                action_area_start.append(button)      # pylint: disable=no-member
+                action_area.append(button)      # pylint: disable=no-member
             else:
-                action_area_start.add(button)         # pylint: disable=no-member
+                action_area.add(button)         # pylint: disable=no-member
 
         for button in buttons_end:
             if GTK_API_VERSION >= 4:
