@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-17 14:31+0200\n"
-"PO-Revision-Date: 2025-02-25 19:19+0000\n"
+"PO-Revision-Date: 2025-02-28 14:02+0000\n"
 "Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= "
 "19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
-"X-Generator: Weblate 5.10.2-dev\n"
+"X-Generator: Weblate 5.10.3-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -1929,7 +1929,7 @@ msgstr "Lejupielādēt failu(s) _uz…"
 
 #: pynicotine/gtkgui/search.py:615
 msgid "Download _Folder(s)"
-msgstr "Lejupielādēt _mapi(-es)"
+msgstr "Lejupielādēt _mapi(es)"
 
 #: pynicotine/gtkgui/search.py:616
 msgid "Download F_older(s) To…"
@@ -1983,7 +1983,7 @@ msgstr "_Rezultātu filtri"
 #: pynicotine/gtkgui/search.py:1277
 #, python-format
 msgid "%d active filter(s)"
-msgstr "%d aktīvais(-ie) filtrs(-i)"
+msgstr "%d aktīvais(ie) filtrs(i)"
 
 #: pynicotine/gtkgui/search.py:1329
 msgid "Add Wi_sh"
@@ -2040,11 +2040,11 @@ msgstr "Savienojums aizvērts"
 
 #: pynicotine/gtkgui/transfers.py:67
 msgid "Connection timeout"
-msgstr "Savienojuma laika ierobežojums"
+msgstr "Savienojuma taimauts"
 
 #: pynicotine/gtkgui/transfers.py:68 pynicotine/gtkgui/transfers.py:673
 msgid "User logged off"
-msgstr "Lietotājs ir izrakstījies"
+msgstr "Lietotājs izrakstījies"
 
 #: pynicotine/gtkgui/transfers.py:70 pynicotine/gtkgui/uploads.py:78
 msgid "Cancelled"
@@ -2129,7 +2129,7 @@ msgstr "Neizdevies"
 
 #: pynicotine/gtkgui/uploads.py:80
 msgid "User Logged Off"
-msgstr "Lietotājs ir izrakstījies"
+msgstr "Lietotājs izrakstījies"
 
 #: pynicotine/gtkgui/uploads.py:142
 #, python-format
@@ -4226,11 +4226,11 @@ msgstr "_Istabas siena"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:124
 msgid "Created by"
-msgstr "Izveidoja"
+msgstr "Izstrādātāji"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:163
 msgid "Translated by"
-msgstr "Tulkojis"
+msgstr "Tulkotāji"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:202
 msgid "License"
