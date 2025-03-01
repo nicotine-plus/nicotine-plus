@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-17 14:31+0200\n"
-"PO-Revision-Date: 2025-02-28 14:02+0000\n"
+"PO-Revision-Date: 2025-03-01 17:01+0000\n"
 "Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
@@ -4095,7 +4095,7 @@ msgstr "Neizdevās ielādēt koplietošanas failus no diska: %(error)s"
 #: pynicotine/userbrowse.py:279
 #, python-format
 msgid "Saved list of shared files for user '%(user)s' to %(dir)s"
-msgstr "Saglabāts lietotāja %(user)s koplietoto failu saraksts uz %(dir)s"
+msgstr "Saglabāts lietotāja '%(user)s' koplietoto failu saraksts: %(dir)s"
 
 #: pynicotine/userbrowse.py:283
 #, python-format
