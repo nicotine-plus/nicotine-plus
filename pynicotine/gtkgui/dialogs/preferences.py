@@ -2169,11 +2169,11 @@ class UserInterfacePage:
     # Tabs #
 
     def on_select_buddy_list_position(self, _combobox, selected_id):
+        self.tab_visible_userlist_toggle.set_active(selected_id == "tab")
 
-        buddies_tab_active = (selected_id == "tab")
-
-        self.tab_visible_userlist_toggle.set_active(buddies_tab_active)
-        self.tab_visible_userlist_toggle.set_sensitive(buddies_tab_active)
+    def on_buddy_list_tab_toggled(self, button):
+        if button.get_active():
+            self.buddy_list_position_combobox.set_selected_id("tab")
 
 
 class LoggingPage:
