@@ -625,7 +625,7 @@ class Scanner:
                 self.queue.put(
                     ScannerLogMessage(
                         _("Error while scanning metadata for file %(path)s: %(error)s"),
-                       {"path": file_path, "error": error}
+                        {"path": file_path, "error": error}
                     )
                 )
 
