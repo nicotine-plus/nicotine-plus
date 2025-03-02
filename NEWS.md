@@ -5,6 +5,21 @@ The current stable version of Nicotine+ is available at [DOWNLOADS.md](doc/DOWNL
 You can run the latest unstable build of Nicotine+ to test recent changes and bug fixes, see [TESTING.md](doc/TESTING.md).
 
 
+## Version 3.3.9 (Unreleased)
+
+### Corrections
+
+ * Fixed a crash when rescanning shared files in some cases
+ * Fixed column widths not being remembered for certain columns
+ * Fixed minor inconsistencies in the GUI
+
+### Issues closed on GitHub
+
+ * Diacritics starting names are in wrong order (at the end of the list) - languages drop-down menu ([#3295](https://github.com/nicotine-plus/nicotine-plus/issues/3295))
+ * Setting the width of the columns is not remembered ([#3296](https://github.com/nicotine-plus/nicotine-plus/issues/3296))
+ * Can't boot after deleting app and reinstalling it ([#3308](https://github.com/nicotine-plus/nicotine-plus/issues/3308))
+
+
 ## Version 3.3.8 (February 24, 2025)
 
 ### Changes
