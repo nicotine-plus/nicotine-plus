@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-17 14:31+0200\n"
-"PO-Revision-Date: 2025-01-12 13:16+0000\n"
+"PO-Revision-Date: 2025-03-02 06:58+0000\n"
 "Last-Translator: Matthaiks <kitynska@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.10.3-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -4815,13 +4815,13 @@ msgstr "Ustaw wiadomość ściany pokoju…"
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:19
 #: pynicotine/gtkgui/ui/settings/search.ui:138
 msgid "Search Result Filters"
-msgstr "Rezultaty filtrowania wyszukiwania"
+msgstr "Filtry wyników wyszukiwania"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:30
 msgid ""
 "Search result filters are used to refine which search results are displayed."
 msgstr ""
-"Rezultaty filtrowania wyszukiwania służą do doprecyzowania wyświetlanych "
+"Filtry wyników wyszukiwania służą do precyzyjnego określania wyświetlanych "
 "wyników wyszukiwania."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:39
@@ -5804,11 +5804,11 @@ msgstr "Powiadomienia"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:212
 msgid "Enable sound for notifications"
-msgstr "Włącz dźwięk dla powiadomień"
+msgstr "Włącz dźwięk powiadomień"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:236
 msgid "Show notification for private chats and mentions in the window title"
-msgstr "Pokaż powiadomienia dla prywatnych czatów i wzmianek w tytule okna"
+msgstr "Pokaż powiadomienia o prywatnych czatach i wzmiankach w tytule okna"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:268
 msgid "Show notifications for:"
