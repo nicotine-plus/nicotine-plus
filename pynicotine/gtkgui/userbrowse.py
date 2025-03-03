@@ -659,6 +659,9 @@ class UserBrowse:
         self.refresh_button.set_sensitive(False)
         self.save_button.set_sensitive(False)
 
+        if core.users.login_status == UserStatus.OFFLINE and self.user != config.sections["server"]["login"]:
+            self.peer_connection_error()
+
     def set_finishing(self):
 
         if hasattr(self, "refresh_button") and not self.refresh_button.get_sensitive():
@@ -1374,9 +1377,6 @@ class UserBrowse:
 
         if not self.indeterminate_progress and progress_bar.get_fraction() <= 0.0:
             self.set_indeterminate_progress()
-
-        if core.users.login_status == UserStatus.OFFLINE and self.user != config.sections["server"]["login"]:
-            self.peer_connection_error()
 
     def on_hide_progress_bar(self, progress_bar):
         """Disables indeterminate progress bar mode when switching to another tab."""
