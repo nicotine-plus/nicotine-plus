@@ -64,6 +64,7 @@
             <property name="mnemonic-widget">name_value_label</property>
             <property name="visible">True</property>
             <property name="xalign">1</property>
+            <property name="yalign">0</property>
             <style>
               <class name="dim-label"/>
             </style>
@@ -71,10 +72,13 @@
         </child>
         <child>
           <object class="GtkLabel" id="name_value_label">
-            <property name="ellipsize">end</property>
+            <property name="hexpand">True</property>
             <property name="selectable">True</property>
             <property name="single-line-mode">True</property>
             <property name="visible">True</property>
+            <property name="wrap">True</property>
+            <property name="wrap-mode">word-char</property>
+            <property name="xalign">0</property>
           </object>
         </child>
       </object>
@@ -89,6 +93,7 @@
             <property name="mnemonic-widget">size_value_label</property>
             <property name="visible">True</property>
             <property name="xalign">1</property>
+            <property name="yalign">0</property>
             <style>
               <class name="dim-label"/>
             </style>
@@ -96,10 +101,13 @@
         </child>
         <child>
           <object class="GtkLabel" id="size_value_label">
-            <property name="ellipsize">end</property>
+            <property name="hexpand">True</property>
             <property name="selectable">True</property>
             <property name="single-line-mode">True</property>
             <property name="visible">True</property>
+            <property name="wrap">True</property>
+            <property name="wrap-mode">word-char</property>
+            <property name="xalign">0</property>
           </object>
         </child>
       </object>
@@ -114,6 +122,7 @@
             <property name="mnemonic-widget">folder_value_label</property>
             <property name="visible">True</property>
             <property name="xalign">1</property>
+            <property name="yalign">0</property>
             <style>
               <class name="dim-label"/>
             </style>
@@ -121,10 +130,13 @@
         </child>
         <child>
           <object class="GtkLabel" id="folder_value_label">
-            <property name="ellipsize">end</property>
+            <property name="hexpand">True</property>
             <property name="selectable">True</property>
             <property name="single-line-mode">True</property>
             <property name="visible">True</property>
+            <property name="wrap">True</property>
+            <property name="wrap-mode">word-char</property>
+            <property name="xalign">0</property>
           </object>
         </child>
       </object>
@@ -139,6 +151,7 @@
             <property name="mnemonic-widget">path_value_label</property>
             <property name="visible">True</property>
             <property name="xalign">1</property>
+            <property name="yalign">0</property>
             <style>
               <class name="dim-label"/>
             </style>
@@ -146,10 +159,13 @@
         </child>
         <child>
           <object class="GtkLabel" id="path_value_label">
-            <property name="ellipsize">end</property>
+            <property name="hexpand">True</property>
             <property name="selectable">True</property>
             <property name="single-line-mode">True</property>
             <property name="visible">True</property>
+            <property name="wrap">True</property>
+            <property name="wrap-mode">word-char</property>
+            <property name="xalign">0</property>
           </object>
         </child>
       </object>
@@ -165,6 +181,7 @@
             <property name="mnemonic-widget">length_value_label</property>
             <property name="visible">True</property>
             <property name="xalign">1</property>
+            <property name="yalign">0</property>
             <style>
               <class name="dim-label"/>
             </style>
@@ -172,11 +189,14 @@
         </child>
         <child>
           <object class="GtkLabel" id="length_value_label">
-            <property name="ellipsize">end</property>
+            <property name="hexpand">True</property>
             <property name="margin-top">12</property>
             <property name="selectable">True</property>
             <property name="single-line-mode">True</property>
             <property name="visible">True</property>
+            <property name="wrap">True</property>
+            <property name="wrap-mode">word-char</property>
+            <property name="xalign">0</property>
           </object>
         </child>
       </object>
@@ -191,6 +211,7 @@
             <property name="mnemonic-widget">quality_value_label</property>
             <property name="visible">True</property>
             <property name="xalign">1</property>
+            <property name="yalign">0</property>
             <style>
               <class name="dim-label"/>
             </style>
@@ -198,10 +219,13 @@
         </child>
         <child>
           <object class="GtkLabel" id="quality_value_label">
-            <property name="ellipsize">end</property>
+            <property name="hexpand">True</property>
             <property name="selectable">True</property>
             <property name="single-line-mode">True</property>
             <property name="visible">True</property>
+            <property name="wrap">True</property>
+            <property name="wrap-mode">word-char</property>
+            <property name="xalign">0</property>
           </object>
         </child>
       </object>
@@ -217,6 +241,7 @@
             <property name="mnemonic-widget">username_value_label</property>
             <property name="visible">True</property>
             <property name="xalign">1</property>
+            <property name="yalign">0</property>
             <style>
               <class name="dim-label"/>
             </style>
@@ -224,11 +249,14 @@
         </child>
         <child>
           <object class="GtkLabel" id="username_value_label">
-            <property name="ellipsize">end</property>
+            <property name="hexpand">True</property>
             <property name="margin-top">12</property>
             <property name="selectable">True</property>
             <property name="single-line-mode">True</property>
             <property name="visible">True</property>
+            <property name="wrap">True</property>
+            <property name="wrap-mode">word-char</property>
+            <property name="xalign">0</property>
           </object>
         </child>
       </object>
@@ -243,6 +271,7 @@
             <property name="mnemonic-widget">queue_value_label</property>
             <property name="visible">True</property>
             <property name="xalign">1</property>
+            <property name="yalign">0</property>
             <style>
               <class name="dim-label"/>
             </style>
@@ -250,10 +279,13 @@
         </child>
         <child>
           <object class="GtkLabel" id="queue_value_label">
-            <property name="ellipsize">end</property>
+            <property name="hexpand">True</property>
             <property name="selectable">True</property>
             <property name="single-line-mode">True</property>
             <property name="visible">True</property>
+            <property name="wrap">True</property>
+            <property name="wrap-mode">word-char</property>
+            <property name="xalign">0</property>
           </object>
         </child>
       </object>
@@ -268,6 +300,7 @@
             <property name="mnemonic-widget">speed_value_label</property>
             <property name="visible">True</property>
             <property name="xalign">1</property>
+            <property name="yalign">0</property>
             <style>
               <class name="dim-label"/>
             </style>
@@ -275,10 +308,13 @@
         </child>
         <child>
           <object class="GtkLabel" id="speed_value_label">
-            <property name="ellipsize">end</property>
+            <property name="hexpand">True</property>
             <property name="selectable">True</property>
             <property name="single-line-mode">True</property>
             <property name="visible">True</property>
+            <property name="wrap">True</property>
+            <property name="wrap-mode">word-char</property>
+            <property name="xalign">0</property>
           </object>
         </child>
       </object>
@@ -293,6 +329,7 @@
             <property name="mnemonic-widget">country_value_label</property>
             <property name="visible">True</property>
             <property name="xalign">1</property>
+            <property name="yalign">0</property>
             <style>
               <class name="dim-label"/>
             </style>
@@ -300,10 +337,13 @@
         </child>
         <child>
           <object class="GtkLabel" id="country_value_label">
-            <property name="ellipsize">end</property>
+            <property name="hexpand">True</property>
             <property name="selectable">True</property>
             <property name="single-line-mode">True</property>
             <property name="visible">True</property>
+            <property name="wrap">True</property>
+            <property name="wrap-mode">word-char</property>
+            <property name="xalign">0</property>
           </object>
         </child>
       </object>
