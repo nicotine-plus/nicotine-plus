@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -90,10 +90,14 @@ class FileProperties(Dialog):
         for button in (self.previous_button, self.next_button):
             button.set_visible(len(self.properties) > 1)
 
-        basename = properties["basename"]
-        virtual_folder_path = properties["virtual_folder_path"]
         size = properties["size"]
         h_size = human_size(size)
+
+        self.name_value_label.set_text(properties["basename"])
+        self.folder_value_label.set_text(properties["virtual_folder_path"])
+        self.size_value_label.set_text(f"{h_size} ({size} B)")  # Don't humanize exact size for easier use in filter
+        self.username_value_label.set_text(properties["user"])
+
         real_folder_path = properties.get("real_folder_path", "")
         h_quality, _bitrate, h_length, _length = FileListMessage.parse_audio_quality_length(
             size, properties.get("file_attributes"), always_show_bitrate=True)
@@ -103,17 +107,7 @@ class FileProperties(Dialog):
         country_name = core.network_filter.COUNTRIES.get(country_code)
         country = f"{country_name} ({country_code})" if country_name else ""
 
-        self.name_value_label.set_text(basename)
-        self.name_value_label.set_tooltip_text(basename)
-
-        self.folder_value_label.set_text(virtual_folder_path)
-        self.folder_value_label.set_tooltip_text(virtual_folder_path)
-
-        self.size_value_label.set_text(f"{h_size} ({size} B)")  # Don't humanize exact size for easier use in filter
-        self.username_value_label.set_text(properties["user"])
-
         self.path_value_label.set_text(real_folder_path)
-        self.path_value_label.set_tooltip_text(real_folder_path)
         self.path_row.set_visible(bool(real_folder_path))
 
         self.quality_value_label.set_text(h_quality)
