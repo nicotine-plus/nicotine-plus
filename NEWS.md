@@ -11,6 +11,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 
  * Fixed a crash when rescanning shared files in some cases
  * Fixed column widths not being remembered for certain columns
+ * Improved readability of long file paths in File Properties dialog
  * Fixed minor inconsistencies in the GUI
 
 ### Issues closed on GitHub
