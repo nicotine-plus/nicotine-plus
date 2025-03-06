@@ -153,7 +153,7 @@ class UserBrowses(IconNotebook):
                              close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
-        if new_request:
+        elif new_request:
             page.clear_model()
             page.set_indeterminate_progress()
 
@@ -646,6 +646,9 @@ class UserBrowse:
         self.progress_bar.set_fraction(fraction)
 
     def set_indeterminate_progress(self):
+
+        if self.indeterminate_progress:
+            return
 
         self.indeterminate_progress = self.refreshing = True
 

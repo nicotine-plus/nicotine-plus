@@ -149,7 +149,7 @@ class UserInfos(IconNotebook):
                              close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
-        if refresh:
+        elif refresh:
             page.set_indeterminate_progress()
 
         if switch_page:
@@ -534,6 +534,9 @@ class UserInfo:
         self.progress_bar.set_fraction(fraction)
 
     def set_indeterminate_progress(self):
+
+        if self.indeterminate_progress:
+            return
 
         self.indeterminate_progress = self.refreshing = True
 
