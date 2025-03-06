@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2010 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
@@ -545,6 +545,9 @@ class UserInfo:
         self.info_bar.set_visible(False)
         self.refresh_button.set_sensitive(False)
 
+        if core.users.login_status == UserStatus.OFFLINE and self.user != config.sections["server"]["login"]:
+            self.peer_connection_error()
+
     def set_finished(self):
 
         self.indeterminate_progress = self.refreshing = False
@@ -674,9 +677,6 @@ class UserInfo:
 
         if not self.indeterminate_progress and progress_bar.get_fraction() <= 0.0:
             self.set_indeterminate_progress()
-
-        if core.users.login_status == UserStatus.OFFLINE and self.user != config.sections["server"]["login"]:
-            self.peer_connection_error()
 
     def on_hide_progress_bar(self, progress_bar):
         """Disables indeterminate progress bar mode when switching to another tab."""

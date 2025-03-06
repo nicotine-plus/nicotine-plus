@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2009 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
@@ -307,9 +307,8 @@ class TreeView:
                 column_properties = column_config.get(column_id, {})
                 column_sort_type = column_properties.get("sort")
 
-                # Restore saved column width if the column size is fixed. For expandable
-                # columns, the width becomes the minimum width, so use the default value in those cases.
-                if not should_expand_column and column_type != "icon":
+                # Restore saved column width
+                if column_type != "icon":
                     width = column_properties.get("width", width)
 
                 if column_sort_type and self._persistent_sort:

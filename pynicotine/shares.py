@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2009-2011 quinox <quinox@users.sf.net>
@@ -29,6 +29,7 @@ import time
 
 from collections import defaultdict
 from collections import deque
+from itertools import chain
 from os import SEEK_END
 from os import SEEK_SET
 from pickle import HIGHEST_PROTOCOL
@@ -230,6 +231,20 @@ class Database:
         self._file_handle.close()
 
 
+class ScannerState:
+    INITIALIZED = 0
+    RESCANNING = 1
+    FAILURE = 2
+
+
+class ScannerLogMessage:
+    __slots__ = ("msg", "msg_args")
+
+    def __init__(self, msg, msg_args=None):
+        self.msg = msg
+        self.msg_args = msg_args
+
+
 class Scanner:
     """Separate process responsible for building shares.
 
@@ -279,11 +294,13 @@ class Scanner:
                     # Failed to load shares or version is invalid, rebuild
                     self.rescan = self.rebuild = True
 
-                self.queue.put("initialized")
+                self.queue.put(ScannerState.INITIALIZED)
 
             if self.rescan:
-                self.queue.put("rescanning")
-                self.queue.put((_("Rebuilding shares…") if self.rebuild else _("Rescanning shares…"), None))
+                self.queue.put(ScannerState.RESCANNING)
+                self.queue.put(
+                    ScannerLogMessage(_("Rebuilding shares…") if self.rebuild else _("Rescanning shares…"))
+                )
 
                 # Clear previous word index to prevent inconsistent state if the scanner fails
                 self.set_shares(word_index={})
@@ -303,22 +320,26 @@ class Scanner:
                 self.create_file_path_index()
 
                 self.queue.put(
-                    (_("Rescan complete: %(num)s folders found"),
-                     {"num": self.current_folder_count})
+                    ScannerLogMessage(
+                        _("Rescan complete: %(num)s folders found"),
+                        {"num": self.current_folder_count}
+                    )
                 )
 
         except Exception:
             from traceback import format_exc
 
-            self.queue.put((
-                _("Serious error occurred while rescanning shares. If this problem persists, "
-                  "delete %(dir)s/*.dbn and try again. If that doesn't help, please file a bug "
-                  "report with this stack trace included: %(trace)s"), {
-                    "dir": os.path.dirname(next(iter(self.share_db_paths.values()))),
-                    "trace": "\n" + format_exc()
-                }
-            ))
-            self.queue.put(Exception("Scanning failed"))
+            self.queue.put(
+                ScannerLogMessage(
+                    _("Serious error occurred while rescanning shares. If this problem persists, "
+                      "delete %(dir)s/*.dbn and try again. If that doesn't help, please file a bug "
+                      "report with this stack trace included: %(trace)s"), {
+                        "dir": os.path.dirname(next(iter(self.share_db_paths.values()))),
+                        "trace": "\n" + format_exc()
+                    }
+                )
+            )
+            self.queue.put(ScannerState.FAILURE)
 
         finally:
             Shares.close_shares(self.share_dbs)
@@ -363,11 +384,11 @@ class Scanner:
             self.share_dbs, self.share_db_paths, destinations={"public_files", "buddy_files", "trusted_files"}
         )
 
-        file_path_index = (
-            list(self.share_dbs["public_files"])
-            + list(self.share_dbs["buddy_files"])
-            + list(self.share_dbs["trusted_files"])
-        )
+        file_path_index = tuple(chain(
+            self.share_dbs["public_files"],
+            self.share_dbs["buddy_files"],
+            self.share_dbs["trusted_files"]
+        ))
         self.queue.put(file_path_index)
 
         Shares.close_shares(self.share_dbs)
@@ -556,12 +577,20 @@ class Scanner:
                             self.current_file_index += 1
 
                         except OSError as error:
-                            self.queue.put((_("Error while scanning file %(path)s: %(error)s"),
-                                           {"path": path, "error": error}))
+                            self.queue.put(
+                                ScannerLogMessage(
+                                    _("Error while scanning file %(path)s: %(error)s"),
+                                    {"path": path, "error": error}
+                                )
+                            )
 
             except OSError as error:
-                self.queue.put((_("Error while scanning folder %(path)s: %(error)s"),
-                               {"path": folder_path, "error": error}))
+                self.queue.put(
+                    ScannerLogMessage(
+                        _("Error while scanning folder %(path)s: %(error)s"),
+                        {"path": folder_path, "error": error}
+                    )
+                )
 
             self.streams[virtual_folder_path] = self.get_folder_stream(file_list)
 
@@ -593,8 +622,12 @@ class Scanner:
                 tag = self.get_audio_tag(encoded_file_path, size)
 
             except Exception as error:
-                self.queue.put((_("Error while scanning metadata for file %(path)s: %(error)s"),
-                               {"path": file_path, "error": error}))
+                self.queue.put(
+                    ScannerLogMessage(
+                        _("Error while scanning metadata for file %(path)s: %(error)s"),
+                        {"path": file_path, "error": error}
+                    )
+                )
 
         if tag is not None:
             bitrate = tag.bitrate
@@ -1080,29 +1113,28 @@ class Shares:
             while not scanner_queue.empty():
                 item = scanner_queue.get()
 
-                if isinstance(item, Exception):
+                if item == ScannerState.FAILURE:
                     successful = False
                     break
 
-                if isinstance(item, tuple):
-                    template, args = item
-                    log.add(template, args)
+                if isinstance(item, int):
+                    if emit_event is not None:
+                        emit_event("shares-scanning", item)
+
+                elif isinstance(item, ScannerLogMessage):
+                    log.add(item.msg, item.msg_args)
+
+                elif isinstance(item, tuple):
+                    self.file_path_index = item
 
                 elif isinstance(item, SharedFileListResponse):
                     self.compressed_shares[item.permission_level] = item
 
-                elif isinstance(item, list):
-                    self.file_path_index = tuple(item)
-
-                elif isinstance(item, int):
-                    if emit_event is not None:
-                        emit_event("shares-scanning", item)
-
-                elif item == "rescanning":
+                elif item == ScannerState.RESCANNING:
                     if emit_event is not None:
                         emit_event("shares-scanning")
 
-                elif item == "initialized":
+                elif item == ScannerState.INITIALIZED:
                     self.initialized = True
 
         self._scanner_process = None

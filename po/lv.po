@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-17 14:31+0200\n"
-"PO-Revision-Date: 2025-01-05 16:01+0000\n"
+"PO-Revision-Date: 2025-03-02 06:49+0000\n"
 "Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= "
 "19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.10.3-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -573,7 +573,7 @@ msgstr "Paziņot"
 
 #: pynicotine/gtkgui/buddies.py:114
 msgid "Prioritized"
-msgstr "Prioritātes"
+msgstr "Prioritizēts"
 
 #: pynicotine/gtkgui/buddies.py:120
 msgid "Last Seen"
@@ -585,7 +585,7 @@ msgstr "Piezīme"
 
 #: pynicotine/gtkgui/buddies.py:143
 msgid "Add User _Note…"
-msgstr "Pievienot lietotājam _piezīmi…"
+msgstr "Pievie_not lietotājam piezīmi…"
 
 #: pynicotine/gtkgui/buddies.py:145
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:224
@@ -965,7 +965,7 @@ msgid ""
 "that account."
 msgstr ""
 "Jūs pašlaik esat izrakstījies no Soulseek tīkla. Ja vēlaties mainīt jau "
-"esoša Soulseek konta paroli, Jums tajā kontā ir jāpieslēdzas."
+"esoša Soulseek konta paroli, jums tajā kontā ir jāpieslēdzas."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:225
 msgid "Enter password to use when logging in:"
@@ -1097,7 +1097,7 @@ msgstr "Publisks"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:628
 msgid "Accessible To"
-msgstr "Pieejams"
+msgstr "Pieejamība"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:817
 #: pynicotine/gtkgui/ui/uploads.ui:56
@@ -1261,11 +1261,11 @@ msgstr "Vienmēr redzama sānjosla"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1779
 msgid "Top"
-msgstr "Augša"
+msgstr "Augšā"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1780
 msgid "Bottom"
-msgstr "Apakša"
+msgstr "Apakšā"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1781
 msgid "Left"
@@ -1929,7 +1929,7 @@ msgstr "Lejupielādēt failu(s) _uz…"
 
 #: pynicotine/gtkgui/search.py:615
 msgid "Download _Folder(s)"
-msgstr "Lejupielādēt _mapi(-es)"
+msgstr "Lejupielādēt _mapi(es)"
 
 #: pynicotine/gtkgui/search.py:616
 msgid "Download F_older(s) To…"
@@ -1983,7 +1983,7 @@ msgstr "_Rezultātu filtri"
 #: pynicotine/gtkgui/search.py:1277
 #, python-format
 msgid "%d active filter(s)"
-msgstr "%d aktīvais(-ie) filtrs(-i)"
+msgstr "%d aktīvais(ie) filtrs(i)"
 
 #: pynicotine/gtkgui/search.py:1329
 msgid "Add Wi_sh"
@@ -2040,11 +2040,11 @@ msgstr "Savienojums aizvērts"
 
 #: pynicotine/gtkgui/transfers.py:67
 msgid "Connection timeout"
-msgstr "Savienojuma laika ierobežojums"
+msgstr "Savienojuma taimauts"
 
 #: pynicotine/gtkgui/transfers.py:68 pynicotine/gtkgui/transfers.py:673
 msgid "User logged off"
-msgstr "Lietotājs ir izrakstījies"
+msgstr "Lietotājs izrakstījies"
 
 #: pynicotine/gtkgui/transfers.py:70 pynicotine/gtkgui/uploads.py:78
 msgid "Cancelled"
@@ -2129,7 +2129,7 @@ msgstr "Neizdevies"
 
 #: pynicotine/gtkgui/uploads.py:80
 msgid "User Logged Off"
-msgstr "Lietotājs ir izrakstījies"
+msgstr "Lietotājs izrakstījies"
 
 #: pynicotine/gtkgui/uploads.py:142
 #, python-format
@@ -2530,7 +2530,7 @@ msgid ""
 "details."
 msgstr ""
 "Lai izveidotu jaunu Soulseek kontu, ievadiet vēlamo lietotājvārdu un paroli. "
-"Ja Jums jau ir konts, ievadiet savus esošos pieslēgšanās datus."
+"Ja jums jau ir konts, ievadiet savus esošos pieslēgšanās datus."
 
 #: pynicotine/headless/application.py:119
 msgid "The following shares are unavailable:"
@@ -3965,7 +3965,7 @@ msgstr "Pārskenē koplietojamos failus…"
 #: pynicotine/shares.py:306
 #, python-format
 msgid "Rescan complete: %(num)s folders found"
-msgstr "Pārskenēšana pabeigta: %(num)s mapes atrastas"
+msgstr "Pārskenēšana pabeigta: atrastas %(num)s mapes"
 
 #: pynicotine/shares.py:314
 #, python-format
@@ -4002,7 +4002,7 @@ msgstr "Pārskenēšana pārtraukta, jo koplietojumi nav pieejami: %s"
 #: pynicotine/shares.py:1152
 #, python-format
 msgid "User %(user)s is browsing your list of shared files"
-msgstr "Lietotājs %(user)s pārlūko Jūsu kopīgoto failu sarakstu"
+msgstr "Lietotājs %(user)s pārlūko jūsu kopīgoto failu sarakstu"
 
 #: pynicotine/slskmessages.py:3120
 #, python-format
@@ -4058,7 +4058,7 @@ msgstr "Atvienots no servera %(host)s:%(port)s"
 
 #: pynicotine/slskproto.py:1499
 msgid "Someone logged in to your Soulseek account elsewhere"
-msgstr "Kāds citur ir pieslēdzies Jūsu Soulseek kontā"
+msgstr "Kāds citur ir pieslēdzies jūsu Soulseek kontā"
 
 #: pynicotine/uploads.py:382
 #, python-format
@@ -4095,7 +4095,7 @@ msgstr "Neizdevās ielādēt koplietošanas failus no diska: %(error)s"
 #: pynicotine/userbrowse.py:279
 #, python-format
 msgid "Saved list of shared files for user '%(user)s' to %(dir)s"
-msgstr "Saglabāts lietotāja %(user)s koplietoto failu saraksts uz %(dir)s"
+msgstr "Saglabāts lietotāja '%(user)s' koplietoto failu saraksts: %(dir)s"
 
 #: pynicotine/userbrowse.py:283
 #, python-format
@@ -4115,7 +4115,7 @@ msgstr "Nevar saglabāt attēlu uz %(filename)s: %(error)s"
 #: pynicotine/userinfo.py:190
 #, python-format
 msgid "User %(user)s is viewing your profile"
-msgstr "Lietotājs %(user)s skatās Jūsu profilu"
+msgstr "Lietotājs %(user)s skatās jūsu profilu"
 
 #: pynicotine/users.py:272
 #, python-format
@@ -4145,7 +4145,7 @@ msgid ""
 "You have no Soulseek privileges. While privileges are active, your downloads "
 "will be queued ahead of those of non-privileged users."
 msgstr ""
-"Jums nav Soulseek privilēģiju. Kamēr privilēģijas ir aktīvas, Jūsu "
+"Jums nav Soulseek privilēģiju. Kamēr privilēģijas ir aktīvas, jūsu "
 "lejupielādes tiks rindotas pirms nepriviliģēto lietotāju lejupielādēm."
 
 #: pynicotine/users.py:455
@@ -4226,11 +4226,11 @@ msgstr "_Istabas siena"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:124
 msgid "Created by"
-msgstr "Izveidoja"
+msgstr "Izstrādātāji"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:163
 msgid "Translated by"
-msgstr "Tulkojis"
+msgstr "Tulkotāji"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:202
 msgid "License"
@@ -4244,7 +4244,7 @@ msgstr "Laipni lūgti Nicotine+"
 msgid ""
 "If your desired username is already taken, you will be prompted to change it."
 msgstr ""
-"Ja vēlamais lietotājvārds jau ir aizņemts, Jums tiks piedāvāts to mainīt."
+"Ja vēlamais lietotājvārds jau ir aizņemts, jums tiks piedāvāts to mainīt."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:322
 msgid ""
@@ -4303,8 +4303,8 @@ msgid ""
 "Donating to Soulseek grants you privileges for a certain time period. If you "
 "have privileges, your downloads will be queued ahead of non-privileged users."
 msgstr ""
-"Ziedojot Soulseek Jums tiek piešķirtas privilēģijas uz noteiktu laika "
-"periodu. Ja Jums ir privilēģijas, jūsu lejupielādes būs rindā pirms "
+"Ziedojot Soulseek jums tiek piešķirtas privilēģijas uz noteiktu laika "
+"periodu. Ja jums ir privilēģijas, jūsu lejupielādes būs rindā pirms "
 "lietotājiem, kuriem nav privilēģiju."
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:20
@@ -4551,7 +4551,7 @@ msgstr "Personīgās intereses"
 
 #: pynicotine/gtkgui/ui/interests.ui:40
 msgid "Add something you like…"
-msgstr "Pievienojiet kaut ko, kas Jums patīk…"
+msgstr "Pievienojiet kaut ko, kas jums patīk…"
 
 #: pynicotine/gtkgui/ui/interests.ui:62
 msgid "Personal Dislikes"
@@ -4559,7 +4559,7 @@ msgstr "Personīgi nepatīk"
 
 #: pynicotine/gtkgui/ui/interests.ui:80
 msgid "Add something you dislike…"
-msgstr "Pievienojiet kaut ko, kas Jums nepatīk…"
+msgstr "Pievienojiet kaut ko, kas jums nepatīk…"
 
 #: pynicotine/gtkgui/ui/interests.ui:143
 msgid "Refresh Recommendations"
@@ -4648,7 +4648,7 @@ msgstr "Konfigurēt augšupielādes"
 msgid ""
 "Users' attempts to download your shared files are queued and managed here"
 msgstr ""
-"Lietotāju mēģinājumi lejupielādēt Jūsu koplietotos failus tiek ierindoti un "
+"Lietotāju mēģinājumi lejupielādēt jūsu koplietotos failus tiek ierindoti un "
 "pārvaldīti šeit"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:788
@@ -4824,7 +4824,7 @@ msgstr ""
 "pārslēdzot pogu 'Rezultātu filtri'. Filtrs sastāv no vairākiem laukiem, kuri "
 "visi tiek pielietoti, nospiežot Enter jebkurā no laukiem. Filtrēšana tiek "
 "nekavējoties pielietota jau saņemtajiem rezultātiem, kā arī tiem, kas vēl "
-"nav saņemti."
+"tiks saņemti."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:48
 msgid ""
@@ -5160,7 +5160,7 @@ msgid ""
 "Prohibit users from accessing your shared files, based on username, IP "
 "address or country."
 msgstr ""
-"Aizliegt lietotājiem piekļūt Jūsu koplietotajiem failiem, pamatojoties uz "
+"Aizliegt lietotājiem piekļūt jūsu koplietotajiem failiem, pamatojoties uz "
 "lietotājvārdu, IP adresi vai valsti."
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:43
@@ -5337,7 +5337,7 @@ msgstr "Dubultklikšķa darbība priekš lejupielādēm:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:152
 msgid "Allow users to send you any files:"
-msgstr "Atļaut lietotājiem sūtīt Jums jebkādus failus:"
+msgstr "Atļaut lietotājiem sūtīt jums jebkādus failus:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:248
 #: pynicotine/gtkgui/ui/userbrowse.ui:45
@@ -5358,7 +5358,7 @@ msgstr "Saņemtie faili:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:316
 msgid "Events"
-msgstr "Pasākumi"
+msgstr "Notikumi"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:333
 msgid "Run command after file download finishes ($ for file path):"
@@ -5677,11 +5677,11 @@ msgstr "Ierobežot augšupielādes ātrumu:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:137
 msgid "Per transfer"
-msgstr "Par pārsūtījumu"
+msgstr "Uz pārsūtījumu"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:145
 msgid "Total transfers"
-msgstr "Kopā pārsūtījumi"
+msgstr "Uz visiem pārsūtījumiem"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:217
 #: pynicotine/gtkgui/ui/userinfo.ui:257
@@ -5916,15 +5916,15 @@ msgstr "Lietotāju statusi"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1351
 msgid "Online color:"
-msgstr "Tiešsaistes krāsa:"
+msgstr "\"Tiešsaistē\" krāsa:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1391
 msgid "Away color:"
-msgstr "Aizgājis krāsa:"
+msgstr "\"Aizgājis\" krāsa:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1431
 msgid "Offline color:"
-msgstr "Bezsaistes krāsa:"
+msgstr "\"Bezsaistē\" krāsa:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1474
 msgid "Text Entries"
@@ -6024,7 +6024,7 @@ msgstr "Augšupielādes ātrums"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:230
 msgid "Free Upload Slots"
-msgstr "Brīvie augšupielādes sloti"
+msgstr "Brīvi augšupielādes sloti"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:284
 msgid "Queued Uploads"

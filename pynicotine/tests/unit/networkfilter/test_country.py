@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2024-2025 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -66,11 +66,11 @@ class CountryTest(TestCase):
 
         for ip_address, country_code in (
             ("0.255.255.255", ""),
-            ("1.0.0.0", "US"),
-            ("1.0.0.255", "US"),
+            ("1.0.0.0", "AU"),
+            ("1.0.0.255", "AU"),
             ("1.0.1.0", "CN"),
             ("1.255.255.255", "KR"),
-            ("2.0.0.0", "GB"),
+            ("2.0.0.0", "US"),
             ("4.255.255.255", "US"),
             ("5.0.0.0", "SY"),
             ("9.255.255.255", "US"),

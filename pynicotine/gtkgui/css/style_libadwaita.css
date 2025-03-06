@@ -13,3 +13,10 @@ treeview > header > button > box {
     font-size: 0.92em;
 }
 
+dropdown popover.menu scrolledwindow > listview > row {
+    /* Reduce menu item height in dropdowns to match other menus */
+    min-height: 32px;
+    padding-bottom: 0;
+    padding-top: 0;
+}
+

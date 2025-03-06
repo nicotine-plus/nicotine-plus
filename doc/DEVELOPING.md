@@ -247,18 +247,17 @@ within 24 hours. In order to preserve author information for commits, use the
 
 ## Releases
 
-Nicotine+ tries to follow [Semantic Versioning](https://semver.org/) when
-possible. As cited in the specification:
+Nicotine+ uses the following versioning scheme: `A.B.C`, e.g. `3.3.8`
 
-> Given a version number MAJOR.MINOR.PATCH, increment the:
-> 
->   MAJOR version when you make incompatible API changes,  
->   MINOR version when you add functionality in a backwards compatible manner,
->   and  
->   PATCH version when you make backwards compatible bug fixes.
->
-> Additional labels for pre-release and build metadata are available as
-> extensions to the MAJOR.MINOR.PATCH format.
+  - A is incremented when major changes are made to the user interface that
+    significantly change the workflow of the application. In practice, this is
+    unlikely to happen.
+  - B is incremented when significant features or new dependencies are added,
+    version requirements are increased, or in the case of major changes to
+    existing code that are deemed too intrusive for a smaller release.
+  - C is incremented when bug fixes, performance improvements or smaller
+    tweaks to existing functionality are made. Low-risk functionality that does
+    not affect translatable strings can also be added.
 
 Release dates are not set in stone, as Nicotine+ development is done by
 volunteers in their spare time. However, keep the following points in mind:
@@ -304,7 +303,7 @@ should do when releasing a new version of Nicotine+.
     of commits), as well as a list of closed issues on GitHub.
 
  5. Increase the Nicotine+ version number / add new version entries in the
-    master branch. Nicotine+ uses [Semantic Versioning](https://semver.org/).
+    master branch.
     The following files need to be modified:
     - [NEWS.md](https://github.com/nicotine-plus/nicotine-plus/blob/HEAD/NEWS.md)
     - [README.md](https://github.com/nicotine-plus/nicotine-plus/blob/HEAD/README.md)

@@ -691,6 +691,7 @@
                           <object class="GtkCheckButton" id="tab_visible_userlist_toggle">
                             <property name="label" translatable="yes">Buddies</property>
                             <property name="visible">True</property>
+                            <signal name="toggled" handler="on_buddy_list_tab_toggled"/>
                           </object>
                         </child>
                       </object>
