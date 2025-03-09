@@ -82,9 +82,7 @@ include_files = []
 def process_files(folder_path, callback, callback_data=None, starts_with=None, ends_with=None, recursive=False):
 
     for full_path in glob.glob(os.path.join(folder_path, "**"), recursive=recursive):
-        short_folder_path = os.path.dirname(os.path.relpath(full_path, folder_path))
-        real_full_path = os.path.realpath(full_path)
-        short_path = os.path.join(short_folder_path, os.path.basename(real_full_path))
+        short_path = os.path.relpath(full_path, folder_path)
 
         if starts_with and not short_path.startswith(starts_with):
             continue
@@ -92,7 +90,7 @@ def process_files(folder_path, callback, callback_data=None, starts_with=None, e
         if ends_with and not short_path.endswith(ends_with):
             continue
 
-        callback(real_full_path, short_path, callback_data)
+        callback(full_path, short_path, callback_data)
 
 
 def add_file(file_path, output_path):
@@ -209,19 +207,28 @@ def add_typelibs():
 
 def add_gtk():
 
+    # Libraries
     if sys.platform == "win32":
+        add_file(
+            file_path=os.path.join(LIB_PATH, "libgtk-4-1.dll"),
+            output_path="lib/libgtk-4-1.dll"
+        )
+        add_file(
+            file_path=os.path.join(LIB_PATH, "libadwaita-1-0.dll"),
+            output_path="lib/libadwaita-1-0.dll"
+        )
         # gdbus required for single-instance application (Windows)
         add_file(file_path=os.path.join(LIB_PATH, "gdbus.exe"), output_path="lib/gdbus.exe")
 
-    # This also includes all dlls required by GTK
-    add_files(
-        folder_path=LIB_PATH, output_path="lib",
-        starts_with="libgtk-4", ends_with=LIB_EXTENSION
-    )
-    add_files(
-        folder_path=LIB_PATH, output_path="lib",
-        starts_with="libadwaita-", ends_with=LIB_EXTENSION
-    )
+    elif sys.platform == "darwin":
+        add_file(
+            file_path=os.path.join(LIB_PATH, "libgtk-4.1.dylib"),
+            output_path="lib/libgtk-4.1.dylib"
+        )
+        add_file(
+            file_path=os.path.join(LIB_PATH, "libadwaita-1.0.dylib"),
+            output_path="lib/libadwaita-1.0.dylib"
+        )
 
     # Schemas
     add_file(
