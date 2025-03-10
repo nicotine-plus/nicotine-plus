@@ -232,9 +232,9 @@ class Database:
 
 
 class ScannerState:
-    INITIALIZED = 0
-    RESCANNING = 1
-    FAILURE = 2
+    INITIALIZED = "initialized"
+    RESCANNING = "rescanning"
+    FAILURE = "failure"
 
 
 class ScannerLogMessage:
