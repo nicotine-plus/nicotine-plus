@@ -73,7 +73,7 @@ def check_gtk_version(gtk_api_version, is_fallback=False):
         if is_gtk3_supported:
             gtk_api_version_fallback = "3"
     else:
-        pygobject_version = (3, 26, 1)
+        pygobject_version = (3, 38, 0)
         gtk_api_version = "3"
         gtk_api_version_fallback = "4"
 
