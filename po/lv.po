@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-08 11:16+0200\n"
-"PO-Revision-Date: 2025-03-02 06:49+0000\n"
+"PO-Revision-Date: 2025-03-14 14:01+0000\n"
 "Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= "
 "19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
-"X-Generator: Weblate 5.10.3-dev\n"
+"X-Generator: Weblate 5.11-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -4120,7 +4120,7 @@ msgstr "Nevar saglabāt attēlu uz %(filename)s: %(error)s"
 #: pynicotine/userinfo.py:190
 #, python-format
 msgid "User %(user)s is viewing your profile"
-msgstr "Lietotājs %(user)s skatās jūsu profilu"
+msgstr "Lietotājs %(user)s apskata jūsu profilu"
 
 #: pynicotine/users.py:272
 #, python-format
