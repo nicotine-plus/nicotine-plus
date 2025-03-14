@@ -4,7 +4,7 @@
 
 ### Required
 
- - [python3](https://www.python.org/) >= 3.6
+ - [python3](https://www.python.org/) >= 3.9
       for runtime language;
  - [gtk4](https://gtk.org/) >= 4.6.9 or [gtk3](https://gtk.org/) >= 3.22.30
       for graphical interface;
