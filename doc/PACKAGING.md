@@ -58,7 +58,7 @@ your own machine.
 ### Building a Frozen Application with cx_Freeze
 
 Follow the instructions on [installing MSYS2](https://www.msys2.org/#installation).
-Once MSYS2 is installed, launch the MINGW64 environment.
+Once MSYS2 is installed, launch the CLANG64 environment.
 
 Clone the `nicotine-plus` Git repository:
 
@@ -72,7 +72,7 @@ Install dependencies:
 
 ```sh
 export ARCH=x86_64
-pacman --noconfirm -S --needed mingw-w64-$ARCH-python
+pacman --noconfirm -S --needed mingw-w64-clang-$ARCH-python
 python3 packaging/windows/dependencies.py
 ```
 

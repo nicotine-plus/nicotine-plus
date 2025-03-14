@@ -98,7 +98,7 @@ jobs:
       matrix:
         include:
           - arch: x86_64
-            prefix: mingw-w64-x86_64
+            prefix: mingw-w64-clang-x86_64
     defaults:
       run:
         shell: msys2 {0}
@@ -109,7 +109,7 @@ jobs:
       - name: Setup msys2
         uses: msys2/setup-msys2@v2
         with:
-          msystem: mingw64
+          msystem: clang64
           release: false
           update: true
           install: >-
