@@ -86,7 +86,7 @@
               <object class="GtkLabel">
                 <property name="height-request">24</property>
                 <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Autoclear finished/filtered downloads from transfer list</property>
+                <property name="label" translatable="yes">Automatically remove finished and filtered downloads from list</property>
                 <property name="mnemonic-widget">autoclear_downloads_toggle</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
