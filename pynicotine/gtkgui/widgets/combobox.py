@@ -47,6 +47,7 @@ class ComboBox:
         self._search_delay = 150
         self._search_delay_timer = None
         self._selection_bound = None
+        self._is_completion_enabled = True
         self._is_updating_entry = False
         self._is_updating_items = False
         self._is_select_callback_enabled = False
@@ -460,6 +461,9 @@ class ComboBox:
         return True
 
     def _on_changed_text(self, is_deletion=False):
+
+        if not self._is_completion_enabled:
+            return
 
         if self._is_updating_entry:
             self._is_updating_entry = False

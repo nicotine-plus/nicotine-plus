@@ -16,14 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 import gi
 from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
+from pynicotine.gtkgui.widgets.combobox import ComboBox
 from pynicotine.gtkgui.widgets.theme import add_css_class
 
 
@@ -36,6 +35,11 @@ class ChatEntry:
         self.widget = Gtk.Entry(
             hexpand=True, placeholder_text=_("Send message…"), primary_icon_name="mail-send-symbolic",
             sensitive=False, show_emoji_icon=True, width_chars=8, visible=True
+        )
+        self.container = Gtk.Box(visible=True)
+        self.combobox = ComboBox(
+            container=self.container, has_entry=True, has_dropdown=False,
+            entry=self.widget, visible=True
         )
         self.send_message_callback = send_message_callback
         self.command_callback = command_callback
@@ -53,13 +57,8 @@ class ChatEntry:
         self.model = Gtk.ListStore(str)
         self.column_numbers = list(range(self.model.get_n_columns()))
 
-        self.entry_completion = Gtk.EntryCompletion(model=self.model, popup_single_match=False)
-        self.entry_completion.set_text_column(0)
-        self.entry_completion.set_match_func(self.entry_completion_find_match)
-        self.entry_completion.connect("match-selected", self.entry_completion_found_match)
-
-        self.widget.set_completion(self.entry_completion)
-        self.patch_popover_hide_broadway(self.widget)
+        #self.entry_completion.set_match_func(self.entry_completion_find_match)
+        #self.entry_completion.connect("match-selected", self.entry_completion_found_match)
 
         self.widget.connect("activate", self.on_send_message)
         self.widget.connect("changed", self.on_changed)
@@ -119,21 +118,16 @@ class ChatEntry:
             return
 
         if config.sections["words"]["dropdown"]:
-            iterator = self.model.insert_with_valuesv(-1, self.column_numbers, [item])
-        else:
-            iterator = None
+            self.combobox.append(item)
 
-        self.completions[item] = iterator
+        self.completions[item] = None
 
     def remove_completion(self, item):
 
         if not self.is_completion_enabled():
             return
 
-        iterator = self.completions.pop(item, None)
-
-        if iterator is not None:
-            self.model.remove(iterator)
+        self.combobox.remove_id(item)
 
     def set_parent(self, entity=None, container=None, chat_view=None):
 
@@ -143,10 +137,10 @@ class ChatEntry:
         self.entity = entity
         self.chat_view = chat_view
 
-        parent = self.widget.get_parent()
+        parent = self.container.get_parent()
 
         if parent is not None:
-            parent.remove(self.widget)
+            parent.remove(self.container)
 
         if container is None:
             return
@@ -154,24 +148,21 @@ class ChatEntry:
         unsent_message = self.unsent_messages.get(entity, "")
 
         if GTK_API_VERSION >= 4:
-            container.append(self.widget)  # pylint: disable=no-member
+            container.append(self.container)  # pylint: disable=no-member
         else:
-            container.add(self.widget)     # pylint: disable=no-member
+            container.add(self.container)     # pylint: disable=no-member
 
         self.widget.set_text(unsent_message)
         self.widget.set_position(-1)
 
     def set_completions(self, completions):
 
-        if self.entry_completion is None:
-            return
-
         config_words = config.sections["words"]
 
-        self.entry_completion.set_popup_completion(config_words["dropdown"])
-        self.entry_completion.set_minimum_key_length(config_words["characters"])
+        self.combobox.is_completion_enabled = config_words["dropdown"]
+        #self.entry_completion.set_minimum_key_length(config_words["characters"])
 
-        self.model.clear()
+        self.combobox.clear()
         self.completions.clear()
 
         if not self.is_completion_enabled():
@@ -181,11 +172,9 @@ class ChatEntry:
             word = str(word)
 
             if config_words["dropdown"]:
-                iterator = self.model.insert_with_valuesv(-1, self.column_numbers, [word])
-            else:
-                iterator = None
+                self.combobox.append(word)
 
-            self.completions[word] = iterator
+            self.completions[word] = None
 
     def set_spell_check_enabled(self, enabled):
 
@@ -243,18 +232,6 @@ class ChatEntry:
     def on_icon_pressed(self, _entry, icon_pos, *_args):
         if icon_pos == Gtk.EntryIconPosition.PRIMARY:
             self.on_send_message()
-
-    @classmethod
-    def patch_popover_hide_broadway(cls, entry):
-
-        # Workaround for GTK 4 bug where broadwayd uses a lot of CPU after hiding popover
-        if GTK_API_VERSION >= 4 and os.environ.get("GDK_BACKEND") == "broadway":
-            completion_popover = list(entry)[-1]
-            completion_popover.connect("hide", cls.on_popover_hide_broadway)
-
-    @staticmethod
-    def on_popover_hide_broadway(popover):
-        popover.unrealize()
 
     def entry_completion_find_match(self, _completion, entry_text, iterator):
 
