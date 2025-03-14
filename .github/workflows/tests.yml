@@ -57,7 +57,7 @@ jobs:
       fail-fast: false
       matrix:
         container: ['debian:bullseye', 'debian:bookworm', 'debian:unstable',
-                    'ubuntu:focal', 'ubuntu:jammy', 'ubuntu:noble', 'ubuntu:devel']
+                    'ubuntu:jammy', 'ubuntu:noble', 'ubuntu:devel']
     container: ${{ matrix.container }}
     steps:
       - name: Checkout code
