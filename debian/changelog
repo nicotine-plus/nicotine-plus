@@ -1,3 +1,9 @@
+nicotine (3.4.0-dev1) oracular; urgency=medium
+
+  * Development version 1.
+
+ -- Mat <mail@mathias.is>  Fri, 14 Mar 2025 20:16:24 +0300
+
 nicotine (3.3.10-1) oracular; urgency=medium
 
   * Latest upstream.
