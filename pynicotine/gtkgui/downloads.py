@@ -177,7 +177,7 @@ class Downloads(Transfers):
             callback_data=(download_callback, callback_args)
         ).present()
 
-    def on_copy_url(self, *_args):
+    def on_copy_file_url(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
 

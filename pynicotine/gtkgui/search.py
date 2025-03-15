@@ -604,9 +604,9 @@ class Search:
 
         self.popup_menu_copy = PopupMenu(self.window.application)
         self.popup_menu_copy.add_items(
-            ("#" + _("Copy _File Path"), self.on_copy_file_path),
-            ("#" + _("Copy _URL"), self.on_copy_url),
-            ("#" + _("Copy Folder U_RL"), self.on_copy_folder_url)
+            ("#" + _("Copy File Path"), self.on_copy_file_path),
+            ("#" + _("Copy File URL"), self.on_copy_file_url),
+            ("#" + _("Copy Folder URL"), self.on_copy_folder_url)
         )
 
         self.popup_menu = FilePopupMenu(
@@ -621,7 +621,7 @@ class Search:
             ("#" + _("View User _Profile"), self.on_user_profile),
             ("#" + _("_Browse Folder"), self.on_browse_folder),
             ("", None),
-            (">" + _("Copy"), self.popup_menu_copy),
+            (">" + _("_Copy"), self.popup_menu_copy),
             (">" + _("User Actions"), self.popup_menu_users)
         )
 
@@ -1637,7 +1637,7 @@ class Search:
         file_path = self.tree_view.get_row_value(iterator, "file_data").path
         clipboard.copy_text(file_path)
 
-    def on_copy_url(self, *_args):
+    def on_copy_file_url(self, *_args):
 
         iterator = next(iter(self.selected_results.values()), None)
 
