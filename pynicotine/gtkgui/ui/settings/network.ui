@@ -296,7 +296,7 @@
               <object class="GtkLabel">
                 <property name="height-request">24</property>
                 <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Auto-connect to server on startup</property>
+                <property name="label" translatable="yes">Connect to server on startup</property>
                 <property name="mnemonic-widget">auto_connect_startup_toggle</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
