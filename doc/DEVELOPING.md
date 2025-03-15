@@ -28,9 +28,9 @@ allows for running Nicotine+ on almost any system without compiling anything.
 Developing in a single language is also easier for everyone involved in the
 project.
 
-We aim to support the oldest minor Python 3 version still used by supported
-releases of distributions and operating systems. The minimum version Nicotine+
-currently supports is 3.6.
+We aim to support the oldest [Python version](https://devguide.python.org/versions/)
+still receiving security updates, up to the latest.
+
 
 ### GTK
 
