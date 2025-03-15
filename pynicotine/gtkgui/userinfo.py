@@ -501,10 +501,13 @@ class UserInfo:
         if not self.refreshing:
             return
 
-        self.info_bar.show_error_message(
-            _("Unable to request information from user. Either you both have a closed listening "
-              "port, the user is offline, or there's a temporary connectivity issue.")
-        )
+        if core.users.statuses.get(self.user, UserStatus.OFFLINE) == UserStatus.OFFLINE:
+            error_message = _("Cannot request information from the user, since they are offline.")
+        else:
+            error_message = _("Cannot request information from the user, possibly due to "
+                              "a closed listening port or temporary connectivity issue.")
+
+        self.info_bar.show_error_message(error_message)
         self.set_finished()
 
     def pulse_progress(self, repeat=True):
