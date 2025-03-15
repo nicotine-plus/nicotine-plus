@@ -56,10 +56,13 @@ class TabLabel:
 
             self.eventbox = Gtk.Box()
         else:
-            self.gesture_click = Gtk.GestureMultiPress(widget=self.container)
+            self.gesture_click = Gtk.GestureMultiPress(widget=self.container)  # pylint: disable=c-extension-no-member
 
-            self.eventbox = Gtk.EventBox(visible=True)
-            self.eventbox.add_events(int(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK))
+            self.eventbox = Gtk.EventBox(visible=True)   # pylint: disable=c-extension-no-member
+            self.eventbox.add_events(
+                int(Gdk.EventMask.SCROLL_MASK            # pylint: disable=c-extension-no-member
+                    | Gdk.EventMask.SMOOTH_SCROLL_MASK)  # pylint: disable=c-extension-no-member
+            )
 
         self.box = Gtk.Box(spacing=6, visible=True)
 
@@ -108,12 +111,14 @@ class TabLabel:
             self.close_button = Gtk.Button(icon_name="window-close-symbolic")
             self.close_button.is_close_button = True
             self.close_button.get_child().is_close_button = True
-            self.container.append(self.close_button)  # pylint: disable=no-member
+            self.container.append(self.close_button)     # pylint: disable=no-member
         else:
             self.close_button = Gtk.Button(image=Gtk.Image(icon_name="window-close-symbolic"))
-            self.container.add(self.close_button)     # pylint: disable=no-member
-            self.close_button.add_events(             # pylint: disable=no-member
-                int(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK))
+            self.container.add(self.close_button)        # pylint: disable=no-member
+            self.close_button.add_events(                # pylint: disable=no-member
+                int(Gdk.EventMask.SCROLL_MASK            # pylint: disable=c-extension-no-member
+                    | Gdk.EventMask.SMOOTH_SCROLL_MASK)  # pylint: disable=c-extension-no-member
+            )
 
         add_css_class(self.close_button, "flat")
         self.close_button.set_tooltip_text(_("Close Tab"))
@@ -328,8 +333,10 @@ class IconNotebook:
             self.pages_button.connect("toggled", self.on_pages_button_pressed)
             self.pages_button_container.add(self.pages_button)  # pylint: disable=no-member
 
-            self.widget.add_events(  # pylint: disable=no-member
-                int(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK))
+            self.widget.add_events(                      # pylint: disable=no-member
+                int(Gdk.EventMask.SCROLL_MASK            # pylint: disable=c-extension-no-member
+                    | Gdk.EventMask.SMOOTH_SCROLL_MASK)  # pylint: disable=c-extension-no-member
+            )
             self.widget.connect("scroll-event", self.on_tab_scroll_event)
 
         for style_class in ("circular", "flat"):
@@ -748,7 +755,7 @@ class IconNotebook:
         if not current_page:
             return False
 
-        if Gtk.get_event_widget(event).is_ancestor(current_page):
+        if Gtk.get_event_widget(event).is_ancestor(current_page):  # pylint: disable=c-extension-no-member
             return False
 
         if event.direction == Gdk.ScrollDirection.SMOOTH:

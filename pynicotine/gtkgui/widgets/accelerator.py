@@ -29,7 +29,7 @@ class Accelerator:
     if GTK_API_VERSION >= 4:
         shortcut_triggers = {}
     else:
-        KEYMAP = Gdk.Keymap.get_for_display(Gdk.Display.get_default())
+        KEYMAP = Gdk.Keymap.get_for_display(Gdk.Display.get_default())  # pylint: disable=c-extension-no-member
         keycodes_mods = {}
 
     def __init__(self, accelerator, widget, callback, user_data=None):

@@ -102,7 +102,7 @@ class RoomList(Popover):
                 parent.add_controller(parent.gesture_click)
             else:
                 parent.set_has_window(True)
-                parent.gesture_click = Gtk.GestureMultiPress(widget=parent)
+                parent.gesture_click = Gtk.GestureMultiPress(widget=parent)  # pylint: disable=c-extension-no-member
 
             parent.gesture_click.connect("released", self.on_toggle_label_pressed, toggle)
 

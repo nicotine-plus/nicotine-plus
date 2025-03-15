@@ -307,7 +307,9 @@ class UserInfo:
             # Setting a pixel size of 21 results in a misaligned country flag
             self.country_icon.set_pixel_size(0)
 
-            self.picture = Gtk.EventBox(can_focus=True, hexpand=True, vexpand=True, visible=True)
+            self.picture = Gtk.EventBox(           # pylint: disable=c-extension-no-member
+                can_focus=True, hexpand=True, vexpand=True, visible=True
+            )
             self.picture.connect("draw", self.on_draw_picture)
 
             self.picture_view.add(self.picture)    # pylint: disable=no-member
@@ -462,7 +464,8 @@ class UserInfo:
             else:
                 data_stream = Gio.MemoryInputStream.new_from_bytes(GLib.Bytes(data))
                 self.picture_data = GdkPixbuf.Pixbuf.new_from_stream(data_stream, cancellable=None)
-                self.picture_surface = Gdk.cairo_surface_create_from_pixbuf(self.picture_data, scale=1, for_window=None)
+                self.picture_surface = Gdk.cairo_surface_create_from_pixbuf(  # pylint: disable=c-extension-no-member
+                    self.picture_data, scale=1, for_window=None)
 
         except Exception as error:
             log.add(_("Failed to load picture for user %(user)s: %(error)s"), {

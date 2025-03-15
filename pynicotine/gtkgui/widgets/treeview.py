@@ -377,9 +377,9 @@ class TreeView:
 
             if GTK_API_VERSION >= 4:
                 gesture_click = Gtk.GestureClick()
-                column_header.add_controller(gesture_click)  # pylint: disable=no-member
+                column_header.add_controller(gesture_click)                  # pylint: disable=no-member
             else:
-                gesture_click = Gtk.GestureMultiPress(widget=column_header)
+                gesture_click = Gtk.GestureMultiPress(widget=column_header)  # pylint: disable=c-extension-no-member
 
             gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
             gesture_click.connect("released", self.on_column_header_pressed, column_id, sort_column_id)

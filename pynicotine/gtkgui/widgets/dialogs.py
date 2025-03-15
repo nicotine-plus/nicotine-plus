@@ -65,12 +65,12 @@ class Dialog(Window):
         if GTK_API_VERSION == 3:
             if os.environ.get("GDK_BACKEND") == "broadway":
                 # Workaround for dialogs being centered at (0,0) coords on startup
-                position = Gtk.WindowPosition.CENTER
+                position = Gtk.WindowPosition.CENTER            # pylint: disable=c-extension-no-member
             else:
-                position = Gtk.WindowPosition.CENTER_ON_PARENT
+                position = Gtk.WindowPosition.CENTER_ON_PARENT  # pylint: disable=c-extension-no-member
 
             widget.set_position(position)                    # pylint: disable=no-member
-            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)  # pylint: disable=no-member
+            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)  # pylint: disable=c-extension-no-member,no-member
 
         if content_box:
             content_box.set_vexpand(True)
@@ -375,9 +375,9 @@ class MessageDialog(Window):
 
             action_box.append(action_area)                            # pylint: disable=no-member
         else:
-            widget.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)  # pylint: disable=no-member
+            widget.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)  # pylint: disable=c-extension-no-member,no-member
             widget.set_skip_taskbar_hint(True)                        # pylint: disable=no-member
-            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)           # pylint: disable=no-member
+            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)           # pylint: disable=c-extension-no-member,no-member
             widget.set_titlebar(header_bar)
             widget.connect("delete-event", self._on_close_request)
 

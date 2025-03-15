@@ -3496,7 +3496,8 @@ class Preferences(Dialog):
                         switch_label.add_controller(switch_label.gesture_click)
                     else:
                         switch_label.set_has_window(True)
-                        switch_label.gesture_click = Gtk.GestureMultiPress(widget=switch_label)
+                        switch_label.gesture_click = Gtk.GestureMultiPress(  # pylint: disable=c-extension-no-member
+                            widget=switch_label)
 
                     obj.set_receives_default(True)
                     switch_label.gesture_click.connect("released", self.on_toggle_label_pressed, obj)

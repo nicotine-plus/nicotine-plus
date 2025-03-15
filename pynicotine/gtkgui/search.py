@@ -1683,7 +1683,7 @@ class Search:
             self.grouping_button.set_has_frame(active)
         else:
             self.grouping_button.set_relief(
-                Gtk.ReliefStyle.NORMAL if active else Gtk.ReliefStyle.NONE
+                Gtk.ReliefStyle.NORMAL if active else Gtk.ReliefStyle.NONE  # pylint: disable=c-extension-no-member
             )
 
         config.sections["searches"]["group_searches"] = mode

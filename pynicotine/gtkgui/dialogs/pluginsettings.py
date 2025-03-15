@@ -129,7 +129,10 @@ class PluginSettings(Dialog):
         group_radios = []
 
         for option_label in items:
-            widget_class = Gtk.CheckButton if GTK_API_VERSION >= 4 else Gtk.RadioButton
+            if GTK_API_VERSION >= 4:
+                widget_class = Gtk.CheckButton
+            else:
+                widget_class = Gtk.RadioButton  # pylint: disable=c-extension-no-member
             radio = widget_class(group=last_radio, label=option_label, receives_default=True, visible=True)
 
             if not last_radio:

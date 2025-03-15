@@ -332,7 +332,7 @@ class MainWindow(Window):
             y_pos = config.sections["ui"]["yposition"]
 
             if x_pos == -1 and y_pos == -1:
-                self.widget.set_position(Gtk.WindowPosition.CENTER)
+                self.widget.set_position(Gtk.WindowPosition.CENTER)  # pylint: disable=c-extension-no-member
             else:
                 self.widget.move(x_pos, y_pos)
 
@@ -351,7 +351,7 @@ class MainWindow(Window):
             self.widget.add_controller(key_controller)
 
         else:
-            self.gesture_click = Gtk.GestureMultiPress(widget=self.widget)
+            self.gesture_click = Gtk.GestureMultiPress(widget=self.widget)  # pylint: disable=c-extension-no-member
             self.widget.connect("key-release-event", self.on_cancel_auto_away)
 
         self.gesture_click.set_button(0)
@@ -396,10 +396,12 @@ class MainWindow(Window):
 
     def on_window_state_changed_gtk3(self, _window, event):
 
-        if not event.changed_mask & Gdk.WindowState.FULLSCREEN:
+        if not event.changed_mask & Gdk.WindowState.FULLSCREEN:  # pylint: disable=c-extension-no-member
             return
 
-        self.is_fullscreen = event.new_window_state & Gdk.WindowState.FULLSCREEN
+        self.is_fullscreen = (
+            event.new_window_state & Gdk.WindowState.FULLSCREEN  # pylint: disable=c-extension-no-member
+        )
         self.toggle_fullscreen_toolbar()
 
     def on_window_visible_changed(self, *_args):
