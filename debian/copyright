@@ -41,8 +41,8 @@ Copyright: 2016-2021 Bowtie AB
 License: Expat
 
 Files: pynicotine/external/tinytag.py
-Copyright: 2014-2023 Tom Wallroth
-           2021-2023 Mat (mathiascode)
+Copyright: 2014-2025 Tom Wallroth, Mat (mathiascode), et al.
+           2020-2025 Nicotine+ Contributors
 License: Expat
 
 License: GPL-3+

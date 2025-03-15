@@ -594,16 +594,18 @@ class Scanner:
 
             self.streams[virtual_folder_path] = self.get_folder_stream(file_list)
 
-    def get_audio_tag(self, encoded_file_path, size):
+    def get_audio_tag(self, file_path, size):
 
-        parser_class = TinyTag._get_parser_for_filename(encoded_file_path)  # pylint: disable=protected-access
+        parser_class = TinyTag._get_parser_for_filename(file_path)  # pylint: disable=protected-access
 
         if parser_class is None:
             return None
 
-        with open(encoded_file_path, "rb") as file_handle:
-            tag = parser_class(file_handle, size)
-            tag.load(tags=False, duration=True, image=False)
+        with open(encode_path(file_path), "rb") as file_handle:
+            tag = parser_class()
+            tag._filehandler = file_handle                          # pylint: disable=protected-access
+            tag.filesize = size
+            tag._load(tags=False, duration=True, image=False)       # pylint: disable=protected-access
 
         return tag
 
@@ -613,13 +615,12 @@ class Scanner:
         tag = None
         quality = None
         duration = None
-        encoded_file_path = encode_path(file_path)
         size = file_stat.st_size
 
         # We skip metadata scanning of files without meaningful content
         if size > 128:
             try:
-                tag = self.get_audio_tag(encoded_file_path, size)
+                tag = self.get_audio_tag(file_path, size)
 
             except Exception as error:
                 self.queue.put(
