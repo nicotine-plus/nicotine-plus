@@ -305,7 +305,7 @@ class UserBrowse:
                 ("#" + _("F_ile Properties"), self.on_file_properties, True),
                 ("", None),
                 ("#" + _("Copy _Folder Path"), self.on_copy_folder_path),
-                ("#" + _("Copy Folder U_RL"), self.on_copy_folder_url),
+                ("#" + _("Copy Folder _URL"), self.on_copy_folder_url),
                 ("", None),
                 (">" + _("User Actions"), self.user_popup_menu)
             )
@@ -317,7 +317,7 @@ class UserBrowse:
                 ("#" + _("F_ile Properties"), self.on_file_properties, True),
                 ("", None),
                 ("#" + _("Copy _Folder Path"), self.on_copy_folder_path),
-                ("#" + _("Copy Folder U_RL"), self.on_copy_folder_url),
+                ("#" + _("Copy Folder _URL"), self.on_copy_folder_url),
                 ("", None),
                 (">" + _("User Actions"), self.user_popup_menu)
             )
@@ -388,7 +388,7 @@ class UserBrowse:
                 ("#" + _("F_ile Properties"), self.on_file_properties),
                 ("", None),
                 ("#" + _("Copy _File Path"), self.on_copy_file_path),
-                ("#" + _("Copy _URL"), self.on_copy_url),
+                ("#" + _("Copy File _URL"), self.on_copy_file_url),
                 ("", None),
                 (">" + _("User Actions"), self.user_popup_menu)
             )
@@ -400,7 +400,7 @@ class UserBrowse:
                 ("#" + _("F_ile Properties"), self.on_file_properties),
                 ("", None),
                 ("#" + _("Copy _File Path"), self.on_copy_file_path),
-                ("#" + _("Copy _URL"), self.on_copy_url),
+                ("#" + _("Copy File _URL"), self.on_copy_file_url),
                 ("", None),
                 (">" + _("User Actions"), self.user_popup_menu)
             )
@@ -1288,7 +1288,7 @@ class UserBrowse:
         file_path = self.get_selected_file_path()
         clipboard.copy_text(file_path)
 
-    def on_copy_url(self, *_args):
+    def on_copy_file_url(self, *_args):
         file_path = self.get_selected_file_path()
         file_url = core.userbrowse.get_soulseek_url(self.user, file_path)
         clipboard.copy_text(file_url)
