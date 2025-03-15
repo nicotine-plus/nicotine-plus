@@ -586,7 +586,9 @@ class UserBrowse:
 
     def shared_file_list(self, msg):
 
-        if not self.refreshing:
+        # Always accept file list loaded from disk, but not unsolicited file list messages from
+        # online users
+        if not self.refreshing and msg.sock is not None:
             return
 
         is_empty = (not msg.list and not msg.privatelist)
