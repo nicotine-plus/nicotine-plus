@@ -29,8 +29,8 @@ Developing in a single language is also easier for everyone involved in the
 project.
 
 We aim to support the oldest [Python version](https://devguide.python.org/versions/)
-still receiving security updates, up to the latest.
-
+still receiving security updates, up to the latest. In any case, there's no rush to
+bump the minimum version requirement unless it brings a new feature that we need.
 
 ### GTK
 
@@ -249,13 +249,15 @@ within 24 hours. In order to preserve author information for commits, use the
 
 Nicotine+ uses the following versioning scheme: `A.B.C`, e.g. `3.3.8`
 
-  - A is incremented when major changes are made to the user interface that
+  - `A` is incremented when major changes are made to the user interface that
     significantly change the workflow of the application. In practice, this is
     unlikely to happen.
-  - B is incremented when significant features or new dependencies are added,
+  - `B` is incremented when significant features or new dependencies are added,
     version requirements are increased, or in the case of major changes to
-    existing code that are deemed too intrusive for a smaller release.
-  - C is incremented when bug fixes, performance improvements or smaller
+    existing code that are deemed too intrusive for a smaller release. The
+    previous feature branch (e.g. `3.3.x`) is created in case any critical bugs
+    are discovered while the next planned release is still in development.
+  - `C` is incremented when bug fixes, performance improvements or smaller
     tweaks to existing functionality are made. Low-risk functionality that does
     not affect translatable strings can also be added.
 
@@ -271,6 +273,9 @@ volunteers in their spare time. However, keep the following points in mind:
    releases before they can be delivered to users.
  - Releasing large updates can make it more difficult to pinpoint eventual
    issues that were introduced since the previous release.
+ - The final bug fix release (`C`) of each feature branch (`B`) has to be very
+   stable before any dependency requirements are bumped, because legacy users
+   might end up needing to use an old version for a long time.
 
 ### Creating a Nicotine+ Release
 
