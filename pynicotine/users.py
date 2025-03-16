@@ -53,8 +53,7 @@ class WatchedUser:
 class Users:
     __slots__ = ("login_status", "login_username", "public_ip_address", "public_port",
                  "server_hostname", "server_port", "privileges_left", "_should_open_privileges_url",
-                 "addresses", "countries", "statuses", "watched", "privileged", "_ip_requested",
-                 "_pending_watch_removals")
+                 "addresses", "countries", "statuses", "watched", "privileged", "_ip_requested")
     USERNAME_MAX_LENGTH = 30
 
     def __init__(self):
@@ -74,7 +73,6 @@ class Users:
         self.watched = {}
         self.privileged = set()
         self._ip_requested = {}
-        self._pending_watch_removals = set()
 
         for event_name, callback in (
             ("admin-message", self._admin_message),
@@ -226,7 +224,6 @@ class Users:
         self.watched.clear()
         self.privileged.clear()
         self._ip_requested.clear()
-        self._pending_watch_removals.clear()
 
         self.login_username = None
         self.public_ip_address = None
@@ -323,12 +320,8 @@ class Users:
         """Server code 5."""
 
         if not msg.userexists:
-            # User does not exist. The server will not keep us informed if the user is created
-            # later, so we need to remove the user from our list.
-            # Due to a bug, the server will in rare cases tell us a user doesn't exist, while
-            # the user is actually online. Remove the user when we receive a UserStatus message
-            # telling us the user is offline.
-            self._pending_watch_removals.add(msg.user)
+            log.add_conn("Unwatching non-existent user %s", msg.user)
+            self.watched.pop(msg.user, None)
             return
 
         if msg.contains_stats:
@@ -365,11 +358,6 @@ class Users:
             self.addresses.pop(username, None)
             self.countries.pop(username, None)
 
-            if username in self._pending_watch_removals:
-                # User does not exist, remove it from list
-                log.add_conn("Unwatching non-existent user %s", username)
-                self.watched.pop(username, None)
-
         elif is_watched:
             user_status = self.statuses.get(username)
 
@@ -385,7 +373,6 @@ class Users:
         if is_watched:
             self.statuses[username] = status
 
-        self._pending_watch_removals.discard(username)
         core.pluginhandler.user_status_notification(username, status, msg.privileged)
 
     def _connect_to_peer(self, msg):
