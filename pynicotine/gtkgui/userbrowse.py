@@ -615,10 +615,13 @@ class UserBrowse:
         if not self.refreshing:
             return
 
-        self.info_bar.show_error_message(
-            _("Unable to request shared files from user. Either the user is offline, the listening ports "
-              "are closed on both sides, or there is a temporary connectivity issue.")
-        )
+        if core.users.statuses.get(self.user, UserStatus.OFFLINE) == UserStatus.OFFLINE:
+            error_message = _("Cannot request information from the user, since they are offline.")
+        else:
+            error_message = _("Cannot request information from the user, possibly due to "
+                              "a closed listening port or temporary connectivity issue.")
+
+        self.info_bar.show_error_message(error_message)
         self.retry_button.set_visible(True)
         self.set_finished()
 
