@@ -229,7 +229,7 @@ class Download(Dialog):
                     [
                         folder_name,
                         "",
-                        selected,
+                        select_all or selected,
                         username,
                         folder_path,
                         0,
@@ -245,7 +245,7 @@ class Download(Dialog):
                 [
                     file_name,
                     human_size(size),
-                    selected,
+                    select_all or selected,
                     username,
                     folder_path,
                     size,
@@ -259,11 +259,12 @@ class Download(Dialog):
 
             if selected:
                 self.initial_selected_iterators.add(iterator)
-
-                self.total_selected_size += size
-                self.num_selected_files[username][folder_path] += 1
             else:
                 self.initial_selected_iterators.discard(parent_iterator)
+
+            if select_all or selected:
+                self.total_selected_size += size
+                self.num_selected_files[username][folder_path] += 1
 
         self.update_title()
         self.tree_view.expand_all_rows()
