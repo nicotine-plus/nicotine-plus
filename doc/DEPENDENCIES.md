@@ -4,9 +4,9 @@
 
 ### Required
 
- - [python3](https://www.python.org/) >= 3.6
+ - [python3](https://www.python.org/) >= 3.9
       for runtime language;
- - [gtk4](https://gtk.org/) >= 4.6.9 or [gtk3](https://gtk.org/) >= 3.22.30
+ - [gtk4](https://gtk.org/) >= 4.6.9 or [gtk3](https://gtk.org/) >= 3.24.24
       for graphical interface;
  - [pygobject](https://pygobject.gnome.org/)
       for Python bindings for GTK.
@@ -58,7 +58,7 @@
  - On SUSE-based distributions:
 
    ```sh
-   sudo zypper install typelib-1_0-Gspell-1 typelib-1_0-Gtk-4_0 typelib-1_0-Adw-1 python312-gobject python312-gobject-cairo python312-gobject-Gdk
+   sudo zypper install typelib-1_0-Gspell-1 typelib-1_0-Gtk-4_0 typelib-1_0-Adw-1 python313-gobject python313-gobject-cairo python313-gobject-Gdk
    ```
 
  - On Alpine-based distributions:
@@ -84,7 +84,7 @@
  - On SUSE-based distributions:
 
    ```sh
-   sudo zypper install gettext-tools python312-build python312-setuptools python312-wheel
+   sudo zypper install gettext-tools python313-build python313-setuptools python313-wheel
    ```
 
  - On Alpine-based distributions:
@@ -110,7 +110,7 @@
  - On SUSE-based distributions:
 
    ```sh
-   sudo zypper install python312-pylint python312-pycodestyle
+   sudo zypper install python313-pylint python313-pycodestyle
    ```
 
  - On Alpine-based distributions:

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -86,12 +86,15 @@ class UserBrowse:
 
         core.send_message_to_peer(username, UploadQueueNotification())
 
-    def _show_user(self, username, path=None, switch_page=True):
+    def _show_user(self, username, path=None, new_request=False, switch_page=True):
 
         if username not in self.users:
             self.users[username] = BrowsedUser(username)
 
-        events.emit("user-browse-show-user", user=username, path=path, switch_page=switch_page)
+        events.emit(
+            "user-browse-show-user", user=username, path=path, new_request=new_request,
+            switch_page=switch_page
+        )
 
     def remove_user(self, username):
 
@@ -132,7 +135,7 @@ class UserBrowse:
                 target=self._parse_local_shares, args=(username, msg), name="LocalShareParser", daemon=True
             ).start()
 
-        self._show_user(username, path=path, switch_page=switch_page)
+        self._show_user(username, path=path, new_request=new_request, switch_page=switch_page)
         core.users.watch_user(username, context="userbrowse")
 
     def request_user_shares(self, username):
@@ -154,7 +157,7 @@ class UserBrowse:
             self.browse_local_shares(path, new_request, switch_page=switch_page)
             return
 
-        self._show_user(username, path=path, switch_page=switch_page)
+        self._show_user(username, path=path, new_request=new_request, switch_page=switch_page)
         core.users.watch_user(username, context="userbrowse")
 
         if browsed_user is None or new_request:

@@ -351,7 +351,8 @@ class About(Dialog):
          "GNU General Public License v3.0 or later</a>, with the following exceptions:"),
 
         ("<b><a href='https://github.com/tinytag/tinytag'>tinytag</a> licensed under the MIT License.</b>"
-         "\nCopyright (c) 2014-2023 Tom Wallroth, Mat (mathiascode)"
+         "\nCopyright (c) 2014-2025 Tom Wallroth, Mat (mathiascode), et al."
+         "\nCopyright (c) 2020-2025 Nicotine+ Contributors"
          "\n\nPermission is hereby granted, free of charge, to any person obtaining a copy "
          'of this software and associated documentation files (the "Software"), to deal '
          "in the Software without restriction, including without limitation the rights "

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2013 eLvErDe <gandalf@le-vert.net>
@@ -65,13 +65,11 @@ from pynicotine.utils import truncate_string_byte
 
 
 class RequestedFolder:
-    __slots__ = ("username", "folder_path", "download_folder_path", "request_timer_id", "has_retried",
-                 "legacy_attempt")
+    __slots__ = ("username", "folder_path", "request_timer_id", "has_retried", "legacy_attempt")
 
-    def __init__(self, username, folder_path, download_folder_path):
+    def __init__(self, username, folder_path):
         self.username = username
         self.folder_path = folder_path
-        self.download_folder_path = download_folder_path
         self.request_timer_id = None
         self.has_retried = False
         self.legacy_attempt = False
@@ -351,10 +349,13 @@ class Downloads(Transfers):
 
     def _dequeue_transfer(self, transfer):
 
-        super()._dequeue_transfer(transfer)
+        if not super()._dequeue_transfer(transfer):
+            return False
 
         if transfer in self._pending_queue_messages:
             del self._pending_queue_messages[transfer]
+
+        return True
 
     def _file_downloaded_actions(self, username, file_path):
 
@@ -635,12 +636,7 @@ class Downloads(Transfers):
 
         # Check if a custom download location was specified
         if not download_folder_path:
-            requested_folder = self._requested_folders.get(username, {}).get(folder_path)
-
-            if requested_folder is not None and requested_folder.download_folder_path:
-                download_folder_path = requested_folder.download_folder_path
-            else:
-                download_folder_path = self.get_default_download_folder(username)
+            download_folder_path = self.get_default_download_folder(username)
 
         # Merge download path with target folder name
         return os.path.join(download_folder_path, target_folders)
@@ -679,8 +675,7 @@ class Downloads(Transfers):
         max_bytes = self.get_basename_byte_limit(download_folder_path)
 
         basename = clean_file(virtual_path.rpartition("\\")[-1])
-        basename_no_extension, separator, extension = basename.rpartition(".")
-        extension = separator + extension
+        basename_no_extension, extension = os.path.splitext(basename)
         basename_limit = max_bytes - len(extension.encode())
         basename_no_extension = truncate_string_byte(basename_no_extension, max(0, basename_limit))
 
@@ -707,8 +702,7 @@ class Downloads(Transfers):
             download_folder_path = self.get_default_download_folder(username)
 
         basename = self.get_download_basename(virtual_path, download_folder_path)
-        basename_no_extension, separator, extension = basename.rpartition(".")
-        extension = separator + extension
+        basename_no_extension, extension = os.path.splitext(basename)
         download_file_path = os.path.join(download_folder_path, basename)
         file_exists = False
         counter = 1
@@ -738,8 +732,7 @@ class Downloads(Transfers):
         max_bytes = self.get_basename_byte_limit(incomplete_folder_path)
 
         basename = clean_file(virtual_path.rpartition("\\")[-1])
-        basename_no_extension, separator, extension = basename.rpartition(".")
-        extension = separator + extension
+        basename_no_extension, extension = os.path.splitext(basename)
         basename_limit = max_bytes - len(prefix) - len(extension.encode())
         basename_no_extension = truncate_string_byte(basename_no_extension, max(0, basename_limit))
 
@@ -759,25 +752,21 @@ class Downloads(Transfers):
 
         return self.get_incomplete_download_file_path(transfer.username, transfer.virtual_path)
 
-    def enqueue_folder(self, username, folder_path, download_folder_path=None):
+    def request_folder(self, username, folder_path):
 
         requested_folder = self._requested_folders.get(username, {}).get(folder_path)
 
         if requested_folder is None:
             self._requested_folders[username][folder_path] = requested_folder = RequestedFolder(
-                username, folder_path, download_folder_path
+                username, folder_path
             )
-
-        # First timeout is shorter to get a response sooner in case the first request
-        # failed. Second timeout is longer in case the response is delayed.
-        timeout = 60 if requested_folder.has_retried else 15
 
         if requested_folder.request_timer_id is not None:
             events.cancel_scheduled(requested_folder.request_timer_id)
             requested_folder.request_timer_id = None
 
         requested_folder.request_timer_id = events.schedule(
-            delay=timeout, callback=self._requested_folder_timeout, callback_args=(requested_folder,)
+            delay=15, callback=self._requested_folder_timeout, callback_args=(requested_folder,)
         )
 
         log.add_transfer("Requesting contents of folder %s from user %s", (folder_path, username))
@@ -979,15 +968,16 @@ class Downloads(Transfers):
             log.add_transfer("Folder content request for folder %s from user %s timed out, "
                              "giving up", (folder_path, username))
             del self._requested_folders[username][folder_path]
+            events.emit("folder-contents-timeout", username, folder_path)
             return
 
         log.add_transfer("Folder content request for folder %s from user %s timed out, "
                          "retrying", (folder_path, username))
 
         requested_folder.has_retried = True
-        self.enqueue_folder(username, folder_path, requested_folder.download_folder_path)
+        self.request_folder(username, folder_path)
 
-    def _folder_contents_response(self, msg, check_num_files=True):
+    def _folder_contents_response(self, msg):
         """Peer code 37."""
 
         username = msg.username
@@ -1011,34 +1001,8 @@ class Downloads(Transfers):
         if not msg.list and not requested_folder.legacy_attempt:
             log.add_transfer("Folder content response is empty. Trying legacy latin-1 request.")
             requested_folder.legacy_attempt = True
-            self.enqueue_folder(username, folder_path, requested_folder.download_folder_path)
+            self.request_folder(username, folder_path)
             return
-
-        for i_folder_path, files in msg.list.items():
-            if i_folder_path != folder_path:
-                continue
-
-            num_files = len(files)
-
-            if check_num_files and num_files > 100:
-                check_num_files = False
-                events.emit(
-                    "download-large-folder", username, folder_path, num_files,
-                    self._folder_contents_response, (msg, check_num_files)
-                )
-                return
-
-            destination_folder_path = self.get_folder_destination(username, folder_path)
-
-            log.add_transfer("Attempting to download files in folder %s for user %s. "
-                             "Destination path: %s", (folder_path, username, destination_folder_path))
-
-            for _code, basename, file_size, _ext, file_attributes, *_unused in files:
-                virtual_path = folder_path.rstrip("\\") + "\\" + basename
-
-                self.enqueue_download(
-                    username, virtual_path, folder_path=destination_folder_path, size=file_size,
-                    file_attributes=file_attributes)
 
         del self._requested_folders[username][folder_path]
 

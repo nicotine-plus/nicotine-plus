@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2022-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2022-2025 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -173,6 +173,7 @@ EVENT_NAMES = {
     "file-transfer-init",
     "file-upload-progress",
     "folder-contents-response",
+    "folder-contents-timeout",
     "folder-download-finished",
     "peer-connection-closed",
     "peer-connection-error",

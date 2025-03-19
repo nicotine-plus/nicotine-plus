@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>

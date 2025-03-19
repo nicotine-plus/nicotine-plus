@@ -180,7 +180,7 @@ class Uploads(Transfers):
             callback=self.on_clear_all_response
         ).present()
 
-    def on_copy_url(self, *_args):
+    def on_copy_file_url(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
 

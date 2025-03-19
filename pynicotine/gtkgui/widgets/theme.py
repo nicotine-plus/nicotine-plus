@@ -213,7 +213,7 @@ def set_global_css():
 
     else:
         add_provider_func = Gtk.StyleContext.add_provider_for_screen  # pylint: disable=no-member
-        display = Gdk.Screen.get_default()
+        display = Gdk.Screen.get_default()  # pylint: disable=c-extension-no-member
 
         with open(encode_path(os.path.join(css_folder_path, "style_gtk3.css")), "rb") as file_handle:
             css += file_handle.read()
@@ -391,29 +391,31 @@ def get_flag_icon_name(country_code):
 
 def get_file_type_icon_name(basename):
 
-    _basename_no_extension, _separator, extension = basename.rpartition(".")
-    extension = extension.lower()
+    _basename_no_extension, separator, extension = basename.rpartition(".")
 
-    if extension in FileTypes.AUDIO:
-        return "folder-music-symbolic"
+    if separator:
+        extension = extension.lower()
 
-    if extension in FileTypes.IMAGE:
-        return "folder-pictures-symbolic"
+        if extension in FileTypes.AUDIO:
+            return "folder-music-symbolic"
 
-    if extension in FileTypes.VIDEO:
-        return "folder-videos-symbolic"
+        if extension in FileTypes.IMAGE:
+            return "folder-pictures-symbolic"
 
-    if extension in FileTypes.ARCHIVE:
-        return "package-x-generic-symbolic"
+        if extension in FileTypes.VIDEO:
+            return "folder-videos-symbolic"
 
-    if extension in FileTypes.DOCUMENT:
-        return "x-office-document-symbolic"
+        if extension in FileTypes.ARCHIVE:
+            return "package-x-generic-symbolic"
 
-    if extension in FileTypes.TEXT:
-        return "emblem-documents-symbolic"
+        if extension in FileTypes.DOCUMENT:
+            return "x-office-document-symbolic"
 
-    if extension in FileTypes.EXECUTABLE:
-        return "application-x-executable-symbolic"
+        if extension in FileTypes.TEXT:
+            return "emblem-documents-symbolic"
+
+        if extension in FileTypes.EXECUTABLE:
+            return "application-x-executable-symbolic"
 
     return "folder-documents-symbolic"
 

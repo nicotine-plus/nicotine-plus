@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2009 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
@@ -307,9 +307,8 @@ class TreeView:
                 column_properties = column_config.get(column_id, {})
                 column_sort_type = column_properties.get("sort")
 
-                # Restore saved column width if the column size is fixed. For expandable
-                # columns, the width becomes the minimum width, so use the default value in those cases.
-                if not should_expand_column and column_type != "icon":
+                # Restore saved column width
+                if column_type != "icon":
                     width = column_properties.get("width", width)
 
                 if column_sort_type and self._persistent_sort:
@@ -355,6 +354,10 @@ class TreeView:
                 renderer.connect("toggled", self.on_toggle, column_data["toggle_callback"])
 
                 column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, active=column_index)
+                inconsistent_column = column_data.get("inconsistent_column")
+
+                if inconsistent_column is not None:
+                    column.add_attribute(renderer, "inconsistent", self._column_ids[inconsistent_column])
 
             elif column_type == "icon":
                 icon_args = {}
@@ -374,9 +377,9 @@ class TreeView:
 
             if GTK_API_VERSION >= 4:
                 gesture_click = Gtk.GestureClick()
-                column_header.add_controller(gesture_click)  # pylint: disable=no-member
+                column_header.add_controller(gesture_click)                  # pylint: disable=no-member
             else:
-                gesture_click = Gtk.GestureMultiPress(widget=column_header)
+                gesture_click = Gtk.GestureMultiPress(widget=column_header)  # pylint: disable=c-extension-no-member
 
             gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
             gesture_click.connect("released", self.on_column_header_pressed, column_id, sort_column_id)

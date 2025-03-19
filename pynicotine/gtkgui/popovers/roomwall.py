@@ -70,7 +70,7 @@ class RoomWall(Popover):
             self.message_entry.select_region(0, -1)
             return
 
-        tickers.pop(core.users.login_username, None)
+        tickers.pop(login_username, None)
         self._update_message_list(tickers)
 
         if entry_text:

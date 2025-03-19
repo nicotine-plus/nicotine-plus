@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2025 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -57,7 +57,7 @@ def get_default_gtk_version():
     return "4"
 
 
-def check_gtk_version(gtk_api_version):
+def check_gtk_version(gtk_api_version, is_fallback=False):
 
     is_gtk3_supported = sys.platform not in {"darwin", "win32"}
 
@@ -68,17 +68,22 @@ def check_gtk_version(gtk_api_version):
     # Require minor version of GTK
     if gtk_api_version == "4":
         pygobject_version = (3, 42, 1)
+        gtk_api_version_fallback = None
+
+        if is_gtk3_supported:
+            gtk_api_version_fallback = "3"
     else:
+        pygobject_version = (3, 38, 0)
         gtk_api_version = "3"
-        pygobject_version = (3, 26, 1)
+        gtk_api_version_fallback = "4"
 
     try:
         import gi
         gi.check_version(pygobject_version)
 
     except (ImportError, ValueError):
-        if gtk_api_version == "4" and is_gtk3_supported:
-            return check_gtk_version(gtk_api_version="3")
+        if not is_fallback and gtk_api_version_fallback:
+            return check_gtk_version(gtk_api_version=gtk_api_version_fallback, is_fallback=True)
 
         return _("Cannot find %s, please install it.") % ("PyGObject >=" + ".".join(str(x) for x in pygobject_version))
 
@@ -86,8 +91,8 @@ def check_gtk_version(gtk_api_version):
         gi.require_version("Gtk", f"{gtk_api_version}.0")
 
     except ValueError:
-        if gtk_api_version == "4" and is_gtk3_supported:
-            return check_gtk_version(gtk_api_version="3")
+        if not is_fallback and gtk_api_version_fallback:
+            return check_gtk_version(gtk_api_version=gtk_api_version_fallback, is_fallback=True)
 
         return _("Cannot find %s, please install it.") % f"GTK >={gtk_api_version}"
 

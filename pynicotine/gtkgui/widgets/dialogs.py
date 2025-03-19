@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -65,12 +65,12 @@ class Dialog(Window):
         if GTK_API_VERSION == 3:
             if os.environ.get("GDK_BACKEND") == "broadway":
                 # Workaround for dialogs being centered at (0,0) coords on startup
-                position = Gtk.WindowPosition.CENTER
+                position = Gtk.WindowPosition.CENTER            # pylint: disable=c-extension-no-member
             else:
-                position = Gtk.WindowPosition.CENTER_ON_PARENT
+                position = Gtk.WindowPosition.CENTER_ON_PARENT  # pylint: disable=c-extension-no-member
 
             widget.set_position(position)                    # pylint: disable=no-member
-            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)  # pylint: disable=no-member
+            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)  # pylint: disable=c-extension-no-member,no-member
 
         if content_box:
             content_box.set_vexpand(True)
@@ -143,10 +143,14 @@ class Dialog(Window):
             action_area.add(action_area_end)          # pylint: disable=no-member
 
         for button in buttons_start:
+            # Cancel button is to the left in header bars, but always to the right in action areas.
+            # This matches built-in GTK dialogs (color and font choosers).
+            action_area = action_area_end if button.get_label() == _("_Cancel") else action_area_start
+
             if GTK_API_VERSION >= 4:
-                action_area_start.append(button)      # pylint: disable=no-member
+                action_area.append(button)      # pylint: disable=no-member
             else:
-                action_area_start.add(button)         # pylint: disable=no-member
+                action_area.add(button)         # pylint: disable=no-member
 
         for button in buttons_end:
             if GTK_API_VERSION >= 4:
@@ -175,10 +179,16 @@ class Dialog(Window):
         # Hide the dialog
         self.widget.set_visible(False)
 
-        # "Soft-delete" the dialog. This is necessary to prevent the dialog from
-        # appearing in window peek on Windows
-        if sys.platform == "win32" and self.widget.get_titlebar() is None:
-            self.widget.unrealize()
+        if sys.platform == "win32":
+            # "Soft-delete" the dialog. This is necessary to prevent the dialog from
+            # appearing in window peek on Windows
+            if self.widget.get_titlebar() is None:
+                self.widget.unrealize()
+
+            # Workaround for parent window minimizing when closing dialog
+            # https://gitlab.gnome.org/GNOME/gtk/-/issues/7313
+            if self.parent is not None and self.parent.is_visible():
+                self.parent.present()
 
         return True
 
@@ -365,9 +375,9 @@ class MessageDialog(Window):
 
             action_box.append(action_area)                            # pylint: disable=no-member
         else:
-            widget.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)  # pylint: disable=no-member
+            widget.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)  # pylint: disable=c-extension-no-member,no-member
             widget.set_skip_taskbar_hint(True)                        # pylint: disable=no-member
-            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)           # pylint: disable=no-member
+            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)           # pylint: disable=c-extension-no-member,no-member
             widget.set_titlebar(header_bar)
             widget.connect("delete-event", self._on_close_request)
 

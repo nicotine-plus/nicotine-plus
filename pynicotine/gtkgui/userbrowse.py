@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2013 SeeSchloss <see@seos.fr>
 # COPYRIGHT (C) 2009-2010 quinox <quinox@users.sf.net>
@@ -32,6 +32,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.dialogs.download import Download
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets import ui
@@ -74,6 +75,7 @@ class UserBrowses(IconNotebook):
         self.toolbar_end_content = window.userbrowse_end
         self.toolbar_default_widget = window.userbrowse_entry
 
+        self.download_dialog = None
         self.file_properties = None
 
         self.userbrowse_combobox = ComboBox(
@@ -101,6 +103,9 @@ class UserBrowses(IconNotebook):
     def destroy(self):
 
         self.userbrowse_combobox.destroy()
+
+        if self.download_dialog is not None:
+            self.download_dialog.destroy()
 
         if self.file_properties is not None:
             self.file_properties.destroy()
@@ -142,7 +147,7 @@ class UserBrowses(IconNotebook):
         else:
             core.userbrowse.browse_user(entry_text)
 
-    def show_user(self, user, path=None, switch_page=True):
+    def show_user(self, user, path=None, new_request=False, switch_page=True):
 
         page = self.pages.get(user)
 
@@ -152,6 +157,10 @@ class UserBrowses(IconNotebook):
             self.append_page(page.container, user, focus_callback=page.on_focus,
                              close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
+
+        elif new_request:
+            page.clear_model()
+            page.set_indeterminate_progress()
 
         page.queued_path = path
         page.browse_queued_path()
@@ -236,6 +245,7 @@ class UserBrowse:
         self.window = userbrowses.window
         self.user = user
         self.indeterminate_progress = False
+        self.refreshing = False
         self.local_permission_level = None
         self.queued_path = None
 
@@ -295,7 +305,7 @@ class UserBrowse:
                 ("#" + _("F_ile Properties"), self.on_file_properties, True),
                 ("", None),
                 ("#" + _("Copy _Folder Path"), self.on_copy_folder_path),
-                ("#" + _("Copy Folder U_RL"), self.on_copy_folder_url),
+                ("#" + _("Copy Folder _URL"), self.on_copy_folder_url),
                 ("", None),
                 (">" + _("User Actions"), self.user_popup_menu)
             )
@@ -307,7 +317,7 @@ class UserBrowse:
                 ("#" + _("F_ile Properties"), self.on_file_properties, True),
                 ("", None),
                 ("#" + _("Copy _Folder Path"), self.on_copy_folder_path),
-                ("#" + _("Copy Folder U_RL"), self.on_copy_folder_url),
+                ("#" + _("Copy Folder _URL"), self.on_copy_folder_url),
                 ("", None),
                 (">" + _("User Actions"), self.user_popup_menu)
             )
@@ -378,7 +388,7 @@ class UserBrowse:
                 ("#" + _("F_ile Properties"), self.on_file_properties),
                 ("", None),
                 ("#" + _("Copy _File Path"), self.on_copy_file_path),
-                ("#" + _("Copy _URL"), self.on_copy_url),
+                ("#" + _("Copy File _URL"), self.on_copy_file_url),
                 ("", None),
                 (">" + _("User Actions"), self.user_popup_menu)
             )
@@ -387,13 +397,10 @@ class UserBrowse:
                 ("#" + _("_Download File(s)"), self.on_download_files),
                 ("#" + _("Download File(s) _To…"), self.on_download_files_to),
                 ("", None),
-                ("#" + _("_Download Folder"), self.on_download_folder),
-                ("#" + _("Download Folder _To…"), self.on_download_folder_to),
-                ("", None),
                 ("#" + _("F_ile Properties"), self.on_file_properties),
                 ("", None),
                 ("#" + _("Copy _File Path"), self.on_copy_file_path),
-                ("#" + _("Copy _URL"), self.on_copy_url),
+                ("#" + _("Copy File _URL"), self.on_copy_file_url),
                 ("", None),
                 (">" + _("User Actions"), self.user_popup_menu)
             )
@@ -581,6 +588,11 @@ class UserBrowse:
 
     def shared_file_list(self, msg):
 
+        # Always accept file list loaded from disk, but not unsolicited file list messages from
+        # online users
+        if not self.refreshing and msg.sock is not None:
+            return
+
         is_empty = (not msg.list and not msg.privatelist)
         self.local_permission_level = msg.permission_level
 
@@ -600,13 +612,16 @@ class UserBrowse:
 
     def peer_connection_error(self):
 
-        if self.refresh_button.get_sensitive():
+        if not self.refreshing:
             return
 
-        self.info_bar.show_error_message(
-            _("Unable to request shared files from user. Either the user is offline, the listening ports "
-              "are closed on both sides, or there is a temporary connectivity issue.")
-        )
+        if core.users.statuses.get(self.user, UserStatus.OFFLINE) == UserStatus.OFFLINE:
+            error_message = _("Cannot request information from the user, since they are offline.")
+        else:
+            error_message = _("Cannot request information from the user, possibly due to "
+                              "a closed listening port or temporary connectivity issue.")
+
+        self.info_bar.show_error_message(error_message)
         self.retry_button.set_visible(True)
         self.set_finished()
 
@@ -619,6 +634,9 @@ class UserBrowse:
         return repeat
 
     def shared_file_list_progress(self, position, total):
+
+        if not self.refreshing:
+            return
 
         self.indeterminate_progress = False
 
@@ -636,7 +654,10 @@ class UserBrowse:
 
     def set_indeterminate_progress(self):
 
-        self.indeterminate_progress = True
+        if self.indeterminate_progress:
+            return
+
+        self.indeterminate_progress = self.refreshing = True
 
         self.progress_bar.get_parent().set_reveal_child(True)
         self.progress_bar.pulse()
@@ -648,6 +669,9 @@ class UserBrowse:
         self.refresh_button.set_sensitive(False)
         self.save_button.set_sensitive(False)
 
+        if core.users.login_status == UserStatus.OFFLINE and self.user != config.sections["server"]["login"]:
+            self.peer_connection_error()
+
     def set_finishing(self):
 
         if hasattr(self, "refresh_button") and not self.refresh_button.get_sensitive():
@@ -657,7 +681,7 @@ class UserBrowse:
 
     def set_finished(self):
 
-        self.indeterminate_progress = False
+        self.indeterminate_progress = self.refreshing = False
 
         self.userbrowses.request_tab_changed(self.container)
         self.progress_bar.set_fraction(1.0)
@@ -907,46 +931,49 @@ class UserBrowse:
         self.folder_popup_menu.update_model()
         self.user_popup_menu.toggle_user_items()
 
-    def on_download_folder(self, *_args, download_folder_path=None, recurse=False):
+    def on_download_folder_recursive(self, *_args, download_folder_path=None):
 
         prev_folder_path = None
 
         for iterator in self.folder_tree_view.get_selected_rows():
             folder_path = self.folder_tree_view.get_row_value(iterator, "folder_path_data")
 
-            if recurse and prev_folder_path and prev_folder_path in folder_path:
+            if prev_folder_path and prev_folder_path in folder_path:
                 # Already recursing, avoid redundant request for subfolder
                 continue
 
             core.userbrowse.download_folder(
-                self.user, folder_path, download_folder_path=download_folder_path, recurse=recurse)
+                self.user, folder_path, download_folder_path=download_folder_path, recurse=True)
 
             prev_folder_path = folder_path
 
-    def on_download_folder_recursive(self, *_args):
-        self.on_download_folder(recurse=True)
-
-    def on_download_folder_to_selected(self, selected_download_folder_paths, recurse):
-        self.on_download_folder(
-            download_folder_path=next(iter(selected_download_folder_paths), None), recurse=recurse)
-
-    def on_download_folder_to(self, *_args, recurse=False):
-
-        if recurse:
-            str_title = _("Select Destination for Downloading Multiple Folders")
-        else:
-            str_title = _("Select Destination Folder")
-
-        FolderChooser(
-            parent=self.window,
-            title=str_title,
-            callback=self.on_download_folder_to_selected,
-            callback_data=recurse,
-            initial_folder=core.downloads.get_default_download_folder()
-        ).present()
-
     def on_download_folder_recursive_to(self, *_args):
-        self.on_download_folder_to(recurse=True)
+
+        data = []
+        prev_folder_path = None
+        selected = True
+
+        for iterator in self.folder_tree_view.get_selected_rows():
+            selected_folder_path = self.folder_tree_view.get_row_value(iterator, "folder_path_data")
+
+            if prev_folder_path and prev_folder_path in selected_folder_path:
+                continue
+
+            for folder_path, files in core.userbrowse.iter_matching_folders(
+                selected_folder_path, browsed_user=core.userbrowse.users[self.user], recurse=True
+            ):
+                for _code, basename, file_size, _ext, file_attributes, *_unused in files:
+                    file_path = "\\".join([folder_path, basename])
+
+                    data.append((self.user, file_path, file_size, file_attributes, selected, selected_folder_path))
+
+            prev_folder_path = selected_folder_path
+
+        if self.userbrowses.download_dialog is None:
+            self.userbrowses.download_dialog = Download(self.window.application)
+
+        self.userbrowses.download_dialog.update_files(data, partial_files=False)
+        self.userbrowses.download_dialog.present()
 
     def on_upload_folder_to_response(self, dialog, _response_id, recurse):
 
@@ -1089,6 +1116,33 @@ class UserBrowse:
 
         self.user_popup_menu.toggle_user_items()
 
+    def _on_download_files(self, *_args):
+
+        folder_path = self.active_folder_path
+        browsed_user = core.userbrowse.users[self.user]
+
+        data = []
+        files = browsed_user.public_folders.get(folder_path)
+
+        if not files:
+            files = browsed_user.private_folders.get(folder_path)
+
+            if not files:
+                return
+
+        for file_data in files:
+            _code, basename, size, _ext, file_attributes, *_unused = file_data
+            file_path = "\\".join([folder_path, basename])
+            selected = basename in self.selected_files
+
+            data.append((self.user, file_path, size, file_attributes, selected))
+
+        if self.userbrowses.download_dialog is None:
+            self.userbrowses.download_dialog = Download(self.window.application)
+
+        self.userbrowses.download_dialog.update_files(data, partial_files=False)
+        self.userbrowses.download_dialog.present()
+
     def on_download_files(self, *_args, download_folder_path=None):
 
         folder_path = self.active_folder_path
@@ -1106,7 +1160,7 @@ class UserBrowse:
             _code, basename, *_unused = file_data
 
             # Find the wanted file
-            if basename not in self.selected_files:
+            if self.selected_files and basename not in self.selected_files:
                 continue
 
             core.userbrowse.download_file(
@@ -1239,7 +1293,7 @@ class UserBrowse:
         file_path = self.get_selected_file_path()
         clipboard.copy_text(file_path)
 
-    def on_copy_url(self, *_args):
+    def on_copy_file_url(self, *_args):
         file_path = self.get_selected_file_path()
         file_url = core.userbrowse.get_soulseek_url(self.user, file_path)
         clipboard.copy_text(file_url)
@@ -1289,11 +1343,7 @@ class UserBrowse:
 
             return True
 
-        if self.file_list_view.is_selection_empty():
-            self.on_download_folder_to()
-        else:
-            self.on_download_files_to()  # (with prompt, Single or Multi-selection)
-
+        self.on_download_files_to()
         return True
 
     def on_file_transfer_accelerator(self, *_args):
@@ -1313,11 +1363,7 @@ class UserBrowse:
 
             return True
 
-        if self.file_list_view.is_selection_empty():
-            self.on_download_folder()  # (without prompt, No-selection=All)
-        else:
-            self.on_download_files()  # (no prompt, Single or Multi-selection)
-
+        self.on_download_files()
         return True
 
     def on_file_transfer_multi_accelerator(self, *_args):
@@ -1363,9 +1409,6 @@ class UserBrowse:
 
         if not self.indeterminate_progress and progress_bar.get_fraction() <= 0.0:
             self.set_indeterminate_progress()
-
-        if core.users.login_status == UserStatus.OFFLINE:
-            self.peer_connection_error()
 
     def on_hide_progress_bar(self, progress_bar):
         """Disables indeterminate progress bar mode when switching to another tab."""
@@ -1438,18 +1481,14 @@ class UserBrowse:
 
     def on_refresh(self, *_args):
 
-        if not self.refresh_button.get_sensitive():
-            # Refresh is already in progress
+        if self.refreshing:
             return
 
         # Remember selection after refresh
         self.select_files()
         file_path = self.get_selected_file_path()
 
-        self.clear_model()
-        self.set_indeterminate_progress()
-
-        if self.local_permission_level:
+        if self.user == config.sections["server"]["login"]:
             core.userbrowse.browse_local_shares(
                 path=file_path, permission_level=self.local_permission_level, new_request=True)
         else:

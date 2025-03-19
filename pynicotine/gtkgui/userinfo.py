@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2010 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
@@ -138,7 +138,7 @@ class UserInfos(IconNotebook):
         self.window.userinfo_entry.set_text("")
         core.userinfo.show_user(username)
 
-    def show_user(self, user, switch_page=True, **_unused):
+    def show_user(self, user, refresh=False, switch_page=True):
 
         page = self.pages.get(user)
 
@@ -148,6 +148,9 @@ class UserInfos(IconNotebook):
             self.append_page(page.container, user, focus_callback=page.on_focus,
                              close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
+
+        elif refresh:
+            page.set_indeterminate_progress()
 
         if switch_page:
             self.set_current_page(page.container)
@@ -304,7 +307,9 @@ class UserInfo:
             # Setting a pixel size of 21 results in a misaligned country flag
             self.country_icon.set_pixel_size(0)
 
-            self.picture = Gtk.EventBox(can_focus=True, hexpand=True, vexpand=True, visible=True)
+            self.picture = Gtk.EventBox(           # pylint: disable=c-extension-no-member
+                can_focus=True, hexpand=True, vexpand=True, visible=True
+            )
             self.picture.connect("draw", self.on_draw_picture)
 
             self.picture_view.add(self.picture)    # pylint: disable=no-member
@@ -313,6 +318,7 @@ class UserInfo:
         self.picture_data = None
         self.picture_surface = None
         self.indeterminate_progress = False
+        self.refreshing = False
 
         # Set up likes list
         self.likes_list_view = TreeView(
@@ -458,7 +464,8 @@ class UserInfo:
             else:
                 data_stream = Gio.MemoryInputStream.new_from_bytes(GLib.Bytes(data))
                 self.picture_data = GdkPixbuf.Pixbuf.new_from_stream(data_stream, cancellable=None)
-                self.picture_surface = Gdk.cairo_surface_create_from_pixbuf(self.picture_data, scale=1, for_window=None)
+                self.picture_surface = Gdk.cairo_surface_create_from_pixbuf(  # pylint: disable=c-extension-no-member
+                    self.picture_data, scale=1, for_window=None)
 
         except Exception as error:
             log.add(_("Failed to load picture for user %(user)s: %(error)s"), {
@@ -494,13 +501,16 @@ class UserInfo:
 
     def peer_connection_error(self):
 
-        if self.refresh_button.get_sensitive():
+        if not self.refreshing:
             return
 
-        self.info_bar.show_error_message(
-            _("Unable to request information from user. Either you both have a closed listening "
-              "port, the user is offline, or there's a temporary connectivity issue.")
-        )
+        if core.users.statuses.get(self.user, UserStatus.OFFLINE) == UserStatus.OFFLINE:
+            error_message = _("Cannot request information from the user, since they are offline.")
+        else:
+            error_message = _("Cannot request information from the user, possibly due to "
+                              "a closed listening port or temporary connectivity issue.")
+
+        self.info_bar.show_error_message(error_message)
         self.set_finished()
 
     def pulse_progress(self, repeat=True):
@@ -512,6 +522,9 @@ class UserInfo:
         return repeat
 
     def user_info_progress(self, position, total):
+
+        if not self.refreshing:
+            return
 
         self.indeterminate_progress = False
 
@@ -528,7 +541,10 @@ class UserInfo:
 
     def set_indeterminate_progress(self):
 
-        self.indeterminate_progress = True
+        if self.indeterminate_progress:
+            return
+
+        self.indeterminate_progress = self.refreshing = True
 
         self.progress_bar.get_parent().set_reveal_child(True)
         self.progress_bar.pulse()
@@ -538,9 +554,12 @@ class UserInfo:
         self.info_bar.set_visible(False)
         self.refresh_button.set_sensitive(False)
 
+        if core.users.login_status == UserStatus.OFFLINE and self.user != config.sections["server"]["login"]:
+            self.peer_connection_error()
+
     def set_finished(self):
 
-        self.indeterminate_progress = False
+        self.indeterminate_progress = self.refreshing = False
 
         self.userinfos.request_tab_changed(self.container)
         self.progress_bar.set_fraction(1.0)
@@ -586,6 +605,9 @@ class UserInfo:
     # Network Messages #
 
     def user_info_response(self, msg):
+
+        if not self.refreshing:
+            return
 
         if msg is None:
             return
@@ -664,9 +686,6 @@ class UserInfo:
 
         if not self.indeterminate_progress and progress_bar.get_fraction() <= 0.0:
             self.set_indeterminate_progress()
-
-        if core.users.login_status == UserStatus.OFFLINE:
-            self.peer_connection_error()
 
     def on_hide_progress_bar(self, progress_bar):
         """Disables indeterminate progress bar mode when switching to another tab."""
@@ -825,7 +844,6 @@ class UserInfo:
         self.hide_picture()
 
     def on_refresh(self, *_args):
-        self.set_indeterminate_progress()
         core.userinfo.show_user(self.user, refresh=True)
 
     def on_focus(self, *_args):

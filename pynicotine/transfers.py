@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2013 eLvErDe <gandalf@le-vert.net>
@@ -494,6 +494,8 @@ class Transfers:
         self.queued_transfers[transfer] = None
         self._user_queue_sizes[transfer.username] += transfer.size
 
+        return True
+
     def _enqueue_limited_transfers(self, username):
         # Optional method
         pass
@@ -504,7 +506,7 @@ class Transfers:
         virtual_path = transfer.virtual_path
 
         if virtual_path not in self.queued_users.get(username, {}):
-            return
+            return False
 
         self._user_queue_sizes[username] -= transfer.size
         del self.queued_transfers[transfer]
@@ -520,6 +522,7 @@ class Transfers:
             self._enqueue_limited_transfers(username)
 
         transfer.queue_position = 0
+        return True
 
     def _activate_transfer(self, transfer, token):
 
@@ -548,7 +551,7 @@ class Transfers:
         token = transfer.token
 
         if token is None or token not in self.active_users.get(username, {}):
-            return
+            return False
 
         del self.active_users[username][token]
 
@@ -566,6 +569,8 @@ class Transfers:
         transfer.sock = None
         transfer.token = None
 
+        return True
+
     def _fail_transfer(self, transfer):
         self.failed_users[transfer.username][transfer.virtual_path] = transfer
 
@@ -575,12 +580,14 @@ class Transfers:
         virtual_path = transfer.virtual_path
 
         if virtual_path not in self.failed_users.get(username, {}):
-            return
+            return False
 
         del self.failed_users[username][virtual_path]
 
         if not self.failed_users[username]:
             del self.failed_users[username]
+
+        return True
 
     # Saving #
 

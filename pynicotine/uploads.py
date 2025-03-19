@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2013 eLvErDe <gandalf@le-vert.net>
@@ -26,6 +26,8 @@
 
 import os
 import time
+
+from collections import defaultdict
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -55,7 +57,8 @@ from pynicotine.utils import encode_path
 
 
 class Uploads(Transfers):
-    __slots__ = ("pending_shutdown", "upload_speed", "token", "_pending_network_msgs",
+    __slots__ = ("pending_shutdown", "upload_speed", "token", "_queue_positions",
+                 "_queue_position_users", "_privileged_position_requested", "_pending_network_msgs",
                  "_user_update_counter", "_user_update_counters", "_upload_queue_timer_id",
                  "_retry_failed_uploads_timer_id")
 
@@ -67,6 +70,9 @@ class Uploads(Transfers):
         self.upload_speed = 0
         self.token = initial_token()
 
+        self._queue_positions = {}
+        self._queue_position_users = defaultdict(dict)
+        self._privileged_position_requested = False
         self._pending_network_msgs = []
         self._user_update_counter = 0
         self._user_update_counters = {}
@@ -122,6 +128,8 @@ class Uploads(Transfers):
         for timer_id in (self._upload_queue_timer_id, self._retry_failed_uploads_timer_id):
             events.cancel_scheduled(timer_id)
 
+        self._queue_positions.clear()
+        self._queue_position_users.clear()
         self._pending_network_msgs.clear()
         self._user_update_counters.clear()
         self._user_update_counter = 0
@@ -314,16 +322,29 @@ class Uploads(Transfers):
         if self.is_privileged(username):
             transfer.modifier = "privileged" if username in core.users.privileged else "prioritized"
 
+        # Clear queue position cache until next position request
+        self._queue_positions.clear()
+        self._queue_position_users.pop(username, None)
+
+        return True
+
     def _dequeue_transfer(self, transfer):
 
         username = transfer.username
 
-        super()._dequeue_transfer(transfer)
+        if not super()._dequeue_transfer(transfer):
+            return False
 
         if username not in self.queued_users:
             self._user_update_counters.pop(username, None)
 
         transfer.modifier = None
+
+        # Clear queue position cache until next position request
+        self._queue_positions.clear()
+        self._queue_position_users.pop(username, None)
+
+        return True
 
     def _activate_transfer(self, transfer, token):
         super()._activate_transfer(transfer, token)
@@ -471,6 +492,10 @@ class Uploads(Transfers):
         target_username = None
         upload_candidate = None
         privileged_users = set()
+
+        if not self._user_update_counters:
+            # No queued uploads to start right now
+            return upload_candidate, has_active_uploads
 
         for username in self._user_update_counters:
             if self.is_privileged(username):
@@ -1171,32 +1196,49 @@ class Uploads(Transfers):
 
         is_fifo_queue = config.sections["transfers"]["fifoqueue"]
         is_privileged_queue = self.is_privileged(username)
-        privileged_queued_users = {k: v for k, v in self.queued_users.items() if self.is_privileged(k)}
+        privileged_queued_users = {k: len(v) for k, v in self.queued_users.items() if self.is_privileged(k)}
         queue_position = 0
 
         if is_fifo_queue:
-            num_non_privileged = 0
+            if is_privileged_queue != self._privileged_position_requested or upload not in self._queue_positions:
+                self._queue_position_users.clear()
 
-            for position, i_upload in enumerate(self.queued_transfers, start=1):
-                if is_privileged_queue and i_upload.username not in privileged_queued_users:
-                    num_non_privileged += 1
+                if is_privileged_queue:
+                    self._queue_positions.clear()
+                    position = 1
 
-                if i_upload == upload:
-                    queue_position += position - num_non_privileged
-                    break
+                    for i_upload in self.queued_transfers:
+                        if i_upload.username in privileged_queued_users:
+                            self._queue_positions[i_upload] = position
+                            position += 1
+                else:
+                    self._queue_positions = {
+                        i_upload: position
+                        for position, i_upload in enumerate(self.queued_transfers, start=1)
+                    }
+
+            queue_position = self._queue_positions[upload]
         else:
-            for position, i_upload in enumerate(self.queued_users.get(username, {}).values(), start=1):
-                if i_upload == upload:
-                    if is_privileged_queue:
-                        num_queued_users = len(privileged_queued_users)
-                    else:
-                        # Cycling through privileged users first
-                        queue_position += sum(
-                            len(queued_uploads) for queued_uploads in privileged_queued_users.values())
-                        num_queued_users = len(self.queued_users)
+            user_queue_positions = self._queue_position_users[username]
 
-                    queue_position += position * num_queued_users
-                    break
+            if upload not in user_queue_positions:
+                self._queue_positions.clear()
+                user_queue_positions.update({
+                    i_upload: position
+                    for position, i_upload in enumerate(self.queued_users[username].values(), start=1)
+                })
+
+            if is_privileged_queue:
+                num_queued_users = len(privileged_queued_users)
+            else:
+                # Cycling through privileged users first
+                queue_position += sum(
+                    num_queued_uploads for num_queued_uploads in privileged_queued_users.values())
+                num_queued_users = len(self.queued_users)
+
+            queue_position += num_queued_users + user_queue_positions[upload]
+
+        self._privileged_position_requested = is_privileged_queue
 
         if queue_position > 0:
             core.send_message_to_peer(

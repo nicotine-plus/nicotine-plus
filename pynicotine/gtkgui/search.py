@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -35,12 +35,12 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.dialogs.download import Download
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.combobox import ComboBox
-from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
@@ -123,6 +123,7 @@ class Searches(IconNotebook):
             entry=self.window.search_entry
         )
 
+        self.download_dialog = None
         self.file_properties = None
 
         for event_name, callback in (
@@ -148,6 +149,9 @@ class Searches(IconNotebook):
         self.room_search_combobox.destroy()
         self.user_search_combobox.destroy()
         self.search_combobox.destroy()
+
+        if self.download_dialog is not None:
+            self.download_dialog.destroy()
 
         if self.file_properties is not None:
             self.file_properties.destroy()
@@ -600,26 +604,24 @@ class Search:
 
         self.popup_menu_copy = PopupMenu(self.window.application)
         self.popup_menu_copy.add_items(
-            ("#" + _("Copy _File Path"), self.on_copy_file_path),
-            ("#" + _("Copy _URL"), self.on_copy_url),
-            ("#" + _("Copy Folder U_RL"), self.on_copy_folder_url)
+            ("#" + _("Copy File Path"), self.on_copy_file_path),
+            ("#" + _("Copy File URL"), self.on_copy_file_url),
+            ("#" + _("Copy Folder URL"), self.on_copy_folder_url)
         )
 
         self.popup_menu = FilePopupMenu(
             self.window.application, parent=self.tree_view.widget, callback=self.on_popup_menu
         )
         self.popup_menu.add_items(
-            ("#" + _("_Download File(s)"), self.on_download_files),
-            ("#" + _("Download File(s) _To…"), self.on_download_files_to),
+            ("#" + _("Download _File(s)"), self.on_download_files),
+            ("#" + _("_Download Folder(s)…"), self.on_download_folders),
             ("", None),
-            ("#" + _("Download _Folder(s)"), self.on_download_folders),
-            ("#" + _("Download F_older(s) To…"), self.on_download_folders_to),
+            ("#" + _("F_ile Properties"), self.on_file_properties),
             ("", None),
             ("#" + _("View User _Profile"), self.on_user_profile),
             ("#" + _("_Browse Folder"), self.on_browse_folder),
-            ("#" + _("F_ile Properties"), self.on_file_properties),
             ("", None),
-            (">" + _("Copy"), self.popup_menu_copy),
+            (">" + _("_Copy"), self.popup_menu_copy),
             (">" + _("User Actions"), self.popup_menu_users)
         )
 
@@ -941,7 +943,7 @@ class Search:
 
     def add_row_to_model(self, row):
 
-        (user, flag, h_speed, h_queue, folder_path, _unused, _unused, _unused, _unused,
+        (user, flag, h_speed, h_queue, h_folder_path, _unused, _unused, _unused, _unused,
             _unused, speed, queue, _unused, _unused, _unused, has_free_slots,
             file_data, _unused) = row
 
@@ -993,6 +995,7 @@ class Search:
             if self.grouping_mode == "folder_grouping":
                 # Group by folder
 
+                folder_path = file_data.path.rpartition("\\")[0]
                 user_folder_path = user + folder_path
 
                 if user_folder_path not in self.folders:
@@ -1002,7 +1005,7 @@ class Search:
                             flag,
                             h_speed,
                             h_queue,
-                            folder_path,
+                            h_folder_path,
                             empty_str,
                             empty_str,
                             empty_str,
@@ -1014,7 +1017,7 @@ class Search:
                             empty_int,
                             empty_int,
                             has_free_slots,
-                            SearchResultFile(file_data.path.rpartition("\\")[0]),
+                            SearchResultFile(folder_path),
                             self.row_id
                         ], select_row=False, parent_iterator=user_iterator
                     )
@@ -1406,7 +1409,7 @@ class Search:
                 self.tree_view.select_row(iterator, should_scroll=False)
                 continue
 
-            user_folder_path = selected_user + self.tree_view.get_row_value(iterator, "folder")
+            user_folder_path = selected_user + self.tree_view.get_row_value(iterator, "file_data").path
             user_folder_data = self.folders.get(user_folder_path)
 
             if not user_folder_data:
@@ -1439,6 +1442,7 @@ class Search:
         folder_path = self.tree_view.get_row_value(iterator, "folder")
 
         if folder_path:
+            folder_path = self.tree_view.get_row_value(iterator, "file_data").path
             user_folder_path = user + folder_path
             row_data = self.folders[user_folder_path]
         else:
@@ -1580,60 +1584,48 @@ class Search:
                 user, file_path, folder_path=download_folder_path, size=size,
                 file_attributes=file_data.attributes)
 
-    def on_download_files_to_selected(self, selected_folder_paths, _data):
-        self.on_download_files(download_folder_path=next(iter(selected_folder_paths), None))
+    def on_download_folders(self, *_args):
 
-    def on_download_files_to(self, *_args):
+        data = []
+        user_folder_paths = set()
+        selected_iterators = self.selected_results.values()
+        selected = True
 
-        FolderChooser(
-            parent=self.window,
-            title=_("Select Destination Folder for File(s)"),
-            callback=self.on_download_files_to_selected,
-            initial_folder=core.downloads.get_default_download_folder()
-        ).present()
-
-    def on_download_folders(self, *_args, download_folder_path=None):
-
-        requested_folders = set()
-
-        for iterator in self.selected_results.values():
+        for iterator in selected_iterators:
             user = self.tree_view.get_row_value(iterator, "user")
-            folder_path = self.tree_view.get_row_value(iterator, "file_data").path.rpartition("\\")[0]
-            user_folder_key = user + folder_path
+            file_data = self.tree_view.get_row_value(iterator, "file_data")
+            file_path = file_data.path
+            size = self.tree_view.get_row_value(iterator, "size_data")
+            user_folder_paths.add((user, file_path.rpartition("\\")[0]))
 
-            if user_folder_key in requested_folders:
-                # Ensure we don't send folder content requests for a folder more than once,
-                # e.g. when several selected results belong to the same folder
-                continue
+            data.append((user, file_path, size, file_data.attributes, selected, None))
 
-            visible_files = []
-            for row in self.all_data:
-                # Find the wanted folder
-                if folder_path != row[16].path.rpartition("\\")[0]:
+        selected = False
+
+        for username, folder_path in user_folder_paths:
+            user_folder_path = username + folder_path
+
+            if user_folder_path in self.folders:
+                _user_folder_iter, child_iterators = self.folders[user_folder_path]
+            else:
+                _user_iter, child_iterators = self.users[username]
+
+            for i_iterator in child_iterators:
+                file_data = self.tree_view.get_row_value(i_iterator, "file_data")
+                file_path = file_data.path
+                i_folder_path = file_path.rpartition("\\")[0]
+
+                if i_folder_path != folder_path:
                     continue
 
-                (_unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused,
-                    _unused, _unused, _unused, size, _unused, _unused, _unused, file_data,
-                    _unused) = row
+                size = self.tree_view.get_row_value(i_iterator, "size_data")
+                data.append((username, file_path, size, file_data.attributes, selected, None))
 
-                visible_files.append((file_data.path, size, file_data.attributes))
+        if self.searches.download_dialog is None:
+            self.searches.download_dialog = Download(self.window.application)
 
-            core.search.request_folder_download(
-                user, folder_path, visible_files, download_folder_path=download_folder_path
-            )
-            requested_folders.add(user_folder_key)
-
-    def on_download_folders_to_selected(self, selected_folder_paths, _data):
-        self.on_download_folders(download_folder_path=next(iter(selected_folder_paths), None))
-
-    def on_download_folders_to(self, *_args):
-
-        FolderChooser(
-            parent=self.window,
-            title=_("Select Destination Folder"),
-            callback=self.on_download_folders_to_selected,
-            initial_folder=core.downloads.get_default_download_folder()
-        ).present()
+        self.searches.download_dialog.update_files(data, select_all=True)
+        self.searches.download_dialog.present()
 
     def on_copy_file_path(self, *_args):
 
@@ -1645,7 +1637,7 @@ class Search:
         file_path = self.tree_view.get_row_value(iterator, "file_data").path
         clipboard.copy_text(file_path)
 
-    def on_copy_url(self, *_args):
+    def on_copy_file_url(self, *_args):
 
         iterator = next(iter(self.selected_results.values()), None)
 
@@ -1691,7 +1683,7 @@ class Search:
             self.grouping_button.set_has_frame(active)
         else:
             self.grouping_button.set_relief(
-                Gtk.ReliefStyle.NORMAL if active else Gtk.ReliefStyle.NONE
+                Gtk.ReliefStyle.NORMAL if active else Gtk.ReliefStyle.NONE  # pylint: disable=c-extension-no-member
             )
 
         config.sections["searches"]["group_searches"] = mode

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -95,6 +95,10 @@ class Application:
 
         # Show errors in the GUI from here on
         sys.excepthook = self.on_critical_error
+
+        # Always use LTR text direction for now. Once we add complete translations for a RTL
+        # language, we need to revise this.
+        Gtk.Widget.set_default_direction(Gtk.TextDirection.LTR)
 
         self._instance.connect("activate", self.on_activate)
         self._instance.connect("shutdown", self.on_shutdown)

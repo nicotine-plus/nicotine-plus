@@ -445,8 +445,8 @@ Creative Commons may be contacted at creativecommons.org.
 
 MIT License
 
-Copyright (c) 2014-2023 Tom Wallroth, Mat (mathiascode)  
-Copyright (c) 2020-2023 Nicotine+ Contributors
+Copyright (c) 2014-2025 Tom Wallroth, Mat (mathiascode), et al.  
+Copyright (c) 2020-2025 Nicotine+ Contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

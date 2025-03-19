@@ -62,7 +62,7 @@
               <object class="GtkLabel">
                 <property name="height-request">24</property>
                 <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Autoclear finished/cancelled uploads from transfer list</property>
+                <property name="label" translatable="yes">Automatically remove finished and cancelled uploads from list</property>
                 <property name="mnemonic-widget">autoclear_uploads_toggle</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
