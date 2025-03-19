@@ -50,36 +50,31 @@ class RoomWall(Popover):
         self.message_view.destroy()
         super().destroy()
 
-    def _update_message_list(self):
+    def _update_message_list(self, tickers):
 
         self.message_view.clear()
-        self.message_entry.set_text("")
 
-        login_username = core.users.login_username
-
-        for username, message in list(core.chatrooms.joined_rooms[self.room].tickers.items()):
+        for username, message in list(tickers.items()):
             self.message_view.add_line(f"> [{username}] {message}", prepend=True)
-
-            if username == login_username:
-                self.message_entry.set_text(message)
-                self.message_entry.select_region(0, -1)
 
         self.message_view.place_cursor_at_line(0)
 
     def on_set_room_wall_message(self, *_args):
 
         entry_text = self.message_entry.get_text()
-        old_ticker = core.chatrooms.joined_rooms[self.room].tickers.get(core.users.login_username, "")
+        login_username = core.users.login_username
+        tickers = core.chatrooms.joined_rooms[self.room].tickers
+        old_ticker = tickers.get(login_username, "")
 
         if entry_text == old_ticker:
             self.message_entry.select_region(0, -1)
             return
 
-        core.chatrooms.joined_rooms[self.room].tickers.pop(core.users.login_username, None)
-        self._update_message_list()
+        tickers.pop(core.users.login_username, None)
+        self._update_message_list(tickers)
 
         if entry_text:
-            self.message_view.add_line(f"> [{core.users.login_username}] {entry_text}", prepend=True)
+            self.message_view.add_line(f"> [{login_username}] {entry_text}", prepend=True)
 
         core.chatrooms.request_update_ticker(self.room, entry_text)
 
@@ -92,4 +87,15 @@ class RoomWall(Popover):
         self.on_set_room_wall_message()
 
     def _on_show(self, *_args):
-        self._update_message_list()
+
+        login_username = core.users.login_username
+        tickers = core.chatrooms.joined_rooms[self.room].tickers
+
+        self._update_message_list(tickers)
+
+        self.message_entry.set_text(tickers.get(login_username, ""))
+        self.message_entry.select_region(0, -1)
+
+        if not tickers:
+            # Focus message entry instead of list when no tickers are present
+            self.message_entry.grab_focus()
