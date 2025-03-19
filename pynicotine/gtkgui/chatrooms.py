@@ -506,6 +506,7 @@ class ChatRoom:
             self.chat_view_container, chat_entry=self.chatrooms.chat_entry, editable=False,
             horizontal_margin=10, vertical_margin=5, pixels_below_lines=2,
             status_users=core.chatrooms.joined_rooms[room].users,
+            roomname_event=(self.roomname_event if is_global else None),
             username_event=self.username_event
         )
 
@@ -733,7 +734,7 @@ class ChatRoom:
             num_lines=config.sections["logging"]["readroomlines"]
         )
 
-        self.chat_view.append_log_lines(log_lines, login_username=config.sections["server"]["login"])
+        self.chat_view.prepend_log_lines(log_lines, login_username=config.sections["server"]["login"])
 
     def populate_room_users(self, joined_users):
 
@@ -857,38 +858,36 @@ class ChatRoom:
 
     def say_chat_room(self, msg):
 
+        roomname = msg.room
         username = msg.user
-        room = msg.room
         message = msg.message
-        formatted_message = msg.formatted_message
         message_type = msg.message_type
-        usertag = self.chat_view.get_user_tag(username)
 
         if message_type != "local":
             if self.speech_toggle.get_active():
                 core.notifications.new_tts(
-                    config.sections["ui"]["speechrooms"], {"room": room, "user": username, "message": message}
+                    config.sections["ui"]["speechrooms"], {"room": roomname, "user": username, "message": message}
                 )
 
             self._show_notification(
-                room, username, message, is_mentioned=(message_type == "hilite"))
+                roomname, username, message, is_mentioned=(message_type == "hilite"))
 
-        self.chat_view.append_line(
-            formatted_message, message_type=message_type, username=username, usertag=usertag,
+        self.chat_view.add_line(
+            message, message_type=message_type, roomname=roomname if self.is_global else None, username=username,
             timestamp_format=config.sections["logging"]["rooms_timestamp"]
         )
 
     def global_room_message(self, msg):
         self.say_chat_room(msg)
 
-    def echo_room_message(self, text, message_type):
+    def echo_room_message(self, message, message_type):
 
         if message_type != "command":
             timestamp_format = config.sections["logging"]["rooms_timestamp"]
         else:
             timestamp_format = None
 
-        self.chat_view.append_line(text, message_type=message_type, timestamp_format=timestamp_format)
+        self.chat_view.add_line(message, message_type=message_type, timestamp_format=timestamp_format)
 
     def user_joined_room(self, msg):
 
@@ -909,7 +908,7 @@ class ChatRoom:
         if (username != core.users.login_username
                 and not core.network_filter.is_user_ignored(username)
                 and not core.network_filter.is_user_ip_ignored(username)):
-            self.activity_view.append_line(
+            self.activity_view.add_line(
                 _("%s joined the room") % username,
                 timestamp_format=config.sections["logging"]["rooms_timestamp"]
             )
@@ -934,7 +933,7 @@ class ChatRoom:
         if not core.network_filter.is_user_ignored(username) and \
                 not core.network_filter.is_user_ip_ignored(username):
             timestamp_format = config.sections["logging"]["rooms_timestamp"]
-            self.activity_view.append_line(_("%s left the room") % username, timestamp_format=timestamp_format)
+            self.activity_view.add_line(_("%s left the room") % username, timestamp_format=timestamp_format)
 
         if self.is_private:
             status_icon_name = USER_STATUS_ICON_NAMES[UserStatus.OFFLINE]
@@ -1103,7 +1102,7 @@ class ChatRoom:
             return
 
         if not core.network_filter.is_user_ignored(user) and not core.network_filter.is_user_ip_ignored(user):
-            self.activity_view.append_line(
+            self.activity_view.add_line(
                 action % user, timestamp_format=config.sections["logging"]["rooms_timestamp"])
 
         self.users_list_view.set_row_value(iterator, "status", status_icon_name)
@@ -1126,6 +1125,9 @@ class ChatRoom:
         if flag_icon_name and flag_icon_name != self.users_list_view.get_row_value(iterator, "country"):
             self.users_list_view.set_row_value(iterator, "country", flag_icon_name)
 
+    def roomname_event(self, _pos_x, _pos_y, room):
+        core.chatrooms.show_room(room)
+
     def username_event(self, pos_x, pos_y, user):
 
         menu = self.popup_menu_user_chat
@@ -1144,7 +1146,7 @@ class ChatRoom:
         self.is_private = msg.private
         self.populate_room_users(msg.users)
 
-        self.activity_view.append_line(
+        self.activity_view.add_line(
             _("%s joined the room") % core.users.login_username,
             timestamp_format=config.sections["logging"]["rooms_timestamp"]
         )

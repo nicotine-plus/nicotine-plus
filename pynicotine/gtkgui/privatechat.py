@@ -411,7 +411,7 @@ class PrivateChat:
             num_lines=config.sections["logging"]["readprivatelines"]
         )
 
-        self.chat_view.append_log_lines(log_lines, login_username=config.sections["server"]["login"])
+        self.chat_view.prepend_log_lines(log_lines, login_username=config.sections["server"]["login"])
 
     def server_disconnect(self):
         self.offline_message = False
@@ -507,12 +507,10 @@ class PrivateChat:
 
         username = msg.user
         tag_username = (core.users.login_username if is_outgoing_message else username)
-        usertag = self.chat_view.get_user_tag(tag_username)
 
         timestamp = msg.timestamp if not is_new_message else None
         timestamp_format = config.sections["logging"]["private_timestamp"]
         message = msg.message
-        formatted_message = msg.formatted_message
 
         if not is_outgoing_message:
             self._show_notification(message, is_mentioned=(message_type == "hilite"))
@@ -524,7 +522,7 @@ class PrivateChat:
 
         if not is_outgoing_message and not is_new_message:
             if not self.offline_message:
-                self.chat_view.append_line(
+                self.chat_view.add_line(
                     _("* Messages sent while you were offline"), message_type="hilite",
                     timestamp_format=timestamp_format
                 )
@@ -533,20 +531,20 @@ class PrivateChat:
         else:
             self.offline_message = False
 
-        self.chat_view.append_line(
-            formatted_message, message_type=message_type, timestamp=timestamp, timestamp_format=timestamp_format,
-            username=tag_username, usertag=usertag
+        self.chat_view.add_line(
+            message, message_type=message_type, timestamp=timestamp, timestamp_format=timestamp_format,
+            username=tag_username
         )
-        self.chats.history.update_user(username, formatted_message)
+        self.chats.history.update_user(username, message)
 
-    def echo_private_message(self, text, message_type):
+    def echo_private_message(self, message, message_type):
 
         if message_type != "command":
             timestamp_format = config.sections["logging"]["private_timestamp"]
         else:
             timestamp_format = None
 
-        self.chat_view.append_line(text, message_type=message_type, timestamp_format=timestamp_format)
+        self.chat_view.add_line(message, message_type=message_type, timestamp_format=timestamp_format)
 
     def username_event(self, pos_x, pos_y, user):
 

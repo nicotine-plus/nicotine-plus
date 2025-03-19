@@ -254,14 +254,14 @@ class Logger:
 
     def read_log(self, folder_path, basename, num_lines):
 
-        lines = None
+        lines = []
         log_file = None
 
         try:
             log_file = self._get_log_file(folder_path, basename, should_create_file=False)
 
             if log_file is not None:
-                lines = self._get_log_lines(log_file, num_lines)
+                lines = reversed(self._get_log_lines(log_file, num_lines))
 
         except Exception as error:
             self._add(_("Cannot access log file %(path)s: %(error)s"), {
