@@ -524,7 +524,7 @@ class StatusNotifierImplementation(BaseImplementation):
                     GLib.Variant.new_string(self.bus.get_unique_name())
                 ),
                 reply_type=None,
-                flags=Gio.DBusCallFlags.NONE,
+                flags=0,
                 timeout_msec=1000,
                 cancellable=None
             )
@@ -1205,7 +1205,7 @@ class TrayIcon:
         self.watch_id = Gio.bus_watch_name(
             bus_type=Gio.BusType.SESSION,
             name="org.kde.StatusNotifierWatcher",
-            flags=Gio.BusNameWatcherFlags.NONE,
+            flags=0,
             name_appeared_closure=self.load,
             name_vanished_closure=self.unload
         )

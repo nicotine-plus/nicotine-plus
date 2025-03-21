@@ -306,7 +306,8 @@ class IconNotebook:
             self.pages_button_container.append(self.pages_button)                  # pylint: disable=no-member
 
             self.scroll_controller = Gtk.EventControllerScroll(
-                flags=int(Gtk.EventControllerScrollFlags.BOTH_AXES | Gtk.EventControllerScrollFlags.DISCRETE)
+                flags=int(Gtk.EventControllerScrollFlags.BOTH_AXES                 # pylint: disable=no-member
+                          | Gtk.EventControllerScrollFlags.DISCRETE)
             )
             self.scroll_controller.connect("scroll", self.on_tab_scroll)
 

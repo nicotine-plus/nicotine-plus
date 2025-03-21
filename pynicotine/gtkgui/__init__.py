@@ -34,7 +34,7 @@ def get_default_gtk_version():
         try:
             dbus_proxy = Gio.DBusProxy.new_for_bus_sync(
                 bus_type=Gio.BusType.SESSION,
-                flags=Gio.DBusProxyFlags.NONE,
+                flags=0,
                 info=None,
                 name="org.a11y.Bus",
                 object_path="/org/a11y/bus",
