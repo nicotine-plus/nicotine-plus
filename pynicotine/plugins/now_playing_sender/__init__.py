@@ -57,7 +57,7 @@ class Plugin(BasePlugin):
             member="PropertiesChanged",
             object_path="/org/mpris/MediaPlayer2",
             arg0=None,
-            flags=Gio.DBusSignalFlags.NONE,
+            flags=0,
             callback=self.song_change,
             user_data=None
         )
@@ -75,7 +75,7 @@ class Plugin(BasePlugin):
         if not player:
             dbus_proxy = Gio.DBusProxy.new_sync(
                 connection=self.bus,
-                flags=Gio.DBusProxyFlags.NONE,
+                flags=0,
                 info=None,
                 name="org.freedesktop.DBus",
                 object_path="/org/freedesktop/DBus",
@@ -96,7 +96,7 @@ class Plugin(BasePlugin):
 
         dbus_proxy = Gio.DBusProxy.new_sync(
             connection=self.bus,
-            flags=Gio.DBusProxyFlags.NONE,
+            flags=0,
             info=None,
             name=self.dbus_mpris_service + player,
             object_path="/org/mpris/MediaPlayer2",

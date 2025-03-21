@@ -178,7 +178,7 @@ class NowPlaying:
         if not player:
             dbus_proxy = Gio.DBusProxy.new_for_bus_sync(
                 bus_type=Gio.BusType.SESSION,
-                flags=Gio.DBusProxyFlags.NONE,
+                flags=0,
                 info=None,
                 name="org.freedesktop.DBus",
                 object_path="/org/freedesktop/DBus",
@@ -206,7 +206,7 @@ class NowPlaying:
         try:
             dbus_proxy = Gio.DBusProxy.new_for_bus_sync(
                 bus_type=Gio.BusType.SESSION,
-                flags=Gio.DBusProxyFlags.NONE,
+                flags=0,
                 info=None,
                 name=dbus_mpris_service + player,
                 object_path="/org/mpris/MediaPlayer2",
