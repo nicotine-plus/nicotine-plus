@@ -29,8 +29,9 @@ Developing in a single language is also easier for everyone involved in the
 project.
 
 We aim to support the oldest [Python version](https://devguide.python.org/versions/)
-still receiving security updates, up to the latest. In any case, there's no rush to
-bump the minimum version requirement unless it brings a new feature that we need.
+still receiving security updates, up to the latest. There is no rush to bump the
+minimum version requirement, since LTS distributions may use older Python
+versions, but a smaller range of versions is easier to test.
 
 ### GTK
 
