@@ -2932,7 +2932,7 @@ class PluginsPage:
         self.plugin_authors_label.set_text(plugin_authors)
 
         self.plugin_description_view.clear()
-        self.plugin_description_view.append_line(plugin_description)
+        self.plugin_description_view.add_line(plugin_description)
         self.plugin_description_view.place_cursor_at_line(0)
 
         self.check_plugin_settings_button(self.selected_plugin)
