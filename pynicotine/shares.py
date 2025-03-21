@@ -1105,6 +1105,7 @@ class Shares:
     def _process_scanner(self, scanner_queue, emit_event=None):
 
         successful = True
+        current_folder_count = None
 
         while self._scanner_process.is_alive() and successful:
             # Cooldown
@@ -1119,7 +1120,7 @@ class Shares:
 
                 if isinstance(item, int):
                     if emit_event is not None:
-                        emit_event("shares-scanning", item)
+                        current_folder_count = item
 
                 elif isinstance(item, ScannerLogMessage):
                     log.add(item.msg, item.msg_args)
@@ -1136,6 +1137,10 @@ class Shares:
 
                 elif item == ScannerState.INITIALIZED:
                     self.initialized = True
+
+            if current_folder_count:
+                emit_event("shares-scanning", current_folder_count)
+                current_folder_count = None
 
         self._scanner_process = None
 
