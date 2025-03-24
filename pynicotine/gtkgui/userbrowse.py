@@ -153,7 +153,7 @@ class UserBrowses(IconNotebook):
                              close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
-        elif new_request:
+        if new_request:
             page.clear_model()
             page.set_indeterminate_progress()
 

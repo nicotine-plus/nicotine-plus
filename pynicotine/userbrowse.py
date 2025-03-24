@@ -123,7 +123,10 @@ class UserBrowse:
             core.setup()
             return
 
-        if username not in self.users or new_request:
+        if username not in self.users:
+            new_request = True
+
+        if new_request:
             if not permission_level:
                 # Check our own permission level, and show relevant shares for it
                 current_permission_level, _reason = core.shares.check_user_permission(username)
@@ -150,7 +153,10 @@ class UserBrowse:
         browsed_user = self.users.get(username)
         local_username = core.users.login_username or config.sections["server"]["login"]
 
-        if browsed_user is not None and new_request:
+        if browsed_user is None:
+            new_request = True
+
+        elif new_request:
             browsed_user.clear()
 
         if username == local_username:
@@ -160,7 +166,7 @@ class UserBrowse:
         self._show_user(username, path=path, new_request=new_request, switch_page=switch_page)
         core.users.watch_user(username, context="userbrowse")
 
-        if browsed_user is None or new_request:
+        if new_request:
             self.request_user_shares(username)
 
     def create_user_shares_folder(self):
