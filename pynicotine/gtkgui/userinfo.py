@@ -149,7 +149,7 @@ class UserInfos(IconNotebook):
                              close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
-        elif refresh:
+        if refresh:
             page.set_indeterminate_progress()
 
         if switch_page:
