@@ -160,7 +160,7 @@ class UserBrowse:
             browsed_user.clear()
 
         if username == local_username:
-            self.browse_local_shares(path, new_request, switch_page=switch_page)
+            self.browse_local_shares(path, new_request=new_request, switch_page=switch_page)
             return
 
         self._show_user(username, path=path, new_request=new_request, switch_page=switch_page)
