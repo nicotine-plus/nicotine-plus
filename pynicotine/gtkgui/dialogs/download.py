@@ -170,6 +170,7 @@ class Download(Dialog):
 
         self.tree_view.freeze()
 
+        self.rename_button.set_sensitive(False)
         self.expand_button.set_active(True)
         self.download_button.set_sensitive(not partial_files)
         self.enable_subfolders_toggle.set_active(True)
