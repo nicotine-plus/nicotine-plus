@@ -272,7 +272,6 @@ class DownloadsPage:
             container=self.sent_files_permission_container,
             items=(
                 (_("No one"), 0),
-                (_("Everyone"), 1),
                 (_("Buddies"), 2),
                 (_("Trusted buddies"), 3)
             )
