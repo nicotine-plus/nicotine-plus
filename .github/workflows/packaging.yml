@@ -98,13 +98,19 @@ jobs:
           path: ${{ steps.build-snap.outputs.snap }}
 
   windows:
-    runs-on: windows-latest
     timeout-minutes: 15
     strategy:
       matrix:
         include:
           - arch: x86_64
             prefix: mingw-w64-clang-x86_64
+            msystem: clang64
+            platform: windows-latest
+          - arch: arm64
+            prefix: mingw-w64-clang-aarch64
+            msystem: clangarm64
+            platform: windows-11-arm
+    runs-on: ${{ matrix.platform }}
     defaults:
       run:
         shell: msys2 {0}
@@ -115,8 +121,7 @@ jobs:
       - name: Setup msys2
         uses: msys2/setup-msys2@v2
         with:
-          msystem: clang64
-          release: false
+          msystem: ${{ matrix.msystem }}
           update: true
           install: >-
             ${{ matrix.prefix }}-ca-certificates
