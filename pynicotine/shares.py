@@ -552,6 +552,11 @@ class Scanner:
                             continue
 
                         try:
+                            if path in self.files:
+                                # Two files with slightly different names, but utf-8 decoded paths become
+                                # identical. Only process one of the files to prevent corrupting the file index.
+                                continue
+
                             if self.is_hidden(folder_path, basename, entry):
                                 continue
 
