@@ -625,7 +625,6 @@ class IconNotebook:
 
         tab_label = self.get_tab_label(page)
         tab_label.set_status_icon(status)
-        tab_label.set_text(user)
         tab_label.set_tooltip_text(f"{user} ({status_text})")
 
     # Signals #
