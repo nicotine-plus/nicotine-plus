@@ -138,22 +138,22 @@ jobs:
             ${{ matrix.prefix }}-webp-pixbuf-loader
 
       - name: Install additional dependencies
-        run: python3 packaging/windows/dependencies.py
+        run: python3 build-aux/windows/dependencies.py
 
       - name: Freeze application
-        run: python3 packaging/windows/setup.py bdist_msi
+        run: python3 build-aux/windows/setup.py bdist_msi
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v4
         with:
           name: windows-${{ matrix.arch }}-installer
-          path: packaging/windows/build/*.msi
+          path: build-aux/windows/build/*.msi
 
       - name: Archive package artifacts
         uses: actions/upload-artifact@v4
         with:
           name: windows-${{ matrix.arch }}-package
-          path: packaging/windows/build/package
+          path: build-aux/windows/build/package
 
   macos:
     strategy:
@@ -179,13 +179,13 @@ jobs:
           python3.13 -m venv venv
 
       - name: Install build dependencies
-        run: venv/bin/python3 packaging/macos/dependencies.py
+        run: venv/bin/python3 build-aux/macos/dependencies.py
 
       - name: Freeze application
-        run: venv/bin/python3 packaging/macos/setup.py bdist_dmg
+        run: venv/bin/python3 build-aux/macos/setup.py bdist_dmg
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v4
         with:
           name: macos-${{ matrix.arch }}-installer
-          path: packaging/macos/build/*.dmg
+          path: build-aux/macos/build/*.dmg
