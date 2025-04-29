@@ -56,7 +56,7 @@ jobs:
         run: flatpak-builder-lint appstream data/org.nicotine_plus.Nicotine.appdata.xml.in
 
       - name: Build Flatpak package
-        uses: flathub-infra/flatpak-github-actions/flatpak-builder@master
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
           bundle: org.nicotine_plus.Nicotine-${{ matrix.arch }}.flatpak
           manifest-path: build-aux/flatpak/org.nicotine_plus.Nicotine.json
