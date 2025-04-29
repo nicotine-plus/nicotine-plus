@@ -32,6 +32,10 @@
                     "path" : "../../",
                     "type" : "dir"
                 }
+            ],
+            "run-tests" : true,
+            "test-commands" : [
+                "python3 -m unittest -v"
             ]
         }
     ],
