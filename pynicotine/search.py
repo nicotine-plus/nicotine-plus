@@ -100,7 +100,7 @@ class Search:
         # Create wishlist searches
         for search_term in config.sections["server"]["autosearch"]:
             self.token = increment_token(self.token)
-            self.add_search(search_term, mode="wishlist", is_ignored=True)
+            self._add_search(self.token, search_term, mode="wishlist", is_ignored=True)
 
     def _quit(self):
         self.remove_all_searches()
@@ -134,20 +134,50 @@ class Search:
         """Disallow parsing search result messages for a search ID."""
         SEARCH_TOKENS_ALLOWED.discard(token)
 
-    def add_search(self, search_term, mode, room=None, users=None, is_ignored=False):
+    def do_search(self, search_term, mode, room=None, users=None, switch_page=True):
 
-        term_sanitized, term_transmitted, included_words, excluded_words = self.sanitize_search_term(search_term)
+        # Validate search term and run it through plugins
+        search_term, room, users = self._process_search_term(search_term, mode, room, users)
 
-        self.searches[self.token] = search = SearchRequest(
-            token=self.token, term=search_term, term_sanitized=term_sanitized, term_transmitted=term_transmitted,
-            included_words=included_words, excluded_words=excluded_words, mode=mode, room=room, users=users,
-            is_ignored=is_ignored
-        )
+        # Get a new search token
+        self.token = increment_token(self.token)
+        search = self._add_search(self.token, search_term, mode, room, users)
 
-        if not is_ignored:
-            self.add_allowed_token(self.token)
+        if config.sections["searches"]["enable_history"]:
+            items = config.sections["searches"]["history"]
 
-        return search
+            if search.term_sanitized in items:
+                items.remove(search.term_sanitized)
+
+            items.insert(0, search.term_sanitized)
+
+            # Clear old items
+            del items[self.SEARCH_HISTORY_LIMIT:]
+            config.write_configuration()
+
+        self.send_search_request(search.token)
+        events.emit("add-search", search.token, search, switch_page)
+
+    def send_search_request(self, token):
+
+        search = self.searches.get(token)
+
+        if search is None:
+            return
+
+        self.add_allowed_token(token)
+
+        if search.mode in {"global", "wishlist"}:
+            self._send_global_search_request(search)
+
+        elif search.mode == "rooms":
+            self._send_rooms_search_request(search)
+
+        elif search.mode == "buddies":
+            self._send_buddies_search_request(search)
+
+        elif search.mode == "user":
+            self._send_peer_search_request(search)
 
     def remove_search(self, token):
 
@@ -171,7 +201,57 @@ class Search:
     def show_search(self, token):
         events.emit("show-search", token)
 
-    def sanitize_search_term(self, search_term):
+    def add_wish(self, wish):
+
+        if not wish:
+            return
+
+        if wish not in config.sections["server"]["autosearch"]:
+            config.sections["server"]["autosearch"].append(wish)
+            config.write_configuration()
+
+        if not any(search.term == wish and search.mode == "wishlist" for search in self.searches.values()):
+            # Get a new search token
+            self.token = increment_token(self.token)
+            self._add_search(self.token, wish, mode="wishlist", is_ignored=True)
+
+        events.emit("add-wish", wish)
+
+    def remove_wish(self, wish):
+
+        if wish not in config.sections["server"]["autosearch"]:
+            return
+
+        config.sections["server"]["autosearch"].remove(wish)
+        config.write_configuration()
+
+        for token, search in self.searches.items():
+            if search.term != wish or search.mode != "wishlist":
+                continue
+
+            if search.is_ignored:
+                del self.searches[token]
+
+            break
+
+        events.emit("remove-wish", wish)
+
+    def is_wish(self, wish):
+        return wish in config.sections["server"]["autosearch"]
+
+    def _add_search(self, token, search_term, mode, room=None, users=None, is_ignored=False):
+
+        term_sanitized, term_transmitted, included_words, excluded_words = self._sanitize_search_term(search_term)
+
+        self.searches[token] = search = SearchRequest(
+            token=token, term=search_term, term_sanitized=term_sanitized, term_transmitted=term_transmitted,
+            included_words=included_words, excluded_words=excluded_words, mode=mode, room=room, users=users,
+            is_ignored=is_ignored
+        )
+
+        return search
+
+    def _sanitize_search_term(self, search_term):
 
         included_words = []
         excluded_words = []
@@ -243,7 +323,7 @@ class Search:
 
         return search_term, search_term_transmitted, included_words, excluded_words
 
-    def process_search_term(self, search_term, mode, room=None, users=None):
+    def _process_search_term(self, search_term, mode, room=None, users=None):
 
         search_term = search_term.strip()
 
@@ -288,77 +368,42 @@ class Search:
 
         return search_term, room, users
 
-    def do_search(self, search_term, mode, room=None, users=None, switch_page=True):
-
-        # Validate search term and run it through plugins
-        search_term, room, users = self.process_search_term(search_term, mode, room, users)
-
-        # Get a new search token
-        self.token = increment_token(self.token)
-        search = self.add_search(search_term, mode, room, users)
-
-        if config.sections["searches"]["enable_history"]:
-            items = config.sections["searches"]["history"]
-
-            if search.term_sanitized in items:
-                items.remove(search.term_sanitized)
-
-            items.insert(0, search.term_sanitized)
-
-            # Clear old items
-            del items[self.SEARCH_HISTORY_LIMIT:]
-            config.write_configuration()
-
-        if mode == "global":
-            self.do_global_search(search.term_transmitted)
-
-        elif mode == "rooms":
-            self.do_rooms_search(search.term_transmitted, room)
-
-        elif mode == "buddies":
-            self.do_buddies_search(search.term_transmitted)
-
-        elif mode == "user":
-            self.do_peer_search(search.term_transmitted, users)
-
-        events.emit("add-search", search.token, search, switch_page)
-
-    def do_global_search(self, text):
-        core.send_message_to_server(FileSearch(self.token, text))
+    def _send_global_search_request(self, search):
+        core.send_message_to_server(FileSearch(search.token, search.term_transmitted))
 
         # Request a list of related searches from the server.
         # Seemingly non-functional since 2018 (always receiving empty lists).
 
         # core.send_message_to_server(RelatedSearch(text))
 
-    def do_rooms_search(self, text, room):
-        core.send_message_to_server(RoomSearch(room, self.token, text))
+    def _send_rooms_search_request(self, search):
+        core.send_message_to_server(RoomSearch(search.room, search.token, search.term_transmitted))
 
-    def do_buddies_search(self, text):
+    def _send_buddies_search_request(self, search):
         for username in core.buddies.users:
-            core.send_message_to_server(UserSearch(username, self.token, text))
+            core.send_message_to_server(UserSearch(username, search.token, search.term_transmitted))
 
-    def do_peer_search(self, text, users):
+    def _send_peer_search_request(self, search):
 
-        for username in users:
+        for username in search.users:
             if username == core.users.login_username:
                 self._own_tokens.add(self.token)
 
-            core.send_message_to_server(UserSearch(username, self.token, text))
+            core.send_message_to_server(UserSearch(username, search.token, search.term_transmitted))
 
-    def do_wishlist_search(self, token, text):
+    def _do_wishlist_search(self, search):
 
-        text, _room, _users = self.process_search_term(text, mode="wishlist")
+        text, _room, _users = self._process_search_term(search.term_transmitted, mode="wishlist")
 
         if not text:
             return
 
         log.add_search(_('Searching for wishlist item "%s"'), text)
 
-        self.add_allowed_token(token)
-        core.send_message_to_server(WishlistSearch(token, text))
+        self.add_allowed_token(search.token)
+        core.send_message_to_server(WishlistSearch(search.token, text))
 
-    def do_wishlist_search_interval(self):
+    def _do_next_wishlist_search(self):
 
         searches = config.sections["server"]["autosearch"]
 
@@ -372,46 +417,8 @@ class Search:
         for search in self.searches.values():
             if search.term == term and search.mode == "wishlist":
                 search.is_ignored = False
-                self.do_wishlist_search(search.token, search.term_transmitted)
+                self._do_wishlist_search(search)
                 break
-
-    def add_wish(self, wish):
-
-        if not wish:
-            return
-
-        if wish not in config.sections["server"]["autosearch"]:
-            config.sections["server"]["autosearch"].append(wish)
-            config.write_configuration()
-
-        if not any(search.term == wish and search.mode == "wishlist" for search in self.searches.values()):
-            # Get a new search token
-            self.token = increment_token(self.token)
-            self.add_search(wish, mode="wishlist", is_ignored=True)
-
-        events.emit("add-wish", wish)
-
-    def remove_wish(self, wish):
-
-        if wish not in config.sections["server"]["autosearch"]:
-            return
-
-        config.sections["server"]["autosearch"].remove(wish)
-        config.write_configuration()
-
-        for token, search in self.searches.items():
-            if search.term != wish or search.mode != "wishlist":
-                continue
-
-            if search.is_ignored:
-                del self.searches[token]
-
-            break
-
-        events.emit("remove-wish", wish)
-
-    def is_wish(self, wish):
-        return wish in config.sections["server"]["autosearch"]
 
     def _set_wishlist_interval(self, msg):
         """Server code 104."""
@@ -423,7 +430,7 @@ class Search:
 
             events.cancel_scheduled(self._wishlist_timer_id)
             self._wishlist_timer_id = events.schedule(
-                delay=self.wishlist_interval, callback=self.do_wishlist_search_interval, repeat=True)
+                delay=self.wishlist_interval, callback=self._do_next_wishlist_search, repeat=True)
 
     def _excluded_search_phrases(self, msg):
         """Server code 160."""
