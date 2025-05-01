@@ -361,9 +361,8 @@ class Searches(IconNotebook):
             page = self.create_page(msg.token, search_term, mode, mode_label, show_page=False)
 
         # No more things to add because we've reached the result limit
-        if page.num_results_found >= page.max_limit:
+        if page.num_results_found >= config.sections["searches"]["max_displayed_results"]:
             core.search.remove_allowed_token(msg.token)
-            page.max_limited = True
             page.update_result_counter()
             return
 
@@ -471,8 +470,6 @@ class Search:
         self.active_filter_count = 0
         self.num_results_found = 0
         self.num_results_visible = 0
-        self.max_limit = config.sections["searches"]["max_displayed_results"]
-        self.max_limited = False
 
         # Use dict instead of list for faster membership checks
         self.selected_users = {}
@@ -628,9 +625,11 @@ class Search:
         self.tab_menu = PopupMenu(self.window.application)
         self.tab_menu.add_items(
             ("#" + _("Edit…"), self.on_edit_search),
+            ("#" + _("Search _Again"), self.on_search_again),
             ("#" + _("Copy Search Term"), self.on_copy_search_term),
             ("", None),
             ("#" + _("Clear All Results"), self.on_clear),
+            ("", None),
             ("#" + _("Close All Tabs…"), self.on_close_all_tabs),
             ("#" + _("_Close Tab"), self.on_close)
         )
@@ -802,8 +801,7 @@ class Search:
         row_id = 0
 
         for _code, file_path, size, _ext, file_attributes, *_unused in result_list:
-            if self.num_results_found >= self.max_limit:
-                self.max_limited = True
+            if self.num_results_found >= config.sections["searches"]["max_displayed_results"]:
                 break
 
             file_path_lower = file_path.lower()
@@ -1286,8 +1284,6 @@ class Search:
         if stored_results:
             self.all_data.clear()
             self.num_results_found = 0
-            self.max_limited = False
-            self.max_limit = config.sections["searches"]["max_displayed_results"]
 
         self.users.clear()
         self.folders.clear()
@@ -1463,13 +1459,16 @@ class Search:
 
     def update_result_counter(self):
 
-        if self.max_limited or self.num_results_found > self.num_results_visible:
+        max_limit = config.sections["searches"]["max_displayed_results"]
+        max_limited = (self.num_results_found >= max_limit)
+
+        if max_limited or self.num_results_found > self.num_results_visible:
             # Append plus symbol "+" if Results are Filtered and/or reached 'Maximum per search'
             str_plus = "+"
 
             # Display total results on the tooltip, but only if we know the exact number of results
-            if self.max_limited:
-                total = f"> {self.max_limit}+"
+            if max_limited:
+                total = f"> {max_limit}+"
             else:
                 total = self.num_results_found
 
@@ -1750,6 +1749,9 @@ class Search:
         self.window.search_entry.set_text(self.text)
         self.window.search_entry.set_position(-1)
         self.window.search_entry.grab_focus_without_selecting()
+
+    def on_search_again(self, *_args):
+        core.search.send_search_request(self.token)
 
     def on_refilter(self, *_args):
 
