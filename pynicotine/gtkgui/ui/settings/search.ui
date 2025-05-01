@@ -218,7 +218,7 @@
                         </child>
                         <child>
                           <object class="GtkEntry" id="filter_include_entry">
-                            <property name="tooltip-text" translatable="yes">Filter in results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
+                            <property name="tooltip-text" translatable="yes">Add a filter to only show results whose file paths have the given text. Use a '|' to specify multiple words or phrases, for example: long trail|till we meet again</property>
                             <property name="valign">center</property>
                             <property name="visible">True</property>
                             <property name="width-chars">8</property>
@@ -243,7 +243,7 @@
                         </child>
                         <child>
                           <object class="GtkEntry" id="filter_exclude_entry">
-                            <property name="tooltip-text" translatable="yes">Filter out results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
+                            <property name="tooltip-text" translatable="yes">Add a filter to hide results whose file paths have the given text. Use a '|' to specify multiple words or phrases, for example: long trail|till we meet again</property>
                             <property name="valign">center</property>
                             <property name="visible">True</property>
                             <property name="width-chars">8</property>
