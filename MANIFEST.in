@@ -3,6 +3,7 @@
 
 include *.md
 recursive-include data *.in
+recursive-include data *.py
 recursive-include doc *
 recursive-include po *
 recursive-include pynicotine *
@@ -14,4 +15,5 @@ recursive-exclude * *.desktop
 recursive-exclude * *.mo
 recursive-exclude * *.old
 recursive-exclude * *.pyc
+recursive-exclude * *.wav
 recursive-exclude * temp_config*

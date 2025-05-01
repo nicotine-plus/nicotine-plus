@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2008 gallows <g4ll0ws@gmail.com>
@@ -33,6 +33,8 @@ from pynicotine.utils import human_length
 class NowPlaying:
     """This class contains code for retrieving information about the song
     currently playing in a media player."""
+
+    __slots__ = ("title",)
 
     def __init__(self):
         self.title_clear()
@@ -132,7 +134,7 @@ class NowPlaying:
             from urllib.request import urlopen
             with urlopen((f"https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={username}"
                           f"&api_key={apikey}&limit=1&format=json"), timeout=10) as response:
-                response_body = response.read().decode("utf-8")
+                response_body = response.read().decode("utf-8", "replace")
 
         except Exception as error:
             log.add(_("Last.fm: Could not connect to Audioscrobbler: %(error)s"), {"error": error},
@@ -156,9 +158,9 @@ class NowPlaying:
             self.title["album"] = lastplayed["album"]["#text"]
             self.title["nowplaying"] = f"{artist} - {title}"
 
-        except Exception:
+        except Exception as error:
             log.add(_("Last.fm: Could not get recent track from Audioscrobbler: %(error)s"),
-                    {"error": response_body}, title=_("Now Playing Error"))
+                    {"error": error}, title=_("Now Playing Error"))
             return None
 
         return True
@@ -176,11 +178,12 @@ class NowPlaying:
         if not player:
             dbus_proxy = Gio.DBusProxy.new_for_bus_sync(
                 bus_type=Gio.BusType.SESSION,
-                flags=Gio.DBusProxyFlags.NONE,
+                flags=0,
                 info=None,
                 name="org.freedesktop.DBus",
                 object_path="/org/freedesktop/DBus",
-                interface_name="org.freedesktop.DBus"
+                interface_name="org.freedesktop.DBus",
+                cancellable=None
             )
             names = dbus_proxy.ListNames()
             players = []
@@ -203,11 +206,12 @@ class NowPlaying:
         try:
             dbus_proxy = Gio.DBusProxy.new_for_bus_sync(
                 bus_type=Gio.BusType.SESSION,
-                flags=Gio.DBusProxyFlags.NONE,
+                flags=0,
                 info=None,
                 name=dbus_mpris_service + player,
                 object_path="/org/mpris/MediaPlayer2",
-                interface_name="org.freedesktop.DBus.Properties"
+                interface_name="org.freedesktop.DBus.Properties",
+                cancellable=None
             )
             metadata = dbus_proxy.Get("(ss)", "org.mpris.MediaPlayer2.Player", "Metadata")
 
@@ -265,7 +269,7 @@ class NowPlaying:
         try:
             from urllib.request import urlopen
             with urlopen(f"https://api.listenbrainz.org/1/user/{username}/playing-now", timeout=10) as response:
-                response_body = response.read().decode("utf-8")
+                response_body = response.read().decode("utf-8", "replace")
 
         except Exception as error:
             log.add(_("ListenBrainz: Could not connect to ListenBrainz: %(error)s"), {"error": error},
@@ -282,16 +286,16 @@ class NowPlaying:
 
             track = json_api["listens"][0]["track_metadata"]
 
-            self.title["artist"] = artist = track["artist_name"]
-            self.title["title"] = title = track["track_name"]
-            self.title["album"] = track["release_name"]
+            self.title["artist"] = artist = track.get("artist_name", "?")
+            self.title["title"] = title = track.get("track_name", "?")
+            self.title["album"] = track.get("release_name", "?")
             self.title["nowplaying"] = f"{artist} - {title}"
 
             return True
 
-        except Exception:
+        except Exception as error:
             log.add(_("ListenBrainz: Could not get current track from ListenBrainz: %(error)s"),
-                    {"error": response_body}, title=_("Now Playing Error"))
+                    {"error": error}, title=_("Now Playing Error"))
         return None
 
     def other(self, command):
@@ -300,8 +304,8 @@ class NowPlaying:
             return None
 
         try:
-            output = execute_command(command, returnoutput=True)
-            self.title["nowplaying"] = output
+            output = execute_command(command, returnoutput=True, hidden=True)
+            self.title["nowplaying"] = output.decode("utf-8", "replace")
             return True
 
         except Exception as error:

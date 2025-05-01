@@ -48,8 +48,9 @@ class TransferSpeeds(Popover):
 
         super().set_menu_button(menu_button)
 
-        if GTK_API_VERSION >= 4:
-            add_css_class(widget=menu_button.get_first_child(), css_class="flat")
+        if menu_button is not None and GTK_API_VERSION >= 4:
+            inner_button = next(iter(menu_button))
+            add_css_class(widget=inner_button, css_class="flat")
 
     @staticmethod
     def update_transfer_limits():

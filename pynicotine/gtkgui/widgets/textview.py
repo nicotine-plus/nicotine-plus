@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -19,12 +19,9 @@
 import re
 import time
 
-from collections import deque
-
 from gi.repository import Gdk
 from gi.repository import Gtk
 
-from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import clipboard
@@ -32,21 +29,25 @@ from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
 from pynicotine.slskmessages import UserStatus
-from pynicotine.utils import encode_path
 from pynicotine.utils import find_whole_word
 from pynicotine.utils import open_uri
 
 
 class TextView:
 
-    if GTK_API_VERSION >= 4:
-        DEFAULT_CURSOR = Gdk.Cursor(name="default")
-        POINTER_CURSOR = Gdk.Cursor(name="pointer")
-        TEXT_CURSOR = Gdk.Cursor(name="text")
-    else:
-        DEFAULT_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "default")
-        POINTER_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "pointer")
-        TEXT_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "text")
+    try:
+        if GTK_API_VERSION >= 4:
+            DEFAULT_CURSOR = Gdk.Cursor(name="default")
+            POINTER_CURSOR = Gdk.Cursor(name="pointer")
+            TEXT_CURSOR = Gdk.Cursor(name="text")
+        else:
+            DEFAULT_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "default")
+            POINTER_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "pointer")
+            TEXT_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "text")
+
+    except TypeError:
+        # Broken cursor theme, but what can we do...
+        DEFAULT_CURSOR = POINTER_CURSOR = TEXT_CURSOR = None
 
     MAX_NUM_LINES = 50000
     URL_REGEX = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.[^\\s]+)|(mailto\\:[^\\s]+)")
@@ -79,10 +80,12 @@ class TextView:
         self.notify_value_handler = self.adjustment.connect("notify::value", self.on_adjustment_value_changed)
 
         self.pressed_x = self.pressed_y = 0
-        self.default_tags = {}
+        self.type_tags = {}
         self.parse_urls = parse_urls
 
         if GTK_API_VERSION >= 4:
+            self.textbuffer.set_enable_undo(editable)
+
             self.gesture_click_primary = Gtk.GestureClick()
             scrollable_container.add_controller(self.gesture_click_primary)
 
@@ -93,10 +96,14 @@ class TextView:
 
             self.motion_controller = Gtk.EventControllerMotion()
             self.motion_controller.connect("motion", self.on_move_cursor)
-            self.widget.add_controller(self.motion_controller)  # pylint: disable=no-member
+            self.widget.add_controller(self.motion_controller)     # pylint: disable=no-member
         else:
-            self.gesture_click_primary = Gtk.GestureMultiPress(widget=scrollable_container)
-            self.gesture_click_secondary = Gtk.GestureMultiPress(widget=scrollable_container)
+            self.gesture_click_primary = Gtk.GestureMultiPress(    # pylint: disable=c-extension-no-member
+                widget=scrollable_container
+            )
+            self.gesture_click_secondary = Gtk.GestureMultiPress(  # pylint: disable=c-extension-no-member
+                widget=scrollable_container
+            )
 
             self.cursor_window = None
 
@@ -143,10 +150,7 @@ class TextView:
         # Optimization: remove lines in batches
         start_iter = self.textbuffer.get_start_iter()
         end_line = (num_lines - (self.MAX_NUM_LINES - 1000))
-        end_iter = self.textbuffer.get_iter_at_line(end_line)
-
-        if GTK_API_VERSION >= 4:
-            _position_found, end_iter = end_iter
+        end_iter = self.get_iter_at_line(end_line)
 
         self.textbuffer.delete(start_iter, end_iter)
         self.end_iter = self.textbuffer.get_end_iter()
@@ -154,7 +158,7 @@ class TextView:
     def append_line(self, line, message_type=None, timestamp=None, timestamp_format=None,
                     username=None, usertag=None):
 
-        tag = self.default_tags.get(message_type)
+        tag = self.type_tags.get(message_type)
         num_lines = self.textbuffer.get_line_count()
         line = str(line).strip("\n")
 
@@ -194,13 +198,23 @@ class TextView:
         self._insert_text(line, tag)
         self._remove_old_lines(num_lines)
 
-        return num_lines
+    def get_iter_at_line(self, line_number):
+
+        iterator = self.textbuffer.get_iter_at_line(line_number)
+
+        if GTK_API_VERSION >= 4:
+            _position_found, iterator = iterator
+
+        return iterator
 
     def get_has_selection(self):
         return self.textbuffer.get_has_selection()
 
     def get_text(self):
+
         start_iter = self.textbuffer.get_start_iter()
+        self.end_iter = self.textbuffer.get_end_iter()
+
         return self.textbuffer.get_text(start_iter, self.end_iter, include_hidden_chars=True)
 
     def get_tags_for_pos(self, pos_x, pos_y):
@@ -226,13 +240,14 @@ class TextView:
         self.widget.grab_focus()
 
     def place_cursor_at_line(self, line_number):
-
-        iterator = self.textbuffer.get_iter_at_line(line_number)
-
-        if GTK_API_VERSION >= 4:
-            _position_found, iterator = iterator
-
+        iterator = self.get_iter_at_line(line_number)
         self.textbuffer.place_cursor(iterator)
+
+    def set_text(self, text):
+        """Sets text without any additional processing, and clears the undo stack."""
+
+        self.textbuffer.set_text(text)
+        self.end_iter = self.textbuffer.get_end_iter()
 
     def update_cursor(self, pos_x, pos_y):
 
@@ -254,8 +269,7 @@ class TextView:
             self.cursor_window.set_cursor(cursor)
 
     def clear(self):
-        self.textbuffer.set_text("")
-        self.end_iter = self.textbuffer.get_end_iter()
+        self.set_text("")
 
     # Text Tags (Usernames, URLs) #
 
@@ -374,12 +388,12 @@ class ChatView(TextView):
         self.chat_entry = chat_entry
         self.username_event = username_event
 
-        if status_users:
+        if status_users is not None:
             # In chatrooms, we only want to set the online status for users that are
             # currently in the room, even though we might know their global status
             self.status_users = status_users
 
-        self.default_tags = {
+        self.type_tags = {
             "remote": self.create_tag("chatremote"),
             "local": self.create_tag("chatlocal"),
             "command": self.create_tag("chatcommand"),
@@ -390,27 +404,19 @@ class ChatView(TextView):
         Accelerator("Down", self.widget, self.on_page_down_accelerator)
         Accelerator("Page_Down", self.widget, self.on_page_down_accelerator)
 
-    def append_log_lines(self, path, num_lines, timestamp_format):
+    def append_log_lines(self, log_lines, login_username=None):
 
-        if not num_lines:
+        if not log_lines:
             return
 
-        try:
-            with open(encode_path(path), "rb") as lines:
-                # Only show as many log lines as specified in config
-                lines = deque(lines, num_lines)
+        login_username_lower = login_username.lower() if login_username else None
 
-        except OSError:
-            return
-
-        login = config.sections["server"]["login"]
-
-        for line in lines:
+        for log_line in log_lines:
             try:
-                line = line.decode("utf-8")
+                line = log_line.decode("utf-8")
 
             except UnicodeDecodeError:
-                line = line.decode("latin-1")
+                line = log_line.decode("latin-1")
 
             user = message_type = usertag = None
 
@@ -424,10 +430,10 @@ class ChatView(TextView):
 
                     text = line[end + 2:-1]
 
-                    if user == login:
+                    if user == login_username:
                         message_type = "local"
 
-                    elif login and find_whole_word(login.lower(), text.lower()) > -1:
+                    elif login_username_lower and find_whole_word(login_username_lower, text.lower()) > -1:
                         message_type = "hilite"
 
                     else:
@@ -438,9 +444,7 @@ class ChatView(TextView):
 
             self.append_line(line, message_type=message_type, username=user, usertag=usertag)
 
-        if lines:
-            self.append_line(_("--- old messages above ---"), message_type="hilite",
-                             timestamp_format=timestamp_format)
+        self.append_line(_("--- old messages above ---"), message_type="hilite")
 
     def clear(self):
         super().clear()
@@ -462,7 +466,7 @@ class ChatView(TextView):
         status = UserStatus.OFFLINE
 
         if username in self.status_users:
-            status = core.user_statuses.get(username, UserStatus.OFFLINE)
+            status = core.users.statuses.get(username, UserStatus.OFFLINE)
 
         color = USER_STATUS_COLORS.get(status)
         self.update_tag(self.user_tags[username], color)

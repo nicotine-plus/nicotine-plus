@@ -1,0 +1,17 @@
+/* Tweaks (GTK 4+ on Windows) */
+
+window.csd {
+    /* Smaller window shadows to mitigate GTK bug where shadows are clickable */
+    box-shadow: 0 1px 3px 3px transparent,
+                0 2px 6px 3px rgba(0, 0, 0, 0.10),
+                0 4px 7px 3px rgba(0, 0, 0, 0.04),
+                0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+window.csd:backdrop {
+    box-shadow: 0 1px 3px 3px rgba(0, 0, 0, 0.05),
+                0 2px 4px 3px rgba(0, 0, 0, 0.01),
+                0 4px 7px 3px transparent,
+                0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+

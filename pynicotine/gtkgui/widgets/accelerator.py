@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -29,7 +29,7 @@ class Accelerator:
     if GTK_API_VERSION >= 4:
         shortcut_triggers = {}
     else:
-        KEYMAP = Gdk.Keymap.get_for_display(Gdk.Display.get_default())
+        KEYMAP = Gdk.Keymap.get_for_display(Gdk.Display.get_default())  # pylint: disable=c-extension-no-member
         keycodes_mods = {}
 
     def __init__(self, accelerator, widget, callback, user_data=None):
@@ -108,3 +108,5 @@ if GTK_API_VERSION == 3:
     ALL_MODIFIERS = (Accelerator.parse_accelerator("<Primary>")[1]
                      | Accelerator.parse_accelerator("<Shift>")[1]
                      | Accelerator.parse_accelerator("<Alt>")[1])
+else:
+    ALL_MODIFIERS = []

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -16,6 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+import sys
+
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -23,7 +26,7 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
-from pynicotine.gtkgui.widgets.textentry import ComboBox
+from pynicotine.gtkgui.widgets.combobox import ComboBox
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.window import Window
@@ -33,14 +36,13 @@ class Dialog(Window):
 
     def __init__(self, widget=None, parent=None, content_box=None, buttons_start=(), buttons_end=(),
                  default_button=None, show_callback=None, close_callback=None, title="", width=0, height=0,
-                 modal=True, resizable=True, close_destroy=True, show_title=True, show_title_buttons=True):
+                 modal=True, show_title=True, show_title_buttons=True):
 
         self.parent = parent
         self.modal = modal
         self.default_width = width
         self.default_height = height
         self.default_button = default_button
-        self.close_destroy = close_destroy
 
         self.show_callback = show_callback
         self.close_callback = close_callback
@@ -55,15 +57,20 @@ class Dialog(Window):
             destroy_with_parent=True,
             default_width=width,
             default_height=height,
-            resizable=resizable,
             child=container
         )
         super().__init__(widget)
         Accelerator("Escape", widget, self.close)
 
         if GTK_API_VERSION == 3:
-            widget.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)  # pylint: disable=no-member
-            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)           # pylint: disable=no-member
+            if os.environ.get("GDK_BACKEND") == "broadway":
+                # Workaround for dialogs being centered at (0,0) coords on startup
+                position = Gtk.WindowPosition.CENTER            # pylint: disable=c-extension-no-member
+            else:
+                position = Gtk.WindowPosition.CENTER_ON_PARENT  # pylint: disable=c-extension-no-member
+
+            widget.set_position(position)                    # pylint: disable=no-member
+            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)  # pylint: disable=c-extension-no-member,no-member
 
         if content_box:
             content_box.set_vexpand(True)
@@ -136,10 +143,14 @@ class Dialog(Window):
             action_area.add(action_area_end)          # pylint: disable=no-member
 
         for button in buttons_start:
+            # Cancel button is to the left in header bars, but always to the right in action areas.
+            # This matches built-in GTK dialogs (color and font choosers).
+            action_area = action_area_end if button.get_label() == _("_Cancel") else action_area_start
+
             if GTK_API_VERSION >= 4:
-                action_area_start.append(button)      # pylint: disable=no-member
+                action_area.append(button)      # pylint: disable=no-member
             else:
-                action_area_start.add(button)         # pylint: disable=no-member
+                action_area.add(button)         # pylint: disable=no-member
 
         for button in buttons_end:
             if GTK_API_VERSION >= 4:
@@ -165,16 +176,19 @@ class Dialog(Window):
         if self.close_callback is not None:
             self.close_callback(self)
 
-        if self.close_destroy:
-            self.destroy()
-            return False
-
         # Hide the dialog
         self.widget.set_visible(False)
 
-        # "Soft-delete" the dialog. This is necessary to prevent the dialog from
-        # appearing in window peek on Windows
-        self.widget.unrealize()
+        if sys.platform == "win32":
+            # "Soft-delete" the dialog. This is necessary to prevent the dialog from
+            # appearing in window peek on Windows
+            if self.widget.get_titlebar() is None:
+                self.widget.unrealize()
+
+            # Workaround for parent window minimizing when closing dialog
+            # https://gitlab.gnome.org/GNOME/gtk/-/issues/7313
+            if self.parent is not None and self.parent.is_visible():
+                self.parent.present()
 
         return True
 
@@ -186,6 +200,10 @@ class Dialog(Window):
             self.widget.connect("delete-event", self._on_close_request)
 
         self.widget.connect("show", self._on_show)
+
+        # Make all dialogs resizable to fix positioning issue.
+        # Workaround for https://gitlab.gnome.org/GNOME/mutter/-/issues/3099
+        self.widget.set_resizable(True)
 
         if self.parent:
             self.widget.set_transient_for(self.parent.widget)
@@ -231,11 +249,23 @@ class Dialog(Window):
             focus_widget.select_region(start_offset=0, end_offset=0)
             self.widget.set_focus(None)
 
-    def _finish_show(self):
+    def _finish_present(self, present_callback):
         self.widget.set_modal(self.modal and self.parent.is_visible())
-        self.widget.present()
+        present_callback()
 
-    def show(self):
+    def set_show_title_buttons(self, visible):
+
+        header_bar = self.widget.get_titlebar()
+
+        if header_bar is None:
+            return
+
+        if GTK_API_VERSION >= 4:
+            header_bar.set_show_title_buttons(visible)    # pylint: disable=no-member
+        else:
+            header_bar.set_show_close_button(visible)     # pylint: disable=no-member
+
+    def present(self):
 
         if self not in Window.active_dialogs:
             Window.active_dialogs.append(self)
@@ -245,7 +275,7 @@ class Dialog(Window):
 
         # Show dialog after slight delay to work around issue where dialogs don't
         # close if another one is shown right after
-        GLib.idle_add(self._finish_show)
+        GLib.idle_add(self._finish_present, super().present, priority=GLib.PRIORITY_HIGH_IDLE)
 
 
 class MessageDialog(Window):
@@ -259,11 +289,11 @@ class MessageDialog(Window):
                 super().__init__(*args, **kwargs)
 
     def __init__(self, parent, title, message, callback=None, callback_data=None, long_message=None,
-                 buttons=None, destructive_response_id=None):
+                 buttons=None, destructive_response_id=None, selectable=False):
 
-        # Prioritize modal non-message dialogs as parent
+        # Prioritize non-message dialogs as parent
         for active_dialog in reversed(Window.active_dialogs):
-            if isinstance(active_dialog, Dialog) and active_dialog.modal:
+            if isinstance(active_dialog, Dialog):
                 parent = active_dialog
                 break
 
@@ -278,12 +308,12 @@ class MessageDialog(Window):
         if not buttons:
             buttons = [("cancel", _("Close"))]
 
-        widget = self._create_dialog(title, message, buttons)
+        widget = self._create_dialog(title, message, buttons, selectable)
         super().__init__(widget=widget)
 
         self._add_long_message(long_message)
 
-    def _create_dialog(self, title, message, buttons):
+    def _create_dialog(self, title, message, buttons, selectable):
 
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, visible=True)
         add_css_class(vbox, "dialog-vbox")
@@ -310,7 +340,7 @@ class MessageDialog(Window):
             add_css_class(widget, css_class)
 
         header_bar = Gtk.Box(height_request=16, visible=True)
-        box = Gtk.Box(margin_start=30, margin_end=30, spacing=30, visible=True)
+        box = Gtk.Box(margin_start=24, margin_end=24, visible=True)
         message_area = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10, hexpand=True, visible=True)
         action_box = Gtk.Box(visible=True)
         action_area = Gtk.Box(hexpand=True, homogeneous=True, visible=True)
@@ -320,7 +350,7 @@ class MessageDialog(Window):
         )
         self.message_label = Gtk.Label(
             margin_bottom=2, halign=Gtk.Align.CENTER, label=message, valign=Gtk.Align.START, vexpand=True, wrap=True,
-            max_width_chars=60, use_markup=True, visible=True
+            max_width_chars=60, selectable=selectable, visible=True
         )
 
         add_css_class(title_label, "title-2")
@@ -332,7 +362,7 @@ class MessageDialog(Window):
             widget.set_titlebar(header_bar_handle)
             widget.connect("close-request", self._on_close_request)
 
-            internal_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20, visible=True)
+            internal_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, visible=True)
 
             vbox.append(internal_vbox)                                # pylint: disable=no-member
             vbox.append(action_box)                                   # pylint: disable=no-member
@@ -345,9 +375,9 @@ class MessageDialog(Window):
 
             action_box.append(action_area)                            # pylint: disable=no-member
         else:
-            widget.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)  # pylint: disable=no-member
+            widget.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)  # pylint: disable=c-extension-no-member,no-member
             widget.set_skip_taskbar_hint(True)                        # pylint: disable=no-member
-            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)           # pylint: disable=no-member
+            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)           # pylint: disable=c-extension-no-member,no-member
             widget.set_titlebar(header_bar)
             widget.connect("delete-event", self._on_close_request)
 
@@ -363,7 +393,7 @@ class MessageDialog(Window):
             action_box.add(action_area)                               # pylint: disable=no-member
 
         for response_type, button_label in buttons:
-            button = Gtk.Button(label=button_label, use_underline=True, hexpand=True, visible=True)
+            button = Gtk.Button(use_underline=True, hexpand=True, visible=True)
             button.connect("clicked", self._on_button_pressed, response_type)
 
             if GTK_API_VERSION >= 4:
@@ -373,17 +403,23 @@ class MessageDialog(Window):
 
             if response_type == self.destructive_response_id:
                 add_css_class(button, "destructive-action")
-                continue
 
-            if response_type in {"cancel", "ok"}:
+            elif response_type in {"cancel", "ok"}:
                 if GTK_API_VERSION >= 4:
                     widget.set_default_widget(button)  # pylint: disable=no-member
                 else:
                     button.set_can_default(True)       # pylint: disable=no-member
                     widget.set_default(button)         # pylint: disable=no-member
 
+                if response_type == "ok":
+                    add_css_class(button, "suggested-action")
+
                 self.message_label.set_mnemonic_widget(button)
                 self.default_focus_widget = button
+
+            # Set mnemonic widget before button label in order for screen reader to
+            # read both labels
+            button.set_label(button_label)
 
         return widget
 
@@ -421,13 +457,15 @@ class MessageDialog(Window):
         if self.callback and response_type != "cancel":
             self.callback(self, response_type, self.callback_data)
 
-        self.close()
+        # "Run in Background" response already closes all dialogs
+        if response_type != "run_background":
+            self.close()
 
-    def _finish_show(self):
+    def _finish_present(self, present_callback):
         self.widget.set_modal(self.parent and self.parent.is_visible())
-        self.widget.present()
+        present_callback()
 
-    def show(self):
+    def present(self):
 
         if self not in Window.active_dialogs:
             Window.active_dialogs.append(self)
@@ -437,7 +475,7 @@ class MessageDialog(Window):
 
         # Show dialog after slight delay to work around issue where dialogs don't
         # close if another one is shown right after
-        GLib.idle_add(self._finish_show)
+        GLib.idle_add(self._finish_present, super().present, priority=GLib.PRIORITY_HIGH_IDLE)
 
 
 class OptionDialog(MessageDialog):
@@ -460,7 +498,6 @@ class OptionDialog(MessageDialog):
     def _add_option_toggle(self, option_label, option_value):
 
         toggle = Gtk.CheckButton(label=option_label, active=option_value, receives_default=True, visible=True)
-        self.message_label.set_mnemonic_widget(toggle)
 
         if option_label:
             if GTK_API_VERSION >= 4:
@@ -491,11 +528,13 @@ class EntryDialog(OptionDialog):
         ], **kwargs)
 
         self.entry_container = None
+        self.entry_combobox = None
+        self.second_entry_combobox = None
+
         self.entry_combobox = self.default_focus_widget = self._add_entry_combobox(
             default, activates_default=not use_second_entry, visibility=visibility,
             show_emoji_icon=show_emoji_icon, droplist=droplist
         )
-        self.second_entry = None
 
         if use_second_entry:
             self.second_entry_combobox = self._add_entry_combobox(
@@ -505,7 +544,7 @@ class EntryDialog(OptionDialog):
 
     def _add_combobox(self, items, has_entry=True, visibility=True, activates_default=True):
 
-        combobox = ComboBox(container=self.entry_container, has_entry=has_entry)
+        combobox = ComboBox(container=self.entry_container, has_entry=has_entry, items=items)
 
         if has_entry:
             entry = combobox.entry
@@ -513,16 +552,8 @@ class EntryDialog(OptionDialog):
             entry.set_width_chars(45)
             entry.set_visibility(visibility)
 
-        if items is not None:
-            combobox.freeze()
-
-            for item in items:
-                combobox.append(item)
-
-            combobox.unfreeze()
-
-        if activates_default:
-            self.message_label.set_mnemonic_widget(entry if activates_default else combobox.widget)
+        if self.entry_combobox is None:
+            self.message_label.set_mnemonic_widget(entry if has_entry else combobox.widget)
 
         self.container.set_visible(True)
         return combobox
@@ -531,18 +562,22 @@ class EntryDialog(OptionDialog):
 
         if GTK_API_VERSION >= 4 and not visibility:
             entry = Gtk.PasswordEntry(
-                activates_default=activates_default, show_peek_icon=True, width_chars=50, visible=True)
+                activates_default=activates_default, show_peek_icon=True,
+                width_chars=50, visible=True
+            )
+            text_widget = next(iter(entry))
+            text_widget.set_truncate_multiline(True)
         else:
             entry = Gtk.Entry(
                 activates_default=activates_default, visibility=visibility, show_emoji_icon=show_emoji_icon,
-                width_chars=50, visible=True)
+                truncate_multiline=(not visibility), width_chars=50, visible=True)
 
         if GTK_API_VERSION >= 4:
             self.entry_container.append(entry)  # pylint: disable=no-member
         else:
             self.entry_container.add(entry)     # pylint: disable=no-member
 
-        if activates_default:
+        if self.entry_combobox is None:
             self.message_label.set_mnemonic_widget(entry)
 
         self.container.set_visible(True)

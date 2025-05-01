@@ -46,6 +46,7 @@
             </child>
             <child>
               <object class="GtkEntry" id="geo_block_country_entry">
+                <property name="input-hints">no-emoji</property>
                 <property name="sensitive" bind-source="geo_block_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
                 <property name="tooltip-text" translatable="yes">Codes must be in ISO 3166-2 format.</property>
                 <property name="valign">center</property>

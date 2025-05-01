@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -27,26 +27,22 @@ LOCALE_PATH = os.path.join(CURRENT_PATH, "locale")
 TRANSLATION_DOMAIN = "nicotine"
 LANGUAGES = (
     ("ca", "Català"),
-    ("da", "Dansk"),
+    ("cs", "Čeština"),
     ("de", "Deutsch"),
     ("en", "English"),
     ("es_CL", "Español (Chile)"),
     ("es_ES", "Español (España)"),
-    ("eu", "Euskara"),
-    ("fi", "Suomi"),
+    ("et", "Eesti"),
     ("fr", "Français"),
     ("hu", "Magyar"),
     ("it", "Italiano"),
-    ("lt", "Lietuvių"),
     ("lv", "Latviešu"),
-    ("nb_NO", "Norsk bokmål"),
     ("nl", "Nederlands"),
     ("pl", "Polski"),
     ("pt_BR", "Português (Brasil)"),
-    ("ro", "Română"),
+    ("pt_PT", "Português (Portugal)"),
     ("ru", "Русский"),
-    ("sk", "Slovenčina"),
-    ("sv", "Svenska"),
+    ("ta", "தமிழ்"),
     ("tr", "Türkçe"),
     ("uk", "Українська"),
     ("zh_CN", "汉语")
@@ -54,25 +50,50 @@ LANGUAGES = (
 
 
 def _set_system_language(language=None):
-    """Extracts the default system language and applies it on systems that
-    don't set the 'LANGUAGE' environment variable by default (Windows,
+    """Extracts the default system locale/language and applies it on systems that
+    don't set the 'LC_ALL/LANGUAGE' environment variables by default (Windows,
     macOS)"""
 
-    if not language and "LANGUAGE" not in os.environ:
-        if sys.platform == "win32":
-            import ctypes
-            windll = ctypes.windll.kernel32
+    default_locale = None
+
+    if sys.platform == "win32":
+        import ctypes
+        windll = ctypes.windll.kernel32
+
+        if not default_locale:
+            default_locale = locale.windows_locale.get(windll.GetUserDefaultLCID())
+
+        if not language and "LANGUAGE" not in os.environ:
             language = locale.windows_locale.get(windll.GetUserDefaultUILanguage())
 
-        elif sys.platform == "darwin":
-            try:
-                import subprocess
-                language_output = subprocess.check_output(("defaults", "read", "-g", "AppleLanguages"))
-                languages = language_output.decode("utf-8").strip('()\n" ').split(",")
-                language = next(iter(languages), None)
+    elif sys.platform == "darwin":
+        import plistlib
+        os_preferences_path = os.path.join(
+            os.path.expanduser("~"), "Library", "Preferences", ".GlobalPreferences.plist")
 
-            except Exception as error:
-                print("Cannot load translations for default system language: %s", error)
+        try:
+            with open(os_preferences_path, "rb") as file_handle:
+                os_preferences = plistlib.load(file_handle)
+
+        except Exception as error:
+            os_preferences = {}
+            print(f"Cannot load global preferences: {error}")
+
+        # macOS provides locales with additional @ specifiers, e.g. en_GB@rg=US (region).
+        # Remove them, since they are not supported.
+        default_locale = next(iter(os_preferences.get("AppleLocale", "").split("@", maxsplit=1)))
+
+        if default_locale.endswith("_ES"):
+            # *_ES locale is currently broken on macOS (crashes when sorting strings).
+            # Disable it for now.
+            default_locale = "pt_PT"
+
+        if not language and "LANGUAGE" not in os.environ:
+            languages = os_preferences.get("AppleLanguages", [""])
+            language = next(iter(languages)).replace("-", "_")
+
+    if default_locale:
+        os.environ["LC_ALL"] = default_locale
 
     if language:
         os.environ["LANGUAGE"] = language
@@ -85,33 +106,3 @@ def apply_translations(language=None):
 
     # Install translations for Python
     gettext.install(TRANSLATION_DOMAIN, LOCALE_PATH)
-
-
-def build_translations():
-    """Builds .mo translation files in the 'mo' folder of the project
-    repository."""
-
-    import glob
-    import subprocess
-
-    for language_code, _language_name in LANGUAGES:
-        if language_code == "en":
-            continue
-
-        lc_messages_folder_path = os.path.join(LOCALE_PATH, language_code, "LC_MESSAGES")
-        po_file_path = os.path.join(BASE_PATH, "po", f"{language_code}.po")
-        mo_file_path = os.path.join(lc_messages_folder_path, "nicotine.mo")
-
-        if not os.path.exists(lc_messages_folder_path):
-            os.makedirs(lc_messages_folder_path)
-
-        subprocess.check_call(["msgfmt", "--check", po_file_path, "-o", mo_file_path])
-
-    # Merge translations into .desktop and appdata files
-    for desktop_file_path in glob.glob(os.path.join(BASE_PATH, "data", "*.desktop.in")):
-        subprocess.check_call(["msgfmt", "--desktop", f"--template={desktop_file_path}", "-d", "po",
-                               "-o", desktop_file_path[:-3]])
-
-    for appdata_file_path in glob.glob(os.path.join(BASE_PATH, "data", "*.appdata.xml.in")):
-        subprocess.check_call(["msgfmt", "--xml", f"--template={appdata_file_path}", "-d", "po",
-                               "-o", appdata_file_path[:-3]])

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2022-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2022-2025 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -29,6 +29,7 @@ from pynicotine.logfacility import log
 
 
 class CLIInputProcessor(Thread):
+    __slots__ = ("has_custom_prompt", "prompt_message", "prompt_callback", "prompt_silent")
 
     def __init__(self):
 
@@ -73,13 +74,11 @@ class CLIInputProcessor(Thread):
         if not user_input:
             return False
 
-        command, *args = user_input.split(maxsplit=1)
+        command, _separator, args = user_input.strip().partition(" ")
+        args = args.strip()
 
         if command.startswith("/"):
             command = command[1:]
-
-        if args:
-            (args,) = args
 
         events.emit_main_thread("cli-command", command, args)
         return True
@@ -108,6 +107,7 @@ class CLIInputProcessor(Thread):
 
 
 class CLI:
+    __slots__ = ("_input_processor", "_log_message_queue", "_tty_attributes")
 
     def __init__(self):
 
@@ -178,7 +178,13 @@ class CLI:
             return
 
         import termios  # pylint: disable=import-error
-        termios.tcsetattr(sys.stdin, termios.TCSANOW, self._tty_attributes)
+
+        try:
+            termios.tcsetattr(sys.stdin, termios.TCSANOW, self._tty_attributes)
+
+        except termios.error:
+            # stdin is gone
+            pass
 
         self._tty_attributes = None
 

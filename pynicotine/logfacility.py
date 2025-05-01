@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -16,19 +16,26 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import io
 import os
 import sys
 import time
 
-from pynicotine import slskmessages
+from collections import deque
+
 from pynicotine.config import config
 from pynicotine.events import events
+from pynicotine.slskmessages import DistribEmbeddedMessage
+from pynicotine.slskmessages import DistribSearch
+from pynicotine.slskmessages import EmbeddedMessage
+from pynicotine.slskmessages import UnknownPeerMessage
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
 from pynicotine.utils import open_file_path
 
 
 class LogFile:
+    __slots__ = ("path", "handle", "last_active")
 
     def __init__(self, path, handle):
         self.path = path
@@ -49,6 +56,9 @@ class LogLevel:
 
 
 class Logger:
+    __slots__ = ("debug_file_name", "downloads_file_name", "uploads_file_name", "debug_folder_path",
+                 "transfer_folder_path", "room_folder_path", "private_chat_folder_path",
+                 "_log_levels", "_log_files")
 
     PREFIXES = {
         LogLevel.DOWNLOAD: "Download",
@@ -62,20 +72,18 @@ class Logger:
     }
 
     EXCLUDED_MSGS = {
-        slskmessages.ChangePassword,
-        slskmessages.DistribEmbeddedMessage,
-        slskmessages.DistribSearch,
-        slskmessages.EmbeddedMessage,
-        slskmessages.SharedFileListResponse,
-        slskmessages.UnknownPeerMessage
+        DistribEmbeddedMessage,
+        DistribSearch,
+        EmbeddedMessage,
+        UnknownPeerMessage
     }
 
     def __init__(self):
 
         current_date_time = time.strftime("%Y-%m-%d_%H-%M-%S")
-        self.debug_file_name = f"debug_{current_date_time}.log"
-        self.downloads_file_name = f"downloads_{current_date_time}.log"
-        self.uploads_file_name = f"uploads_{current_date_time}.log"
+        self.debug_file_name = f"debug_{current_date_time}"
+        self.downloads_file_name = f"downloads_{current_date_time}"
+        self.uploads_file_name = f"uploads_{current_date_time}"
 
         self.debug_folder_path = None
         self.transfer_folder_path = None
@@ -123,22 +131,26 @@ class Logger:
 
     # Log Files #
 
-    def _get_log_file(self, folder_path, basename):
+    def _get_log_file(self, folder_path, basename, should_create_file=True):
 
-        file_path = os.path.join(folder_path, basename)
+        file_path = os.path.join(folder_path, clean_file(f"{basename}.log"))
         log_file = self._log_files.get(file_path)
 
         if log_file is not None:
             return log_file
 
-        folder_path_encoded = encode_path(folder_path)
         file_path_encoded = encode_path(file_path)
+
+        if not should_create_file and not os.path.isfile(file_path_encoded):
+            return log_file
+
+        folder_path_encoded = encode_path(folder_path)
 
         if not os.path.exists(folder_path_encoded):
             os.makedirs(folder_path_encoded)
 
         log_file = self._log_files[file_path] = LogFile(
-            path=file_path, handle=open(encode_path(file_path), "ab"))  # pylint: disable=consider-using-with
+            path=file_path, handle=open(file_path_encoded, "ab+"))  # pylint: disable=consider-using-with
 
         # Disable file access for outsiders
         os.chmod(file_path_encoded, 0o600)
@@ -166,8 +178,8 @@ class Logger:
             # Avoid infinite recursion
             should_log_file = (folder_path != self.debug_folder_path)
 
-            self.add(_('Couldn\'t write to log file "%(filename)s": %(error)s'), {
-                "filename": os.path.join(folder_path, basename),
+            self._add(_('Couldn\'t write to log file "%(filename)s": %(error)s'), {
+                "filename": os.path.join(folder_path, clean_file(f"{basename}.log")),
                 "error": error
             }, should_log_file=should_log_file)
 
@@ -207,15 +219,68 @@ class Logger:
         self.private_chat_folder_path = self._normalize_folder_path(config.sections["logging"]["privatelogsdir"])
 
     def open_log(self, folder_path, basename):
-        self._handle_log(folder_path, basename, self.open_log_callback)
+        self._log_file_operation(folder_path, basename, self.open_log_callback)
+
+    def _get_log_lines(self, log_file, num_lines):
+
+        file_handle = log_file.handle
+        file_handle.seek(0, os.SEEK_END)
+
+        blocks = deque()
+        read_offset = file_handle.tell()
+        lines_left = num_lines + 1
+
+        while lines_left > 0:
+            read_size = io.DEFAULT_BUFFER_SIZE
+            read_offset -= read_size
+
+            if read_offset < 0:
+                # Reached beginning of file, read remaining data
+                read_size += read_offset
+                read_offset = 0
+
+            file_handle.seek(read_offset)
+            block = file_handle.read(read_size)
+            blocks.appendleft(block)
+
+            if read_offset <= 0:
+                # Fewer lines in file than our limit, stop here
+                break
+
+            lines_left -= block.count(b'\n')
+
+        file_handle.seek(0, os.SEEK_END)
+        return b''.join(blocks).splitlines()[-num_lines:]
+
+    def read_log(self, folder_path, basename, num_lines):
+
+        lines = None
+        log_file = None
+
+        try:
+            log_file = self._get_log_file(folder_path, basename, should_create_file=False)
+
+            if log_file is not None:
+                lines = self._get_log_lines(log_file, num_lines)
+
+        except Exception as error:
+            self._add(_("Cannot access log file %(path)s: %(error)s"), {
+                "path": os.path.join(folder_path, clean_file(f"{basename}.log")),
+                "error": error
+            })
+
+        if log_file is not None:
+            self._close_log_file(log_file)
+
+        return lines
 
     def delete_log(self, folder_path, basename):
-        self._handle_log(folder_path, basename, self.delete_log_callback)
+        self._log_file_operation(folder_path, basename, self.delete_log_callback)
 
-    def _handle_log(self, folder_path, basename, callback):
+    def _log_file_operation(self, folder_path, basename, callback):
 
         folder_path_encoded = encode_path(folder_path)
-        file_path = os.path.join(folder_path, f"{clean_file(basename)}.log")
+        file_path = os.path.join(folder_path, clean_file(f"{basename}.log"))
 
         try:
             if not os.path.isdir(folder_path_encoded):
@@ -224,7 +289,7 @@ class Logger:
             callback(file_path)
 
         except Exception as error:
-            log.add(_("Cannot access log file %(path)s: %(error)s"), {"path": file_path, "error": error})
+            self._add(_("Cannot access log file %(path)s: %(error)s"), {"path": file_path, "error": error})
 
     def open_log_callback(self, file_path):
         open_file_path(file_path, create_file=True)
@@ -248,7 +313,7 @@ class Logger:
 
         prefix = self.PREFIXES.get(level)
 
-        if msg_args:
+        if msg_args is not None:
             msg %= msg_args
 
         if prefix:
@@ -256,19 +321,7 @@ class Logger:
 
         return msg
 
-    def add(self, msg, msg_args=None, title=None, level=LogLevel.DEFAULT, should_log_file=True):
-
-        if level not in self._log_levels:
-            return
-
-        if level == LogLevel.MESSAGE:
-            # Compile message contents
-            if msg.__class__ in self.EXCLUDED_MSGS:
-                return
-
-            msg_direction = "OUT" if msg_args else "IN"
-            msg = f"{msg_direction}: {msg}"
-            msg_args = None
+    def _add(self, msg, msg_args=None, title=None, level=LogLevel.DEFAULT, should_log_file=True):
 
         msg = self._format_log_message(level, msg, msg_args)
 
@@ -289,31 +342,78 @@ class Logger:
                 # stdout is gone, prevent future errors
                 sys.stdout = open(os.devnull, "w", encoding="utf-8")  # pylint: disable=consider-using-with
 
+    def add(self, msg, msg_args=None, title=None):
+        self._add(msg, msg_args, title)
+
     def add_download(self, msg, msg_args=None):
+
+        level = LogLevel.DOWNLOAD
+
         self.log_transfer(self.downloads_file_name, msg, msg_args)
-        self.add(msg, msg_args=msg_args, level=LogLevel.DOWNLOAD)
+
+        if level in self._log_levels:
+            self._add(msg, msg_args, level=level)
 
     def add_upload(self, msg, msg_args=None):
+
+        level = LogLevel.UPLOAD
+
         self.log_transfer(self.uploads_file_name, msg, msg_args)
-        self.add(msg, msg_args=msg_args, level=LogLevel.UPLOAD)
+
+        if level in self._log_levels:
+            self._add(msg, msg_args, level=level)
 
     def add_search(self, msg, msg_args=None):
-        self.add(msg, msg_args=msg_args, level=LogLevel.SEARCH)
+
+        level = LogLevel.SEARCH
+
+        if level in self._log_levels:
+            self._add(msg, msg_args, level=level)
 
     def add_chat(self, msg, msg_args=None):
-        self.add(msg, msg_args=msg_args, level=LogLevel.CHAT)
+
+        level = LogLevel.CHAT
+
+        if level in self._log_levels:
+            self._add(msg, msg_args, level=level)
 
     def add_conn(self, msg, msg_args=None):
-        self.add(msg, msg_args=msg_args, level=LogLevel.CONNECTION)
+
+        level = LogLevel.CONNECTION
+
+        if level in self._log_levels:
+            self._add(msg, msg_args, level=level)
 
     def add_msg_contents(self, msg, is_outgoing=False):
-        self.add(msg, msg_args=is_outgoing, level=LogLevel.MESSAGE)
+
+        level = LogLevel.MESSAGE
+
+        if level not in self._log_levels:
+            return
+
+        # Compile message contents
+        if msg.__class__ in self.EXCLUDED_MSGS:
+            return
+
+        msg_direction = "OUT" if is_outgoing else "IN"
+        msg = f"{msg_direction}: {msg}"
+        msg_args = None
+
+        self._add(msg, msg_args, level=level)
 
     def add_transfer(self, msg, msg_args=None):
-        self.add(msg, msg_args=msg_args, level=LogLevel.TRANSFER)
+
+        level = LogLevel.TRANSFER
+
+        if level in self._log_levels:
+            self._add(msg, msg_args, level=level)
 
     def add_debug(self, msg, msg_args=None):
-        self.add(msg, msg_args=msg_args, level=LogLevel.MISCELLANEOUS)
+
+        level = LogLevel.MISCELLANEOUS
+
+        if level in self._log_levels:
+            self._add(msg, msg_args, level=level)
 
 
 log = Logger()

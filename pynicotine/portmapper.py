@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -25,9 +25,12 @@ import time
 from threading import Thread
 from urllib.parse import urlsplit
 
+import pynicotine
+
 from pynicotine.config import config
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.utils import execute_command
 
 
 class PortmapError(Exception):
@@ -35,6 +38,7 @@ class PortmapError(Exception):
 
 
 class BaseImplementation:
+    __slots__ = ("port", "local_ip_address")
 
     def __init__(self):
         self.port = None
@@ -51,6 +55,8 @@ class NATPMP(BaseImplementation):
     https://www.rfc-editor.org/rfc/rfc6886.
     """
 
+    __slots__ = ("_gateway_address",)
+
     NAME = "NAT-PMP"
     REQUEST_PORT = 5351
     REQUEST_ATTEMPTS = 2  # spec says 9, but 2 should be enough
@@ -58,6 +64,7 @@ class NATPMP(BaseImplementation):
     SUCCESS_RESULT = 0
 
     class PortmapResponse:
+        __slots__ = ("message", "result")
 
         def __init__(self, message):
 
@@ -76,6 +83,7 @@ class NATPMP(BaseImplementation):
             return self.message
 
     class PortmapRequest:
+        __slots__ = ("_public_port", "_private_port", "_lease_duration")
 
         RESERVED_VALUE = 0
         TCP_OP_CODE = 2
@@ -90,9 +98,13 @@ class NATPMP(BaseImplementation):
         def sendto(self, sock, addr, num_attempt):
 
             msg = bytes(self)
+            ip_address, port = addr
             sock.sendto(msg, addr)
 
-            log.add_debug(f"NAT-PMP: Portmap request attempt {num_attempt} of {NATPMP.REQUEST_ATTEMPTS}: {msg}")
+            log.add_debug(
+                "NAT-PMP: Portmap request attempt %s of %s to gateway %s, port %s: %s",
+                (num_attempt, NATPMP.REQUEST_ATTEMPTS, ip_address, port, msg)
+            )
 
         def __bytes__(self):
 
@@ -131,19 +143,19 @@ class NATPMP(BaseImplementation):
 
             return gateway_address
 
-        import subprocess
-
         if sys.platform == "win32":
             gateway_pattern = re.compile(b".*?0.0.0.0 +0.0.0.0 +(.*?) +?[^\n]*\n")
         else:
             gateway_pattern = re.compile(b"(?:default|0\\.0\\.0\\.0|::/0)\\s+([\\w\\.:]+)\\s+.*UG")
 
-        output = subprocess.check_output(["netstat", "-rn"], shell=True)
+        output = execute_command("netstat -rn", returnoutput=True, hidden=True)
         return gateway_pattern.search(output).group(1)
 
     def _request_port_mapping(self, public_port, private_port, lease_duration):
 
         with socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP) as sock:
+            log.add_debug("NAT-PMP: Binding socket to local IP address %s", self.local_ip_address)
+
             sock.bind((self.local_ip_address, 0))
             request = self.PortmapRequest(public_port, private_port, lease_duration)
             timeout = self.REQUEST_INIT_TIMEOUT
@@ -159,7 +171,7 @@ class NATPMP(BaseImplementation):
                 except socket.timeout:
                     timeout *= 2
 
-        log.add_debug(f"NAT-PMP: Giving up, all {self.REQUEST_ATTEMPTS} portmap requests timed out")
+        log.add_debug("NAT-PMP: Giving up, all %s portmap requests timed out", self.REQUEST_ATTEMPTS)
 
         return None
 
@@ -191,7 +203,14 @@ class NATPMP(BaseImplementation):
 class UPnP(BaseImplementation):
     """Implementation of the UPnP protocol."""
 
+    __slots__ = ("_service",)
+
     NAME = "UPnP"
+    USER_AGENT = (
+        f"Python/{sys.version.split()[0]} "
+        "UPnP/2.0 "
+        f"{pynicotine.__application_name__}/{pynicotine.__version__}"
+    )
     MULTICAST_HOST = "239.255.255.250"
     MULTICAST_PORT = 1900
     MULTICAST_TTL = 2         # Should default to 2 according to UPnP specification
@@ -199,12 +218,16 @@ class UPnP(BaseImplementation):
     HTTP_REQUEST_TIMEOUT = 5
 
     class Service:
+        __slots__ = ("service_type", "control_url")
+
         def __init__(self, service_type, control_url):
             self.service_type = service_type
             self.control_url = control_url
 
     class SSDPResponse:
         """Simple Service Discovery Protocol (SSDP) response."""
+
+        __slots__ = ("message", "headers")
 
         def __init__(self, message):
 
@@ -219,13 +242,16 @@ class UPnP(BaseImplementation):
     class SSDPRequest:
         """Simple Service Discovery Protocol (SSDP) request."""
 
+        __slots__ = ("headers",)
+
         def __init__(self, search_target):
 
             self.headers = {
                 "HOST": f"{UPnP.MULTICAST_HOST}:{UPnP.MULTICAST_PORT}",
                 "ST": search_target,
                 "MAN": '"ssdp:discover"',
-                "MX": str(UPnP.MX_RESPONSE_DELAY)
+                "MX": str(UPnP.MX_RESPONSE_DELAY),
+                "USER-AGENT": UPnP.USER_AGENT
             }
 
         def sendto(self, sock, addr):
@@ -233,7 +259,7 @@ class UPnP(BaseImplementation):
             msg = bytes(self)
             sock.sendto(msg, addr)
 
-            log.add_debug("UPnP: SSDP request: %s", msg)
+            log.add_debug("UPnP: SSDP request sent: %s", msg)
 
         def __bytes__(self):
 
@@ -253,25 +279,49 @@ class UPnP(BaseImplementation):
             control_url = None
 
             try:
+                from urllib.error import HTTPError
                 from urllib.request import urlopen
                 from xml.etree import ElementTree
 
-                with urlopen(location_url, timeout=UPnP.HTTP_REQUEST_TIMEOUT) as response:
-                    response_body = response.read()
+                try:
+                    with urlopen(location_url, timeout=UPnP.HTTP_REQUEST_TIMEOUT) as response:
+                        response_body = response.read()
+
+                except HTTPError as error:
+                    # Received HTTP error, check what the response body says
+                    response_body = error.read()
 
                 log.add_debug("UPnP: Device description response from %s: %s", (location_url, response_body))
 
-                xml = ElementTree.fromstring(response_body.decode("utf-8"))
+                xml = ElementTree.fromstring(response_body.decode("utf-8", "replace"))
 
                 for service in xml.findall(".//{urn:schemas-upnp-org:device-1-0}service"):
                     found_service_type = service.find(".//{urn:schemas-upnp-org:device-1-0}serviceType").text
 
-                    if found_service_type in {"urn:schemas-upnp-org:service:WANIPConnection:1",
-                                              "urn:schemas-upnp-org:service:WANPPPConnection:1",
-                                              "urn:schemas-upnp-org:service:WANIPConnection:2"}:
+                    if found_service_type in {
+                        "urn:schemas-upnp-org:service:WANIPConnection:2",
+                        "urn:schemas-upnp-org:service:WANIPConnection:1",
+                        "urn:schemas-upnp-org:service:WANPPPConnection:1"
+                    }:
                         # We found a router with UPnP enabled
-                        service_type = found_service_type
+                        location_url_parts = urlsplit(location_url)
+                        location_url_base = f"{location_url_parts.scheme}://{location_url_parts.netloc}/"
                         control_url = service.find(".//{urn:schemas-upnp-org:device-1-0}controlURL").text
+
+                        # Relative URL
+                        if control_url.startswith("/"):
+                            control_url = location_url_base + control_url.lstrip("/")
+
+                        # Absolute URL (allowed in UPnP 1.0)
+                        elif not control_url.startswith(location_url_base):
+                            log.add_debug(
+                                "UPnP: Invalid control URL %s for service %s, ignoring",
+                                (control_url, found_service_type)
+                            )
+                            control_url = None
+                            continue
+
+                        service_type = found_service_type
                         break
 
             except Exception as error:
@@ -298,9 +348,7 @@ class UPnP(BaseImplementation):
 
             locations.add(location)
 
-            url_parts = urlsplit(location)
             service_type, control_url = UPnP.SSDP.get_service_control_url(location)
-            control_url = f"{url_parts.scheme}://{url_parts.netloc}{control_url}"
 
             if service_type is None or control_url is None:
                 log.add_debug("UPnP: No router with UPnP enabled in device search response, ignoring")
@@ -323,35 +371,29 @@ class UPnP(BaseImplementation):
 
             # Create a UDP socket and set its timeout
             with socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP) as sock:
+                log.add_debug("UPnP: Binding socket to local IP address %s", private_ip)
+
                 sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_IF, socket.inet_aton(private_ip))
-                sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, UPnP.MULTICAST_TTL)
+                sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, struct.pack("B", UPnP.MULTICAST_TTL))
                 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
                 sock.settimeout(UPnP.MX_RESPONSE_DELAY + 0.1)  # Larger timeout in case data arrives at the last moment
                 sock.bind((private_ip, 0))
 
-                # Protocol 1
-                wan_ip1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:1")
-                wan_ppp1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANPPPConnection:1")
-                wan_igd1 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:1")
-
-                wan_ip1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
-                log.add_debug("UPnP: Sent M-SEARCH IP request 1")
-
-                wan_ppp1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
-                log.add_debug("UPnP: Sent M-SEARCH PPP request 1")
-
-                wan_igd1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
-                log.add_debug("UPnP: Sent M-SEARCH IGD request 1")
-
                 # Protocol 2
-                wan_ip2 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:2")
                 wan_igd2 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:2")
-
-                wan_ip2.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
-                log.add_debug("UPnP: Sent M-SEARCH IP request 2")
+                wan_ip2 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:2")
 
                 wan_igd2.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
-                log.add_debug("UPnP: Sent M-SEARCH IGD request 2")
+                wan_ip2.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+
+                # Protocol 1
+                wan_igd1 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:1")
+                wan_ip1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:1")
+                wan_ppp1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANPPPConnection:1")
+
+                wan_igd1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                wan_ip1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                wan_ppp1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
 
                 locations = set()
                 services = {}
@@ -359,12 +401,13 @@ class UPnP(BaseImplementation):
                 while True:
                     try:
                         message = sock.recv(65507)  # Maximum size of UDP message
-                        UPnP.SSDP.add_service(services, locations, UPnP.SSDPResponse(message.decode("utf-8")))
+                        UPnP.SSDP.add_service(
+                            services, locations, UPnP.SSDPResponse(message.decode("utf-8", "replace")))
 
                     except socket.timeout:
                         break
 
-                log.add_debug("UPnP: %s service(s) detected", str(len(services)))
+                log.add_debug("UPnP: %s service(s) detected", len(services))
 
             return services
 
@@ -393,6 +436,7 @@ class UPnP(BaseImplementation):
         period of 12 hours.
         """
 
+        from urllib.error import HTTPError
         from urllib.request import Request
         from urllib.request import urlopen
         from xml.etree import ElementTree
@@ -406,6 +450,7 @@ class UPnP(BaseImplementation):
         headers = {
             "Host": urlsplit(control_url).netloc,
             "Content-Type": "text/xml; charset=utf-8",
+            "USER-AGENT": self.USER_AGENT,
             "SOAPACTION": f'"{service_type}#AddPortMapping"'
         }
 
@@ -432,10 +477,17 @@ class UPnP(BaseImplementation):
         log.add_debug("UPnP: Add port mapping request headers: %s", headers)
         log.add_debug("UPnP: Add port mapping request contents: %s", body)
 
-        with urlopen(Request(control_url, data=body, headers=headers), timeout=self.HTTP_REQUEST_TIMEOUT) as response:
-            response_body = response.read()
+        try:
+            request = Request(control_url, data=body, headers=headers)
+            with urlopen(request, timeout=self.HTTP_REQUEST_TIMEOUT) as response:
+                response_body = response.read()
 
-        xml = ElementTree.fromstring(response_body.decode("utf-8"))
+        except HTTPError as error:
+            # Received HTTP error, but response might also contain UPnP error code.
+            # E.g. MikroTik routers that send UPnP error 725 (OnlyPermanentLeasesSupported).
+            response_body = error.read()
+
+        xml = ElementTree.fromstring(response_body.decode("utf-8", "replace"))
 
         if xml.find(".//{http://schemas.xmlsoap.org/soap/envelope/}Body") is None:
             raise PortmapError(f"Invalid response: {response_body}")
@@ -464,11 +516,8 @@ class UPnP(BaseImplementation):
             raise PortmapError(_("No UPnP devices found"))
 
         # Perform the port mapping
-        log.add_debug("UPnP: Trying to redirect external WAN port %s TCP => %s port %s TCP", (
-            self.port,
-            self.local_ip_address,
-            self.port
-        ))
+        log.add_debug("UPnP: Trying to redirect external WAN port %s TCP => %s port %s TCP",
+                      (self.port, self.local_ip_address, self.port))
 
         error_code, error_description = self._request_port_mapping(
             public_port=self.port,
@@ -491,6 +540,7 @@ class UPnP(BaseImplementation):
         if not self._service:
             return
 
+        from urllib.error import HTTPError
         from urllib.request import Request
         from urllib.request import urlopen
 
@@ -522,13 +572,23 @@ class UPnP(BaseImplementation):
         log.add_debug("UPnP: Remove port mapping request headers: %s", headers)
         log.add_debug("UPnP: Remove port mapping request contents: %s", body)
 
-        with urlopen(
-                Request(control_url, data=body, headers=headers), timeout=self.HTTP_REQUEST_TIMEOUT) as response:
-            log.add_debug("UPnP: Remove port mapping response: %s", response.read())
+        try:
+            request = Request(control_url, data=body, headers=headers)
+            with urlopen(request, timeout=self.HTTP_REQUEST_TIMEOUT) as response:
+                response_body = response.read()
+
+        except HTTPError as error:
+            # Received HTTP error, but response body might contain useful information
+            response_body = error.read()
+
+        log.add_debug("UPnP: Remove port mapping response: %s", response_body)
 
 
 class PortMapper:
     """Class that handles Port Mapping."""
+
+    __slots__ = ("_active_implementation", "_has_port", "_is_mapping_port", "_timer",
+                 "_natpmp", "_upnp")
 
     RENEWAL_INTERVAL = 7200   # 2 hours
     LEASE_DURATION = 43200    # 12 hours
@@ -570,16 +630,15 @@ class PortMapper:
                 self._upnp.add_port_mapping(self.LEASE_DURATION)
 
             except Exception as upnp_error:
-                log.add_debug("UPnP not available, port forwarding failed: %s", upnp_error)
-
                 log.add(_("%(protocol)s: Failed to forward external port %(external_port)s: %(error)s"), {
                     "protocol": self._active_implementation.NAME,
                     "external_port": self._active_implementation.port,
                     "error": upnp_error
                 })
 
-                from traceback import format_exc
-                log.add_debug(format_exc())
+                if str(upnp_error) != _("No UPnP devices found"):
+                    from traceback import format_exc
+                    log.add_debug(format_exc())
 
                 self._active_implementation = None
                 self._is_mapping_port = False
@@ -607,10 +666,7 @@ class PortMapper:
             self._active_implementation.remove_port_mapping()
 
         except Exception as error:
-            log.add_debug("%(protocol)s: Failed to remove port mapping: %(error)s", {
-                "protocol": self._active_implementation.NAME,
-                "error": error
-            })
+            log.add_debug("%s: Failed to remove port mapping: %s", (self._active_implementation.NAME, error))
 
         self._active_implementation = None
         self._is_mapping_port = False

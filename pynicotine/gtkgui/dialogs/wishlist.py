@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.widgets import ui
@@ -24,6 +23,7 @@ from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
+from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.treeview import TreeView
 
@@ -45,9 +45,9 @@ class WishList(Dialog):
             show_callback=self.on_show,
             title=_("Wishlist"),
             width=600,
-            height=600,
-            close_destroy=False
+            height=600
         )
+        application.add_window(self.widget)
 
         self.application = application
         self.list_view = TreeView(
@@ -62,18 +62,38 @@ class WishList(Dialog):
             }
         )
 
-        for wish in config.sections["server"]["autosearch"]:
-            wish = str(wish)
-            self.list_view.add_row([wish], select_row=False)
+        self.list_view.freeze()
 
-        CompletionEntry(self.wish_entry, self.list_view.model)
+        for search_item in core.search.searches.values():
+            if search_item.mode == "wishlist":
+                self.add_wish(search_item.term, select=False)
+
+        self.list_view.unfreeze()
+
+        self.completion_entry = CompletionEntry(self.wish_entry, self.list_view.model)
         Accelerator("<Shift>Tab", self.list_view.widget, self.on_list_focus_entry_accelerator)  # skip column header
+
+        self.popup_menu = PopupMenu(application, self.list_view.widget)
+        self.popup_menu.add_items(
+            ("#" + _("_Search for Item"), self.on_search_wish),
+            ("#" + _("Edit…"), self.on_edit_wish),
+            ("", None),
+            ("#" + _("Remove"), self.on_remove_wish)
+        )
 
         for event_name, callback in (
             ("add-wish", self.add_wish),
             ("remove-wish", self.remove_wish)
         ):
             events.connect(event_name, callback)
+
+    def destroy(self):
+
+        self.list_view.destroy()
+        self.completion_entry.destroy()
+        self.popup_menu.destroy()
+
+        super().destroy()
 
     def on_list_focus_entry_accelerator(self, *_args):
         self.wish_entry.grab_focus()
@@ -120,12 +140,19 @@ class WishList(Dialog):
                 action_button_label=_("_Edit"),
                 callback=self.on_edit_wish_response,
                 callback_data=old_wish
-            ).show()
+            ).present()
+            return
+
+    def on_search_wish(self, *_args):
+
+        for iterator in self.list_view.get_selected_rows():
+            wish = self.list_view.get_row_value(iterator, "wish")
+            core.search.do_search(wish, mode="global")
             return
 
     def on_remove_wish(self, *_args):
 
-        for iterator in reversed(self.list_view.get_selected_rows()):
+        for iterator in reversed(list(self.list_view.get_selected_rows())):
             wish = self.list_view.get_row_value(iterator, "wish")
             core.search.remove_wish(wish)
 
@@ -147,11 +174,10 @@ class WishList(Dialog):
             message=_("Do you really want to clear your wishlist?"),
             destructive_response_id="ok",
             callback=self.clear_wishlist_response
-        ).show()
+        ).present()
 
-    def add_wish(self, wish):
-        if wish not in self.list_view.iterators:
-            self.list_view.add_row([wish])
+    def add_wish(self, wish, select=True):
+        self.list_view.add_row([wish], select_row=select)
 
     def remove_wish(self, wish):
 

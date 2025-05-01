@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -17,17 +17,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import pynicotine
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import MessageAcked
+from pynicotine.slskmessages import MessageUser
+from pynicotine.slskmessages import MessageUsers
+from pynicotine.slskmessages import SayChatroom
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import censor_text
-from pynicotine.utils import clean_file
 from pynicotine.utils import find_whole_word
 
 
 class PrivateChat:
+    __slots__ = ("completions", "private_message_queue", "away_message_users", "users")
 
     CTCP_VERSION = "\x01VERSION\x01"
 
@@ -37,10 +41,6 @@ class PrivateChat:
         self.private_message_queue = {}
         self.away_message_users = set()
         self.users = set()
-
-        # Clear list of previously open chats if we don't want to restore them
-        if not config.sections["privatechat"]["store"]:
-            config.sections["privatechat"]["users"].clear()
 
         for event_name, callback in (
             ("message-user", self._message_user),
@@ -56,6 +56,8 @@ class PrivateChat:
     def _start(self):
 
         if not config.sections["privatechat"]["store"]:
+            # Clear list of previously open chats if we don't want to restore them
+            config.sections["privatechat"]["users"].clear()
             return
 
         for username in config.sections["privatechat"]["users"]:
@@ -74,7 +76,7 @@ class PrivateChat:
             return
 
         for username in self.users:
-            core.watch_user(username)  # Get notified of user status
+            core.users.watch_user(username, context="privatechat")  # Get notified of user status
 
     def _server_disconnect(self, _msg):
 
@@ -98,6 +100,7 @@ class PrivateChat:
             config.sections["privatechat"]["users"].remove(username)
 
         self.users.remove(username)
+        core.users.unwatch_user(username, context="privatechat")
         events.emit("private-chat-remove-user", username)
 
     def remove_all_users(self, is_permanent=True):
@@ -108,7 +111,7 @@ class PrivateChat:
 
         self.add_user(username)
         events.emit("private-chat-show-user", username, switch_page, remembered)
-        core.watch_user(username)
+        core.users.watch_user(username, context="privatechat")
 
     def clear_private_messages(self, username):
         events.emit("clear-private-messages", username)
@@ -141,10 +144,10 @@ class PrivateChat:
             for word, replacement in config.sections["words"]["autoreplaced"].items():
                 message = message.replace(str(word), str(replacement))
 
-        core.send_message_to_server(slskmessages.MessageUser(username, message))
+        core.send_message_to_server(MessageUser(username, message))
         core.pluginhandler.outgoing_private_chat_notification(username, message)
 
-        events.emit("message-user", slskmessages.MessageUser(username, message))
+        events.emit("message-user", MessageUser(username, message))
 
     def send_message_users(self, target, message):
 
@@ -154,13 +157,13 @@ class PrivateChat:
         users = None
 
         if target == "buddies":
-            users = set(core.userlist.buddies)
+            users = set(core.buddies.users)
 
         elif target == "downloading":
             users = core.uploads.get_downloading_users()
 
         if users:
-            core.send_message_to_server(slskmessages.MessageUsers(users, message))
+            core.send_message_to_server(MessageUsers(users, message))
 
     def _get_peer_address(self, msg):
         """Server code 3.
@@ -174,19 +177,19 @@ class PrivateChat:
         if username not in self.private_message_queue:
             return
 
-        for msg_obj in self.private_message_queue[username][:]:
-            self.private_message_queue[username].remove(msg_obj)
-            msg_obj.user = username
-            events.emit("message-user", msg_obj, queued_message=True)
+        for queued_msg in self.private_message_queue[username][:]:
+            self.private_message_queue[username].remove(queued_msg)
+            queued_msg.user = username
+            events.emit("message-user", queued_msg, queued_message=True)
 
     def _user_status(self, msg):
         """Server code 7."""
 
-        if msg.user == core.login_username and msg.status != slskmessages.UserStatus.AWAY:
+        if msg.user == core.users.login_username and msg.status != UserStatus.AWAY:
             # Reset list of users we've sent away messages to when the away session ends
             self.away_message_users.clear()
 
-        if msg.status == slskmessages.UserStatus.OFFLINE:
+        if msg.status == UserStatus.OFFLINE:
             self.private_message_queue.pop(msg.user, None)
 
     def get_message_type(self, text, is_outgoing_message):
@@ -197,7 +200,7 @@ class PrivateChat:
         if is_outgoing_message:
             return "local"
 
-        if core.login_username and find_whole_word(core.login_username.lower(), text.lower()) > -1:
+        if core.users.login_username and find_whole_word(core.users.login_username.lower(), text.lower()) > -1:
             return "hilite"
 
         return "remote"
@@ -208,7 +211,7 @@ class PrivateChat:
         is_outgoing_message = (msg.message_id is None)
 
         username = msg.user
-        tag_username = (core.login_username if is_outgoing_message else username)
+        tag_username = (core.users.login_username if is_outgoing_message else username)
         message = msg.message
         timestamp = msg.timestamp if not msg.is_new_message else None
 
@@ -219,7 +222,7 @@ class PrivateChat:
                     "message": message
                 })
 
-                core.send_message_to_server(slskmessages.MessageAcked(msg.message_id))
+                core.send_message_to_server(MessageAcked(msg.message_id))
 
             if username == "server":
                 start_str = "The room you are trying to enter ("
@@ -228,7 +231,7 @@ class PrivateChat:
                     # Redirect message to chat room tab if join wasn't successful
                     msg.user = None
                     room = message[len(start_str):message.rfind(") ")]
-                    events.emit("say-chat-room", slskmessages.SayChatroom(room=room, message=message, user=username))
+                    events.emit("say-chat-room", SayChatroom(room=room, message=message, user=username))
                     return
             else:
                 # Check ignore status for all other users except "server"
@@ -236,7 +239,7 @@ class PrivateChat:
                     msg.user = None
                     return
 
-                user_address = core.user_addresses.get(username)
+                user_address = core.users.addresses.get(username)
 
                 if user_address is not None:
                     if core.network_filter.is_user_ip_ignored(username):
@@ -246,7 +249,7 @@ class PrivateChat:
                 elif not queued_message:
                     # Ask for user's IP address and queue the private message until we receive the address
                     if username not in self.private_message_queue:
-                        core.request_ip_address(username)
+                        core.users.request_ip_address(username)
 
                     self.private_message_queue_add(msg)
                     msg.user = None
@@ -284,7 +287,7 @@ class PrivateChat:
         if config.sections["logging"]["privatechat"] or username in config.sections["logging"]["private_chats"]:
             log.write_log_file(
                 folder_path=log.private_chat_folder_path,
-                basename=f"{clean_file(username)}.log", text=msg.formatted_message, timestamp=timestamp
+                basename=username, text=msg.formatted_message, timestamp=timestamp
             )
 
         if is_outgoing_message:
@@ -301,7 +304,8 @@ class PrivateChat:
 
         autoreply = config.sections["server"]["autoreply"]
 
-        if autoreply and core.user_status == slskmessages.UserStatus.AWAY and username not in self.away_message_users:
+        if (autoreply and core.users.login_status == UserStatus.AWAY
+                and username not in self.away_message_users):
             self.send_automatic_message(username, autoreply)
             self.away_message_users.add(username)
 
@@ -314,7 +318,7 @@ class PrivateChat:
             self.completions.update(core.chatrooms.server_rooms)
 
         if config.sections["words"]["buddies"]:
-            self.completions.update(core.userlist.buddies)
+            self.completions.update(core.buddies.users)
 
         if config.sections["words"]["commands"]:
             self.completions.update(core.pluginhandler.get_command_list("private_chat"))

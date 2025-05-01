@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -57,8 +57,9 @@ class Plugin(BasePlugin):
             member="PropertiesChanged",
             object_path="/org/mpris/MediaPlayer2",
             arg0=None,
-            flags=Gio.DBusSignalFlags.NONE,
-            callback=self.song_change
+            flags=0,
+            callback=self.song_change,
+            user_data=None
         )
 
     def remove_mpris_signal_receiver(self):
@@ -73,12 +74,13 @@ class Plugin(BasePlugin):
 
         if not player:
             dbus_proxy = Gio.DBusProxy.new_sync(
-                bus=self.bus,
-                flags=Gio.DBusProxyFlags.NONE,
+                connection=self.bus,
+                flags=0,
                 info=None,
                 name="org.freedesktop.DBus",
                 object_path="/org/freedesktop/DBus",
-                interface_name="org.freedesktop.DBus"
+                interface_name="org.freedesktop.DBus",
+                cancellable=None
             )
             names = dbus_proxy.ListNames()
 
@@ -93,12 +95,13 @@ class Plugin(BasePlugin):
         """Returns the current song url for the selected MPRIS client."""
 
         dbus_proxy = Gio.DBusProxy.new_sync(
-            bus=self.bus,
-            flags=Gio.DBusProxyFlags.NONE,
+            connection=self.bus,
+            flags=0,
             info=None,
             name=self.dbus_mpris_service + player,
             object_path="/org/mpris/MediaPlayer2",
-            interface_name="org.freedesktop.DBus.Properties"
+            interface_name="org.freedesktop.DBus.Properties",
+            cancellable=None
         )
         metadata = dbus_proxy.Get("(ss)", "org.mpris.MediaPlayer2.Player", "Metadata")
         song_url = metadata.get("xesam:url")
@@ -114,7 +117,8 @@ class Plugin(BasePlugin):
             if playing:
                 self.send_public(room, playing)
 
-    def song_change(self, _connection, _sender_name, _object_path, _interface_name, _signal_name, parameters):
+    def song_change(self, _connection, _sender_name, _object_path, _interface_name,
+                    _signal_name, parameters, _user_data):
 
         if self.config.sections["players"]["npplayer"] != "mpris":
             # MPRIS is not active, exit
@@ -140,8 +144,9 @@ class Plugin(BasePlugin):
             player = self.get_current_mpris_player()
             selected_client_song_url = self.get_current_mpris_song_url(player)
 
-        except Exception:
+        except Exception as error:
             # Selected player is invalid
+            self.log("Cannot retrieve currently playing song. Error: %s", error)
             return
 
         if selected_client_song_url != changed_song_url:

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -22,6 +22,7 @@ import threading
 import time
 
 import gi
+from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -37,14 +38,23 @@ from pynicotine.utils import open_uri
 
 GTK_API_VERSION = Gtk.get_major_version()
 GTK_MINOR_VERSION = Gtk.get_minor_version()
+GTK_MICRO_VERSION = Gtk.get_micro_version()
 GTK_GUI_FOLDER_PATH = os.path.normpath(os.path.dirname(os.path.realpath(__file__)))
 LIBADWAITA_API_VERSION = 0
 
 if GTK_API_VERSION >= 4:
     try:
         if "NICOTINE_LIBADWAITA" not in os.environ:
+            # Only attempt to use libadwaita in a standard GNOME session or Ubuntu's
+            # GNOME session (identified as 'GNOME' and 'ubuntu:GNOME'). Filter out
+            # other desktop environments that specify GNOME as a fallback, such as
+            # Budgie (identified as 'Budgie:GNOME').
+            current_desktop = os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
+
             os.environ["NICOTINE_LIBADWAITA"] = str(int(
-                sys.platform in {"win32", "darwin"} or "gnome" in os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
+                sys.platform in {"win32", "darwin"}
+                or current_desktop == "gnome"
+                or ("ubuntu" in current_desktop and "gnome" in current_desktop)
             ))
 
         if os.environ.get("NICOTINE_LIBADWAITA") == "1":
@@ -59,7 +69,7 @@ if GTK_API_VERSION >= 4:
 
 class Application:
 
-    def __init__(self, start_hidden, ci_mode, multi_instance):
+    def __init__(self, start_hidden, ci_mode, isolated_mode, multi_instance):
 
         self._instance = Gtk.Application(application_id=pynicotine.__application_id__)
         GLib.set_application_name(pynicotine.__application_name__)
@@ -70,6 +80,7 @@ class Application:
 
         self.start_hidden = start_hidden
         self.ci_mode = ci_mode
+        self.isolated_mode = isolated_mode
 
         self.window = None
         self.about = None
@@ -80,28 +91,38 @@ class Application:
         self.statistics = None
         self.wishlist = None
         self.tray_icon = None
-        self.notifications = None
         self.spell_checker = None
 
         # Show errors in the GUI from here on
         sys.excepthook = self.on_critical_error
 
-        self.connect("activate", self.on_activate)
+        # Always use LTR text direction for now. Once we add complete translations for a RTL
+        # language, we need to revise this.
+        Gtk.Widget.set_default_direction(Gtk.TextDirection.LTR)
+
+        self._instance.connect("activate", self.on_activate)
+        self._instance.connect("shutdown", self.on_shutdown)
 
         for event_name, callback in (
             ("confirm-quit", self.on_confirm_quit),
             ("invalid-password", self.on_invalid_password),
+            ("invalid-username", self.on_invalid_password),
             ("quit", self._instance.quit),
+            ("server-login", self._update_user_status),
+            ("server-disconnect", self._update_user_status),
             ("setup", self.on_fast_configure),
-            ("shares-unavailable", self.on_shares_unavailable)
+            ("shares-unavailable", self.on_shares_unavailable),
+            ("show-notification", self._show_notification),
+            ("show-chatroom-notification", self._show_chatroom_notification),
+            ("show-download-notification", self._show_download_notification),
+            ("show-private-chat-notification", self._show_private_chat_notification),
+            ("show-search-notification", self._show_search_notification),
+            ("user-status", self.on_user_status)
         ):
             events.connect(event_name, callback)
 
     def run(self):
         return self._instance.run()
-
-    def connect(self, event_name, callback):
-        self._instance.connect(event_name, callback)
 
     def add_action(self, action):
         self._instance.add_action(action)
@@ -112,43 +133,26 @@ class Application:
     def remove_action(self, action):
         self._instance.remove_action(action)
 
-    def get_accels_for_action(self, action):
-        return self._instance.get_accels_for_action(action)
-
-    def set_accels_for_action(self, action, accels):
-
-        if GTK_API_VERSION >= 4 and sys.platform == "darwin":
-            # Use Command key instead of Ctrl in accelerators on macOS
-            for i, accelerator in enumerate(accels):
-                accels[i] = accelerator.replace("<Primary>", "<Meta>")
-
-        self._instance.set_accels_for_action(action, accels)
-
     def add_window(self, window):
         self._instance.add_window(window)
 
-    def set_menubar(self, model):
-        self._instance.set_menubar(model)
-
-    def send_notification(self, event_id, notification):
-        self._instance.send_notification(event_id, notification)
-
-    def set_up_actions(self):
+    def _set_up_actions(self):
 
         # Regular actions
 
         for action_name, callback, parameter_type, is_enabled in (
             # General
+            ("disabled", None, None, False),
             ("connect", self.on_connect, None, True),
             ("disconnect", self.on_disconnect, None, False),
             ("soulseek-privileges", self.on_soulseek_privileges, None, False),
-            ("away", self.on_away, None, False),
+            ("away", self.on_away, None, True),
             ("away-accel", self.on_away_accelerator, None, False),
             ("message-downloading-users", self.on_message_downloading_users, None, False),
             ("message-buddies", self.on_message_buddies, None, False),
             ("wishlist", self.on_wishlist, None, True),
             ("confirm-quit", self.on_confirm_quit_request, None, True),
-            ("confirm-quit-uploads", self.on_confirm_quit_uploads_request, None, True),
+            ("force-quit", self.on_force_quit_request, None, True),
             ("quit", self.on_quit_request, None, True),
 
             # Shares
@@ -169,11 +173,11 @@ class Application:
             ("configure-ignored-users", self.on_configure_ignored_users, None, True),
             ("configure-account", self.on_configure_account, None, True),
             ("configure-user-profile", self.on_configure_user_profile, None, True),
-            ("personal-profile", self.on_personal_profile, None, False),
+            ("personal-profile", self.on_personal_profile, None, True),
 
             # Notifications
             ("chatroom-notification-activated", self.on_chatroom_notification_activated, "s", True),
-            ("download-notification-activated", self.on_download_notification_activated, None, True),
+            ("download-notification-activated", self.on_downloads, None, True),
             ("private-chat-notification-activated", self.on_private_chat_notification_activated, "s", True),
             ("search-notification-activated", self.on_search_notification_activated, "s", True),
 
@@ -189,7 +193,10 @@ class Application:
                 parameter_type = GLib.VariantType(parameter_type)
 
             action = Gio.SimpleAction(name=action_name, parameter_type=parameter_type, enabled=is_enabled)
-            action.connect("activate", callback)
+
+            if callback:
+                action.connect("activate", callback)
+
             self.add_action(action)
 
         self.lookup_action("away-accel").cooldown_time = 0  # needed to prevent server ban
@@ -209,29 +216,49 @@ class Application:
             ("log-transfers", self.on_debug_transfers, ("transfer" in enabled_logs)),
             ("log-miscellaneous", self.on_debug_miscellaneous, ("miscellaneous" in enabled_logs))
         ):
-            action = Gio.SimpleAction(name=action_name, state=GLib.Variant("b", state))
+            action = Gio.SimpleAction(name=action_name, state=GLib.Variant.new_boolean(state))
             action.connect("change-state", callback)
             self.add_action(action)
 
-    def set_up_action_accels(self):
+    def _set_accels_for_action(self, action, accels):
+
+        if GTK_API_VERSION >= 4 and sys.platform == "darwin":
+            # Use Command key instead of Ctrl in accelerators on macOS
+            for i, accelerator in enumerate(accels):
+                accels[i] = accelerator.replace("<Primary>", "<Meta>")
+
+        self._instance.set_accels_for_action(action, accels)
+
+    def _set_up_action_accels(self):
 
         for action_name, accelerators in (
             # Global accelerators
             ("app.connect", ["<Shift><Primary>c"]),
             ("app.disconnect", ["<Shift><Primary>d"]),
-            ("app.away-accel", ["<Primary>h"]),
+            ("app.away-accel", ["<Shift><Primary>a"]),
             ("app.wishlist", ["<Shift><Primary>w"]),
             ("app.confirm-quit", ["<Primary>q"]),
-            ("app.quit", ["<Primary><Alt>q"]),
+            ("app.force-quit", ["<Primary><Alt>q"]),
+            ("app.quit", ["<Primary>q"]),  # Only used to show accelerator in menus
             ("app.rescan-shares", ["<Shift><Primary>r"]),
             ("app.keyboard-shortcuts", ["<Primary>question", "F1"]),
             ("app.preferences", ["<Primary>comma", "<Primary>p"]),
+
+            # Window accelerators
+            ("win.main-menu", ["F10"]),
+            ("win.context-menu", ["<Shift>F10"]),
+            ("win.change-focus-view", ["F6"]),
+            ("win.show-log-pane", ["<Primary>l"]),
+            ("win.reopen-closed-tab", ["<Primary><Shift>t"]),
+            ("win.close-tab", ["<Primary>F4", "<Primary>w"]),
+            ("win.cycle-tabs", ["<Control>Tab"]),
+            ("win.cycle-tabs-reverse", ["<Control><Shift>Tab"]),
 
             # Other accelerators (logic defined elsewhere, actions only used for shortcuts dialog)
             ("accel.cut-clipboard", ["<Primary>x"]),
             ("accel.copy-clipboard", ["<Primary>c"]),
             ("accel.paste-clipboard", ["<Primary>v"]),
-            ("accel.insert-emoji", ["<Primary>period"]),
+            ("accel.insert-emoji", ["<Control>period"]),
             ("accel.select-all", ["<Primary>a"]),
             ("accel.find", ["<Primary>f"]),
             ("accel.find-next-match", ["<Primary>g"]),
@@ -246,28 +273,228 @@ class Application:
             ("accel.retry-transfer", ["r"]),
             ("accel.abort-transfer", ["t"])
         ):
-            self.set_accels_for_action(action_name, accelerators)
+            self._set_accels_for_action(action_name, accelerators)
 
-        if GTK_API_VERSION == 3 or sys.platform != "darwin":
-            return
+        numpad_accels = []
 
-        # Built-in GTK shortcuts use Ctrl key on macOS, add shortcuts that use Command key
-        for widget in (Gtk.Text, Gtk.TextView):
-            for action_name, accelerator in (
-                ("clipboard.cut", "<Meta>x"),
-                ("clipboard.copy", "<Meta>c"),
-                ("clipboard.paste", "<Meta>v"),
-                ("selection.select-all", "<Meta>a"),
-                ("misc.insert-emoji", "<Meta>period"),
-                ("text.undo", "<Meta>z"),
-                ("text.redo", "<Shift><Meta>u")
-            ):
-                widget.add_shortcut(
-                    Gtk.Shortcut(
-                        trigger=Gtk.ShortcutTrigger.parse_string(accelerator),
-                        action=Gtk.NamedAction(action_name=action_name),
-                    )
+        for num in range(1, 10):
+            numpad_accels.append(f"<Alt>KP_{num}")
+            self._set_accels_for_action(f"win.primary-tab-{num}", [f"<Primary>{num}", f"<Alt>{num}"])
+
+        # Disable Alt+1-9 accelerators for numpad keys to avoid conflict with Alt codes
+        self._set_accels_for_action("app.disabled", numpad_accels)
+
+    def _update_user_status(self, *_args):
+
+        status = core.users.login_status
+        is_online = (status != UserStatus.OFFLINE)
+
+        self.lookup_action("connect").set_enabled(not is_online)
+
+        for action_name in ("disconnect", "soulseek-privileges", "away-accel",
+                            "message-downloading-users", "message-buddies"):
+            self.lookup_action(action_name).set_enabled(is_online)
+
+        self.tray_icon.update()
+
+    # Primary Menus #
+
+    @staticmethod
+    def _add_connection_section(menu):
+
+        menu.add_items(
+            ("=" + _("_Connect"), "app.connect"),
+            ("=" + _("_Disconnect"), "app.disconnect"),
+            ("#" + _("Soulseek _Privileges"), "app.soulseek-privileges"),
+            ("", None)
+        )
+
+    @staticmethod
+    def _add_preferences_item(menu):
+        menu.add_items(("^" + _("_Preferences"), "app.preferences"))
+
+    def _add_quit_item(self, menu):
+
+        menu.add_items(
+            ("", None),
+            ("^" + _("_Quit"), "app.quit")
+        )
+
+    def _create_file_menu(self):
+
+        from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+
+        menu = PopupMenu(self)
+        self._add_connection_section(menu)
+        self._add_preferences_item(menu)
+        self._add_quit_item(menu)
+
+        return menu
+
+    def _add_browse_shares_section(self, menu):
+
+        menu.add_items(
+            ("#" + _("Browse _Public Shares"), "app.browse-public-shares"),
+            ("#" + _("Browse _Buddy Shares"), "app.browse-buddy-shares"),
+            ("#" + _("Browse _Trusted Shares"), "app.browse-trusted-shares")
+        )
+
+    def _create_shares_menu(self):
+
+        from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+
+        menu = PopupMenu(self)
+        menu.add_items(
+            ("#" + _("_Rescan Shares"), "app.rescan-shares"),
+            ("#" + _("Configure _Shares"), "app.configure-shares"),
+            ("", None)
+        )
+        self._add_browse_shares_section(menu)
+
+        return menu
+
+    def _create_browse_shares_menu(self):
+
+        from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+
+        menu = PopupMenu(self)
+        self._add_browse_shares_section(menu)
+
+        return menu
+
+    def _create_help_menu(self):
+
+        from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+
+        menu = PopupMenu(self)
+        menu.add_items(
+            ("#" + _("_Keyboard Shortcuts"), "app.keyboard-shortcuts"),
+            ("#" + _("_Setup Assistant"), "app.setup-assistant"),
+            ("#" + _("_Transfer Statistics"), "app.transfer-statistics"),
+            ("", None)
+        )
+        if not self.isolated_mode:
+            menu.add_items(
+                ("#" + _("Report a _Bug"), "app.report-bug"),
+                ("#" + _("Improve T_ranslations"), "app.improve-translations"),
+                ("", None)
+            )
+        menu.add_items(
+            ("^" + _("_About Nicotine+"), "app.about")
+        )
+
+        return menu
+
+    def _set_up_menubar(self):
+
+        from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+
+        menu = PopupMenu(self)
+        menu.add_items(
+            (">" + _("_File"), self._create_file_menu()),
+            (">" + _("_Shares"), self._create_shares_menu()),
+            (">" + _("_Help"), self._create_help_menu())
+        )
+
+        menu.update_model()
+        self._instance.set_menubar(menu.model)
+
+    def create_hamburger_menu(self):
+
+        from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+
+        menu = PopupMenu(self)
+        self._add_connection_section(menu)
+        menu.add_items(
+            ("#" + _("_Rescan Shares"), "app.rescan-shares"),
+            (">" + _("_Browse Shares"), self._create_browse_shares_menu()),
+            ("#" + _("Configure _Shares"), "app.configure-shares"),
+            ("", None),
+            (">" + _("_Help"), self._create_help_menu())
+        )
+        self._add_preferences_item(menu)
+        self._add_quit_item(menu)
+
+        menu.update_model()
+        return menu
+
+    # Notifications #
+
+    def _show_notification(self, message, title=None, action=None, action_target=None, high_priority=False):
+
+        if title is None:
+            title = pynicotine.__application_name__
+
+        title = title.strip()
+        message = message.strip()
+
+        try:
+            if sys.platform == "win32":
+                self.tray_icon.show_notification(
+                    title=title, message=message, action=action, action_target=action_target,
+                    high_priority=high_priority
                 )
+                return
+
+            priority = Gio.NotificationPriority.HIGH if high_priority else Gio.NotificationPriority.NORMAL
+
+            notification = Gio.Notification.new(title)
+            notification.set_body(message)
+            notification.set_priority(priority)
+
+            # Fix notification icon in Snap package
+            snap_name = os.environ.get("SNAP_NAME")
+
+            if snap_name:
+                notification.set_icon(Gio.ThemedIcon(name=f"snap.{snap_name}.{pynicotine.__application_id__}"))
+
+            # Unity doesn't support default click actions, and replaces the notification with a dialog.
+            # Disable actions to prevent this from happening.
+            if action and os.environ.get("XDG_CURRENT_DESKTOP", "").lower() != "unity":
+                if action_target:
+                    notification.set_default_action_and_target(action, GLib.Variant.new_string(action_target))
+                else:
+                    notification.set_default_action(action)
+
+            self._instance.send_notification(id=None, notification=notification)
+
+            if config.sections["notifications"]["notification_popup_sound"]:
+                Gdk.Display.get_default().beep()
+
+        except Exception as error:
+            log.add(_("Unable to show notification: %s"), error)
+
+    def _show_chatroom_notification(self, room, message, title=None, high_priority=False):
+
+        self._show_notification(
+            message, title, action="app.chatroom-notification-activated", action_target=room,
+            high_priority=high_priority
+        )
+
+        if high_priority:
+            self.window.set_urgency_hint(True)
+
+    def _show_download_notification(self, message, title=None, high_priority=False):
+
+        self._show_notification(
+            message, title, action="app.download-notification-activated",
+            high_priority=high_priority
+        )
+
+    def _show_private_chat_notification(self, user, message, title=None):
+
+        self._show_notification(
+            message, title, action="app.private-chat-notification-activated", action_target=user,
+            high_priority=True
+        )
+        self.window.set_urgency_hint(True)
+
+    def _show_search_notification(self, search_token, message, title=None):
+
+        self._show_notification(
+            message, title, action="app.search-notification-activated", action_target=search_token,
+            high_priority=True
+        )
 
     # Core Events #
 
@@ -276,16 +503,19 @@ class Application:
         should_finish_uploads = dialog.get_option_value()
 
         if response_id == "quit":
-            core.quit(should_finish_uploads=should_finish_uploads)
+            if should_finish_uploads:
+                core.uploads.request_shutdown()
+            else:
+                core.quit()
 
         elif response_id == "run_background":
             self.window.hide()
 
-    def on_confirm_quit(self, only_on_active_uploads=False):
+    def on_confirm_quit(self):
 
         has_active_uploads = core.uploads.has_active_uploads()
 
-        if not self.window.is_visible() or only_on_active_uploads and not has_active_uploads:
+        if not self.window.is_visible():
             # Never show confirmation dialog when main window is hidden
             core.quit()
             return
@@ -301,11 +531,9 @@ class Application:
 
         buttons = [
             ("cancel", _("_No")),
-            ("quit", _("_Quit"))
+            ("quit", _("_Quit")),
+            ("run_background", _("_Run in Background"))
         ]
-
-        if not only_on_active_uploads:
-            buttons.append(("run_background", _("_Run in Background")))
 
         OptionDialog(
             parent=self.window,
@@ -314,7 +542,7 @@ class Application:
             buttons=buttons,
             option_label=option_label,
             callback=self.on_confirm_quit_response
-        ).show()
+        ).present()
 
     def on_shares_unavailable_response(self, _dialog, response_id, _data):
         core.shares.rescan_shares(force=(response_id == "force_rescan"))
@@ -340,45 +568,27 @@ class Application:
             ],
             destructive_response_id="force_rescan",
             callback=self.on_shares_unavailable_response
-        ).show()
-
-    def on_invalid_password_response(self, *_args):
-        self.on_preferences(page_id="network")
+        ).present()
 
     def on_invalid_password(self):
+        self.on_fast_configure(invalid_password=True)
 
-        from pynicotine.gtkgui.widgets.dialogs import OptionDialog
-
-        title = _("Invalid Password")
-        msg = _("User %s already exists, and the password you entered is invalid. Please choose another username "
-                "if this is your first time logging in.") % config.sections["server"]["login"]
-
-        OptionDialog(
-            parent=self.window,
-            title=title,
-            message=msg,
-            buttons=[
-                ("cancel", _("_Cancel")),
-                ("ok", _("Change _Login Details"))
-            ],
-            callback=self.on_invalid_password_response
-        ).show()
+    def on_user_status(self, msg):
+        if msg.user == core.users.login_username:
+            self._update_user_status()
 
     # Actions #
 
     def on_connect(self, *_args):
-        core.connect()
+        if core.users.login_status == UserStatus.OFFLINE:
+            core.connect()
 
     def on_disconnect(self, *_args):
-        core.disconnect()
+        if core.users.login_status != UserStatus.OFFLINE:
+            core.disconnect()
 
     def on_soulseek_privileges(self, *_args):
-
-        import urllib.parse
-
-        login = urllib.parse.quote(core.login_username)
-        open_uri(pynicotine.__privileges_url__ % login)
-        core.request_check_privileges()
+        core.users.request_check_privileges(should_open_url=True)
 
     def on_preferences(self, *_args, page_id="network"):
 
@@ -388,32 +598,7 @@ class Application:
 
         self.preferences.set_settings()
         self.preferences.set_active_page(page_id)
-        self.preferences.show()
-
-    def on_chatroom_notification_activated(self, _action, room_variant):
-
-        room = room_variant.get_string()
-        core.chatrooms.show_room(room)
-
-        self.window.show()
-
-    def on_download_notification_activated(self, *_args):
-        self.window.change_main_page(self.window.downloads_page)
-        self.window.show()
-
-    def on_private_chat_notification_activated(self, _action, user_variant):
-
-        user = user_variant.get_string()
-        core.privatechat.show_user(user)
-
-        self.window.show()
-
-    def on_search_notification_activated(self, _action, search_token_variant):
-
-        search_token = int(search_token_variant.get_string())
-        core.search.show_search(search_token)
-
-        self.window.show()
+        self.preferences.present()
 
     def on_set_debug_level(self, action, state, level):
 
@@ -448,13 +633,17 @@ class Application:
     def on_debug_miscellaneous(self, action, state):
         self.on_set_debug_level(action, state, "miscellaneous")
 
-    def on_fast_configure(self, *_args):
+    def on_fast_configure(self, *_args, invalid_password=False):
 
         if self.fast_configure is None:
             from pynicotine.gtkgui.dialogs.fastconfigure import FastConfigure
             self.fast_configure = FastConfigure(self)
 
-        self.fast_configure.show()
+        if invalid_password and self.fast_configure.is_visible():
+            self.fast_configure.hide()
+
+        self.fast_configure.invalid_password = invalid_password
+        self.fast_configure.present()
 
     def on_keyboard_shortcuts(self, *_args):
 
@@ -462,7 +651,7 @@ class Application:
             from pynicotine.gtkgui.dialogs.shortcuts import Shortcuts
             self.shortcuts = Shortcuts(self)
 
-        self.shortcuts.show()
+        self.shortcuts.present()
 
     def on_transfer_statistics(self, *_args):
 
@@ -470,7 +659,7 @@ class Application:
             from pynicotine.gtkgui.dialogs.statistics import Statistics
             self.statistics = Statistics(self)
 
-        self.statistics.show()
+        self.statistics.present()
 
     @staticmethod
     def on_report_bug(*_args):
@@ -486,7 +675,7 @@ class Application:
             from pynicotine.gtkgui.dialogs.wishlist import WishList
             self.wishlist = WishList(self)
 
-        self.wishlist.show()
+        self.wishlist.present()
 
     def on_about(self, *_args):
 
@@ -494,7 +683,48 @@ class Application:
             from pynicotine.gtkgui.dialogs.about import About
             self.about = About(self)
 
-        self.about.show()
+        self.about.present()
+
+    def on_chatroom_notification_activated(self, _action, room_variant):
+
+        room = room_variant.get_string()
+        core.chatrooms.show_room(room)
+
+        self.window.present()
+
+    def on_private_chat_notification_activated(self, _action, user_variant):
+
+        user = user_variant.get_string()
+        core.privatechat.show_user(user)
+
+        self.window.present()
+
+    def on_search_notification_activated(self, _action, search_token_variant):
+
+        search_token = int(search_token_variant.get_string())
+        core.search.show_search(search_token)
+
+        self.window.present()
+
+    def on_downloads(self, *_args):
+        self.window.change_main_page(self.window.downloads_page)
+        self.window.present()
+
+    def on_uploads(self, *_args):
+        self.window.change_main_page(self.window.uploads_page)
+        self.window.present()
+
+    def on_private_chat(self, *_args):
+        self.window.change_main_page(self.window.private_page)
+        self.window.present()
+
+    def on_chat_rooms(self, *_args):
+        self.window.change_main_page(self.window.chatrooms_page)
+        self.window.present()
+
+    def on_searches(self, *_args):
+        self.window.change_main_page(self.window.search_page)
+        self.window.present()
 
     def on_message_users_response(self, dialog, _response_id, target):
 
@@ -515,7 +745,7 @@ class Application:
             callback=self.on_message_users_response,
             callback_data="downloading",
             show_emoji_icon=True
-        ).show()
+        ).present()
 
     def on_message_buddies(self, *_args):
 
@@ -529,7 +759,7 @@ class Application:
             callback=self.on_message_users_response,
             callback_data="buddies",
             show_emoji_icon=True
-        ).show()
+        ).present()
 
     def on_rescan_shares(self, *_args):
         core.shares.rescan_shares()
@@ -557,7 +787,10 @@ class Application:
             callback=self.on_load_shares_from_disk_selected,
             initial_folder=core.userbrowse.create_user_shares_folder(),
             select_multiple=True
-        ).show()
+        ).present()
+
+    def on_personal_profile(self, *_args):
+        core.userinfo.show_user()
 
     def on_configure_shares(self, *_args):
         self.on_preferences(page_id="shares")
@@ -583,8 +816,18 @@ class Application:
     def on_configure_user_profile(self, *_args):
         self.on_preferences(page_id="user-profile")
 
-    def on_personal_profile(self, *_args):
-        core.userinfo.show_user(core.login_username)
+    def on_window_hide_unhide(self, *_args):
+
+        if self.window.is_visible():
+            self.window.hide()
+            return
+
+        self.window.present()
+
+        # Workaround for broken window size when restoring maximized window from tray icon
+        if sys.platform == "win32" and self.window.is_maximized():
+            self.window.unmaximize()
+            self.window.maximize()
 
     def on_away_accelerator(self, action, *_args):
         """Ctrl+H: Away/Online toggle."""
@@ -599,16 +842,13 @@ class Application:
     def on_away(self, *_args):
         """Away/Online status button."""
 
-        core.set_away_mode(core.user_status != UserStatus.AWAY, save_state=True)
+        if core.users.login_status == UserStatus.OFFLINE:
+            core.connect()
+            return
+
+        core.users.set_away_mode(core.users.login_status != UserStatus.AWAY, save_state=True)
 
     # Running #
-
-    def _force_quit(self):
-        """Used when the thread event processor fails due to an unhandled
-        exception, to force a shutdown."""
-
-        core.quit()
-        events.emit("quit")
 
     def _raise_exception(self, exc_value):
         raise exc_value
@@ -644,19 +884,19 @@ class Application:
             ],
             callback=self._show_critical_error_dialog_response,
             callback_data=(loop, error)
-        ).show()
+        ).present()
 
     def _on_critical_error(self, exc_type, exc_value, exc_traceback):
 
         if self.ci_mode:
-            self._force_quit()
+            core.quit()
             self._raise_exception(exc_value)
             return
 
         from traceback import format_tb
 
         # Check if exception occurred in a plugin
-        if core.pluginhandler is not None:
+        if exc_traceback is not None:
             traceback = exc_traceback
 
             while traceback.tb_next:
@@ -666,8 +906,7 @@ class Application:
                     plugin_path = core.pluginhandler.get_plugin_path(plugin_name)
 
                     if file_path.startswith(plugin_path):
-                        core.pluginhandler.show_plugin_error(
-                            plugin_name, exc_type, exc_value, exc_traceback)
+                        core.pluginhandler.show_plugin_error(plugin_name, exc_value)
                         return
 
                 traceback = traceback.tb_next
@@ -685,17 +924,22 @@ class Application:
 
         # Dialog was closed, quit
         sys.excepthook = None
-        self._force_quit()
+        core.quit()
+
+        # Process 'quit' event after slight delay in case thread event loop is stuck
+        GLib.idle_add(lambda: events.process_thread_events() == -1, priority=GLib.PRIORITY_HIGH_IDLE)
+
+        # Log exception in terminal
         self._raise_exception(exc_value)
 
-    def on_critical_error(self, _exc_type, exc_value, _exc_traceback):
+    def on_critical_error(self, exc_type, exc_value, exc_traceback):
 
         if threading.current_thread() is threading.main_thread():
-            self._on_critical_error(_exc_type, exc_value, _exc_traceback)
+            self._on_critical_error(exc_type, exc_value, exc_traceback)
             return
 
         # Raise exception in the main thread
-        GLib.idle_add(self._raise_exception, exc_value)
+        GLib.idle_add(self._raise_exception, exc_value, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def on_process_thread_events(self):
         return events.process_thread_events()
@@ -704,11 +948,10 @@ class Application:
 
         if self.window:
             # Show the window of the running application instance
-            self.window.show()
+            self.window.present()
             return
 
         from pynicotine.gtkgui.mainwindow import MainWindow
-        from pynicotine.gtkgui.widgets.notifications import Notifications
         from pynicotine.gtkgui.widgets.theme import load_icons
         from pynicotine.gtkgui.widgets.trayicon import TrayIcon
 
@@ -718,11 +961,11 @@ class Application:
 
         load_icons()
 
-        self.set_up_actions()
-        self.set_up_action_accels()
+        self._set_up_actions()
+        self._set_up_action_accels()
+        self._set_up_menubar()
 
         self.tray_icon = TrayIcon(self)
-        self.notifications = Notifications(self)
         self.window = MainWindow(self)
 
         core.start()
@@ -736,13 +979,52 @@ class Application:
                                               and config.sections["ui"]["startup_hidden"]))
 
         if not start_hidden:
-            self.window.show()
+            self.window.present()
 
     def on_confirm_quit_request(self, *_args):
         core.confirm_quit()
 
-    def on_confirm_quit_uploads_request(self, *_args):
-        core.confirm_quit(only_on_active_uploads=True)
+    def on_force_quit_request(self, *_args):
+        core.quit()
 
     def on_quit_request(self, *_args):
-        core.quit()
+
+        if not core.uploads.has_active_uploads():
+            core.quit()
+            return
+
+        core.confirm_quit()
+
+    def on_shutdown(self, *_args):
+
+        if self.about is not None:
+            self.about.destroy()
+
+        if self.fast_configure is not None:
+            self.fast_configure.destroy()
+
+        if self.preferences is not None:
+            self.preferences.destroy()
+
+        if self.file_properties is not None:
+            self.file_properties.destroy()
+
+        if self.shortcuts is not None:
+            self.shortcuts.destroy()
+
+        if self.statistics is not None:
+            self.statistics.destroy()
+
+        if self.wishlist is not None:
+            self.wishlist.destroy()
+
+        if self.spell_checker is not None:
+            self.spell_checker.destroy()
+
+        if self.window is not None:
+            self.window.destroy()
+
+        if self.tray_icon is not None:
+            self.tray_icon.destroy()
+
+        self.__dict__.clear()

@@ -54,14 +54,16 @@
     <signal name="activate" handler="on_search"/>
   </object>
   <object class="GtkEntry" id="search_entry">
-    <property name="max-width-chars">75</property>
+    <property name="max-width-chars">72</property>
     <property name="placeholder-text" translatable="yes">Search term…</property>
     <property name="primary-icon-name">system-search-symbolic</property>
+    <property name="secondary-icon-tooltip-text" translatable="yes">Clear</property>
     <property name="tooltip-text" translatable="yes">Search patterns: with a word = term, without a word = -term, partial word = *erm</property>
     <property name="visible">True</property>
     <property name="width-chars">5</property>
     <signal name="activate" handler="on_search"/>
-    <signal name="icon-press" handler="on_search"/>
+    <signal name="changed" handler="on_search_entry_changed"/>
+    <signal name="icon-press" handler="on_search_entry_icon_press"/>
   </object>
   <object class="GtkBox" id="search_page">
     <property name="visible">False</property>
@@ -86,7 +88,7 @@
                 <child>
                   <object class="GtkBox" id="search_title">
                     <property name="hexpand">True</property>
-                    <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
+                    <property name="sensitive">False</property>
                     <property name="spacing">4</property>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
@@ -149,6 +151,12 @@
                         <style>
                           <class name="image-text-button"/>
                         </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparator">
+                        <property name="orientation">vertical</property>
+                        <property name="visible">True</property>
                       </object>
                     </child>
                     <child>
@@ -723,7 +731,6 @@
     <property name="max-width-chars">45</property>
     <property name="placeholder-text" translatable="yes">Username…</property>
     <property name="primary-icon-name">avatar-default-symbolic</property>
-    <property name="tooltip-text" translatable="yes">Enter the username of the person whose files you want to see</property>
     <property name="visible">True</property>
     <property name="width-chars">5</property>
     <signal name="activate" handler="on_get_shares"/>
@@ -753,7 +760,6 @@
                   <object class="GtkBox" id="userbrowse_title">
                     <property name="halign">start</property>
                     <property name="hexpand">True</property>
-                    <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
                   </object>
@@ -773,7 +779,7 @@
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkImage">
-                                <property name="icon-name">folder-open-symbolic</property>
+                                <property name="icon-name">document-open-symbolic</property>
                                 <property name="visible">True</property>
                               </object>
                             </child>
@@ -791,6 +797,12 @@
                         <style>
                           <class name="image-text-button"/>
                         </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparator">
+                        <property name="orientation">vertical</property>
+                        <property name="visible">True</property>
                       </object>
                     </child>
                     <child>
@@ -887,7 +899,6 @@
     <property name="max-width-chars">45</property>
     <property name="placeholder-text" translatable="yes">Username…</property>
     <property name="primary-icon-name">avatar-default-symbolic</property>
-    <property name="tooltip-text" translatable="yes">Enter the username of the person whose information you want to see</property>
     <property name="visible">True</property>
     <property name="width-chars">5</property>
     <signal name="activate" handler="on_show_user_profile"/>
@@ -917,7 +928,6 @@
                   <object class="GtkBox" id="userinfo_title">
                     <property name="halign">start</property>
                     <property name="hexpand">True</property>
-                    <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
                   </object>
@@ -954,6 +964,12 @@
                         <style>
                           <class name="image-text-button"/>
                         </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparator">
+                        <property name="orientation">vertical</property>
+                        <property name="visible">True</property>
                       </object>
                     </child>
                     <child>
@@ -1078,7 +1094,6 @@
                         <property name="max-width-chars">40</property>
                         <property name="placeholder-text" translatable="yes">Username…</property>
                         <property name="primary-icon-name">avatar-default-symbolic</property>
-                        <property name="tooltip-text" translatable="yes">Enter the username of the person you want to send a message to</property>
                         <property name="visible">True</property>
                         <property name="width-chars">5</property>
                         <signal name="activate" handler="on_get_private_chat"/>
@@ -1237,8 +1252,7 @@
                       <object class="GtkEntry" id="add_buddy_entry">
                         <property name="max-width-chars">45</property>
                         <property name="placeholder-text" translatable="yes">Add buddy…</property>
-                        <property name="primary-icon-name">contact-new-symbolic</property>
-                        <property name="tooltip-text" translatable="yes">Enter the username of the person you want to add to your buddy list</property>
+                        <property name="primary-icon-name">system-users-symbolic</property>
                         <property name="visible">True</property>
                         <property name="width-chars">5</property>
                         <signal name="activate" handler="on_add_buddy"/>
@@ -1279,6 +1293,12 @@
                         <style>
                           <class name="image-text-button"/>
                         </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparator">
+                        <property name="orientation">vertical</property>
+                        <property name="visible">True</property>
                       </object>
                     </child>
                     <child>
@@ -1324,7 +1344,7 @@
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkImage">
-                    <property name="icon-name">contact-new-symbolic</property>
+                    <property name="icon-name">system-users-symbolic</property>
                     <property name="pixel-size">128</property>
                     <property name="visible">True</property>
                     <style>
@@ -1398,16 +1418,16 @@
                       <object class="GtkBox" id="chatrooms_title">
                         <property name="halign">start</property>
                         <property name="hexpand">True</property>
-                        <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
+                        <property name="sensitive">False</property>
                         <property name="spacing">4</property>
                         <property name="valign">center</property>
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkEntry" id="chatrooms_entry">
+                            <property name="input-hints">no-emoji</property>
                             <property name="max-width-chars">40</property>
                             <property name="placeholder-text" translatable="yes">Join or create room…</property>
                             <property name="primary-icon-name">user-available-symbolic</property>
-                            <property name="tooltip-text" translatable="yes">Enter the name of a room you want to join. If the room doesn't exist, it will be created.</property>
                             <property name="visible">True</property>
                             <property name="width-chars">5</property>
                             <signal name="activate" handler="on_create_room"/>
@@ -1619,19 +1639,11 @@
             <child>
               <object class="GtkBox" id="log_container">
                 <property name="orientation">vertical</property>
-                <property name="visible" bind-source="_log_history_button" bind-property="active" bind-flags="bidirectional|sync-create"/>
+                <property name="visible" bind-source="_log_pane_button" bind-property="active" bind-flags="bidirectional|sync-create"/>
                 <child>
                   <object class="GtkSearchBar" id="log_search_bar">
                     <property name="show-close-button">True</property>
                     <property name="visible">True</property>
-                    <child>
-                      <object class="GtkSearchEntry" id="log_search_entry">
-                        <property name="max-width-chars">75</property>
-                        <property name="placeholder-text" translatable="yes">Search log…</property>
-                        <property name="visible">True</property>
-                        <property name="width-chars">24</property>
-                      </object>
-                    </child>
                   </object>
                 </child>
                 <child>
@@ -1663,26 +1675,33 @@
         <property name="spacing">18</property>
         <property name="visible">True</property>
         <child>
-          <object class="GtkLabel" id="status_label">
-            <property name="ellipsize">end</property>
+          <object class="GtkBox">
             <property name="hexpand">True</property>
-            <property name="margin-start">12</property>
-            <property name="selectable">True</property>
-            <property name="single-line-mode">True</property>
             <property name="visible">True</property>
-            <property name="xalign">0</property>
+            <child>
+              <object class="GtkLabel" id="status_label">
+                <property name="ellipsize">end</property>
+                <property name="margin-start">12</property>
+                <property name="selectable">True</property>
+                <property name="single-line-mode">True</property>
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
           <object class="GtkBox" id="scan_progress_container">
-            <property name="spacing">6</property>
-            <property name="tooltip-text" bind-source="scan_progress_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
+            <property name="spacing">8</property>
             <property name="visible">False</property>
             <child>
               <object class="GtkLabel" id="scan_progress_label">
                 <property name="ellipsize">end</property>
                 <property name="selectable">True</property>
                 <property name="visible">True</property>
+                <attributes>
+                  <attribute name="font-features" value="tnum=1"/>
+                </attributes>
                 <style>
                   <class name="caption"/>
                   <class name="dim-label"/>
@@ -1812,7 +1831,7 @@
                       <object class="GtkImage" id="user_status_icon">
                         <property name="icon-name">nplus-status-offline</property>
                         <property name="tooltip-text" bind-source="user_status_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
-                        <property name="visible">True</property>
+                        <property name="visible" bind-source="user_status_button" bind-property="visible" bind-flags="bidirectional|sync-create"/>
                         <style>
                           <class name="colored-icon"/>
                           <class name="user-status"/>
@@ -1837,9 +1856,9 @@
               </object>
             </child>
             <child>
-              <object class="GtkToggleButton" id="_log_history_button">
-                <property name="action-name">win.show-log-history</property>
-                <property name="tooltip-text" translatable="yes">Show Log History Pane</property>
+              <object class="GtkToggleButton" id="_log_pane_button">
+                <property name="action-name">win.show-log-pane</property>
+                <property name="tooltip-text" translatable="yes">Show Log Pane</property>
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkImage">
@@ -1859,6 +1878,11 @@
         <style>
           <class name="border-top"/>
         </style>
+      </object>
+    </child>
+    <child>
+      <object class="GtkButton" id="hide_window_button">
+        <property name="visible">False</property>
       </object>
     </child>
   </object>

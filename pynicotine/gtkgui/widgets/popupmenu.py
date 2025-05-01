@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2009 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
@@ -20,16 +20,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+import sys
+
 from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
+from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
-from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 
@@ -45,9 +48,14 @@ class PopupMenu:
         self.callback = callback
 
         self.popup_menu = None
+        self.menu_button = None
         self.gesture_click = None
         self.gesture_press = None
-        self.valid_parent_widgets = Gtk.Box if GTK_API_VERSION >= 4 else (Gtk.Box, Gtk.EventBox)
+
+        if GTK_API_VERSION >= 4:
+            self.valid_parent_widgets = Gtk.Box
+        else:
+            self.valid_parent_widgets = (Gtk.Box, Gtk.EventBox)  # pylint: disable=c-extension-no-member
 
         if connect_events and parent:
             self.connect_events(parent)
@@ -73,6 +81,23 @@ class PopupMenu:
             self.connect_events(parent)
             self.parent = parent
 
+    def set_menu_button(self, button):
+
+        if self.menu_button is not None:
+            self.menu_button.set_menu_model(None)
+
+        self.menu_button = button
+
+        if button is None:
+            return
+
+        button.set_menu_model(self.model)
+
+        # Workaround for GTK bug where clicks stop working after clicking inside popover once
+        if GTK_API_VERSION >= 4 and os.environ.get("GDK_BACKEND") == "broadway":
+            popover = list(button)[-1]
+            popover.set_has_arrow(False)
+
     def create_context_menu(self, parent):
 
         if self.popup_menu:
@@ -92,14 +117,14 @@ class PopupMenu:
             # Workaround for wrong widget receiving focus after closing menu in GTK 4
             self.popup_menu.connect("closed", lambda *_args: self.parent.child_focus(Gtk.DirectionType.TAB_FORWARD))
         else:
-            self.popup_menu = Gtk.Menu.new_from_model(self.model)
+            self.popup_menu = Gtk.Menu.new_from_model(self.model)  # pylint: disable=c-extension-no-member
             self.popup_menu.attach_to_widget(parent)
 
         return self.popup_menu
 
     def _create_action(self, action_id, stateful=False):
 
-        state = GLib.Variant("b", False) if stateful else None
+        state = GLib.Variant.new_boolean(False) if stateful else None
         action = Gio.SimpleAction(name=action_id, state=state)
 
         self.application.add_action(action)
@@ -113,6 +138,7 @@ class PopupMenu:
             O - choice
             # - regular
             = - hidden when disabled
+            ^ - hidden in macOS menu bar
         """
 
         submenu = False
@@ -147,7 +173,10 @@ class PopupMenu:
         menuitem = Gio.MenuItem.new(label, action_id)
 
         if item_type == "=":
-            menuitem.set_attribute_value("hidden-when", GLib.Variant("s", "action-disabled"))
+            menuitem.set_attribute_value("hidden-when", GLib.Variant.new_string("action-disabled"))
+
+        elif item_type == "^":
+            menuitem.set_attribute_value("hidden-when", GLib.Variant.new_string("macos-menubar"))
 
         if submenu:
             menuitem.set_submenu(item[1].model)
@@ -156,7 +185,7 @@ class PopupMenu:
             if GTK_API_VERSION == 3:
                 # Ideally, we wouldn't hide disabled submenus, but a GTK limitation forces us to
                 # https://discourse.gnome.org/t/question-how-do-i-disable-a-menubar-menu-in-gtk-is-it-even-possible/906/9
-                menuitem.set_attribute_value("hidden-when", GLib.Variant("s", "action-disabled"))
+                menuitem.set_attribute_value("hidden-when", GLib.Variant.new_string("action-disabled"))
 
         elif action and item[1]:
             # Callback
@@ -164,7 +193,9 @@ class PopupMenu:
             action.connect(action_name, *item[1:])
 
         self.items[label] = menuitem
-        self.actions[label] = action
+
+        if action is not None:
+            self.actions[label] = action
 
         return menuitem
 
@@ -242,10 +273,10 @@ class PopupMenu:
 
         event = None
 
-        if controller:
+        if controller is not None:
             sequence = controller.get_current_sequence()
 
-            if sequence:
+            if sequence is not None:
                 event = controller.get_last_event(sequence)
 
         menu.popup_at_pointer(event)
@@ -277,14 +308,38 @@ class PopupMenu:
                 # No rows selected, don't show menu
                 return False
 
-        if callback:
+        if callback is not None:
             callback(menu_model, self.parent)
 
         self.popup(pos_x, pos_y, controller, menu=menu)
         return True
 
-    def _callback_click(self, controller, _num_p, pos_x, pos_y):
+    def _callback_click_gtk4(self, controller, _num_p, pos_x, pos_y):
         return self._callback(controller, pos_x, pos_y)
+
+    def _callback_click_gtk4_darwin(self, controller, _num_p, pos_x, pos_y):
+
+        try:
+            event = controller.get_last_event()
+        except TypeError:
+            # PyGObject <3.48.0
+            return False
+
+        if event.triggers_context_menu():
+            return self._callback(controller, pos_x, pos_y)
+
+        return False
+
+    def _callback_click_gtk3(self, controller, _num_p, pos_x, pos_y):
+
+        sequence = controller.get_current_sequence()
+        event = controller.get_last_event(sequence)
+        show_context_menu = event.triggers_context_menu()
+
+        if show_context_menu:
+            return self._callback(controller, pos_x, pos_y)
+
+        return False
 
     def _callback_menu(self, *_args):
         return self._callback()
@@ -293,6 +348,8 @@ class PopupMenu:
 
         if GTK_API_VERSION >= 4:
             self.gesture_click = Gtk.GestureClick()
+            self.gesture_click.set_button(Gdk.BUTTON_SECONDARY)
+            self.gesture_click.connect("pressed", self._callback_click_gtk4)
             parent.add_controller(self.gesture_click)
 
             self.gesture_press = Gtk.GestureLongPress()
@@ -300,16 +357,24 @@ class PopupMenu:
 
             Accelerator("<Shift>F10", parent, self._callback_menu)
 
+            if sys.platform == "darwin":
+                gesture_click_darwin = Gtk.GestureClick()
+                parent.add_controller(gesture_click_darwin)
+
+                gesture_click_darwin.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+                gesture_click_darwin.connect("pressed", self._callback_click_gtk4_darwin)
+
         else:
-            self.gesture_click = Gtk.GestureMultiPress(widget=parent)
+            self.gesture_click = Gtk.GestureMultiPress(widget=parent)  # pylint: disable=c-extension-no-member
+            self.gesture_click.set_button(0)
+            self.gesture_click.connect("pressed", self._callback_click_gtk3)
+
             self.gesture_press = Gtk.GestureLongPress(widget=parent)
 
             # Shift+F10
             parent.connect("popup-menu", self._callback_menu)
 
         self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-        self.gesture_click.set_button(Gdk.BUTTON_SECONDARY)
-        self.gesture_click.connect("pressed", self._callback_click)
 
         self.gesture_press.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.gesture_press.set_touch_only(True)
@@ -350,8 +415,11 @@ class UserPopupMenu(PopupMenu):
 
         self.username = username
         self.tab_name = tab_name
+        self.popup_menu_private_rooms = None
 
-        self.setup_user_menu(username)
+        if tab_name != "private_rooms":
+            self.popup_menu_private_rooms = UserPopupMenu(self.application, username=username, tab_name="private_rooms")
+            self.setup_user_menu(username)
 
     def setup_user_menu(self, username):
 
@@ -366,7 +434,7 @@ class UserPopupMenu(PopupMenu):
             self.add_items(("#" + _("View User _Profile"), self.on_user_profile))
 
         if self.tab_name != "privatechat":
-            self.add_items(("#" + _("Send M_essage"), self.on_send_message))
+            self.add_items(("#" + _("_Send Message"), self.on_send_message))
 
         if self.tab_name != "userbrowse":
             self.add_items(("#" + _("_Browse Files"), self.on_browse_user))
@@ -375,14 +443,15 @@ class UserPopupMenu(PopupMenu):
             self.add_items(("$" + _("_Add Buddy"), self.on_add_to_list))
 
         self.add_items(
-            ("#" + _("_Gift Privileges…"), self.on_give_privileges),
             ("", None),
             ("$" + _("Ban User"), self.on_ban_user),
             ("$" + _("Ignore User"), self.on_ignore_user),
             ("", None),
             ("$" + _("Ban IP Address"), self.on_ban_ip),
             ("$" + _("Ignore IP Address"), self.on_ignore_ip),
-            ("#" + _("Show IP A_ddress"), self.on_show_ip_address)
+            ("#" + _("Show IP A_ddress"), self.on_show_ip_address),
+            ("", None),
+            (">" + _("Private Rooms"), self.popup_menu_private_rooms)
         )
 
     def update_username_item(self):
@@ -407,15 +476,18 @@ class UserPopupMenu(PopupMenu):
         self.username = username
         self.update_username_item()
 
+        if self.popup_menu_private_rooms is not None:
+            self.popup_menu_private_rooms.set_user(self.username)
+
     def toggle_user_items(self):
 
         self.editing = True
-        self.actions[_("_Gift Privileges…")].set_enabled(bool(core.privileges_left))
 
+        local_username = core.users.login_username or config.sections["server"]["login"]
         add_to_list = _("_Add Buddy")
 
         if add_to_list in self.actions:
-            self.actions[add_to_list].set_state(GLib.Variant("b", self.username in core.userlist.buddies))
+            self.actions[add_to_list].set_state(GLib.Variant.new_boolean(self.username in core.buddies.users))
 
         for action_id, value in (
             (_("Ban User"), core.network_filter.is_user_banned(self.username)),
@@ -424,19 +496,18 @@ class UserPopupMenu(PopupMenu):
             (_("Ignore IP Address"), core.network_filter.is_user_ip_ignored(self.username))
         ):
             # Disable menu item if it's our own username and we haven't banned ourselves before
-            self.actions[action_id].set_enabled(GLib.Variant("b", self.username != core.login_username or value))
-            self.actions[action_id].set_state(GLib.Variant("b", value))
+            self.actions[action_id].set_enabled(GLib.Variant.new_boolean(self.username != local_username or value))
+            self.actions[action_id].set_state(GLib.Variant.new_boolean(value))
 
+        self.popup_menu_private_rooms.populate_private_rooms()
+        self.popup_menu_private_rooms.update_model()
+
+        self.actions[_("Private Rooms")].set_enabled(bool(self.popup_menu_private_rooms.items))
         self.editing = False
 
-    def populate_private_rooms(self, popup):
+    def populate_private_rooms(self):
 
-        popup.clear()
-
-        if self.username is None:
-            return
-
-        popup.set_user(self.username)
+        self.clear()
 
         for room, data in core.chatrooms.private_rooms.items():
             is_owned = core.chatrooms.is_private_room_owned(room)
@@ -445,24 +516,32 @@ class UserPopupMenu(PopupMenu):
             if not is_owned and not is_operator:
                 continue
 
-            if self.username in data["users"]:
-                popup.add_items(
-                    ("#" + _("Remove from Private Room %s") % room, popup.on_private_room_remove_user, room))
-            else:
-                popup.add_items(("#" + _("Add to Private Room %s") % room, popup.on_private_room_add_user, room))
+            if self.username == data.owner:
+                continue
+
+            is_user_member = (self.username in data.members)
+            is_user_operator = (self.username in data.operators)
+
+            if not is_user_operator:
+                if is_user_member:
+                    self.add_items(
+                        ("#" + _("Remove from Private Room %s") % room, self.on_private_room_remove_user, room))
+                else:
+                    self.add_items(
+                        ("#" + _("Add to Private Room %s") % room, self.on_private_room_add_user, room))
 
             if not is_owned:
                 continue
 
-            if self.username in data["operators"]:
-                popup.add_items(
-                    ("#" + _("Remove as Operator of %s") % room, popup.on_private_room_remove_operator, room))
-            else:
-                popup.add_items(("#" + _("Add as Operator of %s") % room, popup.on_private_room_add_operator, room))
+            if is_user_operator:
+                self.add_items(
+                    ("#" + _("Remove as Operator of %s") % room, self.on_private_room_remove_operator, room))
 
-            popup.add_items(("", None))
+            elif is_user_member:
+                self.add_items(
+                    ("#" + _("Add as Operator of %s") % room, self.on_private_room_add_operator, room))
 
-        popup.update_model()
+            self.add_items(("", None))
 
     def update_model(self):
         super().update_model()
@@ -472,7 +551,7 @@ class UserPopupMenu(PopupMenu):
 
     def on_search_user(self, *_args):
 
-        self.application.window.lookup_action("search-mode").change_state(GLib.Variant("s", "user"))
+        self.application.window.lookup_action("search-mode").change_state(GLib.Variant.new_string("user"))
         self.application.window.user_search_entry.set_text(self.username)
         self.application.window.change_main_page(self.application.window.search_page)
         GLib.idle_add(lambda: self.application.window.search_entry.grab_focus() == -1, priority=GLib.PRIORITY_HIGH_IDLE)
@@ -481,7 +560,7 @@ class UserPopupMenu(PopupMenu):
         core.privatechat.show_user(self.username)
 
     def on_show_ip_address(self, *_args):
-        core.request_ip_address(self.username, notify=True)
+        core.users.request_ip_address(self.username, notify=True)
 
     def on_user_profile(self, *_args):
         core.userinfo.show_user(self.username)
@@ -489,20 +568,16 @@ class UserPopupMenu(PopupMenu):
     def on_browse_user(self, *_args):
         core.userbrowse.browse_user(self.username)
 
-    def on_private_room_add_user(self, *args):
-        room = args[-1]
+    def on_private_room_add_user(self, _action, _parameter, room):
         core.chatrooms.add_user_to_private_room(room, self.username)
 
-    def on_private_room_remove_user(self, *args):
-        room = args[-1]
+    def on_private_room_remove_user(self, _action, _parameter, room):
         core.chatrooms.remove_user_from_private_room(room, self.username)
 
-    def on_private_room_add_operator(self, *args):
-        room = args[-1]
+    def on_private_room_add_operator(self, _action, _parameter, room):
         core.chatrooms.add_operator_to_private_room(room, self.username)
 
-    def on_private_room_remove_operator(self, *args):
-        room = args[-1]
+    def on_private_room_remove_operator(self, _action, _parameter, room):
         core.chatrooms.remove_operator_from_private_room(room, self.username)
 
     def on_add_to_list(self, action, state):
@@ -511,9 +586,9 @@ class UserPopupMenu(PopupMenu):
             return
 
         if state.get_boolean():
-            core.userlist.add_buddy(self.username)
+            core.buddies.add_buddy(self.username)
         else:
-            core.userlist.remove_buddy(self.username)
+            core.buddies.remove_buddy(self.username)
 
         action.set_state(state)
 
@@ -567,40 +642,3 @@ class UserPopupMenu(PopupMenu):
 
     def on_copy_user(self, *_args):
         clipboard.copy_text(self.username)
-
-    def on_give_privileges_response(self, dialog, _response_id, _data):
-
-        days = dialog.get_entry_value()
-
-        if not days:
-            return
-
-        try:
-            days = int(days)
-            core.request_give_privileges(self.username, days)
-
-        except ValueError:
-            self.on_give_privileges(error=_("Please enter number of days."))
-
-    def on_give_privileges(self, *_args, error=None):
-
-        core.request_check_privileges()
-
-        if core.privileges_left is None:
-            days = _("Unknown")
-        else:
-            days = core.privileges_left // 60 // 60 // 24
-
-        message = (_("Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):") %
-                   {"user": self.username, "days_left": _("%(days)s days left") % {"days": days}})
-
-        if error:
-            message += "\n\n" + error
-
-        EntryDialog(
-            parent=self.application.window,
-            title=_("Gift Privileges"),
-            message=message,
-            action_button_label=_("_Give Privileges"),
-            callback=self.on_give_privileges_response
-        ).show()

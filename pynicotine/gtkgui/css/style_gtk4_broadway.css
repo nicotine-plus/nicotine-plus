@@ -1,0 +1,21 @@
+/* Tweaks (GTK 4+ with Broadway backend) */
+
+window {
+    /* Workaround for GTK bug where clicks in dialogs no longer register after
+       clicking once (no idea why this works). */
+    outline: none;
+}
+
+window.csd {
+    /* Smaller shadows to work around GTK bug where window is misaligned */
+    box-shadow: 0 1px 3px 3px transparent,
+                0 2px 6px 3px rgba(0, 0, 0, 0.10),
+                0 4px 7px 3px rgba(0, 0, 0, 0.06),
+                0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+
+popover > contents {
+    /* Workaround for GTK bug where popovers are misaligned */
+    box-shadow: none;
+}
+

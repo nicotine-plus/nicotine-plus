@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -16,34 +16,33 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.widgets.combobox import ComboBox
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
-from pynicotine.gtkgui.widgets.textentry import ComboBox
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import add_css_class
 
 
 class PluginSettings(Dialog):
 
-    def __init__(self, application, plugin_id, plugin_settings):
+    def __init__(self, application):
 
         self.application = application
-        self.plugin_id = plugin_id
-        self.plugin_settings = plugin_settings
+        self.plugin_id = None
+        self.plugin_settings = None
         self.option_widgets = {}
-
-        plugin_name = core.pluginhandler.get_plugin_info(plugin_id).get("Name", plugin_id)
 
         cancel_button = Gtk.Button(label=_("_Cancel"), use_underline=True, visible=True)
         cancel_button.connect("clicked", self.on_cancel)
 
-        ok_button = Gtk.Button(label=_("_OK"), use_underline=True, visible=True)
+        ok_button = Gtk.Button(label=_("_Apply"), use_underline=True, visible=True)
         ok_button.connect("clicked", self.on_ok)
         add_css_class(ok_button, "suggested-action")
 
@@ -51,29 +50,29 @@ class PluginSettings(Dialog):
             orientation=Gtk.Orientation.VERTICAL, width_request=340, visible=True,
             margin_top=14, margin_bottom=14, margin_start=18, margin_end=18, spacing=12
         )
-        scrolled_window = Gtk.ScrolledWindow(
+        self.scrolled_window = Gtk.ScrolledWindow(
             child=self.primary_container, hexpand=True, vexpand=True, min_content_height=300,
             hscrollbar_policy=Gtk.PolicyType.NEVER, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC, visible=True
         )
 
         super().__init__(
             parent=application.preferences,
-            content_box=scrolled_window,
+            content_box=self.scrolled_window,
             buttons_start=(cancel_button,),
             buttons_end=(ok_button,),
             default_button=ok_button,
-            title=_("%s Settings") % plugin_name,
+            close_callback=self.on_close,
             width=600,
             height=425,
-            close_destroy=True,
             show_title_buttons=False
         )
 
-        self._add_options()
+    def destroy(self):
+        self.__dict__.clear()
 
     @staticmethod
     def _generate_label(text):
-        return Gtk.Label(label=text, use_markup=True, hexpand=True, wrap=True, xalign=0, visible=bool(text))
+        return Gtk.Label(label=text, hexpand=True, wrap=True, xalign=0, visible=bool(text))
 
     def _generate_widget_container(self, description, child_widget=None, homogeneous=False,
                                    orientation=Gtk.Orientation.HORIZONTAL):
@@ -130,7 +129,10 @@ class PluginSettings(Dialog):
         group_radios = []
 
         for option_label in items:
-            widget_class = Gtk.CheckButton if GTK_API_VERSION >= 4 else Gtk.RadioButton
+            if GTK_API_VERSION >= 4:
+                widget_class = Gtk.CheckButton
+            else:
+                widget_class = Gtk.RadioButton  # pylint: disable=c-extension-no-member
             radio = widget_class(group=last_radio, label=option_label, receives_default=True, visible=True)
 
             if not last_radio:
@@ -152,7 +154,7 @@ class PluginSettings(Dialog):
 
         label = self._generate_widget_container(description, homogeneous=True)
         self.option_widgets[option_name] = combobox = ComboBox(
-            container=label.get_parent(), label=label, items=((item, item) for item in items)
+            container=label.get_parent(), label=label, items=items
         )
         self.application.preferences.set_widget(combobox, option_value)
 
@@ -197,14 +199,24 @@ class PluginSettings(Dialog):
             self.application.window, parent=scrolled_window, activate_row_callback=self.on_row_activated,
             delete_accelerator_callback=self.on_delete_accelerator,
             columns={
+                # Visible columns
                 "description": {
                     "column_type": "text",
                     "title": description
+                },
+
+                # Hidden data columns
+                "id_data": {
+                    "data_type": GObject.TYPE_INT,
+                    "default_sort_type": "ascending",
+                    "iterator_key": True
                 }
             }
         )
+        rows = [[item, index] for index, item in enumerate(option_value)]
         treeview.description = description
-        self.application.preferences.set_widget(treeview, option_value)
+        treeview.row_id = len(rows)
+        self.application.preferences.set_widget(treeview, rows)
 
         button_container = Gtk.Box(margin_end=6, margin_bottom=6, margin_start=6, margin_top=6,
                                    spacing=6, visible=True)
@@ -250,11 +262,17 @@ class PluginSettings(Dialog):
         label = self._generate_widget_container(description, container, homogeneous=True)
 
         self.option_widgets[option_name] = FileChooserButton(
-            container, window=self.widget, label=label, chooser_type=file_chooser_type
+            container, window=self, label=label, chooser_type=file_chooser_type,
+            show_open_external_button=not self.application.isolated_mode
         )
         self.application.preferences.set_widget(self.option_widgets[option_name], option_value)
 
     def _add_options(self):
+
+        self.option_widgets.clear()
+
+        for child in list(self.primary_container):
+            self.primary_container.remove(child)
 
         for option_name, data in self.plugin_settings.items():
             option_type = data.get("type")
@@ -332,12 +350,24 @@ class PluginSettings(Dialog):
 
         from pynicotine.gtkgui.widgets.treeview import TreeView
         if isinstance(widget, TreeView):
-            return list(widget.iterators)
+            return [
+                widget.get_row_value(iterator, "description")
+                for row_id, iterator in sorted(widget.iterators.items())
+            ]
 
         if isinstance(widget, FileChooserButton):
-            return widget.get_path()
+            return widget.get_path(dynamic=False)
 
         return None
+
+    def update_settings(self, plugin_id, plugin_settings):
+
+        self.plugin_id = plugin_id
+        self.plugin_settings = plugin_settings
+        plugin_name = core.pluginhandler.get_plugin_info(plugin_id).get("Name", plugin_id)
+
+        self.set_title(_("%s Settings") % plugin_name)
+        self._add_options()
 
     def on_add_response(self, window, _response_id, treeview):
 
@@ -346,10 +376,8 @@ class PluginSettings(Dialog):
         if not value:
             return
 
-        if value in treeview.iterators:
-            return
-
-        treeview.add_row([value])
+        treeview.row_id += 1
+        treeview.add_row([value, treeview.row_id])
 
     def on_add(self, _button, treeview):
 
@@ -357,9 +385,10 @@ class PluginSettings(Dialog):
             parent=self,
             title=_("Add Item"),
             message=treeview.description,
+            action_button_label=_("_Add"),
             callback=self.on_add_response,
             callback_data=treeview
-        ).show()
+        ).present()
 
     def on_edit_response(self, window, _response_id, data):
 
@@ -368,29 +397,35 @@ class PluginSettings(Dialog):
         if not value:
             return
 
-        treeview, iterator = data
+        treeview, row_id = data
+        iterator = treeview.iterators[row_id]
 
         treeview.remove_row(iterator)
-        treeview.add_row([value])
+        treeview.add_row([value, row_id])
 
     def on_edit(self, _button=None, treeview=None):
 
         for iterator in treeview.get_selected_rows():
-            value = treeview.get_row_value(iterator, "description")
+            value = treeview.get_row_value(iterator, "description") or ""
+            row_id = treeview.get_row_value(iterator, "id_data")
 
             EntryDialog(
                 parent=self,
                 title=_("Edit Item"),
                 message=treeview.description,
+                action_button_label=_("_Edit"),
                 callback=self.on_edit_response,
-                callback_data=(treeview, iterator),
+                callback_data=(treeview, row_id),
                 default=value
-            ).show()
+            ).present()
             return
 
     def on_remove(self, _button=None, treeview=None):
-        for iterator in reversed(treeview.get_selected_rows()):
-            treeview.remove_row(iterator)
+        for iterator in reversed(list(treeview.get_selected_rows())):
+            row_id = treeview.get_row_value(iterator, "id_data")
+            orig_iterator = treeview.iterators[row_id]
+
+            treeview.remove_row(orig_iterator)
 
     def on_row_activated(self, treeview, *_args):
         self.on_edit(treeview=treeview)
@@ -403,13 +438,15 @@ class PluginSettings(Dialog):
 
     def on_ok(self, *_args):
 
+        plugin = core.pluginhandler.enabled_plugins[self.plugin_id]
+
         for name in self.plugin_settings:
             value = self._get_widget_data(self.option_widgets[name])
 
             if value is not None:
-                config.sections["plugins"][self.plugin_id.lower()][name] = value
-
-        core.pluginhandler.plugin_settings(
-            self.plugin_id, core.pluginhandler.enabled_plugins[self.plugin_id])
+                plugin.settings[name] = value
 
         self.close()
+
+    def on_close(self, *_args):
+        self.scrolled_window.get_vadjustment().set_value(0)

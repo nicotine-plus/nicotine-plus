@@ -120,7 +120,7 @@ class Plugin(BasePlugin):
             from urllib.request import urlopen
             with urlopen((f"https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails"
                           f"&id={video_id}&key={api_key}"), timeout=10) as response:
-                response_body = response.read().decode("utf-8")
+                response_body = response.read().decode("utf-8", "replace")
 
         except Exception as error:
             self.log("Failed to connect to www.googleapis.com: %s", error)
@@ -130,14 +130,14 @@ class Plugin(BasePlugin):
             data = json.loads(response_body)
 
         except Exception as error:
-            self.log("Failed to parse response from www.googleapis.com: %s", str(error))
+            self.log("Failed to parse response from www.googleapis.com: %s", error)
             return None
 
         if "error" in data:
             error_message = data["error"].get("message", False)
             if not error_message:
                 # This should not occur
-                error_message = str(data["error"])
+                error_message = data["error"]
             self.log(error_message)
             return None
 

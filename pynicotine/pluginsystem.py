@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -25,6 +25,7 @@ import sys
 import time
 
 from ast import literal_eval
+from collections import defaultdict
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -322,7 +323,7 @@ class ResponseThrottle:
         last_request = self.plugin_usage[room]["last_request"]
 
         try:
-            _ip_address, port = self.core.user_addresses[nick]
+            _ip_address, port = self.core.users.addresses[nick]
         except Exception:
             port = True
 
@@ -358,7 +359,8 @@ class ResponseThrottle:
                 willing_to_respond, reason = False, "Responded in multiple rooms enough"
 
         if self.logging and not willing_to_respond:
-            log.add_debug(f"{self.plugin_name} plugin request rejected - room '{room}', nick '{nick}' - {reason}")
+            log.add_debug("%s plugin request rejected - room '%s', nick '%s' - %s",
+                          (self.plugin_name, room, nick, reason))
 
         return willing_to_respond
 
@@ -368,8 +370,10 @@ class ResponseThrottle:
 
 
 class PluginHandler:
+    __slots__ = ("plugin_folders", "enabled_plugins", "command_source", "commands",
+                 "user_plugin_folder", "_load_now_playing_sender")
 
-    def __init__(self):
+    def __init__(self, isolated_mode=False):
 
         self.plugin_folders = []
         self.enabled_plugins = {}
@@ -379,6 +383,11 @@ class PluginHandler:
             "private_chat": {},
             "cli": {}
         }
+        self._load_now_playing_sender = (
+            not isolated_mode
+            and sys.platform not in {"win32", "darwin"}
+            and "SNAP_NAME" not in os.environ
+        )
 
         # Load system-wide plugins
         prefix = os.path.dirname(os.path.realpath(__file__))
@@ -408,7 +417,7 @@ class PluginHandler:
             return
 
         to_enable = config.sections["plugins"]["enabled"]
-        log.add_debug(f"Enabled plugin(s): {', '.join(to_enable)}")
+        log.add_debug("Enabled plugin(s): %s", ', '.join(to_enable))
 
         for plugin in to_enable:
             self.enable_plugin(plugin)
@@ -423,7 +432,7 @@ class PluginHandler:
             self.disable_plugin(plugin, is_permanent=False)
 
     def _cli_command(self, command, args):
-        self.trigger_cli_command_event(command, args or "")
+        self.trigger_cli_command_event(command, args)
 
     def update_completions(self, plugin):
 
@@ -448,8 +457,7 @@ class PluginHandler:
 
     def _import_plugin_instance(self, plugin_name):
 
-        if (plugin_name == "now_playing_sender" and
-                (sys.platform in {"win32", "darwin"} or "SNAP_NAME" in os.environ)):
+        if plugin_name == "now_playing_sender" and not self._load_now_playing_sender:
             # MPRIS is not available on Windows and macOS
             return None
 
@@ -553,8 +561,8 @@ class PluginHandler:
                 for command, _func in plugin_commands:
                     if command not in interface_commands:
                         interface_commands[command] = None
-                        plugin.log((f"/{command}: {attribute_name} is deprecated, please use the new "
-                                    f"command system. See pynicotine/plugins/ in the Git repository for examples."))
+                        plugin.log(f"/{command}: {attribute_name} is deprecated, please use the new "
+                                   f"command system. See pynicotine/plugins/ in the Git repository for examples.")
 
             self.update_completions(plugin)
 
@@ -586,8 +594,7 @@ class PluginHandler:
                     if file_path == "core_commands":
                         continue
 
-                    if (file_path == "now_playing_sender" and
-                            (sys.platform in {"win32", "darwin"} or "SNAP_NAME" in os.environ)):
+                    if file_path == "now_playing_sender" and not self._load_now_playing_sender:
                         # MPRIS is not available on Windows and macOS
                         continue
 
@@ -660,6 +667,22 @@ class PluginHandler:
                     # Builtin module
                     continue
 
+            # Remove any event callbacks registered by the plugin
+            for callbacks in events._callbacks.values():  # pylint: disable=protected-access
+                for function in callbacks[:]:
+                    if function.__module__ is not None and function.__module__.split(".", 1)[0] == plugin_name:
+                        callbacks.remove(function)
+
+            # Remove any event callbacks scheduled by the plugin
+            for event_id, event in events._scheduler_events.copy().items():  # pylint: disable=protected-access
+                function = event.callback
+
+                if function is None:
+                    continue
+
+                if function.__module__ is not None and function.__module__.split(".", 1)[0] == plugin_name:
+                    events.cancel_scheduled(event_id)
+
             if is_permanent and plugin_name in config.sections["plugins"]["enabled"]:
                 config.sections["plugins"]["enabled"].remove(plugin_name)
 
@@ -677,6 +700,10 @@ class PluginHandler:
             return not self.disable_plugin(plugin_name)
 
         return self.enable_plugin(plugin_name)
+
+    def reload_plugin(self, plugin_name):
+        self.disable_plugin(plugin_name)
+        self.enable_plugin(plugin_name)
 
     def get_plugin_settings(self, plugin_name):
 
@@ -701,7 +728,7 @@ class PluginHandler:
         with open(encode_path(info_path), encoding="utf-8") as file_handle:
             for line in file_handle:
                 try:
-                    key, value = line.split("=", 1)
+                    key, _separator, value = line.partition("=")
                     key = key.strip()
                     value = value.strip()
 
@@ -718,47 +745,37 @@ class PluginHandler:
         return plugin_info
 
     @staticmethod
-    def show_plugin_error(plugin_name, exc_type, exc_value, exc_traceback):
+    def show_plugin_error(plugin_name, error):
 
         from traceback import format_tb
 
         log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
                   "Trace: %(trace)s"), {
             "module": plugin_name,
-            "errortype": exc_type,
-            "error": exc_value,
-            "trace": "".join(format_tb(exc_traceback))
+            "errortype": type(error),
+            "error": error,
+            "trace": "".join(format_tb(error.__traceback__))
         })
 
     def plugin_settings(self, plugin_name, plugin):
 
         plugin_name = plugin_name.lower()
 
-        try:
-            if not plugin.settings:
-                return
+        if not plugin.settings:
+            return
 
-            if plugin_name not in config.sections["plugins"]:
-                config.sections["plugins"][plugin_name] = plugin.settings
+        previous_settings = config.sections["plugins"].get(plugin_name, {})
 
-            for i in plugin.settings:
-                if i not in config.sections["plugins"][plugin_name]:
-                    config.sections["plugins"][plugin_name][i] = plugin.settings[i]
+        for key in previous_settings:
+            if key not in plugin.settings:
+                log.add_debug("Stored setting '%s' is no longer present in the '%s' plugin",
+                              (key, plugin_name))
+                continue
 
-            customsettings = config.sections["plugins"][plugin_name]
+            plugin.settings[key] = previous_settings[key]
 
-            for key in customsettings:
-                if key in plugin.settings:
-                    plugin.settings[key] = customsettings[key]
-
-                else:
-                    log.add_debug("Stored setting '%(key)s' is no longer present in the '%(name)s' plugin", {
-                        "key": key,
-                        "name": plugin_name
-                    })
-
-        except KeyError:
-            log.add_debug("No stored settings found for %s", plugin.human_name)
+        # Persist plugin settings in the config
+        config.sections["plugins"][plugin_name] = plugin.settings
 
     def get_command_list(self, command_interface):
         """Returns a list of every command and alias available.
@@ -785,7 +802,7 @@ class PluginHandler:
         Currently used for the /help command.
         """
 
-        command_groups = {}
+        command_groups = defaultdict(list)
 
         for command, data in self.commands.get(command_interface).items():
             aliases = []
@@ -806,9 +823,6 @@ class PluginHandler:
                     and not any(search_query in parameter for parameter in parameters)
                     and search_query not in description.lower()):
                 continue
-
-            if group not in command_groups:
-                command_groups[group] = []
 
             command_groups[group].append((command, aliases, parameters, description))
 
@@ -913,8 +927,8 @@ class PluginHandler:
                             command_found = True
                             break
 
-            except Exception:
-                self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
+            except Exception as error:
+                self.show_plugin_error(module, error)
                 plugin = None
                 break
 
@@ -942,8 +956,8 @@ class PluginHandler:
             try:
                 return_value = getattr(plugin, function_name)(*args)
 
-            except Exception:
-                self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
+            except Exception as error:
+                self.show_plugin_error(module, error)
                 continue
 
             if return_value is None:
@@ -964,8 +978,7 @@ class PluginHandler:
             if return_value == returncode["pass"]:
                 continue
 
-            log.add_debug("Plugin %(module)s returned something weird, '%(value)s', ignoring",
-                          {"module": module, "value": return_value})
+            log.add_debug("Plugin %s returned something weird, '%s', ignoring", (module, return_value))
 
         return args
 
@@ -979,7 +992,7 @@ class PluginHandler:
         self._trigger_event("public_room_message_notification", (room, user, line))
 
     def incoming_private_chat_event(self, user, line):
-        if user != core.login_username:
+        if user != core.users.login_username:
             # dont trigger the scripts on our own talking - we've got "Outgoing" for that
             return self._trigger_event("incoming_private_chat_event", (user, line))
 

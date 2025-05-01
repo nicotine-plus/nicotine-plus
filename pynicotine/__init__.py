@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -18,9 +18,9 @@
 
 __application_name__ = "Nicotine+"
 __application_id__ = "org.nicotine_plus.Nicotine"
-__version__ = "3.3.0rc1"
+__version__ = "3.4.0.dev1"
 __author__ = "Nicotine+ Team"
-__copyright__ = """© 2004–2023 Nicotine+ Contributors
+__copyright__ = """© 2004–2025 Nicotine+ Contributors
 © 2003–2004 Nicotine Contributors
 © 2001–2003 PySoulSeek Contributors"""
 __website_url__ = "https://nicotine-plus.org"
@@ -29,7 +29,6 @@ __port_checker_url__ = "https://www.slsknet.org/porttest.php?port=%s"
 __issue_tracker_url__ = "https://github.com/nicotine-plus/nicotine-plus/issues"
 __translations_url__ = "https://nicotine-plus.org/doc/TRANSLATIONS"
 
-import argparse
 import io
 import os
 import sys
@@ -43,6 +42,8 @@ from pynicotine.logfacility import log
 
 def check_arguments():
     """Parse command line arguments specified by the user."""
+
+    import argparse
 
     parser = argparse.ArgumentParser(
         prog="nicotine", description=_("Graphical client for the Soulseek peer-to-peer network"),
@@ -90,6 +91,9 @@ def check_arguments():
     # Disables critical error dialog; used for integration tests
     parser.add_argument("--ci-mode", action="store_true", help=argparse.SUPPRESS)
 
+    # Disables features that require external applications, useful for e.g. Docker containers
+    parser.add_argument("--isolated", action="store_true", help=argparse.SUPPRESS)
+
     args = parser.parse_args()
     multi_instance = False
 
@@ -105,7 +109,7 @@ def check_arguments():
     core.cli_interface_address = args.bindip
     core.cli_listen_port = args.port
 
-    return args.headless, args.hidden, args.ci_mode, args.rescan, multi_instance
+    return args.headless, args.hidden, args.ci_mode, args.isolated, args.rescan, multi_instance
 
 
 def check_python_version():
@@ -140,6 +144,11 @@ def set_up_python():
 
         # Support file scanning process in frozen binaries
         multiprocessing.freeze_support()
+
+        # Prioritize dlls in the 'lib' subfolder over system dlls, to avoid issues with conflicting dlls
+        if sys.platform == "win32":
+            import ctypes
+            ctypes.windll.kernel32.SetDllDirectoryW(os.path.join(executable_folder, "lib"))
 
 
 def rename_process(new_name, debug_info=False):
@@ -194,14 +203,17 @@ def run():
     set_up_python()
     rename_process(b"nicotine")
 
-    headless, hidden, ci_mode, rescan, multi_instance = check_arguments()
+    headless, hidden, ci_mode, isolated_mode, rescan, multi_instance = check_arguments()
     error = check_python_version()
 
     if error:
         print(error)
         return 1
 
-    core.init_components(enabled_components={"cli", "shares"} if rescan else None)
+    core.init_components(
+        enabled_components={"cli", "shares"} if rescan else None,
+        isolated_mode=isolated_mode
+    )
 
     # Dump tracebacks for C modules (in addition to pure Python code)
     try:
@@ -220,7 +232,7 @@ def run():
     # Initialize GTK-based GUI
     if not headless:
         from pynicotine import gtkgui as application
-        exit_code = application.run(hidden, ci_mode, multi_instance)
+        exit_code = application.run(hidden, ci_mode, isolated_mode, multi_instance)
 
         if exit_code is not None:
             return exit_code

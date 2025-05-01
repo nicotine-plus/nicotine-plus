@@ -12,6 +12,9 @@
         <property name="visible">True</property>
       </object>
     </child>
+    <style>
+      <class name="image-button"/>
+    </style>
   </object>
   <object class="GtkBox" id="container">
     <property name="orientation">vertical</property>
@@ -462,6 +465,7 @@
                 <child>
                   <object class="GtkEntry" id="color_tab_entry">
                     <property name="hexpand">True</property>
+                    <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
                     <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                     <property name="visible">True</property>
@@ -501,6 +505,7 @@
                 <child>
                   <object class="GtkEntry" id="color_tab_changed_entry">
                     <property name="hexpand">True</property>
+                    <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
                     <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                     <property name="visible">True</property>
@@ -540,6 +545,7 @@
                 <child>
                   <object class="GtkEntry" id="color_tab_highlighted_entry">
                     <property name="hexpand">True</property>
+                    <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
                     <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                     <property name="visible">True</property>
@@ -685,6 +691,7 @@
                           <object class="GtkCheckButton" id="tab_visible_userlist_toggle">
                             <property name="label" translatable="yes">Buddies</property>
                             <property name="visible">True</property>
+                            <signal name="toggled" handler="on_buddy_list_tab_toggled"/>
                           </object>
                         </child>
                       </object>
@@ -1002,45 +1009,7 @@
                 <child>
                   <object class="GtkEntry" id="color_list_text_entry">
                     <property name="hexpand">True</property>
-                    <property name="secondary-icon-name">edit-undo-symbolic</property>
-                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
-                    <property name="visible">True</property>
-                    <property name="width-chars">4</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="homogeneous">True</property>
-            <property name="spacing">12</property>
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="label" translatable="yes">Queued search result text color:</property>
-                <property name="mnemonic-widget">color_queued_result_text_button</property>
-                <property name="visible">True</property>
-                <property name="wrap">True</property>
-                <property name="wrap-mode">word-char</property>
-                <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkBox">
-                <property name="spacing">12</property>
-                <property name="valign">center</property>
-                <property name="visible">True</property>
-                <child>
-                  <object class="GtkColorButton" id="color_queued_result_text_button">
-                    <property name="valign">center</property>
-                    <property name="visible">True</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkEntry" id="color_queued_result_text_entry">
-                    <property name="hexpand">True</property>
+                    <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
                     <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                     <property name="visible">True</property>
@@ -1142,6 +1111,7 @@
                 <child>
                   <object class="GtkEntry" id="color_chat_remote_entry">
                     <property name="hexpand">True</property>
+                    <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
                     <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                     <property name="visible">True</property>
@@ -1181,6 +1151,7 @@
                 <child>
                   <object class="GtkEntry" id="color_chat_local_entry">
                     <property name="hexpand">True</property>
+                    <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
                     <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                     <property name="visible">True</property>
@@ -1220,6 +1191,7 @@
                 <child>
                   <object class="GtkEntry" id="color_chat_command_entry">
                     <property name="hexpand">True</property>
+                    <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
                     <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                     <property name="visible">True</property>
@@ -1259,6 +1231,7 @@
                 <child>
                   <object class="GtkEntry" id="color_chat_action_entry">
                     <property name="hexpand">True</property>
+                    <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
                     <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                     <property name="visible">True</property>
@@ -1298,6 +1271,7 @@
                 <child>
                   <object class="GtkEntry" id="color_chat_highlighted_entry">
                     <property name="hexpand">True</property>
+                    <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
                     <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                     <property name="visible">True</property>
@@ -1337,6 +1311,7 @@
                 <child>
                   <object class="GtkEntry" id="color_url_entry">
                     <property name="hexpand">True</property>
+                    <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
                     <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                     <property name="visible">True</property>
@@ -1396,6 +1371,7 @@
                 <child>
                   <object class="GtkEntry" id="color_status_online_entry">
                     <property name="hexpand">True</property>
+                    <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
                     <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                     <property name="visible">True</property>
@@ -1435,6 +1411,7 @@
                 <child>
                   <object class="GtkEntry" id="color_status_away_entry">
                     <property name="hexpand">True</property>
+                    <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
                     <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                     <property name="visible">True</property>
@@ -1474,6 +1451,7 @@
                 <child>
                   <object class="GtkEntry" id="color_status_offline_entry">
                     <property name="hexpand">True</property>
+                    <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
                     <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                     <property name="visible">True</property>
@@ -1533,6 +1511,7 @@
                 <child>
                   <object class="GtkEntry" id="color_input_background_entry">
                     <property name="hexpand">True</property>
+                    <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
                     <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                     <property name="visible">True</property>
@@ -1572,6 +1551,7 @@
                 <child>
                   <object class="GtkEntry" id="color_input_text_entry">
                     <property name="hexpand">True</property>
+                    <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
                     <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                     <property name="visible">True</property>
@@ -1638,6 +1618,9 @@
                         <property name="visible">True</property>
                       </object>
                     </child>
+                    <style>
+                      <class name="image-button"/>
+                    </style>
                   </object>
                 </child>
                 <style>
@@ -1683,6 +1666,9 @@
                         <property name="visible">True</property>
                       </object>
                     </child>
+                    <style>
+                      <class name="image-button"/>
+                    </style>
                   </object>
                 </child>
                 <style>
@@ -1728,6 +1714,9 @@
                         <property name="visible">True</property>
                       </object>
                     </child>
+                    <style>
+                      <class name="image-button"/>
+                    </style>
                   </object>
                 </child>
                 <style>
@@ -1773,6 +1762,9 @@
                         <property name="visible">True</property>
                       </object>
                     </child>
+                    <style>
+                      <class name="image-button"/>
+                    </style>
                   </object>
                 </child>
                 <style>
@@ -1818,6 +1810,9 @@
                         <property name="visible">True</property>
                       </object>
                     </child>
+                    <style>
+                      <class name="image-button"/>
+                    </style>
                   </object>
                 </child>
                 <style>
@@ -1863,6 +1858,9 @@
                         <property name="visible">True</property>
                       </object>
                     </child>
+                    <style>
+                      <class name="image-button"/>
+                    </style>
                   </object>
                 </child>
                 <style>
@@ -1908,6 +1906,9 @@
                         <property name="visible">True</property>
                       </object>
                     </child>
+                    <style>
+                      <class name="image-button"/>
+                    </style>
                   </object>
                 </child>
                 <style>

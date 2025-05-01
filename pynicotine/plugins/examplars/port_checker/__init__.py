@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -53,11 +53,10 @@ class Plugin(BasePlugin):
         }
         self.throttle = ResponseThrottle(self.core, self.human_name)
         self.checkroom = "nicotine"
-        self.pending_user = ""
 
     def incoming_public_chat_notification(self, room, user, line):
 
-        if room != self.checkroom or not self.settings["keyword_enabled"] or self.core.login_username == user:
+        if room != self.checkroom or not self.settings["keyword_enabled"] or self.core.users.login_username == user:
             return
 
         if not self.throttle.ok_to_respond(room, user, line, 10):
@@ -67,25 +66,13 @@ class Plugin(BasePlugin):
             self.log("%s requested a port scan", user)
             self.resolve(user, True)
 
-    def user_resolve_notification(self, user, ip_address, port, _country):
-
-        if not self.pending_user or user not in self.pending_user:
-            return
-
-        user, announce = self.pending_user
-        self.pending_user = ()
-        threading.Thread(target=self.check_port, args=(user, ip_address, port, announce)).start()
-
     def resolve(self, user, announce):
 
-        user_address = self.core.user_addresses.get(user)
+        user_address = self.core.users.addresses.get(user)
 
         if user_address is not None:
             ip_address, port = user_address
             threading.Thread(target=self.check_port, args=(user, ip_address, port, announce)).start()
-        else:
-            self.pending_user = user, announce
-            self.core.request_ip_address(user)
 
     def check_port(self, user, ip_address, port, announce):
 

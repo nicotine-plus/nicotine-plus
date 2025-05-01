@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -26,6 +26,7 @@ from pynicotine.utils import execute_command
 
 
 class Notifications:
+    __slots__ = ("tts", "_tts_thread")
 
     def __init__(self):
 
@@ -86,7 +87,7 @@ class Notifications:
         while self.tts:
             try:
                 message = self.tts.popleft()
-                execute_command(config.sections["ui"]["speechcommand"], message, background=False)
+                execute_command(config.sections["ui"]["speechcommand"], message, background=False, hidden=True)
 
             except Exception as error:
                 log.add(_("Text-to-speech for message failed: %s"), error)

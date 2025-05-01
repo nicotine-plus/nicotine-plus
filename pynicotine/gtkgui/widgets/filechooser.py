@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -39,9 +39,7 @@ class FileChooser:
     def __init__(self, parent, callback, callback_data=None, title=_("Select a File"),
                  initial_folder=None, select_multiple=False):
 
-        if not initial_folder:
-            initial_folder = os.path.expanduser("~")
-        else:
+        if initial_folder:
             initial_folder = os.path.normpath(os.path.expandvars(initial_folder))
             initial_folder_encoded = encode_path(initial_folder)
 
@@ -69,7 +67,8 @@ class FileChooser:
                 self.select_method = self.file_chooser.open
                 self.finish_method = self.file_chooser.open_finish
 
-            self.file_chooser.set_initial_folder(Gio.File.new_for_path(initial_folder))
+            if initial_folder:
+                self.file_chooser.set_initial_folder(Gio.File.new_for_path(initial_folder))
 
         except AttributeError:
             # GTK < 4.10
@@ -84,12 +83,34 @@ class FileChooser:
             self.file_chooser.connect("response", self.on_response)
 
             if GTK_API_VERSION >= 4:
-                self.file_chooser.set_current_folder(Gio.File.new_for_path(initial_folder))
+                if initial_folder:
+                    self.file_chooser.set_current_folder(Gio.File.new_for_path(initial_folder))
                 return
 
             # Display network shares
             self.file_chooser.set_local_only(False)  # pylint: disable=no-member
-            self.file_chooser.set_current_folder(initial_folder)
+
+            if initial_folder:
+                self.file_chooser.set_current_folder(initial_folder)
+
+    def _get_selected_paths(self, selected_file=None, selected_files=None):
+
+        selected = []
+
+        if selected_files:
+            for i_file in selected_files:
+                path = i_file.get_path()
+
+                if path:
+                    selected.append(os.path.normpath(path))
+
+        elif selected_file is not None:
+            path = selected_file.get_path()
+
+            if path:
+                selected.append(os.path.normpath(path))
+
+        return selected
 
     def on_finish(self, _dialog, result):
 
@@ -103,10 +124,12 @@ class FileChooser:
             self.destroy()
             return
 
+        selected = []
+
         if self.select_multiple:
-            selected = [os.path.normpath(i.get_path()) for i in selected_result]
+            selected = self._get_selected_paths(selected_files=selected_result)
         else:
-            selected = os.path.normpath(selected_result.get_path())
+            selected = self._get_selected_paths(selected_file=selected_result)
 
         if selected:
             self.callback(selected, self.callback_data)
@@ -123,17 +146,16 @@ class FileChooser:
             return
 
         if self.select_multiple:
-            selected = [os.path.normpath(i.get_path()) for i in self.file_chooser.get_files()]
+            selected = self._get_selected_paths(selected_files=self.file_chooser.get_files())
         else:
-            selected_file = self.file_chooser.get_file()
-            selected = os.path.normpath(selected_file.get_path()) if selected_file else None
+            selected = self._get_selected_paths(selected_file=self.file_chooser.get_file())
 
         if selected:
             self.callback(selected, self.callback_data)
 
         self.destroy()
 
-    def show(self):
+    def present(self):
 
         FileChooser.active_chooser = self
 
@@ -240,11 +262,12 @@ class FileChooserSave(FileChooser):
 class FileChooserButton:
 
     def __init__(self, container, window, label=None, end_button=None, chooser_type="file",
-                 is_flat=False, selected_function=None):
+                 is_flat=False, show_open_external_button=True, selected_function=None):
 
         self.window = window
         self.chooser_type = chooser_type
         self.selected_function = selected_function
+        self.show_open_external_button = show_open_external_button
         self.path = ""
 
         widget = Gtk.Box(visible=True)
@@ -256,9 +279,9 @@ class FileChooserButton:
             label.set_mnemonic_widget(self.chooser_button)
 
         icon_names = {
-            "file": "image-x-generic-symbolic",
+            "file": "folder-documents-symbolic",
             "folder": "folder-symbolic",
-            "image": "image-x-generic-symbolic"
+            "image": "folder-pictures-symbolic"
         }
 
         label_container = Gtk.Box(spacing=6, visible=True)
@@ -277,7 +300,7 @@ class FileChooserButton:
             label_container.append(self.label)              # pylint: disable=no-member
             self.chooser_button.set_child(label_container)  # pylint: disable=no-member
 
-            self.open_folder_button.set_icon_name("folder-open-symbolic")  # pylint: disable=no-member
+            self.open_folder_button.set_icon_name("external-link-symbolic")  # pylint: disable=no-member
 
             if end_button:
                 widget.append(end_button)                   # pylint: disable=no-member
@@ -289,7 +312,8 @@ class FileChooserButton:
             label_container.add(self.label)                 # pylint: disable=no-member
             self.chooser_button.add(label_container)        # pylint: disable=no-member
 
-            self.open_folder_button.set_image(Gtk.Image(icon_name="folder-open-symbolic"))  # pylint: disable=no-member
+            self.open_folder_button.set_image(              # pylint: disable=no-member
+                Gtk.Image(icon_name="external-link-symbolic"))
 
             if end_button:
                 widget.add(end_button)                      # pylint: disable=no-member
@@ -304,20 +328,24 @@ class FileChooserButton:
 
         self.open_folder_button.connect("clicked", self.on_open_folder)
 
+    def destroy(self):
+        self.__dict__.clear()
+
     def on_open_file_chooser_response(self, selected, _data):
 
-        if selected.startswith(config.data_folder_path):
-            # Use a dynamic path that can be expanded with os.path.expandvars()
-            selected = selected.replace(config.data_folder_path, "${NICOTINE_DATA_HOME}", 1)
+        selected_path = next(iter(selected), None)
 
-        self.set_path(selected)
+        if not selected_path:
+            return
+
+        self.set_path(selected_path)
 
         try:
             self.selected_function()
 
         except TypeError:
             # No function defined
-            return
+            pass
 
     def on_open_file_chooser(self, *_args):
 
@@ -326,7 +354,7 @@ class FileChooserButton:
                 parent=self.window,
                 callback=self.on_open_file_chooser_response,
                 initial_folder=self.path
-            ).show()
+            ).present()
             return
 
         folder_path = os.path.dirname(self.path) if self.path else None
@@ -336,20 +364,28 @@ class FileChooserButton:
                 parent=self.window,
                 callback=self.on_open_file_chooser_response,
                 initial_folder=folder_path
-            ).show()
+            ).present()
             return
 
         FileChooser(
             parent=self.window,
             callback=self.on_open_file_chooser_response,
             initial_folder=folder_path
-        ).show()
+        ).present()
 
     def on_open_folder(self, *_args):
-        folder_path = self.path if self.chooser_type == "folder" else os.path.dirname(self.path)
+
+        path = os.path.expandvars(self.path)
+        folder_path = os.path.expandvars(path if self.chooser_type == "folder" else os.path.dirname(path))
+
         open_folder_path(folder_path, create_folder=True)
 
-    def get_path(self):
+    def get_path(self, dynamic=True):
+
+        if dynamic and self.path.startswith(config.data_folder_path):
+            # Use a dynamic path that can be expanded with os.path.expandvars()
+            return self.path.replace(config.data_folder_path, "${NICOTINE_DATA_HOME}", 1)
+
         return self.path
 
     def set_path(self, path):
@@ -361,7 +397,7 @@ class FileChooserButton:
 
         self.chooser_button.set_tooltip_text(os.path.expandvars(path))  # Show path without env variables
         self.label.set_label(os.path.basename(path))
-        self.open_folder_button.set_visible(True)
+        self.open_folder_button.set_visible(self.show_open_external_button)
 
     def clear(self):
 

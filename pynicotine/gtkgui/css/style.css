@@ -42,12 +42,12 @@
 
 .title-1 {
     font-weight: 800;
-    font-size: 1.83em;
+    font-size: 181%;
 }
 
 .title-2 {
     font-weight: 800;
-    font-size: 1.35em;
+    font-size: 136%;
 }
 
 .heading {
@@ -75,7 +75,8 @@
 
 /* Tweaks */
 
-flowbox, flowboxchild {
+flowbox:not(.emoji-toolbar),
+flowbox:not(.emoji-toolbar) flowboxchild {
     /* GTK adds unwanted padding to flowbox children by default */
     border: 0;
     background: inherit;
@@ -87,9 +88,20 @@ scrollbar {
     margin: 0;
 }
 
-.search-view treeview:disabled {
-    /* Search results with no free slots have no style by default */
-    color: unset;
+treeview .cell:disabled {
+    /* Grey out disabled rows */
+    color: alpha(alpha(currentColor, 1.12), .6);
+}
+
+treeview .cell:disabled:selected {
+    /* Grey out disabled rows */
+    color: alpha(alpha(currentColor, 1.12), .7);
+}
+
+treeview .progressbar:disabled {
+    /* Grey out disabled progress bars */
+    background: alpha(@theme_selected_bg_color, .5);
+    color: alpha(alpha(currentColor, 1.12), .8);
 }
 
 treeview button > box {
@@ -117,6 +129,7 @@ progressbar.osd trough,
 progressbar.osd progress {
     /* Make overlay progress bars slightly more legible */
     min-height: 4px;
+    min-width: 4px;
 }
 
 treeview button:not(:last-child):dir(ltr) > box,

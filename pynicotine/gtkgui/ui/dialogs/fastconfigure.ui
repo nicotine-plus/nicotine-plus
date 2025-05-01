@@ -2,16 +2,57 @@
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkButton" id="previous_button">
-    <property name="label" translatable="yes">_Previous</property>
-    <property name="use-underline">True</property>
     <property name="visible">True</property>
     <signal name="clicked" handler="on_previous"/>
+    <child>
+      <object class="GtkBox">
+        <property name="margin-end">3</property>
+        <property name="spacing">6</property>
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkImage">
+            <property name="icon-name">go-previous-symbolic</property>
+            <property name="visible">True</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="previous_label">
+            <property name="mnemonic-widget">previous_button</property>
+            <property name="use-underline">True</property>
+            <property name="visible">True</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <style>
+      <class name="image-text-button"/>
+    </style>
   </object>
   <object class="GtkButton" id="next_button">
-    <property name="use-underline">True</property>
     <property name="visible">True</property>
     <signal name="clicked" handler="on_next"/>
+    <child>
+      <object class="GtkBox">
+        <property name="margin-start">3</property>
+        <property name="spacing">4</property>
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkLabel" id="next_label">
+            <property name="mnemonic-widget">next_button</property>
+            <property name="use-underline">True</property>
+            <property name="visible">True</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="icon-name">go-next-symbolic</property>
+            <property name="visible">True</property>
+          </object>
+        </child>
+      </object>
+    </child>
     <style>
+      <class name="image-text-button"/>
       <class name="suggested-action"/>
     </style>
   </object>
@@ -85,17 +126,30 @@
             <property name="visible">True</property>
             <signal name="clicked" handler="on_next"/>
             <child>
-              <object class="GtkLabel">
-                <property name="label" translatable="yes">_Set Up…</property>
-                <property name="margin-end">24</property>
-                <property name="margin-start">24</property>
-                <property name="mnemonic-widget">set_up_button</property>
-                <property name="use-underline">True</property>
+              <object class="GtkBox">
+                <property name="margin-end">18</property>
+                <property name="margin-start">21</property>
+                <property name="spacing">6</property>
                 <property name="visible">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">_Next</property>
+                    <property name="mnemonic-widget">set_up_button</property>
+                    <property name="use-underline">True</property>
+                    <property name="visible">True</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkImage">
+                    <property name="icon-name">go-next-symbolic</property>
+                    <property name="visible">True</property>
+                  </object>
+                </child>
               </object>
             </child>
             <style>
               <class name="circular"/>
+              <class name="image-text-button"/>
               <class name="suggested-action"/>
             </style>
           </object>
@@ -116,7 +170,7 @@
         <child>
           <object class="GtkImage">
             <property name="halign">center</property>
-            <property name="icon-name">dialog-password-symbolic</property>
+            <property name="icon-name">avatar-default-symbolic</property>
             <property name="pixel-size">64</property>
             <property name="visible">True</property>
           </object>
@@ -125,7 +179,7 @@
           <object class="GtkBox">
             <property name="orientation">vertical</property>
             <property name="spacing">24</property>
-            <property name="visible">True</property>
+            <property name="visible" bind-source="invalid_password_label" bind-property="visible" bind-flags="bidirectional|invert-boolean|sync-create"/>
             <child>
               <object class="GtkLabel">
                 <property name="label" translatable="yes">To create a new Soulseek account, fill in your desired username and password. If you already have an account, fill in your existing login details.</property>
@@ -149,6 +203,15 @@
           </object>
         </child>
         <child>
+          <object class="GtkLabel" id="invalid_password_label">
+            <property name="max-width-chars">60</property>
+            <property name="selectable">True</property>
+            <property name="visible">False</property>
+            <property name="wrap">True</property>
+            <property name="xalign">0</property>
+          </object>
+        </child>
+        <child>
           <object class="GtkFlowBox">
             <property name="column-spacing">18</property>
             <property name="max-children-per-line">2</property>
@@ -167,7 +230,7 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkLabel">
-                        <property name="label" translatable="yes">Username</property>
+                        <property name="label" translatable="yes">Username: </property>
                         <property name="mnemonic-widget">username_entry</property>
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
@@ -178,6 +241,8 @@
                     </child>
                     <child>
                       <object class="GtkEntry" id="username_entry">
+                        <property name="input-hints">no-emoji</property>
+                        <property name="truncate-multiline">True</property>
                         <property name="visible">True</property>
                         <property name="width-chars">20</property>
                         <signal name="activate" handler="on_user_entry_activate"/>
@@ -200,7 +265,7 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkLabel">
-                        <property name="label" translatable="yes">Password</property>
+                        <property name="label" translatable="yes">Password: </property>
                         <property name="mnemonic-widget">password_entry</property>
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
@@ -211,6 +276,7 @@
                     </child>
                     <child>
                       <object class="GtkEntry" id="password_entry">
+                        <property name="truncate-multiline">True</property>
                         <property name="visibility">False</property>
                         <property name="visible">True</property>
                         <property name="width-chars">20</property>

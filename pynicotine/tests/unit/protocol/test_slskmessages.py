@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -29,7 +29,7 @@ from pynicotine.slskmessages import LeaveGlobalRoom
 from pynicotine.slskmessages import Login
 from pynicotine.slskmessages import NotifyPrivileges
 from pynicotine.slskmessages import PrivateRoomAddUser
-from pynicotine.slskmessages import PrivateRoomDismember
+from pynicotine.slskmessages import PrivateRoomCancelMembership
 from pynicotine.slskmessages import PrivateRoomDisown
 from pynicotine.slskmessages import PrivateRoomRemoveUser
 from pynicotine.slskmessages import PrivateRoomSomething
@@ -324,11 +324,11 @@ class PrivateRoomAddUserMessageTest(TestCase):
             message)
 
 
-class PrivateRoomDismemberMessageTest(TestCase):
+class PrivateRoomCancelMembershipMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = PrivateRoomDismember(room="room4")
+        obj = PrivateRoomCancelMembership(room="room4")
 
         # Act
         message = obj.make_network_message()
@@ -385,11 +385,11 @@ class PrivateRoomRemoveUserMessageTest(TestCase):
 
     def test_parse_network_message(self):
         # Arrange
-        message = memoryview(b"\x05\x00\x00\x00room7\x05\x00\x00\x00admin")
+        message = b"\x05\x00\x00\x00room7\x05\x00\x00\x00admin"
 
         # Act
         obj = PrivateRoomRemoveUser()
-        obj.parse_network_message(message)
+        obj.parse_network_message(memoryview(message))
 
         # Assert
         self.assertEqual("room7", obj.room)

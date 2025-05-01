@@ -6,11 +6,10 @@ jobs:
 
   debian:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
@@ -30,42 +29,60 @@ jobs:
           cp -Lr ../nicotine_* build/package/
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: debian-package
           path: build/package/
 
   flatpak:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     strategy:
       matrix:
-        arch: [x86_64]
+        include:
+          - arch: x86_64
+            platform: ubuntu-latest
     container:
-      image: bilelmoussaoui/flatpak-github-actions:gnome-45
+      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-48
       options: --privileged
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v4
+
+      - name: Validate manifest
+        run: flatpak-builder-lint manifest build-aux/flatpak/org.nicotine_plus.Nicotine.json
+
+      - name: Validate appstream
+        run: flatpak-builder-lint appstream data/org.nicotine_plus.Nicotine.appdata.xml.in
 
       - name: Build Flatpak package
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
-          bundle: flatpak-package.flatpak
-          manifest-path: packaging/flatpak/org.nicotine_plus.Nicotine.json
+          bundle: org.nicotine_plus.Nicotine-${{ matrix.arch }}.flatpak
+          manifest-path: build-aux/flatpak/org.nicotine_plus.Nicotine.json
           cache-key: flatpak-builder-${{ github.sha }}
+          arch: ${{ matrix.arch }}
+          upload-artifact: false
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: flatpak-${{ matrix.arch }}-package
+          path: org.nicotine_plus.Nicotine-${{ matrix.arch }}.flatpak
 
   snap:
-    runs-on: ubuntu-latest
+    timeout-minutes: 15
     strategy:
       matrix:
-        arch: [x86_64]
+        include:
+          - arch: x86_64
+            platform: ubuntu-latest
+          - arch: arm64
+            platform: ubuntu-24.04-arm
+    runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v4
 
       - name: Build Snap package
         uses: snapcore/action-build@v1
@@ -75,89 +92,100 @@ jobs:
         run: sudo snap install --dangerous ${{ steps.build-snap.outputs.snap }}
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: snap-${{ matrix.arch }}-package
           path: ${{ steps.build-snap.outputs.snap }}
 
   windows:
-    runs-on: windows-latest
+    timeout-minutes: 15
     strategy:
-      fail-fast: false
       matrix:
         include:
-          - { msystem: MINGW64, arch: x86_64, gtk: 4, libadwaita: 1 }
-          - { msystem: MINGW32, arch: i686, gtk: 4, libadwaita: 1 }
+          - arch: x86_64
+            prefix: mingw-w64-clang-x86_64
+            msystem: clang64
+            platform: windows-latest
+          - arch: arm64
+            prefix: mingw-w64-clang-aarch64
+            msystem: clangarm64
+            platform: windows-11-arm
+    runs-on: ${{ matrix.platform }}
     defaults:
       run:
         shell: msys2 {0}
-    env:
-      ARCH: ${{ matrix.arch }}
-      NICOTINE_GTK_VERSION: ${{ matrix.gtk }}
-      NICOTINE_LIBADWAITA: ${{ matrix.libadwaita }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v4
 
       - name: Setup msys2
         uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.msystem }}
-          release: false
+          update: true
           install: >-
-            mingw-w64-${{ matrix.arch }}-gettext
-            mingw-w64-${{ matrix.arch }}-gtk${{ matrix.gtk }}
-            mingw-w64-${{ matrix.arch }}-python-cx-freeze
-            mingw-w64-${{ matrix.arch }}-python-pip
-            mingw-w64-${{ matrix.arch }}-python-pycodestyle
-            mingw-w64-${{ matrix.arch }}-python-pylint
-            mingw-w64-${{ matrix.arch }}-python-gobject
+            ${{ matrix.prefix }}-ca-certificates
+            ${{ matrix.prefix }}-gettext-tools
+            ${{ matrix.prefix }}-gtk4
+            ${{ matrix.prefix }}-libadwaita
+            ${{ matrix.prefix }}-python-build
+            ${{ matrix.prefix }}-python-cx-freeze
+            ${{ matrix.prefix }}-python-gobject
+            ${{ matrix.prefix }}-python-pycodestyle
+            ${{ matrix.prefix }}-python-pylint
+            ${{ matrix.prefix }}-python-setuptools
+            ${{ matrix.prefix }}-python-wheel
+            ${{ matrix.prefix }}-webp-pixbuf-loader
 
       - name: Install additional dependencies
-        run: python3 packaging/windows/dependencies.py
+        run: python3 build-aux/windows/dependencies.py
 
       - name: Freeze application
-        run: python3 packaging/windows/setup.py bdist_msi
+        run: python3 build-aux/windows/setup.py bdist_msi
 
       - name: Archive installer artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: windows-${{ matrix.arch }}-installer
-          path: packaging/windows/build/*.msi
+          path: build-aux/windows/build/*.msi
 
       - name: Archive package artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: windows-${{ matrix.arch }}-package
-          path: packaging/windows/build/package
+          path: build-aux/windows/build/package
 
   macos:
-    runs-on: macos-12
-    env:
-      NICOTINE_GTK_VERSION: 4
-      NICOTINE_LIBADWAITA: 1
+    strategy:
+      matrix:
+        include:
+          - arch: x86_64
+            platform: macos-13
+          - arch: arm64
+            platform: macos-14
+    runs-on: ${{ matrix.platform }}
+    timeout-minutes: 20
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v4
 
       - name: Set system language
         run: defaults write NSGlobalDomain AppleLanguages "(en-US)"
 
-      - name: Install build dependencies
+      - name: Create Python virtual environment
         run: |
-          brew uninstall --ignore-dependencies python@3.11
-          brew install --overwrite python@3.11
-          python3 packaging/macos/dependencies.py
+          brew uninstall --ignore-dependencies python@3.13
+          brew install --overwrite python@3.13
+          python3.13 -m venv venv
+
+      - name: Install build dependencies
+        run: venv/bin/python3 build-aux/macos/dependencies.py
 
       - name: Freeze application
-        run: python3 packaging/macos/setup.py bdist_dmg
+        run: venv/bin/python3 build-aux/macos/setup.py bdist_dmg
 
       - name: Archive installer artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: macos-installer
-          path: packaging/macos/build/*.dmg
+          name: macos-${{ matrix.arch }}-installer
+          path: build-aux/macos/build/*.dmg

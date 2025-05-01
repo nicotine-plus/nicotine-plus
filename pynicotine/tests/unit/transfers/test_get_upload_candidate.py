@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2022-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2022-2025 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -17,13 +17,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import shutil
 
 from unittest import TestCase
 
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.transfers import Transfer
+from pynicotine.slskmessages import increment_token
+from pynicotine.slskmessages import initial_token
 
+DATA_FOLDER_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), "temp_data")
 NUM_ALLOWED_NONE = 2
 
 
@@ -33,25 +37,25 @@ class GetUploadCandidateTest(TestCase):
 
     def setUp(self):
 
-        self.token = 0
+        self.token = initial_token()
 
-        config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
-        config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
+        config.set_data_folder(DATA_FOLDER_PATH)
+        config.set_config_file(os.path.join(DATA_FOLDER_PATH, "temp_config"))
 
-        core.init_components(enabled_components={"pluginhandler", "shares", "statistics", "uploads", "userlist"})
+        core.init_components(enabled_components={
+            "users", "pluginhandler", "shares", "statistics", "uploads", "buddies"}
+        )
         core.start()
 
-        core.uploads.privileged_users = {"puser1", "puser2"}
+        core.users.privileged = {"puser1", "puser2"}
         core.uploads.transfers.clear()
-        core.uploads._allow_saving_transfers = False
 
     def tearDown(self):
-
         core.quit()
 
-        self.assertIsNone(core.statistics)
-        self.assertIsNone(core.uploads)
-        self.assertIsNone(core.userlist)
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(DATA_FOLDER_PATH)
 
     def add_transfers(self, users, is_active=False):
 
@@ -63,7 +67,7 @@ class GetUploadCandidateTest(TestCase):
 
             if is_active:
                 core.uploads._activate_transfer(transfer, self.token)
-                self.token += 1
+                self.token = increment_token(self.token)
             else:
                 core.uploads._enqueue_transfer(transfer)
 
@@ -122,7 +126,7 @@ class GetUploadCandidateTest(TestCase):
             in_progress.append(candidate)
             core.uploads._activate_transfer(candidate, self.token)
 
-            self.token += 1
+            self.token = increment_token(self.token)
 
         return candidates
 

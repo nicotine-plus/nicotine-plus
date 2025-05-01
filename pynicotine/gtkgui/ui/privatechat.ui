@@ -12,14 +12,6 @@
           <object class="GtkSearchBar" id="search_bar">
             <property name="show-close-button">True</property>
             <property name="visible">True</property>
-            <child>
-              <object class="GtkSearchEntry" id="search_entry">
-                <property name="max-width-chars">75</property>
-                <property name="placeholder-text" translatable="yes">Search chat log…</property>
-                <property name="visible">True</property>
-                <property name="width-chars">24</property>
-              </object>
-            </child>
           </object>
         </child>
         <child>
@@ -46,13 +38,8 @@
             <property name="spacing">6</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkEntry" id="chat_entry">
-                <property name="hexpand">True</property>
-                <property name="placeholder-text" translatable="yes">Send message…</property>
-                <property name="sensitive">False</property>
-                <property name="show-emoji-icon">True</property>
+              <object class="GtkBox" id="chat_entry_container">
                 <property name="visible">True</property>
-                <property name="width-chars">8</property>
               </object>
             </child>
             <child>

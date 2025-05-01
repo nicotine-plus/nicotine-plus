@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -22,9 +22,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import sys
 import time
 
+from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -34,6 +36,8 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.application import GTK_MINOR_VERSION
+from pynicotine.gtkgui.buddies import Buddies
 from pynicotine.gtkgui.chatrooms import ChatRooms
 from pynicotine.gtkgui.downloads import Downloads
 from pynicotine.gtkgui.interests import Interests
@@ -42,7 +46,6 @@ from pynicotine.gtkgui.search import Searches
 from pynicotine.gtkgui.uploads import Uploads
 from pynicotine.gtkgui.userbrowse import UserBrowses
 from pynicotine.gtkgui.userinfo import UserInfos
-from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -57,7 +60,7 @@ from pynicotine.gtkgui.widgets.theme import set_use_header_bar
 from pynicotine.gtkgui.widgets.window import Window
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
-from pynicotine.utils import human_speed
+from pynicotine.utils import humanize
 from pynicotine.utils import open_folder_path
 
 
@@ -70,7 +73,10 @@ class MainWindow(Window):
         self.auto_away = False
         self.away_timer_id = None
         self.away_cooldown_time = 0
+        self.is_fullscreen = False
         self.gesture_click = None
+        self.window_active_handler = None
+        self.window_visible_handler = None
 
         # Load UI
 
@@ -107,6 +113,7 @@ class MainWindow(Window):
             self.header_end_container,
             self.header_menu,
             self.header_title,
+            self.hide_window_button,
             self.horizontal_paned,
             self.interests_container,
             self.interests_end,
@@ -115,7 +122,6 @@ class MainWindow(Window):
             self.interests_toolbar,
             self.log_container,
             self.log_search_bar,
-            self.log_search_entry,
             self.log_view_container,
             self.private_content,
             self.private_end,
@@ -202,7 +208,8 @@ class MainWindow(Window):
                 (self.download_status_label, self.download_status_button),
                 (self.upload_status_label, self.upload_status_button)
             ):
-                label.set_mnemonic_widget(button.get_first_child())
+                inner_button = next(iter(button))
+                label.set_mnemonic_widget(inner_button)
         else:
             self.header_bar.set_has_subtitle(False)
             self.header_bar.set_show_close_button(True)
@@ -218,26 +225,31 @@ class MainWindow(Window):
             self.vertical_paned.child_set_property(self.log_container, "resize", False)
             self.vertical_paned.child_set_property(self.log_container, "shrink", False)
 
+        # Avoid unnecessary 'notify' signals when updating number of currently scanned folders
+        self.scan_progress_label.freeze_notify()
+
         # Logging
-        self.log_view = TextView(self.log_view_container, auto_scroll=not config.sections["logging"]["logcollapsed"],
-                                 parse_urls=False, editable=False, vertical_margin=5, pixels_below_lines=2)
-        self.log_search_bar = TextSearchBar(self.log_view.widget, self.log_search_bar, self.log_search_entry,
-                                            controller_widget=self.log_container)
+        self.log_view = TextView(
+            self.log_view_container, auto_scroll=not config.sections["logging"]["logcollapsed"],
+            parse_urls=False, editable=False, vertical_margin=5, pixels_below_lines=2
+        )
+        self.log_search_bar = TextSearchBar(
+            self.log_view.widget, self.log_search_bar, controller_widget=self.log_container,
+            placeholder_text=_("Search log…")
+        )
 
         self.create_log_context_menu()
         events.connect("log-message", self.log_callback)
 
         # Events
         for event_name, callback in (
-            ("schedule-quit", self.schedule_quit),
+            ("quit", self.on_quit),
             ("server-login", self.update_user_status),
             ("server-disconnect", self.update_user_status),
             ("set-connection-stats", self.set_connection_stats),
             ("shares-preparing", self.shares_preparing),
             ("shares-ready", self.shares_ready),
             ("shares-scanning", self.shares_scanning),
-            ("update-download-limits", self.update_download_limits),
-            ("update-upload-limits", self.update_upload_limits),
             ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
@@ -256,8 +268,8 @@ class MainWindow(Window):
         self.search = Searches(self)
         self.downloads = Downloads(self)
         self.uploads = Uploads(self)
-        self.userlist = UserList(self)
-        self.privatechat = self.private = PrivateChats(self)
+        self.buddies = Buddies(self)
+        self.privatechat = PrivateChats(self)
         self.userinfo = UserInfos(self)
         self.userbrowse = UserBrowses(self)
 
@@ -265,30 +277,28 @@ class MainWindow(Window):
             "chatrooms": self.chatrooms,
             "downloads": self.downloads,
             "interests": self.interests,
-            "private": self.private,
+            "private": self.privatechat,
             "search": self.search,
             "uploads": self.uploads,
             "userbrowse": self.userbrowse,
             "userinfo": self.userinfo,
-            "userlist": self.userlist
+            "userlist": self.buddies
         }
 
         # Actions and menu
         self.set_up_actions()
-        self.set_up_action_accels()
         self.set_up_menu()
 
         # Tab visibility/order
         self.append_main_tabs()
         self.set_tab_positions()
-        self.set_buddy_list_position()
         self.set_main_tabs_order()
         self.set_main_tabs_visibility()
         self.set_last_session_tab()
         self.connect_tab_signals()
 
         # Apply UI customizations
-        set_global_style()
+        set_global_style(self.application.isolated_mode)
 
         # Show window
         self.init_window()
@@ -297,26 +307,37 @@ class MainWindow(Window):
 
     def init_window(self):
 
+        isolated_mode = self.application.isolated_mode
+
         # Set main window title and icon
         self.set_title(pynicotine.__application_name__)
         self.widget.set_default_icon_name(pynicotine.__application_id__)
 
         # Set main window size
-        self.widget.set_default_size(width=config.sections["ui"]["width"],
-                                     height=config.sections["ui"]["height"])
+        self.widget.set_default_size(
+            width=0 if isolated_mode else config.sections["ui"]["width"],
+            height=0 if isolated_mode else config.sections["ui"]["height"]
+        )
+
+        # Hide close button in isolated_mode mode (e.g. Broadway backend)
+        if isolated_mode:
+            self.widget.set_deletable(False)
+
+            if os.environ.get("GDK_BACKEND") == "broadway":
+                self.widget.set_resizable(False)
 
         # Set main window position
-        if GTK_API_VERSION == 3:
+        elif GTK_API_VERSION == 3:
             x_pos = config.sections["ui"]["xposition"]
             y_pos = config.sections["ui"]["yposition"]
 
             if x_pos == -1 and y_pos == -1:
-                self.widget.set_position(Gtk.WindowPosition.CENTER)
+                self.widget.set_position(Gtk.WindowPosition.CENTER)  # pylint: disable=c-extension-no-member
             else:
                 self.widget.move(x_pos, y_pos)
 
         # Maximize main window if necessary
-        if sys.platform != "darwin" and config.sections["ui"]["maximized"]:
+        if config.sections["ui"]["maximized"] or isolated_mode:
             self.widget.maximize()
 
         # Auto-away mode
@@ -330,7 +351,7 @@ class MainWindow(Window):
             self.widget.add_controller(key_controller)
 
         else:
-            self.gesture_click = Gtk.GestureMultiPress(widget=self.widget)
+            self.gesture_click = Gtk.GestureMultiPress(widget=self.widget)  # pylint: disable=c-extension-no-member
             self.widget.connect("key-release-event", self.on_cancel_auto_away)
 
         self.gesture_click.set_button(0)
@@ -338,14 +359,16 @@ class MainWindow(Window):
         self.gesture_click.connect("pressed", self.on_cancel_auto_away)
 
         # Clear notifications when main window is focused
-        self.widget.connect("notify::is-active", self.on_window_active_changed)
-        self.widget.connect("notify::visible", self.on_window_visible_changed)
+        self.window_active_handler = self.widget.connect("notify::is-active", self.on_window_active_changed)
+        self.window_visible_handler = self.widget.connect("notify::visible", self.on_window_visible_changed)
 
-        # System window close (X)
+        # System window close (X) and fullscreen
         if GTK_API_VERSION >= 4:
             self.widget.connect("close-request", self.on_close_window_request)
+            self.widget.connect("notify::fullscreened", self.on_window_fullscreen_changed_gtk4)
         else:
             self.widget.connect("delete-event", self.on_close_window_request)
+            self.widget.connect("window-state-event", self.on_window_state_changed_gtk3)
 
         self.application.add_window(self.widget)
 
@@ -365,10 +388,65 @@ class MainWindow(Window):
         self.privatechat.clear_notifications()
         self.on_cancel_auto_away()
 
-        self.application.notifications.set_urgency_hint(False)
+        self.set_urgency_hint(False)
+
+    def on_window_fullscreen_changed_gtk4(self, *_args):
+        self.is_fullscreen = self.widget.is_fullscreen()
+        self.toggle_fullscreen_toolbar()
+
+    def on_window_state_changed_gtk3(self, _window, event):
+
+        if not event.changed_mask & Gdk.WindowState.FULLSCREEN:  # pylint: disable=c-extension-no-member
+            return
+
+        self.is_fullscreen = (
+            event.new_window_state & Gdk.WindowState.FULLSCREEN  # pylint: disable=c-extension-no-member
+        )
+        self.toggle_fullscreen_toolbar()
 
     def on_window_visible_changed(self, *_args):
-        self.application.tray_icon.update_window_visibility()
+        self.application.tray_icon.update()
+
+    def update_title(self):
+
+        notification_text = ""
+
+        if not config.sections["notifications"]["notification_window_title"]:
+            # Reset Title
+            pass
+
+        elif self.privatechat.highlighted_users:
+            # Private Chats have a higher priority
+            user = self.privatechat.highlighted_users[-1]
+            notification_text = _("Private Message from %(user)s") % {"user": user}
+            self.set_urgency_hint(True)
+
+        elif self.chatrooms.highlighted_rooms:
+            # Allow for the possibility the username is not available
+            room, user = list(self.chatrooms.highlighted_rooms.items())[-1]
+            notification_text = _("Mentioned by %(user)s in Room %(room)s") % {"user": user, "room": room}
+            self.set_urgency_hint(True)
+
+        elif any(is_important for is_important in self.search.unread_pages.values()):
+            notification_text = _("Wishlist Results Found")
+
+        if not notification_text:
+            self.set_title(pynicotine.__application_name__)
+            return
+
+        self.set_title(f"{pynicotine.__application_name__} - {notification_text}")
+
+    def set_urgency_hint(self, enabled):
+
+        surface = self.get_surface()
+        is_active = self.is_active()
+
+        try:
+            surface.set_urgency_hint(enabled and not is_active)
+
+        except AttributeError:
+            # No support for urgency hints
+            pass
 
     def save_window_state(self):
 
@@ -396,14 +474,6 @@ class MainWindow(Window):
         config.sections["ui"]["xposition"] = x_pos
         config.sections["ui"]["yposition"] = y_pos
 
-    def show(self):
-
-        self.widget.present()
-
-        if GTK_API_VERSION == 3:
-            # Fix for Windows where minimized window is not shown when unhiding from tray
-            self.widget.deiconify()
-
     # Actions #
 
     def add_action(self, action):
@@ -426,21 +496,20 @@ class MainWindow(Window):
         self.add_action(action)
 
         action = Gio.SimpleAction(name="toggle-status")
-        action.set_enabled(False)
         action.connect("activate", self.on_toggle_status)
         self.add_action(action)
 
         # View
 
-        state = GLib.Variant("b", not config.sections["logging"]["logcollapsed"])
-        action = Gio.SimpleAction(name="show-log-history", state=state)
-        action.connect("change-state", self.on_show_log_history)
+        state = GLib.Variant.new_boolean(not config.sections["logging"]["logcollapsed"])
+        action = Gio.SimpleAction(name="show-log-pane", state=state)
+        action.connect("change-state", self.on_show_log_pane)
         self.add_action(action)
 
         # Search
 
-        action = Gio.SimpleAction(
-            name="search-mode", parameter_type=GLib.VariantType("s"), state=GLib.Variant("s", "global"))
+        state = GLib.Variant.new_string("global")
+        action = Gio.SimpleAction(name="search-mode", parameter_type=state.get_type(), state=state)
         action.connect("change-state", self.search.on_search_mode)
         self.add_action(action)
 
@@ -467,137 +536,12 @@ class MainWindow(Window):
             action.connect("activate", self.on_change_primary_tab, num)
             self.add_action(action)
 
-    def set_up_action_accels(self):
-
-        for action_name, accelerators in (
-            ("win.main-menu", ["F10"]),
-            ("win.context-menu", ["<Shift>F10"]),
-            ("win.change-focus-view", ["F6"]),
-            ("win.show-log-history", ["<Primary>l"]),
-            ("win.reopen-closed-tab", ["<Primary><Shift>t"]),
-            ("win.close-tab", ["<Primary>F4", "<Primary>w"]),
-            ("win.cycle-tabs", ["<Primary>Tab"]),
-            ("win.cycle-tabs-reverse", ["<Primary><Shift>Tab"])
-        ):
-            self.application.set_accels_for_action(action_name, accelerators)
-
-        for num in range(1, 10):
-            self.application.set_accels_for_action(f"win.primary-tab-{num}",
-                                                   [f"<Primary>{num}", f"<Alt>{num}"])
-
     # Primary Menus #
-
-    @staticmethod
-    def add_connection_section(menu):
-
-        menu.add_items(
-            ("=" + _("_Connect"), "app.connect"),
-            ("=" + _("_Disconnect"), "app.disconnect"),
-            ("#" + _("Soulseek _Privileges"), "app.soulseek-privileges"),
-            ("", None)
-        )
-
-    @staticmethod
-    def add_preferences_item(menu):
-        menu.add_items(("#" + _("_Preferences"), "app.preferences"))
-
-    def add_quit_item(self, menu):
-
-        menu.add_items(
-            ("", None),
-            ("#" + _("_Quit"), "app.confirm-quit-uploads")
-        )
-
-    def create_file_menu(self):
-
-        menu = PopupMenu(self.application)
-        self.add_connection_section(menu)
-        self.add_preferences_item(menu)
-        self.add_quit_item(menu)
-
-        return menu
-
-    def add_browse_shares_section(self, menu):
-
-        menu.add_items(
-            ("#" + _("Browse _Public Shares"), "app.browse-public-shares"),
-            ("#" + _("Browse _Buddy Shares"), "app.browse-buddy-shares"),
-            ("#" + _("Browse _Trusted Shares"), "app.browse-trusted-shares")
-        )
-
-    def create_shares_menu(self):
-
-        menu = PopupMenu(self.application)
-        menu.add_items(
-            ("#" + _("_Rescan Shares"), "app.rescan-shares"),
-            ("#" + _("Configure _Shares"), "app.configure-shares"),
-            ("", None)
-        )
-        self.add_browse_shares_section(menu)
-
-        return menu
-
-    def create_browse_shares_menu(self):
-
-        menu = PopupMenu(self.application)
-        self.add_browse_shares_section(menu)
-
-        return menu
-
-    def create_help_menu(self):
-
-        menu = PopupMenu(self.application)
-        menu.add_items(
-            ("#" + _("_Keyboard Shortcuts"), "app.keyboard-shortcuts"),
-            ("#" + _("_Setup Assistant"), "app.setup-assistant"),
-            ("#" + _("_Transfer Statistics"), "app.transfer-statistics"),
-            ("", None),
-            ("#" + _("Report a _Bug"), "app.report-bug"),
-            ("#" + _("Improve T_ranslations"), "app.improve-translations"),
-            ("", None),
-            ("#" + _("_About Nicotine+"), "app.about")
-        )
-
-        return menu
-
-    def create_hamburger_menu(self):
-        """Menu button menu (header bar enabled)"""
-
-        menu = PopupMenu(self.application)
-        self.add_connection_section(menu)
-        menu.add_items(
-            ("#" + _("_Rescan Shares"), "app.rescan-shares"),
-            (">" + _("_Browse Shares"), self.create_browse_shares_menu()),
-            ("#" + _("Configure _Shares"), "app.configure-shares"),
-            ("", None),
-            (">" + _("_Help"), self.create_help_menu())
-        )
-        self.add_preferences_item(menu)
-        self.add_quit_item(menu)
-
-        menu.update_model()
-        return menu
-
-    def create_menu_bar(self):
-        """Classic menu bar (header bar disabled)"""
-
-        menu = PopupMenu(self.application)
-        menu.add_items(
-            (">" + _("_File"), self.create_file_menu()),
-            (">" + _("_Shares"), self.create_shares_menu()),
-            (">" + _("_Help"), self.create_help_menu())
-        )
-
-        menu.update_model()
-        return menu
 
     def set_up_menu(self):
 
-        menu_bar = self.create_menu_bar()
-        self.application.set_menubar(menu_bar.model)
-
-        hamburger_menu = self.create_hamburger_menu()
-        self.header_menu.set_menu_model(hamburger_menu.model)
+        menu = self.application.create_hamburger_menu()
+        menu.set_menu_button(self.header_menu)
 
         if GTK_API_VERSION == 3:
             return
@@ -605,21 +549,24 @@ class MainWindow(Window):
         # F10 shortcut to open menu
         self.header_menu.set_primary(True)
 
-        # Ensure menu button always gets focus after closing menu
-        popover = self.header_menu.get_popover()
-        popover.connect("closed", lambda *_args: self.header_menu.grab_focus())
+        # Ensure menu button always gets focus after closing menu (fixed in GTK 4.16)
+        if (GTK_API_VERSION, GTK_MINOR_VERSION) < (4, 16):
+            popover = self.header_menu.get_popover()
+            popover.connect("closed", lambda *_args: self.header_menu.grab_focus())
 
     def on_menu(self, *_args):
         self.header_menu.set_active(not self.header_menu.get_active())
 
     # Headerbar/Toolbar #
 
-    def show_header_bar(self, page_id):
+    def show_header_bar(self, page_id, leaving_fullscreen=False):
         """Set a headerbar for the main window (client side decorations
         enabled)"""
 
-        if self.widget.get_titlebar() != self.header_bar:
-            self.widget.set_titlebar(self.header_bar)
+        if leaving_fullscreen or self.widget.get_titlebar() != self.header_bar:
+            if not leaving_fullscreen:
+                self.widget.set_titlebar(self.header_bar)
+
             self.widget.set_show_menubar(False)
 
             if GTK_API_VERSION == 3:
@@ -633,6 +580,15 @@ class MainWindow(Window):
 
         end_widget = self.tabs[page_id].toolbar_end_content
         end_widget.get_parent().remove(end_widget)
+
+        for widget in end_widget:
+            # Themes decide if header bar buttons should be flat
+            if isinstance(widget, Gtk.Button):
+                remove_css_class(widget, "flat")
+
+            # Header bars never contain separators, hide them
+            elif isinstance(widget, Gtk.Separator):
+                widget.set_visible(False)
 
         if GTK_API_VERSION >= 4:
             self.header_title.append(title_widget)
@@ -657,17 +613,16 @@ class MainWindow(Window):
         self.header_end_container.remove(end_widget)
 
         toolbar = self.tabs[self.current_page_id].toolbar
+        toolbar_content = next(iter(toolbar))
 
         if GTK_API_VERSION >= 4:
-            toolbar_content = toolbar.get_first_child()
             toolbar_content.append(title_widget)
             toolbar_content.append(end_widget)
         else:
-            toolbar_content = toolbar.get_children()[0]
             toolbar_content.add(title_widget)
             toolbar_content.add(end_widget)
 
-    def show_toolbar(self, page_id):
+    def show_toolbar(self, page_id, entering_fullscreen=False):
         """Show the non-CSD toolbar."""
 
         if not self.widget.get_show_menubar():
@@ -678,10 +633,19 @@ class MainWindow(Window):
                 # Don't override builtin accelerator for menu bar
                 self.lookup_action("main-menu").set_enabled(False)
 
-            if self.widget.get_titlebar():
+            if not entering_fullscreen and self.widget.get_titlebar():
                 self.widget.unrealize()
                 self.widget.set_titlebar(None)
                 self.widget.map()
+
+        for widget in self.tabs[page_id].toolbar_end_content:
+            # Make secondary buttons at the end of the toolbar flat. Keep buttons
+            # next to text entries raised for more prominence.
+            if isinstance(widget, Gtk.Button):
+                add_css_class(widget, "flat")
+
+            elif isinstance(widget, Gtk.Separator):
+                widget.set_visible(True)
 
         toolbar = self.tabs[page_id].toolbar
         toolbar.set_visible(True)
@@ -701,7 +665,7 @@ class MainWindow(Window):
         This is used when changing the active notebook tab.
         """
 
-        if config.sections["ui"]["header_bar"]:
+        if config.sections["ui"]["header_bar"] and not self.is_fullscreen:
             self.hide_current_header_bar()
             self.show_header_bar(page_id)
         else:
@@ -712,7 +676,7 @@ class MainWindow(Window):
 
     def _show_dialogs(self, dialogs):
         for dialog in dialogs:
-            dialog.show()
+            dialog.present()
 
     def set_use_header_bar(self, enabled):
 
@@ -738,7 +702,20 @@ class MainWindow(Window):
 
         # Show active dialogs again after a slight delay
         if active_dialogs:
-            GLib.idle_add(self._show_dialogs, active_dialogs)
+            GLib.idle_add(self._show_dialogs, active_dialogs, priority=GLib.PRIORITY_HIGH_IDLE)
+
+    def toggle_fullscreen_toolbar(self):
+
+        if not config.sections["ui"]["header_bar"]:
+            return
+
+        if self.is_fullscreen:
+            self.hide_current_header_bar()
+            self.show_toolbar(self.current_page_id, entering_fullscreen=True)
+            return
+
+        self.hide_current_toolbar()
+        self.show_header_bar(self.current_page_id, leaving_fullscreen=True)
 
     def on_change_focus_view(self, *_args):
         """F6 - move focus between header bar/toolbar and main content."""
@@ -759,10 +736,8 @@ class MainWindow(Window):
                     return
             else:
                 # No notebook present, attempt to focus the main content widget
-                if GTK_API_VERSION >= 4:
-                    content_widget = tab.page.get_first_child().get_last_child()
-                else:
-                    content_widget = tab.page.get_children()[0].get_children[-1]
+                page_container = next(iter(tab.page))
+                content_widget = list(page_container)[-1]
 
                 if content_widget.child_focus(Gtk.DirectionType.TAB_FORWARD):
                     # Found a focusable widget
@@ -778,12 +753,12 @@ class MainWindow(Window):
 
         for tab_id, tab_text, tab_icon_name in (
             ("search", _("Search Files"), "system-search-symbolic"),
-            ("downloads", _("Downloads"), "document-save-symbolic"),
+            ("downloads", _("Downloads"), "folder-download-symbolic"),
             ("uploads", _("Uploads"), "emblem-shared-symbolic"),
             ("userbrowse", _("Browse Shares"), "folder-symbolic"),
             ("userinfo", _("User Profiles"), "avatar-default-symbolic"),
             ("private", _("Private Chat"), "mail-unread-symbolic"),
-            ("userlist", _("Buddies"), "contact-new-symbolic"),
+            ("userlist", _("Buddies"), "system-users-symbolic"),
             ("chatrooms", _("Chat Rooms"), "user-available-symbolic"),
             ("interests", _("Interests"), "emblem-default-symbolic")
         ):
@@ -992,80 +967,12 @@ class MainWindow(Window):
         self.userbrowse.set_tab_pos(positions.get(config.sections["ui"]["tabbrowse"], default_pos))
         self.search.set_tab_pos(positions.get(config.sections["ui"]["tabsearch"], default_pos))
 
-    def set_buddy_list_position(self):
-
-        parent_container = self.userlist.container.get_parent()
-        mode = config.sections["ui"]["buddylistinchatrooms"]
-
-        if mode not in {"tab", "chatrooms", "always"}:
-            mode = "tab"
-
-        if parent_container == self.buddy_list_container:
-            if mode == "always":
-                return
-
-            self.buddy_list_container.remove(self.userlist.container)
-            self.buddy_list_container.set_visible(False)
-
-        elif parent_container == self.chatrooms_buddy_list_container:
-            if mode == "chatrooms":
-                return
-
-            self.chatrooms_buddy_list_container.remove(self.userlist.container)
-            self.chatrooms_buddy_list_container.set_visible(False)
-
-        elif parent_container == self.userlist_content:
-            if mode == "tab":
-                return
-
-            self.userlist_content.remove(self.userlist.container)
-
-        if mode == "always":
-            if GTK_API_VERSION >= 4:
-                self.buddy_list_container.append(self.userlist.container)
-            else:
-                self.buddy_list_container.add(self.userlist.container)
-
-            self.userlist.side_toolbar.set_visible(True)
-            self.buddy_list_container.set_visible(True)
-            return
-
-        if mode == "chatrooms":
-            if GTK_API_VERSION >= 4:
-                self.chatrooms_buddy_list_container.append(self.userlist.container)
-            else:
-                self.chatrooms_buddy_list_container.add(self.userlist.container)
-
-            self.userlist.side_toolbar.set_visible(True)
-            self.chatrooms_buddy_list_container.set_visible(True)
-            return
-
-        if mode == "tab":
-            self.userlist.side_toolbar.set_visible(False)
-
-            if GTK_API_VERSION >= 4:
-                self.userlist_content.append(self.userlist.container)
-            else:
-                self.userlist_content.add(self.userlist.container)
-
     # Connection #
 
     def update_user_status(self, *_args):
 
-        status = core.user_status
-        is_online = (status != UserStatus.OFFLINE)
+        status = core.users.login_status
         is_away = (status == UserStatus.AWAY)
-        toggle_status_action = self.lookup_action("toggle-status")
-
-        # Action status
-        self.application.lookup_action("connect").set_enabled(not is_online)
-        toggle_status_action.set_enabled(is_online)
-
-        for action_name in ("disconnect", "soulseek-privileges", "away-accel", "away", "personal-profile",
-                            "message-downloading-users", "message-buddies"):
-            self.application.lookup_action(action_name).set_enabled(is_online)
-
-        self.application.tray_icon.update_user_status()
 
         # Away mode
         if not is_away:
@@ -1074,10 +981,7 @@ class MainWindow(Window):
             self.remove_away_timer()
 
         # Status bar
-        if core.uploads.pending_shutdown:
-            return
-
-        username = core.login_username
+        username = core.users.login_username
         icon_name = USER_STATUS_ICON_NAMES[status]
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
 
@@ -1092,20 +996,41 @@ class MainWindow(Window):
             status_text = _("Offline")
 
         if self.user_status_button.get_tooltip_text() != username:
+            # Hide widget to keep tooltips for other widgets visible
+            self.user_status_button.set_visible(False)
             self.user_status_button.set_tooltip_text(username)
+            self.user_status_button.set_visible(True)
 
-        self.user_status_icon.set_from_icon_name(icon_name, *icon_args)
-        self.user_status_label.set_text(status_text)
+        if self.user_status_label.get_text() != status_text:
+            self.user_status_icon.set_from_icon_name(icon_name, *icon_args)
+            self.user_status_label.set_text(status_text)
 
-        # Disable button toggled state without activating action
-        toggle_status_action.handler_block_by_func(self.on_toggle_status)
-        self.user_status_button.set_active(False)
-        toggle_status_action.handler_unblock_by_func(self.on_toggle_status)
+        if self.user_status_button.get_active():
+            toggle_status_action = self.lookup_action("toggle-status")
+
+            toggle_status_action.set_enabled(False)
+            self.user_status_button.set_active(False)
+            toggle_status_action.set_enabled(True)
+
+    def user_status(self, msg):
+        if msg.user == core.users.login_username:
+            self.update_user_status()
 
     # Search #
 
     def on_search(self, *_args):
         self.search.on_search()
+
+    def on_search_entry_changed(self, entry, *_args):
+        entry.props.secondary_icon_name = "edit-clear-symbolic" if entry.get_text() else None
+
+    def on_search_entry_icon_press(self, entry, icon_pos, *_args):
+
+        if icon_pos == Gtk.EntryIconPosition.SECONDARY:
+            entry.set_text("")
+            return
+
+        self.on_search()
 
     # User Info #
 
@@ -1127,26 +1052,22 @@ class MainWindow(Window):
 
     # Away Mode #
 
-    def user_status(self, msg):
-        if msg.user == core.login_username:
-            self.update_user_status()
-
     def set_auto_away(self, active=True):
 
         if active:
             self.auto_away = True
             self.away_timer_id = None
 
-            if core.user_status != UserStatus.AWAY:
-                core.set_away_mode(True)
+            if core.users.login_status != UserStatus.AWAY:
+                core.users.set_away_mode(True)
 
             return
 
         if self.auto_away:
             self.auto_away = False
 
-            if core.user_status == UserStatus.AWAY:
-                core.set_away_mode(False)
+            if core.users.login_status == UserStatus.AWAY:
+                core.users.set_away_mode(False)
 
         # Reset away timer
         self.remove_away_timer()
@@ -1154,7 +1075,7 @@ class MainWindow(Window):
 
     def create_away_timer(self):
 
-        if core.user_status != UserStatus.ONLINE:
+        if core.users.login_status != UserStatus.ONLINE:
             return
 
         away_interval = config.sections["server"]["autoaway"]
@@ -1176,14 +1097,14 @@ class MainWindow(Window):
     # User Actions #
 
     def on_add_buddy(self, *_args):
-        self.userlist.on_add_buddy()
+        self.buddies.on_add_buddy()
 
     # Log Pane #
 
     def create_log_context_menu(self):
 
-        popup_menu_log_categories = PopupMenu(self.application)
-        popup_menu_log_categories.add_items(
+        self.popup_menu_log_categories = PopupMenu(self.application)
+        self.popup_menu_log_categories.add_items(
             ("$" + _("Downloads"), "app.log-downloads"),
             ("$" + _("Uploads"), "app.log-uploads"),
             ("$" + _("Search"), "app.log-searches"),
@@ -1195,16 +1116,22 @@ class MainWindow(Window):
             ("$" + _("[Debug] Miscellaneous"), "app.log-miscellaneous"),
         )
 
-        PopupMenu(self.application, self.log_view.widget, self.on_popup_menu_log).add_items(
+        self.popup_menu_log_view = PopupMenu(self.application, self.log_view.widget, self.on_popup_menu_log)
+        self.popup_menu_log_view.add_items(
             ("#" + _("_Find…"), self.on_find_log_window),
             ("", None),
             ("#" + _("_Copy"), self.log_view.on_copy_text),
             ("#" + _("Copy _All"), self.log_view.on_copy_all_text),
-            ("", None),
-            ("#" + _("View _Debug Logs"), self.on_view_debug_logs),
-            ("#" + _("View _Transfer Logs"), self.on_view_transfer_logs),
-            ("", None),
-            (">" + _("_Log Categories"), popup_menu_log_categories),
+            ("", None)
+        )
+        if not self.application.isolated_mode:
+            self.popup_menu_log_view.add_items(
+                ("#" + _("View _Debug Logs"), self.on_view_debug_logs),
+                ("#" + _("View _Transfer Logs"), self.on_view_transfer_logs),
+                ("", None)
+            )
+        self.popup_menu_log_view.add_items(
+            (">" + _("_Log Categories"), self.popup_menu_log_categories),
             ("", None),
             ("#" + _("Clear Log View"), self.on_clear_log_view)
         )
@@ -1215,7 +1142,7 @@ class MainWindow(Window):
     def update_log(self, timestamp_format, msg, title, level):
 
         if title:
-            MessageDialog(parent=self, title=title, message=msg).show()
+            MessageDialog(parent=self, title=title, message=msg, selectable=True).present()
 
         # Keep verbose debug messages out of statusbar to make it more useful
         if level not in {"transfer", "connection", "message", "miscellaneous"}:
@@ -1241,7 +1168,7 @@ class MainWindow(Window):
         self.log_view.on_clear_all_text()
         self.set_status_text("")
 
-    def on_show_log_history(self, action, state):
+    def on_show_log_pane(self, action, state):
 
         action.set_state(state)
         visible = state.get_boolean()
@@ -1255,76 +1182,60 @@ class MainWindow(Window):
     # Status Bar #
 
     def set_status_text(self, msg):
+
+        # Hide widget to keep tooltips for other widgets visible
+        self.status_label.set_visible(False)
         self.status_label.set_text(msg)
         self.status_label.set_tooltip_text(msg)
+        self.status_label.set_visible(True)
 
-    def set_connection_stats(self, total_conns=0, download_bandwidth=0, upload_bandwidth=0):
+    def set_connection_stats(self, total_conns=0, **_kwargs):
 
         total_conns_text = repr(total_conns)
-        download_bandwidth = human_speed(download_bandwidth)
-        upload_bandwidth = human_speed(upload_bandwidth)
-        download_bandwidth_text = f"{download_bandwidth} ( {len(core.downloads.active_users)} )"
-        upload_bandwidth_text = f"{upload_bandwidth} ( {len(core.uploads.active_users)} )"
 
         if self.connections_label.get_text() != total_conns_text:
             self.connections_label.set_text(total_conns_text)
 
-        if self.download_status_label.get_text() != download_bandwidth_text:
-            self.download_status_label.set_text(download_bandwidth_text)
-            self.application.tray_icon.set_download_status(_("Downloads: %(speed)s") % {"speed": download_bandwidth})
-
-        if self.upload_status_label.get_text() != upload_bandwidth_text:
-            self.upload_status_label.set_text(upload_bandwidth_text)
-            self.application.tray_icon.set_upload_status(_("Uploads: %(speed)s") % {"speed": upload_bandwidth})
-
-    def update_download_limits(self):
-        self.update_bandwidth_label_underlines(transfer_type="download")
-
-    def update_upload_limits(self):
-        self.update_bandwidth_label_underlines(transfer_type="upload")
-
-    def update_bandwidth_label_underlines(self, transfer_type):
-        """Underline status bar bandwidth labels when alternative speed limits
-        are active."""
-
-        if transfer_type == "download":
-            label = self.download_status_label
-            config_key = "use_download_speed_limit"
-        else:
-            label = self.upload_status_label
-            config_key = "use_upload_speed_limit"
-
-        if config.sections["transfers"][config_key] == "alternative":
-            add_css_class(label, "underline")
-            return
-
-        remove_css_class(label, "underline")
-
     def shares_preparing(self):
 
-        self.scan_progress_label.set_label(_("Preparing Shares"))
+        label = _("Preparing Shares")
+
+        # Hide widget to keep tooltips for other widgets visible
+        self.scan_progress_container.set_visible(False)
+        self.scan_progress_container.set_tooltip_text(label)
+        self.scan_progress_label.set_label(label)
         self.scan_progress_container.set_visible(True)
         self.scan_progress_spinner.start()
 
-    def shares_scanning(self):
+    def shares_scanning(self, folder_count=None):
 
-        self.scan_progress_label.set_label(_("Scanning Shares"))
+        label = _("Scanning Shares")
+
+        if folder_count is not None:
+            # TODO: turn this into a proper translated string in 3.4.0
+            self.scan_progress_label.set_label(
+                f"{_('Shared Folders')}: {humanize(folder_count)}")
+            return
+
+        # Hide widget to keep tooltips for other widgets visible
+        self.scan_progress_container.set_visible(False)
+        self.scan_progress_container.set_tooltip_text(label)
+        self.scan_progress_label.set_label(label)
         self.scan_progress_container.set_visible(True)
         self.scan_progress_spinner.start()
 
     def shares_ready(self, _successful):
-
         self.scan_progress_container.set_visible(False)
         self.scan_progress_spinner.stop()
 
     def on_toggle_status(self, *_args):
 
         if core.uploads.pending_shutdown:
-            core.uploads.pending_shutdown = False
-            self.update_user_status()
-            return
+            core.uploads.cancel_shutdown()
+        else:
+            self.application.lookup_action("away").activate()
 
-        self.application.lookup_action("away").activate()
+        self.user_status_button.set_active(False)
 
     # Exit #
 
@@ -1341,21 +1252,8 @@ class MainWindow(Window):
 
         return True
 
-    def schedule_quit(self, should_finish_uploads):
-
-        if not should_finish_uploads:
-            return
-
-        icon_name = "system-shutdown-symbolic"
-        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
-        toggle_status_action = self.lookup_action("toggle-status")
-
-        toggle_status_action.handler_block_by_func(self.on_toggle_status)
-        self.user_status_button.set_active(True)
-        toggle_status_action.handler_unblock_by_func(self.on_toggle_status)
-
-        self.user_status_icon.set_from_icon_name(icon_name, *icon_args)
-        self.user_status_label.set_text(_("Quitting..."))
+    def on_quit(self, *_args):
+        self.save_window_state()
 
     def hide(self):
 
@@ -1370,4 +1268,32 @@ class MainWindow(Window):
         config.write_configuration()
 
         # Hide window
+        if sys.platform == "darwin":
+            # macOS-specific way to hide the application, to ensure it is restored when clicking the dock icon
+            self.hide_window_button.set_action_name("gtkinternal.hide")
+            self.hide_window_button.emit("clicked")
+            return
+
+        if sys.platform == "win32":
+            if GTK_API_VERSION >= 4:
+                self.widget.minimize()
+            else:
+                self.widget.iconify()
+
         super().hide()
+
+    def destroy(self):
+
+        for tab in self.tabs.values():
+            tab.destroy()
+
+        self.notebook.destroy()
+        self.log_search_bar.destroy()
+        self.log_view.destroy()
+        self.popup_menu_log_view.destroy()
+        self.popup_menu_log_categories.destroy()
+
+        self.widget.disconnect(self.window_active_handler)
+        self.widget.disconnect(self.window_visible_handler)
+
+        super().destroy()

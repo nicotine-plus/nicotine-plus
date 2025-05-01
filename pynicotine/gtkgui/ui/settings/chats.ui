@@ -47,8 +47,9 @@
               <object class="GtkLabel">
                 <property name="height-request">24</property>
                 <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Enable spell checker</property>
-                <property name="mnemonic-widget">enable_spell_checker_toggle</property>
+                <property name="label" translatable="yes">_Accept private room invitations</property>
+                <property name="mnemonic-widget">private_room_toggle</property>
+                <property name="use-underline">True</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
@@ -56,7 +57,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkSwitch" id="enable_spell_checker_toggle">
+              <object class="GtkSwitch" id="private_room_toggle">
                 <property name="valign">center</property>
                 <property name="visible">True</property>
               </object>
@@ -81,6 +82,30 @@
             </child>
             <child>
               <object class="GtkSwitch" id="reopen_private_chats_toggle">
+                <property name="valign">center</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="spacing">12</property>
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="height-request">24</property>
+                <property name="hexpand">True</property>
+                <property name="label" translatable="yes">Enable spell checker</property>
+                <property name="mnemonic-widget">enable_spell_checker_toggle</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="enable_spell_checker_toggle">
                 <property name="valign">center</property>
                 <property name="visible">True</property>
               </object>
@@ -203,7 +228,6 @@
               <object class="GtkSwitch" id="enable_tab_completion_toggle">
                 <property name="valign">center</property>
                 <property name="visible">True</property>
-                <signal name="notify::active" handler="on_completion_changed"/>
               </object>
             </child>
           </object>
@@ -232,7 +256,6 @@
                   <object class="GtkSwitch" id="enable_completion_dropdown_toggle">
                     <property name="valign">center</property>
                     <property name="visible">True</property>
-                    <signal name="notify::active" handler="on_completion_changed"/>
                   </object>
                 </child>
               </object>
@@ -264,7 +287,6 @@
                         <property name="numeric">True</property>
                         <property name="valign">center</property>
                         <property name="visible">True</property>
-                        <signal name="changed" handler="on_completion_changed"/>
                       </object>
                     </child>
                   </object>
@@ -319,7 +341,6 @@
                           <object class="GtkCheckButton" id="complete_buddy_names_toggle">
                             <property name="label" translatable="yes">Buddy names</property>
                             <property name="visible">True</property>
-                            <signal name="toggled" handler="on_completion_changed"/>
                           </object>
                         </child>
                       </object>
@@ -332,7 +353,6 @@
                           <object class="GtkCheckButton" id="complete_room_usernames_toggle">
                             <property name="label" translatable="yes">Chat room usernames</property>
                             <property name="visible">True</property>
-                            <signal name="toggled" handler="on_completion_changed"/>
                           </object>
                         </child>
                       </object>
@@ -345,7 +365,6 @@
                           <object class="GtkCheckButton" id="complete_room_names_toggle">
                             <property name="label" translatable="yes">Room names</property>
                             <property name="visible">True</property>
-                            <signal name="toggled" handler="on_completion_changed"/>
                           </object>
                         </child>
                       </object>
@@ -358,7 +377,6 @@
                           <object class="GtkCheckButton" id="complete_commands_toggle">
                             <property name="label" translatable="yes">Commands</property>
                             <property name="visible">True</property>
-                            <signal name="toggled" handler="on_completion_changed"/>
                           </object>
                         </child>
                       </object>
@@ -458,7 +476,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkBox">
+      <object class="GtkBox" id="tts_container">
         <property name="orientation">vertical</property>
         <property name="spacing">12</property>
         <property name="visible">True</property>
@@ -475,95 +493,115 @@
         </child>
         <child>
           <object class="GtkBox">
-            <property name="spacing">12</property>
+            <property name="orientation">vertical</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkLabel">
-                <property name="height-request">24</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Enable Text-to-Speech</property>
-                <property name="mnemonic-widget">enable_tts_toggle</property>
+              <object class="GtkBox">
+                <property name="spacing">12</property>
                 <property name="visible">True</property>
-                <property name="wrap">True</property>
-                <property name="wrap-mode">word-char</property>
-                <property name="xalign">0</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="height-request">24</property>
+                    <property name="hexpand">True</property>
+                    <property name="label" translatable="yes">Enable Text-to-Speech</property>
+                    <property name="mnemonic-widget">enable_tts_toggle</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="wrap-mode">word-char</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkSwitch" id="enable_tts_toggle">
+                    <property name="valign">center</property>
+                    <property name="visible">True</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkSwitch" id="enable_tts_toggle">
-                <property name="valign">center</property>
+              <object class="GtkRevealer">
+                <property name="reveal-child" bind-source="enable_tts_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
+                <property name="transition-type">slide-down</property>
                 <property name="visible">True</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="homogeneous">True</property>
-            <property name="margin-top">6</property>
-            <property name="spacing">12</property>
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkLabel" id="tts_command_label">
-                <property name="label" translatable="yes">Text-to-Speech command:</property>
-                <property name="visible">True</property>
-                <property name="wrap">True</property>
-                <property name="wrap-mode">word-char</property>
-                <property name="xalign">0</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="homogeneous">True</property>
-            <property name="spacing">12</property>
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="label" translatable="yes">Private chat message:</property>
-                <property name="mnemonic-widget">tts_private_message_entry</property>
-                <property name="visible">True</property>
-                <property name="wrap">True</property>
-                <property name="wrap-mode">word-char</property>
-                <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkEntry" id="tts_private_message_entry">
-                <property name="secondary-icon-name">edit-undo-symbolic</property>
-                <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
-                <property name="valign">center</property>
-                <property name="visible">True</property>
-                <property name="width-chars">8</property>
-                <signal name="icon-press" handler="on_default_tts_private_message"/>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="homogeneous">True</property>
-            <property name="spacing">12</property>
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="label" translatable="yes">Chat room message:</property>
-                <property name="mnemonic-widget">tts_room_message_entry</property>
-                <property name="visible">True</property>
-                <property name="wrap">True</property>
-                <property name="wrap-mode">word-char</property>
-                <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkEntry" id="tts_room_message_entry">
-                <property name="secondary-icon-name">edit-undo-symbolic</property>
-                <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
-                <property name="valign">center</property>
-                <property name="visible">True</property>
-                <property name="width-chars">8</property>
-                <signal name="icon-press" handler="on_default_tts_room_message"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">12</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="homogeneous">True</property>
+                        <property name="margin-top">18</property>
+                        <property name="spacing">12</property>
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkLabel" id="tts_command_label">
+                            <property name="label" translatable="yes">Text-to-Speech command:</property>
+                            <property name="visible">True</property>
+                            <property name="wrap">True</property>
+                            <property name="wrap-mode">word-char</property>
+                            <property name="xalign">0</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="homogeneous">True</property>
+                        <property name="spacing">12</property>
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Private chat message:</property>
+                            <property name="mnemonic-widget">tts_private_message_entry</property>
+                            <property name="visible">True</property>
+                            <property name="wrap">True</property>
+                            <property name="wrap-mode">word-char</property>
+                            <property name="xalign">0</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="tts_private_message_entry">
+                            <property name="secondary-icon-name">edit-undo-symbolic</property>
+                            <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                            <property name="valign">center</property>
+                            <property name="visible">True</property>
+                            <property name="width-chars">8</property>
+                            <signal name="icon-press" handler="on_default_tts_private_message"/>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="homogeneous">True</property>
+                        <property name="spacing">12</property>
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Chat room message:</property>
+                            <property name="mnemonic-widget">tts_room_message_entry</property>
+                            <property name="visible">True</property>
+                            <property name="wrap">True</property>
+                            <property name="wrap-mode">word-char</property>
+                            <property name="xalign">0</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="tts_room_message_entry">
+                            <property name="secondary-icon-name">edit-undo-symbolic</property>
+                            <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                            <property name="valign">center</property>
+                            <property name="visible">True</property>
+                            <property name="width-chars">8</property>
+                            <signal name="icon-press" handler="on_default_tts_room_message"/>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
           </object>

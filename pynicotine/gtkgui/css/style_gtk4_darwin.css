@@ -1,0 +1,56 @@
+/* Tweaks (GTK 4+ on macOS) */
+
+window {
+  /* Remove GTK's window border, since macOS provides one */
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* macOS-style window controls */
+
+windowcontrols {
+  border-spacing: 0;
+  margin: 4px;
+}
+
+windowcontrols button {
+  background: none;
+  border: none;
+  margin: 0;
+  min-width: 12px;
+  min-height: 12px;
+  padding: 4px;
+}
+
+windowcontrols button image {
+  -gtk-icon-size: 10px;
+  border-radius: 50%;
+  color: transparent;
+  margin: 0;
+  padding: 0;
+}
+
+windowcontrols button:hover image {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+windowcontrols button:active image {
+  filter: brightness(75%);
+}
+
+windowcontrols button.close image {
+  border: 1px solid #E0373B;
+  background-color: #FD5858;
+}
+
+windowcontrols button.minimize image {
+  border: 1px solid #DF9F16;
+  background-color: #FDBD30;
+}
+
+windowcontrols button.maximize image {
+  border: 1px solid #25AD24;
+  background-color: #36CC40;
+}
+

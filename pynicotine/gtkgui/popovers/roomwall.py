@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -38,7 +38,7 @@ class RoomWall(Popover):
             window=window,
             content_box=self.container,
             show_callback=self._on_show,
-            width=600,
+            width=650,
             height=500
         )
 
@@ -46,56 +46,53 @@ class RoomWall(Popover):
         self.message_view = TextView(self.message_view_container, editable=False, vertical_margin=4,
                                      pixels_above_lines=3, pixels_below_lines=3)
 
+    def destroy(self):
+        self.message_view.destroy()
+        super().destroy()
+
     def _update_message_list(self):
 
         tickers = core.chatrooms.joined_rooms[self.room].tickers
         newline = "\n"
-        messages = [f"> [{user}] {msg.replace(newline, ' ')}" for user, msg in reversed(tickers.items())]
+        messages = [f"> [{user}] {msg.replace(newline, ' ')}" for user, msg in reversed(list(tickers.items()))]
 
-        self.message_view.append_line("\n".join(messages))
+        self.message_view.append_line(newline.join(messages))
         self.message_view.place_cursor_at_line(0)
-
-    def _clear_room_wall_message(self, update_list=True):
-
-        entry_text = self.message_entry.get_text()
-        self.message_entry.set_text("")
-
-        core.chatrooms.joined_rooms[self.room].tickers.pop(core.login_username, None)
-        self.message_view.clear()
-
-        if update_list:
-            core.chatrooms.request_update_ticker(self.room, "")
-            self._update_message_list()
-
-        return entry_text
 
     def on_set_room_wall_message(self, *_args):
 
-        entry_text = self._clear_room_wall_message(update_list=False)
+        entry_text = self.message_entry.get_text()
         core.chatrooms.request_update_ticker(self.room, entry_text)
 
+        core.chatrooms.joined_rooms[self.room].tickers.pop(core.users.login_username, None)
+        self.message_view.clear()
+
         if entry_text:
-            user = core.login_username
-            self.message_view.append_line(f"> [{user}] {entry_text}")
+            self.message_view.append_line(f"> [{core.users.login_username}] {entry_text}")
+            self.message_entry.set_text("")
 
         self._update_message_list()
 
     def on_icon_pressed(self, _entry, icon_pos, *_args):
 
-        if icon_pos == Gtk.EntryIconPosition.PRIMARY:
-            self.on_set_room_wall_message()
-            return
+        if icon_pos == Gtk.EntryIconPosition.SECONDARY:
+            # Clear message
+            self.message_entry.set_text("")
 
-        self._clear_room_wall_message()
+        self.on_set_room_wall_message()
 
     def _on_show(self, *_args):
 
         self.message_view.clear()
         self._update_message_list()
 
-        login_username = core.login_username
-        message = core.chatrooms.joined_rooms[self.room].tickers.get(login_username)
+        tickers = core.chatrooms.joined_rooms[self.room].tickers
+        login_username = core.users.login_username
+        message = tickers.get(login_username, "")
 
-        if message:
-            self.message_entry.set_text(message)
-            self.message_entry.select_region(0, -1)
+        self.message_entry.set_text(message)
+        self.message_entry.select_region(0, -1)
+
+        if not tickers:
+            # Focus message entry instead of list when no tickers are present
+            self.message_entry.grab_focus()

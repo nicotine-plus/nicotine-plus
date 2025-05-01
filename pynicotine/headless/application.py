@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -38,6 +38,7 @@ class Application:
         for event_name, callback in (
             ("confirm-quit", self.on_confirm_quit),
             ("invalid-password", self.on_invalid_password),
+            ("invalid-username", self.on_invalid_password),
             ("setup", self.on_setup),
             ("shares-unavailable", self.on_shares_unavailable)
         ):
@@ -46,7 +47,9 @@ class Application:
     def run(self):
 
         core.start()
-        core.connect()
+
+        if config.sections["server"]["auto_connect_startup"]:
+            core.connect()
 
         # Main loop, process events from threads 10 times per second
         while events.process_thread_events():
@@ -69,7 +72,7 @@ class Application:
         if user_input.lower().startswith("y"):
             core.quit()
 
-    def on_confirm_quit(self, _only_on_active_uploads):
+    def on_confirm_quit(self):
         responses = "[y/N] "
         cli.prompt(_("Do you really want to exit? %s") % responses, callback=self.on_confirm_quit_response)
 

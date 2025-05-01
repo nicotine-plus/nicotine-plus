@@ -5,7 +5,7 @@
     <property name="hexpand">True</property>
     <property name="max-width-chars">0</property>
     <property name="placeholder-text" translatable="yes">Include text…</property>
-    <property name="primary-icon-name">emblem-ok-symbolic</property>
+    <property name="primary-icon-name">object-select-symbolic</property>
     <property name="tooltip-text" translatable="yes">Add a filter to only show results whose file paths have the given text. Use a '|' to specify multiple words or phrases, for example: long trail|till we meet again</property>
     <property name="visible">True</property>
     <property name="width-chars">14</property>
@@ -27,7 +27,7 @@
     <property name="hexpand">True</property>
     <property name="max-width-chars">0</property>
     <property name="placeholder-text" translatable="yes">File type…</property>
-    <property name="primary-icon-name">text-x-generic-symbolic</property>
+    <property name="primary-icon-name">folder-documents-symbolic</property>
     <property name="tooltip-text" translatable="yes">File type, e.g. flac wav or !mp3 !m4a</property>
     <property name="visible">True</property>
     <property name="width-chars">12</property>
@@ -219,6 +219,9 @@
                         <property name="visible">True</property>
                       </object>
                     </child>
+                    <style>
+                      <class name="image-button"/>
+                    </style>
                   </object>
                 </child>
                 <style>
@@ -241,8 +244,8 @@
                 <child>
                   <object class="GtkFlowBox">
                     <property name="column-spacing">12</property>
-                    <property name="hexpand">True</property>
                     <property name="max-children-per-line">7</property>
+                    <property name="min-children-per-line">2</property>
                     <property name="row-spacing">6</property>
                     <property name="selection-mode">none</property>
                     <property name="visible">True</property>

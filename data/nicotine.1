@@ -9,15 +9,18 @@ nicotine - graphical client for the Soulseek peer-to-peer network
 
 .SH DESCRIPTION
 .BI Nicotine+
-is a graphical application that allows users to interact with the Soulseek peer-to-peer network.
+is a graphical application that allows users to interact with the
+Soulseek peer-to-peer network.
 
 .SH OPTIONS
 .TP
 .BI \-c " <file>" "\fR,\fP \-\^\-config=" <file>
-Use <file> as configuration file. If <file> does not exists a new empty configuration file will be created.
+Use <file> as configuration file. If <file> does not exists a new empty
+configuration file will be created.
 .TP
 .BI \-u " <dir>" "\fR,\fP \-\^\-user-data=" <dir>
-Use <dir> as directory for user data and plugins. If <dir> does not exists a new empty directory will be created.
+Use <dir> as directory for user data and plugins. If <dir> does not
+exists a new empty directory will be created.
 .TP
 .B \-h, \-\^\-help
 Show command help and exit.
@@ -54,6 +57,16 @@ The configuration file.
 .TP
 .I ~/.local/share/nicotine/
 Other personal files such as downloads, shares and logs.
+
+.SH ENVIRONMENT
+The following environment variables are available when running the program.
+.TP
+.IP NICOTINE_GTK_VERSION
+The major GTK version to use, if installed. Possible values are 4 or 3.
+.TP
+.IP NICOTINE_LIBADWAITA
+Whether to enable libadwaita (GNOME theme), if installed. Possible values
+are 1 or 0.
 
 .SH AUTHOR
 Nicotine+ Team <https://nicotine-plus.org/>
