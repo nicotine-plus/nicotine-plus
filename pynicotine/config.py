@@ -416,6 +416,7 @@ class Config:
                 "notification_popup_sound": False,
                 "notification_popup_file": True,
                 "notification_popup_folder": True,
+                "notification_popup_queued_upload": True,
                 "notification_popup_private_message": True,
                 "notification_popup_chatroom": False,
                 "notification_popup_chatroom_mention": True,

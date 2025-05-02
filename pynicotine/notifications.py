@@ -55,6 +55,9 @@ class Notifications:
     def show_search_notification(self, search_token, message, title=None):
         events.emit("show-search-notification", search_token, message, title=title)
 
+    def show_upload_notification(self, message, title=None):
+        events.emit("show-upload-notification", message, title=title)
+
     # TTS #
 
     def new_tts(self, message, args=None):

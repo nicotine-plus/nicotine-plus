@@ -55,13 +55,14 @@ from pynicotine.transfers import Transfer
 from pynicotine.transfers import Transfers
 from pynicotine.transfers import TransferStatus
 from pynicotine.utils import encode_path
+from pynicotine.utils import human_size
 
 
 class Uploads(Transfers):
     __slots__ = ("pending_shutdown", "upload_speed", "token", "_queue_positions",
                  "_queue_position_users", "_privileged_position_requested", "_pending_network_msgs",
-                 "_user_update_counter", "_user_update_counters", "_upload_queue_timer_id",
-                 "_retry_failed_uploads_timer_id")
+                 "_queue_notification_users", "_user_update_counter", "_user_update_counters",
+                 "_queue_notification_timer_id", "_upload_queue_timer_id", "_retry_failed_uploads_timer_id")
 
     def __init__(self):
 
@@ -73,11 +74,13 @@ class Uploads(Transfers):
 
         self._queue_positions = {}
         self._queue_position_users = defaultdict(dict)
+        self._queue_notification_users = defaultdict(list)
         self._privileged_position_requested = False
         self._pending_network_msgs = []
         self._user_update_counter = 0
         self._user_update_counters = {}
 
+        self._queue_notification_timer_id = None
         self._upload_queue_timer_id = None
         self._retry_failed_uploads_timer_id = None
 
@@ -115,6 +118,10 @@ class Uploads(Transfers):
 
         super()._server_login(msg)
 
+        # Show notifications for newly queued uploads every second
+        self._queue_notification_timer_id = events.schedule(
+            delay=1, callback=self._show_queued_upload_notifications, repeat=True)
+
         # Check if queued uploads can be started every 10 seconds
         self._upload_queue_timer_id = events.schedule(delay=10, callback=self._check_upload_queue, repeat=True)
 
@@ -126,11 +133,16 @@ class Uploads(Transfers):
 
         super()._server_disconnect(msg)
 
-        for timer_id in (self._upload_queue_timer_id, self._retry_failed_uploads_timer_id):
+        for timer_id in (
+            self._queue_notification_timer_id,
+            self._upload_queue_timer_id,
+            self._retry_failed_uploads_timer_id
+        ):
             events.cancel_scheduled(timer_id)
 
         self._queue_positions.clear()
         self._queue_position_users.clear()
+        self._queue_notification_users.clear()
         self._pending_network_msgs.clear()
         self._user_update_counters.clear()
         self._user_update_counter = 0
@@ -314,7 +326,7 @@ class Uploads(Transfers):
 
     # Transfer Actions #
 
-    def _enqueue_transfer(self, transfer):
+    def _enqueue_transfer(self, transfer, show_notification=False):
 
         username = transfer.username
 
@@ -326,6 +338,9 @@ class Uploads(Transfers):
         # Clear queue position cache until next position request
         self._queue_positions.clear()
         self._queue_position_users.pop(username, None)
+
+        if show_notification and config.sections["notifications"]["notification_popup_queued_upload"]:
+            self._queue_notification_users[username].append(transfer)
 
         return True
 
@@ -637,6 +652,44 @@ class Uploads(Transfers):
 
         self._update_transfer(final_upload_candidate)
 
+    def _show_queued_upload_notifications(self):
+
+        if not config.sections["notifications"]["notification_popup_queued_upload"]:
+            self._queue_notification_users.clear()
+            return
+
+        for username, queued_uploads in self._queue_notification_users.copy().items():
+            num_files = len(queued_uploads)
+            num_folders = len(set(transfer.folder_path for transfer in queued_uploads))
+            total_size = human_size(sum(transfer.size for transfer in queued_uploads))
+
+            if num_files == 1:
+                folder_path, _separator, basename = next(iter(queued_uploads)).virtual_path.rpartition("\\")
+                message = _("%(user)s is downloading file %(file)s (%(size)s) from folder %(folder)s") % {
+                    "user": username,
+                    "file": basename,
+                    "size": total_size,
+                    "folder": folder_path
+                }
+            elif num_folders == 1:
+                message = _("%(user)s is downloading %(files)s files (%(size)s) from folder %(folder)s") % {
+                    "user": username,
+                    "files": num_files,
+                    "size": total_size,
+                    "folder": next(iter(queued_uploads)).virtual_path.rpartition("\\")[0]
+                }
+            else:
+                message = _("%(user)s is downloading %(files)s files (%(size)s) from %(folders)s folders") % {
+                    "user": username,
+                    "files": num_files,
+                    "size": total_size,
+                    "folders": num_folders
+                }
+
+            core.notifications.show_upload_notification(message, title=_("Queued Uploads"))
+
+        self._queue_notification_users.clear()
+
     def enqueue_upload(self, username, virtual_path):
 
         transfer = self.transfers.get(username + virtual_path)
@@ -947,7 +1000,7 @@ class Uploads(Transfers):
         transfer.is_backslash_path = is_backslash_path
         transfer.is_lowercase_path = is_lowercase_path
 
-        self._enqueue_transfer(transfer)
+        self._enqueue_transfer(transfer, show_notification=True)
         self._update_transfer(transfer)
 
         # Must be emitted after the final update to prevent inconsistent state
@@ -1029,7 +1082,7 @@ class Uploads(Transfers):
         transfer.is_backslash_path = is_backslash_path
 
         if not self.is_new_upload_accepted() or username in self.active_users:
-            self._enqueue_transfer(transfer)
+            self._enqueue_transfer(transfer, show_notification=True)
             self._update_transfer(transfer)
 
             # Must be emitted after the final update to prevent inconsistent state

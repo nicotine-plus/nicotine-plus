@@ -117,6 +117,7 @@ class Application:
             ("show-download-notification", self._show_download_notification),
             ("show-private-chat-notification", self._show_private_chat_notification),
             ("show-search-notification", self._show_search_notification),
+            ("show-upload-notification", self._show_upload_notification),
             ("user-status", self.on_user_status)
         ):
             events.connect(event_name, callback)
@@ -180,6 +181,7 @@ class Application:
             ("download-notification-activated", self.on_downloads, None, True),
             ("private-chat-notification-activated", self.on_private_chat_notification_activated, "s", True),
             ("search-notification-activated", self.on_search_notification_activated, "s", True),
+            ("upload-notification-activated", self.on_uploads, None, True),
 
             # Help
             ("keyboard-shortcuts", self.on_keyboard_shortcuts, None, True),
@@ -494,6 +496,12 @@ class Application:
         self._show_notification(
             message, title, action="app.search-notification-activated", action_target=search_token,
             high_priority=True
+        )
+
+    def _show_upload_notification(self, message, title=None):
+
+        self._show_notification(
+            message, title, action="app.upload-notification-activated"
         )
 
     # Core Events #
