@@ -111,6 +111,8 @@ jobs:
             msystem: clangarm64
             platform: windows-11-arm
     runs-on: ${{ matrix.platform }}
+    env:
+      ARCH: ${{ matrix.arch }}
     defaults:
       run:
         shell: msys2 {0}
