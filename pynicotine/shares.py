@@ -29,6 +29,8 @@ import time
 
 from collections import defaultdict
 from collections import deque
+from datetime import datetime
+from datetime import timedelta
 from itertools import chain
 from os import SEEK_END
 from os import SEEK_SET
@@ -706,7 +708,7 @@ class Scanner:
 
 class Shares:
     __slots__ = ("share_dbs", "requested_share_times", "initialized", "rescanning", "compressed_shares",
-                 "share_db_paths", "file_path_index", "_scanner_process")
+                 "share_db_paths", "file_path_index", "_scanner_process", "_rescan_daily_timer_id")
 
     BACKSLASH_SENTINEL = "@@BACKSLASH@@"
 
@@ -738,6 +740,7 @@ class Shares:
         self.file_path_index = ()
 
         self._scanner_process = None
+        self._rescan_daily_timer_id = None
 
         for event_name, callback in (
             ("folder-contents-request", self._folder_contents_request),
@@ -1135,6 +1138,21 @@ class Shares:
 
         return unavailable_shares
 
+    def start_rescan_daily_timer(self):
+
+        if self._rescan_daily_timer_id is not None:
+            events.cancel_scheduled(self._rescan_daily_timer_id)
+            self._rescan_daily_timer_id = None
+
+        if not config.sections["transfers"]["rescan_shares_daily"]:
+            return
+
+        timestamp_midnight = (datetime.now() + timedelta(days=1)).replace(
+            hour=0, minute=0, second=0, microsecond=0).timestamp()
+
+        self._rescan_daily_timer_id = events.schedule_at(
+            timestamp=timestamp_midnight, callback=self.rescan_shares)
+
     def _build_scanner_process(self, share_groups=None, init=False, rescan=True, rebuild=False):
 
         import multiprocessing
@@ -1211,6 +1229,7 @@ class Shares:
                 successful = False
 
         self.rescanning = False
+        self.start_rescan_daily_timer()
 
         if not successful:
             self.file_path_index = ()
