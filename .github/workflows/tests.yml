@@ -8,14 +8,13 @@ env:
 jobs:
 
   python:
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
-        python: ['3.9', '3.10', '3.11', '3.12', '3.13',
+        python: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14-dev',
                  'pypy-3.10', 'pypy-3.11']
-        platform: ['ubuntu-24.04']
-    runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
