@@ -25,6 +25,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 import time
 
 from collections import defaultdict
@@ -375,7 +376,11 @@ class Uploads(Transfers):
         if not already_exists:
             core.statistics.append_stat_value("completed_uploads", 1)
 
-            real_path = core.shares.virtual2real(virtual_path, is_lowercase_path=transfer.is_lowercase_path)
+            real_path = core.shares.virtual2real(
+                virtual_path,
+                revert_backslash=transfer.is_backslash_path,
+                is_lowercase_path=transfer.is_lowercase_path
+            )
             core.pluginhandler.upload_finished_notification(username, virtual_path, real_path)
 
             log.add_upload(
@@ -479,6 +484,20 @@ class Uploads(Transfers):
 
         return True, None, size
 
+    def _check_backslash_path_exists(self, username, virtual_path):
+        """Replace a backslash sentinel with an actual backslash in a file path, and check
+        if a file for the resulting path exists and is shared."""
+
+        is_shared = False
+        real_path = None
+        size = None
+
+        if sys.platform != "win32" and core.shares.BACKSLASH_SENTINEL in virtual_path:
+            real_path = core.shares.virtual2real(virtual_path, revert_backslash=True)
+            is_shared, size = core.shares.file_is_shared(username, virtual_path, real_path)
+
+        return is_shared, real_path, size
+
     def _get_upload_candidate(self):
         """Retrieve a suitable queued transfer for uploading.
 
@@ -575,7 +594,11 @@ class Uploads(Transfers):
                 continue
 
             virtual_path = upload_candidate.virtual_path
-            real_path = core.shares.virtual2real(virtual_path, is_lowercase_path=upload_candidate.is_lowercase_path)
+            real_path = core.shares.virtual2real(
+                virtual_path,
+                revert_backslash=upload_candidate.is_backslash_path,
+                is_lowercase_path=upload_candidate.is_lowercase_path
+            )
             is_file_shared, _new_size = core.shares.file_is_shared(username, virtual_path, real_path)
 
             if not is_file_shared:
@@ -872,6 +895,7 @@ class Uploads(Transfers):
         virtual_path = msg.file
         real_path = core.shares.virtual2real(virtual_path)
         allowed, reason, size = self._check_queue_upload_allowed(username, msg.addr, virtual_path, real_path, msg)
+        is_backslash_path = False
         is_lowercase_path = False
 
         if reason == TransferRejectReason.FILE_NOT_SHARED:
@@ -885,6 +909,14 @@ class Uploads(Transfers):
                 is_lowercase_path = True
 
                 if allowed:
+                    reason = None
+            else:
+                # Possibly a file path with a backslash sentinel that should be substituted
+                allowed, real_path_reverted, size = self._check_backslash_path_exists(username, virtual_path)
+
+                if allowed:
+                    is_backslash_path = True
+                    real_path = real_path_reverted
                     reason = None
 
         log.add_transfer("Upload request for file %s from user: %s, allowed: %s, "
@@ -912,6 +944,7 @@ class Uploads(Transfers):
             transfer = Transfer(username, virtual_path, folder_path, size)
             self._append_transfer(transfer)
 
+        transfer.is_backslash_path = is_backslash_path
         transfer.is_lowercase_path = is_lowercase_path
 
         self._enqueue_transfer(transfer)
@@ -952,6 +985,7 @@ class Uploads(Transfers):
         username = msg.username
         virtual_path = msg.file
         token = msg.token
+        is_backslash_path = False
 
         log.add_transfer("Received legacy upload request %s for file %s from user %s",
                          (token, virtual_path, username))
@@ -959,6 +993,15 @@ class Uploads(Transfers):
         # Is user allowed to download?
         real_path = core.shares.virtual2real(virtual_path)
         allowed, reason, size = self._check_queue_upload_allowed(username, msg.addr, virtual_path, real_path, msg)
+
+        if reason == TransferRejectReason.FILE_NOT_SHARED:
+            # Possibly a file path with a backslash sentinel that should be substituted
+            allowed, real_path_reverted, size = self._check_backslash_path_exists(username, virtual_path)
+
+            if allowed:
+                is_backslash_path = True
+                real_path = real_path_reverted
+                reason = None
 
         if not allowed:
             if reason:
@@ -982,6 +1025,8 @@ class Uploads(Transfers):
         else:
             transfer = Transfer(username, virtual_path, folder_path, size)
             self._append_transfer(transfer)
+
+        transfer.is_backslash_path = is_backslash_path
 
         if not self.is_new_upload_accepted() or username in self.active_users:
             self._enqueue_transfer(transfer)
@@ -1097,7 +1142,11 @@ class Uploads(Transfers):
         log.add_transfer("Initializing upload with token %s for file %s to user %s",
                          (token, virtual_path, username))
 
-        real_path = core.shares.virtual2real(virtual_path, is_lowercase_path=upload.is_lowercase_path)
+        real_path = core.shares.virtual2real(
+            virtual_path,
+            revert_backslash=upload.is_backslash_path,
+            is_lowercase_path=upload.is_lowercase_path
+        )
 
         try:
             # Open File

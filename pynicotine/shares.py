@@ -542,7 +542,15 @@ class Scanner:
             try:
                 with os.scandir(encode_path(folder_path, prefix=False)) as entries:
                     for entry in entries:
-                        basename = entry.name.decode("utf-8", "replace")
+                        basename = basename_escaped = entry.name.decode("utf-8", "replace")
+
+                        if "\\" in basename:
+                            # Substitute backslashes with backslash sentinels in basenames. This is necessary
+                            # due to the Soulseek network using backslashes as path separators, conflicting
+                            # with non-Windows systems where backslashes are valid (but uncommon) file name
+                            # characters. We restore the original backslash later when a user downloads the file.
+                            basename_escaped = basename.replace("\\", Shares.BACKSLASH_SENTINEL)
+
                         path = os.path.join(folder_path, basename)
 
                         if entry.is_dir():
@@ -568,7 +576,7 @@ class Scanner:
                             file_stat = entry.stat()
                             file_index = self.current_file_index
                             self.mtimes[path] = file_mtime = file_stat.st_mtime
-                            virtual_file_path = f"{virtual_folder_path}\\{basename}"
+                            virtual_file_path = f"{virtual_folder_path}\\{basename_escaped}"
                             virtual_folder_path_lower = virtual_folder_path.lower()
 
                             if not self.rebuild and file_mtime == old_mtimes.get(path) and path in old_files:
@@ -578,14 +586,14 @@ class Scanner:
                                 full_path_file_data = self.get_file_info(virtual_file_path, path, file_stat)
 
                             basename_file_data = full_path_file_data[:]
-                            basename_file_data[0] = basename
+                            basename_file_data[0] = basename_escaped
                             file_list.append(basename_file_data)
 
                             for k in set(virtual_file_path.lower().translate(TRANSLATE_PUNCTUATION).split()):
                                 self.word_index[k].append(file_index)
 
                             self.files[path] = full_path_file_data
-                            self.lowercase_paths[virtual_folder_path_lower][basename.lower()] = file_index
+                            self.lowercase_paths[virtual_folder_path_lower][basename_escaped.lower()] = file_index
 
                             self.current_file_index += 1
 
@@ -694,6 +702,8 @@ class Shares:
     __slots__ = ("share_dbs", "requested_share_times", "initialized", "rescanning", "compressed_shares",
                  "share_db_paths", "file_path_index", "_scanner_process")
 
+    BACKSLASH_SENTINEL = "@@BACKSLASH@@"
+
     def __init__(self):
 
         self.share_dbs = {}
@@ -786,7 +796,7 @@ class Shares:
 
         return index
 
-    def virtual2real(self, virtual_path, is_lowercase_path=False):
+    def virtual2real(self, virtual_path, revert_backslash=False, is_lowercase_path=False):
 
         if is_lowercase_path:
             real_path_index = self.get_lowercase_path_index(virtual_path)
@@ -804,6 +814,11 @@ class Shares:
 
                 if virtual_path.startswith(virtual_name + "\\"):
                     real_path = folder_path.rstrip(os.sep) + virtual_path[len(virtual_name):].replace("\\", os.sep)
+
+                    if revert_backslash and self.BACKSLASH_SENTINEL in virtual_path:
+                        # Real path contains non-separator backslashes. Revert backslash substitutions.
+                        real_path = real_path.replace(self.BACKSLASH_SENTINEL, "\\")
+
                     return real_path
 
         return "__INVALID_SHARE__" + virtual_path
