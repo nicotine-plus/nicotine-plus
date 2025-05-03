@@ -441,6 +441,7 @@ class Search:
             self.filters_button,
             self.filters_container,
             self.filters_label,
+            self.folder_level_filtering_button,
             self.grouping_button,
             self.results_button,
             self.results_label,
@@ -470,6 +471,8 @@ class Search:
         self.active_filter_count = 0
         self.num_results_found = 0
         self.num_results_visible = 0
+        self.found_include_filter = False
+        self.found_exclude_filter = False
 
         # Use dict instead of list for faster membership checks
         self.selected_users = {}
@@ -789,6 +792,46 @@ class Search:
 
         self.on_refilter()
 
+    def process_folder_results(self, folder_results):
+
+        if self.found_include_filter and not self.found_exclude_filter:
+            for row in folder_results:
+                self.add_row_to_model(row)
+
+        folder_results.clear()
+        self.found_include_filter = self.found_exclude_filter = False
+
+    def process_rows(self, rows, folder_results):
+
+        current_folder = None
+        is_folder_level = config.sections["searches"]["folder_level_filtering"]
+        update_ui = False
+
+        for row in rows:
+            folder_path = row[4]
+
+            if not is_folder_level:
+                if self.check_filter(row):
+                    self.add_row_to_model(row)
+                    update_ui = True
+                continue
+
+            if folder_path != current_folder:
+                self.process_folder_results(folder_results)
+                current_folder = folder_path
+
+            if self.found_exclude_filter:
+                continue
+
+            folder_results.append(row)
+
+            if self.check_filter(row):
+                self.found_include_filter = True
+                update_ui = True
+
+        self.process_folder_results(folder_results)
+        return update_ui
+
     def add_result_list(self, result_list, user, country_code, inqueue, ulspeed, h_speed,
                         h_queue, has_free_slots, private=False):
         """Adds a list of search results to the treeview.
@@ -799,6 +842,7 @@ class Search:
         update_ui = False
         search = core.search.searches[self.token]
         row_id = 0
+        folder_results = []
 
         for _code, file_path, size, _ext, file_attributes, *_unused in result_list:
             if self.num_results_found >= config.sections["searches"]["max_displayed_results"]:
@@ -838,30 +882,29 @@ class Search:
             if private:
                 name = _("[PRIVATE]  %s") % name
 
-            is_result_visible = self.append(
-                [
-                    user,
-                    get_flag_icon_name(country_code),
-                    h_speed,
-                    h_queue,
-                    folder_path,
-                    get_file_type_icon_name(name),
-                    name,
-                    h_size,
-                    h_quality,
-                    h_length,
-                    ulspeed,
-                    inqueue,
-                    size,
-                    bitrate,
-                    length,
-                    has_free_slots,
-                    SearchResultFile(file_path, file_attributes),
-                    row_id
-                ]
-            )
+            row = [
+                user,
+                get_flag_icon_name(country_code),
+                h_speed,
+                h_queue,
+                folder_path,
+                get_file_type_icon_name(name),
+                name,
+                h_size,
+                h_quality,
+                h_length,
+                ulspeed,
+                inqueue,
+                size,
+                bitrate,
+                length,
+                has_free_slots,
+                SearchResultFile(file_path, file_attributes),
+                row_id
+            ]
+            self.all_data.append(row)
 
-            if is_result_visible:
+            if self.process_rows([row], folder_results):
                 update_ui = True
 
         return update_ui
@@ -928,16 +971,6 @@ class Search:
 
         # Update number of results, even if they are all filtered
         self.update_result_counter()
-
-    def append(self, row):
-
-        self.all_data.append(row)
-
-        if not self.check_filter(row):
-            return False
-
-        self.add_row_to_model(row)
-        return True
 
     def add_row_to_model(self, row):
 
@@ -1174,6 +1207,7 @@ class Search:
                     return True
 
                 if operation is operator.ne:
+                    self.found_exclude_filter = True
                     return False
 
             if value and operation(value, digit) and not blocked:
@@ -1184,8 +1218,7 @@ class Search:
 
         return False if blocked else allowed
 
-    @staticmethod
-    def check_country(result_filter, value):
+    def check_country(self, result_filter, value):
 
         allowed = False
 
@@ -1197,12 +1230,12 @@ class Search:
                 allowed = True
 
             elif country_code.startswith("!") and country_code[1:] == value:
+                self.found_exclude_filter = True
                 return False
 
         return allowed
 
-    @staticmethod
-    def check_file_type(result_filter, value):
+    def check_file_type(self, result_filter, value):
 
         allowed = False
         found_inclusive = False
@@ -1220,6 +1253,7 @@ class Search:
                 ext = "." + ext
 
             if ext.startswith("!") and value.endswith(exclude_ext):
+                self.found_exclude_filter = True
                 return False
 
             if not ext.startswith("!"):
@@ -1252,6 +1286,7 @@ class Search:
                 return False
 
             if filter_id == "filterout" and (filter_value.search(row[16].path) or filter_value.fullmatch(row[0])):
+                self.found_exclude_filter = True
                 return False
 
             if filter_id == "filterslot" and row[11] > 0:
@@ -1295,9 +1330,8 @@ class Search:
 
         self.tree_view.freeze()
 
-        for row in self.all_data:
-            if self.check_filter(row):
-                self.add_row_to_model(row)
+        folder_results = []
+        self.process_rows(self.all_data, folder_results)
 
         # Update number of results
         self.update_result_counter()
@@ -1755,6 +1789,12 @@ class Search:
 
     def on_refilter(self, *_args):
 
+        folder_level_filtering = self.folder_level_filtering_button.get_active()
+        folder_level_changed = (folder_level_filtering != config.sections["searches"]["folder_level_filtering"])
+
+        if folder_level_changed:
+            config.sections["searches"]["folder_level_filtering"] = folder_level_filtering
+
         if self.populating_filters:
             return
 
@@ -1834,7 +1874,7 @@ class Search:
             "filterlength": (filter_length, filter_length_str),
         }
 
-        if self.filters == filters:
+        if not folder_level_changed and self.filters == filters:
             # Filters have not changed, no need to refilter
             self.refiltering = False
             return

@@ -307,6 +307,7 @@ class Config:
                 "history": [],
                 "enablefilters": False,
                 "filters_visible": False,
+                "folder_level_filtering": False,
                 "defilter": ["", "", "", "", 0, "", ""],
                 "filtercc": [],
                 "filterin": [],
