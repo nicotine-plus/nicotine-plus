@@ -769,11 +769,62 @@ class TreeView:
         column.set_visible(not column.get_visible())
         self._update_column_properties()
 
+    def on_invert_sort_order(self, *_args):
+
+        self._sort_type = (Gtk.SortType.DESCENDING if self._sort_type == Gtk.SortType.ASCENDING
+                           else Gtk.SortType.ASCENDING)
+
+        self.model.set_sort_column_id(self._sort_column, self._sort_type)
+        self.save_columns()
+
+    def on_reset_sort_column(self, *_args):
+
+        self._sort_column = self._default_sort_column
+        self._sort_type = self._default_sort_type
+
+        self.model.set_sort_column_id(self._sort_column, self._sort_type)
+        self.save_columns()
+
+    def on_reset_columns(self, *_args):
+
+        sorted_columns = sorted(
+            self.widget.get_columns(),
+            key=lambda column: list(self._columns.keys()).index(column.id)
+        )
+
+        for column_index, column_data in reversed(list(enumerate(self._columns.values()))):
+            if column_index >= len(sorted_columns):
+                continue
+
+            column = sorted_columns[column_index]
+            width = column_data.get("width")
+
+            if width is not None:
+                column.set_resizable(column.type != "icon")
+
+            if not width:
+                width = -1
+
+            column.set_fixed_width(width)
+            column.set_visible(True)
+
+            self.widget.move_column_after(column, None)
+
+        self.on_reset_sort_column()
+
     def on_column_header_menu(self, menu, _treeview):
 
         columns = self.widget.get_columns()
         visible_columns = [column for column in columns if column.get_visible()]
         menu.clear()
+
+        sort_label = _("A_scending") if self._sort_type == Gtk.SortType.DESCENDING else _("De_scending")
+        sort_menu = PopupMenu(self.window.application)
+        sort_menu.add_items(
+            ("#" + sort_label, self.on_invert_sort_order),
+            ("", None),
+            ("#" + _("_Reset Sort Column"), self.on_reset_sort_column)
+        )
 
         for column_num, column in enumerate(columns, start=1):
             title = column.get_title()
@@ -791,6 +842,13 @@ class TreeView:
                 menu.actions[title].set_enabled(len(visible_columns) > 1)
 
             menu.actions[title].connect("activate", self.on_column_header_toggled, column)
+
+        menu.add_items(
+            ("", None),
+            (">" + _("_Sort Order"), sort_menu),
+            ("#" + _("Reset Columns"), self.on_reset_columns)
+        )
+        menu.update_model()
 
     def on_column_position_changed(self, column, _param):
         """Save column position and width to config."""
