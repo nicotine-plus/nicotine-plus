@@ -255,7 +255,8 @@ class Scanner:
     __slots__ = ("queue", "share_groups", "share_dbs", "share_db_paths", "init",
                  "rescan", "rebuild", "reveal_buddy_shares", "reveal_trusted_shares",
                  "files", "streams", "mtimes", "word_index", "processed_share_names",
-                 "processed_share_paths", "current_file_index", "current_folder_count")
+                 "processed_share_paths", "current_file_index", "current_folder_count",
+                 "lowercase_paths")
 
     HIDDEN_FOLDER_NAMES = {"@eaDir", "#recycle", "#snapshot"}
 
@@ -274,6 +275,7 @@ class Scanner:
         self.files = {}
         self.streams = {}
         self.mtimes = {}
+        self.lowercase_paths = defaultdict(dict)
         self.word_index = defaultdict(list)
         self.processed_share_names = set()
         self.processed_share_paths = set()
@@ -313,8 +315,9 @@ class Scanner:
                 ):
                     self.rescan_dirs(permission_level)
 
-                self.set_shares(word_index=self.word_index)
+                self.set_shares(word_index=self.word_index, lowercase_paths=self.lowercase_paths)
                 self.word_index.clear()
+                self.lowercase_paths.clear()
 
                 self.create_compressed_shares()
                 self.create_file_path_index()
@@ -414,18 +417,20 @@ class Scanner:
 
         raise ValueError(f"Cannot find virtual path for {real_path}")
 
-    def set_shares(self, permission_level=None, files=None, streams=None, mtimes=None, word_index=None):
+    def set_shares(self, permission_level=None, files=None, streams=None, mtimes=None, word_index=None,
+                   lowercase_paths=None):
 
         for source, destination in (
             (files, "files"),
             (streams, "streams"),
             (mtimes, "mtimes"),
-            (word_index, "words")
+            (word_index, "words"),
+            (lowercase_paths, "lowercase_paths")
         ):
             if source is None:
                 continue
 
-            if destination != "words":
+            if destination not in {"words", "lowercase_paths"}:
                 destination = f"{permission_level}_{destination}"
 
             share_db = None
@@ -564,6 +569,7 @@ class Scanner:
                             file_index = self.current_file_index
                             self.mtimes[path] = file_mtime = file_stat.st_mtime
                             virtual_file_path = f"{virtual_folder_path}\\{basename}"
+                            virtual_folder_path_lower = virtual_folder_path.lower()
 
                             if not self.rebuild and file_mtime == old_mtimes.get(path) and path in old_files:
                                 full_path_file_data = old_files[path]
@@ -579,6 +585,8 @@ class Scanner:
                                 self.word_index[k].append(file_index)
 
                             self.files[path] = full_path_file_data
+                            self.lowercase_paths[virtual_folder_path_lower][basename.lower()] = file_index
+
                             self.current_file_index += 1
 
                         except OSError as error:
@@ -700,6 +708,7 @@ class Shares:
         }
         self.share_db_paths = {
             "words": os.path.join(config.data_folder_path, "words.dbn"),
+            "lowercase_paths": os.path.join(config.data_folder_path, "lowercasepaths.dbn"),
             "public_files": os.path.join(config.data_folder_path, "publicfiles.dbn"),
             "public_mtimes": os.path.join(config.data_folder_path, "publicmtimes.dbn"),
             "public_streams": os.path.join(config.data_folder_path, "publicstreams.dbn"),
@@ -767,13 +776,28 @@ class Shares:
             import shutil
             shutil.rmtree(db_path_encoded)
 
-    def virtual2real(self, virtual_path):
+    def get_lowercase_path_index(self, virtual_path):
 
-        for shares in (
-            config.sections["transfers"]["shared"],
-            config.sections["transfers"]["buddyshared"],
-            config.sections["transfers"]["trustedshared"]
-        ):
+        virtual_folder_path, basename = virtual_path.rsplit("\\", 1)
+        index = None
+
+        if virtual_folder_path in core.shares.share_dbs["lowercase_paths"]:
+            index = core.shares.share_dbs["lowercase_paths"][virtual_folder_path].get(basename)
+
+        return index
+
+    def virtual2real(self, virtual_path, is_lowercase_path=False):
+
+        if is_lowercase_path:
+            real_path_index = self.get_lowercase_path_index(virtual_path)
+
+            if real_path_index is not None:
+                # Mangled path from a Soulseek NS client (all lowercase)
+                return self.file_path_index[real_path_index]
+
+        share_groups = self.get_shared_folders()
+
+        for shares in share_groups:
             for virtual_name, folder_path, *_unused in shares:
                 if virtual_path == virtual_name:
                     return folder_path
@@ -1157,8 +1181,8 @@ class Shares:
             try:
                 self.load_shares(
                     self.share_dbs, self.share_db_paths, destinations={
-                        "words", "public_files", "public_streams", "buddy_files", "buddy_streams",
-                        "trusted_files", "trusted_streams"
+                        "words", "lowercase_paths", "public_files", "public_streams", "buddy_files",
+                        "buddy_streams", "trusted_files", "trusted_streams"
                     })
 
             except Exception:
