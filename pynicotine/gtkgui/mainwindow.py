@@ -1148,7 +1148,7 @@ class MainWindow(Window):
         if level not in {"transfer", "connection", "message", "miscellaneous"}:
             self.set_status_text(msg)
 
-        self.log_view.append_line(msg, timestamp_format=timestamp_format)
+        self.log_view.add_line(msg, timestamp_format=timestamp_format)
 
     def on_popup_menu_log(self, menu, _textview):
         menu.actions[_("_Copy")].set_enabled(self.log_view.get_has_selection())
@@ -1165,7 +1165,7 @@ class MainWindow(Window):
         open_folder_path(log.transfer_folder_path, create_folder=True)
 
     def on_clear_log_view(self, *_args):
-        self.log_view.on_clear_all_text()
+        self.log_view.clear()
         self.set_status_text("")
 
     def on_show_log_pane(self, action, state):

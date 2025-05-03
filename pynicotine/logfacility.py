@@ -35,12 +35,14 @@ from pynicotine.utils import open_file_path
 
 
 class LogFile:
-    __slots__ = ("path", "handle", "last_active")
+    __slots__ = ("path", "handle", "last_active", "read_buffer", "read_offset")
 
-    def __init__(self, path, handle):
+    def __init__(self, path):
         self.path = path
-        self.handle = handle
-        self.last_active = time.monotonic()
+        self.handle = None
+        self.last_active = 0.0
+        self.read_buffer = deque([b''])
+        self.read_offset = None
 
 
 class LogLevel:
@@ -93,8 +95,8 @@ class Logger:
         self._log_levels = {LogLevel.DEFAULT}
         self._log_files = {}
 
-        events.connect("quit", self._close_log_files)
-        events.schedule(delay=10, callback=self._close_inactive_log_files, repeat=True)
+        events.connect("quit", self._shut_log_files)
+        events.schedule(delay=10, callback=self._close_inactive_handles, repeat=True)
 
     # Log Levels #
 
@@ -136,7 +138,8 @@ class Logger:
         file_path = os.path.join(folder_path, clean_file(f"{basename}.log"))
         log_file = self._log_files.get(file_path)
 
-        if log_file is not None:
+        if log_file is not None and log_file.handle is not None:
+            log_file.last_active = time.monotonic()
             return log_file
 
         file_path_encoded = encode_path(file_path)
@@ -149,11 +152,20 @@ class Logger:
         if not os.path.exists(folder_path_encoded):
             os.makedirs(folder_path_encoded)
 
-        log_file = self._log_files[file_path] = LogFile(
-            path=file_path, handle=open(file_path_encoded, "ab+"))  # pylint: disable=consider-using-with
+        if log_file is None:
+            log_file = self._log_files[file_path] = LogFile(path=file_path)
 
-        # Disable file access for outsiders
-        os.chmod(file_path_encoded, 0o600)
+        log_file.handle = open(file_path_encoded, "ab+")  # pylint: disable=consider-using-with
+
+        if log_file.read_offset is None:
+            # Disable file access for outsiders
+            os.chmod(file_path_encoded, 0o600)
+
+            # EOF at startup datum is the initial reading position
+            log_file.handle.seek(0, os.SEEK_END)
+            log_file.read_offset = log_file.handle.tell()
+
+        log_file.last_active = time.monotonic()
 
         return log_file
 
@@ -172,7 +184,6 @@ class Logger:
                 text += "\n"
 
             log_file.handle.write(text.encode("utf-8", "replace"))
-            log_file.last_active = time.monotonic()
 
         except Exception as error:
             # Avoid infinite recursion
@@ -183,7 +194,10 @@ class Logger:
                 "error": error
             }, should_log_file=should_log_file)
 
-    def _close_log_file(self, log_file):
+    def _close_handle(self, log_file):
+
+        if log_file.handle is None:
+            return
 
         try:
             log_file.handle.close()
@@ -194,19 +208,24 @@ class Logger:
                 "error": error
             })
 
+        log_file.handle = None
+
+    def _shut_log_file(self, log_file):
+        self._close_handle(log_file)
         del self._log_files[log_file.path]
 
-    def _close_log_files(self):
+    def _shut_log_files(self):
         for log_file in self._log_files.copy().values():
-            self._close_log_file(log_file)
+            self._shut_log_file(log_file)
 
-    def _close_inactive_log_files(self):
+    def _close_inactive_handles(self):
+        """Keep buffers and current reading places, just close handles."""
 
         current_time = time.monotonic()
 
-        for log_file in self._log_files.copy().values():
+        for log_file in self._log_files.values():
             if (current_time - log_file.last_active) >= 10:
-                self._close_log_file(log_file)
+                self._close_handle(log_file)
 
     def _normalize_folder_path(self, folder_path):
         return os.path.normpath(os.path.expandvars(folder_path))
@@ -221,47 +240,40 @@ class Logger:
     def open_log(self, folder_path, basename):
         self._log_file_operation(folder_path, basename, self.open_log_callback)
 
-    def _get_log_lines(self, log_file, num_lines):
+    def _get_log_lines(self, log_file):
 
-        file_handle = log_file.handle
-        file_handle.seek(0, os.SEEK_END)
+        read_size = io.DEFAULT_BUFFER_SIZE
+        log_file.read_offset -= read_size
 
-        blocks = deque()
-        read_offset = file_handle.tell()
-        lines_left = num_lines + 1
+        if log_file.read_offset < 0:
+            # Reached beginning of file, read remaining data
+            read_size += log_file.read_offset
+            log_file.read_offset = 0
 
-        while lines_left > 0:
-            read_size = io.DEFAULT_BUFFER_SIZE
-            read_offset -= read_size
+        log_file.handle.seek(log_file.read_offset)
+        lines = deque(log_file.handle.read(read_size).splitlines(keepends=True))
 
-            if read_offset < 0:
-                # Reached beginning of file, read remaining data
-                read_size += read_offset
-                read_offset = 0
+        # FIXME: Align line breaks
+        if lines[-1].endswith(b'\n'):
+            lines.append(log_file.read_buffer.pop())
+        else:
+            lines[-1] += log_file.read_buffer.pop()
 
-            file_handle.seek(read_offset)
-            block = file_handle.read(read_size)
-            blocks.appendleft(block)
-
-            if read_offset <= 0:
-                # Fewer lines in file than our limit, stop here
-                break
-
-            lines_left -= block.count(b'\n')
-
-        file_handle.seek(0, os.SEEK_END)
-        return b''.join(blocks).splitlines()[-num_lines:]
+        return lines
 
     def read_log(self, folder_path, basename, num_lines):
 
-        lines = None
+        lines = deque()
         log_file = None
 
         try:
             log_file = self._get_log_file(folder_path, basename, should_create_file=False)
 
-            if log_file is not None:
-                lines = self._get_log_lines(log_file, num_lines)
+            while log_file and log_file.read_offset and len(log_file.read_buffer) < num_lines:
+                log_file.read_buffer.extend(self._get_log_lines(log_file))
+
+            if log_file and log_file.handle:
+                log_file.handle.seek(0, os.SEEK_END)
 
         except Exception as error:
             self._add(_("Cannot access log file %(path)s: %(error)s"), {
@@ -270,11 +282,24 @@ class Logger:
             })
 
         if log_file is not None:
-            self._close_log_file(log_file)
+            # Read the specified number of lines from read_buffer
+            while len(lines) < num_lines and log_file.read_buffer:
+                lines.append(log_file.read_buffer.pop())
 
         return lines
 
+    def shut_log(self, folder_path, basename):
+        """Forget everything, including current reading place."""
+
+        log_file = self._get_log_file(folder_path, basename, should_create_file=False)
+
+        if log_file is None:
+            return
+
+        self._shut_log_file(log_file)
+
     def delete_log(self, folder_path, basename):
+        self.shut_log(folder_path, basename)
         self._log_file_operation(folder_path, basename, self.delete_log_callback)
 
     def _log_file_operation(self, folder_path, basename, callback):

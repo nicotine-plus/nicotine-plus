@@ -504,23 +504,23 @@ class ChatRooms:
         is_action_message = (msg.message_type == "action")
 
         if is_action_message:
-            message = message.replace("/me ", "", 1)
+            msg.message = message = message.replace("/me ", "", 1)
 
         if config.sections["words"]["censorwords"] and username != core.users.login_username:
             message = censor_text(message, censored_patterns=config.sections["words"]["censored"])
 
-        if is_action_message:
-            msg.formatted_message = msg.message = f"* {username} {message}"
-        else:
-            msg.formatted_message = f"[{username}] {message}"
-
-        if is_global:
-            msg.formatted_message = f"{msg.room} | {msg.formatted_message}"
-
         if config.sections["logging"]["chatrooms"] or room in config.sections["logging"]["rooms"]:
+            if is_action_message:
+                formatted_message = f"* {username} {message}"
+            else:
+                formatted_message = f"[{username}] {message}"
+
+            if is_global:
+                formatted_message = f"{msg.room} | {formatted_message}"
+
             log.write_log_file(
                 folder_path=log.room_folder_path,
-                basename=room, text=msg.formatted_message
+                basename=room, text=formatted_message
             )
 
         if is_global:
@@ -589,7 +589,7 @@ class ChatRooms:
             # User ignored, ignore Ticker messages
             return
 
-        room_obj.tickers[username] = msg.msg
+        room_obj.tickers[username] = msg.msg.replace("\n", " ")
 
     def _ticker_remove(self, msg):
         """Server code 115."""
