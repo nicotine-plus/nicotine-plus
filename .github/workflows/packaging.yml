@@ -1,6 +1,6 @@
 name: Packaging
-
 on: [push, pull_request]
+permissions: {}
 
 jobs:
 
