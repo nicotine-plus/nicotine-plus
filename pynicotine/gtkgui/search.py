@@ -42,6 +42,7 @@ from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.combobox import ComboBox
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
+from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
@@ -54,6 +55,7 @@ from pynicotine.gtkgui.widgets.treeview import create_grouping_menu
 from pynicotine.logfacility import log
 from pynicotine.shares import FileTypes
 from pynicotine.slskmessages import FileListMessage
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import factorize
 from pynicotine.utils import humanize
 from pynicotine.utils import human_size
@@ -133,8 +135,6 @@ class Searches(IconNotebook):
             ("quit", self.quit),
             ("remove-search", self.remove_search),
             ("remove-wish", self.update_wish_button),
-            ("server-disconnect", self.server_disconnect),
-            ("server-login", self.server_login),
             ("show-search", self.show_search)
         ):
             events.connect(event_name, callback)
@@ -163,11 +163,8 @@ class Searches(IconNotebook):
         if self.window.current_page_id != self.window.search_page.id:
             return True
 
-        if self.window.search_entry.is_sensitive():
-            self.window.search_entry.grab_focus()
-            return True
-
-        return False
+        self.window.search_entry.grab_focus()
+        return True
 
     def on_restore_removed_page(self, page_args):
         search_term, mode, room, users = page_args
@@ -279,11 +276,12 @@ class Searches(IconNotebook):
         elif mode == "buddies":
             mode_label = _("Buddies")
 
-        self.create_page(token, search.term_sanitized, mode, mode_label, room=room, users=users)
+        page = self.create_page(token, search.term_sanitized, mode, mode_label, room=room, users=users)
 
         if switch_page:
             self.show_search(token)
 
+        page.show_error_message()
         self.add_search_history_item(search.term_sanitized)
 
     def show_search(self, token):
@@ -374,13 +372,6 @@ class Searches(IconNotebook):
             if page.text == wish:
                 page.update_wish_button()
 
-    def server_login(self, *_args):
-        self.window.search_title.set_sensitive(True)
-        self.on_focus()
-
-    def server_disconnect(self, *_args):
-        self.window.search_title.set_sensitive(False)
-
 
 class Search:
 
@@ -442,8 +433,10 @@ class Search:
             self.filters_container,
             self.filters_label,
             self.grouping_button,
+            self.info_bar_container,
             self.results_button,
             self.results_label,
+            self.retry_button,
             self.tree_container
         ) = ui.load(scope=self, path="search.ui")
 
@@ -474,6 +467,8 @@ class Search:
         # Use dict instead of list for faster membership checks
         self.selected_users = {}
         self.selected_results = {}
+
+        self.info_bar = InfoBar(parent=self.info_bar_container, button=self.retry_button)
 
         # Combo boxes
         self.filter_include_combobox = ComboBox(
@@ -693,6 +688,10 @@ class Search:
         # Wishlist
         self.update_wish_button()
 
+    def show_error_message(self):
+        if core.users.statuses.get(core.users.login_username, UserStatus.OFFLINE) == UserStatus.OFFLINE:
+            self.info_bar.show_error_message(_("Cannot receive search results while offline."))
+
     def clear(self):
         self.clear_model(stored_results=True)
 
@@ -704,6 +703,7 @@ class Search:
         for combobox in self.filter_comboboxes.values():
             combobox.destroy()
 
+        self.info_bar.destroy()
         self.tree_view.destroy()
         self.window.update_title()
         self.__dict__.clear()
@@ -1751,7 +1751,10 @@ class Search:
         self.window.search_entry.grab_focus_without_selecting()
 
     def on_search_again(self, *_args):
+
+        self.info_bar.set_visible(False)
         core.search.send_search_request(self.token)
+        self.show_error_message()
 
     def on_refilter(self, *_args):
 

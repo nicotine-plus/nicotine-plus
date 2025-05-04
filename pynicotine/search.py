@@ -350,7 +350,7 @@ class Search:
 
         elif mode == "user":
             if not users:
-                users = [core.users.login_username]
+                users = [core.users.login_username or config.sections["server"]["login"]]
 
             feedback = core.pluginhandler.outgoing_user_search_event(users, search_term)
 
