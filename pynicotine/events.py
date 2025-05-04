@@ -26,6 +26,7 @@ from threading import Thread
 EVENT_NAMES = {
     # General
     "check-latest-version",
+    "check-port-status",
     "cli-command",
     "cli-prompt-finished",
     "confirm-quit",

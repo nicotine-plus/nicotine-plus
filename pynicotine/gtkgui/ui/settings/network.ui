@@ -124,27 +124,13 @@
               </object>
             </child>
             <child>
-              <object class="GtkBox">
-                <property name="spacing">18</property>
+              <object class="GtkLabel" id="current_port_label">
+                <property name="label" translatable="yes">Unknown</property>
+                <property name="selectable">True</property>
                 <property name="visible">True</property>
-                <child>
-                  <object class="GtkLabel" id="current_port_label">
-                    <property name="label" translatable="yes">Unknown</property>
-                    <property name="selectable">True</property>
-                    <property name="visible">True</property>
-                    <property name="wrap">True</property>
-                    <property name="wrap-mode">word</property>
-                    <property name="xalign">0</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="check_port_status_label">
-                    <property name="label" translatable="yes">Check Port Status</property>
-                    <property name="visible">True</property>
-                    <property name="wrap">True</property>
-                    <property name="wrap-mode">word-char</property>
-                  </object>
-                </child>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word</property>
+                <property name="xalign">0</property>
               </object>
             </child>
           </object>
@@ -160,16 +146,49 @@
                 <property name="mnemonic-widget">listen_port_spinner</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
-                <property name="wrap-mode">word-char</property>
+                <property name="wrap-mode">word</property>
                 <property name="xalign">0</property>
               </object>
             </child>
             <child>
-              <object class="GtkSpinButton" id="listen_port_spinner">
-                <property name="adjustment">_listen_port_adjustment</property>
-                <property name="numeric">True</property>
+              <object class="GtkBox">
+                <property name="spacing">12</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
+                <child>
+                  <object class="GtkSpinButton" id="listen_port_spinner">
+                    <property name="adjustment">_listen_port_adjustment</property>
+                    <property name="numeric">True</property>
+                    <property name="valign">center</property>
+                    <property name="visible">True</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkMenuButton" id="check_port_status_button">
+                    <property name="tooltip-text" translatable="yes">Check Status</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="spacing">6</property>
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">network-wired-symbolic</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="check_port_status_label">
+                            <property name="ellipsize">end</property>
+                            <property name="label" translatable="yes">Check Status</property>
+                            <property name="mnemonic-widget">check_port_status_button</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
