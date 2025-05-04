@@ -158,16 +158,16 @@ class UserBrowses(IconNotebook):
                              close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
-        if new_request:
-            page.clear_model()
-            page.set_indeterminate_progress()
-
         page.queued_path = path
         page.browse_queued_path()
 
         if switch_page:
             self.set_current_page(page.container)
             self.window.change_main_page(self.window.userbrowse_page)
+
+        if new_request:
+            page.clear_model()
+            page.set_indeterminate_progress()
 
     def remove_user(self, user):
 
@@ -658,19 +658,19 @@ class UserBrowse:
             return
 
         self.indeterminate_progress = self.refreshing = True
+        self.info_bar.set_visible(False)
+
+        if core.users.login_status == UserStatus.OFFLINE and self.user != config.sections["server"]["login"]:
+            self.peer_connection_error()
+            return
 
         self.progress_bar.get_parent().set_reveal_child(True)
         self.progress_bar.pulse()
         GLib.timeout_add(320, self.pulse_progress, False)
         GLib.timeout_add(1000, self.pulse_progress)
 
-        self.info_bar.set_visible(False)
-
         self.refresh_button.set_sensitive(False)
         self.save_button.set_sensitive(False)
-
-        if core.users.login_status == UserStatus.OFFLINE and self.user != config.sections["server"]["login"]:
-            self.peer_connection_error()
 
     def set_finishing(self):
 
