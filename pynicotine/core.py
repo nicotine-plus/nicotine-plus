@@ -34,7 +34,7 @@ class Core:
     __slots__ = ("shares", "users", "network_filter", "statistics", "search", "downloads",
                  "uploads", "interests", "userbrowse", "userinfo", "buddies", "privatechat",
                  "chatrooms", "pluginhandler", "now_playing", "portmapper", "notifications",
-                 "update_checker", "_network_thread", "cli_interface_address",
+                 "port_checker", "update_checker", "_network_thread", "cli_interface_address",
                  "cli_listen_port", "enabled_components")
 
     def __init__(self):
@@ -56,6 +56,7 @@ class Core:
         self.now_playing = None
         self.portmapper = None
         self.notifications = None
+        self.port_checker = None
         self.update_checker = None
         self._network_thread = None
 
@@ -70,7 +71,7 @@ class Core:
         if enabled_components is None:
             enabled_components = {
                 "error_handler", "signal_handler", "cli", "portmapper", "network_thread", "shares", "users",
-                "notifications", "network_filter", "now_playing", "statistics", "update_checker",
+                "notifications", "network_filter", "now_playing", "statistics", "port_checker", "update_checker",
                 "search", "downloads", "uploads", "interests", "userbrowse", "userinfo", "buddies",
                 "chatrooms", "privatechat", "pluginhandler"
             }
@@ -144,6 +145,10 @@ class Core:
         if "statistics" in enabled_components:
             from pynicotine.transfers import Statistics
             self.statistics = Statistics()
+
+        if "port_checker" in enabled_components:
+            from pynicotine.portchecker import PortChecker
+            self.port_checker = PortChecker()
 
         if "update_checker" in enabled_components:
             self.update_checker = UpdateChecker()

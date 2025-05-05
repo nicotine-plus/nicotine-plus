@@ -39,6 +39,7 @@ from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_MINOR_VERSION
 from pynicotine.gtkgui.dialogs.pluginsettings import PluginSettings
+from pynicotine.gtkgui.popovers.portchecker import PortChecker
 from pynicotine.gtkgui.popovers.searchfilterhelp import SearchFilterHelp
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
@@ -76,6 +77,7 @@ class NetworkPage:
             self.auto_away_spinner,
             self.auto_connect_startup_toggle,
             self.auto_reply_message_entry,
+            self.check_port_status_button,
             self.check_port_status_label,
             self.container,
             self.current_port_label,
@@ -89,7 +91,19 @@ class NetworkPage:
         self.application = application
 
         self.username_entry.set_max_length(core.users.USERNAME_MAX_LENGTH)
-        self.check_port_status_label.connect("activate-link", self.on_activate_link)
+
+        for event_name, callback in (
+            ("server-disconnect", self.update_port),
+            ("server-login", self.update_port)
+        ):
+            events.connect(event_name, callback)
+
+        self.port_checker = PortChecker(application.preferences)
+        self.port_checker.set_menu_button(self.check_port_status_button)
+
+        if GTK_API_VERSION >= 4:
+            inner_button = next(iter(self.check_port_status_button))
+            self.check_port_status_label.set_mnemonic_widget(inner_button)
 
         self.network_interface_combobox = ComboBox(
             container=self.network_interface_label.get_parent(), has_entry=True,
@@ -109,33 +123,23 @@ class NetworkPage:
             }
         }
 
-        for event_name, callback in (
-            ("server-disconnect", self.update_port_label),
-            ("server-login", self.update_port_label)
-        ):
-            events.connect(event_name, callback)
-
     def destroy(self):
         self.network_interface_combobox.destroy()
         self.__dict__.clear()
 
-    def update_port_label(self, *_args):
+    def update_port(self, *_args):
 
         unknown_label = _("Unknown")
 
         if core.users.public_port:
-            url = pynicotine.__port_checker_url__ % str(core.users.public_port)
-            port_status_text = _("Check Port Status")
-
             self.current_port_label.set_markup(_("<b>%(ip)s</b>, port %(port)s") % {
                 "ip": core.users.public_ip_address or unknown_label,
                 "port": core.users.public_port or unknown_label
             })
-            self.check_port_status_label.set_markup(f"<a href='{url}' title='{url}'>{port_status_text}</a>")
-            self.check_port_status_label.set_visible(not self.application.isolated_mode)
         else:
             self.current_port_label.set_text(unknown_label)
-            self.check_port_status_label.set_visible(False)
+
+        self.port_checker.port = core.users.public_port
 
     def set_settings(self):
 
@@ -152,7 +156,7 @@ class NetworkPage:
         self.application.preferences.set_widgets_data(self.options)
 
         # Listening port status
-        self.update_port_label()
+        self.update_port()
 
         # Special options
         server_hostname, server_port = config.sections["server"]["server"]
