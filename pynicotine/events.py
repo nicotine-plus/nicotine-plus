@@ -63,6 +63,7 @@ EVENT_NAMES = {
     "show-download-notification",
     "show-private-chat-notification",
     "show-search-notification",
+    "show-upload-notification",
 
     # Buddy list
     "add-buddy",
