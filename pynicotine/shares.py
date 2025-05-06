@@ -292,6 +292,12 @@ class Scanner:
                     self.create_compressed_shares()
                     self.create_file_path_index()
 
+                    # Attempt to load remaining dbs
+                    Shares.load_shares(
+                        self.share_dbs, self.share_db_paths, destinations={"words", "lowercase_paths"}
+                    )
+                    Shares.close_shares(self.share_dbs)
+
                 except Exception:
                     # Failed to load shares or version is invalid, rebuild
                     self.rescan = self.rebuild = True
