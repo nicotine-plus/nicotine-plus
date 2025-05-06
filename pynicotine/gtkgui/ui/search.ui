@@ -370,20 +370,45 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="clear_undo_filters_button">
-                    <property name="valign">start</property>
+                  <object class="GtkBox">
+                    <property name="spacing">3</property>
                     <property name="visible">True</property>
-                    <signal name="clicked" handler="on_clear_undo_filters"/>
                     <child>
-                      <object class="GtkImage" id="clear_undo_filters_icon">
+                      <object class="GtkToggleButton" id="folder_level_filtering_button">
+                        <property name="tooltip-text" translatable="yes">Folder-Level Filtering</property>
+                        <property name="valign">start</property>
                         <property name="visible">True</property>
+                        <signal name="toggled" handler="on_refilter"/>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">folder-symbolic</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                        <style>
+                          <class name="circular"/>
+                          <class name="flat"/>
+                          <class name="image-button"/>
+                        </style>
                       </object>
                     </child>
-                    <style>
-                      <class name="circular"/>
-                      <class name="flat"/>
-                      <class name="image-button"/>
-                    </style>
+                    <child>
+                      <object class="GtkButton" id="clear_undo_filters_button">
+                        <property name="valign">start</property>
+                        <property name="visible">True</property>
+                        <signal name="clicked" handler="on_clear_undo_filters"/>
+                        <child>
+                          <object class="GtkImage" id="clear_undo_filters_icon">
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                        <style>
+                          <class name="circular"/>
+                          <class name="flat"/>
+                          <class name="image-button"/>
+                        </style>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
