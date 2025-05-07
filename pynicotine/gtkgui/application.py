@@ -978,6 +978,9 @@ class Application:
 
         core.start()
 
+        gtk_version = f"{Gtk.get_major_version()}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
+        log.add(_("Loaded %(program)s %(version)s"), {"program": "GTK", "version": gtk_version})
+
         if config.sections["server"]["auto_connect_startup"]:
             core.connect()
 

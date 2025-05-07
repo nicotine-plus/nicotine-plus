@@ -96,7 +96,7 @@ def check_gtk_version(gtk_api_version, is_fallback=False):
 
         return _("Cannot find %s, please install it.") % f"GTK >={gtk_api_version}"
 
-    from gi.repository import Gtk
+    from gi.repository import Gtk  # pylint:disable=unused-import
 
     if sys.platform == "win32":
         # Ensure all Windows-specific APIs are available
@@ -109,9 +109,6 @@ def check_gtk_version(gtk_api_version, is_fallback=False):
         # on Windows while a proxy is enabled. We always keep the loop active anyway
         # (on_process_thread_events in application.py).
         gi._ossighelper._wakeup_fd_is_active = True  # pylint:disable=protected-access
-
-    gtk_version = f"{Gtk.get_major_version()}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
-    log.add(_("Loading %(program)s %(version)s"), {"program": "GTK", "version": gtk_version})
 
     return None
 

@@ -97,19 +97,6 @@ class Core:
         ):
             events.connect(event_name, callback)
 
-        script_folder_path = os.path.dirname(__file__)
-
-        log.add(_("Loading %(program)s %(version)s"), {
-            "program": "Python",
-            "version": sys.version.split()[0]
-        })
-        log.add_debug("Using %s executable: %s", ("Python", sys.executable))
-        log.add(_("Loading %(program)s %(version)s"), {
-            "program": pynicotine.__application_name__,
-            "version": pynicotine.__version__
-        })
-        log.add_debug("Using %s executable: %s", (pynicotine.__application_name__, script_folder_path))
-
         if "portmapper" in enabled_components:
             from pynicotine.portmapper import PortMapper
             self.portmapper = PortMapper()
@@ -229,6 +216,19 @@ class Core:
         threading.Thread.__init__ = init_thread_excepthook
 
     def start(self):
+
+        script_folder_path = os.path.dirname(__file__)
+
+        log.add(_("Starting %(program)s %(version)s"), {
+            "program": pynicotine.__application_name__,
+            "version": pynicotine.__version__
+        })
+        log.add(_("Loaded %(program)s %(version)s"), {
+            "program": "Python",
+            "version": sys.version.split()[0]
+        })
+        log.add_debug("Using %s executable: %s", (pynicotine.__application_name__, script_folder_path))
+        log.add_debug("Using %s executable: %s", ("Python", sys.executable))
 
         if "cli" in self.enabled_components:
             from pynicotine.cli import cli
