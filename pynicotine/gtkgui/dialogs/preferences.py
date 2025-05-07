@@ -2637,6 +2637,7 @@ class NowPlayingPage:
             self.format_help_label,
             self.format_message_label,
             self.lastfm_radio,
+            self.librefm_radio,
             self.listenbrainz_radio,
             self.mpris_radio,
             self.other_radio,
@@ -2729,6 +2730,9 @@ class NowPlayingPage:
         elif self.enable_other and self.other_radio.get_active():
             player = "other"
 
+        elif self.librefm_radio.get_active():
+            player = "librefm"
+
         elif self.listenbrainz_radio.get_active():
             player = "listenbrainz"
 
@@ -2748,6 +2752,9 @@ class NowPlayingPage:
         elif player == "other" and self.enable_other:
             self.other_radio.set_active(True)
 
+        elif player == "librefm":
+            self.librefm_radio.set_active(True)
+
         elif player == "listenbrainz":
             self.listenbrainz_radio.set_active(True)
 
@@ -2759,6 +2766,10 @@ class NowPlayingPage:
         if self.lastfm_radio.get_active():
             self.player_replacers = ["$n", "$t", "$a", "$b"]
             self.command_label.set_text(_("Username;APIKEY"))
+
+        if self.librefm_radio.get_active():
+            self.player_replacers = ["$n", "$t", "$a", "$b"]
+            self.command_label.set_text(_("Username: "))
 
         elif self.mpris_radio.get_active():
             self.player_replacers = ["$n", "$p", "$a", "$b", "$t", "$y", "$c", "$r", "$k", "$l", "$f"]
