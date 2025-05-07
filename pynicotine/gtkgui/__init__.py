@@ -146,10 +146,6 @@ def run(hidden, ci_mode, isolated_mode, multi_instance):
         os.environ["GDK_DISABLE"] = "gl,vulkan"
         os.environ["GSK_RENDERER"] = "cairo"
 
-    elif sys.platform == "darwin":
-        # Older GL renderer is still faster on macOS for now
-        os.environ["GSK_RENDERER"] = "gl"
-
     error = check_gtk_version(gtk_api_version=os.environ.get("NICOTINE_GTK_VERSION", get_default_gtk_version()))
 
     if error:
