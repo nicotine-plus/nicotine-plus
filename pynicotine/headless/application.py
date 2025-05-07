@@ -50,6 +50,8 @@ class Application:
 
         if config.sections["server"]["auto_connect_startup"]:
             core.connect()
+        else:
+            log.add(_("Type %s to connect to Soulseek"), "/connect")
 
         # Main loop, process events from threads 10 times per second
         while events.process_thread_events():
