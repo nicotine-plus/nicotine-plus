@@ -318,8 +318,7 @@ class PrivateChat:
             self.container,
             self.help_button,
             self.log_toggle,
-            self.search_bar,
-            self.speech_toggle
+            self.search_bar
         ) = ui.load(scope=self, path="privatechat.ui")
 
         self.user = user
@@ -445,7 +444,6 @@ class PrivateChat:
 
     def toggle_chat_buttons(self):
         self.log_toggle.set_visible(not config.sections["logging"]["privatechat"])
-        self.speech_toggle.set_visible(config.sections["ui"]["speechenabled"])
 
     def on_log_toggled(self, *_args):
 
@@ -516,11 +514,6 @@ class PrivateChat:
 
         if not is_outgoing_message:
             self._show_notification(message, is_mentioned=(message_type == "hilite"))
-
-            if self.speech_toggle.get_active():
-                core.notifications.new_tts(
-                    config.sections["ui"]["speechprivate"], {"user": tag_username, "message": message}
-                )
 
         if not is_outgoing_message and not is_new_message:
             if not self.offline_message:

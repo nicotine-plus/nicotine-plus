@@ -1329,7 +1329,6 @@ class ChatsPage:
             self.enable_ctcp_toggle,
             self.enable_spell_checker_toggle,
             self.enable_tab_completion_toggle,
-            self.enable_tts_toggle,
             self.format_codes_label,
             self.min_chars_dropdown_spinner,
             self.private_room_toggle,
@@ -1339,10 +1338,6 @@ class ChatsPage:
             self.replacement_list_container,
             self.timestamp_private_chat_entry,
             self.timestamp_room_entry,
-            self.tts_command_label,
-            self.tts_container,
-            self.tts_private_message_entry,
-            self.tts_room_message_entry,
         ) = self.widgets = ui.load(scope=self, path="settings/chats.ui")
 
         self.application = application
@@ -1353,14 +1348,6 @@ class ChatsPage:
         self.format_codes_label.set_markup(
             f"<a href='{format_codes_url}' title='{format_codes_url}'>{format_codes_label}</a>")
         self.format_codes_label.connect("activate-link", self.on_activate_link)
-
-        self.tts_command_combobox = ComboBox(
-            container=self.tts_command_label.get_parent(), label=self.tts_command_label, has_entry=True,
-            items=(
-                ("flite -t $", None),
-                ("echo $ | festival --tts", None)
-            )
-        )
 
         self.censored_patterns = []
         self.censor_list_view = TreeView(
@@ -1425,17 +1412,12 @@ class ChatsPage:
                 "replacewords": self.auto_replace_words_toggle
             },
             "ui": {
-                "spellcheck": self.enable_spell_checker_toggle,
-                "speechenabled": self.enable_tts_toggle,
-                "speechcommand": self.tts_command_combobox,
-                "speechrooms": self.tts_room_message_entry,
-                "speechprivate": self.tts_private_message_entry
+                "spellcheck": self.enable_spell_checker_toggle
             }
         }
 
     def destroy(self):
 
-        self.tts_command_combobox.destroy()
         self.censor_list_view.destroy()
         self.replacement_list_view.destroy()
 
@@ -1453,7 +1435,6 @@ class ChatsPage:
         self.enable_spell_checker_toggle.get_parent().set_visible(SpellChecker.is_available())
         self.enable_ctcp_toggle.set_active(not config.sections["server"]["ctcpmsgs"])
         self.format_codes_label.set_visible(not self.application.isolated_mode)
-        self.tts_container.set_margin_top(24 if self.application.isolated_mode else 0)
 
         self.censored_patterns = config.sections["words"]["censored"][:]
         self.replacements = config.sections["words"]["autoreplaced"].copy()
@@ -1488,23 +1469,13 @@ class ChatsPage:
                 "replacewords": self.auto_replace_words_toggle.get_active()
             },
             "ui": {
-                "spellcheck": self.enable_spell_checker_toggle.get_active(),
-                "speechenabled": self.enable_tts_toggle.get_active(),
-                "speechcommand": self.tts_command_combobox.get_text().strip(),
-                "speechrooms": self.tts_room_message_entry.get_text(),
-                "speechprivate": self.tts_private_message_entry.get_text()
+                "spellcheck": self.enable_spell_checker_toggle.get_active()
             }
         }
 
     def on_activate_link(self, _label, url):
         open_uri(url)
         return True
-
-    def on_default_tts_private_message(self, *_args):
-        self.tts_private_message_entry.set_text(config.defaults["ui"]["speechprivate"])
-
-    def on_default_tts_room_message(self, *_args):
-        self.tts_room_message_entry.set_text(config.defaults["ui"]["speechrooms"])
 
     def on_default_timestamp_room(self, *_args):
         self.timestamp_room_entry.set_text(config.defaults["logging"]["rooms_timestamp"])

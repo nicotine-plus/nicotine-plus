@@ -475,7 +475,6 @@ class ChatRoom:
             self.log_toggle,
             self.room_wall_button,
             self.room_wall_label,
-            self.speech_toggle,
             self.users_container,
             self.users_label,
             self.users_list_container
@@ -674,7 +673,6 @@ class ChatRoom:
         for widget in (self.activity_container, self.users_container, self.chat_entry_container, self.help_button):
             widget.set_visible(False)
 
-        self.speech_toggle.set_active(False)  # Public feed is jibberish and too fast for TTS
         self.chat_entry_row.set_halign(Gtk.Align.END)
 
     def add_user_row(self, userdata):
@@ -812,13 +810,11 @@ class ChatRoom:
     def toggle_chat_buttons(self):
 
         is_log_toggle_visible = not config.sections["logging"]["chatrooms"]
-        is_speech_toggle_visible = config.sections["ui"]["speechenabled"]
 
         self.log_toggle.set_visible(is_log_toggle_visible)
-        self.speech_toggle.set_visible(is_speech_toggle_visible)
 
         if self.is_global:
-            self.chat_entry_row.set_visible(is_log_toggle_visible or is_speech_toggle_visible)
+            self.chat_entry_row.set_visible(is_log_toggle_visible)
 
     def _show_notification(self, room, user, text, is_mentioned):
 
@@ -865,11 +861,6 @@ class ChatRoom:
         usertag = self.chat_view.get_user_tag(username)
 
         if message_type != "local":
-            if self.speech_toggle.get_active():
-                core.notifications.new_tts(
-                    config.sections["ui"]["speechrooms"], {"room": room, "user": username, "message": message}
-                )
-
             self._show_notification(
                 room, username, message, is_mentioned=(message_type == "hilite"))
 

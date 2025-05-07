@@ -385,10 +385,10 @@ class Config:
                 "trayicon": True,
                 "startup_hidden": False,
                 "filemanager": "",
-                "speechenabled": False,
-                "speechprivate": "User %(user)s told you: %(message)s",
-                "speechrooms": "In room %(room)s, user %(user)s said: %(message)s",
-                "speechcommand": "flite -t $",
+                "speechenabled": False,                                              # TODO: remove in 3.4.0
+                "speechprivate": "User %(user)s told you: %(message)s",              # TODO: remove in 3.4.0
+                "speechrooms": "In room %(room)s, user %(user)s said: %(message)s",  # TODO: remove in 3.4.0
+                "speechcommand": "flite -t $",                                       # TODO: remove in 3.4.0
                 "width": 800,
                 "height": 600,
                 "xposition": -1,
