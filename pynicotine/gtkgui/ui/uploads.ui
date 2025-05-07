@@ -95,36 +95,6 @@
                 </style>
               </object>
             </child>
-            <child>
-              <object class="GtkButton" id="_ban_users_button">
-                <property name="tooltip-text" bind-source="_ban_users_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
-                <property name="visible">True</property>
-                <signal name="clicked" handler="on_ban_users"/>
-                <child>
-                  <object class="GtkBox">
-                    <property name="spacing">6</property>
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="icon-name">action-unavailable-symbolic</property>
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="_ban_users_label">
-                        <property name="ellipsize">end</property>
-                        <property name="label" translatable="yes">Ban User(s)</property>
-                        <property name="mnemonic-widget">_ban_users_button</property>
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <style>
-                  <class name="flat"/>
-                </style>
-              </object>
-            </child>
           </object>
         </child>
         <child>
