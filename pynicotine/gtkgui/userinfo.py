@@ -215,6 +215,7 @@ class UserInfos(IconNotebook):
         page = self.pages.get(msg.user)
 
         if page is not None:
+            page.user_status(msg)
             self.set_user_status(page.container, msg.user, msg.status)
 
     def user_country(self, user, country_code):
@@ -274,6 +275,7 @@ class UserInfo:
             self.interests_container,
             self.likes_list_container,
             self.picture_view,
+            self.privileged_user_button,
             self.progress_bar,
             self.queued_uploads_label,
             self.refresh_button,
@@ -629,6 +631,9 @@ class UserInfo:
         self.info_bar.set_visible(False)
         self.set_finished()
 
+    def user_status(self, msg):
+        self.privileged_user_button.set_visible(msg.privileged)
+
     def user_stats(self, msg):
 
         speed = msg.avgspeed or 0
@@ -765,6 +770,12 @@ class UserInfo:
             return
 
         core.network_filter.ignore_user(self.user)
+
+    def on_privileged_user(self, *_args):
+        log.add(_("User %(user)s has Soulseek privileges. Their downloads are queued ahead "
+                  "of those of non-privileged users."), {
+            "user": self.user
+        }, title=_("Privileged User"))
 
     def on_give_privileges_response(self, dialog, _response_id, _data):
 
