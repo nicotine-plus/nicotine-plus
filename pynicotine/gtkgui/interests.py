@@ -492,13 +492,13 @@ class Interests:
 
             if stats is not None:
                 speed = stats.upload_speed or 0
-                files = stats.files
+                files = stats.files or 0
             else:
                 speed = 0
-                files = None
+                files = 0
 
-            h_files = humanize(files) if files is not None else ""
             h_speed = human_speed(speed) if speed > 0 else ""
+            h_files = humanize(files)
 
             self.similar_users_list_view.add_row([
                 USER_STATUS_ICON_NAMES[status],
@@ -507,7 +507,7 @@ class Interests:
                 h_speed,
                 h_files,
                 speed,
-                files or 0,
+                files,
                 rating
             ], select_row=False)
 

@@ -682,9 +682,9 @@ class ChatRoom:
         status_icon_name = USER_STATUS_ICON_NAMES.get(status, "")
         flag_icon_name = get_flag_icon_name(userdata.country)
         speed = userdata.avgspeed or 0
-        files = userdata.files
+        files = userdata.files or 0
         h_speed = human_speed(speed) if speed > 0 else ""
-        h_files = humanize(files) if files is not None else ""
+        h_files = humanize(files)
         weight = Pango.Weight.NORMAL
         underline = Pango.Underline.NONE
         is_unignored = not (core.network_filter.is_user_ignored(username)
@@ -706,7 +706,7 @@ class ChatRoom:
             h_speed,
             h_files,
             speed,
-            files or 0,
+            files,
             weight,
             underline,
             is_unignored
