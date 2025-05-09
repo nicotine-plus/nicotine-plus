@@ -372,7 +372,7 @@
                         </child>
                         <child>
                           <object class="GtkButton" id="edit_interests_button">
-                            <property name="tooltip-text" translatable="yes">Edit Interests</property>
+                            <property name="tooltip-text" translatable="yes">Add Interests</property>
                             <property name="visible">True</property>
                             <signal name="clicked" handler="on_edit_interests"/>
                             <child>

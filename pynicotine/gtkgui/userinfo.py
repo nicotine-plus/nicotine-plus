@@ -377,10 +377,10 @@ class UserInfo:
 
         self.picture_popup_menu = PopupMenu(self.window.application, self.picture)
         self.picture_popup_menu.add_items(
-            ("#" + _("Copy Picture"), self.on_copy_picture),
-            ("#" + _("Save Picture"), self.on_save_picture),
+            ("#" + _("_Copy Picture"), self.on_copy_picture),
+            ("#" + _("_Save Picture"), self.on_save_picture),
             ("", None),
-            ("#" + _("Remove"), self.on_hide_picture)
+            ("#" + _("_Hide"), self.on_hide_picture)
         )
 
         self.popup_menus = (
