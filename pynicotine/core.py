@@ -109,7 +109,7 @@ class Core:
         })
         log.add_debug("Using %s executable: %s", (pynicotine.__application_name__, script_folder_path))
 
-        if "portmapper" in enabled_components:
+        if not isolated_mode and "portmapper" in enabled_components:
             from pynicotine.portmapper import PortMapper
             self.portmapper = PortMapper()
 
