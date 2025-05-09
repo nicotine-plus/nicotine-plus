@@ -118,7 +118,7 @@ class Buddies:
                 "last_seen": {
                     "column_type": "text",
                     "title": _("Last Seen"),
-                    "width": 160,
+                    "width": 225,
                     "sort_column": "last_seen_data"
                 },
                 "comments": {
