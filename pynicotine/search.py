@@ -371,11 +371,6 @@ class Search:
     def _send_global_search_request(self, search):
         core.send_message_to_server(FileSearch(search.token, search.term_transmitted))
 
-        # Request a list of related searches from the server.
-        # Seemingly non-functional since 2018 (always receiving empty lists).
-
-        # core.send_message_to_server(RelatedSearch(text))
-
     def _send_rooms_search_request(self, search):
         core.send_message_to_server(RoomSearch(search.room, search.token, search.term_transmitted))
 
