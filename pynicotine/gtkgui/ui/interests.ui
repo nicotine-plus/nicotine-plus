@@ -10,7 +10,7 @@
   </object>
   <object class="GtkEntry" id="add_like_entry">
     <property name="hexpand">True</property>
-    <property name="max-width-chars">30</property>
+    <property name="max-width-chars">26</property>
     <property name="placeholder-text" translatable="yes">Add something you like…</property>
     <property name="primary-icon-name">emblem-default-symbolic</property>
     <property name="visible">True</property>
