@@ -1466,6 +1466,21 @@
                         <property name="valign">center</property>
                         <property name="visible">True</property>
                         <child>
+                          <object class="GtkToggleButton" id="chatrooms_user_list_button">
+                            <property name="tooltip-text" translatable="yes">Show Room Users</property>
+                            <property name="visible">False</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="icon-name">sidebar-show-symbolic</property>
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                            <style>
+                              <class name="image-button"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
                           <object class="GtkButton">
                             <property name="action-name">app.configure-chats</property>
                             <property name="tooltip-text" translatable="yes">Configure Chats</property>
