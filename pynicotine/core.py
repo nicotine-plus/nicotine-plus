@@ -97,7 +97,7 @@ class Core:
         ):
             events.connect(event_name, callback)
 
-        if "portmapper" in enabled_components:
+        if not isolated_mode and "portmapper" in enabled_components:
             from pynicotine.portmapper import PortMapper
             self.portmapper = PortMapper()
 

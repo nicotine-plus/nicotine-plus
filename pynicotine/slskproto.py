@@ -1260,8 +1260,10 @@ class NetworkThread(Thread):
                 # Ensure listening port is open
                 msg.local_address = self._user_addresses[self._server_username]
                 local_ip_address, port = msg.local_address
-                self._portmapper.set_port(port, local_ip_address)
-                self._portmapper.add_port_mapping(blocking=True)
+
+                if self._portmapper is not None:
+                    self._portmapper.set_port(port, local_ip_address)
+                    self._portmapper.add_port_mapping(blocking=True)
 
                 msg.username = self._server_username
                 msg.server_address = self._server_address

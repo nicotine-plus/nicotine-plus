@@ -154,6 +154,7 @@ class NetworkPage:
         self.network_interface_combobox.unfreeze()
 
         self.application.preferences.set_widgets_data(self.options)
+        self.upnp_toggle.get_parent().set_visible(not self.application.isolated_mode)
 
         # Listening port status
         self.update_port()
