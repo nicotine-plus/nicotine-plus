@@ -295,12 +295,12 @@ class Interests:
 
         self.show_recommendations()
 
-    def show_recommendations(self):
+    def show_recommendations(self, always_global=False):
 
         self.recommendations_label.set_label(_("Recommendations"))
         self.similar_users_label.set_label(_("Similar Users"))
 
-        if not self.likes_list_view.iterators and not self.dislikes_list_view.iterators:
+        if always_global or (not self.likes_list_view.iterators and not self.dislikes_list_view.iterators):
             core.interests.request_global_recommendations()
         else:
             core.interests.request_recommendations()
@@ -469,7 +469,13 @@ class Interests:
         self.set_recommendations(msg.recommendations, msg.unrecommendations)
 
     def recommendations(self, msg):
-        self.set_recommendations(msg.recommendations, msg.unrecommendations)
+
+        if msg.recommendations or msg.unrecommendations:
+            self.set_recommendations(msg.recommendations, msg.unrecommendations)
+            return
+
+        # No personal recommendations, fall back to global ones
+        self.show_recommendations(always_global=True)
 
     def item_recommendations(self, msg):
         self.set_recommendations(msg.recommendations, msg.unrecommendations, msg.thing)
