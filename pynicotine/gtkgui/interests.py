@@ -26,6 +26,7 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import ui
+from pynicotine.gtkgui.widgets.combobox import ComboBox
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
@@ -41,7 +42,9 @@ class Interests:
     def __init__(self, window):
 
         (
+            self.add_dislike_container,
             self.add_dislike_entry,
+            self.add_like_container,
             self.add_like_entry,
             self.container,
             self.dislikes_list_container,
@@ -178,6 +181,17 @@ class Interests:
 
         self.likes_list_view.unfreeze()
         self.dislikes_list_view.unfreeze()
+
+        # Comboboxes
+
+        self.add_like_combobox = ComboBox(
+            container=self.add_like_container, has_entry=True, has_entry_completion=True,
+            entry=self.add_like_entry, item_selected_callback=self.on_add_thing_i_like
+        )
+        self.add_dislike_combobox = ComboBox(
+            container=self.add_dislike_container, has_entry=True, has_entry_completion=True,
+            entry=self.add_dislike_entry, item_selected_callback=self.on_add_thing_i_dislike
+        )
 
         # Popup menus
         popup = PopupMenu(self.window.application, self.likes_list_view.widget)
@@ -353,6 +367,7 @@ class Interests:
             return
 
         self.add_like_entry.set_text("")
+        self.add_like_combobox.remove_id(item)
         core.interests.add_thing_i_like(item)
 
     def on_add_thing_i_dislike(self, *_args):
@@ -363,6 +378,7 @@ class Interests:
             return
 
         self.add_dislike_entry.set_text("")
+        self.add_dislike_combobox.remove_id(item)
         core.interests.add_thing_i_hate(item)
 
     def on_remove_thing_i_like(self, *_args):
@@ -421,29 +437,42 @@ class Interests:
     def on_refresh_recommendations(self, *_args):
         self.show_recommendations()
 
-    def set_recommendations(self, recommendations, item=None):
+    def set_recommendations(self, recommendations, unrecommendations, item=None):
 
         if item:
             self.recommendations_label.set_label(_("Recommendations (%s)") % item)
         else:
             self.recommendations_label.set_label(_("Recommendations"))
 
-        self.recommendations_list_view.clear()
-        self.recommendations_list_view.freeze()
+        widgets = (self.add_like_combobox, self.add_dislike_combobox, self.recommendations_list_view)
+
+        for widget in widgets:
+            widget.clear()
+            widget.freeze()
 
         for thing, rating in recommendations:
+            if thing not in self.likes_list_view.iterators:
+                self.add_like_combobox.append(thing)
+
             self.recommendations_list_view.add_row([humanize(rating), thing, rating], select_row=False)
 
-        self.recommendations_list_view.unfreeze()
+        for thing, rating in unrecommendations:
+            if thing not in self.dislikes_list_view.iterators:
+                self.add_dislike_combobox.append(thing)
+
+            self.recommendations_list_view.add_row([humanize(rating), thing, rating], select_row=False)
+
+        for widget in widgets:
+            widget.unfreeze()
 
     def global_recommendations(self, msg):
-        self.set_recommendations(msg.recommendations + msg.unrecommendations)
+        self.set_recommendations(msg.recommendations, msg.unrecommendations)
 
     def recommendations(self, msg):
-        self.set_recommendations(msg.recommendations + msg.unrecommendations)
+        self.set_recommendations(msg.recommendations, msg.unrecommendations)
 
     def item_recommendations(self, msg):
-        self.set_recommendations(msg.recommendations + msg.unrecommendations, msg.thing)
+        self.set_recommendations(msg.recommendations, msg.unrecommendations, msg.thing)
 
     def set_similar_users(self, users, item=None):
 
