@@ -594,6 +594,7 @@ class SharesPage:
 
         (
             self.container,
+            self.rescan_daily_toggle,
             self.rescan_on_startup_toggle,
             self.reveal_buddy_shares_toggle,
             self.reveal_trusted_shares_toggle,
@@ -636,6 +637,7 @@ class SharesPage:
         self.options = {
             "transfers": {
                 "rescanonstartup": self.rescan_on_startup_toggle,
+                "rescan_shares_daily": self.rescan_daily_toggle,
                 "reveal_buddy_shares": self.reveal_buddy_shares_toggle,
                 "reveal_trusted_shares": self.reveal_trusted_shares_toggle
             }
@@ -678,6 +680,7 @@ class SharesPage:
                 "buddyshared": self.buddy_shared_folders[:],
                 "trustedshared": self.trusted_shared_folders[:],
                 "rescanonstartup": self.rescan_on_startup_toggle.get_active(),
+                "rescan_shares_daily": self.rescan_daily_toggle.get_active(),
                 "reveal_buddy_shares": self.reveal_buddy_shares_toggle.get_active(),
                 "reveal_trusted_shares": self.reveal_trusted_shares_toggle.get_active()
             }
@@ -3207,6 +3210,8 @@ class Preferences(Dialog):
             if rescan_required:
                 break
 
+        rescan_daily_required = self.has_option_changed(options, "transfers", "rescan_shares_daily")
+
         for section, key in (
             ("transfers", "reveal_buddy_shares"),
             ("transfers", "reveal_trusted_shares")
@@ -3246,6 +3251,7 @@ class Preferences(Dialog):
             reconnect_required,
             portmap_required,
             rescan_required,
+            rescan_daily_required,
             recompress_shares_required,
             user_profile_required,
             private_room_required,
@@ -3267,6 +3273,7 @@ class Preferences(Dialog):
             reconnect_required,
             portmap_required,
             rescan_required,
+            rescan_daily_required,
             recompress_shares_required,
             user_profile_required,
             private_room_required,
@@ -3334,8 +3341,12 @@ class Preferences(Dialog):
         if search_history_required:
             self.application.window.search.populate_search_history()
 
-        if recompress_shares_required and not rescan_required:
-            core.shares.rescan_shares(init=True, rescan=False)
+        if not rescan_required:
+            if rescan_daily_required:
+                core.shares.start_rescan_daily_timer()
+
+            if recompress_shares_required:
+                core.shares.rescan_shares(init=True, rescan=False)
 
         # Dark mode
         dark_mode_state = config.sections["ui"]["dark_mode"]
