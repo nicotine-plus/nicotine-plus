@@ -85,6 +85,9 @@ class ChatRooms(IconNotebook):
 
         window.chatrooms_entry.set_max_length(core.chatrooms.ROOM_NAME_MAX_LENGTH)
 
+        window.chatrooms_user_list_button.connect("toggled", self.on_toggle_user_list_visibility)
+        window.chatrooms_user_list_button.set_active(config.sections["chatrooms"]["user_list_visible"])
+
         if GTK_API_VERSION >= 4:
             window.chatrooms_paned.set_resize_start_child(True)
         else:
@@ -202,6 +205,8 @@ class ChatRooms(IconNotebook):
             if not tab.loaded:
                 tab.load()
 
+            self.window.chatrooms_user_list_button.set_visible(not tab.is_global)
+
             # Remove highlight
             self.unhighlight_room(room)
             break
@@ -231,6 +236,18 @@ class ChatRooms(IconNotebook):
             core.chatrooms.show_room(room)
 
         self.window.chatrooms_entry.set_text("")
+
+    def on_toggle_user_list_visibility(self, *_args):
+
+        active = self.window.chatrooms_user_list_button.get_active()
+        config.sections["chatrooms"]["user_list_visible"] = active
+        tooltip = _("Hide Room Users") if active else _("Show Room Users")
+
+        self.window.chatrooms_user_list_button.set_tooltip_text(tooltip)
+
+        for _room, tab in self.pages.items():
+            if not tab.is_global:
+                tab.on_toggle_user_list_visibility()
 
     def clear_room_messages(self, room):
 
@@ -297,6 +314,9 @@ class ChatRooms(IconNotebook):
         page.destroy()
 
         self.chat_entry.clear_unsent_message(room)
+
+        if not self.pages:
+            self.window.chatrooms_user_list_button.set_visible(False)
 
         if room != core.chatrooms.GLOBAL_ROOM_NAME:
             combobox = self.window.search.room_search_combobox
@@ -639,6 +659,7 @@ class ChatRoom:
             self.popup_menu_activity_view, self.popup_menu_chat_view, self.tab_menu
         )
 
+        self.on_toggle_user_list_visibility()
         self.setup_public_feed()
         self.prepend_old_messages()
 
@@ -806,6 +827,10 @@ class ChatRoom:
     def on_popup_menu_chat(self, menu, _textview):
         menu.actions[_("Copy")].set_enabled(self.chat_view.get_has_selection())
         menu.actions[_("Copy Link")].set_enabled(bool(self.chat_view.get_url_for_current_pos()))
+
+    def on_toggle_user_list_visibility(self, *_args):
+        visible = self.window.chatrooms_user_list_button.get_active()
+        self.users_container.set_visible(visible)
 
     def toggle_chat_buttons(self):
 

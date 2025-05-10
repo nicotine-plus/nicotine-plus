@@ -92,6 +92,7 @@ class MainWindow(Window):
             self.chatrooms_paned,
             self.chatrooms_title,
             self.chatrooms_toolbar,
+            self.chatrooms_user_list_button,
             self.connections_label,
             self.container,
             self.content,

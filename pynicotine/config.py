@@ -287,6 +287,9 @@ class Config:
                 "private_chats": [],
                 "rooms": []
             },
+            "chatrooms": {
+                "user_list_visible": True
+            },
             "privatechat": {
                 "store": True,
                 "users": []
