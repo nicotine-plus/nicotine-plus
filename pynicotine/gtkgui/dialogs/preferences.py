@@ -2297,6 +2297,7 @@ class SearchesPage:
             self.filter_help_button,
             self.filter_include_entry,
             self.filter_length_entry,
+            self.filter_public_files_toggle,
             self.max_displayed_results_spinner,
             self.max_sent_results_spinner,
             self.min_search_term_length_spinner,
@@ -2358,6 +2359,9 @@ class SearchesPage:
             if num_filters > 7:
                 self.filter_length_entry.set_text(str(searches["defilter"][7]))
 
+            if num_filters > 8:
+                self.filter_public_files_toggle.set_active(searches["defilter"][8])
+
         self.clear_search_history_icon.get_parent().set_visible_child(self.clear_search_history_icon)
         self.clear_filter_history_icon.get_parent().set_visible_child(self.clear_filter_history_icon)
 
@@ -2375,7 +2379,8 @@ class SearchesPage:
                     self.filter_free_slot_toggle.get_active(),
                     self.filter_country_entry.get_text().strip(),
                     self.filter_file_type_entry.get_text().strip(),
-                    self.filter_length_entry.get_text().strip()
+                    self.filter_length_entry.get_text().strip(),
+                    self.filter_public_files_toggle.get_active(),
                 ],
                 "search_results": self.repond_search_requests_toggle.get_active(),
                 "max_displayed_results": self.max_displayed_results_spinner.get_value_as_int(),

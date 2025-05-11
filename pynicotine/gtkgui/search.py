@@ -63,11 +63,12 @@ from pynicotine.utils import human_speed
 
 
 class SearchResultFile:
-    __slots__ = ("path", "attributes")
+    __slots__ = ("path", "attributes", "is_private")
 
-    def __init__(self, path, attributes=None):
+    def __init__(self, path, attributes=None, is_private=False):
         self.path = path
         self.attributes = attributes
+        self.is_private = is_private
 
 
 class Searches(IconNotebook):
@@ -400,7 +401,8 @@ class Search:
         "filterslot": (False, False),
         "filtercc": (None, ""),
         "filtertype": (None, ""),
-        "filterlength": (None, "")
+        "filterlength": (None, ""),
+        "filterpublic": (False, False),
     }
 
     def __init__(self, searches, text, token, mode, mode_label, room, users, show_page):
@@ -429,6 +431,7 @@ class Search:
             self.filter_include_entry,
             self.filter_length_container,
             self.filter_length_entry,
+            self.filter_public_files_button,
             self.filters_button,
             self.filters_container,
             self.filters_label,
@@ -654,10 +657,12 @@ class Search:
             popover.set_has_arrow(False)
 
         self.expand_button.set_active(config.sections["searches"]["expand_searches"])
+        self.filter_public_files_button.set_visible(config.sections["searches"]["private_search_results"])
 
         # Filter button widgets
         self.filter_buttons = {
-            "filterslot": self.filter_free_slot_button
+            "filterslot": self.filter_free_slot_button,
+            "filterpublic": self.filter_public_files_button
         }
 
         # Filter combobox widgets
@@ -856,7 +861,7 @@ class Search:
                     bitrate,
                     length,
                     has_free_slots,
-                    SearchResultFile(file_path, file_attributes),
+                    SearchResultFile(file_path, file_attributes, private),
                     row_id
                 ]
             )
@@ -1264,6 +1269,9 @@ class Search:
                 return False
 
             if filter_id == "filterlength" and not self.check_digit(filter_value, row[14]):
+                return False
+
+            if filter_id == "filterpublic" and row[16].is_private:
                 return False
 
         return True
@@ -1772,6 +1780,7 @@ class Search:
         filter_file_type_str = self.filter_file_type_combobox.get_text().strip()
         filter_length_str = self.filter_length_combobox.get_text().strip()
         filter_free_slot = self.filter_free_slot_button.get_active()
+        filter_public = self.filter_public_files_button.get_active()
 
         # Include/exclude text
         error_entries = set()
@@ -1835,6 +1844,7 @@ class Search:
             "filtercc": (filter_country, filter_country_str),
             "filtertype": (filter_file_type, filter_file_type_str),
             "filterlength": (filter_length, filter_length_str),
+            "filterpublic": (filter_public, filter_public),
         }
 
         if self.filters == filters:
@@ -1854,6 +1864,9 @@ class Search:
         # Add filters to history
         for filter_id, (_value, h_value) in filters.items():
             if not h_value:
+                continue
+
+            if filter_id == "filterpublic" and not config.sections["searches"]["private_search_results"]:
                 continue
 
             self.push_history(filter_id, h_value)
