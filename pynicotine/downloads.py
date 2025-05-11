@@ -780,7 +780,7 @@ class Downloads(Transfers):
         )
 
     def enqueue_download(self, username, virtual_path, folder_path=None, size=0, file_attributes=None,
-                         bypass_filter=False):
+                         bypass_filter=False, paused=False):
 
         transfer = self.transfers.get(username + virtual_path)
 
@@ -798,11 +798,11 @@ class Downloads(Transfers):
             # Duplicate download found, stop here
             return
 
-        transfer = Transfer(username, virtual_path, folder_path, size, file_attributes)
+        transfer = Transfer(username, virtual_path, folder_path, size, file_attributes, TransferStatus.PAUSED)
 
         self._append_transfer(transfer)
 
-        if self._enqueue_transfer(transfer, bypass_filter=bypass_filter):
+        if paused or self._enqueue_transfer(transfer, bypass_filter=bypass_filter):
             self._update_transfer(transfer)
 
     def retry_download(self, transfer, bypass_filter=False):
