@@ -36,6 +36,7 @@ from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import FILE_TYPE_ICON_LABELS
+from pynicotine.gtkgui.widgets.theme import PRIVATE_ICON_LABELS
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_LABELS
 from pynicotine.gtkgui.widgets.theme import add_css_class
 
@@ -693,6 +694,9 @@ class TreeView:
 
         if column.id == "status":
             return USER_STATUS_ICON_LABELS[icon_name]
+
+        if column.id == "private":
+            return PRIVATE_ICON_LABELS.get(icon_name, "")
 
         if column.id == "file_type":
             return FILE_TYPE_ICON_LABELS[icon_name]
