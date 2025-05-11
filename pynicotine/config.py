@@ -311,7 +311,7 @@ class Config:
                 "history": [],
                 "enablefilters": False,
                 "filters_visible": False,
-                "defilter": ["", "", "", "", 0, "", ""],
+                "defilter": [],
                 "filtercc": [],
                 "filterin": [],
                 "filterout": [],
