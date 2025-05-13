@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 # COPYRIGHT (C) 2009 quinox <quinox@users.sf.net>
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -42,7 +42,7 @@ class Plugin(BasePlugin):
         tracemalloc.start()                                                           # pylint: disable=no-member
 
         for i in range(3):
-            self.log("Forcing collection of generation %s...", i)
+            self.log("Forcing collection of generation %s…", i)
             self.log("Collected %s objects", gc.collect(i))
 
         unclaimed = [f"A total of {len(gc.garbage)} objects that could not be freed:"]
