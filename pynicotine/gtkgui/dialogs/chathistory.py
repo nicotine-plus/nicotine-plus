@@ -26,38 +26,37 @@ from gi.repository import GObject
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
-from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
-from pynicotine.gtkgui.widgets.popover import Popover
+from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
-from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 
 
-class ChatHistory(Popover):
+class ChatHistory(Dialog):
 
-    def __init__(self, window):
+    def __init__(self, application):
 
         (
             self.container,
             self.list_container,
             self.search_entry
-        ) = ui.load(scope=self, path="popovers/chathistory.ui")
+        ) = ui.load(scope=self, path="dialogs/chathistory.ui")
 
         super().__init__(
-            window=window,
+            parent=application.window,
             content_box=self.container,
-            width=1000,
+            title=_("Chat History"),
+            width=960,
             height=700
         )
 
         self.list_view = TreeView(
-            window, parent=self.list_container, activate_row_callback=self.on_show_user,
+            application.window, parent=self.list_container, activate_row_callback=self.on_show_user,
             search_entry=self.search_entry,
             columns={
                 "status": {
@@ -86,13 +85,8 @@ class ChatHistory(Popover):
         )
 
         Accelerator("<Primary>f", self.widget, self.on_search_accelerator)
-        self.completion_entry = CompletionEntry(window.private_entry, self.list_view.model, column=1)
+        self.completion_entry = CompletionEntry(application.window.private_entry, self.list_view.model, column=1)
 
-        if GTK_API_VERSION >= 4:
-            inner_button = next(iter(window.private_history_button))
-            add_css_class(widget=inner_button, css_class="arrow-button")
-
-        self.set_menu_button(window.private_history_button)
         self.load_users()
 
         for event_name, callback in (
@@ -252,7 +246,7 @@ class ChatHistory(Popover):
             username = self.list_view.get_row_value(iterator, "user")
 
             core.privatechat.show_user(username)
-            self.close(use_transition=False)
+            self.close()
             return
 
     def on_search_accelerator(self, *_args):

@@ -1100,28 +1100,32 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuButton" id="private_history_button">
+                      <object class="GtkButton" id="_private_history_button">
+                        <property name="action-name">app.chat-history</property>
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkBox">
                             <property name="spacing">6</property>
                             <property name="visible">True</property>
                             <child>
-                              <object class="GtkLabel" id="private_history_label">
-                                <property name="label" translatable="yes">Chat _History</property>
-                                <property name="mnemonic-widget">private_history_button</property>
-                                <property name="use-underline">True</property>
+                              <object class="GtkImage">
+                                <property name="icon-name">mail-unread-symbolic</property>
                                 <property name="visible">True</property>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkImage">
-                                <property name="icon-name">pan-down-symbolic</property>
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">Chat _History</property>
+                                <property name="mnemonic-widget">_private_history_button</property>
+                                <property name="use-underline">True</property>
                                 <property name="visible">True</property>
                               </object>
                             </child>
                           </object>
                         </child>
+                        <style>
+                          <class name="image-text-button"/>
+                        </style>
                       </object>
                     </child>
                   </object>

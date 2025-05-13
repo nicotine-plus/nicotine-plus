@@ -86,6 +86,7 @@ class Application:
         self.about = None
         self.fast_configure = None
         self.preferences = None
+        self.chat_history = None
         self.file_properties = None
         self.shortcuts = None
         self.statistics = None
@@ -149,6 +150,7 @@ class Application:
             ("soulseek-privileges", self.on_soulseek_privileges, None, False),
             ("away", self.on_away, None, True),
             ("away-accel", self.on_away_accelerator, None, False),
+            ("chat-history", self.on_chat_history, None, True),
             ("message-downloading-users", self.on_message_downloading_users, None, False),
             ("message-buddies", self.on_message_buddies, None, False),
             ("wishlist", self.on_wishlist, None, True),
@@ -164,7 +166,6 @@ class Application:
             ("load-shares-from-disk", self.on_load_shares_from_disk, None, True),
 
             # Configuration
-
             ("preferences", self.on_preferences, None, True),
             ("configure-shares", self.on_configure_shares, None, True),
             ("configure-downloads", self.on_configure_downloads, None, True),
@@ -661,6 +662,14 @@ class Application:
 
         self.shortcuts.present()
 
+    def on_chat_history(self, *_args):
+
+        if self.chat_history is None:
+            from pynicotine.gtkgui.dialogs.chathistory import ChatHistory
+            self.chat_history = ChatHistory(self)
+
+        self.chat_history.present()
+
     def on_transfer_statistics(self, *_args):
 
         if self.statistics is None:
@@ -1016,6 +1025,9 @@ class Application:
 
         if self.preferences is not None:
             self.preferences.destroy()
+
+        if self.chat_history is not None:
+            self.chat_history.destroy()
 
         if self.file_properties is not None:
             self.file_properties.destroy()
