@@ -208,6 +208,9 @@ class ChatHistory(Dialog):
         if iterator is not None:
             self.list_view.remove_row(iterator)
 
+        if not self.list_view.iterators:
+            self.list_container.set_visible(False)
+
     def update_user(self, username, message, timestamp=None):
 
         self.remove_user(username)
@@ -227,6 +230,9 @@ class ChatHistory(Dialog):
             message,
             int(timestamp)
         ], select_row=False)
+
+        if not self.list_container.get_visible():
+            self.list_container.set_visible(True)
 
     def user_status(self, msg):
 
