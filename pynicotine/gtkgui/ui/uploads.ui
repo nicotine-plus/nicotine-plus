@@ -104,36 +104,6 @@
             <property name="spacing">6</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkButton" id="_clear_finished_button">
-                <property name="tooltip-text" translatable="yes">Clear All Finished/Cancelled Uploads</property>
-                <property name="visible">True</property>
-                <signal name="clicked" handler="on_clear_finished_cancelled"/>
-                <child>
-                  <object class="GtkBox">
-                    <property name="spacing">6</property>
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="icon-name">edit-clear-symbolic</property>
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="ellipsize">end</property>
-                        <property name="label" translatable="yes">Clear Finished</property>
-                        <property name="mnemonic-widget">_clear_finished_button</property>
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <style>
-                  <class name="flat"/>
-                </style>
-              </object>
-            </child>
-            <child>
               <object class="GtkButton" id="_message_all_button">
                 <property name="action-name">app.message-downloading-users</property>
                 <property name="tooltip-text" translatable="yes">Message All</property>
@@ -153,6 +123,36 @@
                         <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Message All</property>
                         <property name="mnemonic-widget">_message_all_button</property>
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <style>
+                  <class name="flat"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="_clear_finished_button">
+                <property name="tooltip-text" translatable="yes">Clear All Finished/Cancelled Uploads</property>
+                <property name="visible">True</property>
+                <signal name="clicked" handler="on_clear_finished_cancelled"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="spacing">6</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="icon-name">edit-clear-symbolic</property>
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="ellipsize">end</property>
+                        <property name="label" translatable="yes">Clear Finished</property>
+                        <property name="mnemonic-widget">_clear_finished_button</property>
                         <property name="visible">True</property>
                       </object>
                     </child>
