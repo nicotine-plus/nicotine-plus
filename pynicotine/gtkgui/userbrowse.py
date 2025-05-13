@@ -1432,6 +1432,9 @@ class UserBrowse:
         if adjustment.get_value() < adjustment_end:
             self.path_bar_container.emit("scroll-child", Gtk.ScrollType.END, True)
 
+    def on_user_statistics(self, *_args):
+        core.userbrowse.show_user_statistics(self.user)
+
     def on_expand(self, *_args):
 
         active = self.expand_button.get_active()

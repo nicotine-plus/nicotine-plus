@@ -32,6 +32,8 @@ from pynicotine.slskmessages import SharedFileListResponse
 from pynicotine.slskmessages import UploadQueueNotification
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
+from pynicotine.utils import human_size
+from pynicotine.utils import humanize
 
 
 class BrowsedUser:
@@ -357,6 +359,21 @@ class UserBrowse:
             for _code, basename, *_unused in files:
                 file_path = "\\".join([folder_path, basename])
                 core.uploads.enqueue_upload(username, file_path)
+
+    def show_user_statistics(self, username):
+
+        browsed_user = self.users.get(username)
+
+        if browsed_user is None:
+            return
+
+        log.add(_("User %(user)s is sharing %(num_files)s files totaling %(shared_size)s across "
+                  "%(num_folders)s folders."), {
+            "user": username,
+            "num_files": humanize(browsed_user.num_files or 0),
+            "shared_size": human_size(browsed_user.shared_size or 0),
+            "num_folders": humanize(browsed_user.num_folders or 0)
+        }, title=_("User Statistics"))
 
     @staticmethod
     def get_soulseek_url(username, path):
