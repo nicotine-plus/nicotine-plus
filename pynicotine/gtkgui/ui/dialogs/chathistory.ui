@@ -93,8 +93,6 @@
                 <child>
                   <object class="GtkScrolledWindow" id="list_container">
                     <property name="hexpand">True</property>
-                    <property name="min-content-height">175</property>
-                    <property name="propagate-natural-height">True</property>
                     <property name="visible">False</property>
                     <style>
                       <class name="colored-icon"/>
