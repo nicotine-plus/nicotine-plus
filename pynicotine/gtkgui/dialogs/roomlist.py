@@ -109,6 +109,7 @@ class RoomList(Dialog):
 
         self.private_room_toggle.set_active(config.sections["server"]["private_chatrooms"])
         self.private_room_toggle.connect("notify::active", self.on_toggle_accept_private_room)
+        self.public_feed_toggle.set_active(core.chatrooms.GLOBAL_ROOM_NAME in core.chatrooms.joined_rooms)
 
         Accelerator("<Primary>f", self.widget, self.on_search_accelerator)
         self.completion_entry = CompletionEntry(application.window.chatrooms_entry, self.list_view.model, column=0)
