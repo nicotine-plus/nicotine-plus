@@ -1441,13 +1441,16 @@ class UserBrowse:
 
         if active:
             icon_name = "view-restore-symbolic"
+            tooltip_text = _("Collapse All")
             self.folder_tree_view.expand_all_rows()
         else:
             icon_name = "view-fullscreen-symbolic"
+            tooltip_text = _("Expand All")
             self.folder_tree_view.collapse_all_rows()
 
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
         self.expand_icon.set_from_icon_name(icon_name, *icon_args)
+        self.expand_button.set_tooltip_text(tooltip_text)
 
         config.sections["userbrowse"]["expand_folders"] = active
 

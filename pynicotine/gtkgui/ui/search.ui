@@ -207,7 +207,7 @@
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkToggleButton" id="expand_button">
-                    <property name="tooltip-text" translatable="yes">Expand / Collapse All</property>
+                    <property name="tooltip-text" translatable="yes">Expand All</property>
                     <signal name="toggled" handler="on_toggle_expand_all"/>
                     <child>
                       <object class="GtkImage" id="expand_icon">
