@@ -1421,7 +1421,6 @@
                       <object class="GtkBox" id="chatrooms_title">
                         <property name="halign">start</property>
                         <property name="hexpand">True</property>
-                        <property name="sensitive">False</property>
                         <property name="spacing">4</property>
                         <property name="valign">center</property>
                         <property name="visible">True</property>
@@ -1445,16 +1444,16 @@
                                 <property name="spacing">6</property>
                                 <property name="visible">True</property>
                                 <child>
-                                  <object class="GtkLabel" id="room_list_label">
-                                    <property name="label" translatable="yes">_Rooms</property>
-                                    <property name="mnemonic-widget">room_list_button</property>
-                                    <property name="use-underline">True</property>
+                                  <object class="GtkImage">
+                                    <property name="icon-name">view-list-symbolic</property>
                                     <property name="visible">True</property>
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkImage">
-                                    <property name="icon-name">pan-down-symbolic</property>
+                                  <object class="GtkLabel" id="room_list_label">
+                                    <property name="label" translatable="yes">All _Rooms</property>
+                                    <property name="mnemonic-widget">room_list_button</property>
+                                    <property name="use-underline">True</property>
                                     <property name="visible">True</property>
                                   </object>
                                 </child>

@@ -168,6 +168,9 @@ class RoomList(Popover):
             text_underline
         ], select_row=False)
 
+        if not self.list_container.get_visible():
+            self.list_container.set_visible(True)
+
     def update_room_user_count(self, room, user_count=None, decrement=False):
 
         iterator = self.list_view.iterators.get(room)
@@ -200,6 +203,7 @@ class RoomList(Popover):
 
     def clear(self, *_args):
         self.list_view.clear()
+        self.list_container.set_visible(False)
 
     def private_room_added(self, msg):
         self.add_room(msg.room, is_private=True)

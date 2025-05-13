@@ -111,7 +111,6 @@ class ChatRooms(IconNotebook):
             ("room-completions", self.update_completions),
             ("say-chat-room", self.say_chat_room),
             ("server-disconnect", self.server_disconnect),
-            ("server-login", self.server_login),
             ("show-room", self.show_room),
             ("start", self.start),
             ("unignore-user", self.unignore_user),
@@ -222,7 +221,8 @@ class ChatRooms(IconNotebook):
         if not room:
             return
 
-        if room not in core.chatrooms.server_rooms and room not in core.chatrooms.private_rooms:
+        if (core.users.login_status != UserStatus.OFFLINE
+                and room not in core.chatrooms.server_rooms and room not in core.chatrooms.private_rooms):
             room = core.chatrooms.sanitize_room_name(room)
             OptionDialog(
                 parent=self.window,
@@ -464,12 +464,8 @@ class ChatRooms(IconNotebook):
             tab.toggle_chat_buttons()
             tab.update_tags()
 
-    def server_login(self, *_args):
-        self.window.chatrooms_title.set_sensitive(True)
-
     def server_disconnect(self, *_args):
 
-        self.window.chatrooms_title.set_sensitive(False)
         self.chat_entry.set_sensitive(False)
 
         for page in self.pages.values():
