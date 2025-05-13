@@ -32,7 +32,6 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.chatcommandhelp import ChatCommandHelp
-from pynicotine.gtkgui.popovers.roomlist import RoomList
 from pynicotine.gtkgui.popovers.roomwall import RoomWall
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -78,7 +77,6 @@ class ChatRooms(IconNotebook):
             command_callback=core.pluginhandler.trigger_chatroom_command_event,
             enable_spell_check=config.sections["ui"]["spellcheck"]
         )
-        self.room_list = RoomList(window)
         self.command_help = None
         self.room_wall = None
         self.highlighted_rooms = {}
@@ -134,7 +132,6 @@ class ChatRooms(IconNotebook):
     def destroy(self):
 
         self.chat_entry.destroy()
-        self.room_list.destroy()
 
         if self.command_help is not None:
             self.command_help.destroy()

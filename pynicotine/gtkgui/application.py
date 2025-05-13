@@ -87,6 +87,7 @@ class Application:
         self.fast_configure = None
         self.preferences = None
         self.chat_history = None
+        self.room_list = None
         self.file_properties = None
         self.shortcuts = None
         self.statistics = None
@@ -151,6 +152,7 @@ class Application:
             ("away", self.on_away, None, True),
             ("away-accel", self.on_away_accelerator, None, False),
             ("chat-history", self.on_chat_history, None, True),
+            ("room-list", self.on_room_list, None, True),
             ("message-downloading-users", self.on_message_downloading_users, None, False),
             ("message-buddies", self.on_message_buddies, None, False),
             ("wishlist", self.on_wishlist, None, True),
@@ -670,6 +672,14 @@ class Application:
 
         self.chat_history.present()
 
+    def on_room_list(self, *_args):
+
+        if self.room_list is None:
+            from pynicotine.gtkgui.dialogs.roomlist import RoomList
+            self.room_list = RoomList(self)
+
+        self.room_list.present()
+
     def on_transfer_statistics(self, *_args):
 
         if self.statistics is None:
@@ -1028,6 +1038,9 @@ class Application:
 
         if self.chat_history is not None:
             self.chat_history.destroy()
+
+        if self.room_list is not None:
+            self.room_list.destroy()
 
         if self.file_properties is not None:
             self.file_properties.destroy()

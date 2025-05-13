@@ -1437,7 +1437,8 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkMenuButton" id="room_list_button">
+                          <object class="GtkButton" id="_room_list_button">
+                            <property name="action-name">app.room-list</property>
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkBox">
@@ -1450,15 +1451,18 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="room_list_label">
+                                  <object class="GtkLabel">
                                     <property name="label" translatable="yes">All _Rooms</property>
-                                    <property name="mnemonic-widget">room_list_button</property>
+                                    <property name="mnemonic-widget">_room_list_button</property>
                                     <property name="use-underline">True</property>
                                     <property name="visible">True</property>
                                   </object>
                                 </child>
                               </object>
                             </child>
+                            <style>
+                              <class name="image-text-button"/>
+                            </style>
                           </object>
                         </child>
                       </object>
