@@ -9,6 +9,7 @@
     <property name="orientation">vertical</property>
     <property name="spacing">30</property>
     <property name="visible">True</property>
+    <property name="width-request">360</property>
     <child>
       <object class="GtkBox">
         <property name="hexpand">True</property>
