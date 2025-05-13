@@ -314,7 +314,7 @@ class Users:
             "ip": msg.ip_address,
             "port": msg.port,
             "country": country
-        }, title=_("IP Address"))
+        }, title=_("User IP Address"))
 
     def _watch_user(self, msg):
         """Server code 5."""
