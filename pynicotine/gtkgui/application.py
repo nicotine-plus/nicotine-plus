@@ -665,19 +665,9 @@ class Application:
         self.shortcuts.present()
 
     def on_chat_history(self, *_args):
-
-        if self.chat_history is None:
-            from pynicotine.gtkgui.dialogs.chathistory import ChatHistory
-            self.chat_history = ChatHistory(self)
-
         self.chat_history.present()
 
     def on_room_list(self, *_args):
-
-        if self.room_list is None:
-            from pynicotine.gtkgui.dialogs.roomlist import RoomList
-            self.room_list = RoomList(self)
-
         self.room_list.present()
 
     def on_transfer_statistics(self, *_args):
@@ -978,6 +968,8 @@ class Application:
             self.window.present()
             return
 
+        from pynicotine.gtkgui.dialogs.chathistory import ChatHistory
+        from pynicotine.gtkgui.dialogs.roomlist import RoomList
         from pynicotine.gtkgui.mainwindow import MainWindow
         from pynicotine.gtkgui.widgets.theme import load_icons
         from pynicotine.gtkgui.widgets.trayicon import TrayIcon
@@ -994,6 +986,8 @@ class Application:
 
         self.tray_icon = TrayIcon(self)
         self.window = MainWindow(self)
+        self.chat_history = ChatHistory(self)
+        self.room_list = RoomList(self)
 
         core.start()
 

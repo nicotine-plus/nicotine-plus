@@ -461,7 +461,7 @@ class PrivateChat:
     def on_delete_chat_log_response(self, *_args):
 
         log.delete_log(log.private_chat_folder_path, self.user)
-        self.chats.history.remove_user(self.user)
+        self.chats.window.application.chat_history.remove_user(self.user)
         self.chat_view.clear()
 
     def on_delete_chat_log(self, *_args):
@@ -527,7 +527,7 @@ class PrivateChat:
             formatted_message, message_type=message_type, timestamp=timestamp, timestamp_format=timestamp_format,
             username=tag_username, usertag=usertag
         )
-        self.chats.history.update_user(username, formatted_message)
+        self.chats.window.application.chat_history.update_user(username, formatted_message)
 
     def echo_private_message(self, text, message_type):
 
