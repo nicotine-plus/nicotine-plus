@@ -220,7 +220,7 @@ class ChatHistory(Dialog):
             timestamp_format = config.sections["logging"]["log_timestamp"]
             timestamp = time.time()
             h_timestamp = time.strftime(timestamp_format)
-            message = f"{h_timestamp} {message}"
+            message = f"{h_timestamp} [{username}] {message}"
 
         status = core.users.statuses.get(username, UserStatus.OFFLINE)
 
