@@ -306,7 +306,7 @@ class TextView:
 
     # Events #
 
-    def on_released_primary(self, _controller, _num_p, pressed_x, pressed_y):
+    def click_tag(self, pressed_x, pressed_y, secondary=False):
 
         self.pressed_x = pressed_x
         self.pressed_y = pressed_y
@@ -315,30 +315,21 @@ class TextView:
             return False
 
         for tag in self.get_tags_for_pos(pressed_x, pressed_y):
-            if hasattr(tag, "url"):
+            if hasattr(tag, "name"):
+                tag.callback(tag.name, pressed_x, pressed_y, secondary)
+                return True
+
+            if not secondary and hasattr(tag, "url"):
                 open_uri(tag.url)
                 return True
 
-            if hasattr(tag, "name"):
-                tag.callback(pressed_x, pressed_y, tag.name)
-                return True
-
         return False
+
+    def on_released_primary(self, _controller, _num_p, pressed_x, pressed_y):
+        return self.click_tag(pressed_x, pressed_y)
 
     def on_pressed_secondary(self, _controller, _num_p, pressed_x, pressed_y):
-
-        self.pressed_x = pressed_x
-        self.pressed_y = pressed_y
-
-        if self.textbuffer.get_has_selection():
-            return False
-
-        for tag in self.get_tags_for_pos(pressed_x, pressed_y):
-            if hasattr(tag, "name"):
-                tag.callback(pressed_x, pressed_y, tag.name)
-                return True
-
-        return False
+        return self.click_tag(pressed_x, pressed_y, secondary=True)
 
     def on_move_cursor(self, _controller, pos_x, pos_y):
         self.update_cursor(pos_x, pos_y)
