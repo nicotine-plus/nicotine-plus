@@ -83,9 +83,6 @@ class ChatRooms(IconNotebook):
 
         window.chatrooms_entry.set_max_length(core.chatrooms.ROOM_NAME_MAX_LENGTH)
 
-        window.chatrooms_user_list_button.connect("toggled", self.on_toggle_user_list_visibility)
-        window.chatrooms_user_list_button.set_active(config.sections["chatrooms"]["user_list_visible"])
-
         if GTK_API_VERSION >= 4:
             window.chatrooms_paned.set_resize_start_child(True)
         else:
@@ -186,6 +183,7 @@ class ChatRooms(IconNotebook):
 
             self.chat_entry.set_parent(room, tab.chat_entry_container, tab.chat_view)
             self.chat_entry.set_sensitive(joined_room is not None and joined_room.users)
+            tab.toggle_chat_buttons()
             tab.update_room_user_completions()
 
             if self.command_help is None:
@@ -200,8 +198,6 @@ class ChatRooms(IconNotebook):
 
             if not tab.loaded:
                 tab.load()
-
-            self.window.chatrooms_user_list_button.set_visible(not tab.is_global)
 
             # Remove highlight
             self.unhighlight_room(room)
@@ -233,18 +229,6 @@ class ChatRooms(IconNotebook):
             core.chatrooms.show_room(room)
 
         self.window.chatrooms_entry.set_text("")
-
-    def on_toggle_user_list_visibility(self, *_args):
-
-        active = self.window.chatrooms_user_list_button.get_active()
-        config.sections["chatrooms"]["user_list_visible"] = active
-        tooltip = _("Hide Room Users") if active else _("Show Room Users")
-
-        self.window.chatrooms_user_list_button.set_tooltip_text(tooltip)
-
-        for _room, tab in self.pages.items():
-            if not tab.is_global:
-                tab.on_toggle_user_list_visibility()
 
     def clear_room_messages(self, room):
 
@@ -311,9 +295,6 @@ class ChatRooms(IconNotebook):
         page.destroy()
 
         self.chat_entry.clear_unsent_message(room)
-
-        if not self.pages:
-            self.window.chatrooms_user_list_button.set_visible(False)
 
         if room != core.chatrooms.GLOBAL_ROOM_NAME:
             combobox = self.window.search.room_search_combobox
@@ -488,6 +469,7 @@ class ChatRoom:
             self.log_toggle,
             self.room_wall_button,
             self.room_wall_label,
+            self.user_list_button,
             self.users_container,
             self.users_label,
             self.users_list_container
@@ -533,6 +515,9 @@ class ChatRoom:
             controller_widget=self.chat_container, focus_widget=self.chatrooms.chat_entry,
             placeholder_text=_("Search chat log…")
         )
+
+        self.user_list_button.connect("toggled", self.on_toggle_user_list_visibility)
+        self.user_list_button.set_active(config.sections["chatrooms"]["user_list_visible"])
 
         self.log_toggle.set_active(room in config.sections["logging"]["rooms"])
         self.toggle_chat_buttons()
@@ -652,7 +637,6 @@ class ChatRoom:
             self.popup_menu_activity_view, self.popup_menu_chat_view, self.tab_menu
         )
 
-        self.on_toggle_user_list_visibility()
         self.setup_public_feed()
         self.prepend_old_messages()
 
@@ -684,7 +668,7 @@ class ChatRoom:
         if not self.is_global:
             return
 
-        for widget in (self.activity_container, self.users_container, self.chat_entry_container, self.help_button):
+        for widget in (self.activity_container, self.chat_entry_container, self.help_button, self.user_list_button):
             widget.set_visible(False)
 
         self.chat_entry_row.set_halign(Gtk.Align.END)
@@ -822,7 +806,15 @@ class ChatRoom:
         menu.actions[_("Copy Link")].set_enabled(bool(self.chat_view.get_url_for_current_pos()))
 
     def on_toggle_user_list_visibility(self, *_args):
-        visible = self.window.chatrooms_user_list_button.get_active()
+
+        if self.is_global:
+            return
+
+        visible = self.user_list_button.get_active()
+        config.sections["chatrooms"]["user_list_visible"] = visible
+        tooltip = _("Hide Room Users") if visible else _("Show Room Users")
+
+        self.user_list_button.set_tooltip_text(tooltip)
         self.users_container.set_visible(visible)
 
     def toggle_chat_buttons(self):
@@ -833,6 +825,8 @@ class ChatRoom:
 
         if self.is_global:
             self.chat_entry_row.set_visible(is_log_toggle_visible)
+
+        self.user_list_button.set_active(config.sections["chatrooms"]["user_list_visible"])
 
     def _show_notification(self, room, user, text, is_mentioned):
 
