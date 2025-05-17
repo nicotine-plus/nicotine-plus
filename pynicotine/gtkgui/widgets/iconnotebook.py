@@ -296,8 +296,9 @@ class IconNotebook:
         if GTK_API_VERSION >= 4:
             parent.append(self.widget)
 
+            self.pages_button_gesture_click = Gtk.GestureClick()
+            self.pages_button.add_controller(self.pages_button_gesture_click)      # pylint: disable=no-member
             self.pages_button.set_has_frame(False)                                 # pylint: disable=no-member
-            self.pages_button.set_create_popup_func(self.on_pages_button_pressed)  # pylint: disable=no-member
             self.pages_button_container.append(self.pages_button)                  # pylint: disable=no-member
 
             self.scroll_controller = Gtk.EventControllerScroll(
@@ -324,8 +325,8 @@ class IconNotebook:
         else:
             parent.add(self.widget)
 
+            self.pages_button_gesture_click = Gtk.GestureMultiPress(widget=self.pages_button)
             self.pages_button.set_use_popover(False)            # pylint: disable=no-member
-            self.pages_button.connect("toggled", self.on_pages_button_pressed)
             self.pages_button_container.add(self.pages_button)  # pylint: disable=no-member
 
             self.widget.add_events(  # pylint: disable=no-member
@@ -337,6 +338,10 @@ class IconNotebook:
 
         Accelerator("Left", self.widget, self.on_arrow_accelerator)
         Accelerator("Right", self.widget, self.on_arrow_accelerator)
+
+        self.pages_button_gesture_click.set_button(Gdk.BUTTON_PRIMARY)
+        self.pages_button_gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        self.pages_button_gesture_click.connect("released", self.on_pages_button_pressed)
 
         self.popup_menu_pages = PopupMenu(self.window.application)
         self.update_pages_menu_button()
@@ -703,7 +708,7 @@ class IconNotebook:
 
     def on_pages_button_pressed(self, *_args):
 
-        if GTK_API_VERSION == 3 and not self.pages_button.get_active():
+        if self.pages_button.get_active():
             return
 
         self.popup_menu_pages.clear()
