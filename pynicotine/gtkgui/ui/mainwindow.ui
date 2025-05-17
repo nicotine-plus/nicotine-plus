@@ -440,7 +440,7 @@
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkImage">
-                    <property name="icon-name">document-save-symbolic</property>
+                    <property name="icon-name">folder-download-symbolic</property>
                     <property name="pixel-size">128</property>
                     <property name="visible">True</property>
                     <style>
