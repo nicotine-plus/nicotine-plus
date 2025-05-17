@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -367,7 +367,7 @@ class UPnP(BaseImplementation):
         @staticmethod
         def get_services(private_ip):
 
-            log.add_debug("UPnP: Discovering... delay=%s seconds", UPnP.MX_RESPONSE_DELAY)
+            log.add_debug("UPnP: Discovering… delay=%s seconds", UPnP.MX_RESPONSE_DELAY)
 
             # Create a UDP socket and set its timeout
             with socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP) as sock:
@@ -616,7 +616,7 @@ class PortMapper:
             return
 
         self._is_mapping_port = True
-        log.add_debug("Creating Port Mapping rule...")
+        log.add_debug("Creating Port Mapping rule…")
 
         try:
             self._active_implementation = self._natpmp

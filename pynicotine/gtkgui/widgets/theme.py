@@ -65,7 +65,7 @@ if USE_COLOR_SCHEME_PORTAL:
                     GLib.Variant.new_string("org.freedesktop.appearance"),
                     GLib.Variant.new_string("color-scheme")
                 ),
-                flags=Gio.DBusCallFlags.NONE,
+                flags=0,
                 timeout_msec=1000,
                 cancellable=None
             )
@@ -92,7 +92,7 @@ if USE_COLOR_SCHEME_PORTAL:
     try:
         SETTINGS_PORTAL = Gio.DBusProxy.new_for_bus_sync(
             bus_type=Gio.BusType.SESSION,
-            flags=Gio.DBusProxyFlags.NONE,
+            flags=0,
             info=None,
             name="org.freedesktop.portal.Desktop",
             object_path="/org/freedesktop/portal/desktop",

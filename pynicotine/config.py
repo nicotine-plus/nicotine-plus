@@ -225,6 +225,7 @@ class Config:
                 "autoclear_downloads": False,
                 "autoclear_uploads": False,
                 "rescanonstartup": True,
+                "rescan_shares_daily": True,
                 "enablefilters": False,
                 "downloadregexp": "",
                 "downloadfilters": [
@@ -287,6 +288,9 @@ class Config:
                 "private_chats": [],
                 "rooms": []
             },
+            "chatrooms": {
+                "user_list_visible": True
+            },
             "privatechat": {
                 "store": True,
                 "users": []
@@ -307,7 +311,7 @@ class Config:
                 "history": [],
                 "enablefilters": False,
                 "filters_visible": False,
-                "defilter": ["", "", "", "", 0, "", ""],
+                "defilter": [],
                 "filtercc": [],
                 "filterin": [],
                 "filterout": [],
@@ -385,10 +389,10 @@ class Config:
                 "trayicon": True,
                 "startup_hidden": False,
                 "filemanager": "",
-                "speechenabled": False,
-                "speechprivate": "User %(user)s told you: %(message)s",
-                "speechrooms": "In room %(room)s, user %(user)s said: %(message)s",
-                "speechcommand": "flite -t $",
+                "speechenabled": False,                                              # TODO: remove in 3.4.0
+                "speechprivate": "User %(user)s told you: %(message)s",              # TODO: remove in 3.4.0
+                "speechrooms": "In room %(room)s, user %(user)s said: %(message)s",  # TODO: remove in 3.4.0
+                "speechcommand": "flite -t $",                                       # TODO: remove in 3.4.0
                 "width": 800,
                 "height": 600,
                 "xposition": -1,
@@ -416,6 +420,7 @@ class Config:
                 "notification_popup_sound": False,
                 "notification_popup_file": True,
                 "notification_popup_folder": True,
+                "notification_popup_queued_upload": True,
                 "notification_popup_private_message": True,
                 "notification_popup_chatroom": False,
                 "notification_popup_chatroom_mention": True,

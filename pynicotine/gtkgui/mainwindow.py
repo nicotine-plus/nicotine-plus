@@ -92,6 +92,7 @@ class MainWindow(Window):
             self.chatrooms_paned,
             self.chatrooms_title,
             self.chatrooms_toolbar,
+            self.chatrooms_user_list_button,
             self.connections_label,
             self.container,
             self.content,
@@ -126,13 +127,9 @@ class MainWindow(Window):
             self.private_content,
             self.private_end,
             self.private_entry,
-            self.private_history_button,
-            self.private_history_label,
             self.private_page,
             self.private_title,
             self.private_toolbar,
-            self.room_list_button,
-            self.room_list_label,
             self.room_search_entry,
             self.scan_progress_container,
             self.scan_progress_label,
@@ -203,8 +200,6 @@ class MainWindow(Window):
             # Workaround for screen reader support in GTK <4.12
             for label, button in (
                 (self.search_mode_label, self.search_mode_button),
-                (self.private_history_label, self.private_history_button),
-                (self.room_list_label, self.room_list_button),
                 (self.download_status_label, self.download_status_button),
                 (self.upload_status_label, self.upload_status_button)
             ):

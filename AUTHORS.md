@@ -335,6 +335,8 @@
  - bgo-eiu
  - blueboy
  - Bonislaw
+ - boredcar
+ - Boris Topalov
  - Brett W. Thompson
  - Bugmenot
  - burnmail123
@@ -402,6 +404,7 @@
  - Kian-Meng Ang
  - Kip Warner
  - Kirill Feoktistov
+ - Kylie McClain
  - lee8oi
  - Lene Preuss
  - Lev Gorodetskiy
@@ -485,6 +488,7 @@
  - wanderer
  - Wojciech Owczarek
  - Wretched
+ - Wynfyd
  - W L
  - X Kowalsky
  - Ys413

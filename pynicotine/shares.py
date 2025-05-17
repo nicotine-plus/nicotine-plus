@@ -29,6 +29,8 @@ import time
 
 from collections import defaultdict
 from collections import deque
+from datetime import datetime
+from datetime import timedelta
 from itertools import chain
 from os import SEEK_END
 from os import SEEK_SET
@@ -255,7 +257,8 @@ class Scanner:
     __slots__ = ("queue", "share_groups", "share_dbs", "share_db_paths", "init",
                  "rescan", "rebuild", "reveal_buddy_shares", "reveal_trusted_shares",
                  "files", "streams", "mtimes", "word_index", "processed_share_names",
-                 "processed_share_paths", "current_file_index", "current_folder_count")
+                 "processed_share_paths", "current_file_index", "current_folder_count",
+                 "lowercase_paths")
 
     HIDDEN_FOLDER_NAMES = {"@eaDir", "#recycle", "#snapshot"}
 
@@ -274,6 +277,7 @@ class Scanner:
         self.files = {}
         self.streams = {}
         self.mtimes = {}
+        self.lowercase_paths = defaultdict(dict)
         self.word_index = defaultdict(list)
         self.processed_share_names = set()
         self.processed_share_paths = set()
@@ -289,6 +293,12 @@ class Scanner:
                 try:
                     self.create_compressed_shares()
                     self.create_file_path_index()
+
+                    # Attempt to load remaining dbs
+                    Shares.load_shares(
+                        self.share_dbs, self.share_db_paths, destinations={"words", "lowercase_paths"}
+                    )
+                    Shares.close_shares(self.share_dbs)
 
                 except Exception:
                     # Failed to load shares or version is invalid, rebuild
@@ -313,8 +323,9 @@ class Scanner:
                 ):
                     self.rescan_dirs(permission_level)
 
-                self.set_shares(word_index=self.word_index)
+                self.set_shares(word_index=self.word_index, lowercase_paths=self.lowercase_paths)
                 self.word_index.clear()
+                self.lowercase_paths.clear()
 
                 self.create_compressed_shares()
                 self.create_file_path_index()
@@ -414,18 +425,20 @@ class Scanner:
 
         raise ValueError(f"Cannot find virtual path for {real_path}")
 
-    def set_shares(self, permission_level=None, files=None, streams=None, mtimes=None, word_index=None):
+    def set_shares(self, permission_level=None, files=None, streams=None, mtimes=None, word_index=None,
+                   lowercase_paths=None):
 
         for source, destination in (
             (files, "files"),
             (streams, "streams"),
             (mtimes, "mtimes"),
-            (word_index, "words")
+            (word_index, "words"),
+            (lowercase_paths, "lowercase_paths")
         ):
             if source is None:
                 continue
 
-            if destination != "words":
+            if destination not in {"words", "lowercase_paths"}:
                 destination = f"{permission_level}_{destination}"
 
             share_db = None
@@ -537,7 +550,15 @@ class Scanner:
             try:
                 with os.scandir(encode_path(folder_path, prefix=False)) as entries:
                     for entry in entries:
-                        basename = entry.name.decode("utf-8", "replace")
+                        basename = basename_escaped = entry.name.decode("utf-8", "replace")
+
+                        if "\\" in basename:
+                            # Substitute backslashes with backslash sentinels in basenames. This is necessary
+                            # due to the Soulseek network using backslashes as path separators, conflicting
+                            # with non-Windows systems where backslashes are valid (but uncommon) file name
+                            # characters. We restore the original backslash later when a user downloads the file.
+                            basename_escaped = basename.replace("\\", Shares.BACKSLASH_SENTINEL)
+
                         path = os.path.join(folder_path, basename)
 
                         if entry.is_dir():
@@ -552,13 +573,19 @@ class Scanner:
                             continue
 
                         try:
+                            if path in self.files:
+                                # Two files with slightly different names, but utf-8 decoded paths become
+                                # identical. Only process one of the files to prevent corrupting the file index.
+                                continue
+
                             if self.is_hidden(folder_path, basename, entry):
                                 continue
 
                             file_stat = entry.stat()
                             file_index = self.current_file_index
                             self.mtimes[path] = file_mtime = file_stat.st_mtime
-                            virtual_file_path = f"{virtual_folder_path}\\{basename}"
+                            virtual_file_path = f"{virtual_folder_path}\\{basename_escaped}"
+                            virtual_folder_path_lower = virtual_folder_path.lower()
 
                             if not self.rebuild and file_mtime == old_mtimes.get(path) and path in old_files:
                                 full_path_file_data = old_files[path]
@@ -567,13 +594,15 @@ class Scanner:
                                 full_path_file_data = self.get_file_info(virtual_file_path, path, file_stat)
 
                             basename_file_data = full_path_file_data[:]
-                            basename_file_data[0] = basename
+                            basename_file_data[0] = basename_escaped
                             file_list.append(basename_file_data)
 
                             for k in set(virtual_file_path.lower().translate(TRANSLATE_PUNCTUATION).split()):
                                 self.word_index[k].append(file_index)
 
                             self.files[path] = full_path_file_data
+                            self.lowercase_paths[virtual_folder_path_lower][basename_escaped.lower()] = file_index
+
                             self.current_file_index += 1
 
                         except OSError as error:
@@ -679,7 +708,9 @@ class Scanner:
 
 class Shares:
     __slots__ = ("share_dbs", "requested_share_times", "initialized", "rescanning", "compressed_shares",
-                 "share_db_paths", "file_path_index", "_scanner_process")
+                 "share_db_paths", "file_path_index", "_scanner_process", "_rescan_daily_timer_id")
+
+    BACKSLASH_SENTINEL = "@@BACKSLASH@@"
 
     def __init__(self):
 
@@ -695,6 +726,7 @@ class Shares:
         }
         self.share_db_paths = {
             "words": os.path.join(config.data_folder_path, "words.dbn"),
+            "lowercase_paths": os.path.join(config.data_folder_path, "lowercasepaths.dbn"),
             "public_files": os.path.join(config.data_folder_path, "publicfiles.dbn"),
             "public_mtimes": os.path.join(config.data_folder_path, "publicmtimes.dbn"),
             "public_streams": os.path.join(config.data_folder_path, "publicstreams.dbn"),
@@ -708,6 +740,7 @@ class Shares:
         self.file_path_index = ()
 
         self._scanner_process = None
+        self._rescan_daily_timer_id = None
 
         for event_name, callback in (
             ("folder-contents-request", self._folder_contents_request),
@@ -762,19 +795,40 @@ class Shares:
             import shutil
             shutil.rmtree(db_path_encoded)
 
-    def virtual2real(self, virtual_path):
+    def get_lowercase_path_index(self, virtual_path):
 
-        for shares in (
-            config.sections["transfers"]["shared"],
-            config.sections["transfers"]["buddyshared"],
-            config.sections["transfers"]["trustedshared"]
-        ):
+        virtual_folder_path, basename = virtual_path.rsplit("\\", 1)
+        lowercase_paths = core.shares.share_dbs.get("lowercase_paths", {})
+        index = None
+
+        if virtual_folder_path in lowercase_paths:
+            index = lowercase_paths[virtual_folder_path].get(basename)
+
+        return index
+
+    def virtual2real(self, virtual_path, revert_backslash=False, is_lowercase_path=False):
+
+        if is_lowercase_path:
+            real_path_index = self.get_lowercase_path_index(virtual_path)
+
+            if real_path_index is not None:
+                # Mangled path from a Soulseek NS client (all lowercase)
+                return self.file_path_index[real_path_index]
+
+        share_groups = self.get_shared_folders()
+
+        for shares in share_groups:
             for virtual_name, folder_path, *_unused in shares:
                 if virtual_path == virtual_name:
                     return folder_path
 
                 if virtual_path.startswith(virtual_name + "\\"):
                     real_path = folder_path.rstrip(os.sep) + virtual_path[len(virtual_name):].replace("\\", os.sep)
+
+                    if revert_backslash and self.BACKSLASH_SENTINEL in virtual_path:
+                        # Real path contains non-separator backslashes. Revert backslash substitutions.
+                        real_path = real_path.replace(self.BACKSLASH_SENTINEL, "\\")
+
                     return real_path
 
         return "__INVALID_SHARE__" + virtual_path
@@ -1084,6 +1138,21 @@ class Shares:
 
         return unavailable_shares
 
+    def start_rescan_daily_timer(self):
+
+        if self._rescan_daily_timer_id is not None:
+            events.cancel_scheduled(self._rescan_daily_timer_id)
+            self._rescan_daily_timer_id = None
+
+        if not config.sections["transfers"]["rescan_shares_daily"]:
+            return
+
+        timestamp_midnight = (datetime.now() + timedelta(days=1)).replace(
+            hour=0, minute=0, second=0, microsecond=0).timestamp()
+
+        self._rescan_daily_timer_id = events.schedule_at(
+            timestamp=timestamp_midnight, callback=self.rescan_shares)
+
     def _build_scanner_process(self, share_groups=None, init=False, rescan=True, rebuild=False):
 
         import multiprocessing
@@ -1152,14 +1221,15 @@ class Shares:
             try:
                 self.load_shares(
                     self.share_dbs, self.share_db_paths, destinations={
-                        "words", "public_files", "public_streams", "buddy_files", "buddy_streams",
-                        "trusted_files", "trusted_streams"
+                        "words", "lowercase_paths", "public_files", "public_streams", "buddy_files",
+                        "buddy_streams", "trusted_files", "trusted_streams"
                     })
 
             except Exception:
                 successful = False
 
         self.rescanning = False
+        self.start_rescan_daily_timer()
 
         if not successful:
             self.file_path_index = ()

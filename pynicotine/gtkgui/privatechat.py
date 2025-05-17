@@ -28,7 +28,6 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.chatcommandhelp import ChatCommandHelp
-from pynicotine.gtkgui.popovers.chathistory import ChatHistory
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -66,7 +65,6 @@ class PrivateChats(IconNotebook):
             command_callback=core.pluginhandler.trigger_private_chat_command_event,
             enable_spell_check=config.sections["ui"]["spellcheck"]
         )
-        self.history = ChatHistory(window)
         self.command_help = None
         self.highlighted_users = []
 
@@ -96,7 +94,6 @@ class PrivateChats(IconNotebook):
     def destroy(self):
 
         self.chat_entry.destroy()
-        self.history.destroy()
 
         if self.command_help is not None:
             self.command_help.destroy()
@@ -318,8 +315,7 @@ class PrivateChat:
             self.container,
             self.help_button,
             self.log_toggle,
-            self.search_bar,
-            self.speech_toggle
+            self.search_bar
         ) = ui.load(scope=self, path="privatechat.ui")
 
         self.user = user
@@ -445,7 +441,6 @@ class PrivateChat:
 
     def toggle_chat_buttons(self):
         self.log_toggle.set_visible(not config.sections["logging"]["privatechat"])
-        self.speech_toggle.set_visible(config.sections["ui"]["speechenabled"])
 
     def on_log_toggled(self, *_args):
 
@@ -466,7 +461,7 @@ class PrivateChat:
     def on_delete_chat_log_response(self, *_args):
 
         log.delete_log(log.private_chat_folder_path, self.user)
-        self.chats.history.remove_user(self.user)
+        self.chats.window.application.chat_history.remove_user(self.user)
         self.chat_view.clear()
 
     def on_delete_chat_log(self, *_args):
@@ -515,11 +510,6 @@ class PrivateChat:
         if not is_outgoing_message:
             self._show_notification(message, is_mentioned=(message_type == "hilite"))
 
-            if self.speech_toggle.get_active():
-                core.notifications.new_tts(
-                    config.sections["ui"]["speechprivate"], {"user": tag_username, "message": message}
-                )
-
         if not is_outgoing_message and not is_new_message:
             if not self.offline_message:
                 self.chat_view.add_line(
@@ -535,7 +525,7 @@ class PrivateChat:
             message, message_type=message_type, timestamp=timestamp, timestamp_format=timestamp_format,
             username=tag_username
         )
-        self.chats.history.update_user(username, message)
+        self.chats.window.application.chat_history.update_user(username, message)
 
     def echo_private_message(self, message, message_type):
 

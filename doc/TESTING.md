@@ -66,16 +66,24 @@ Nicotine+ on other distributions.
 
 Unstable packages are built after every commit to the master branch.
 
- - [Download Unstable Windows Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer.zip)
+ - [Download Unstable Windows x64 Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer.zip)
     — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer)  
    for Windows 10 or later
+
+ - [Download Unstable Windows ARM64 Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-arm64-installer.zip)
+    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-arm64-installer)  
+   for Windows 11 or later
 
 Standalone executables are also available. They can be run from any folder and
 do not require installation.
 
- - [Download Unstable Windows Standalone Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package.zip)
+ - [Download Unstable Windows x64 Standalone Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package.zip)
     — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package)  
    for Windows 10 or later
+
+ - [Download Unstable Windows ARM64 Standalone Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-arm64-package.zip)
+    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-arm64-package)  
+   for Windows 11 or later
 
 > **NOTE**: Configuration files are always stored in  
 > *C:\Users\\<USERNAME\>\AppData\Roaming\nicotine*

@@ -306,7 +306,8 @@ class IconNotebook:
             self.pages_button_container.append(self.pages_button)                  # pylint: disable=no-member
 
             self.scroll_controller = Gtk.EventControllerScroll(
-                flags=int(Gtk.EventControllerScrollFlags.BOTH_AXES | Gtk.EventControllerScrollFlags.DISCRETE)
+                flags=int(Gtk.EventControllerScrollFlags.BOTH_AXES                 # pylint: disable=no-member
+                          | Gtk.EventControllerScrollFlags.DISCRETE)
             )
             self.scroll_controller.connect("scroll", self.on_tab_scroll)
 
@@ -624,7 +625,6 @@ class IconNotebook:
 
         tab_label = self.get_tab_label(page)
         tab_label.set_status_icon(status)
-        tab_label.set_text(user)
         tab_label.set_tooltip_text(f"{user} ({status_text})")
 
     # Signals #

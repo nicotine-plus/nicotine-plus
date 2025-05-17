@@ -1,6 +1,6 @@
 name: Tests
-
 on: [push, pull_request]
+permissions: {}
 
 env:
   NICOTINE_NETWORK_TESTS: 1
@@ -8,15 +8,13 @@ env:
 jobs:
 
   python:
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
-        python: ['3.9', '3.10', '3.11', '3.12', '3.13',
-                 'pypy-3.10', 'pypy-3.11']
-        gtk: [4]
-        platform: ['ubuntu-24.04']
-    runs-on: ${{ matrix.platform }}
+        python: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14-dev',
+                 'pypy-3.10']
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -31,8 +29,8 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install gettext gir1.2-gtk-${{ matrix.gtk }}.0 libcairo2-dev \
-            libgirepository-2.0-dev libgtk-${{ matrix.gtk }}-bin
+          sudo apt install gettext gir1.2-gtk-4.0 libcairo2-dev \
+            libgirepository-2.0-dev libgtk-4-bin
           python -m pip install build setuptools wheel .[tests]
 
       - name: PEP 8 style checks
@@ -173,7 +171,6 @@ jobs:
         run: python3 -m build --no-isolation
 
   windows:
-    runs-on: windows-latest
     timeout-minutes: 15
     strategy:
       fail-fast: false
@@ -181,6 +178,15 @@ jobs:
         include:
           - arch: x86_64
             prefix: mingw-w64-clang-x86_64
+            msystem: clang64
+            platform: windows-latest
+          - arch: arm64
+            prefix: mingw-w64-clang-aarch64
+            msystem: clangarm64
+            platform: windows-11-arm
+    runs-on: ${{ matrix.platform }}
+    env:
+      ARCH: ${{ matrix.arch }}
     defaults:
       run:
         shell: msys2 {0}
@@ -191,8 +197,7 @@ jobs:
       - name: Setup msys2
         uses: msys2/setup-msys2@v2
         with:
-          msystem: clang64
-          release: false
+          msystem: ${{ matrix.msystem }}
           update: true
           install: >-
             ${{ matrix.prefix }}-ca-certificates
@@ -209,7 +214,7 @@ jobs:
             ${{ matrix.prefix }}-webp-pixbuf-loader
 
       - name: Install additional dependencies
-        run: python3 packaging/windows/dependencies.py
+        run: python3 build-aux/windows/dependencies.py
 
       - name: PEP 8 style checks
         run: python3 -m pycodestyle
@@ -243,12 +248,12 @@ jobs:
 
       - name: Create Python virtual environment
         run: |
-          brew uninstall --ignore-dependencies python@3.12
-          brew install --overwrite python@3.12
-          python3.12 -m venv venv
+          brew uninstall --ignore-dependencies python@3.13
+          brew install --overwrite python@3.13
+          python3.13 -m venv venv
 
       - name: Install dependencies
-        run: venv/bin/python3 packaging/macos/dependencies.py
+        run: venv/bin/python3 build-aux/macos/dependencies.py
 
       - name: PEP 8 style checks
         run: venv/bin/python3 -m pycodestyle

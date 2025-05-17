@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -26,19 +26,18 @@ from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
-from pynicotine.gtkgui.widgets.popover import Popover
+from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
-from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.utils import humanize
 
 
-class RoomList(Popover):
+class RoomList(Dialog):
 
     PRIVATE_USERS_OFFSET = 10000000
 
-    def __init__(self, window):
+    def __init__(self, application):
 
         (
             self.container,
@@ -47,17 +46,19 @@ class RoomList(Popover):
             self.public_feed_toggle,
             self.refresh_button,
             self.search_entry
-        ) = ui.load(scope=self, path="popovers/roomlist.ui")
+        ) = ui.load(scope=self, path="dialogs/roomlist.ui")
 
         super().__init__(
-            window=window,
+            parent=application.window,
             content_box=self.container,
-            width=450,
-            height=500
+            title=_("All Rooms"),
+            width=500,
+            height=625
         )
+        application.add_window(self.widget)
 
         self.list_view = TreeView(
-            window, parent=self.list_container,
+            application.window, parent=self.list_container,
             activate_row_callback=self.on_row_activated, search_entry=self.search_entry,
             columns={
                 # Visible columns
@@ -85,7 +86,7 @@ class RoomList(Popover):
         )
 
         self.popup_room = None
-        self.popup_menu = PopupMenu(window.application, self.list_view.widget, self.on_popup_menu)
+        self.popup_menu = PopupMenu(application, self.list_view.widget, self.on_popup_menu)
         self.popup_menu.add_items(
             ("=" + _("Join Room"), self.on_popup_join),
             ("=" + _("Leave Room"), self.on_popup_leave),
@@ -110,13 +111,7 @@ class RoomList(Popover):
         self.private_room_toggle.connect("notify::active", self.on_toggle_accept_private_room)
 
         Accelerator("<Primary>f", self.widget, self.on_search_accelerator)
-        self.completion_entry = CompletionEntry(window.chatrooms_entry, self.list_view.model, column=0)
-
-        if GTK_API_VERSION >= 4:
-            inner_button = next(iter(window.room_list_button))
-            add_css_class(widget=inner_button, css_class="arrow-button")
-
-        self.set_menu_button(window.room_list_button)
+        self.completion_entry = CompletionEntry(application.window.chatrooms_entry, self.list_view.model, column=0)
 
         for event_name, callback in (
             ("join-room", self.join_room),
@@ -168,6 +163,9 @@ class RoomList(Popover):
             text_underline
         ], select_row=False)
 
+        if not self.list_container.get_visible():
+            self.list_container.set_visible(True)
+
     def update_room_user_count(self, room, user_count=None, decrement=False):
 
         iterator = self.list_view.iterators.get(room)
@@ -200,6 +198,7 @@ class RoomList(Popover):
 
     def clear(self, *_args):
         self.list_view.clear()
+        self.list_container.set_visible(False)
 
     def private_room_added(self, msg):
         self.add_room(msg.room, is_private=True)
@@ -280,7 +279,7 @@ class RoomList(Popover):
 
     def on_popup_join(self, *_args):
         core.chatrooms.show_room(self.popup_room)
-        self.close(use_transition=False)
+        self.close()
 
     def on_toggle_label_pressed(self, _controller, _num_p, _pos_x, _pos_y, toggle):
         toggle.emit("activate")
@@ -293,7 +292,7 @@ class RoomList(Popover):
             if global_room_name not in core.chatrooms.joined_rooms:
                 core.chatrooms.show_room(global_room_name)
 
-            self.close(use_transition=False)
+            self.close()
             return
 
         core.chatrooms.remove_room(global_room_name)
