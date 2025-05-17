@@ -452,8 +452,7 @@ class ChatView(TextView):
             yield (closer, tag)
 
         # Highlight urls, if found and tag them
-        for hypertext, tag in list(self._generate_hypertext(message, tag=tag)):
-            yield (hypertext, tag)
+        yield from self._generate_hypertext(message, tag=tag)
 
     def prepend_log_lines(self, log_lines, login_username=None):
         """Insert batch of previously gathered log lines from file"""
