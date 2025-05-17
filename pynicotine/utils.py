@@ -586,15 +586,14 @@ def open_folder_path(folder_path, create_folder=False):
 
 
 def open_uri(uri):
-    """Open a URI in an external (web) browser.
-
-    The given argument has to be a properly formed URI including the
-    scheme (fe. HTTP).
-    """
+    """Open a URI in an external (web) browser."""
 
     from pynicotine.config import config
 
     try:
+        if uri.startswith("www."):
+            uri = "http://" + uri
+
         # Situation 1, user defined a way of handling the protocol
         protocol = uri[:uri.find(":")]
 

@@ -258,11 +258,11 @@ class TextView:
             self.cursor_window = self.widget.get_window(Gtk.TextWindowType.TEXT)  # pylint: disable=no-member
 
         for tag in self.get_tags_for_pos(pos_x, pos_y):
-            if hasattr(tag, "name"):
+            if tag.username:
                 cursor = self.DEFAULT_CURSOR
                 break
 
-            if hasattr(tag, "url"):
+            if tag.roomname or tag.url:
                 cursor = self.POINTER_CURSOR
                 break
 
@@ -274,23 +274,16 @@ class TextView:
 
     # Text Tags (Roomnames, Usernames, URLs)
 
-    def create_tag(self, color_id=None, callback=None, name=None, url=None):
+    def create_tag(self, color_id=None, callback=None, username=None, roomname=None, url=None):
 
         tag = self.textbuffer.create_tag()
+        tag.callback = callback
+        tag.username = username
+        tag.roomname = roomname
+        tag.url = url
 
         if color_id:
-            update_tag_visuals(tag, color_id=color_id)
-            tag.color_id = color_id
-
-        if url:
-            if url.startswith("www."):
-                url = "http://" + url
-
-            tag.url = url
-
-        elif name:
-            tag.callback = callback
-            tag.name = name
+            self.update_tag(tag, color_id=color_id)
 
         return tag
 
@@ -299,14 +292,14 @@ class TextView:
         if color_id is not None:
             tag.color_id = color_id
 
-        update_tag_visuals(tag, color_id=tag.color_id)
+        update_tag_visuals(tag)
 
     def update_tags(self):
         self.textbuffer.get_tag_table().foreach(self.update_tag)
 
     # Events #
 
-    def on_released_primary(self, _controller, _num_p, pressed_x, pressed_y):
+    def click_tag(self, pressed_x, pressed_y, secondary=False):
 
         self.pressed_x = pressed_x
         self.pressed_y = pressed_y
@@ -315,30 +308,19 @@ class TextView:
             return False
 
         for tag in self.get_tags_for_pos(pressed_x, pressed_y):
-            if hasattr(tag, "url"):
-                open_uri(tag.url)
-                return True
+            if tag.callback:
+                return tag.callback(tag.username or tag.roomname, pressed_x, pressed_y, secondary)
 
-            if hasattr(tag, "name"):
-                tag.callback(pressed_x, pressed_y, tag.name)
-                return True
+            if not secondary and tag.url:
+                return open_uri(tag.url)
 
         return False
+
+    def on_released_primary(self, _controller, _num_p, pressed_x, pressed_y):
+        return self.click_tag(pressed_x, pressed_y)
 
     def on_pressed_secondary(self, _controller, _num_p, pressed_x, pressed_y):
-
-        self.pressed_x = pressed_x
-        self.pressed_y = pressed_y
-
-        if self.textbuffer.get_has_selection():
-            return False
-
-        for tag in self.get_tags_for_pos(pressed_x, pressed_y):
-            if hasattr(tag, "name"):
-                tag.callback(pressed_x, pressed_y, tag.name)
-                return True
-
-        return False
+        return self.click_tag(pressed_x, pressed_y, secondary=True)
 
     def on_move_cursor(self, _controller, pos_x, pos_y):
         self.update_cursor(pos_x, pos_y)
@@ -385,7 +367,6 @@ class ChatView(TextView):
 
         super().__init__(*args, **kwargs)
 
-        self.room_tags = {}  # Only used in global room feed
         self.user_tags = self.status_users = {}
         self.chat_entry = chat_entry
         self.roomname_event = roomname_event
@@ -440,7 +421,7 @@ class ChatView(TextView):
 
         # Tag roomname, only used in global room feed
         if roomname:
-            yield (roomname, self._get_room_tag(roomname))
+            yield (roomname, self.get_room_tag(roomname))
             yield (" | ", tag)
 
         # Tag username with popup menu and away/online/offline colors
@@ -448,7 +429,7 @@ class ChatView(TextView):
             opener, closer = ("* ", " ") if message_type == "action" else ("[", "] ")
 
             yield (opener, tag)
-            yield (username, self._get_user_tag(username))
+            yield (username, self.get_user_tag(username))
             yield (closer, tag)
 
         # Highlight urls, if found and tag them
@@ -512,21 +493,15 @@ class ChatView(TextView):
 
     def clear(self):
         super().clear()
-        self.room_tags.clear()
         self.user_tags.clear()
 
-    def _get_room_tag(self, roomname):
+    def get_room_tag(self, roomname):
+        return self.create_tag("urlcolor", callback=self.roomname_event, roomname=roomname)
 
-        if roomname not in self.room_tags:
-            color = USER_STATUS_COLORS.get(UserStatus.ONLINE)  # Pick a color, any color?
-            self.room_tags[roomname] = self.create_tag(color_id=color, callback=self.roomname_event, name=roomname)
-
-        return self.room_tags[roomname]
-
-    def _get_user_tag(self, username):
+    def get_user_tag(self, username):
 
         if username not in self.user_tags:
-            self.user_tags[username] = self.create_tag(callback=self.username_event, name=username)
+            self.user_tags[username] = self.create_tag(callback=self.username_event, username=username)
             self.update_user_tag(username)
 
         return self.user_tags[username]

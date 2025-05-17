@@ -1134,15 +1134,22 @@ class ChatRoom:
         if flag_icon_name and flag_icon_name != self.users_list_view.get_row_value(iterator, "country"):
             self.users_list_view.set_row_value(iterator, "country", flag_icon_name)
 
-    def roomname_event(self, _pos_x, _pos_y, room):
-        core.chatrooms.show_room(room)
+    def roomname_event(self, room, _pos_x, _pos_y, secondary):
 
-    def username_event(self, pos_x, pos_y, user):
+        if secondary:
+            # Right-click: No action
+            return False
+
+        core.chatrooms.show_room(room)
+        return True
+
+    def username_event(self, user, pos_x, pos_y, _secondary):
 
         menu = self.popup_menu_user_chat
         menu.update_model()
         self.populate_user_menu(user, menu)
         menu.popup(pos_x, pos_y)
+        return True
 
     def update_tags(self):
         self.chat_view.update_tags()

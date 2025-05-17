@@ -536,12 +536,13 @@ class PrivateChat:
 
         self.chat_view.add_line(message, message_type=message_type, timestamp_format=timestamp_format)
 
-    def username_event(self, pos_x, pos_y, user):
+    def username_event(self, user, pos_x, pos_y, _secondary):
 
         self.popup_menu_user_chat.update_model()
         self.popup_menu_user_chat.set_user(user)
         self.popup_menu_user_chat.toggle_user_items()
         self.popup_menu_user_chat.popup(pos_x, pos_y)
+        return True
 
     def update_tags(self):
         self.chat_view.update_tags()
