@@ -34,7 +34,7 @@ def get_default_gtk_version():
         try:
             dbus_proxy = Gio.DBusProxy.new_for_bus_sync(
                 bus_type=Gio.BusType.SESSION,
-                flags=Gio.DBusProxyFlags.NONE,
+                flags=0,
                 info=None,
                 name="org.a11y.Bus",
                 object_path="/org/a11y/bus",
@@ -96,7 +96,7 @@ def check_gtk_version(gtk_api_version, is_fallback=False):
 
         return _("Cannot find %s, please install it.") % f"GTK >={gtk_api_version}"
 
-    from gi.repository import Gtk
+    from gi.repository import Gtk  # pylint:disable=unused-import
 
     if sys.platform == "win32":
         # Ensure all Windows-specific APIs are available
@@ -109,9 +109,6 @@ def check_gtk_version(gtk_api_version, is_fallback=False):
         # on Windows while a proxy is enabled. We always keep the loop active anyway
         # (on_process_thread_events in application.py).
         gi._ossighelper._wakeup_fd_is_active = True  # pylint:disable=protected-access
-
-    gtk_version = f"{Gtk.get_major_version()}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
-    log.add(_("Loading %(program)s %(version)s"), {"program": "GTK", "version": gtk_version})
 
     return None
 
@@ -139,16 +136,6 @@ def run(hidden, ci_mode, isolated_mode, multi_instance):
 
         # Disable client-side decorations when header bar is disabled
         os.environ["GTK_CSD"] = "0"
-
-        # Use Cairo software rendering due to flickering issues in the GPU renderer (#2859).
-        # Reevaluate when the new GPU renderers are stable:
-        # https://blog.gtk.org/2024/01/28/new-renderers-for-gtk/
-        os.environ["GDK_DISABLE"] = "gl,vulkan"
-        os.environ["GSK_RENDERER"] = "cairo"
-
-    elif sys.platform == "darwin":
-        # Older GL renderer is still faster on macOS for now
-        os.environ["GSK_RENDERER"] = "gl"
 
     error = check_gtk_version(gtk_api_version=os.environ.get("NICOTINE_GTK_VERSION", get_default_gtk_version()))
 

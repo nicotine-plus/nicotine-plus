@@ -80,13 +80,12 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkToggleButton" id="speech_toggle">
-                        <property name="active">True</property>
-                        <property name="tooltip-text" translatable="yes">Toggle Text-to-Speech</property>
+                      <object class="GtkMenuButton" id="help_button">
+                        <property name="tooltip-text" translatable="yes">Chat Room Command Help</property>
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="icon-name">audio-volume-high-symbolic</property>
+                            <property name="icon-name">dialog-question-symbolic</property>
                             <property name="visible">True</property>
                           </object>
                         </child>
@@ -96,12 +95,12 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuButton" id="help_button">
-                        <property name="tooltip-text" translatable="yes">Chat Room Command Help</property>
+                      <object class="GtkToggleButton" id="user_list_button">
+                        <property name="tooltip-text" translatable="yes">Show Room Users</property>
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="icon-name">dialog-question-symbolic</property>
+                            <property name="icon-name">sidebar-show-right-symbolic</property>
                             <property name="visible">True</property>
                           </object>
                         </child>
@@ -131,7 +130,7 @@
           <object class="GtkBox" id="users_container">
             <property name="hexpand">False</property>
             <property name="orientation">vertical</property>
-            <property name="visible">True</property>
+            <property name="visible">False</property>
             <property name="width-request">180</property>
             <child>
               <object class="GtkBox">

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -139,6 +139,26 @@ class NATPMP(BaseImplementation):
                         continue
 
                     gateway_address = socket.inet_ntoa(struct.pack("<L", int(routes[2], 16)))
+                    break
+
+            return gateway_address
+
+        if sys.platform.startswith("haiku"):
+            gateway_address = None
+            output = execute_command("route", returnoutput=True, hidden=True)
+
+            for line in output.splitlines():
+                columns = line.strip().split()
+
+                if len(columns) < 5:
+                    continue
+
+                new_gateway_address = columns[2]
+                flags = columns[3]
+
+                # D = RTF_DEFAULT
+                if flags[0:1] == b"D" and new_gateway_address != b"-":
+                    gateway_address = new_gateway_address
                     break
 
             return gateway_address
@@ -367,7 +387,7 @@ class UPnP(BaseImplementation):
         @staticmethod
         def get_services(private_ip):
 
-            log.add_debug("UPnP: Discovering... delay=%s seconds", UPnP.MX_RESPONSE_DELAY)
+            log.add_debug("UPnP: Discovering… delay=%s seconds", UPnP.MX_RESPONSE_DELAY)
 
             # Create a UDP socket and set its timeout
             with socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP) as sock:
@@ -616,7 +636,7 @@ class PortMapper:
             return
 
         self._is_mapping_port = True
-        log.add_debug("Creating Port Mapping rule...")
+        log.add_debug("Creating Port Mapping rule…")
 
         try:
             self._active_implementation = self._natpmp

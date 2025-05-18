@@ -86,6 +86,8 @@ class Application:
         self.about = None
         self.fast_configure = None
         self.preferences = None
+        self.chat_history = None
+        self.room_list = None
         self.file_properties = None
         self.shortcuts = None
         self.statistics = None
@@ -117,6 +119,7 @@ class Application:
             ("show-download-notification", self._show_download_notification),
             ("show-private-chat-notification", self._show_private_chat_notification),
             ("show-search-notification", self._show_search_notification),
+            ("show-upload-notification", self._show_upload_notification),
             ("user-status", self.on_user_status)
         ):
             events.connect(event_name, callback)
@@ -148,6 +151,8 @@ class Application:
             ("soulseek-privileges", self.on_soulseek_privileges, None, False),
             ("away", self.on_away, None, True),
             ("away-accel", self.on_away_accelerator, None, False),
+            ("chat-history", self.on_chat_history, None, True),
+            ("room-list", self.on_room_list, None, True),
             ("message-downloading-users", self.on_message_downloading_users, None, False),
             ("message-buddies", self.on_message_buddies, None, False),
             ("wishlist", self.on_wishlist, None, True),
@@ -163,7 +168,6 @@ class Application:
             ("load-shares-from-disk", self.on_load_shares_from_disk, None, True),
 
             # Configuration
-
             ("preferences", self.on_preferences, None, True),
             ("configure-shares", self.on_configure_shares, None, True),
             ("configure-downloads", self.on_configure_downloads, None, True),
@@ -180,6 +184,7 @@ class Application:
             ("download-notification-activated", self.on_downloads, None, True),
             ("private-chat-notification-activated", self.on_private_chat_notification_activated, "s", True),
             ("search-notification-activated", self.on_search_notification_activated, "s", True),
+            ("upload-notification-activated", self.on_uploads, None, True),
 
             # Help
             ("keyboard-shortcuts", self.on_keyboard_shortcuts, None, True),
@@ -496,6 +501,12 @@ class Application:
             high_priority=True
         )
 
+    def _show_upload_notification(self, message, title=None):
+
+        self._show_notification(
+            message, title, action="app.upload-notification-activated"
+        )
+
     # Core Events #
 
     def on_confirm_quit_response(self, dialog, response_id, _data):
@@ -652,6 +663,12 @@ class Application:
             self.shortcuts = Shortcuts(self)
 
         self.shortcuts.present()
+
+    def on_chat_history(self, *_args):
+        self.chat_history.present()
+
+    def on_room_list(self, *_args):
+        self.room_list.present()
 
     def on_transfer_statistics(self, *_args):
 
@@ -951,6 +968,8 @@ class Application:
             self.window.present()
             return
 
+        from pynicotine.gtkgui.dialogs.chathistory import ChatHistory
+        from pynicotine.gtkgui.dialogs.roomlist import RoomList
         from pynicotine.gtkgui.mainwindow import MainWindow
         from pynicotine.gtkgui.widgets.theme import load_icons
         from pynicotine.gtkgui.widgets.trayicon import TrayIcon
@@ -967,8 +986,13 @@ class Application:
 
         self.tray_icon = TrayIcon(self)
         self.window = MainWindow(self)
+        self.chat_history = ChatHistory(self)
+        self.room_list = RoomList(self)
 
         core.start()
+
+        gtk_version = f"{Gtk.get_major_version()}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
+        log.add(_("Loaded %(program)s %(version)s"), {"program": "GTK", "version": gtk_version})
 
         if config.sections["server"]["auto_connect_startup"]:
             core.connect()
@@ -1005,6 +1029,12 @@ class Application:
 
         if self.preferences is not None:
             self.preferences.destroy()
+
+        if self.chat_history is not None:
+            self.chat_history.destroy()
+
+        if self.room_list is not None:
+            self.room_list.destroy()
 
         if self.file_properties is not None:
             self.file_properties.destroy()

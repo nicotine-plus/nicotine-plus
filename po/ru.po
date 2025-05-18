@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-08 11:16+0200\n"
-"PO-Revision-Date: 2024-11-19 22:16+0000\n"
-"Last-Translator: Ilya <wileyfoxyx@gmail.com>\n"
+"PO-Revision-Date: 2025-05-18 03:59+0000\n"
+"Last-Translator: SnIPeRSnIPeR <feoktistovk@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
 "Language: ru\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.12-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -997,14 +997,14 @@ msgstr "Всем"
 #: pynicotine/gtkgui/ui/buddies.ui:18 pynicotine/gtkgui/ui/mainwindow.ui:1363
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:692
 msgid "Buddies"
-msgstr "Друзьям"
+msgstr "Друзья"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:277
 #: pynicotine/gtkgui/dialogs/preferences.py:586
 #: pynicotine/gtkgui/dialogs/preferences.py:720
 #: pynicotine/gtkgui/dialogs/preferences.py:756
 msgid "Trusted buddies"
-msgstr "Доверенным друзьям"
+msgstr "Доверенные друзья"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:282
 #: pynicotine/gtkgui/dialogs/preferences.py:806

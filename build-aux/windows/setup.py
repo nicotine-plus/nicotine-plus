@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2025 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -25,8 +25,13 @@ import subprocess
 import sys
 import tempfile
 
-from cx_Freeze import Executable, setup  # pylint: disable=import-error
-from cx_Freeze.hooks import gi  # pylint: disable=import-error
+from cx_Freeze import Executable, setup     # pylint: disable=import-error
+
+try:
+    from cx_Freeze.hooks import gi          # pylint: disable=import-error
+except ImportError:
+    from cx_Freeze.hooks import _gi_ as gi  # pylint: disable=import-error,import-private-name
+
 del gi.load_gi
 
 # pylint: disable=duplicate-code

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009-2011 quinox <quinox@users.sf.net>
@@ -152,7 +152,7 @@ class Uploads(Transfers):
         toggle_status_action.set_enabled(True)
 
         self.window.user_status_icon.set_from_icon_name(icon_name, *icon_args)
-        self.window.user_status_label.set_text(_("Quitting..."))
+        self.window.user_status_label.set_text(_("Quitting…"))
 
     def shutdown_cancel(self):
         self.window.update_user_status()
@@ -235,13 +235,6 @@ class Uploads(Transfers):
                 self.selected_transfers[transfer] = None
 
         self.abort_selected_transfers()
-
-    def on_ban_users(self, *_args):
-
-        self.select_transfers()
-
-        for username in self.selected_users:
-            core.network_filter.ban_user(username)
 
     def on_clear_queued(self, *_args):
         core.uploads.clear_uploads(statuses={TransferStatus.QUEUED})

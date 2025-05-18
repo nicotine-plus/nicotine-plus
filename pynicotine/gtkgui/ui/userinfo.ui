@@ -66,7 +66,27 @@
                                   </object>
                                 </child>
                                 <child>
+                                  <object class="GtkButton" id="privileged_user_button">
+                                    <property name="tooltip-text" translatable="yes">Privileged User</property>
+                                    <property name="valign">center</property>
+                                    <property name="visible">False</property>
+                                    <signal name="clicked" handler="on_privileged_user"/>
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="icon-name">starred-symbolic</property>
+                                        <property name="visible">True</property>
+                                      </object>
+                                    </child>
+                                    <style>
+                                      <class name="circular"/>
+                                      <class name="image-button"/>
+                                      <class name="warning"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
                                   <object class="GtkButton" id="country_button">
+                                    <property name="valign">center</property>
                                     <property name="visible">False</property>
                                     <signal name="clicked" handler="on_show_ip_address"/>
                                     <child>
@@ -99,6 +119,7 @@
                             <child>
                               <object class="GtkButton" id="edit_profile_button">
                                 <property name="tooltip-text" translatable="yes">Edit Profile</property>
+                                <property name="valign">center</property>
                                 <property name="visible">True</property>
                                 <signal name="clicked" handler="on_edit_profile"/>
                                 <child>
@@ -351,7 +372,7 @@
                         </child>
                         <child>
                           <object class="GtkButton" id="edit_interests_button">
-                            <property name="tooltip-text" translatable="yes">Edit Interests</property>
+                            <property name="tooltip-text" translatable="yes">Add Interests</property>
                             <property name="visible">True</property>
                             <signal name="clicked" handler="on_edit_interests"/>
                             <child>

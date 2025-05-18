@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 # COPYRIGHT (C) 2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009 quinox <quinox@users.sf.net>
@@ -118,7 +118,7 @@ class Buddies:
                 "last_seen": {
                     "column_type": "text",
                     "title": _("Last Seen"),
-                    "width": 160,
+                    "width": 225,
                     "sort_column": "last_seen_data"
                 },
                 "comments": {
@@ -313,6 +313,7 @@ class Buddies:
 
         speed = msg.avgspeed or 0
         num_files = msg.files or 0
+        h_num_files = humanize(num_files)
         column_ids = []
         column_values = []
 
@@ -322,9 +323,7 @@ class Buddies:
             column_ids.extend(("speed", "speed_data"))
             column_values.extend((h_speed, speed))
 
-        if num_files != self.list_view.get_row_value(iterator, "files_data"):
-            h_num_files = humanize(num_files)
-
+        if h_num_files != self.list_view.get_row_value(iterator, "files"):
             column_ids.extend(("files", "files_data"))
             column_values.extend((h_num_files, num_files))
 

@@ -43,22 +43,6 @@
               </object>
             </child>
             <child>
-              <object class="GtkToggleButton" id="speech_toggle">
-                <property name="active">True</property>
-                <property name="tooltip-text" translatable="yes">Toggle Text-to-Speech</property>
-                <property name="visible">True</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="icon-name">audio-volume-high-symbolic</property>
-                    <property name="visible">True</property>
-                  </object>
-                </child>
-                <style>
-                  <class name="image-button"/>
-                </style>
-              </object>
-            </child>
-            <child>
               <object class="GtkMenuButton" id="help_button">
                 <property name="tooltip-text" translatable="yes">Private Chat Command Help</property>
                 <property name="visible">True</property>

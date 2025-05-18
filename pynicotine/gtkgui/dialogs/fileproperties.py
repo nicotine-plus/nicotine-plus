@@ -68,18 +68,18 @@ class FileProperties(Dialog):
 
     def update_title(self):
 
-        index = self.current_index + 1
-        total_files = len(self.properties)
+        index = humanize(self.current_index + 1)
+        total_files = humanize(len(self.properties))
         total_size = human_size(self.total_size)
 
         if self.total_length:
-            self.set_title(_("File Properties (%(num)i of %(total)i  /  %(size)s  /  %(length)s)") % {
+            self.set_title(_("File Properties  -  %(num)s of %(total)s  /  %(size)s  /  %(length)s") % {
                 "num": index, "total": total_files, "size": total_size,
                 "length": human_length(self.total_length)
             })
             return
 
-        self.set_title(_("File Properties (%(num)i of %(total)i  /  %(size)s)") % {
+        self.set_title(_("File Properties  -  %(num)s of %(total)s  /  %(size)s") % {
                        "num": index, "total": total_files, "size": total_size})
 
     def update_current_file(self):

@@ -39,6 +39,7 @@ from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_MINOR_VERSION
 from pynicotine.gtkgui.dialogs.pluginsettings import PluginSettings
+from pynicotine.gtkgui.popovers.portchecker import PortChecker
 from pynicotine.gtkgui.popovers.searchfilterhelp import SearchFilterHelp
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
@@ -76,6 +77,7 @@ class NetworkPage:
             self.auto_away_spinner,
             self.auto_connect_startup_toggle,
             self.auto_reply_message_entry,
+            self.check_port_status_button,
             self.check_port_status_label,
             self.container,
             self.current_port_label,
@@ -89,7 +91,19 @@ class NetworkPage:
         self.application = application
 
         self.username_entry.set_max_length(core.users.USERNAME_MAX_LENGTH)
-        self.check_port_status_label.connect("activate-link", self.on_activate_link)
+
+        for event_name, callback in (
+            ("server-disconnect", self.update_port),
+            ("server-login", self.update_port)
+        ):
+            events.connect(event_name, callback)
+
+        self.port_checker = PortChecker(application.preferences)
+        self.port_checker.set_menu_button(self.check_port_status_button)
+
+        if GTK_API_VERSION >= 4:
+            inner_button = next(iter(self.check_port_status_button))
+            self.check_port_status_label.set_mnemonic_widget(inner_button)
 
         self.network_interface_combobox = ComboBox(
             container=self.network_interface_label.get_parent(), has_entry=True,
@@ -109,33 +123,23 @@ class NetworkPage:
             }
         }
 
-        for event_name, callback in (
-            ("server-disconnect", self.update_port_label),
-            ("server-login", self.update_port_label)
-        ):
-            events.connect(event_name, callback)
-
     def destroy(self):
         self.network_interface_combobox.destroy()
         self.__dict__.clear()
 
-    def update_port_label(self, *_args):
+    def update_port(self, *_args):
 
         unknown_label = _("Unknown")
 
         if core.users.public_port:
-            url = pynicotine.__port_checker_url__ % str(core.users.public_port)
-            port_status_text = _("Check Port Status")
-
             self.current_port_label.set_markup(_("<b>%(ip)s</b>, port %(port)s") % {
                 "ip": core.users.public_ip_address or unknown_label,
                 "port": core.users.public_port or unknown_label
             })
-            self.check_port_status_label.set_markup(f"<a href='{url}' title='{url}'>{port_status_text}</a>")
-            self.check_port_status_label.set_visible(not self.application.isolated_mode)
         else:
             self.current_port_label.set_text(unknown_label)
-            self.check_port_status_label.set_visible(False)
+
+        self.port_checker.port = core.users.public_port
 
     def set_settings(self):
 
@@ -150,9 +154,10 @@ class NetworkPage:
         self.network_interface_combobox.unfreeze()
 
         self.application.preferences.set_widgets_data(self.options)
+        self.upnp_toggle.get_parent().set_visible(not self.application.isolated_mode)
 
         # Listening port status
-        self.update_port_label()
+        self.update_port()
 
         # Special options
         server_hostname, server_port = config.sections["server"]["server"]
@@ -272,7 +277,6 @@ class DownloadsPage:
             container=self.sent_files_permission_container,
             items=(
                 (_("No one"), 0),
-                (_("Everyone"), 1),
                 (_("Buddies"), 2),
                 (_("Trusted buddies"), 3)
             )
@@ -590,6 +594,7 @@ class SharesPage:
 
         (
             self.container,
+            self.rescan_daily_toggle,
             self.rescan_on_startup_toggle,
             self.reveal_buddy_shares_toggle,
             self.reveal_trusted_shares_toggle,
@@ -632,6 +637,7 @@ class SharesPage:
         self.options = {
             "transfers": {
                 "rescanonstartup": self.rescan_on_startup_toggle,
+                "rescan_shares_daily": self.rescan_daily_toggle,
                 "reveal_buddy_shares": self.reveal_buddy_shares_toggle,
                 "reveal_trusted_shares": self.reveal_trusted_shares_toggle
             }
@@ -674,6 +680,7 @@ class SharesPage:
                 "buddyshared": self.buddy_shared_folders[:],
                 "trustedshared": self.trusted_shared_folders[:],
                 "rescanonstartup": self.rescan_on_startup_toggle.get_active(),
+                "rescan_shares_daily": self.rescan_daily_toggle.get_active(),
                 "reveal_buddy_shares": self.reveal_buddy_shares_toggle.get_active(),
                 "reveal_trusted_shares": self.reveal_trusted_shares_toggle.get_active()
             }
@@ -1326,7 +1333,6 @@ class ChatsPage:
             self.enable_ctcp_toggle,
             self.enable_spell_checker_toggle,
             self.enable_tab_completion_toggle,
-            self.enable_tts_toggle,
             self.format_codes_label,
             self.min_chars_dropdown_spinner,
             self.private_room_toggle,
@@ -1336,10 +1342,6 @@ class ChatsPage:
             self.replacement_list_container,
             self.timestamp_private_chat_entry,
             self.timestamp_room_entry,
-            self.tts_command_label,
-            self.tts_container,
-            self.tts_private_message_entry,
-            self.tts_room_message_entry,
         ) = self.widgets = ui.load(scope=self, path="settings/chats.ui")
 
         self.application = application
@@ -1350,14 +1352,6 @@ class ChatsPage:
         self.format_codes_label.set_markup(
             f"<a href='{format_codes_url}' title='{format_codes_url}'>{format_codes_label}</a>")
         self.format_codes_label.connect("activate-link", self.on_activate_link)
-
-        self.tts_command_combobox = ComboBox(
-            container=self.tts_command_label.get_parent(), label=self.tts_command_label, has_entry=True,
-            items=(
-                ("flite -t $", None),
-                ("echo $ | festival --tts", None)
-            )
-        )
 
         self.censored_patterns = []
         self.censor_list_view = TreeView(
@@ -1422,17 +1416,12 @@ class ChatsPage:
                 "replacewords": self.auto_replace_words_toggle
             },
             "ui": {
-                "spellcheck": self.enable_spell_checker_toggle,
-                "speechenabled": self.enable_tts_toggle,
-                "speechcommand": self.tts_command_combobox,
-                "speechrooms": self.tts_room_message_entry,
-                "speechprivate": self.tts_private_message_entry
+                "spellcheck": self.enable_spell_checker_toggle
             }
         }
 
     def destroy(self):
 
-        self.tts_command_combobox.destroy()
         self.censor_list_view.destroy()
         self.replacement_list_view.destroy()
 
@@ -1450,7 +1439,6 @@ class ChatsPage:
         self.enable_spell_checker_toggle.get_parent().set_visible(SpellChecker.is_available())
         self.enable_ctcp_toggle.set_active(not config.sections["server"]["ctcpmsgs"])
         self.format_codes_label.set_visible(not self.application.isolated_mode)
-        self.tts_container.set_margin_top(24 if self.application.isolated_mode else 0)
 
         self.censored_patterns = config.sections["words"]["censored"][:]
         self.replacements = config.sections["words"]["autoreplaced"].copy()
@@ -1485,23 +1473,13 @@ class ChatsPage:
                 "replacewords": self.auto_replace_words_toggle.get_active()
             },
             "ui": {
-                "spellcheck": self.enable_spell_checker_toggle.get_active(),
-                "speechenabled": self.enable_tts_toggle.get_active(),
-                "speechcommand": self.tts_command_combobox.get_text().strip(),
-                "speechrooms": self.tts_room_message_entry.get_text(),
-                "speechprivate": self.tts_private_message_entry.get_text()
+                "spellcheck": self.enable_spell_checker_toggle.get_active()
             }
         }
 
     def on_activate_link(self, _label, url):
         open_uri(url)
         return True
-
-    def on_default_tts_private_message(self, *_args):
-        self.tts_private_message_entry.set_text(config.defaults["ui"]["speechprivate"])
-
-    def on_default_tts_room_message(self, *_args):
-        self.tts_room_message_entry.set_text(config.defaults["ui"]["speechrooms"])
 
     def on_default_timestamp_room(self, *_args):
         self.timestamp_room_entry.set_text(config.defaults["logging"]["rooms_timestamp"])
@@ -1705,6 +1683,7 @@ class UserInterfacePage:
             self.notification_download_file_toggle,
             self.notification_download_folder_toggle,
             self.notification_private_message_toggle,
+            self.notification_queued_upload_toggle,
             self.notification_sounds_toggle,
             self.notification_window_title_toggle,
             self.notification_wish_toggle,
@@ -1954,6 +1933,7 @@ class UserInterfacePage:
                 "notification_popup_sound": self.notification_sounds_toggle,
                 "notification_popup_file": self.notification_download_file_toggle,
                 "notification_popup_folder": self.notification_download_folder_toggle,
+                "notification_popup_queued_upload": self.notification_queued_upload_toggle,
                 "notification_popup_private_message": self.notification_private_message_toggle,
                 "notification_popup_chatroom": self.notification_chatroom_toggle,
                 "notification_popup_chatroom_mention": self.notification_chatroom_mention_toggle,
@@ -2037,6 +2017,7 @@ class UserInterfacePage:
                 "notification_popup_sound": self.notification_sounds_toggle.get_active(),
                 "notification_popup_file": self.notification_download_file_toggle.get_active(),
                 "notification_popup_folder": self.notification_download_folder_toggle.get_active(),
+                "notification_popup_queued_upload": self.notification_queued_upload_toggle.get_active(),
                 "notification_popup_private_message": self.notification_private_message_toggle.get_active(),
                 "notification_popup_chatroom": self.notification_chatroom_toggle.get_active(),
                 "notification_popup_chatroom_mention": self.notification_chatroom_mention_toggle.get_active(),
@@ -2316,6 +2297,7 @@ class SearchesPage:
             self.filter_help_button,
             self.filter_include_entry,
             self.filter_length_entry,
+            self.filter_public_files_toggle,
             self.max_displayed_results_spinner,
             self.max_sent_results_spinner,
             self.min_search_term_length_spinner,
@@ -2377,6 +2359,9 @@ class SearchesPage:
             if num_filters > 7:
                 self.filter_length_entry.set_text(str(searches["defilter"][7]))
 
+            if num_filters > 8:
+                self.filter_public_files_toggle.set_active(searches["defilter"][8])
+
         self.clear_search_history_icon.get_parent().set_visible_child(self.clear_search_history_icon)
         self.clear_filter_history_icon.get_parent().set_visible_child(self.clear_filter_history_icon)
 
@@ -2394,7 +2379,8 @@ class SearchesPage:
                     self.filter_free_slot_toggle.get_active(),
                     self.filter_country_entry.get_text().strip(),
                     self.filter_file_type_entry.get_text().strip(),
-                    self.filter_length_entry.get_text().strip()
+                    self.filter_length_entry.get_text().strip(),
+                    self.filter_public_files_toggle.get_active(),
                 ],
                 "search_results": self.repond_search_requests_toggle.get_active(),
                 "max_displayed_results": self.max_displayed_results_spinner.get_value_as_int(),
@@ -2631,6 +2617,7 @@ class NowPlayingPage:
             self.format_help_label,
             self.format_message_label,
             self.lastfm_radio,
+            self.librefm_radio,
             self.listenbrainz_radio,
             self.mpris_radio,
             self.other_radio,
@@ -2723,6 +2710,9 @@ class NowPlayingPage:
         elif self.enable_other and self.other_radio.get_active():
             player = "other"
 
+        elif self.librefm_radio.get_active():
+            player = "librefm"
+
         elif self.listenbrainz_radio.get_active():
             player = "listenbrainz"
 
@@ -2742,6 +2732,9 @@ class NowPlayingPage:
         elif player == "other" and self.enable_other:
             self.other_radio.set_active(True)
 
+        elif player == "librefm":
+            self.librefm_radio.set_active(True)
+
         elif player == "listenbrainz":
             self.listenbrainz_radio.set_active(True)
 
@@ -2753,6 +2746,10 @@ class NowPlayingPage:
         if self.lastfm_radio.get_active():
             self.player_replacers = ["$n", "$t", "$a", "$b"]
             self.command_label.set_text(_("Username;APIKEY"))
+
+        if self.librefm_radio.get_active():
+            self.player_replacers = ["$n", "$t", "$a", "$b"]
+            self.command_label.set_text(_("Username: "))
 
         elif self.mpris_radio.get_active():
             self.player_replacers = ["$n", "$p", "$a", "$b", "$t", "$y", "$c", "$r", "$k", "$l", "$f"]
@@ -3218,6 +3215,8 @@ class Preferences(Dialog):
             if rescan_required:
                 break
 
+        rescan_daily_required = self.has_option_changed(options, "transfers", "rescan_shares_daily")
+
         for section, key in (
             ("transfers", "reveal_buddy_shares"),
             ("transfers", "reveal_trusted_shares")
@@ -3257,6 +3256,7 @@ class Preferences(Dialog):
             reconnect_required,
             portmap_required,
             rescan_required,
+            rescan_daily_required,
             recompress_shares_required,
             user_profile_required,
             private_room_required,
@@ -3278,6 +3278,7 @@ class Preferences(Dialog):
             reconnect_required,
             portmap_required,
             rescan_required,
+            rescan_daily_required,
             recompress_shares_required,
             user_profile_required,
             private_room_required,
@@ -3345,8 +3346,12 @@ class Preferences(Dialog):
         if search_history_required:
             self.application.window.search.populate_search_history()
 
-        if recompress_shares_required and not rescan_required:
-            core.shares.rescan_shares(init=True, rescan=False)
+        if not rescan_required:
+            if rescan_daily_required:
+                core.shares.start_rescan_daily_timer()
+
+            if recompress_shares_required:
+                core.shares.rescan_shares(init=True, rescan=False)
 
         # Dark mode
         dark_mode_state = config.sections["ui"]["dark_mode"]

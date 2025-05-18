@@ -42,6 +42,7 @@ from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.combobox import ComboBox
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
+from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
@@ -54,6 +55,7 @@ from pynicotine.gtkgui.widgets.treeview import create_grouping_menu
 from pynicotine.logfacility import log
 from pynicotine.shares import FileTypes
 from pynicotine.slskmessages import FileListMessage
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import factorize
 from pynicotine.utils import humanize
 from pynicotine.utils import human_size
@@ -61,11 +63,12 @@ from pynicotine.utils import human_speed
 
 
 class SearchResultFile:
-    __slots__ = ("path", "attributes")
+    __slots__ = ("path", "attributes", "is_private")
 
-    def __init__(self, path, attributes=None):
+    def __init__(self, path, attributes=None, is_private=False):
         self.path = path
         self.attributes = attributes
+        self.is_private = is_private
 
 
 class Searches(IconNotebook):
@@ -133,8 +136,6 @@ class Searches(IconNotebook):
             ("quit", self.quit),
             ("remove-search", self.remove_search),
             ("remove-wish", self.update_wish_button),
-            ("server-disconnect", self.server_disconnect),
-            ("server-login", self.server_login),
             ("show-search", self.show_search)
         ):
             events.connect(event_name, callback)
@@ -163,11 +164,8 @@ class Searches(IconNotebook):
         if self.window.current_page_id != self.window.search_page.id:
             return True
 
-        if self.window.search_entry.is_sensitive():
-            self.window.search_entry.grab_focus()
-            return True
-
-        return False
+        self.window.search_entry.grab_focus()
+        return True
 
     def on_restore_removed_page(self, page_args):
         search_term, mode, room, users = page_args
@@ -279,11 +277,12 @@ class Searches(IconNotebook):
         elif mode == "buddies":
             mode_label = _("Buddies")
 
-        self.create_page(token, search.term_sanitized, mode, mode_label, room=room, users=users)
+        page = self.create_page(token, search.term_sanitized, mode, mode_label, room=room, users=users)
 
         if switch_page:
             self.show_search(token)
 
+        page.show_error_message()
         self.add_search_history_item(search.term_sanitized)
 
     def show_search(self, token):
@@ -361,9 +360,8 @@ class Searches(IconNotebook):
             page = self.create_page(msg.token, search_term, mode, mode_label, show_page=False)
 
         # No more things to add because we've reached the result limit
-        if page.num_results_found >= page.max_limit:
+        if page.num_results_found >= config.sections["searches"]["max_displayed_results"]:
             core.search.remove_allowed_token(msg.token)
-            page.max_limited = True
             page.update_result_counter()
             return
 
@@ -374,13 +372,6 @@ class Searches(IconNotebook):
         for page in self.pages.values():
             if page.text == wish:
                 page.update_wish_button()
-
-    def server_login(self, *_args):
-        self.window.search_title.set_sensitive(True)
-        self.on_focus()
-
-    def server_disconnect(self, *_args):
-        self.window.search_title.set_sensitive(False)
 
 
 class Search:
@@ -410,7 +401,8 @@ class Search:
         "filterslot": (False, False),
         "filtercc": (None, ""),
         "filtertype": (None, ""),
-        "filterlength": (None, "")
+        "filterlength": (None, ""),
+        "filterpublic": (False, False),
     }
 
     def __init__(self, searches, text, token, mode, mode_label, room, users, show_page):
@@ -439,12 +431,15 @@ class Search:
             self.filter_include_entry,
             self.filter_length_container,
             self.filter_length_entry,
+            self.filter_public_files_button,
             self.filters_button,
             self.filters_container,
             self.filters_label,
             self.grouping_button,
+            self.info_bar_container,
             self.results_button,
             self.results_label,
+            self.retry_button,
             self.tree_container
         ) = ui.load(scope=self, path="search.ui")
 
@@ -471,12 +466,12 @@ class Search:
         self.active_filter_count = 0
         self.num_results_found = 0
         self.num_results_visible = 0
-        self.max_limit = config.sections["searches"]["max_displayed_results"]
-        self.max_limited = False
 
         # Use dict instead of list for faster membership checks
         self.selected_users = {}
         self.selected_results = {}
+
+        self.info_bar = InfoBar(parent=self.info_bar_container, button=self.retry_button)
 
         # Combo boxes
         self.filter_include_combobox = ComboBox(
@@ -628,9 +623,11 @@ class Search:
         self.tab_menu = PopupMenu(self.window.application)
         self.tab_menu.add_items(
             ("#" + _("Edit…"), self.on_edit_search),
+            ("#" + _("Search _Again"), self.on_search_again),
             ("#" + _("Copy Search Term"), self.on_copy_search_term),
             ("", None),
             ("#" + _("Clear All Results"), self.on_clear),
+            ("", None),
             ("#" + _("Close All Tabs…"), self.on_close_all_tabs),
             ("#" + _("_Close Tab"), self.on_close)
         )
@@ -660,10 +657,12 @@ class Search:
             popover.set_has_arrow(False)
 
         self.expand_button.set_active(config.sections["searches"]["expand_searches"])
+        self.filter_public_files_button.set_visible(config.sections["searches"]["private_search_results"])
 
         # Filter button widgets
         self.filter_buttons = {
-            "filterslot": self.filter_free_slot_button
+            "filterslot": self.filter_free_slot_button,
+            "filterpublic": self.filter_public_files_button
         }
 
         # Filter combobox widgets
@@ -694,6 +693,10 @@ class Search:
         # Wishlist
         self.update_wish_button()
 
+    def show_error_message(self):
+        if core.users.statuses.get(core.users.login_username, UserStatus.OFFLINE) == UserStatus.OFFLINE:
+            self.info_bar.show_error_message(_("Cannot receive search results while offline."))
+
     def clear(self):
         self.clear_model(stored_results=True)
 
@@ -705,6 +708,7 @@ class Search:
         for combobox in self.filter_comboboxes.values():
             combobox.destroy()
 
+        self.info_bar.destroy()
         self.tree_view.destroy()
         self.window.update_title()
         self.__dict__.clear()
@@ -802,8 +806,7 @@ class Search:
         row_id = 0
 
         for _code, file_path, size, _ext, file_attributes, *_unused in result_list:
-            if self.num_results_found >= self.max_limit:
-                self.max_limited = True
+            if self.num_results_found >= config.sections["searches"]["max_displayed_results"]:
                 break
 
             file_path_lower = file_path.lower()
@@ -858,7 +861,7 @@ class Search:
                     bitrate,
                     length,
                     has_free_slots,
-                    SearchResultFile(file_path, file_attributes),
+                    SearchResultFile(file_path, file_attributes, private),
                     row_id
                 ]
             )
@@ -1268,6 +1271,9 @@ class Search:
             if filter_id == "filterlength" and not self.check_digit(filter_value, row[14]):
                 return False
 
+            if filter_id == "filterpublic" and row[16].is_private:
+                return False
+
         return True
 
     def update_filter_counter(self, count):
@@ -1286,8 +1292,6 @@ class Search:
         if stored_results:
             self.all_data.clear()
             self.num_results_found = 0
-            self.max_limited = False
-            self.max_limit = config.sections["searches"]["max_displayed_results"]
 
         self.users.clear()
         self.folders.clear()
@@ -1463,13 +1467,16 @@ class Search:
 
     def update_result_counter(self):
 
-        if self.max_limited or self.num_results_found > self.num_results_visible:
+        max_limit = config.sections["searches"]["max_displayed_results"]
+        max_limited = (self.num_results_found >= max_limit)
+
+        if max_limited or self.num_results_found > self.num_results_visible:
             # Append plus symbol "+" if Results are Filtered and/or reached 'Maximum per search'
             str_plus = "+"
 
             # Display total results on the tooltip, but only if we know the exact number of results
-            if self.max_limited:
-                total = f"> {self.max_limit}+"
+            if max_limited:
+                total = f"> {max_limit}+"
             else:
                 total = self.num_results_found
 
@@ -1705,9 +1712,11 @@ class Search:
 
         if active:
             icon_name = "view-restore-symbolic"
+            tooltip_text = _("Collapse All")
             self.tree_view.expand_all_rows()
         else:
             icon_name = "view-fullscreen-symbolic"
+            tooltip_text = _("Expand All")
             self.tree_view.collapse_all_rows()
 
             if self.grouping_mode == "folder_grouping":
@@ -1715,6 +1724,7 @@ class Search:
 
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
         self.expand_icon.set_from_icon_name(icon_name, *icon_args)
+        self.expand_button.set_tooltip_text(tooltip_text)
 
         config.sections["searches"]["expand_searches"] = active
 
@@ -1751,6 +1761,12 @@ class Search:
         self.window.search_entry.set_position(-1)
         self.window.search_entry.grab_focus_without_selecting()
 
+    def on_search_again(self, *_args):
+
+        self.info_bar.set_visible(False)
+        core.search.send_search_request(self.token)
+        self.show_error_message()
+
     def on_refilter(self, *_args):
 
         if self.populating_filters:
@@ -1767,6 +1783,7 @@ class Search:
         filter_file_type_str = self.filter_file_type_combobox.get_text().strip()
         filter_length_str = self.filter_length_combobox.get_text().strip()
         filter_free_slot = self.filter_free_slot_button.get_active()
+        filter_public = self.filter_public_files_button.get_active()
 
         # Include/exclude text
         error_entries = set()
@@ -1830,6 +1847,7 @@ class Search:
             "filtercc": (filter_country, filter_country_str),
             "filtertype": (filter_file_type, filter_file_type_str),
             "filterlength": (filter_length, filter_length_str),
+            "filterpublic": (filter_public, filter_public),
         }
 
         if self.filters == filters:
@@ -1849,6 +1867,9 @@ class Search:
         # Add filters to history
         for filter_id, (_value, h_value) in filters.items():
             if not h_value:
+                continue
+
+            if filter_id == "filterpublic" and not config.sections["searches"]["private_search_results"]:
                 continue
 
             self.push_history(filter_id, h_value)

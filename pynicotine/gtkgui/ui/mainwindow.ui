@@ -58,7 +58,7 @@
     <property name="placeholder-text" translatable="yes">Search term…</property>
     <property name="primary-icon-name">system-search-symbolic</property>
     <property name="secondary-icon-tooltip-text" translatable="yes">Clear</property>
-    <property name="tooltip-text" translatable="yes">Search patterns: with a word = term, without a word = -term, partial word = *erm</property>
+    <property name="tooltip-text" translatable="yes">Search patterns: with a word = term, without a word = -term, partial word = *erm, exact phrase = "search term"</property>
     <property name="visible">True</property>
     <property name="width-chars">5</property>
     <signal name="activate" handler="on_search"/>
@@ -88,7 +88,6 @@
                 <child>
                   <object class="GtkBox" id="search_title">
                     <property name="hexpand">True</property>
-                    <property name="sensitive">False</property>
                     <property name="spacing">4</property>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
@@ -368,7 +367,7 @@
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkToggleButton" id="downloads_expand_button">
-                            <property name="tooltip-text" translatable="yes">Expand / Collapse All</property>
+                            <property name="tooltip-text" translatable="yes">Expand All</property>
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkImage" id="downloads_expand_icon">
@@ -441,7 +440,7 @@
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkImage">
-                    <property name="icon-name">document-save-symbolic</property>
+                    <property name="icon-name">folder-download-symbolic</property>
                     <property name="pixel-size">128</property>
                     <property name="visible">True</property>
                     <style>
@@ -607,7 +606,7 @@
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkToggleButton" id="uploads_expand_button">
-                            <property name="tooltip-text" translatable="yes">Expand / Collapse All</property>
+                            <property name="tooltip-text" translatable="yes">Expand All</property>
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkImage" id="uploads_expand_icon">
@@ -1101,28 +1100,32 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuButton" id="private_history_button">
+                      <object class="GtkButton" id="_private_history_button">
+                        <property name="action-name">app.chat-history</property>
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkBox">
                             <property name="spacing">6</property>
                             <property name="visible">True</property>
                             <child>
-                              <object class="GtkLabel" id="private_history_label">
-                                <property name="label" translatable="yes">Chat _History</property>
-                                <property name="mnemonic-widget">private_history_button</property>
-                                <property name="use-underline">True</property>
+                              <object class="GtkImage">
+                                <property name="icon-name">mail-unread-symbolic</property>
                                 <property name="visible">True</property>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkImage">
-                                <property name="icon-name">pan-down-symbolic</property>
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">Chat _History</property>
+                                <property name="mnemonic-widget">_private_history_button</property>
+                                <property name="use-underline">True</property>
                                 <property name="visible">True</property>
                               </object>
                             </child>
                           </object>
                         </child>
+                        <style>
+                          <class name="image-text-button"/>
+                        </style>
                       </object>
                     </child>
                   </object>
@@ -1418,7 +1421,6 @@
                       <object class="GtkBox" id="chatrooms_title">
                         <property name="halign">start</property>
                         <property name="hexpand">True</property>
-                        <property name="sensitive">False</property>
                         <property name="spacing">4</property>
                         <property name="valign">center</property>
                         <property name="visible">True</property>
@@ -1435,28 +1437,32 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkMenuButton" id="room_list_button">
+                          <object class="GtkButton" id="_room_list_button">
+                            <property name="action-name">app.room-list</property>
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkBox">
                                 <property name="spacing">6</property>
                                 <property name="visible">True</property>
                                 <child>
-                                  <object class="GtkLabel" id="room_list_label">
-                                    <property name="label" translatable="yes">_Rooms</property>
-                                    <property name="mnemonic-widget">room_list_button</property>
-                                    <property name="use-underline">True</property>
+                                  <object class="GtkImage">
+                                    <property name="icon-name">view-list-symbolic</property>
                                     <property name="visible">True</property>
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkImage">
-                                    <property name="icon-name">pan-down-symbolic</property>
+                                  <object class="GtkLabel">
+                                    <property name="label" translatable="yes">All _Rooms</property>
+                                    <property name="mnemonic-widget">_room_list_button</property>
+                                    <property name="use-underline">True</property>
                                     <property name="visible">True</property>
                                   </object>
                                 </child>
                               </object>
                             </child>
+                            <style>
+                              <class name="image-text-button"/>
+                            </style>
                           </object>
                         </child>
                       </object>

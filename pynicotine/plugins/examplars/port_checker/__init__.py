@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -90,7 +90,7 @@ class Plugin(BasePlugin):
             return "unknown"
 
         timeout = self.settings["socket_timeout"]
-        self.log("Scanning %s:%d (socket timeout %d seconds)...", (ip_address, port, timeout))
+        self.log("Scanning %s:%d (socket timeout %d seconds)…", (ip_address, port, timeout))
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(timeout)

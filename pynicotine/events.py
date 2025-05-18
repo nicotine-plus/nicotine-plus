@@ -26,6 +26,7 @@ from threading import Thread
 EVENT_NAMES = {
     # General
     "check-latest-version",
+    "check-port-status",
     "cli-command",
     "cli-prompt-finished",
     "confirm-quit",
@@ -62,6 +63,7 @@ EVENT_NAMES = {
     "show-download-notification",
     "show-private-chat-notification",
     "show-search-notification",
+    "show-upload-notification",
 
     # Buddy list
     "add-buddy",
@@ -299,6 +301,9 @@ class Events:
 
     def schedule(self, delay, callback, callback_args=None, repeat=False):
 
+        if delay <= 0:
+            return None
+
         self._scheduler_event_id += 1
         next_time = (time.monotonic() + delay)
 
@@ -309,6 +314,10 @@ class Events:
             SchedulerEvent(self._scheduler_event_id, next_time, delay, repeat, callback, callback_args)
         )
         return self._scheduler_event_id
+
+    def schedule_at(self, timestamp, callback, callback_args=None):
+        delay = (timestamp - time.time())
+        return self.schedule(delay, callback, callback_args, repeat=False)
 
     def cancel_scheduled(self, event_id):
         self._pending_scheduler_events.append(SchedulerEvent(event_id, next_time=None))
