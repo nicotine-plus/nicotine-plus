@@ -143,6 +143,26 @@ class NATPMP(BaseImplementation):
 
             return gateway_address
 
+        if sys.platform.startswith("haiku"):
+            gateway_address = None
+            output = execute_command("route", returnoutput=True, hidden=True)
+
+            for line in output.splitlines():
+                columns = line.strip().split()
+
+                if len(columns) < 5:
+                    continue
+
+                new_gateway_address = columns[2]
+                flags = columns[3]
+
+                # D = RTF_DEFAULT
+                if flags[0:1] == b"D" and new_gateway_address != b"-":
+                    gateway_address = new_gateway_address
+                    break
+
+            return gateway_address
+
         if sys.platform == "win32":
             gateway_pattern = re.compile(b".*?0.0.0.0 +0.0.0.0 +(.*?) +?[^\n]*\n")
         else:
