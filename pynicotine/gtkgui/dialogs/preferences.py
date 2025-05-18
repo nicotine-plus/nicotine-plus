@@ -1622,7 +1622,6 @@ class UserInterfacePage:
 
         (
             self.buddy_list_position_label,
-            self.chat_colored_usernames_toggle,
             self.chat_username_appearance_label,
             self.close_action_label,
             self.color_chat_action_button,
@@ -1966,7 +1965,6 @@ class UserInterfacePage:
                 "tab_hilite": self.color_tab_highlighted_entry,
                 "tab_changed": self.color_tab_changed_entry,
                 "usernamestyle": self.chat_username_appearance_combobox,
-                "usernamehotspots": self.chat_colored_usernames_toggle,
                 "buddylistinchatrooms": self.buddy_list_position_combobox,
                 "header_bar": self.header_bar_toggle
             }
@@ -2064,7 +2062,6 @@ class UserInterfacePage:
                 "tab_default": self.color_tab_entry.get_text().strip(),
                 "tab_changed": self.color_tab_changed_entry.get_text().strip(),
                 "usernamestyle": self.chat_username_appearance_combobox.get_selected_id(),
-                "usernamehotspots": self.chat_colored_usernames_toggle.get_active(),
                 "buddylistinchatrooms": self.buddy_list_position_combobox.get_selected_id(),
                 "header_bar": self.header_bar_toggle.get_active()
             }

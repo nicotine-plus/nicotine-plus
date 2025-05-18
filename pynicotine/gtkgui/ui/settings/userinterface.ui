@@ -1054,30 +1054,6 @@
         </child>
         <child>
           <object class="GtkBox">
-            <property name="spacing">12</property>
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="height-request">24</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Enable colored usernames</property>
-                <property name="mnemonic-widget">chat_colored_usernames_toggle</property>
-                <property name="visible">True</property>
-                <property name="wrap">True</property>
-                <property name="wrap-mode">word-char</property>
-                <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkSwitch" id="chat_colored_usernames_toggle">
-                <property name="valign">center</property>
-                <property name="visible">True</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
             <property name="homogeneous">True</property>
             <property name="margin-top">6</property>
             <property name="spacing">12</property>

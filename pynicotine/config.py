@@ -338,7 +338,7 @@ class Config:
                 "useronline": "#16BB5C",
                 "useraway": "#C9AE13",
                 "useroffline": "#E04F5E",
-                "usernamehotspots": True,
+                "usernamehotspots": True,                                            # TODO: remove in 3.4.0
                 "usernamestyle": "bold",
                 "textbg": "",
                 "search": "",

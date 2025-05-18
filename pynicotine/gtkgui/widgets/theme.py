@@ -617,13 +617,9 @@ def update_custom_css():
 
 def update_tag_visuals(tag, color_id):
 
-    enable_colored_usernames = config.sections["ui"]["usernamehotspots"]
     is_hotspot_tag = (color_id in {"useraway", "useronline", "useroffline"})
     color_hex = config.sections["ui"].get(color_id)
     tag_props = tag.props
-
-    if is_hotspot_tag and not enable_colored_usernames:
-        color_hex = None
 
     if not color_hex:
         if tag_props.foreground_rgba:
