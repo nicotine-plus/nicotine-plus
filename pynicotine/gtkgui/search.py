@@ -63,12 +63,11 @@ from pynicotine.utils import human_speed
 
 
 class SearchResultFile:
-    __slots__ = ("path", "attributes", "is_private")
+    __slots__ = ("path", "attributes")
 
-    def __init__(self, path, attributes=None, is_private=False):
+    def __init__(self, path, attributes=None):
         self.path = path
         self.attributes = attributes
-        self.is_private = is_private
 
 
 class Searches(IconNotebook):
@@ -511,7 +510,7 @@ class Search:
                     "column_type": "text",
                     "title": _("User"),
                     "width": 200,
-                    "sensitive_column": "free_slot_data"
+                    "sensitive_column": "public_data"
                 },
                 "country": {
                     "column_type": "icon",
@@ -524,21 +523,29 @@ class Search:
                     "title": _("Speed"),
                     "width": 120,
                     "sort_column": "speed_data",
-                    "sensitive_column": "free_slot_data"
+                    "sensitive_column": "public_data"
                 },
                 "in_queue": {
                     "column_type": "number",
                     "title": _("In Queue"),
                     "width": 110,
                     "sort_column": "in_queue_data",
-                    "sensitive_column": "free_slot_data"
+                    "sensitive_column": "public_data"
+                },
+                "private": {
+                    "column_type": "icon",
+                    "title": _("Private"),
+                    "width": 35,
+                    "sort_column": "public_data",
+                    "hide_header": True,
+                    "sensitive_column": "public_data"
                 },
                 "folder": {
                     "column_type": "text",
                     "title": _("Folder"),
                     "width": 200,
                     "expand_column": True,
-                    "sensitive_column": "free_slot_data",
+                    "sensitive_column": "public_data",
                     "tooltip_callback": self.on_file_path_tooltip
                 },
                 "file_type": {
@@ -546,14 +553,14 @@ class Search:
                     "title": _("File Type"),
                     "width": 40,
                     "hide_header": True,
-                    "sensitive_column": "free_slot_data"
+                    "sensitive_column": "public_data"
                 },
                 "filename": {
                     "column_type": "text",
                     "title": _("Filename"),
                     "width": 200,
                     "expand_column": True,
-                    "sensitive_column": "free_slot_data",
+                    "sensitive_column": "public_data",
                     "tooltip_callback": self.on_file_path_tooltip
                 },
                 "size": {
@@ -561,21 +568,21 @@ class Search:
                     "title": _("Size"),
                     "width": 180,
                     "sort_column": "size_data",
-                    "sensitive_column": "free_slot_data"
+                    "sensitive_column": "public_data"
                 },
                 "quality": {
                     "column_type": "number",
                     "title": _("Quality"),
                     "width": 150,
                     "sort_column": "bitrate_data",
-                    "sensitive_column": "free_slot_data"
+                    "sensitive_column": "public_data"
                 },
                 "length": {
                     "column_type": "number",
                     "title": _("Duration"),
                     "width": 100,
                     "sort_column": "length_data",
-                    "sensitive_column": "free_slot_data"
+                    "sensitive_column": "public_data"
                 },
 
                 # Hidden data columns
@@ -584,7 +591,7 @@ class Search:
                 "size_data": {"data_type": GObject.TYPE_UINT64},
                 "bitrate_data": {"data_type": GObject.TYPE_UINT},
                 "length_data": {"data_type": GObject.TYPE_UINT},
-                "free_slot_data": {"data_type": GObject.TYPE_BOOLEAN},
+                "public_data": {"data_type": GObject.TYPE_BOOLEAN},
                 "file_data": {"data_type": GObject.TYPE_PYOBJECT},
                 "id_data": {
                     "data_type": GObject.TYPE_INT,
@@ -795,7 +802,7 @@ class Search:
         self.on_refilter()
 
     def add_result_list(self, result_list, user, country_code, inqueue, ulspeed, h_speed,
-                        h_queue, has_free_slots, private=False):
+                        h_queue, is_private=False):
         """Adds a list of search results to the treeview.
 
         Lists can either contain publicly or privately shared files.
@@ -839,9 +846,7 @@ class Search:
 
             h_size = human_size(size, config.sections["ui"]["file_size_unit"])
             h_quality, bitrate, h_length, length = FileListMessage.parse_audio_quality_length(size, file_attributes)
-
-            if private:
-                name = _("[PRIVATE]  %s") % name
+            private_icon_name = "security-medium-symbolic" if is_private else ""
 
             is_result_visible = self.append(
                 [
@@ -849,6 +854,7 @@ class Search:
                     get_flag_icon_name(country_code),
                     h_speed,
                     h_queue,
+                    private_icon_name,
                     folder_path,
                     get_file_type_icon_name(name),
                     name,
@@ -860,8 +866,8 @@ class Search:
                     size,
                     bitrate,
                     length,
-                    has_free_slots,
-                    SearchResultFile(file_path, file_attributes, private),
+                    not is_private,
+                    SearchResultFile(file_path, file_attributes),
                     row_id
                 ]
             )
@@ -885,9 +891,8 @@ class Search:
             core.network_filter.get_country_code(ip_address)
             or core.users.countries.get(user)
         )
-        has_free_slots = msg.freeulslots
 
-        if has_free_slots:
+        if msg.freeulslots:
             inqueue = 0
             h_queue = ""
         else:
@@ -900,17 +905,16 @@ class Search:
         if ulspeed > 0:
             h_speed = human_speed(ulspeed)
 
-        update_ui = self.add_result_list(msg.list, user, country_code, inqueue, ulspeed, h_speed,
-                                         h_queue, has_free_slots)
+        update_ui_private = False
 
         if msg.privatelist and config.sections["searches"]["private_search_results"]:
             update_ui_private = self.add_result_list(
                 msg.privatelist, user, country_code, inqueue, ulspeed, h_speed, h_queue,
-                has_free_slots, private=True
+                is_private=True
             )
 
-            if not update_ui and update_ui_private:
-                update_ui = True
+        update_ui = self.add_result_list(
+            msg.list, user, country_code, inqueue, ulspeed, h_speed, h_queue) or update_ui_private
 
         if update_ui:
             # If this search wasn't initiated by us (e.g. wishlist), and the results aren't spoofed, show tab
@@ -946,9 +950,8 @@ class Search:
 
     def add_row_to_model(self, row):
 
-        (user, flag, h_speed, h_queue, h_folder_path, _unused, _unused, _unused, _unused,
-            _unused, speed, queue, _unused, _unused, _unused, has_free_slots,
-            file_data, _unused) = row
+        (user, flag, h_speed, h_queue, private_icon_name, h_folder_path, _unused, _unused, _unused, _unused,
+            _unused, speed, queue, _unused, _unused, _unused, is_public, file_data, _unused) = row
 
         expand_allowed = self.initialized
         expand_user = False
@@ -976,12 +979,13 @@ class Search:
                         empty_str,
                         empty_str,
                         empty_str,
+                        empty_str,
                         speed,
                         queue,
                         empty_int,
                         empty_int,
                         empty_int,
-                        has_free_slots,
+                        is_public,
                         None,
                         self.row_id
                     ], select_row=False
@@ -1008,6 +1012,7 @@ class Search:
                             flag,
                             h_speed,
                             h_queue,
+                            private_icon_name,
                             h_folder_path,
                             empty_str,
                             empty_str,
@@ -1019,7 +1024,7 @@ class Search:
                             empty_int,
                             empty_int,
                             empty_int,
-                            has_free_slots,
+                            is_public,
                             SearchResultFile(folder_path),
                             self.row_id
                         ], select_row=False, parent_iterator=user_iterator
@@ -1030,7 +1035,7 @@ class Search:
                     self.folders[user_folder_path] = (iterator, [])
 
                 row = row[:]
-                row[4] = ""  # Folder not visible for file row if "group by folder" is enabled
+                row[4] = row[5] = ""  # Folder not visible for file row if "group by folder" is enabled
 
                 user_folder_iterator, user_folder_child_iterators = self.folders[user_folder_path]
                 parent_iterator = user_folder_iterator
@@ -1044,7 +1049,7 @@ class Search:
 
             user_iterator, user_child_iterators = self.users[user]
 
-        row[17] = self.row_id
+        row[18] = self.row_id
         iterator = self.tree_view.add_row(row, select_row=False, parent_iterator=parent_iterator)
         self.row_id += 1
 
@@ -1247,31 +1252,31 @@ class Search:
             if not filter_value:
                 continue
 
-            if filter_id == "filtertype" and not self.check_file_type(filter_value, row[16].path.lower()):
+            if filter_id == "filtertype" and not self.check_file_type(filter_value, row[17].path.lower()):
                 return False
 
             if filter_id == "filtercc" and not self.check_country(filter_value, row[1][-2:].upper()):
                 return False
 
-            if filter_id == "filterin" and not filter_value.search(row[16].path) and not filter_value.fullmatch(row[0]):
+            if filter_id == "filterin" and not filter_value.search(row[17].path) and not filter_value.fullmatch(row[0]):
                 return False
 
-            if filter_id == "filterout" and (filter_value.search(row[16].path) or filter_value.fullmatch(row[0])):
+            if filter_id == "filterout" and (filter_value.search(row[17].path) or filter_value.fullmatch(row[0])):
                 return False
 
-            if filter_id == "filterslot" and row[11] > 0:
+            if filter_id == "filterslot" and row[12] > 0:
                 return False
 
-            if filter_id == "filtersize" and not self.check_digit(filter_value, row[12], file_size=True):
+            if filter_id == "filtersize" and not self.check_digit(filter_value, row[13], file_size=True):
                 return False
 
-            if filter_id == "filterbr" and not self.check_digit(filter_value, row[13]):
+            if filter_id == "filterbr" and not self.check_digit(filter_value, row[14]):
                 return False
 
-            if filter_id == "filterlength" and not self.check_digit(filter_value, row[14]):
+            if filter_id == "filterlength" and not self.check_digit(filter_value, row[15]):
                 return False
 
-            if filter_id == "filterpublic" and row[16].is_private:
+            if filter_id == "filterpublic" and not row[16]:
                 return False
 
         return True
