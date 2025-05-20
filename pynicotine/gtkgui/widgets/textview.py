@@ -438,10 +438,9 @@ class ChatView(TextView):
     def prepend_log_lines(self, log_lines, login_username=None):
         """Insert batch of previously gathered log lines from file"""
 
-        if log_lines:
-            self.add_line(_("--- old messages above ---"), prepend=True, message_type="hilite")
+        self.add_line(_("--- old messages above ---"), prepend=True, message_type="hilite")
 
-        for decoded_line in self.decode_log_lines(log_lines, login_username=login_username):
+        for decoded_line in self.decode_log_lines(reversed(log_lines), login_username=login_username):
             timestamp_string, username, message, message_type = decoded_line
 
             self.add_line(

@@ -746,6 +746,9 @@ class ChatRoom:
             num_lines=config.sections["logging"]["readroomlines"]
         )
 
+        if not log_lines:
+            return
+
         self.chat_view.prepend_log_lines(log_lines, login_username=config.sections["server"]["login"])
 
     def populate_room_users(self, joined_users):

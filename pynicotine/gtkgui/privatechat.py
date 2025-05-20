@@ -407,6 +407,9 @@ class PrivateChat:
             num_lines=config.sections["logging"]["readprivatelines"]
         )
 
+        if not log_lines:
+            return
+
         self.chat_view.prepend_log_lines(log_lines, login_username=config.sections["server"]["login"])
 
     def server_disconnect(self):
