@@ -1178,7 +1178,7 @@ class Shares:
 
         while self._scanner_process.is_alive() and successful:
             # Cooldown
-            time.sleep(0.05)
+            time.sleep(0.2)
 
             while not scanner_queue.empty():
                 item = scanner_queue.get()
