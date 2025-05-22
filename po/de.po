@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-08 11:16+0200\n"
 "PO-Revision-Date: 2025-05-22 21:18+0000\n"
-"Last-Translator: Felix Hansen <gore-snagged-happy@duck.com>\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -1064,7 +1064,7 @@ msgstr "Filter"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:334
 msgid "Regex"
-msgstr "Filters"
+msgstr "Regex (regulärer Ausdruck)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:468
 msgid "Add Download Filter"
