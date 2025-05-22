@@ -148,6 +148,8 @@ class TextView:
 
         line_number = 0 if prepend else self.textbuffer.get_line_count()
         iterator = self.get_iter_at_line(line_number)
+        offset = iterator.get_offset()
+        second_iterator = None
 
         # None tag on line breaks to prevent wrong color glitch on next line
         if prepend and self.textbuffer.get_char_count() > 0:
@@ -156,21 +158,23 @@ class TextView:
         elif line_number > 1 or self.textbuffer.get_char_count() > 0:
             text_line.insert(0, ("\n", None))
 
+        self.textbuffer.insert(iterator, "".join(text for text, _tag in text_line))
+
         for text, tag in text_line:
-            self._insert_text(text, tag, iterator)
+            if tag is None:
+                offset += len(text)
+                continue
+
+            if second_iterator is None:
+                second_iterator = iterator.copy()
+
+            iterator.set_offset(offset)
+            offset += len(text)
+            second_iterator.set_offset(offset)
+
+            self.textbuffer.apply_tag(tag, iterator, second_iterator)
 
         self._remove_old_lines(line_number)
-
-    def _insert_text(self, text, tag, iterator):
-
-        if tag is not None:
-            start_offset = iterator.get_offset()
-
-        self.textbuffer.insert(iterator, text)
-
-        if tag is not None:
-            start_iter = self.textbuffer.get_iter_at_offset(start_offset)
-            self.textbuffer.apply_tag(tag, start_iter, iterator)
 
     def _remove_old_lines(self, num_lines):
 
