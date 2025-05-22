@@ -31,6 +31,7 @@
   </object>
   <object class="GtkEntry" id="filter_file_type_entry">
     <property name="hexpand">True</property>
+    <property name="input-hints">no-emoji</property>
     <property name="max-width-chars">0</property>
     <property name="placeholder-text" translatable="yes">File type…</property>
     <property name="primary-icon-name">folder-documents-symbolic</property>
@@ -42,6 +43,7 @@
   </object>
   <object class="GtkEntry" id="filter_file_size_entry">
     <property name="hexpand">True</property>
+    <property name="input-hints">no-emoji</property>
     <property name="max-width-chars">0</property>
     <property name="placeholder-text" translatable="yes">File size…</property>
     <property name="primary-icon-name">drive-harddisk-symbolic</property>
@@ -53,6 +55,7 @@
   </object>
   <object class="GtkEntry" id="filter_bitrate_entry">
     <property name="hexpand">True</property>
+    <property name="input-hints">no-emoji</property>
     <property name="max-width-chars">0</property>
     <property name="placeholder-text" translatable="yes">Bitrate…</property>
     <property name="primary-icon-name">audio-volume-high-symbolic</property>
@@ -64,6 +67,7 @@
   </object>
   <object class="GtkEntry" id="filter_length_entry">
     <property name="hexpand">True</property>
+    <property name="input-hints">no-emoji</property>
     <property name="max-width-chars">0</property>
     <property name="placeholder-text" translatable="yes">Duration…</property>
     <property name="primary-icon-name">media-playback-start-symbolic</property>
@@ -75,6 +79,7 @@
   </object>
   <object class="GtkEntry" id="filter_country_entry">
     <property name="hexpand">True</property>
+    <property name="input-hints">no-emoji</property>
     <property name="max-width-chars">0</property>
     <property name="placeholder-text" translatable="yes">Country code…</property>
     <property name="primary-icon-name">mark-location-symbolic</property>

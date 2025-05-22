@@ -347,6 +347,7 @@
             </child>
             <child>
               <object class="GtkEntry" id="soulseek_server_entry">
+                <property name="input-hints">no-emoji</property>
                 <property name="secondary-icon-name">edit-undo-symbolic</property>
                 <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                 <property name="valign">center</property>
