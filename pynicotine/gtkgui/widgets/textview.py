@@ -237,7 +237,7 @@ class TextView:
     def get_url_for_current_pos(self):
 
         for tag in self.get_tags_for_pos(self.pressed_x, self.pressed_y):
-            if hasattr(tag, "url"):
+            if tag.url:
                 return tag.url
 
         return ""
@@ -262,11 +262,11 @@ class TextView:
             self.cursor_window = self.widget.get_window(Gtk.TextWindowType.TEXT)  # pylint: disable=no-member
 
         for tag in self.get_tags_for_pos(pos_x, pos_y):
-            if tag.username:
+            if tag.secondary_callback:
                 cursor = self.DEFAULT_CURSOR
                 break
 
-            if tag.roomname or tag.url:
+            if tag.primary_callback or tag.url:
                 cursor = self.POINTER_CURSOR
                 break
 
@@ -278,12 +278,12 @@ class TextView:
 
     # Text Tags (Roomnames, Usernames, URLs)
 
-    def create_tag(self, color_id=None, callback=None, username=None, roomname=None, url=None):
+    def create_tag(self, color_id=None, primary_callback=None, secondary_callback=None, callback_arg=None, url=None):
 
         tag = self.textbuffer.create_tag()
-        tag.callback = callback
-        tag.username = username
-        tag.roomname = roomname
+        tag.primary_callback = primary_callback
+        tag.secondary_callback = secondary_callback
+        tag.callback_arg = callback_arg
         tag.url = url
 
         if color_id:
@@ -303,7 +303,7 @@ class TextView:
 
     # Events #
 
-    def click_tag(self, pressed_x, pressed_y, secondary=False):
+    def on_released_primary(self, _controller, _num_p, pressed_x, pressed_y):
 
         self.pressed_x = pressed_x
         self.pressed_y = pressed_y
@@ -312,19 +312,29 @@ class TextView:
             return False
 
         for tag in self.get_tags_for_pos(pressed_x, pressed_y):
-            if tag.callback:
-                return tag.callback(tag.username or tag.roomname, pressed_x, pressed_y, secondary)
+            if tag.primary_callback:
+                tag.primary_callback(pressed_x, pressed_y, tag.callback_arg)
+                return True
 
-            if not secondary and tag.url:
+            if tag.url:
                 return open_uri(tag.url)
 
         return False
 
-    def on_released_primary(self, _controller, _num_p, pressed_x, pressed_y):
-        return self.click_tag(pressed_x, pressed_y)
-
     def on_pressed_secondary(self, _controller, _num_p, pressed_x, pressed_y):
-        return self.click_tag(pressed_x, pressed_y, secondary=True)
+
+        self.pressed_x = pressed_x
+        self.pressed_y = pressed_y
+
+        if self.textbuffer.get_has_selection():
+            return False
+
+        for tag in self.get_tags_for_pos(pressed_x, pressed_y):
+            if tag.secondary_callback:
+                tag.secondary_callback(pressed_x, pressed_y, tag.callback_arg)
+                return True
+
+        return False
 
     def on_move_cursor(self, _controller, pos_x, pos_y):
         self.update_cursor(pos_x, pos_y)
@@ -499,12 +509,14 @@ class ChatView(TextView):
         self.user_tags.clear()
 
     def get_room_tag(self, roomname):
-        return self.create_tag("urlcolor", callback=self.roomname_event, roomname=roomname)
+        return self.create_tag("urlcolor", primary_callback=self.roomname_event, callback_arg=roomname)
 
     def get_user_tag(self, username):
 
         if username not in self.user_tags:
-            self.user_tags[username] = self.create_tag(callback=self.username_event, username=username)
+            self.user_tags[username] = self.create_tag(
+                primary_callback=self.username_event, secondary_callback=self.username_event, callback_arg=username
+            )
             self.update_user_tag(username)
 
         return self.user_tags[username]

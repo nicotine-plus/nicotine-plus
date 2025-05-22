@@ -620,7 +620,7 @@ def update_tag_visuals(tag):
     color_hex = config.sections["ui"].get(tag.color_id)
     tag_props = tag.props
 
-    if tag.username and not config.sections["ui"]["usernamehotspots"]:
+    if tag.secondary_callback and not config.sections["ui"]["usernamehotspots"]:
         color_hex = None
 
     if not color_hex:
@@ -639,7 +639,7 @@ def update_tag_visuals(tag):
         tag_props.underline = Pango.Underline.SINGLE
 
     # Hotspots
-    if not tag.callback:
+    if not tag.callback_arg:
         return
 
     username_style = config.sections["ui"]["usernamestyle"]
