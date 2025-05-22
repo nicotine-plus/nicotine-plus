@@ -269,6 +269,7 @@
                         <child>
                           <object class="GtkEntry" id="filter_file_type_entry">
                             <property name="halign">end</property>
+                            <property name="input-hints">no-emoji</property>
                             <property name="max-width-chars">26</property>
                             <property name="tooltip-text" translatable="yes">File type, e.g. flac wav or !mp3 !m4a</property>
                             <property name="valign">center</property>
@@ -296,6 +297,7 @@
                         <child>
                           <object class="GtkEntry" id="filter_file_size_entry">
                             <property name="halign">end</property>
+                            <property name="input-hints">no-emoji</property>
                             <property name="max-width-chars">26</property>
                             <property name="tooltip-text" translatable="yes">File size, e.g. &gt;10.5m &lt;1g</property>
                             <property name="valign">center</property>
@@ -323,6 +325,7 @@
                         <child>
                           <object class="GtkEntry" id="filter_bitrate_entry">
                             <property name="halign">end</property>
+                            <property name="input-hints">no-emoji</property>
                             <property name="max-width-chars">26</property>
                             <property name="tooltip-text" translatable="yes">Bitrate, e.g. 256 &lt;1412</property>
                             <property name="valign">center</property>
@@ -350,6 +353,7 @@
                         <child>
                           <object class="GtkEntry" id="filter_length_entry">
                             <property name="halign">end</property>
+                            <property name="input-hints">no-emoji</property>
                             <property name="max-width-chars">26</property>
                             <property name="tooltip-text" translatable="yes">Duration, e.g. &gt;6:00 &lt;12:00 !6:54</property>
                             <property name="valign">center</property>
@@ -377,6 +381,7 @@
                         <child>
                           <object class="GtkEntry" id="filter_country_entry">
                             <property name="halign">end</property>
+                            <property name="input-hints">no-emoji</property>
                             <property name="max-width-chars">26</property>
                             <property name="tooltip-text" translatable="yes">Country code, e.g. US ES or !DE !GB</property>
                             <property name="valign">center</property>
