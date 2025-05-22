@@ -511,13 +511,7 @@ class Downloads(Transfers):
         username = transfer.username
 
         log.add_transfer("Clearing download %s from user %s", (virtual_path, username))
-
-        try:
-            super()._clear_transfer(transfer, denied_message=denied_message)
-
-        except KeyError:
-            log.add("FIXME: failed to remove download %s from user %s, not present in list",
-                    (virtual_path, username))
+        super()._clear_transfer(transfer, denied_message=denied_message)
 
         events.emit("clear-download", transfer, update_parent)
 

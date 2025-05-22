@@ -430,13 +430,7 @@ class Uploads(Transfers):
         username = transfer.username
 
         log.add_transfer("Clearing upload %s to user %s", (virtual_path, username))
-
-        try:
-            super()._clear_transfer(transfer, denied_message=denied_message)
-
-        except KeyError:
-            log.add("FIXME: failed to remove upload %s to user %s, not present in list",
-                    (virtual_path, username))
+        super()._clear_transfer(transfer, denied_message=denied_message)
 
         events.emit("clear-upload", transfer, update_parent)
 
