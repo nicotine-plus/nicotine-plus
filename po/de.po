@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-08 11:16+0200\n"
-"PO-Revision-Date: 2024-11-17 12:58+0000\n"
-"Last-Translator: Mat <mail@mathias.is>\n"
+"PO-Revision-Date: 2025-05-22 21:18+0000\n"
+"Last-Translator: Felix Hansen <gore-snagged-happy@duck.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.12-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -103,7 +103,7 @@ msgstr "Webseite: %s"
 
 #: pynicotine/__init__.py:56
 msgid "show this help message and exit"
-msgstr "zeige diese Hilfenachricht an und beende"
+msgstr "diese Hilfemeldung anzeigen und beenden"
 
 #: pynicotine/__init__.py:59
 msgid "file"
@@ -208,7 +208,7 @@ msgstr ""
 #: pynicotine/config.py:816
 #, python-format
 msgid "Error backing up config: %s"
-msgstr "Fehler beim Sichern der Konfiguration: %s"
+msgstr "Fehler beim sichern der Konfiguration: %s"
 
 #: pynicotine/config.py:819
 #, python-format
@@ -364,15 +364,15 @@ msgstr "_Beenden"
 
 #: pynicotine/gtkgui/application.py:337
 msgid "Browse _Public Shares"
-msgstr "_Öffentliche Freigaben durchsuchen"
+msgstr "Durchsuche _Öffentliche Freigaben"
 
 #: pynicotine/gtkgui/application.py:338
 msgid "Browse _Buddy Shares"
-msgstr "Freundenfreigaben durchsuchen"
+msgstr "Durchsuche _Freunde Freigaben"
 
 #: pynicotine/gtkgui/application.py:339
 msgid "Browse _Trusted Shares"
-msgstr "Durchstöbere _Vertrauenswürdige Freigaben"
+msgstr "Durchsuche _Vertrauenswürdige Freigaben"
 
 #: pynicotine/gtkgui/application.py:348 pynicotine/gtkgui/application.py:409
 msgid "_Rescan Shares"
@@ -476,7 +476,7 @@ msgstr "_Abbrechen"
 
 #: pynicotine/gtkgui/application.py:566 pynicotine/gtkgui/uploads.py:49
 msgid "_Retry"
-msgstr "Wiederholen"
+msgstr "_Wiederholen"
 
 #: pynicotine/gtkgui/application.py:567
 msgid "_Force Rescan"
@@ -484,7 +484,7 @@ msgstr "_Neues Scannen erzwingen"
 
 #: pynicotine/gtkgui/application.py:742
 msgid "Message Downloading Users"
-msgstr "Herunterlader Nachricht senden"
+msgstr "Nachricht an herunterladene Benutzer"
 
 #: pynicotine/gtkgui/application.py:743
 msgid "Send private message to all users who are downloading from you:"
@@ -589,7 +589,7 @@ msgstr "Notiz"
 
 #: pynicotine/gtkgui/buddies.py:143
 msgid "Add User _Note…"
-msgstr "Benutzer_notiz hinzufügen …"
+msgstr "Benutzer_Notiz hinzufügen…"
 
 #: pynicotine/gtkgui/buddies.py:145
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:224
@@ -665,11 +665,11 @@ msgstr "Mach den Raum privat"
 
 #: pynicotine/gtkgui/chatrooms.py:515
 msgid "Search activity log…"
-msgstr "Aktivitätenprotokoll durchsuchen …"
+msgstr "Aktivitätsprotokoll durchsuchen…"
 
 #: pynicotine/gtkgui/chatrooms.py:522 pynicotine/gtkgui/privatechat.py:342
 msgid "Search chat log…"
-msgstr "Chatprotokoll durchsuchen …"
+msgstr "Chatprotokoll durchsuchen…"
 
 #: pynicotine/gtkgui/chatrooms.py:597
 msgid "Sear_ch User's Files"
@@ -678,7 +678,7 @@ msgstr "Benutzerdateien durchsuchen"
 #: pynicotine/gtkgui/chatrooms.py:603 pynicotine/gtkgui/chatrooms.py:615
 #: pynicotine/gtkgui/privatechat.py:370
 msgid "Find…"
-msgstr "Finden …"
+msgstr "Finden…"
 
 #: pynicotine/gtkgui/chatrooms.py:605 pynicotine/gtkgui/chatrooms.py:617
 #: pynicotine/gtkgui/chatrooms.py:806 pynicotine/gtkgui/chatrooms.py:809
@@ -713,7 +713,7 @@ msgstr "Raumprotokoll anzeigen"
 
 #: pynicotine/gtkgui/chatrooms.py:627
 msgid "Delete Room Log…"
-msgstr "Raumprotokoll löschen …"
+msgstr "Raumprotokoll löschen…"
 
 #: pynicotine/gtkgui/chatrooms.py:629 pynicotine/gtkgui/privatechat.py:384
 msgid "Clear Message View"
@@ -785,11 +785,11 @@ msgstr "Neue Version verfügbar: %s"
 
 #: pynicotine/gtkgui/dialogs/about.py:467
 msgid "Up to date"
-msgstr "Aktuäl"
+msgstr "Aktuell"
 
 #: pynicotine/gtkgui/dialogs/about.py:496
 msgid "Checking latest version…"
-msgstr "Neueste Version überprüfen …"
+msgstr "Neueste Version überprüfen…"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:75
 msgid "Setup Assistant"
@@ -862,7 +862,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:279
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:334
 msgid "File Properties"
-msgstr "Datei-Eigenschaften"
+msgstr "Dateieigenschaften"
 
 #: pynicotine/gtkgui/dialogs/fileproperties.py:76
 #, python-format
@@ -943,7 +943,7 @@ msgstr "Artikel bearbeiten"
 #: pynicotine/gtkgui/ui/userinfo.ui:214 pynicotine/gtkgui/ui/userinfo.ui:241
 #: pynicotine/gtkgui/ui/userinfo.ui:268 pynicotine/gtkgui/ui/userinfo.ui:295
 msgid "Unknown"
-msgstr "unbekannt"
+msgstr "Unbekannt"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:128
 #: pynicotine/gtkgui/ui/settings/network.ui:142
@@ -1053,17 +1053,18 @@ msgid ""
 "<b>Syntax</b>: Case-insensitive. If enabled, Python regular expressions can "
 "be used, otherwise only wildcard * matches are supported."
 msgstr ""
-"<b>Syntax</b>: Groß- und Kleinschreibung wird nicht beachtet. Wenn "
-"aktiviert, können Python-Reguläre Ausdrücke verwendet werden, ansonsten "
-"werden nur Platzhalter * unterstützt."
+"<b>Syntax</b>: Groß- und Kleinschreibung wird nicht berücksichtigt. Wenn "
+"diese Option aktiviert ist, können Python-Reguläre Ausdrücke eingesetzt "
+"werden – andernfalls werden lediglich Platzhalter-Übereinstimmungen mit * "
+"unterstützt."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:327
 msgid "Filter"
-msgstr "Filters"
+msgstr "Filter"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:334
 msgid "Regex"
-msgstr "Regex"
+msgstr "Filters"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:468
 msgid "Add Download Filter"
@@ -1182,7 +1183,7 @@ msgstr "Gib eine IP-Adresse ein, die du sperren möchtest:"
 #: pynicotine/gtkgui/dialogs/preferences.py:1348
 #: pynicotine/gtkgui/dialogs/preferences.py:2205
 msgid "Format codes"
-msgstr "Formatkodes"
+msgstr "Formatierungscodes"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1370
 #: pynicotine/gtkgui/dialogs/preferences.py:1384
@@ -1235,7 +1236,7 @@ msgstr "Bestätigungsdialog anzeigen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1751
 msgid "Run in the background"
-msgstr "Im Hintergrund laufen"
+msgstr "Im Hintergrund ausführen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1759
 msgid "bold"
@@ -1247,7 +1248,7 @@ msgstr "kursiv"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1761
 msgid "underline"
-msgstr "unterstreichen"
+msgstr "unterstrichen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1762
 msgid "normal"
@@ -3984,7 +3985,7 @@ msgstr ""
 
 #: pynicotine/shares.py:302
 msgid "Rebuilding shares…"
-msgstr "Freigaben aktualisieren …"
+msgstr "Freigaben aktualisieren…"
 
 #: pynicotine/shares.py:302
 msgid "Rescanning shares…"
