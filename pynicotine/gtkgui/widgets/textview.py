@@ -200,7 +200,7 @@ class TextView:
             line.append((" ", None))
 
         # Highlight urls, if found and tag them
-        line.extend(list(self._generate_hypertext(message)))
+        line.extend(self._generate_hypertext(message))
 
         self._insert_line(line, prepend=prepend)
 
