@@ -1203,13 +1203,12 @@ class MainWindow(Window):
 
     def shares_scanning(self, folder_count=None):
 
-        label = _("Scanning Shares")
-
         if folder_count is not None:
-            # TODO: turn this into a proper translated string in 3.4.0
             self.scan_progress_label.set_label(
-                f"{_('Shared Folders')}: {humanize(folder_count)}")
+                _("Scanned Folders: %s") % humanize(folder_count))
             return
+
+        label = _("Scanning Shares")
 
         # Hide widget to keep tooltips for other widgets visible
         self.scan_progress_container.set_visible(False)
