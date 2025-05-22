@@ -39,6 +39,7 @@
   </object>
   <object class="GtkEntry" id="room_search_entry">
     <property name="hexpand">False</property>
+    <property name="input-hints">no-emoji</property>
     <property name="max-width-chars">20</property>
     <property name="placeholder-text" translatable="yes">Room…</property>
     <property name="visible">True</property>
@@ -47,6 +48,7 @@
   </object>
   <object class="GtkEntry" id="user_search_entry">
     <property name="hexpand">False</property>
+    <property name="input-hints">no-emoji</property>
     <property name="max-width-chars">20</property>
     <property name="placeholder-text" translatable="yes">Username…</property>
     <property name="visible">True</property>
@@ -440,7 +442,7 @@
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkImage">
-                    <property name="icon-name">document-save-symbolic</property>
+                    <property name="icon-name">folder-download-symbolic</property>
                     <property name="pixel-size">128</property>
                     <property name="visible">True</property>
                     <style>
@@ -727,6 +729,7 @@
     </child>
   </object>
   <object class="GtkEntry" id="userbrowse_entry">
+    <property name="input-hints">no-emoji</property>
     <property name="max-width-chars">45</property>
     <property name="placeholder-text" translatable="yes">Username…</property>
     <property name="primary-icon-name">avatar-default-symbolic</property>
@@ -895,6 +898,7 @@
     </child>
   </object>
   <object class="GtkEntry" id="userinfo_entry">
+    <property name="input-hints">no-emoji</property>
     <property name="max-width-chars">45</property>
     <property name="placeholder-text" translatable="yes">Username…</property>
     <property name="primary-icon-name">avatar-default-symbolic</property>
@@ -1090,6 +1094,7 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkEntry" id="private_entry">
+                        <property name="input-hints">no-emoji</property>
                         <property name="max-width-chars">40</property>
                         <property name="placeholder-text" translatable="yes">Username…</property>
                         <property name="primary-icon-name">avatar-default-symbolic</property>
@@ -1253,6 +1258,7 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkEntry" id="add_buddy_entry">
+                        <property name="input-hints">no-emoji</property>
                         <property name="max-width-chars">45</property>
                         <property name="placeholder-text" translatable="yes">Add buddy…</property>
                         <property name="primary-icon-name">system-users-symbolic</property>
@@ -1472,21 +1478,6 @@
                         <property name="spacing">6</property>
                         <property name="valign">center</property>
                         <property name="visible">True</property>
-                        <child>
-                          <object class="GtkToggleButton" id="chatrooms_user_list_button">
-                            <property name="tooltip-text" translatable="yes">Show Room Users</property>
-                            <property name="visible">False</property>
-                            <child>
-                              <object class="GtkImage">
-                                <property name="icon-name">sidebar-show-symbolic</property>
-                                <property name="visible">True</property>
-                              </object>
-                            </child>
-                            <style>
-                              <class name="image-button"/>
-                            </style>
-                          </object>
-                        </child>
                         <child>
                           <object class="GtkButton">
                             <property name="action-name">app.configure-chats</property>

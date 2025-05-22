@@ -249,6 +249,9 @@ FILE_TYPE_ICON_LABELS = {
     "x-office-document-symbolic": _("Document"),
     "emblem-documents-symbolic": _("Text")
 }
+PRIVATE_ICON_LABELS = {
+    "security-medium-symbolic": _("Private")
+}
 USER_STATUS_ICON_LABELS = {
     "nplus-status-available": _("Online"),
     "nplus-status-away": _("Away"),

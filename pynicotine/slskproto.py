@@ -195,6 +195,9 @@ class NetworkInterfaces:
     elif sys.platform.startswith("sunos"):
         SIOCGIFADDR = -0x3fdf96f3  # Solaris
 
+    elif sys.platform.startswith("haiku"):
+        SIOCGIFADDR = 0x22c7
+
     else:
         SIOCGIFADDR = 0xc0206921   # macOS, *BSD
 
@@ -262,7 +265,7 @@ class NetworkInterfaces:
                 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
                     ip_interface = fcntl.ioctl(sock.fileno(),
                                                cls.SIOCGIFADDR,
-                                               struct.pack("256s", interface_name.encode()[:15]))
+                                               struct.pack("256s", interface_name.encode()))
 
                     ip_address = socket.inet_ntoa(ip_interface[20:24])
                     interface_addresses[interface_name] = ip_address

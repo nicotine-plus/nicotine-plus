@@ -545,6 +545,8 @@ class Scanner:
                 # Sharing a folder twice, no go
                 continue
 
+            self.queue.put(self.current_folder_count)
+
             file_list = []
 
             try:
@@ -565,11 +567,7 @@ class Scanner:
                             if self.is_hidden(path, entry=entry):
                                 continue
 
-                            self.current_folder_count += 1
                             folder_paths.append(path)
-
-                            if not self.current_folder_count % 100:
-                                self.queue.put(self.current_folder_count)
                             continue
 
                         try:
@@ -622,6 +620,7 @@ class Scanner:
                 )
 
             self.streams[virtual_folder_path] = self.get_folder_stream(file_list)
+            self.current_folder_count += 1
 
     def get_audio_tag(self, file_path, size):
 
@@ -1175,10 +1174,11 @@ class Shares:
     def _process_scanner(self, scanner_queue, emit_event=None):
 
         successful = True
+        current_folder_count = None
 
-        while self._scanner_process.is_alive():
+        while self._scanner_process.is_alive() and successful:
             # Cooldown
-            time.sleep(0.05)
+            time.sleep(0.2)
 
             while not scanner_queue.empty():
                 item = scanner_queue.get()
@@ -1189,7 +1189,7 @@ class Shares:
 
                 if isinstance(item, int):
                     if emit_event is not None:
-                        emit_event("shares-scanning", item)
+                        current_folder_count = item
 
                 elif isinstance(item, ScannerLogMessage):
                     log.add(item.msg, item.msg_args)
@@ -1206,6 +1206,10 @@ class Shares:
 
                 elif item == ScannerState.INITIALIZED:
                     self.initialized = True
+
+            if current_folder_count:
+                emit_event("shares-scanning", current_folder_count)
+                current_folder_count = None
 
         self._scanner_process = None
 
