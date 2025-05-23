@@ -436,6 +436,27 @@
             <property name="xalign">0</property>
           </object>
         </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="label" translatable="yes">Public Files</property>
+            <property name="selectable">True</property>
+            <property name="visible">True</property>
+            <property name="xalign">0</property>
+            <style>
+              <class name="italic"/>
+            </style>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="label" translatable="yes">Only show files that are shared publicly, and hide privately shared files which cannot be downloaded until the uploader gives explicit permission.</property>
+            <property name="margin-start">12</property>
+            <property name="selectable">True</property>
+            <property name="visible">True</property>
+            <property name="wrap">True</property>
+            <property name="xalign">0</property>
+          </object>
+        </child>
       </object>
     </child>
   </object>
