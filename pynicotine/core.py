@@ -198,27 +198,7 @@ class Core:
         def thread_excepthook(args):
             sys.excepthook(*args[:3])
 
-        if hasattr(threading, "excepthook"):
-            threading.excepthook = thread_excepthook
-            return
-
-        # Workaround for Python <= 3.7
-        init_thread = threading.Thread.__init__
-
-        def init_thread_excepthook(self, *args, **kwargs):
-
-            init_thread(self, *args, **kwargs)
-            run_thread = self.run
-
-            def run_with_excepthook(*args2, **kwargs2):
-                try:
-                    run_thread(*args2, **kwargs2)
-                except Exception:
-                    thread_excepthook(sys.exc_info())
-
-            self.run = run_with_excepthook
-
-        threading.Thread.__init__ = init_thread_excepthook
+        threading.excepthook = thread_excepthook
 
     def start(self):
 
