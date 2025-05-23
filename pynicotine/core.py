@@ -193,7 +193,12 @@ class Core:
 
         import signal
 
-        for signal_type in (signal.SIGINT, signal.SIGTERM):
+        signals = [signal.SIGINT, signal.SIGTERM]
+
+        if hasattr(signal, "SIGHUP"):
+            signals.append(signal.SIGHUP)  # Terminal was closed
+
+        for signal_type in signals:
             signal.signal(signal_type, self.quit)
 
     def _init_error_handler(self):
