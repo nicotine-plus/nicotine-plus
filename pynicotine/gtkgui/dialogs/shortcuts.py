@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 
@@ -31,6 +32,17 @@ class Shortcuts(Dialog):
             parent=application.window
         )
         application.window.set_help_overlay(self.dialog)
+
+        if GTK_API_VERSION >= 4:
+            header_bar = self.dialog.get_titlebar()
+
+            if header_bar is not None:
+                try:
+                    header_bar.set_use_native_controls(True)  # pylint: disable=no-member
+
+                except AttributeError:
+                    # Older GTK version
+                    pass
 
         # Workaround for off-centered dialog on first run
         self.dialog.set_visible(True)

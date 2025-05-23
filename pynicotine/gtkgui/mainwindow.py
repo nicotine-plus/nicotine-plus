@@ -183,6 +183,13 @@ class MainWindow(Window):
         self.header_bar.pack_end(self.header_end)
 
         if GTK_API_VERSION >= 4:
+            try:
+                self.header_bar.set_use_native_controls(True)  # pylint: disable=no-member
+
+            except AttributeError:
+                # Older GTK version
+                pass
+
             self.header_bar.set_show_title_buttons(True)
 
             self.horizontal_paned.set_resize_start_child(True)

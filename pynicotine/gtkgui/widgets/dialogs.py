@@ -101,6 +101,13 @@ class Dialog(Window):
         self.widget.set_titlebar(header_bar)
 
         if GTK_API_VERSION >= 4:
+            try:
+                header_bar.set_use_native_controls(True)             # pylint: disable=no-member
+
+            except AttributeError:
+                # Older GTK version
+                pass
+
             header_bar.set_show_title_buttons(show_title_buttons)    # pylint: disable=no-member
 
             if not show_title:
