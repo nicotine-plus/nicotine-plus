@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-08 11:16+0200\n"
-"PO-Revision-Date: 2025-05-23 19:19+0000\n"
+"PO-Revision-Date: 2025-05-23 19:22+0000\n"
 "Last-Translator: Felix Hansen <gore-snagged-happy@duck.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -224,7 +224,7 @@ msgstr "Laden von %(program)s %(version)s"
 #: pynicotine/core.py:243
 #, python-format
 msgid "Quitting %(program)s %(version)s, %(status)s…"
-msgstr "Aufhören mit %(program)s %(version)s, %(status)s…"
+msgstr "Aufhören mit %(program)s %(version)s, %(status)s …"
 
 #: pynicotine/core.py:246
 msgid "terminating"
@@ -243,7 +243,7 @@ msgstr "Beenden von %(program)s %(version)s!"
 msgid "You need to specify a username and password before connecting…"
 msgstr ""
 "Du musst einen Benutzernamen und ein Passwort angeben, bevor du dich "
-"verbindest…"
+"verbindest …"
 
 #: pynicotine/downloads.py:239
 #, python-format
