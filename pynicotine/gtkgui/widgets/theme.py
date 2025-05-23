@@ -618,14 +618,12 @@ def update_custom_css():
     load_css(CUSTOM_CSS_PROVIDER, css)
 
 
-def update_tag_visuals(tag, color_id):
+def update_tag_visuals(tag):
 
-    enable_colored_usernames = config.sections["ui"]["usernamehotspots"]
-    is_hotspot_tag = (color_id in {"useraway", "useronline", "useroffline"})
-    color_hex = config.sections["ui"].get(color_id)
+    color_hex = config.sections["ui"].get(tag.color_id)
     tag_props = tag.props
 
-    if is_hotspot_tag and not enable_colored_usernames:
+    if tag.secondary_callback and not config.sections["ui"]["usernamehotspots"]:
         color_hex = None
 
     if not color_hex:
@@ -640,11 +638,11 @@ def update_tag_visuals(tag, color_id):
             tag_props.foreground_rgba = new_rgba
 
     # URLs
-    if color_id == "urlcolor" and tag_props.underline != Pango.Underline.SINGLE:
+    if tag.url and tag_props.underline != Pango.Underline.SINGLE:
         tag_props.underline = Pango.Underline.SINGLE
 
     # Hotspots
-    if not is_hotspot_tag:
+    if not tag.callback_arg:
         return
 
     username_style = config.sections["ui"]["usernamestyle"]

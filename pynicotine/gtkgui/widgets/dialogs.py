@@ -448,7 +448,7 @@ class MessageDialog(Window):
             self.container.add(frame)     # pylint: disable=no-member
 
         textview = self.default_focus_widget = TextView(scrolled_window, editable=False)
-        textview.append_line(text)
+        textview.add_line(text)
 
         self.container.set_visible(True)
 
