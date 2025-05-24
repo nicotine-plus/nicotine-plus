@@ -55,6 +55,7 @@ from pynicotine.slskmessages import SharedFoldersFiles
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 from pynicotine.utils import UINT32_LIMIT
 from pynicotine.utils import encode_path
+from pynicotine.utils import humanize
 
 
 class FileTypes:
@@ -332,8 +333,12 @@ class Scanner:
 
                 self.queue.put(
                     ScannerLogMessage(
-                        _("Rescan complete: %(num)s folders found"),
-                        {"num": self.current_folder_count}
+                        ngettext(
+                            "Rescan complete: %(num)s folder found",
+                            "Rescan complete: %(num)s folders found",
+                            self.current_folder_count
+                        ),
+                        {"num": humanize(self.current_folder_count)}
                     )
                 )
 
