@@ -259,7 +259,7 @@ class Transfers:
         )
         if not self.window.application.isolated_mode:
             self.popup_menu.add_items(
-                ("#" + _("_Open File"), self.on_open_file),
+                ("#" + "open_file", self.on_open_file),
                 ("#" + _("Open in File _Manager"), self.on_open_file_manager)
             )
         self.popup_menu.add_items(
@@ -1035,7 +1035,10 @@ class Transfers:
     def on_popup_menu(self, menu, _widget):
 
         self.select_transfers()
-        menu.set_num_selected_files(len(self.selected_transfers))
+
+        num_files = len(self.selected_transfers)
+        menu.set_num_selected_files(num_files)
+        menu.update_item_label("open_file", _("_Open File") if num_files == 1 else _("_Open Files"))
 
         self.populate_popup_menu_users()
 
