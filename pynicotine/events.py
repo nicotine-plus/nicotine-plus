@@ -19,7 +19,7 @@
 import time
 
 from collections import defaultdict
-from collections import deque
+from queue import Empty, SimpleQueue
 from threading import Thread
 
 
@@ -239,8 +239,8 @@ class Events:
     def __init__(self):
 
         self._callbacks = defaultdict(list)
-        self._thread_events = deque()
-        self._pending_scheduler_events = deque()
+        self._thread_events = SimpleQueue()
+        self._pending_scheduler_events = SimpleQueue()
         self._scheduler_events = {}
         self._scheduler_event_id = 0
         self._is_active = False
@@ -294,7 +294,7 @@ class Events:
                 core.pluginhandler.show_plugin_error(module_name, error)
 
     def emit_main_thread(self, event_name, *args, **kwargs):
-        self._thread_events.append(ThreadEvent(event_name, args, kwargs))
+        self._thread_events.put_nowait(ThreadEvent(event_name, args, kwargs))
 
     def invoke_main_thread(self, callback, *args, **kwargs):
         self.emit_main_thread("thread-callback", callback, *args, **kwargs)
@@ -310,7 +310,7 @@ class Events:
         if callback_args is None:
             callback_args = ()
 
-        self._pending_scheduler_events.append(
+        self._pending_scheduler_events.put_nowait(
             SchedulerEvent(self._scheduler_event_id, next_time, delay, repeat, callback, callback_args)
         )
         return self._scheduler_event_id
@@ -320,7 +320,7 @@ class Events:
         return self.schedule(delay, callback, callback_args, repeat=False)
 
     def cancel_scheduled(self, event_id):
-        self._pending_scheduler_events.append(SchedulerEvent(event_id, next_time=None))
+        self._pending_scheduler_events.put_nowait(SchedulerEvent(event_id, next_time=None))
 
     def process_thread_events(self):
         """Called by the main loop 10 times per second to emit thread events in
@@ -330,16 +330,19 @@ class Events:
         processing events.
         """
 
-        if not self._thread_events:
+        event_list = []
+
+        while True:
+            try:
+                event_list.append(self._thread_events.get_nowait())
+            except Empty:
+                break
+
+        if not event_list:
             if not self._is_active:
                 return False
 
             return True
-
-        event_list = []
-
-        while self._thread_events:
-            event_list.append(self._thread_events.popleft())
 
         for event in event_list:
             self.emit(event.event_name, *event.args, **event.kwargs)
@@ -350,8 +353,11 @@ class Events:
 
         while self._is_active:
             # Scheduled events additions/removals from other threads
-            while self._pending_scheduler_events:
-                event = self._pending_scheduler_events.popleft()
+            while True:
+                try:
+                    event = self._pending_scheduler_events.get_nowait()
+                except Empty:
+                    break
 
                 if event.next_time is not None:
                     self._scheduler_events[event.event_id] = event
@@ -392,7 +398,13 @@ class Events:
 
         self._is_active = False
         self._callbacks.clear()
-        self._pending_scheduler_events.clear()
+
+        while True:
+            try:
+                self._pending_scheduler_events.get_nowait()
+            except Empty:
+                break
+
         self._scheduler_events.clear()
 
 
