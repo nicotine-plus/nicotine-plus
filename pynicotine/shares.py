@@ -1181,7 +1181,13 @@ class Shares:
             # Cooldown
             time.sleep(0.2)
 
-            while reader.poll():
+            while True:
+                try:
+                    if not reader.poll():
+                        break
+                except BrokenPipeError:
+                    break
+
                 try:
                     item = reader.recv()
                 except EOFError:
