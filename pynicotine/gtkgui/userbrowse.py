@@ -153,9 +153,6 @@ class UserBrowses(IconNotebook):
                              close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
-        page.queued_path = path
-        page.browse_queued_path()
-
         if switch_page:
             self.set_current_page(page.container)
             self.window.change_main_page(self.window.userbrowse_page)
@@ -163,6 +160,9 @@ class UserBrowses(IconNotebook):
         if new_request:
             page.clear_model()
             page.set_indeterminate_progress()
+
+        page.queued_path = path
+        page.browse_queued_path()
 
     def remove_user(self, user):
 
