@@ -28,7 +28,6 @@ import sys
 import time
 
 from collections import defaultdict
-from collections import deque
 from datetime import datetime
 from datetime import timedelta
 from itertools import chain
@@ -536,7 +535,7 @@ class Scanner:
     def scan_shared_folder(self, shared_folder_path, old_mtimes, old_files):
         """Scan a shared folder for all subfolders, files and their metadata."""
 
-        folder_paths = deque([shared_folder_path])
+        folder_paths = [shared_folder_path]
 
         while folder_paths:
             folder_path = folder_paths.pop()
