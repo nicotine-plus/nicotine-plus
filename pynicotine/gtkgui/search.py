@@ -615,8 +615,8 @@ class Search:
             self.window.application, parent=self.tree_view.widget, callback=self.on_popup_menu
         )
         self.popup_menu.add_items(
-            ("#" + _("Download _File(s)"), self.on_download_files),
-            ("#" + _("_Download Folder(s)…"), self.on_download_folders),
+            ("#" + "download_files", self.on_download_files),
+            ("#" + "download_folders", self.on_download_folders),
             ("", None),
             ("#" + _("F_ile Properties"), self.on_file_properties),
             ("", None),
@@ -1288,7 +1288,8 @@ class Search:
         else:
             self.filters_label.set_label(_("_Result Filters"))
 
-        self.filters_label.set_tooltip_text(_("%d active filter(s)") % count)
+        self.filters_label.set_tooltip_text(
+            ngettext("%(num)s active filter", "%(num)s active filters", count) % {"num": count})
 
     def clear_model(self, stored_results=False):
 
@@ -1525,8 +1526,28 @@ class Search:
     def on_popup_menu(self, menu, _widget):
 
         self.select_results()
+
+        num_results = len(self.selected_results)
+        menu.set_num_selected_files(num_results)
+
+        self.popup_menu.update_item_label(
+            "download_files",
+            _("Download _File") if num_results == 1 else _("Download _Files")
+        )
+
+        user_folder_paths = set()
+
+        for iterator in self.selected_results.values():
+            user = self.tree_view.get_row_value(iterator, "user")
+            file_data = self.tree_view.get_row_value(iterator, "file_data")
+            user_folder_paths.add((user, file_data.path.rpartition("\\")[0]))
+
+        self.popup_menu.update_item_label(
+            "download_folders",
+            _("_Download Folder…") if len(user_folder_paths) == 1 else _("_Download Folders…")
+        )
+
         self.populate_popup_menu_users()
-        menu.set_num_selected_files(len(self.selected_results))
 
     def on_browse_folder(self, *_args):
 

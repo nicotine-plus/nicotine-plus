@@ -38,6 +38,7 @@ from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.slskmessages import UserStatus
+from pynicotine.utils import humanize
 
 
 class TabLabel:
@@ -490,7 +491,8 @@ class IconNotebook:
 
         if self.unread_pages:
             icon_name = "emblem-important-symbolic"
-            tooltip_text = _("%i Unread Tab(s)") % len(self.unread_pages)
+            num_pages = len(self.unread_pages)
+            tooltip_text = ngettext("%s Unread Tab", "%s Unread Tabs", num_pages) % humanize(num_pages)
         else:
             icon_name = "pan-down-symbolic"
             tooltip_text = _("All Tabs")

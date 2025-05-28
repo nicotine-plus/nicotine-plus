@@ -88,6 +88,7 @@ from pynicotine.slskmessages import WatchUser
 from pynicotine.slskmessages import increment_token
 from pynicotine.slskmessages import initial_token
 from pynicotine.utils import human_speed
+from pynicotine.utils import humanize
 
 
 class Connection:
@@ -1095,7 +1096,13 @@ class NetworkThread(Thread):
             self._server_timeout_value *= 2
 
         self._server_timeout_time = time.monotonic() + self._server_timeout_value
-        log.add(_("Reconnecting to server in %s seconds"), self._server_timeout_value)
+        log.add(
+            ngettext(
+                "Reconnecting to server in %(num)s second",
+                "Reconnecting to server in %(num)s seconds",
+                self._server_timeout_value,
+            ), {"num": humanize(self._server_timeout_value)}
+        )
 
     @staticmethod
     def _set_server_socket_keepalive(sock, idle=10, interval=2):
