@@ -28,7 +28,6 @@ import sys
 import time
 
 from collections import defaultdict
-from collections import deque
 from datetime import datetime
 from datetime import timedelta
 from itertools import chain
@@ -254,7 +253,7 @@ class Scanner:
     databases and writing them to disk.
     """
 
-    __slots__ = ("queue", "share_groups", "share_dbs", "share_db_paths", "init",
+    __slots__ = ("writer", "share_groups", "share_dbs", "share_db_paths", "init",
                  "rescan", "rebuild", "reveal_buddy_shares", "reveal_trusted_shares",
                  "files", "streams", "mtimes", "word_index", "processed_share_names",
                  "processed_share_paths", "current_file_index", "current_folder_count",
@@ -262,10 +261,10 @@ class Scanner:
 
     HIDDEN_FOLDER_NAMES = {"@eaDir", "#recycle", "#snapshot"}
 
-    def __init__(self, queue, share_groups, share_db_paths, init=False, rescan=True,
+    def __init__(self, writer, share_groups, share_db_paths, init=False, rescan=True,
                  rebuild=False, reveal_buddy_shares=False, reveal_trusted_shares=False):
 
-        self.queue = queue
+        self.writer = writer
         self.share_groups = share_groups
         self.share_dbs = {}
         self.share_db_paths = share_db_paths
@@ -304,11 +303,11 @@ class Scanner:
                     # Failed to load shares or version is invalid, rebuild
                     self.rescan = self.rebuild = True
 
-                self.queue.put(ScannerState.INITIALIZED)
+                self.writer.send(ScannerState.INITIALIZED)
 
             if self.rescan:
-                self.queue.put(ScannerState.RESCANNING)
-                self.queue.put(
+                self.writer.send(ScannerState.RESCANNING)
+                self.writer.send(
                     ScannerLogMessage(_("Rebuilding shares…") if self.rebuild else _("Rescanning shares…"))
                 )
 
@@ -330,7 +329,7 @@ class Scanner:
                 self.create_compressed_shares()
                 self.create_file_path_index()
 
-                self.queue.put(
+                self.writer.send(
                     ScannerLogMessage(
                         _("Rescan complete: %(num)s folders found"),
                         {"num": self.current_folder_count}
@@ -340,7 +339,7 @@ class Scanner:
         except Exception:
             from traceback import format_exc
 
-            self.queue.put(
+            self.writer.send(
                 ScannerLogMessage(
                     _("Serious error occurred while rescanning shares. If this problem persists, "
                       "delete %(dir)s/*.dbn and try again. If that doesn't help, please file a bug "
@@ -350,9 +349,10 @@ class Scanner:
                     }
                 )
             )
-            self.queue.put(ScannerState.FAILURE)
+            self.writer.send(ScannerState.FAILURE)
 
         finally:
+            self.writer.close()
             Shares.close_shares(self.share_dbs)
 
     def create_compressed_shares_message(self, permission_level):
@@ -376,7 +376,7 @@ class Scanner:
         compressed_shares.make_network_message()
         compressed_shares.public_shares = compressed_shares.buddy_shares = compressed_shares.trusted_shares = None
 
-        self.queue.put(compressed_shares)
+        self.writer.send(compressed_shares)
 
     def create_compressed_shares(self):
 
@@ -400,7 +400,7 @@ class Scanner:
             self.share_dbs["buddy_files"],
             self.share_dbs["trusted_files"]
         ))
-        self.queue.put(file_path_index)
+        self.writer.send(file_path_index)
 
         Shares.close_shares(self.share_dbs)
 
@@ -535,7 +535,7 @@ class Scanner:
     def scan_shared_folder(self, shared_folder_path, old_mtimes, old_files):
         """Scan a shared folder for all subfolders, files and their metadata."""
 
-        folder_paths = deque([shared_folder_path])
+        folder_paths = [shared_folder_path]
 
         while folder_paths:
             folder_path = folder_paths.pop()
@@ -545,7 +545,7 @@ class Scanner:
                 # Sharing a folder twice, no go
                 continue
 
-            self.queue.put(self.current_folder_count)
+            self.writer.send(self.current_folder_count)
 
             file_list = []
 
@@ -604,7 +604,7 @@ class Scanner:
                             self.current_file_index += 1
 
                         except OSError as error:
-                            self.queue.put(
+                            self.writer.send(
                                 ScannerLogMessage(
                                     _("Error while scanning file %(path)s: %(error)s"),
                                     {"path": path, "error": error}
@@ -612,7 +612,7 @@ class Scanner:
                             )
 
             except OSError as error:
-                self.queue.put(
+                self.writer.send(
                     ScannerLogMessage(
                         _("Error while scanning folder %(path)s: %(error)s"),
                         {"path": folder_path, "error": error}
@@ -651,7 +651,7 @@ class Scanner:
                 tag = self.get_audio_tag(file_path, size)
 
             except Exception as error:
-                self.queue.put(
+                self.writer.send(
                     ScannerLogMessage(
                         _("Error while scanning metadata for file %(path)s: %(error)s"),
                         {"path": file_path, "error": error}
@@ -1113,17 +1113,17 @@ class Shares:
         events.emit("shares-preparing")
 
         share_groups = self.get_shared_folders()
-        self._scanner_process, scanner_queue = self._build_scanner_process(share_groups, init, rescan, rebuild)
+        self._scanner_process, reader = self._build_scanner_process(share_groups, init, rescan, rebuild)
         self._scanner_process.start()
 
         if use_thread:
             Thread(
-                target=self._process_scanner, args=(scanner_queue, events.emit_main_thread),
+                target=self._process_scanner, args=(reader, events.emit_main_thread),
                 name="ProcessShareScanner", daemon=True
             ).start()
             return None
 
-        return self._process_scanner(scanner_queue)
+        return self._process_scanner(reader)
 
     def check_shares_available(self):
 
@@ -1157,9 +1157,9 @@ class Shares:
         import multiprocessing
 
         context = multiprocessing.get_context(method="spawn")
-        scanner_queue = context.Queue()
+        reader, writer = context.Pipe(duplex=False)
         scanner_obj = Scanner(
-            scanner_queue,
+            writer,
             share_groups,
             self.share_db_paths,
             init,
@@ -1169,9 +1169,9 @@ class Shares:
             reveal_trusted_shares=config.sections["transfers"]["reveal_trusted_shares"]
         )
         scanner = context.Process(target=scanner_obj.run, daemon=True)
-        return scanner, scanner_queue
+        return scanner, reader
 
-    def _process_scanner(self, scanner_queue, emit_event=None):
+    def _process_scanner(self, reader, emit_event=None):
 
         successful = True
         current_folder_count = None
@@ -1180,8 +1180,17 @@ class Shares:
             # Cooldown
             time.sleep(0.2)
 
-            while not scanner_queue.empty():
-                item = scanner_queue.get()
+            while True:
+                try:
+                    if not reader.poll():
+                        break
+                except BrokenPipeError:
+                    break
+
+                try:
+                    item = reader.recv()
+                except EOFError:
+                    break
 
                 if item == ScannerState.FAILURE:
                     successful = False
@@ -1211,6 +1220,8 @@ class Shares:
                 emit_event("shares-scanning", current_folder_count)
                 current_folder_count = None
 
+        reader.close()
+        self._scanner_process.close()
         self._scanner_process = None
 
         if emit_event is not None:

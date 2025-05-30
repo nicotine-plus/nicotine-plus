@@ -26,8 +26,8 @@ import sys
 import time
 
 from collections import defaultdict
-from collections import deque
 from os import strerror
+from queue import Empty, SimpleQueue
 from threading import Thread
 
 from pynicotine.events import events
@@ -381,7 +381,7 @@ class NetworkThread(Thread):
 
         super().__init__(name="NetworkThread")
 
-        self._message_queue = deque()
+        self._message_queue = SimpleQueue()
         self._pending_peer_conns = {}
         self._pending_init_msgs = defaultdict(list)
         self._token_init_msgs = {}
@@ -452,7 +452,7 @@ class NetworkThread(Thread):
 
     def _queue_network_message(self, msg):
         if self._should_process_queue:
-            self._message_queue.append(msg)
+            self._message_queue.put_nowait(msg)
 
     def _schedule_quit(self):
         self._want_abort = True
@@ -1480,7 +1480,12 @@ class NetworkThread(Thread):
         for conn in self._conns.copy().values():
             self._close_connection(conn)
 
-        self._message_queue.clear()
+        while True:
+            try:
+                self._message_queue.get_nowait()
+            except Empty:
+                break
+
         self._pending_peer_conns.clear()
         self._pending_init_msgs.clear()
         self._username_init_msgs.clear()
@@ -2612,8 +2617,11 @@ class NetworkThread(Thread):
 
         msgs = []
 
-        while self._message_queue:
-            msgs.append(self._message_queue.popleft())
+        while True:
+            try:
+                msgs.append(self._message_queue.get_nowait())
+            except Empty:
+                break
 
         self._process_outgoing_messages(msgs)
 
