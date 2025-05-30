@@ -1,3 +1,10 @@
+<!--
+  SPDX-FileCopyrightText: 2004-2025 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2003-2004 Nicotine Contributors
+  SPDX-FileCopyrightText: 2002-2003 PySoulSeek Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # Authors
 
 ## Nicotine+ Team
