@@ -57,7 +57,7 @@
                       <object class="GtkSwitch" id="enable_plugins_toggle">
                         <property name="valign">center</property>
                         <property name="visible">True</property>
-                        <signal name="notify::active" handler="on_enable_plugins"/>
+                        <signal name="notify::active" handler="on_toggle_enable_plugins"/>
                       </object>
                     </child>
                   </object>
@@ -131,7 +131,7 @@
                                     <property name="sensitive">False</property>
                                     <property name="tooltip-text" translatable="yes">Settings</property>
                                     <property name="visible">True</property>
-                                    <signal name="clicked" handler="on_plugin_settings"/>
+                                    <signal name="clicked" handler="on_click_plugin_settings"/>
                                     <child>
                                       <object class="GtkBox">
                                         <property name="spacing">6</property>

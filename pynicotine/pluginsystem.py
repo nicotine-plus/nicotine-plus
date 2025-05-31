@@ -495,7 +495,7 @@ class PluginHandler:
         # Reset class attributes
         BasePlugin.internal_name = BasePlugin.human_name = BasePlugin.path = None
 
-        self.plugin_settings(plugin_name, instance)
+        self.load_plugin_settings(instance)
 
         if hasattr(plugin, "enable"):
             instance.log("top-level enable() function is obsolete, please use BasePlugin.__init__() instead")
@@ -705,7 +705,7 @@ class PluginHandler:
         self.disable_plugin(plugin_name)
         self.enable_plugin(plugin_name)
 
-    def get_plugin_settings(self, plugin_name):
+    def get_plugin_metasettings(self, plugin_name):
 
         if plugin_name in self.enabled_plugins:
             plugin = self.enabled_plugins[plugin_name]
@@ -757,9 +757,9 @@ class PluginHandler:
             "trace": "".join(format_tb(error.__traceback__))
         })
 
-    def plugin_settings(self, plugin_name, plugin):
+    def load_plugin_settings(self, plugin):
 
-        plugin_name = plugin_name.lower()
+        plugin_name = plugin.internal_name.lower()
 
         if not plugin.settings:
             return
