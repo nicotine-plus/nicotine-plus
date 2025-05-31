@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-08 11:16+0200\n"
-"PO-Revision-Date: 2025-05-23 05:09+0000\n"
+"PO-Revision-Date: 2025-05-23 19:22+0000\n"
 "Last-Translator: Felix Hansen <gore-snagged-happy@duck.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -224,7 +224,7 @@ msgstr "Laden von %(program)s %(version)s"
 #: pynicotine/core.py:243
 #, python-format
 msgid "Quitting %(program)s %(version)s, %(status)s…"
-msgstr "Aufhören mit %(program)s %(version)s, %(status)s…"
+msgstr "Aufhören mit %(program)s %(version)s, %(status)s …"
 
 #: pynicotine/core.py:246
 msgid "terminating"
@@ -243,7 +243,7 @@ msgstr "Beenden von %(program)s %(version)s!"
 msgid "You need to specify a username and password before connecting…"
 msgstr ""
 "Du musst einen Benutzernamen und ein Passwort angeben, bevor du dich "
-"verbindest…"
+"verbindest …"
 
 #: pynicotine/downloads.py:239
 #, python-format
@@ -3501,7 +3501,7 @@ msgstr "US-amerikanische kleinere abgelegene Inseln"
 
 #: pynicotine/networkfilter.py:273
 msgid "United States"
-msgstr "Vereinigte Staaten"
+msgstr "Vereinigte Staaten von Amerika"
 
 #: pynicotine/networkfilter.py:274
 msgid "Uruguay"
@@ -4182,7 +4182,7 @@ msgid ""
 "You have no Soulseek privileges. While privileges are active, your downloads "
 "will be queued ahead of those of non-privileged users."
 msgstr ""
-"Du hast keine Soulseek Privilegien. Solange Privilegien aktiv sind, werden "
+"Du hast keine Soulseek Privilegien. Nur mit aktiven Privilegien, werden "
 "deine Downloads vor denen von nicht-privilegierten Nutzern in die "
 "Warteschlange eingereiht."
 
@@ -4911,8 +4911,8 @@ msgid ""
 "Use | (or pipes) to seperate several exact phrases. Example:\n"
 "    Remix|Dub Mix|Instrumental"
 msgstr ""
-"Verwende | (or pipes) (senkrechten Strich), um mehrere exakte Phrasen zu "
-"trennen. Beispiel:\n"
+"Verwende | (senkrechter Strich), um mehrere exakte Phrasen zu trennen. "
+"Beispiel:\n"
 "    Remix|Dub-Mix|Instrumental"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:118
