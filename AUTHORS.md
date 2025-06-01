@@ -76,6 +76,11 @@
  - Nicotine+ on Win32
  - Author of Nicotine+ guide
 
+### OffHand
+ - Website and Trac maintenance
+ - Tester
+ - Nicotine+ dinosaur
+
 ### Mutnick
  - Created Nicotine+ GitHub organization
  - Developer
@@ -441,7 +446,7 @@
  - nince78
  - Nir Arbel
  - nyoooooooooooooooom
- - Offhand
+ - OffHand
  - Oğuz Ersen
  - Oleg Gritsun
  - Oliver Hattshire
