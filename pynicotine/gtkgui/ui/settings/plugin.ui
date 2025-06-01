@@ -131,7 +131,7 @@
                                     <property name="sensitive">False</property>
                                     <property name="tooltip-text" translatable="yes">Settings</property>
                                     <property name="visible">True</property>
-                                    <signal name="clicked" handler="on_click_plugin_settings"/>
+                                    <signal name="clicked" handler="on_show_plugin_settings"/>
                                     <child>
                                       <object class="GtkBox">
                                         <property name="spacing">6</property>

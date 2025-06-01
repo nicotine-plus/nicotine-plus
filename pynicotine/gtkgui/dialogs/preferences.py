@@ -2964,7 +2964,7 @@ class PluginsPage:
     def on_add_plugins(self, *_args):
         open_folder_path(core.pluginhandler.user_plugin_folder, create_folder=True)
 
-    def on_click_plugin_settings(self, *_args):
+    def on_show_plugin_settings(self, *_args):
 
         if self.selected_plugin is None:
             return
@@ -2982,7 +2982,7 @@ class PluginsPage:
 
     def on_row_activated(self, _list_view, _iterator, column_id):
         if column_id == "human_name":
-            self.on_click_plugin_settings()
+            self.on_show_plugin_settings()
 
 
 class Preferences(Dialog):
