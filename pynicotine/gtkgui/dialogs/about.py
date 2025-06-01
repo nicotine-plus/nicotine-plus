@@ -110,6 +110,11 @@ class About(Dialog):
          "\n •  Nicotine+ on Win32"
          "\n •  Author of Nicotine+ guide"),
 
+        ("<b>OffHand</b>"
+         "\n •  Website and Trac maintenance"
+         "\n •  Tester"
+         "\n •  Nicotine+ dinosaur"),
+
         ("<b>Mutnick</b>"
          "\n •  Created Nicotine+ GitHub organization"
          "\n •  Developer"),
