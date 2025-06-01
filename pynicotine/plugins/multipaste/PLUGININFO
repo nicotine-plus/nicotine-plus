@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2008-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 Version = "2008-07-03r00"
 Authors = ["Nicotine+"]
 Name = "Multi Paste"
