@@ -1,28 +1,13 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
-# COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2009 hedonist <ak@sensi.org>
-# COPYRIGHT (C) 2007 gallows <g4ll0ws@gmail.com>
-# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
-# COPYRIGHT (C) 2001-2003 Alexander Kanavin
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# SPDX-FileCopyrightText: 2016-2018 Mutnick <mutnick@techie.com>
+# SPDX-FileCopyrightText: 2008-2011 quinox <quinox@users.sf.net>
+# SPDX-FileCopyrightText: 2009 hedonist <ak@sensi.org>
+# SPDX-FileCopyrightText: 2007 gallows <g4ll0ws@gmail.com>
+# SPDX-FileCopyrightText: 2006-2009 daelstorm <daelstorm@gmail.com>
+# SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# SPDX-FileCopyrightText: 2001-2003 Alexander Kanavin
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
 import sys
