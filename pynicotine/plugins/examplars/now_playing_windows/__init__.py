@@ -47,7 +47,7 @@ class Plugin(BasePlugin):
     def now_playing_command(self, _args, **_unused):
 
         player = self.settings["player"]
-        if player in ["None"]:
+        if player == "None":
             self.log("No player selected")
             return returncode['zap']
 
