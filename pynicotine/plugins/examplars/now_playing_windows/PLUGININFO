@@ -1,0 +1,4 @@
+Version="2025-04-20r00"
+Authors=['Inso-m-niaC']
+Name="Now Playing (Windows)"
+Description="Now playing plugin for Windows.\n\nSupported Players:\nAIMP\nFoobar2000\nMediaMonkey 2024\nMusicBee\nWinamp\nVLC Media Player\n\nCommand: /np"
