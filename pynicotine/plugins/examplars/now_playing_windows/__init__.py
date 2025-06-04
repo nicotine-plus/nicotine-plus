@@ -1,7 +1,7 @@
+from window_helper import get_now_playing
+
 from pynicotine.pluginsystem import BasePlugin
 from pynicotine.pluginsystem import returncode
-
-from window_helper import get_now_playing
 
 
 class Plugin(BasePlugin):
