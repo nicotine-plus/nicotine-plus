@@ -2836,7 +2836,7 @@ class PluginsPage:
 
         self.application = application
         self.selected_plugin = None
-        self.plugin_settings = None
+        self.plugin_settings_dialog = None
 
         self.options = {
             "plugins": {
@@ -2855,17 +2855,17 @@ class PluginsPage:
                     "column_type": "toggle",
                     "title": _("Enabled"),
                     "width": 0,
-                    "toggle_callback": self.on_plugin_toggle,
+                    "toggle_callback": self.on_toggle_plugin,
                     "hide_header": True
                 },
-                "plugin": {
+                "human_name": {
                     "column_type": "text",
                     "title": _("Plugin"),
                     "default_sort_type": "ascending"
                 },
 
                 # Hidden data columns
-                "plugin_id": {"data_type": GObject.TYPE_STRING, "iterator_key": True}
+                "name_data": {"data_type": GObject.TYPE_STRING, "iterator_key": True}
             }
         )
         self.add_plugins_button.set_visible(not self.application.isolated_mode)
@@ -2875,8 +2875,8 @@ class PluginsPage:
         self.plugin_description_view.destroy()
         self.plugin_list_view.destroy()
 
-        if self.plugin_settings is not None:
-            self.plugin_settings.destroy()
+        if self.plugin_settings_dialog is not None:
+            self.plugin_settings_dialog.destroy()
 
         self.__dict__.clear()
 
@@ -2887,15 +2887,15 @@ class PluginsPage:
 
         self.application.preferences.set_widgets_data(self.options)
 
-        for plugin_id in core.pluginhandler.list_installed_plugins():
+        for plugin_name in core.pluginhandler.list_installed_plugins():
             try:
-                info = core.pluginhandler.get_plugin_info(plugin_id)
+                info = core.pluginhandler.get_plugin_info(plugin_name)
             except OSError:
                 continue
 
-            plugin_name = info.get("Name", plugin_id)
-            enabled = (plugin_id in config.sections["plugins"]["enabled"])
-            self.plugin_list_view.add_row([enabled, plugin_name, plugin_id], select_row=False)
+            plugin_human_name = info.get("Name", plugin_name)
+            enabled = (plugin_name in config.sections["plugins"]["enabled"])
+            self.plugin_list_view.add_row([enabled, plugin_human_name, plugin_name], select_row=False)
 
         self.plugin_list_view.unfreeze()
 
@@ -2907,8 +2907,8 @@ class PluginsPage:
             }
         }
 
-    def check_plugin_settings_button(self, plugin):
-        self.plugin_settings_button.set_sensitive(bool(core.pluginhandler.get_plugin_settings(plugin)))
+    def check_plugin_settings_button(self, plugin_name):
+        self.plugin_settings_button.set_sensitive(bool(core.pluginhandler.get_plugin_metasettings(plugin_name)))
 
     def on_select_plugin(self, list_view, iterator):
 
@@ -2916,15 +2916,15 @@ class PluginsPage:
             self.selected_plugin = _("No Plugin Selected")
             info = {}
         else:
-            self.selected_plugin = list_view.get_row_value(iterator, "plugin_id")
+            self.selected_plugin = list_view.get_row_value(iterator, "name_data")
             info = core.pluginhandler.get_plugin_info(self.selected_plugin)
 
-        plugin_name = info.get("Name", self.selected_plugin)
+        plugin_human_name = info.get("Name", self.selected_plugin)
         plugin_version = info.get("Version", "-")
         plugin_authors = ", ".join(info.get("Authors", "-"))
         plugin_description = info.get("Description", "").replace(r"\n", "\n")
 
-        self.plugin_name_label.set_text(plugin_name)
+        self.plugin_name_label.set_text(plugin_human_name)
         self.plugin_version_label.set_text(plugin_version)
         self.plugin_authors_label.set_text(plugin_authors)
 
@@ -2934,55 +2934,55 @@ class PluginsPage:
 
         self.check_plugin_settings_button(self.selected_plugin)
 
-    def on_plugin_toggle(self, list_view, iterator):
+    def on_toggle_plugin(self, list_view, iterator):
 
-        plugin_id = list_view.get_row_value(iterator, "plugin_id")
-        enabled = core.pluginhandler.toggle_plugin(plugin_id)
+        plugin_name = list_view.get_row_value(iterator, "name_data")
+        enabled = core.pluginhandler.toggle_plugin(plugin_name)
 
         list_view.set_row_value(iterator, "enabled", enabled)
-        self.check_plugin_settings_button(plugin_id)
+        self.check_plugin_settings_button(plugin_name)
 
-    def on_enable_plugins(self, *_args):
+    def on_toggle_enable_plugins(self, *_args):
 
-        enabled_plugin_ids = config.sections["plugins"]["enabled"].copy()
+        plugins_enabled = config.sections["plugins"]["enabled"].copy()
 
         if self.enable_plugins_toggle.get_active():
             # Enable all selected plugins
-            for plugin_id in enabled_plugin_ids:
-                core.pluginhandler.enable_plugin(plugin_id)
+            for plugin_name in plugins_enabled:
+                core.pluginhandler.enable_plugin(plugin_name)
 
             self.check_plugin_settings_button(self.selected_plugin)
             return
 
         # Disable all plugins
-        for plugin in core.pluginhandler.enabled_plugins.copy():
-            core.pluginhandler.disable_plugin(plugin)
+        for plugin_name in core.pluginhandler.enabled_plugins.copy():
+            core.pluginhandler.disable_plugin(plugin_name)
 
-        config.sections["plugins"]["enabled"] = enabled_plugin_ids
+        config.sections["plugins"]["enabled"] = plugins_enabled
         self.plugin_settings_button.set_sensitive(False)
 
     def on_add_plugins(self, *_args):
         open_folder_path(core.pluginhandler.user_plugin_folder, create_folder=True)
 
-    def on_plugin_settings(self, *_args):
+    def on_show_plugin_settings(self, *_args):
 
         if self.selected_plugin is None:
             return
 
-        settings = core.pluginhandler.get_plugin_settings(self.selected_plugin)
+        metasettings = core.pluginhandler.get_plugin_metasettings(self.selected_plugin)
 
-        if not settings:
+        if not metasettings:
             return
 
-        if self.plugin_settings is None:
-            self.plugin_settings = PluginSettings(self.application)
+        if self.plugin_settings_dialog is None:
+            self.plugin_settings_dialog = PluginSettings(self.application)
 
-        self.plugin_settings.update_settings(plugin_id=self.selected_plugin, plugin_settings=settings)
-        self.plugin_settings.present()
+        self.plugin_settings_dialog.load_options(self.selected_plugin, metasettings)
+        self.plugin_settings_dialog.present()
 
     def on_row_activated(self, _list_view, _iterator, column_id):
-        if column_id == "plugin":
-            self.on_plugin_settings()
+        if column_id == "human_name":
+            self.on_show_plugin_settings()
 
 
 class Preferences(Dialog):

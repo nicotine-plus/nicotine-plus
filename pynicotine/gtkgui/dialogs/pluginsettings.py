@@ -35,8 +35,8 @@ class PluginSettings(Dialog):
     def __init__(self, application):
 
         self.application = application
-        self.plugin_id = None
-        self.plugin_settings = None
+        self.plugin_name = None
+        self.plugin_metasettings = None
         self.option_widgets = {}
 
         cancel_button = Gtk.Button(label=_("_Cancel"), use_underline=True, visible=True)
@@ -274,14 +274,14 @@ class PluginSettings(Dialog):
         for child in list(self.primary_container):
             self.primary_container.remove(child)
 
-        for option_name, data in self.plugin_settings.items():
+        for option_name, data in self.plugin_metasettings.items():
             option_type = data.get("type")
 
             if not option_type:
                 continue
 
             description = data.get("description", "")
-            option_value = config.sections["plugins"][self.plugin_id.lower()][option_name]
+            option_value = config.sections["plugins"][self.plugin_name.lower()][option_name]
 
             if option_type in {"integer", "int", "float"}:
                 self._add_numerical_option(
@@ -360,13 +360,13 @@ class PluginSettings(Dialog):
 
         return None
 
-    def update_settings(self, plugin_id, plugin_settings):
+    def load_options(self, plugin_name, plugin_metasettings):
 
-        self.plugin_id = plugin_id
-        self.plugin_settings = plugin_settings
-        plugin_name = core.pluginhandler.get_plugin_info(plugin_id).get("Name", plugin_id)
+        self.plugin_name = plugin_name
+        self.plugin_metasettings = plugin_metasettings
+        plugin_human_name = core.pluginhandler.get_plugin_info(plugin_name).get("Name", plugin_name)
 
-        self.set_title(_("%s Settings") % plugin_name)
+        self.set_title(_("%s Settings") % plugin_human_name)
         self._add_options()
 
     def on_add_response(self, window, _response_id, treeview):
@@ -438,13 +438,13 @@ class PluginSettings(Dialog):
 
     def on_ok(self, *_args):
 
-        plugin = core.pluginhandler.enabled_plugins[self.plugin_id]
+        plugin = core.pluginhandler.enabled_plugins[self.plugin_name]
 
-        for name in self.plugin_settings:
-            value = self._get_widget_data(self.option_widgets[name])
+        for option_name in self.plugin_metasettings:
+            new_value = self._get_widget_data(self.option_widgets[option_name])
 
-            if value is not None:
-                plugin.settings[name] = value
+            if new_value is not None:
+                plugin.settings[option_name] = new_value
 
         self.close()
 
