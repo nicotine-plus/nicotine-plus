@@ -101,5 +101,3 @@ class Plugin(BasePlugin):
             now_playing = prefix + now_playing + suffix
 
             self.send_message(now_playing)
-
-        return returncode['zap']
