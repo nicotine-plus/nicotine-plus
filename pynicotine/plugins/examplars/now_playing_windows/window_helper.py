@@ -22,7 +22,7 @@ def get_now_playing(class_name, endswith_text):
                     window_text = text_buffer.value
                     if window_text.endswith(endswith_text):
                         found_text = window_text.removesuffix(endswith_text)
-                        if endswith_text in [" - Winamp", " - MediaMonkey 2024"]:
+                        if endswith_text in {" - Winamp", " - MediaMonkey 2024"}:
                             found_text = re.sub(r"^\d+\.\s", "", found_text)  # strip track number
                         return False  # Stop enumeration once found
         return True  # Continue enumeration
