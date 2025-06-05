@@ -325,6 +325,7 @@
  - (._.)
  - Adam Cécile
  - AHOHNMYC
+ - Airn Here
  - alekksander
  - Alexander Kanavin
  - Alexey Vyskubov
@@ -334,6 +335,7 @@
  - Artem
  - AtticFinder65536
  - Attila Fidan
+ - Aubin Paul
  - Avery
  - b1llso
  - baloo79
@@ -346,12 +348,14 @@
  - Bugmenot
  - burnmail123
  - ButterflyOfFire
+ - Carlos Laviola
  - Cata
  - César Augusto do Nascimento
  - Chris McKenzie
  - Christian Swinehart
  - chz
  - Coda
+ - cravings
  - cwpute
  - daelstorm
  - David Balazs
@@ -360,6 +364,7 @@
  - dtalens
  - Elias Groß
  - Emily
+ - Enr1X
  - Eryk Michalak
  - Everly
  - Felipe Nogaroto Gonzalez
@@ -382,11 +387,13 @@
  - hylau
  - ian andrew remsen
  - Ilya
+ - infinito
  - Ingmar K. Steen
  - INMCM
  - Inso-m-niaC
  - Jackson Baber
  - Jason Green
+ - jat
  - Jean-Baptiste ALLAIN
  - Jimmy
  - J. Lavoie
@@ -491,6 +498,7 @@
  - Vladimir Sedach
  - Vladyslav Anisimov
  - wanderer
+ - waxed
  - Wojciech Owczarek
  - Wretched
  - Wynfyd
@@ -498,6 +506,7 @@
  - X Kowalsky
  - Ys413
  - yyyyyyyan
+ - Ziabice
  - zniavre
  - ZTetriminos
  - Žygimantas Beručka
