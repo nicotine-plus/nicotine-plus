@@ -291,10 +291,16 @@ class Download(Dialog):
             for count in folders.values():
                 num_selected_files += count
 
-        self.set_title(_("Download %(num_files)s file(s)  /  %(total_size)s") % {
-            "num_files": humanize(num_selected_files),
-            "total_size": human_size(self.total_selected_size)
-        })
+        self.set_title(
+            ngettext(
+                "Download %(num_files)s file  /  %(total_size)s",
+                "Download %(num_files)s files  /  %(total_size)s",
+                num_selected_files
+            ) % {
+                "num_files": humanize(num_selected_files),
+                "total_size": human_size(self.total_selected_size)
+            }
+        )
 
     def download(self, paused=False):
 
