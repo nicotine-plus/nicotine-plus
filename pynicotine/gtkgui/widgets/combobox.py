@@ -41,8 +41,11 @@ class ComboBox:
         self._model = None
         self._button = None
         self._popover = None
+        self._list_view = None
         self._entry_completion = None
         self._is_popup_visible = False
+        self._selected_position = None
+        self._position_offset = 0
 
         self._create_combobox(container, label, has_entry, has_entry_completion)
 
@@ -89,11 +92,16 @@ class ComboBox:
 
         try:
             scrollable = list(self._popover.get_child())[-1]
-            list_view = scrollable.get_child()
-            list_view.connect("activate", self._on_item_selected)
+            self._list_view = scrollable.get_child()
 
         except AttributeError:
             pass
+
+        if self._list_view is not None:
+            self._list_view.connect("activate", self._on_item_selected)
+
+            for accelerator in ("Tab", "<Shift>Tab"):
+                Accelerator(accelerator, self._list_view, self._on_list_tab_accelerator)
 
         if not has_entry:
             self.widget = self.dropdown
@@ -256,6 +264,9 @@ class ComboBox:
 
         self._update_item_positions(start_position=(position + 1), added=True)
 
+        if self._selected_position is not None and position <= self._selected_position:
+            self._position_offset += 1
+
         self._ids[position] = item_id
         self._positions[item_id] = position
 
@@ -334,6 +345,16 @@ class ComboBox:
         self._positions.pop(item_id, None)
         self._update_item_positions(start_position=position)
 
+        if self._selected_position is None:
+            return
+
+        if (self._selected_position + self._position_offset) >= len(self._positions):
+            self._selected_position = len(self._positions) - 1
+            self._position_offset = 0
+
+        elif position < self._selected_position:
+            self._position_offset -= 1
+
     def remove_id(self, item_id):
         position = self._positions.get(item_id)
         self.remove_pos(position)
@@ -342,6 +363,8 @@ class ComboBox:
 
         self._ids.clear()
         self._positions.clear()
+        self._selected_position = None
+        self._position_offset = 0
 
         if GTK_API_VERSION >= 4:
             self._model.splice(position=0, n_removals=self._model.get_n_items())
@@ -377,6 +400,10 @@ class ComboBox:
     def _on_entry_list_factory_setup(self, _factory, list_item):
         list_item.set_child(
             Gtk.Label(ellipsize=Pango.EllipsizeMode.END, xalign=0))
+
+    def _on_list_tab_accelerator(self, *_args):
+        # Disable focus move with Tab key
+        return True
 
     def _on_arrow_key_accelerator(self, _widget, _unused, direction):
 
@@ -435,16 +462,36 @@ class ComboBox:
         # Only enable item selection callback when an item is selected from the UI
         GLib.idle_add(self._on_select_callback_status, visible, priority=GLib.PRIORITY_HIGH_IDLE)
 
-        if self.entry is None:
-            return
-
         if not visible:
+            if self._list_view is not None:
+                self._selected_position = self._list_view.get_model().get_selection().get_nth(0)
             return
 
-        text = self.get_text()
+        if self.entry is not None:
+            text = self.get_text()
 
-        if text:
-            self.set_selected_id(text)
+            if text:
+                self.set_selected_id(text)
+
+        if self._list_view is None or self._selected_position is None:
+            return
+
+        new_position = (self._selected_position + self._position_offset)
+
+        try:
+            self._list_view.scroll_to(new_position, Gtk.ListScrollFlags.FOCUS | Gtk.ListScrollFlags.SELECT)
+
+        except AttributeError:
+            # Workaround for GTK <4.12 versions without scroll_to()
+            direction = Gtk.DirectionType.TAB_FORWARD if self._position_offset >= 0 else Gtk.DirectionType.TAB_BACKWARD
+
+            for _ in range(abs(self._position_offset)):
+                self._list_view.child_focus(direction)
+
+            self._list_view.get_model().select_item(new_position, True)
+
+        self._selected_position = None
+        self._position_offset = 0
 
     def _on_item_selected(self, *_args):
 
