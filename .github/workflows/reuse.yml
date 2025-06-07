@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: REUSE Compliance
+on: [push, pull_request]
+permissions: {}
+
+jobs:
+
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: REUSE compliance
+        uses: fsfe/reuse-action@v5

@@ -1,3 +1,8 @@
+<!--
+  SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # Development
 
 This document contains important information about Nicotine+ design decisions

@@ -1,3 +1,8 @@
+<!--
+  SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # Screenshots
 
 [![Search Files](screenshot1.png)](screenshot1.png?raw=1)  

@@ -1,3 +1,8 @@
+<!--
+  SPDX-FileCopyrightText: 2008-2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # Nicotine+ Plugins
 
 This folder contains the Nicotine+ core plugins that are available for all users, as well as example plugins developers may find helpful.

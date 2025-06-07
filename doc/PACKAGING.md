@@ -1,3 +1,8 @@
+<!--
+  SPDX-FileCopyrightText: 2016-2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # Packaging
 
 > **NOTE**: For distribution packagers: There is a standard feature of GitHub
