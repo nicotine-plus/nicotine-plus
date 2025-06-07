@@ -73,14 +73,13 @@ class ChatHistory(Dialog):
                 },
                 "latest_message": {
                     "column_type": "text",
-                    "title": _("Latest Message")
+                    "title": _("Latest Message"),
+                    "sort_column": "timestamp_data",
+                    "default_sort_type": "descending"
                 },
 
                 # Hidden data columns
-                "timestamp_data": {
-                    "data_type": GObject.TYPE_UINT64,
-                    "default_sort_type": "descending"
-                }
+                "timestamp_data": {"data_type": GObject.TYPE_UINT64}
             }
         )
 
