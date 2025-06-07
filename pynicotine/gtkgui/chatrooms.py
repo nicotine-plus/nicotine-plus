@@ -50,7 +50,6 @@ from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserData
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
-from pynicotine.utils import human_speed
 
 
 class ChatRooms(IconNotebook):
@@ -547,20 +546,12 @@ class ChatRoom:
                 "user": {
                     "column_type": "text",
                     "title": _("User"),
-                    "width": 110,
+                    "width": 125,
                     "expand_column": True,
                     "iterator_key": True,
                     "default_sort_type": "ascending",
                     "text_underline_column": "username_underline_data",
                     "text_weight_column": "username_weight_data",
-                    "sensitive_column": "is_unignored_data"
-                },
-                "speed": {
-                    "column_type": "number",
-                    "title": _("Speed"),
-                    "width": 80,
-                    "sort_column": "speed_data",
-                    "expand_column": True,
                     "sensitive_column": "is_unignored_data"
                 },
                 "files": {
@@ -572,7 +563,6 @@ class ChatRoom:
                 },
 
                 # Hidden data columns
-                "speed_data": {"data_type": GObject.TYPE_UINT},
                 "files_data": {"data_type": GObject.TYPE_UINT},
                 "username_weight_data": {"data_type": Pango.Weight},
                 "username_underline_data": {"data_type": Pango.Underline},
@@ -680,9 +670,7 @@ class ChatRoom:
         status = userdata.status
         status_icon_name = USER_STATUS_ICON_NAMES.get(status, "")
         flag_icon_name = get_flag_icon_name(userdata.country)
-        speed = userdata.avgspeed or 0
         files = userdata.files or 0
-        h_speed = human_speed(speed) if speed > 0 else ""
         h_files = humanize(files)
         weight = Pango.Weight.NORMAL
         underline = Pango.Underline.NONE
@@ -702,9 +690,7 @@ class ChatRoom:
             status_icon_name,
             flag_icon_name,
             username,
-            h_speed,
             h_files,
-            speed,
             files,
             weight,
             underline,
@@ -948,8 +934,8 @@ class ChatRoom:
 
             self.users_list_view.set_row_values(
                 iterator,
-                column_ids=["status", "speed", "speed_data", "files", "files_data", "country"],
-                values=[status_icon_name, empty_str, empty_int, empty_str, empty_int, empty_str]
+                column_ids=["status", "files", "files_data", "country"],
+                values=[status_icon_name, empty_str, empty_int, empty_str]
             )
         else:
             self.users_list_view.remove_row(iterator)
@@ -1058,16 +1044,9 @@ class ChatRoom:
             # Private room member offline/not currently joined
             return
 
-        speed = msg.avgspeed or 0
         num_files = msg.files or 0
         column_ids = []
         column_values = []
-
-        if speed != self.users_list_view.get_row_value(iterator, "speed_data"):
-            h_speed = human_speed(speed) if speed > 0 else ""
-
-            column_ids.extend(("speed", "speed_data"))
-            column_values.extend((h_speed, speed))
 
         if num_files != self.users_list_view.get_row_value(iterator, "files_data"):
             h_num_files = humanize(num_files)
