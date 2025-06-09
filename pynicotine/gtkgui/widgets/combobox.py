@@ -188,19 +188,21 @@ class ComboBox:
         else:
             self._create_combobox_gtk3(container, label, has_entry, has_dropdown)
 
-        if has_entry:
-            self._completion_model = Gtk.ListStore(str)
-            self._entry_completion = Gtk.EntryCompletion(
-                inline_completion=not self._enable_word_completion,
-                inline_selection=not self._enable_word_completion, popup_single_match=False,
-                model=self._completion_model
-            )
-            self._entry_completion.set_text_column(0)
-            self._entry_completion.set_match_func(self._entry_completion_find_match)
-            self._entry_completion.connect("match-selected", self._entry_completion_found_match)
+        if not has_entry:
+            return
 
-            self.entry.set_completion(self._entry_completion)
-            self.patch_popover_hide_broadway(self.entry)
+        self._completion_model = Gtk.ListStore(str)
+        self._entry_completion = Gtk.EntryCompletion(
+            inline_completion=not self._enable_word_completion,
+            inline_selection=not self._enable_word_completion, popup_single_match=False,
+            model=self._completion_model
+        )
+        self._entry_completion.set_text_column(0)
+        self._entry_completion.set_match_func(self._entry_completion_find_match)
+        self._entry_completion.connect("match-selected", self._entry_completion_found_match)
+
+        self.entry.set_completion(self._entry_completion)
+        self.patch_popover_hide_broadway(self.entry)
 
         Accelerator("Up", self.entry, self._on_arrow_key_accelerator_gtk4, "up")
         Accelerator("Down", self.entry, self._on_arrow_key_accelerator_gtk4, "down")
