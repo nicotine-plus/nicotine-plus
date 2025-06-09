@@ -185,11 +185,11 @@ class Interests:
         # Comboboxes
 
         self.add_like_combobox = ComboBox(
-            container=self.add_like_container, has_entry=True, has_entry_completion=True,
+            container=self.add_like_container, has_entry=True,
             entry=self.add_like_entry, item_selected_callback=self.on_add_thing_i_like
         )
         self.add_dislike_combobox = ComboBox(
-            container=self.add_dislike_container, has_entry=True, has_entry_completion=True,
+            container=self.add_dislike_container, has_entry=True,
             entry=self.add_dislike_entry, item_selected_callback=self.on_add_thing_i_dislike
         )
 

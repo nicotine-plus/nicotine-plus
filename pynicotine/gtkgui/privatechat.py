@@ -29,6 +29,7 @@ from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.chatcommandhelp import ChatCommandHelp
 from pynicotine.gtkgui.widgets import ui
+from pynicotine.gtkgui.widgets.combobox import ComboBox
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
@@ -65,6 +66,10 @@ class PrivateChats(IconNotebook):
             command_callback=core.pluginhandler.trigger_private_chat_command_event,
             enable_spell_check=config.sections["ui"]["spellcheck"]
         )
+        self.username_combobox = ComboBox(
+            container=window.private_entry_container, has_entry=True, has_dropdown=False,
+            entry=window.private_entry, visible=True
+        )
         self.command_help = None
         self.highlighted_users = []
 
@@ -86,7 +91,11 @@ class PrivateChats(IconNotebook):
         self.freeze()
 
     def start(self):
+
         self.unfreeze()
+
+        for username in self.window.application.chat_history.list_view.iterators:
+            self.username_combobox.append(username)
 
     def quit(self):
         self.freeze()
@@ -94,6 +103,7 @@ class PrivateChats(IconNotebook):
     def destroy(self):
 
         self.chat_entry.destroy()
+        self.username_combobox.destroy()
 
         if self.command_help is not None:
             self.command_help.destroy()
@@ -465,6 +475,7 @@ class PrivateChat:
 
         log.delete_log(log.private_chat_folder_path, self.user)
         self.chats.window.application.chat_history.remove_user(self.user)
+        self.chats.username_combobox.remove(self.user)
         self.chat_view.clear()
 
     def on_delete_chat_log(self, *_args):
@@ -529,6 +540,7 @@ class PrivateChat:
             username=tag_username
         )
         self.chats.window.application.chat_history.update_user(username, message)
+        self.chats.username_combobox.append(username)
 
     def echo_private_message(self, message, message_type):
 

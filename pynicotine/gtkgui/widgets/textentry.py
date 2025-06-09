@@ -16,14 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 import gi
 from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
+from pynicotine.gtkgui.widgets.combobox import ComboBox
 from pynicotine.gtkgui.widgets.theme import add_css_class
 
 
@@ -59,7 +58,7 @@ class ChatEntry:
         self.entry_completion.connect("match-selected", self.entry_completion_found_match)
 
         self.widget.set_completion(self.entry_completion)
-        CompletionEntry.patch_popover_hide_broadway(self.widget)
+        ComboBox.patch_popover_hide_broadway(self.widget)
 
         self.widget.connect("activate", self.on_send_message)
         self.widget.connect("changed", self.on_changed)
@@ -375,71 +374,6 @@ class ChatEntry:
 
         self.chat_view.grab_focus()
         return True
-
-
-class CompletionEntry:
-
-    def __init__(self, widget, model=None, column=0):
-
-        self.model = model
-        self.column = column
-        self.completions = {}
-
-        if model is None:
-            self.model = model = Gtk.ListStore(str)
-            self.column_numbers = list(range(self.model.get_n_columns()))
-
-        completion = Gtk.EntryCompletion(inline_completion=True, inline_selection=True,
-                                         popup_single_match=False, model=model)
-        completion.set_text_column(column)
-        completion.set_match_func(self.entry_completion_find_match)
-
-        widget.set_completion(completion)
-        self.patch_popover_hide_broadway(widget)
-
-    def destroy(self):
-        self.__dict__.clear()
-
-    def add_completion(self, item):
-        if item not in self.completions:
-            self.completions[item] = self.model.insert_with_valuesv(-1, self.column_numbers, [item])
-
-    def remove_completion(self, item):
-
-        iterator = self.completions.pop(item, None)
-
-        if iterator is not None:
-            self.model.remove(iterator)
-
-    def clear(self):
-        self.model.clear()
-
-    def entry_completion_find_match(self, _completion, entry_text, iterator):
-
-        if not entry_text:
-            return False
-
-        item_text = self.model.get_value(iterator, self.column)
-
-        if not item_text:
-            return False
-
-        if item_text.lower().startswith(entry_text.lower()):
-            return True
-
-        return False
-
-    @classmethod
-    def patch_popover_hide_broadway(cls, entry):
-
-        # Workaround for GTK 4 bug where broadwayd uses a lot of CPU after hiding popover
-        if GTK_API_VERSION >= 4 and os.environ.get("GDK_BACKEND") == "broadway":
-            completion_popover = list(entry)[-1]
-            completion_popover.connect("hide", cls.on_popover_hide_broadway)
-
-    @staticmethod
-    def on_popover_hide_broadway(popover):
-        popover.unrealize()
 
 
 class SpellChecker:

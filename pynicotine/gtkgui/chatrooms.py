@@ -22,6 +22,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from itertools import chain
+
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -34,6 +36,7 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.chatcommandhelp import ChatCommandHelp
 from pynicotine.gtkgui.popovers.roomwall import RoomWall
 from pynicotine.gtkgui.widgets import ui
+from pynicotine.gtkgui.widgets.combobox import ComboBox
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -81,6 +84,10 @@ class ChatRooms(IconNotebook):
         self.room_wall = None
         self.highlighted_rooms = {}
 
+        self.join_room_combobox = ComboBox(
+            container=window.chatrooms_entry_container, has_entry=True, has_dropdown=False,
+            entry=window.chatrooms_entry, visible=True
+        )
         window.chatrooms_entry.set_max_length(core.chatrooms.ROOM_NAME_MAX_LENGTH)
 
         if GTK_API_VERSION >= 4:
@@ -104,6 +111,7 @@ class ChatRooms(IconNotebook):
             ("quit", self.quit),
             ("remove-room", self.remove_room),
             ("room-completions", self.update_completions),
+            ("room-list", self.room_list),
             ("say-chat-room", self.say_chat_room),
             ("server-disconnect", self.server_disconnect),
             ("show-room", self.show_room),
@@ -129,6 +137,7 @@ class ChatRooms(IconNotebook):
     def destroy(self):
 
         self.chat_entry.destroy()
+        self.join_room_combobox.destroy()
 
         if self.command_help is not None:
             self.command_help.destroy()
@@ -321,6 +330,7 @@ class ChatRooms(IconNotebook):
     def join_room(self, msg):
 
         page = self.pages.get(msg.room)
+        self.join_room_combobox.append(msg.room)
 
         if page is None:
             return
@@ -376,6 +386,16 @@ class ChatRooms(IconNotebook):
         if page is not None:
             page.user_left_room(msg)
 
+    def room_list(self, msg):
+
+        self.join_room_combobox.freeze()
+        self.join_room_combobox.clear()
+
+        for room, _user_count in chain(msg.rooms, msg.ownedprivaterooms, msg.otherprivaterooms):
+            self.join_room_combobox.append(room)
+
+        self.join_room_combobox.unfreeze()
+
     def echo_room_message(self, room, text, message_type):
 
         page = self.pages.get(room)
@@ -396,6 +416,9 @@ class ChatRooms(IconNotebook):
 
         if page is not None:
             page.global_room_message(msg)
+
+    def private_room_added(self, msg):
+        self.join_room_combobox.append(msg.room)
 
     def private_room_add_operator(self, msg):
 

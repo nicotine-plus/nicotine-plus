@@ -16,19 +16,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
 from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Pango
 
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
-from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import add_css_class
 
 
 class ComboBox:
 
-    def __init__(self, container, label=None, has_entry=False, has_entry_completion=False,
+    def __init__(self, container, label=None, has_entry=False, has_dropdown=True,
                  entry=None, visible=True, items=None, item_selected_callback=None):
 
         self.widget = None
@@ -38,16 +39,17 @@ class ComboBox:
 
         self._ids = {}
         self._positions = {}
+        self._completions = {}
         self._model = None
+        self._completion_model = None
         self._button = None
         self._popover = None
         self._list_view = None
-        self._entry_completion = None
         self._is_popup_visible = False
         self._selected_position = None
         self._position_offset = 0
 
-        self._create_combobox(container, label, has_entry, has_entry_completion)
+        self._create_combobox(container, label, has_entry, has_dropdown)
 
         if items:
             self.freeze()
@@ -68,7 +70,7 @@ class ComboBox:
     def destroy(self):
         self.__dict__.clear()
 
-    def _create_combobox_gtk4(self, container, label, has_entry):
+    def _create_combobox_gtk4(self, container, label, has_entry, has_dropdown):
 
         self._model = Gtk.StringList()
         self.dropdown = self._button = Gtk.DropDown(
@@ -133,14 +135,20 @@ class ComboBox:
         self.widget.append(self.entry)
         self.widget.append(self.dropdown)
 
-        add_css_class(self.widget, "linked")
+        if has_dropdown:
+            add_css_class(self.widget, "linked")
+        else:
+            toggle_button = next(iter(self.dropdown))
+            toggle_button.set_visible(False)
+            self.dropdown.set_size_request(width=1, height=-1)
+
         add_css_class(self.dropdown, "entry")
         container.append(self.widget)
 
         Accelerator("Up", self.entry, self._on_arrow_key_accelerator_gtk4, "up")
         Accelerator("Down", self.entry, self._on_arrow_key_accelerator_gtk4, "down")
 
-    def _create_combobox_gtk3(self, container, label, has_entry, has_entry_completion):
+    def _create_combobox_gtk3(self, container, label, has_entry, has_dropdown):
 
         self.dropdown = self.widget = Gtk.ComboBoxText(has_entry=has_entry, valign=Gtk.Align.CENTER, visible=True)
         self._model = self.dropdown.get_model()
@@ -159,8 +167,7 @@ class ComboBox:
             container.add(self.widget)
             return
 
-        if has_entry_completion:
-            add_css_class(self.dropdown, "dropdown-scrollbar")
+        add_css_class(self.dropdown, "dropdown-scrollbar")
 
         if self.entry is None:
             self.entry = self.dropdown.get_child()
@@ -170,17 +177,52 @@ class ComboBox:
             self.dropdown.add(self.entry)  # pylint: disable=no-member
 
         self._button = list(self.entry.get_parent())[-1]
+        self._button.set_visible(has_dropdown)
         container.add(self.widget)
 
-    def _create_combobox(self, container, label, has_entry, has_entry_completion):
+    def _create_combobox(self, container, label, has_entry, has_dropdown):
 
         if GTK_API_VERSION >= 4:
-            self._create_combobox_gtk4(container, label, has_entry)
+            self._create_combobox_gtk4(container, label, has_entry, has_dropdown)
         else:
-            self._create_combobox_gtk3(container, label, has_entry, has_entry_completion)
+            self._create_combobox_gtk3(container, label, has_entry, has_dropdown)
 
-        if has_entry_completion:
-            self._entry_completion = CompletionEntry(self.entry)
+        if has_entry:
+            self._completion_model = Gtk.ListStore(str)
+            completion = Gtk.EntryCompletion(inline_completion=True, inline_selection=True,
+                                             popup_single_match=False, model=self._completion_model)
+            completion.set_text_column(0)
+            completion.set_match_func(self._entry_completion_find_match)
+
+            self.entry.set_completion(completion)
+            self.patch_popover_hide_broadway(self.entry)
+
+    def _entry_completion_find_match(self, _completion, entry_text, iterator):
+
+        if not entry_text:
+            return False
+
+        item_text = self._completion_model.get_value(iterator, 0)
+
+        if not item_text:
+            return False
+
+        if item_text.lower().startswith(entry_text.lower()):
+            return True
+
+        return False
+
+    @classmethod
+    def patch_popover_hide_broadway(cls, entry):
+
+        # Workaround for GTK 4 bug where broadwayd uses a lot of CPU after hiding popover
+        if GTK_API_VERSION >= 4 and os.environ.get("GDK_BACKEND") == "broadway":
+            completion_popover = list(entry)[-1]
+            completion_popover.connect("hide", cls._on_popover_hide_broadway)
+
+    @staticmethod
+    def _on_popover_hide_broadway(popover):
+        popover.unrealize()
 
     def _update_item_entry_text(self):
         """Set text entry text to the same value as selected item."""
@@ -258,8 +300,8 @@ class ComboBox:
         if self.entry and not self._positions:
             self._button.set_sensitive(True)
 
-        if self._entry_completion:
-            self._entry_completion.add_completion(item)
+        if self._completion_model:
+            self._completions[item] = self._completion_model.insert_with_valuesv(-1, [0], [item])
 
         self._update_item_positions(start_position=(position + 1), added=True)
 
@@ -337,8 +379,11 @@ class ComboBox:
         if self.entry and not self._ids:
             self._button.set_sensitive(False)
 
-        if self._entry_completion:
-            self._entry_completion.remove_completion(item_id)
+        if self._completion_model:
+            iterator = self._completions.pop(item_id, None)
+
+            if iterator is not None:
+                self._completion_model.remove(iterator)
 
         # Update positions for items after the removed one
         self._positions.pop(item_id, None)
@@ -373,8 +418,9 @@ class ComboBox:
         if self.entry and self._button:
             self._button.set_sensitive(False)
 
-        if self._entry_completion:
-            self._entry_completion.clear()
+        if self._completion_model:
+            self._completions.clear()
+            self._completion_model.clear()
 
     def grab_focus(self):
         self.entry.grab_focus()
@@ -419,7 +465,7 @@ class ComboBox:
         if not self._positions:
             return False
 
-        if self._entry_completion:
+        if self._completion_model:
             completion_popover = list(self.entry)[-1]
 
             if completion_popover.get_visible():

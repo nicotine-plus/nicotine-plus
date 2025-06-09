@@ -29,7 +29,6 @@ from pynicotine.events import events
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import Dialog
-from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.logfacility import log
@@ -84,7 +83,6 @@ class ChatHistory(Dialog):
         )
 
         Accelerator("<Primary>f", self.widget, self.on_search_accelerator)
-        self.completion_entry = CompletionEntry(application.window.private_entry, self.list_view.model, column=1)
 
         self.load_users()
 
@@ -96,10 +94,7 @@ class ChatHistory(Dialog):
             events.connect(event_name, callback)
 
     def destroy(self):
-
         self.list_view.destroy()
-        self.completion_entry.destroy()
-
         super().destroy()
 
     def server_login(self, msg):

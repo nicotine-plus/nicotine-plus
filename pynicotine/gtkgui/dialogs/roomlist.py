@@ -28,7 +28,6 @@ from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
-from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.utils import humanize
 
@@ -111,7 +110,6 @@ class RoomList(Dialog):
         self.private_room_toggle.connect("notify::active", self.on_toggle_accept_private_room)
 
         Accelerator("<Primary>f", self.widget, self.on_search_accelerator)
-        self.completion_entry = CompletionEntry(application.window.chatrooms_entry, self.list_view.model, column=0)
 
         for event_name, callback in (
             ("join-room", self.join_room),
@@ -129,7 +127,6 @@ class RoomList(Dialog):
 
         self.list_view.destroy()
         self.popup_menu.destroy()
-        self.completion_entry.destroy()
 
         super().destroy()
 
