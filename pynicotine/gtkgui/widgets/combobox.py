@@ -81,8 +81,8 @@ class ComboBox:
         if not has_entry:
             button_factory = Gtk.SignalListItemFactory()
 
-            button_factory.connect("setup", self._on_button_factory_setup)
-            button_factory.connect("bind", self._on_button_factory_bind)
+            button_factory.connect("setup", self._on_button_factory_setup_gtk4)
+            button_factory.connect("bind", self._on_button_factory_bind_gtk4)
 
         self.dropdown.set_factory(button_factory)
         self.dropdown.set_list_factory(list_factory)
@@ -101,7 +101,7 @@ class ComboBox:
             self._list_view.connect("activate", self._on_item_selected)
 
             for accelerator in ("Tab", "<Shift>Tab"):
-                Accelerator(accelerator, self._list_view, self._on_list_tab_accelerator)
+                Accelerator(accelerator, self._list_view, self._on_list_tab_accelerator_gtk4)
 
         if not has_entry:
             self.widget = self.dropdown
@@ -114,13 +114,13 @@ class ComboBox:
 
         list_factory = Gtk.SignalListItemFactory()
 
-        list_factory.connect("setup", self._on_entry_list_factory_setup)
-        list_factory.connect("bind", self._on_entry_list_factory_bind)
+        list_factory.connect("setup", self._on_entry_list_factory_setup_gtk4)
+        list_factory.connect("bind", self._on_entry_list_factory_bind_gtk4)
 
         self.dropdown.set_list_factory(list_factory)
 
         self.widget = Gtk.Box(valign=Gtk.Align.CENTER, visible=True)
-        self._popover.connect("map", self._on_dropdown_map)
+        self._popover.connect("map", self._on_dropdown_map_gtk4)
 
         if self.entry is None:
             self.entry = Gtk.Entry(hexpand=True, width_chars=8, visible=True)
@@ -137,15 +137,15 @@ class ComboBox:
         add_css_class(self.dropdown, "entry")
         container.append(self.widget)
 
-        Accelerator("Up", self.entry, self._on_arrow_key_accelerator, "up")
-        Accelerator("Down", self.entry, self._on_arrow_key_accelerator, "down")
+        Accelerator("Up", self.entry, self._on_arrow_key_accelerator_gtk4, "up")
+        Accelerator("Down", self.entry, self._on_arrow_key_accelerator_gtk4, "down")
 
     def _create_combobox_gtk3(self, container, label, has_entry, has_entry_completion):
 
         self.dropdown = self.widget = Gtk.ComboBoxText(has_entry=has_entry, valign=Gtk.Align.CENTER, visible=True)
         self._model = self.dropdown.get_model()
 
-        self.dropdown.connect("scroll-event", self._on_button_scroll_event)
+        self.dropdown.connect("scroll-event", self._on_button_scroll_event_gtk3)
         self.dropdown.connect("notify::active", self._on_item_selected)
         self.dropdown.connect("notify::popup-shown", self._on_dropdown_visible)
 
@@ -384,27 +384,37 @@ class ComboBox:
 
     # Callbacks #
 
-    def _on_button_factory_bind(self, _factory, list_item):
+    def _on_button_scroll_event_gtk3(self, widget, event, *_args):
+        """Prevent scrolling and pass scroll event to parent scrollable."""
+
+        scrollable = widget.get_ancestor(Gtk.ScrolledWindow)
+
+        if scrollable is not None:
+            scrollable.event(event)
+
+        return True
+
+    def _on_button_factory_bind_gtk4(self, _factory, list_item):
         label = list_item.get_child()
         label.set_text(list_item.get_item().get_string())
 
-    def _on_button_factory_setup(self, _factory, list_item):
+    def _on_button_factory_setup_gtk4(self, _factory, list_item):
         list_item.set_child(
             Gtk.Label(ellipsize=Pango.EllipsizeMode.END, mnemonic_widget=self.widget, xalign=0))
 
-    def _on_entry_list_factory_bind(self, _factory, list_item):
+    def _on_entry_list_factory_bind_gtk4(self, _factory, list_item):
         label = list_item.get_child()
         label.set_text(list_item.get_item().get_string())
 
-    def _on_entry_list_factory_setup(self, _factory, list_item):
+    def _on_entry_list_factory_setup_gtk4(self, _factory, list_item):
         list_item.set_child(
             Gtk.Label(ellipsize=Pango.EllipsizeMode.END, xalign=0))
 
-    def _on_list_tab_accelerator(self, *_args):
+    def _on_list_tab_accelerator_gtk4(self, *_args):
         # Disable focus move with Tab key
         return True
 
-    def _on_arrow_key_accelerator(self, _widget, _unused, direction):
+    def _on_arrow_key_accelerator_gtk4(self, _widget, _unused, direction):
 
         if not self._positions:
             return False
@@ -427,20 +437,7 @@ class ComboBox:
         self._update_item_entry_text()
         return True
 
-    def _on_button_scroll_event(self, widget, event, *_args):
-        """Prevent scrolling and pass scroll event to parent scrollable (GTK 3)"""
-
-        scrollable = widget.get_ancestor(Gtk.ScrolledWindow)
-
-        if scrollable is not None:
-            scrollable.event(event)
-
-        return True
-
-    def _on_select_callback_status(self, enabled):
-        self._is_popup_visible = enabled
-
-    def _on_dropdown_map(self, *_args):
+    def _on_dropdown_map_gtk4(self, *_args):
 
         # Align dropdown with entry and button
         popover_content = next(iter(self._popover))
@@ -450,23 +447,7 @@ class ComboBox:
         self._popover.set_offset(x_offset=-container_width + button_width, y_offset=0)
         popover_content.set_size_request(container_width, height=-1)
 
-    def _on_dropdown_visible(self, widget, param):
-
-        visible = widget.get_property(param.name)
-
-        # Only enable item selection callback when an item is selected from the UI
-        GLib.idle_add(self._on_select_callback_status, visible, priority=GLib.PRIORITY_HIGH_IDLE)
-
-        if not visible:
-            if self._list_view is not None:
-                self._selected_position = self._list_view.get_model().get_selection().get_nth(0)
-            return
-
-        if self.entry is not None:
-            text = self.get_text()
-
-            if text:
-                self.set_selected_id(text)
+    def _on_dropdown_visible_gtk4(self, *_args):
 
         if self._list_view is None or self._selected_position is None:
             return
@@ -487,6 +468,30 @@ class ComboBox:
 
         self._selected_position = None
         self._position_offset = 0
+
+    def _on_select_callback_status(self, enabled):
+        self._is_popup_visible = enabled
+
+    def _on_dropdown_visible(self, widget, param):
+
+        visible = widget.get_property(param.name)
+
+        # Only enable item selection callback when an item is selected from the UI
+        GLib.idle_add(self._on_select_callback_status, visible, priority=GLib.PRIORITY_HIGH_IDLE)
+
+        if not visible:
+            if self._list_view is not None:
+                self._selected_position = self._list_view.get_model().get_selection().get_nth(0)
+            return
+
+        if self.entry is not None:
+            text = self.get_text()
+
+            if text:
+                self.set_selected_id(text)
+
+        if GTK_API_VERSION >= 4:
+            self._on_dropdown_visible_gtk4()
 
     def _on_item_selected(self, *_args):
 
