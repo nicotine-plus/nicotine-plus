@@ -32,10 +32,23 @@ class ChatEntry:
     def __init__(self, application, send_message_callback, command_callback, enable_spell_check=False):
 
         self.application = application
+        self.container = Gtk.Box(visible=True)
         self.widget = Gtk.Entry(
             hexpand=True, placeholder_text=_("Send message…"), primary_icon_name="mail-send-symbolic",
             sensitive=False, show_emoji_icon=True, width_chars=8, visible=True
         )
+
+        # Create accelerators early to override ComboBox accelerators
+        Accelerator("Down", self.widget, self.on_page_down_accelerator)
+        Accelerator("Page_Down", self.widget, self.on_page_down_accelerator)
+        Accelerator("Up", self.widget, self.on_page_up_accelerator)
+        Accelerator("Page_Up", self.widget, self.on_page_up_accelerator)
+
+        self.combobox = ComboBox(
+            container=self.container, has_entry=True, has_dropdown=False, entry=self.widget,
+            enable_arrow_keys=False, enable_word_completion=True, visible=True
+        )
+
         self.send_message_callback = send_message_callback
         self.command_callback = command_callback
         self.spell_checker = None
@@ -46,19 +59,7 @@ class ChatEntry:
         self.current_completions = []
         self.completion_index = 0
         self.midway_completion = False  # True if the user just used tab completion
-        self.selecting_completion = False  # True if the list box is open with suggestions
         self.is_inserting_completion = False
-
-        self.model = Gtk.ListStore(str)
-        self.column_numbers = list(range(self.model.get_n_columns()))
-
-        self.entry_completion = Gtk.EntryCompletion(model=self.model, popup_single_match=False)
-        self.entry_completion.set_text_column(0)
-        self.entry_completion.set_match_func(self.entry_completion_find_match)
-        self.entry_completion.connect("match-selected", self.entry_completion_found_match)
-
-        self.widget.set_completion(self.entry_completion)
-        ComboBox.patch_popover_hide_broadway(self.widget)
 
         self.widget.connect("activate", self.on_send_message)
         self.widget.connect("changed", self.on_changed)
@@ -66,9 +67,6 @@ class ChatEntry:
 
         Accelerator("<Shift>Tab", self.widget, self.on_tab_complete_accelerator, True)
         Accelerator("Tab", self.widget, self.on_tab_complete_accelerator)
-        Accelerator("Down", self.widget, self.on_page_down_accelerator)
-        Accelerator("Page_Down", self.widget, self.on_page_down_accelerator)
-        Accelerator("Page_Up", self.widget, self.on_page_up_accelerator)
 
         self.set_spell_check_enabled(enable_spell_check)
 
@@ -118,21 +116,16 @@ class ChatEntry:
             return
 
         if config.sections["words"]["dropdown"]:
-            iterator = self.model.insert_with_valuesv(-1, self.column_numbers, [item])
-        else:
-            iterator = None
+            self.combobox.append(item)
 
-        self.completions[item] = iterator
+        self.completions[item] = None
 
     def remove_completion(self, item):
 
         if not self.is_completion_enabled():
             return
 
-        iterator = self.completions.pop(item, None)
-
-        if iterator is not None:
-            self.model.remove(iterator)
+        self.combobox.remove_id(item)
 
     def set_parent(self, entity=None, container=None, chat_view=None):
 
@@ -142,10 +135,10 @@ class ChatEntry:
         self.entity = entity
         self.chat_view = chat_view
 
-        parent = self.widget.get_parent()
+        parent = self.container.get_parent()
 
         if parent is not None:
-            parent.remove(self.widget)
+            parent.remove(self.container)
 
         if container is None:
             return
@@ -153,24 +146,21 @@ class ChatEntry:
         unsent_message = self.unsent_messages.get(entity, "")
 
         if GTK_API_VERSION >= 4:
-            container.append(self.widget)  # pylint: disable=no-member
+            container.append(self.container)  # pylint: disable=no-member
         else:
-            container.add(self.widget)     # pylint: disable=no-member
+            container.add(self.container)     # pylint: disable=no-member
 
         self.widget.set_text(unsent_message)
         self.widget.set_position(-1)
 
     def set_completions(self, completions):
 
-        if self.entry_completion is None:
-            return
-
         config_words = config.sections["words"]
 
-        self.entry_completion.set_popup_completion(config_words["dropdown"])
-        self.entry_completion.set_minimum_key_length(config_words["characters"])
+        self.combobox.set_completion_popup_enabled(config_words["dropdown"])
+        self.combobox.set_completion_min_key_length(config_words["characters"])
 
-        self.model.clear()
+        self.combobox.clear()
         self.completions.clear()
 
         if not self.is_completion_enabled():
@@ -180,11 +170,9 @@ class ChatEntry:
             word = str(word)
 
             if config_words["dropdown"]:
-                iterator = self.model.insert_with_valuesv(-1, self.column_numbers, [word])
-            else:
-                iterator = None
+                self.combobox.append(word)
 
-            self.completions[word] = iterator
+            self.completions[word] = None
 
     def set_spell_check_enabled(self, enabled):
 
@@ -243,62 +231,11 @@ class ChatEntry:
         if icon_pos == Gtk.EntryIconPosition.PRIMARY:
             self.on_send_message()
 
-    def entry_completion_find_match(self, _completion, entry_text, iterator):
-
-        if not entry_text:
-            return False
-
-        # Get word to the left of current position
-        if " " in entry_text:
-            i = self.widget.get_position()
-            split_key = entry_text[:i].split(" ")[-1]
-        else:
-            split_key = entry_text
-
-        if not split_key or len(split_key) < config.sections["words"]["characters"]:
-            return False
-
-        # Case-insensitive matching
-        item_text = self.model.get_value(iterator, 0).lower()
-
-        if item_text.startswith(split_key) and item_text != split_key:
-            self.selecting_completion = True
-            return True
-
-        return False
-
-    def entry_completion_found_match(self, _completion, model, iterator):
-
-        current_text = self.widget.get_text()
-        completion_value = model.get_value(iterator, 0)
-
-        # if more than a word has been typed, we throw away the
-        # one to the left of our current position because we want
-        # to replace it with the matching word
-
-        if " " in current_text:
-            i = self.widget.get_position()
-            prefix = " ".join(current_text[:i].split(" ")[:-1])
-            suffix = " ".join(current_text[i:].split(" "))
-
-            # add the matching word
-            new_text = f"{prefix} {completion_value}{suffix}"
-            # set back the whole text
-            self.widget.set_text(new_text)
-            # move the cursor at the end
-            self.widget.set_position(len(prefix) + len(completion_value) + 1)
-        else:
-            self.widget.set_text(completion_value)
-            self.widget.set_position(-1)
-
-        # stop the event propagation
-        return True
-
     def on_changed(self, *_args):
 
         # If the entry was modified, and we don't block entry_changed_handler, we're no longer completing
         if not self.is_inserting_completion:
-            self.midway_completion = self.selecting_completion = False
+            self.midway_completion = False
 
     def on_tab_complete_accelerator(self, _widget, _state, backwards=False):
         """Tab and Shift+Tab: tab complete chat."""
@@ -360,16 +297,16 @@ class ChatEntry:
         """Page_Down, Down - Scroll chat view to bottom, and keep input focus in
         entry widget."""
 
-        if self.selecting_completion:
+        if self.widget.get_text_length():
             return False
 
         self.chat_view.scroll_bottom()
         return True
 
     def on_page_up_accelerator(self, *_args):
-        """Page_Up - Move up into view to begin scrolling message history."""
+        """Page_Up, Up - Move up into view to begin scrolling message history."""
 
-        if self.selecting_completion:
+        if self.widget.get_text_length():
             return False
 
         self.chat_view.grab_focus()

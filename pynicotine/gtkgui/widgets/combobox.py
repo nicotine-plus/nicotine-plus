@@ -30,17 +30,21 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 class ComboBox:
 
     def __init__(self, container, label=None, has_entry=False, has_dropdown=True,
-                 entry=None, visible=True, items=None, item_selected_callback=None):
+                 entry=None, visible=True, enable_arrow_keys=True, enable_word_completion=False,
+                 items=None, item_selected_callback=None):
 
         self.widget = None
         self.dropdown = None
         self.entry = entry
-        self.item_selected_callback = item_selected_callback
+        self._enable_arrow_keys = enable_arrow_keys
+        self._enable_word_completion = enable_word_completion
+        self._item_selected_callback = item_selected_callback
 
         self._ids = {}
         self._positions = {}
         self._completions = {}
         self._model = None
+        self._entry_completion = None
         self._completion_model = None
         self._button = None
         self._popover = None
@@ -145,9 +149,6 @@ class ComboBox:
         add_css_class(self.dropdown, "entry")
         container.append(self.widget)
 
-        Accelerator("Up", self.entry, self._on_arrow_key_accelerator_gtk4, "up")
-        Accelerator("Down", self.entry, self._on_arrow_key_accelerator_gtk4, "down")
-
     def _create_combobox_gtk3(self, container, label, has_entry, has_dropdown):
 
         self.dropdown = self.widget = Gtk.ComboBoxText(has_entry=has_entry, valign=Gtk.Align.CENTER, visible=True)
@@ -189,13 +190,20 @@ class ComboBox:
 
         if has_entry:
             self._completion_model = Gtk.ListStore(str)
-            completion = Gtk.EntryCompletion(inline_completion=True, inline_selection=True,
-                                             popup_single_match=False, model=self._completion_model)
-            completion.set_text_column(0)
-            completion.set_match_func(self._entry_completion_find_match)
+            self._entry_completion = Gtk.EntryCompletion(
+                inline_completion=not self._enable_word_completion,
+                inline_selection=not self._enable_word_completion, popup_single_match=False,
+                model=self._completion_model
+            )
+            self._entry_completion.set_text_column(0)
+            self._entry_completion.set_match_func(self._entry_completion_find_match)
+            self._entry_completion.connect("match-selected", self._entry_completion_found_match)
 
-            self.entry.set_completion(completion)
+            self.entry.set_completion(self._entry_completion)
             self.patch_popover_hide_broadway(self.entry)
+
+        Accelerator("Up", self.entry, self._on_arrow_key_accelerator_gtk4, "up")
+        Accelerator("Down", self.entry, self._on_arrow_key_accelerator_gtk4, "down")
 
     def _entry_completion_find_match(self, _completion, entry_text, iterator):
 
@@ -207,10 +215,58 @@ class ComboBox:
         if not item_text:
             return False
 
-        if item_text.lower().startswith(entry_text.lower()):
+        if self._enable_word_completion:
+            # Get word to the left of current position
+            if " " in entry_text:
+                i = self.entry.get_position()
+                split_key = entry_text[:i].split(" ")[-1]
+            else:
+                split_key = entry_text
+
+            if not split_key or len(split_key) < self._entry_completion.get_minimum_key_length():
+                return False
+
+            # Case-insensitive matching
+            item_text = item_text.lower()
+
+            if item_text.startswith(split_key) and item_text != split_key:
+                return True
+
+        elif item_text.lower().startswith(entry_text.lower()):
             return True
 
         return False
+
+    def _entry_completion_found_match(self, _completion, _model, iterator):
+
+        if not self._enable_word_completion:
+            return False
+
+        completion_value = self._completion_model.get_value(iterator, 0)
+        current_text = self.entry.get_text()
+
+        # if more than a word has been typed, we throw away the
+        # one to the left of our current position because we want
+        # to replace it with the matching word
+
+        if " " in current_text:
+            i = self.entry.get_position()
+            prefix = " ".join(current_text[:i].split(" ")[:-1])
+            suffix = " ".join(current_text[i:].split(" "))
+
+            # add the matching word
+            new_text = f"{prefix} {completion_value}{suffix}"
+            print(new_text)
+            # set back the whole text
+            self.entry.set_text(new_text)
+            # move the cursor at the end
+            self.entry.set_position(len(prefix) + len(completion_value) + 1)
+        else:
+            self.entry.set_text(completion_value)
+            self.entry.set_position(-1)
+
+        # stop the event propagation
+        return True
 
     @classmethod
     def patch_popover_hide_broadway(cls, entry):
@@ -425,6 +481,12 @@ class ComboBox:
     def grab_focus(self):
         self.entry.grab_focus()
 
+    def set_completion_popup_enabled(self, enabled):
+        self._entry_completion.set_popup_completion(enabled)
+
+    def set_completion_min_key_length(self, length):
+        self._entry_completion.set_minimum_key_length(length)
+
     def set_visible(self, visible):
         self.widget.set_visible(visible)
 
@@ -471,6 +533,9 @@ class ComboBox:
             if completion_popover.get_visible():
                 # Completion popup takes precedence
                 return False
+
+        if not self._enable_arrow_keys:
+            return True
 
         current_position = self._positions.get(self.get_text(), -1)
 
@@ -556,5 +621,5 @@ class ComboBox:
         if self.entry is not None:
             self.entry.grab_focus_without_selecting()
 
-        if self.item_selected_callback is not None:
-            self.item_selected_callback(self, selected_id)
+        if self._item_selected_callback is not None:
+            self._item_selected_callback(self, selected_id)
