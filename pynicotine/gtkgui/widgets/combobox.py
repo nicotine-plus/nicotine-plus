@@ -137,6 +137,9 @@ class ComboBox:
         add_css_class(self.dropdown, "entry")
         container.append(self.widget)
 
+        Accelerator("Up", self.entry, self._on_arrow_key_accelerator, "up")
+        Accelerator("Down", self.entry, self._on_arrow_key_accelerator, "down")
+
     def _create_combobox_gtk3(self, container, label, has_entry, has_entry_completion):
 
         self.dropdown = self.widget = Gtk.ComboBoxText(has_entry=has_entry, valign=Gtk.Align.CENTER, visible=True)
@@ -175,10 +178,6 @@ class ComboBox:
             self._create_combobox_gtk4(container, label, has_entry)
         else:
             self._create_combobox_gtk3(container, label, has_entry, has_entry_completion)
-
-        if has_entry:
-            Accelerator("Up", self.entry, self._on_arrow_key_accelerator, "up")
-            Accelerator("Down", self.entry, self._on_arrow_key_accelerator, "down")
 
         if has_entry_completion:
             self._entry_completion = CompletionEntry(self.entry)
@@ -406,10 +405,6 @@ class ComboBox:
         return True
 
     def _on_arrow_key_accelerator(self, _widget, _unused, direction):
-
-        if GTK_API_VERSION == 3:
-            # Gtk.ComboBox already supports this functionality
-            return False
 
         if not self._positions:
             return False
