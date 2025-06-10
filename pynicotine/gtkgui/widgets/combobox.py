@@ -204,8 +204,8 @@ class ComboBox:
         self.entry.set_completion(self._entry_completion)
         self.patch_popover_hide_broadway(self.entry)
 
-        Accelerator("Up", self.entry, self._on_arrow_key_accelerator_gtk4, "up")
-        Accelerator("Down", self.entry, self._on_arrow_key_accelerator_gtk4, "down")
+        Accelerator("Up", self.entry, self._on_arrow_key_accelerator, "up")
+        Accelerator("Down", self.entry, self._on_arrow_key_accelerator, "down")
 
     def _entry_completion_find_match(self, _completion, entry_text, iterator):
 
@@ -524,32 +524,6 @@ class ComboBox:
         # Disable focus move with Tab key
         return True
 
-    def _on_arrow_key_accelerator_gtk4(self, _widget, _unused, direction):
-
-        if not self._positions:
-            return False
-
-        if self._completion_model:
-            completion_popover = list(self.entry)[-1]
-
-            if completion_popover.get_visible():
-                # Completion popup takes precedence
-                return False
-
-        if not self._enable_arrow_keys:
-            return True
-
-        current_position = self._positions.get(self.get_text(), -1)
-
-        if direction == "up":
-            new_position = max(0, current_position - 1)
-        else:
-            new_position = min(current_position + 1, len(self._positions) - 1)
-
-        self.set_selected_pos(new_position)
-        self._update_item_entry_text()
-        return True
-
     def _on_dropdown_map_gtk4(self, *_args):
 
         # Align dropdown with entry and button
@@ -581,6 +555,35 @@ class ComboBox:
 
         self._selected_position = None
         self._position_offset = 0
+
+    def _on_arrow_key_accelerator(self, _widget, _unused, direction):
+
+        if GTK_API_VERSION >= 4 and self._completion_model:
+            completion_popover = list(self.entry)[-1]
+
+            if completion_popover.get_visible():
+                # Completion popup takes precedence
+                return False
+
+        if not self._enable_arrow_keys:
+            return True
+
+        if not self._positions:
+            return False
+
+        if GTK_API_VERSION == 3:
+            return False
+
+        current_position = self._positions.get(self.get_text(), -1)
+
+        if direction == "up":
+            new_position = max(0, current_position - 1)
+        else:
+            new_position = min(current_position + 1, len(self._positions) - 1)
+
+        self.set_selected_pos(new_position)
+        self._update_item_entry_text()
+        return True
 
     def _on_select_callback_status(self, enabled):
         self._is_popup_visible = enabled
