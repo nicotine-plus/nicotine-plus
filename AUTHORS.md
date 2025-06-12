@@ -368,6 +368,7 @@
  - Eryk Michalak
  - Everly
  - Felipe Nogaroto Gonzalez
+ - Felix Hansen
  - fkobi
  - Gabriele
  - gahag
@@ -468,6 +469,7 @@
  - Poesty Li
  - PriitUring
  - quinox
+ - Ramsey Harrison
  - redactedscribe
  - rimasx
  - Saumon
