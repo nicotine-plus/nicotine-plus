@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-08 11:16+0200\n"
-"PO-Revision-Date: 2025-05-31 18:02+0000\n"
+"PO-Revision-Date: 2025-06-12 20:49+0000\n"
 "Last-Translator: Felix Hansen <gore-snagged-happy@duck.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -187,7 +187,7 @@ msgstr "%(user)s ist offline"
 
 #: pynicotine/buddies.py:316
 msgid "Buddy Status"
-msgstr "Freund Status"
+msgstr "Freunde Status"
 
 #: pynicotine/chatrooms.py:383
 #, python-format
@@ -355,7 +355,7 @@ msgstr "Soulseek _Privilegien"
 
 #: pynicotine/gtkgui/application.py:314
 msgid "_Preferences"
-msgstr "_Einstellungen"
+msgstr "_Benutzereinstellungen"
 
 #: pynicotine/gtkgui/application.py:320 pynicotine/gtkgui/application.py:534
 #: pynicotine/gtkgui/widgets/trayicon.py:107
@@ -368,7 +368,7 @@ msgstr "Durchsuche _Öffentliche Freigaben"
 
 #: pynicotine/gtkgui/application.py:338
 msgid "Browse _Buddy Shares"
-msgstr "Durchsuche _Freund Freigaben"
+msgstr "Durchsuche _Freunde Freigaben"
 
 #: pynicotine/gtkgui/application.py:339
 msgid "Browse _Trusted Shares"
@@ -499,11 +499,11 @@ msgstr "_Nachricht senden"
 
 #: pynicotine/gtkgui/application.py:756
 msgid "Message Buddies"
-msgstr "Freunde Nachricht senden"
+msgstr "Nachricht an Freunde"
 
 #: pynicotine/gtkgui/application.py:757
 msgid "Send private message to all online buddies:"
-msgstr "Sende eine private Nachricht an alle online Freunde:"
+msgstr "Private Nachricht an alle verfügbaren Freunde senden:"
 
 #: pynicotine/gtkgui/application.py:786
 msgid "Select a Saved Shares List File"
@@ -1320,19 +1320,19 @@ msgstr "Fenster"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1923
 msgid "Online (Tray)"
-msgstr "Online (Fach)"
+msgstr "Online (Infobereich)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1924
 msgid "Away (Tray)"
-msgstr "Abwesend (Fach)"
+msgstr "Abwesend (Infobereich)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1925
 msgid "Offline (Tray)"
-msgstr "Offline (Fach)"
+msgstr "Offline (Infobereich)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1926
 msgid "Message (Tray)"
-msgstr "Nachricht (Fach)"
+msgstr "Nachricht (Infobereich)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2495
 msgid "Protocol"
@@ -4309,7 +4309,7 @@ msgid ""
 "later in the preferences."
 msgstr ""
 "Falls erforderlich, wähle unten einen anderen Empfangsport. Dies kann auch "
-"später in den Einstellungen vorgenommen werden."
+"später in den Benutzereinstellungen vorgenommen werden."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:383
 msgid "Download Files to Folder"
@@ -5916,7 +5916,7 @@ msgstr "Hervorgehobene Tab-Bezeichnungsfarbe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:567
 msgid "Buddy list position:"
-msgstr "Position Freunde-Liste:"
+msgstr "Position der Freundesliste:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:593
 msgid "Visible main tabs:"
