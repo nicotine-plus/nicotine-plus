@@ -19,6 +19,7 @@
 from pynicotine.pluginsystem import BasePlugin
 from pynicotine.shares import PermissionLevel
 from pynicotine.slskmessages import UserStatus
+from pynicotine.utils import humanize
 
 
 class _CommandGroup:
@@ -293,10 +294,18 @@ class Plugin(BasePlugin):
         output_text = ""
 
         if not search_query:
-            output_text += _("Listing %(num)i available commands:") % {"num": num_commands}
+            output_text += ngettext(
+                "Listing %(num)s available command:",
+                "Listing %(num)s available commands:",
+                num_commands
+            ) % {"num": humanize(num_commands)}
         else:
-            output_text += _('Listing %(num)i available commands matching "%(query)s":') % {
-                "num": num_commands,
+            output_text += ngettext(
+                'Listing %(num)s available command matching "%(query)s":',
+                'Listing %(num)s available commands matching "%(query)s":',
+                num_commands
+            ) % {
+                "num": humanize(num_commands),
                 "query": search_query
             }
 

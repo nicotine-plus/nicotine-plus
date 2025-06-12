@@ -34,6 +34,7 @@ from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.transfers import TransferStatus
 from pynicotine.utils import human_speed
+from pynicotine.utils import humanize
 from pynicotine.utils import open_file_path
 from pynicotine.utils import open_folder_path
 
@@ -162,13 +163,20 @@ class Downloads(Transfers):
         if self.window.current_page_id != self.transfer_page.id:
             self.window.notebook.request_tab_changed(self.transfer_page, is_important=True)
 
-    def download_large_folder(self, username, folder, numfiles, download_callback, callback_args):
+    def download_large_folder(self, username, folder, num_files, download_callback, callback_args):
 
         OptionDialog(
             parent=self.window,
-            title=_("Download %(num)i files?") % {"num": numfiles},
-            message=_("Do you really want to download %(num)i files from %(user)s's folder %(folder)s?") % {
-                "num": numfiles, "user": username, "folder": folder},
+            title=ngettext(
+                "Download %(num)s File?",
+                "Download %(num)s Files?",
+                num_files
+            ) % {"num": humanize(num_files)},
+            message=ngettext(
+                "Do you really want to download %(num)s file from %(user)s's folder %(folder)s?",
+                "Do you really want to download %(num)s files from %(user)s's folder %(folder)s?",
+                num_files
+            ) % {"num": humanize(num_files), "user": username, "folder": folder},
             buttons=[
                 ("cancel", _("_Cancel")),
                 ("download", _("_Download Folder"))
