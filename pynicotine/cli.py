@@ -16,6 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+try:
+    # Enable line editing and history
+    import readline
+    ENABLE_READLINE = True
+
+except ImportError:
+    # Readline is not available on this OS
+    ENABLE_READLINE = False
+
 import os
 import sys
 import time
@@ -31,20 +40,14 @@ from pynicotine.logfacility import log
 class CLIInputProcessor(Thread):
     __slots__ = ("has_custom_prompt", "prompt_message", "prompt_callback", "prompt_silent")
 
+    PRIMARY_PROMPT = ""
+
     def __init__(self):
 
         super().__init__(name="CLIInputProcessor", daemon=True)
 
-        try:
-            # Enable line editing and history
-            import readline  # noqa: F401  # pylint:disable=unused-import
-
-        except ImportError:
-            # Readline is not available on this OS
-            pass
-
         self.has_custom_prompt = False
-        self.prompt_message = ""
+        self.prompt_message = self.PRIMARY_PROMPT
         self.prompt_callback = None
         self.prompt_silent = False
 
@@ -92,7 +95,7 @@ class CLIInputProcessor(Thread):
         user_input = input_func(self.prompt_message)
 
         self.has_custom_prompt = False
-        self.prompt_message = ""
+        self.prompt_message = self.PRIMARY_PROMPT
         self.prompt_callback = None
         self.prompt_silent = False
 
@@ -104,6 +107,13 @@ class CLIInputProcessor(Thread):
 
         # No custom prompt, treat input as command
         self._handle_prompt_command(user_input)
+
+    def redisplay_prompt(self):
+
+        if not ENABLE_READLINE or not self.is_alive():
+            return
+
+        print(f"{self.prompt_message}{readline.get_line_buffer()}", end="", flush=True)
 
 
 class CLI:
@@ -148,6 +158,8 @@ class CLI:
         try:
             print(log_message, flush=True)
 
+            self._input_processor.redisplay_prompt()
+
         except OSError:
             # stdout is gone, prevent future errors
             sys.stdout = open(os.devnull, "w", encoding="utf-8")  # pylint: disable=consider-using-with
@@ -160,12 +172,13 @@ class CLI:
 
         if timestamp_format:
             timestamp = time.strftime(timestamp_format)
-            log_message = f"[{timestamp}] {msg}"
+            log_message = f"\r[{timestamp}] {msg}"
         else:
-            log_message = msg
+            log_message = f"\r{msg}"
 
-        if self._input_processor.has_custom_prompt:
-            # Don't print log messages while custom prompt is active
+        if not ENABLE_READLINE and self._input_processor.has_custom_prompt:
+            # Unless there's a way to avoid overwriting the prompt and user
+            # input, don't print log messages while custom prompt is active
             self._log_message_queue.append(log_message)
             return
 
