@@ -1,3 +1,8 @@
+<!--
+  SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # Downloads
 
 Download the current stable version of Nicotine+ for your operating system.

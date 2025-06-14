@@ -1,3 +1,8 @@
+<!--
+  SPDX-FileCopyrightText: 2006-2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # Soulseek Protocol Documentation
 
 [Last updated on April 25, 2025](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
