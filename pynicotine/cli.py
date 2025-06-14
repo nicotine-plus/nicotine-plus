@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2022-2025 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import os
 import sys
 import time
 
@@ -135,7 +134,8 @@ class CLI:
 
         except OSError:
             # stdout is gone, prevent future errors
-            sys.stdout = open(os.devnull, "w", encoding="utf-8")  # pylint: disable=consider-using-with
+            events.disconnect("log-message", self._log_message)
+            self._log_message_queue.clear()
 
     def _cli_prompt_finished(self):
         while self._log_message_queue:
