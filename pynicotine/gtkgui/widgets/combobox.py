@@ -14,7 +14,7 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 
 class ComboBox:
 
-    def __init__(self, container, label=None, has_entry=False, has_dropdown=True,
+    def __init__(self, container, label=None, has_entry=False, has_dropdown=True, has_entry_completion=True,
                  entry=None, visible=True, enable_arrow_keys=True, enable_word_completion=False,
                  items=None, item_selected_callback=None):
 
@@ -38,7 +38,7 @@ class ComboBox:
         self._selected_position = None
         self._position_offset = 0
 
-        self._create_combobox(container, label, has_entry, has_dropdown)
+        self._create_combobox(container, label, has_entry, has_entry_completion, has_dropdown)
 
         if items:
             self.freeze()
@@ -166,7 +166,7 @@ class ComboBox:
         self._button.set_visible(has_dropdown)
         container.add(self.widget)
 
-    def _create_combobox(self, container, label, has_entry, has_dropdown):
+    def _create_combobox(self, container, label, has_entry, has_entry_completion, has_dropdown):
 
         if GTK_API_VERSION >= 4:
             self._create_combobox_gtk4(container, label, has_entry, has_dropdown)
@@ -174,6 +174,12 @@ class ComboBox:
             self._create_combobox_gtk3(container, label, has_entry, has_dropdown)
 
         if not has_entry:
+            return
+
+        Accelerator("Up", self.entry, self._on_arrow_key_accelerator, "up")
+        Accelerator("Down", self.entry, self._on_arrow_key_accelerator, "down")
+
+        if not has_entry_completion:
             return
 
         self._completion_model = Gtk.ListStore(str)
@@ -188,9 +194,6 @@ class ComboBox:
 
         self.entry.set_completion(self._entry_completion)
         self.patch_popover_hide_broadway(self.entry)
-
-        Accelerator("Up", self.entry, self._on_arrow_key_accelerator, "up")
-        Accelerator("Down", self.entry, self._on_arrow_key_accelerator, "down")
 
     def _entry_completion_find_match(self, _completion, entry_text, iterator):
 

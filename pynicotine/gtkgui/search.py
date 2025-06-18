@@ -459,31 +459,31 @@ class Search:
 
         # Combo boxes
         self.filter_include_combobox = ComboBox(
-            container=self.filter_include_container, has_entry=True,
+            container=self.filter_include_container, has_entry=True, has_entry_completion=False,
             entry=self.filter_include_entry, item_selected_callback=self.on_refilter)
 
         self.filter_exclude_combobox = ComboBox(
-            container=self.filter_exclude_container, has_entry=True,
+            container=self.filter_exclude_container, has_entry=True, has_entry_completion=False,
             entry=self.filter_exclude_entry, item_selected_callback=self.on_refilter)
 
         self.filter_file_type_combobox = ComboBox(
-            container=self.filter_file_type_container, has_entry=True,
+            container=self.filter_file_type_container, has_entry=True, has_entry_completion=False,
             entry=self.filter_file_type_entry, item_selected_callback=self.on_refilter)
 
         self.filter_file_size_combobox = ComboBox(
-            container=self.filter_file_size_container, has_entry=True,
+            container=self.filter_file_size_container, has_entry=True, has_entry_completion=False,
             entry=self.filter_file_size_entry, item_selected_callback=self.on_refilter)
 
         self.filter_bitrate_combobox = ComboBox(
-            container=self.filter_bitrate_container, has_entry=True,
+            container=self.filter_bitrate_container, has_entry=True, has_entry_completion=False,
             entry=self.filter_bitrate_entry, item_selected_callback=self.on_refilter)
 
         self.filter_length_combobox = ComboBox(
-            container=self.filter_length_container, has_entry=True,
+            container=self.filter_length_container, has_entry=True, has_entry_completion=False,
             entry=self.filter_length_entry, item_selected_callback=self.on_refilter)
 
         self.filter_country_combobox = ComboBox(
-            container=self.filter_country_container, has_entry=True,
+            container=self.filter_country_container, has_entry=True, has_entry_completion=False,
             entry=self.filter_country_entry, item_selected_callback=self.on_refilter)
 
         self.tree_view = TreeView(
