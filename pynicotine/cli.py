@@ -1,20 +1,5 @@
-# COPYRIGHT (C) 2022-2025 Nicotine+ Contributors
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2022-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 try:
     # Enable line editing and history
@@ -25,7 +10,6 @@ except ImportError:
     # Readline is not available on this OS
     ENABLE_READLINE = False
 
-import os
 import sys
 import time
 
@@ -162,7 +146,8 @@ class CLI:
 
         except OSError:
             # stdout is gone, prevent future errors
-            sys.stdout = open(os.devnull, "w", encoding="utf-8")  # pylint: disable=consider-using-with
+            events.disconnect("log-message", self._log_message)
+            self._log_message_queue.clear()
 
     def _cli_prompt_finished(self):
         while self._log_message_queue:

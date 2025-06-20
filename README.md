@@ -1,3 +1,8 @@
+<!--
+  SPDX-FileCopyrightText: 2013-2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # Nicotine+
 
 <img src="data/icons/icon.svg" alt="Nicotine+ Logo" align="right"

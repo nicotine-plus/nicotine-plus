@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2020-2025 Nicotine+ Contributors -->
+<!--
+  SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+  SPDX-License-Identifier: CC0-1.0
+-->
 <component type="desktop-application">
   <id>org.nicotine_plus.Nicotine</id>
   <launchable type="desktop-id">org.nicotine_plus.Nicotine.desktop</launchable>

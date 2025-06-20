@@ -1,25 +1,10 @@
-# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
-# COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
-# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2016-2018 Mutnick <mutnick@techie.com>
+# SPDX-FileCopyrightText: 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# SPDX-FileCopyrightText: 2008-2011 quinox <quinox@users.sf.net>
+# SPDX-FileCopyrightText: 2006-2009 daelstorm <daelstorm@gmail.com>
+# SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import operator
 import os
@@ -474,31 +459,31 @@ class Search:
 
         # Combo boxes
         self.filter_include_combobox = ComboBox(
-            container=self.filter_include_container, has_entry=True,
+            container=self.filter_include_container, has_entry=True, has_entry_completion=False,
             entry=self.filter_include_entry, item_selected_callback=self.on_refilter)
 
         self.filter_exclude_combobox = ComboBox(
-            container=self.filter_exclude_container, has_entry=True,
+            container=self.filter_exclude_container, has_entry=True, has_entry_completion=False,
             entry=self.filter_exclude_entry, item_selected_callback=self.on_refilter)
 
         self.filter_file_type_combobox = ComboBox(
-            container=self.filter_file_type_container, has_entry=True,
+            container=self.filter_file_type_container, has_entry=True, has_entry_completion=False,
             entry=self.filter_file_type_entry, item_selected_callback=self.on_refilter)
 
         self.filter_file_size_combobox = ComboBox(
-            container=self.filter_file_size_container, has_entry=True,
+            container=self.filter_file_size_container, has_entry=True, has_entry_completion=False,
             entry=self.filter_file_size_entry, item_selected_callback=self.on_refilter)
 
         self.filter_bitrate_combobox = ComboBox(
-            container=self.filter_bitrate_container, has_entry=True,
+            container=self.filter_bitrate_container, has_entry=True, has_entry_completion=False,
             entry=self.filter_bitrate_entry, item_selected_callback=self.on_refilter)
 
         self.filter_length_combobox = ComboBox(
-            container=self.filter_length_container, has_entry=True,
+            container=self.filter_length_container, has_entry=True, has_entry_completion=False,
             entry=self.filter_length_entry, item_selected_callback=self.on_refilter)
 
         self.filter_country_combobox = ComboBox(
-            container=self.filter_country_container, has_entry=True,
+            container=self.filter_country_container, has_entry=True, has_entry_completion=False,
             entry=self.filter_country_entry, item_selected_callback=self.on_refilter)
 
         self.tree_view = TreeView(
