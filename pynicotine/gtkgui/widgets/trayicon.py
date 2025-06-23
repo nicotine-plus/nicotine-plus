@@ -19,7 +19,6 @@
 import os
 import sys
 
-from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -702,8 +701,7 @@ class Win32Implementation(BaseImplementation):
     WS_SYSMENU = 524288
     CW_USEDEFAULT = -2147483648
 
-    IMAGE_ICON = 1
-    LR_LOADFROMFILE = 16
+    LR_DEFAULTCOLOR = 0
     SM_CXSMICON = 49
 
     if sys.platform == "win32":
@@ -845,28 +843,26 @@ class Win32Implementation(BaseImplementation):
         windll.user32.DestroyWindow(self._h_wnd)
         self._h_wnd = None
 
-    def _load_ico_buffer(self, icon_name, icon_size):
+    def _load_png_buffer(self, icon_name, icon_size):
 
-        ico_buffer = b""
+        if not ICON_THEME.has_icon(icon_name):
+            return b""
 
         if GTK_API_VERSION >= 4:
+            snapshot = Gtk.Snapshot()
             icon = ICON_THEME.lookup_icon(icon_name, fallbacks=None, size=icon_size, scale=1, direction=0, flags=0)
-            icon_path = icon.get_file().get_path()
+            icon.snapshot(snapshot, icon_size, icon_size)
 
-            if not icon_path:
-                return ico_buffer
-
-            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(icon_path, icon_size, icon_size)
+            node = snapshot.to_node()
+            texture = node.get_texture()
+            png_buffer = texture.save_to_png_bytes().get_data()
         else:
             icon = ICON_THEME.lookup_icon(icon_name, size=icon_size, flags=0)
-
-            if not icon:
-                return ico_buffer
-
             pixbuf = icon.load_icon()
+            _success, png_buffer = pixbuf.save_to_bufferv(
+                type="png", option_keys=[], option_values=[])
 
-        _success, ico_buffer = pixbuf.save_to_bufferv("ico")
-        return ico_buffer
+        return png_buffer
 
     def _load_h_icon(self, icon_name):
 
@@ -874,31 +870,22 @@ class Win32Implementation(BaseImplementation):
 
         # Attempt to load custom icons first
         icon_size = windll.user32.GetSystemMetrics(self.SM_CXSMICON)
-        ico_buffer = self._load_ico_buffer(
+        png_buffer = self._load_png_buffer(
             icon_name.replace(f"{pynicotine.__application_id__}-", "nplus-tray-"), icon_size)
 
-        if not ico_buffer:
+        if not png_buffer:
             # No custom icons present, fall back to default icons
-            ico_buffer = self._load_ico_buffer(icon_name, icon_size)
+            png_buffer = self._load_png_buffer(icon_name, icon_size)
 
-        try:
-            import tempfile
-            file_handle = tempfile.NamedTemporaryFile(delete=False)
-
-            with file_handle:
-                file_handle.write(ico_buffer)
-
-            return windll.user32.LoadImageA(
-                0,
-                encode_path(file_handle.name),
-                self.IMAGE_ICON,
-                icon_size,
-                icon_size,
-                self.LR_LOADFROMFILE
-            )
-
-        finally:
-            os.remove(file_handle.name)
+        return windll.user32.CreateIconFromResourceEx(
+            png_buffer,
+            len(png_buffer),
+            True,
+            0x00030000,
+            icon_size,
+            icon_size,
+            self.LR_DEFAULTCOLOR
+        )
 
     def _destroy_h_icon(self):
 
