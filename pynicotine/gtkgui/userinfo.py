@@ -23,7 +23,6 @@
 import time
 
 from gi.repository import Gdk
-from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -460,6 +459,8 @@ class UserInfo:
                 self.picture_data = Gdk.Texture.new_from_bytes(GLib.Bytes(data))
                 self.picture.set_paintable(self.picture_data)
             else:
+                from gi.repository import GdkPixbuf
+
                 data_stream = Gio.MemoryInputStream.new_from_bytes(GLib.Bytes(data))
                 self.picture_data = GdkPixbuf.Pixbuf.new_from_stream(data_stream, cancellable=None)
                 self.picture_surface = Gdk.cairo_surface_create_from_pixbuf(self.picture_data, scale=1, for_window=None)

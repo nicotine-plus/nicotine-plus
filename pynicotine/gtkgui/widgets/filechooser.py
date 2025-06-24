@@ -19,7 +19,6 @@
 import os
 import sys
 
-from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -224,6 +223,8 @@ class ImageChooser(FileChooser):
             self.file_chooser.set_preview_widget(self.preview)  # pylint: disable=no-member
 
     def on_update_image_preview(self, chooser):
+
+        from gi.repository import GdkPixbuf
 
         file_path = chooser.get_preview_filename()
 
