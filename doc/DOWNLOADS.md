@@ -157,4 +157,3 @@ using them.
 | Package Manager                                                     | Package Name    |
 |---------------------------------------------------------------------|-----------------|
 | [Homebrew Formulae](https://formulae.brew.sh/formula/nicotine-plus) | `nicotine-plus` |
-| [MacPorts](https://ports.macports.org/port/nicotine-plus/)          | `nicotine-plus` |
