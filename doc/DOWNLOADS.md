@@ -12,7 +12,7 @@ If you want to download the latest unstable build and help test Nicotine+,
 see [TESTING.md](TESTING.md).
 
 
-## GNU/Linux, *BSD, Solaris
+## GNU/Linux, *BSD, Haiku, Solaris
 
 ### Operating System Packages
 
@@ -28,6 +28,7 @@ using the package manager.
 | [Fedora](https://packages.fedoraproject.org/pkgs/nicotine+/nicotine+/)                   | `nicotine+`                |
 | [FreeBSD Ports](https://www.freshports.org/net-p2p/py-nicotine-plus)                     | `net-p2p/py-nicotine-plus` |
 | [Gentoo](https://packages.gentoo.org/packages/net-p2p/nicotine+)                         | `net-p2p/nicotine+`        |
+| [Haiku Depot](https://depot.haiku-os.org/#!/pkg/nicotineplus)                            | `nicotineplus`             |
 | [Mageia](https://madb.mageialinux-online.org/show?distribution=cauldron&rpm=nicotine%2B) | `nicotine+`                |
 | [Manjaro](https://manjaristas.org/branch_compare?q=nicotine%2B)                          | `nicotine+`                |
 | [NixOS](https://search.nixos.org/packages?show=nicotine-plus)                            | `nicotine-plus`            |
