@@ -111,6 +111,11 @@ Stable installers are available for download.
 Standalone executables are also available. They can be run from any folder and
 do not require installation.
 
+Please note that application data and
+configuration files are still stored in the same folder as the installed
+variant, i.e. they will conflict. There are plans to add a portable package
+that stores configuration independently at some point.
+
  - [Download Windows Standalone Package](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip)
     — [`SHA256`](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip.sha256)  
    for Windows 10 or later

@@ -82,6 +82,11 @@ Unstable packages are built after every commit to the master branch.
 Standalone executables are also available. They can be run from any folder and
 do not require installation.
 
+Please note that application data and
+configuration files are still stored in the same folder as the installed
+variant, i.e. they will conflict. There are plans to add a portable package
+that stores configuration independently at some point.
+
  - [Download Unstable Windows x64 Standalone Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package.zip)
     — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package)  
    for Windows 10 or later
