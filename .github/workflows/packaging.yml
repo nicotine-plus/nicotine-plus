@@ -53,7 +53,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Validate manifest
-        run: flatpak-builder-lint manifest build-aux/flatpak/org.nicotine_plus.Nicotine.json
+        run: flatpak-builder-lint --exceptions manifest build-aux/flatpak/org.nicotine_plus.Nicotine.json
 
       - name: Validate appstream
         run: flatpak-builder-lint appstream data/org.nicotine_plus.Nicotine.appdata.xml.in
