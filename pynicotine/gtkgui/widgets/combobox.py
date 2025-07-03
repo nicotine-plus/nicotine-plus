@@ -21,20 +21,27 @@ class ComboBox:
         self.widget = None
         self.dropdown = None
         self.entry = entry
+        self._has_entry_completion = has_entry_completion
         self._enable_arrow_keys = enable_arrow_keys
         self._enable_word_completion = enable_word_completion
         self._item_selected_callback = item_selected_callback
 
         self._ids = {}
         self._positions = {}
-        self._completions = {}
         self._model = None
         self._entry_completion = None
-        self._completion_model = None
         self._button = None
         self._popover = None
+        self._search_entry = None
         self._list_view = None
+        self._focus_controller = None
         self._is_popup_visible = False
+        self._is_completion_popup_enabled = True
+        self._is_updating_entry = False
+        self._min_completion_key_length = 1
+        self._search_delay = 150
+        self._search_delay_timer = None
+        self._entry_selection_bound = None
         self._selected_position = None
         self._position_offset = 0
 
@@ -57,14 +64,30 @@ class ComboBox:
         self.set_visible(visible)
 
     def destroy(self):
+
+        if self._search_delay_timer is not None:
+            GLib.source_remove(self._search_delay_timer)
+            self._search_delay_timer = None
+
+        if self._focus_controller is not None:
+            self.widget.remove_controller(self._focus_controller)
+
         self.__dict__.clear()
 
-    def _create_combobox_gtk4(self, container, label, has_entry, has_dropdown):
+    def _create_combobox_gtk4(self, container, label, has_entry, has_entry_completion, has_dropdown):
 
         self._model = Gtk.StringList()
-        self.dropdown = self._button = Gtk.DropDown(
-            model=self._model, valign=Gtk.Align.CENTER, visible=True
-        )
+
+        # Workaround for using GtkExpression in old PyGObject versions
+        builder = Gtk.Builder.new_from_string("""<interface>
+  <object class="GtkDropDown" id="dropdown">
+    <property name="expression">
+      <lookup type="GtkStringObject" name="string" />
+    </property>
+  </object>
+</interface>""", -1)
+        self.dropdown = self._button = builder.get_object("dropdown")
+        self.dropdown.set_model(self._model)
 
         list_factory = self.dropdown.get_factory()
         button_factory = None
@@ -119,6 +142,30 @@ class ComboBox:
         if label:
             label.set_mnemonic_widget(self.entry)
 
+        if has_entry_completion:
+            entry_buffer = self.entry.get_buffer()
+            self.entry.connect("notify::selection-bound", self._on_entry_selection_bound_changed_gtk4)
+            entry_buffer.connect("inserted-text", self._on_inserted_text_gtk4)
+            entry_buffer.connect_after("deleted-text", self._on_deleted_text_gtk4)
+
+            self._focus_controller = Gtk.EventControllerFocus()
+            self._focus_controller.connect("leave", self._on_focus_out_gtk4)
+            self.widget.add_controller(self._focus_controller)
+
+            self.dropdown.set_enable_search(True)
+
+            popover_container = self._popover.get_child()
+            search_container = next(iter(popover_container))
+            self._search_entry = next(iter(search_container))
+
+            search_container.set_visible(False)
+
+            for accelerator in ("Tab", "<Shift>Tab"):
+                Accelerator(accelerator, self.entry, self._on_focus_out_gtk4)
+
+            Accelerator("Up", self._list_view, self._on_list_arrow_key_accelerator_gtk4, "up")
+            Accelerator("Down", self._list_view, self._on_list_arrow_key_accelerator_gtk4, "down")
+
         self._button.set_sensitive(False)
 
         self.widget.append(self.entry)
@@ -134,7 +181,7 @@ class ComboBox:
         add_css_class(self.dropdown, "entry")
         container.append(self.widget)
 
-    def _create_combobox_gtk3(self, container, label, has_entry, has_dropdown):
+    def _create_combobox_gtk3(self, container, label, has_entry, has_entry_completion, has_dropdown):
 
         self.dropdown = self.widget = Gtk.ComboBoxText(has_entry=has_entry, valign=Gtk.Align.CENTER, visible=True)
         self._model = self.dropdown.get_model()
@@ -166,109 +213,32 @@ class ComboBox:
         self._button.set_visible(has_dropdown)
         container.add(self.widget)
 
+        if not has_entry_completion:
+            return
+
+        self._entry_completion = Gtk.EntryCompletion(
+            inline_completion=not self._enable_word_completion,
+            inline_selection=not self._enable_word_completion, popup_single_match=False,
+            model=self._model
+        )
+        self._entry_completion.set_text_column(0)
+        self._entry_completion.set_match_func(self._on_entry_completion_find_match_gtk3)
+        self._entry_completion.connect("match-selected", self._on_entry_completion_found_match_gtk3)
+
+        self.entry.set_completion(self._entry_completion)
+
     def _create_combobox(self, container, label, has_entry, has_entry_completion, has_dropdown):
 
         if GTK_API_VERSION >= 4:
-            self._create_combobox_gtk4(container, label, has_entry, has_dropdown)
+            self._create_combobox_gtk4(container, label, has_entry, has_entry_completion, has_dropdown)
         else:
-            self._create_combobox_gtk3(container, label, has_entry, has_dropdown)
+            self._create_combobox_gtk3(container, label, has_entry, has_entry_completion, has_dropdown)
 
         if not has_entry:
             return
 
-        Accelerator("Up", self.entry, self._on_arrow_key_accelerator, "up")
-        Accelerator("Down", self.entry, self._on_arrow_key_accelerator, "down")
-
-        if not has_entry_completion:
-            return
-
-        self._completion_model = Gtk.ListStore(str)
-        self._entry_completion = Gtk.EntryCompletion(
-            inline_completion=not self._enable_word_completion,
-            inline_selection=not self._enable_word_completion, popup_single_match=False,
-            model=self._completion_model
-        )
-        self._entry_completion.set_text_column(0)
-        self._entry_completion.set_match_func(self._entry_completion_find_match)
-        self._entry_completion.connect("match-selected", self._entry_completion_found_match)
-
-        self.entry.set_completion(self._entry_completion)
-        self.patch_popover_hide_broadway(self.entry)
-
-    def _entry_completion_find_match(self, _completion, entry_text, iterator):
-
-        if not entry_text:
-            return False
-
-        item_text = self._completion_model.get_value(iterator, 0)
-
-        if not item_text:
-            return False
-
-        if self._enable_word_completion:
-            # Get word to the left of current position
-            if " " in entry_text:
-                i = self.entry.get_position()
-                split_key = entry_text[:i].split(" ")[-1]
-            else:
-                split_key = entry_text
-
-            if not split_key or len(split_key) < self._entry_completion.get_minimum_key_length():
-                return False
-
-            # Case-insensitive matching
-            item_text = item_text.lower()
-
-            if item_text.startswith(split_key) and item_text != split_key:
-                return True
-
-        elif item_text.lower().startswith(entry_text.lower()):
-            return True
-
-        return False
-
-    def _entry_completion_found_match(self, _completion, _model, iterator):
-
-        if not self._enable_word_completion:
-            return False
-
-        completion_value = self._completion_model.get_value(iterator, 0)
-        current_text = self.entry.get_text()
-
-        # if more than a word has been typed, we throw away the
-        # one to the left of our current position because we want
-        # to replace it with the matching word
-
-        if " " in current_text:
-            i = self.entry.get_position()
-            prefix = " ".join(current_text[:i].split(" ")[:-1])
-            suffix = " ".join(current_text[i:].split(" "))
-
-            # add the matching word
-            new_text = f"{prefix} {completion_value}{suffix}"
-            print(new_text)
-            # set back the whole text
-            self.entry.set_text(new_text)
-            # move the cursor at the end
-            self.entry.set_position(len(prefix) + len(completion_value) + 1)
-        else:
-            self.entry.set_text(completion_value)
-            self.entry.set_position(-1)
-
-        # stop the event propagation
-        return True
-
-    @classmethod
-    def patch_popover_hide_broadway(cls, entry):
-
-        # Workaround for GTK 4 bug where broadwayd uses a lot of CPU after hiding popover
-        if GTK_API_VERSION >= 4 and os.environ.get("GDK_BACKEND") == "broadway":
-            completion_popover = list(entry)[-1]
-            completion_popover.connect("hide", cls._on_popover_hide_broadway)
-
-    @staticmethod
-    def _on_popover_hide_broadway(popover):
-        popover.unrealize()
+        Accelerator("Up", self.entry, self._on_entry_arrow_key_accelerator, "up")
+        Accelerator("Down", self.entry, self._on_entry_arrow_key_accelerator, "down")
 
     def _update_item_entry_text(self):
         """Set text entry text to the same value as selected item."""
@@ -280,9 +250,20 @@ class ComboBox:
                 return
 
             item_text = item.get_string()
+            current_text = self.entry.get_text()
 
-            if self.get_text() != item_text:
-                self.set_text(item_text)
+            if self._enable_word_completion and " " in current_text:
+                position = self.entry.get_position()
+                prefix = " ".join(current_text[:position].split(" ")[:-1])
+                suffix = " ".join(current_text[position:].split(" "))
+                new_text = f"{prefix} {item_text}{suffix}"
+
+                self.entry.set_text(new_text)
+                self.entry.set_position(len(prefix) + len(item_text) + 1)
+                return
+
+            if current_text != item_text:
+                self.entry.set_text(item_text)
 
         self.entry.set_position(-1)
 
@@ -346,9 +327,6 @@ class ComboBox:
         if self.entry and not self._positions:
             self._button.set_sensitive(True)
 
-        if self._completion_model:
-            self._completions[item] = self._completion_model.insert_with_valuesv(-1, [0], [item])
-
         self._update_item_positions(start_position=(position + 1), added=True)
 
         if self._selected_position is not None and position <= self._selected_position:
@@ -402,6 +380,7 @@ class ComboBox:
     def set_text(self, text):
 
         if self.entry:
+            self._is_updating_entry = True
             self.entry.set_text(text)
             return
 
@@ -424,12 +403,6 @@ class ComboBox:
 
         if self.entry and not self._ids:
             self._button.set_sensitive(False)
-
-        if self._completion_model:
-            iterator = self._completions.pop(item_id, None)
-
-            if iterator is not None:
-                self._completion_model.remove(iterator)
 
         # Update positions for items after the removed one
         self._positions.pop(item_id, None)
@@ -464,18 +437,22 @@ class ComboBox:
         if self.entry and self._button:
             self._button.set_sensitive(False)
 
-        if self._completion_model:
-            self._completions.clear()
-            self._completion_model.clear()
-
     def grab_focus(self):
         self.entry.grab_focus()
 
     def set_completion_popup_enabled(self, enabled):
-        self._entry_completion.set_popup_completion(enabled)
+
+        self._is_completion_popup_enabled = enabled
+
+        if self._entry_completion is not None:
+            self._entry_completion.set_popup_completion(enabled)
 
     def set_completion_min_key_length(self, length):
-        self._entry_completion.set_minimum_key_length(length)
+
+        self._min_completion_key_length = length
+
+        if self._entry_completion is not None:
+            self._entry_completion.set_minimum_key_length(length)
 
     def set_visible(self, visible):
         self.widget.set_visible(visible)
@@ -490,6 +467,60 @@ class ComboBox:
         if scrollable is not None:
             scrollable.event(event)
 
+        return True
+
+    def _on_entry_completion_find_match_gtk3(self, _completion, entry_text, iterator):
+
+        if not entry_text:
+            return False
+
+        item_text = self._model.get_value(iterator, 0)
+
+        if not item_text:
+            return False
+
+        item_text = item_text.lower()
+        entry_text = entry_text.lower()
+
+        if self._enable_word_completion:
+            # Get word to the left of current position
+            if " " in entry_text:
+                position = self.entry.get_position()
+                split_key = entry_text[:position].split(" ")[-1]
+            else:
+                split_key = entry_text
+
+            if not split_key or len(split_key) < self._min_completion_key_length:
+                return False
+
+            if item_text != split_key and item_text.startswith(split_key):
+                return True
+
+        elif item_text != entry_text and item_text.startswith(entry_text):
+            return True
+
+        return False
+
+    def _on_entry_completion_found_match_gtk3(self, _completion, _model, iterator):
+
+        if not self._enable_word_completion:
+            return False
+
+        completion_value = self._model.get_value(iterator, 0)
+        current_text = self.entry.get_text()
+
+        if " " in current_text:
+            position = self.entry.get_position()
+            prefix = " ".join(current_text[:position].split(" ")[:-1])
+            suffix = " ".join(current_text[position:].split(" "))
+            new_text = f"{prefix} {completion_value}{suffix}"
+
+            self.entry.set_text(new_text)
+            self.entry.set_position(len(prefix) + len(completion_value) + 1)
+            return True
+
+        self.entry.set_text(completion_value)
+        self.entry.set_position(-1)
         return True
 
     def _on_button_factory_bind_gtk4(self, _factory, list_item):
@@ -511,6 +542,123 @@ class ComboBox:
     def _on_list_tab_accelerator_gtk4(self, *_args):
         # Disable focus move with Tab key
         return True
+
+    def _on_changed_text_gtk4(self, position, is_deletion=False):
+
+        if not self._has_entry_completion:
+            return
+
+        if self._is_updating_entry:
+            self._is_updating_entry = False
+            return
+
+        text = self.get_text()
+        text_lower = text.lower()
+        search_query = text
+        matches = []
+        show_popover = False
+
+        if text:
+            for item in self._ids.values():
+                item_lower = item.lower()
+
+                if self._enable_word_completion:
+                    # Get word to the left of current position
+                    if " " in text:
+                        split_key = text[:position].split(" ")[-1]
+                    else:
+                        split_key = text
+
+                    if not split_key or len(split_key) < self._min_completion_key_length:
+                        break
+
+                    if item_lower == split_key or not item_lower.startswith(split_key):
+                        continue
+
+                    search_query = split_key
+                    show_popover = self._is_completion_popup_enabled
+
+                elif item_lower != text_lower and item_lower.startswith(text_lower):
+                    if item.startswith(text):
+                        matches.append(item)
+
+                    show_popover = (self._is_completion_popup_enabled and len(text) >= self._min_completion_key_length)
+
+        prefix = os.path.commonprefix(matches)
+
+        if not is_deletion and prefix and prefix != text:
+            # Entry completion: fill text entry with common prefix of matches
+            self._entry_selection_bound = len(text)
+            self._is_updating_entry = True
+            self.entry.get_buffer().insert_text(
+                position=self._entry_selection_bound, chars=prefix[self._entry_selection_bound:], n_chars=-1)
+
+        if self._search_delay_timer is not None:
+            GLib.source_remove(self._search_delay_timer)
+            self._search_delay_timer = None
+
+        if show_popover:
+            self._search_delay_timer = GLib.timeout_add(
+                self._search_delay, self._on_search_changed_gtk4, search_query)
+        else:
+            self._popover.set_visible(False)
+
+    def _on_inserted_text_gtk4(self, _entry, position, _chars, n_chars):
+        self._on_changed_text_gtk4(position + n_chars)
+
+    def _on_deleted_text_gtk4(self, _entry, position, *_args):
+        self._on_changed_text_gtk4(position, is_deletion=True)
+
+    def _on_search_changed_gtk4(self, search_query):
+
+        self._search_delay_timer = None
+
+        # Entry completion: reuse Gtk.DropDown's search entry for filtering
+        self._search_entry.set_text(search_query)
+        self._search_entry.emit("search-changed")
+
+        if self._list_view.get_model().get_n_items() <= 1:
+            self._popover.set_visible(False)
+            return
+
+        if self._popover.get_visible():
+            return
+
+        self._selected_position = None
+        self._position_offset = 0
+
+        self._popover.set_autohide(False)
+        self._popover.set_visible(True)
+
+    def _on_entry_selection_bound_changed_gtk4(self, *_args):
+
+        if self._entry_selection_bound is not None:
+            self.entry.select_region(self._entry_selection_bound, -1)
+
+        self._entry_selection_bound = None
+
+    def _on_focus_out_gtk4(self, *_args):
+
+        is_visible = self._popover.get_visible()
+        self._popover.set_visible(False)
+
+        return is_visible
+
+    def _on_list_arrow_key_accelerator_gtk4(self, _list_view, _unused, direction):
+
+        if self._popover.get_autohide():
+            return
+
+        # Entry completion: move focus to text entry when reaching beginning/end of list
+        list_model = self._list_view.get_model()
+        selected_position = list_model.get_selection().get_nth(0)
+        target_position = 0 if direction == "up" else list_model.get_n_items() - 1
+
+        if selected_position != target_position:
+            return
+
+        self.entry.grab_focus()
+        list_model.select_item(0, unselect_rest=True)
 
     def _on_dropdown_map_gtk4(self, *_args):
 
@@ -539,19 +687,30 @@ class ComboBox:
             for _ in range(abs(self._position_offset)):
                 self._list_view.child_focus(direction)
 
-            self._list_view.get_model().select_item(new_position, True)
+            self._list_view.get_model().select_item(new_position, unselect_rest=True)
 
         self._selected_position = None
         self._position_offset = 0
 
-    def _on_arrow_key_accelerator(self, _widget, _unused, direction):
+    def _on_entry_arrow_key_accelerator(self, _entry, _unused, direction):
 
-        if GTK_API_VERSION >= 4 and self._completion_model:
-            completion_popover = list(self.entry)[-1]
+        # Entry completion: scroll to the first item on arrow down, last item on arrow up
+        if GTK_API_VERSION >= 4 and self._popover.get_visible():
+            new_position = 0 if direction == "down" else self._list_view.get_model().get_n_items() - 1
 
-            if completion_popover.get_visible():
-                # Completion popup takes precedence
-                return False
+            self._popover.child_focus(Gtk.DirectionType.TAB_FORWARD)
+
+            try:
+                self._list_view.scroll_to(new_position, Gtk.ListScrollFlags.FOCUS | Gtk.ListScrollFlags.SELECT)
+
+            except AttributeError:
+                # Workaround for GTK <4.12 versions without scroll_to()
+                for _ in range(new_position):
+                    self._list_view.child_focus(Gtk.DirectionType.TAB_FORWARD)
+
+                self._list_view.get_model().select_item(new_position, unselect_rest=True)
+
+            return True
 
         if not self._enable_arrow_keys:
             return True
@@ -559,19 +718,20 @@ class ComboBox:
         if not self._positions:
             return False
 
-        if GTK_API_VERSION == 3:
-            return False
+        # Cycle between items when pressing arrow keys inside text entry
+        if GTK_API_VERSION >= 4:
+            current_position = self._positions.get(self.get_text(), -1)
 
-        current_position = self._positions.get(self.get_text(), -1)
+            if direction == "up":
+                new_position = max(0, current_position - 1)
+            else:
+                new_position = min(current_position + 1, len(self._positions) - 1)
 
-        if direction == "up":
-            new_position = max(0, current_position - 1)
-        else:
-            new_position = min(current_position + 1, len(self._positions) - 1)
+            self.set_selected_pos(new_position)
+            self._update_item_entry_text()
+            return True
 
-        self.set_selected_pos(new_position)
-        self._update_item_entry_text()
-        return True
+        return False
 
     def _on_select_callback_status(self, enabled):
         self._is_popup_visible = enabled
@@ -586,6 +746,10 @@ class ComboBox:
         if not visible:
             if self._list_view is not None:
                 self._selected_position = self._list_view.get_model().get_selection().get_nth(0)
+
+            if self._popover is not None:
+                self._popover.set_autohide(True)
+
             return
 
         if self.entry is not None:
