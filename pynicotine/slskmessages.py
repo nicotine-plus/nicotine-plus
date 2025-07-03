@@ -79,7 +79,7 @@ class ConnectionType:
     DISTRIBUTED = "D"
 
 
-class LoginFailure:
+class LoginRejectReason:
     USERNAME = "INVALIDUSERNAME"
     PASSWORD = "INVALIDPASS"
     VERSION = "INVALIDVERSION"
@@ -640,8 +640,9 @@ class Login(ServerMessage):
     established. Server responds with the greeting message.
     """
 
-    __slots__ = ("username", "passwd", "version", "minorversion", "success", "reason",
-                 "banner", "ip_address", "local_address", "server_address", "is_supporter")
+    __slots__ = ("username", "passwd", "version", "minorversion", "success", "rejection_reason",
+                 "rejection_detail", "banner", "ip_address", "local_address", "server_address",
+                 "is_supporter")
     __excluded_attrs__ = {"passwd"}
 
     def __init__(self, username=None, passwd=None, version=None, minorversion=None):
@@ -650,7 +651,8 @@ class Login(ServerMessage):
         self.version = version
         self.minorversion = minorversion
         self.success = None
-        self.reason = None
+        self.rejection_reason = None
+        self.rejection_detail = None
         self.banner = None
         self.ip_address = None
         self.local_address = None
@@ -676,7 +678,10 @@ class Login(ServerMessage):
         pos, self.success = self.unpack_bool(message)
 
         if not self.success:
-            pos, self.reason = self.unpack_string(message, pos)
+            pos, self.rejection_reason = self.unpack_string(message, pos)
+
+            if message[pos:]:
+                pos, self.rejection_detail = self.unpack_string(message, pos)
             return
 
         pos, self.banner = self.unpack_string(message, pos)

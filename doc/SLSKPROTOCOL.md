@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on April 25, 2025](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on July 4, 2025](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -89,13 +89,25 @@ please report them.
 | `D`  | Distributed Network |
 
 
-## Login Failure Reasons
+## Login Rejection Reasons
 
-| Reason            | Description                                                                      |
-|-------------------|----------------------------------------------------------------------------------|
-| `INVALIDUSERNAME` | Username is longer than 30 characters or contains invalid characters (non-ASCII) |
-| `INVALIDPASS`     | Password for existing user is incorrect                                          |
-| `INVALIDVERSION`  | Client version is outdated                                                       |
+| Reason            | Description                             |
+|-------------------|-----------------------------------------|
+| `INVALIDUSERNAME` | Username is invalid                     |
+| `INVALIDPASS`     | Password for existing user is incorrect |
+| `INVALIDVERSION`  | Client version is outdated              |
+
+
+## Login Rejection Details
+
+### INVALIDUSERNAME
+
+| Detail                                            | Comments                                |
+|---------------------------------------------------|-----------------------------------------|
+| `Nick empty.`                                     |                                         |
+| `Nick too long.`                                  | Max 30 characters allowed               |
+| `Invalid characters in nick.`                     | Only printable ASCII characters allowed |
+| `No leading and trailing spaces allowed in nick.` |                                         |
 
 
 ## User Status Codes
@@ -360,9 +372,11 @@ Server responds with the greeting message.
         4.  **bool** *is supporter*  
             If we have donated to Soulseek at some point in the past
     3.  If *success* is false
-        1.  **bool** *failure*
-        2.  **string** *reason*
-            See [Login Failure Reasons](#login-failure-reasons)
+        1.  **string** *rejection reason*
+            See [Login Rejection Reasons](#login-rejection-reasons)
+        2.  If *rejection reason* is `INVALIDUSERNAME`
+            1.  **string** *rejection detail*
+                See [Login Rejection Details](#login-rejection-details)
 
 
 ## Server Code 2

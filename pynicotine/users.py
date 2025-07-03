@@ -12,7 +12,7 @@ from pynicotine.slskmessages import GetPeerAddress
 from pynicotine.slskmessages import GetUserStats
 from pynicotine.slskmessages import GetUserStatus
 from pynicotine.slskmessages import GivePrivileges
-from pynicotine.slskmessages import LoginFailure
+from pynicotine.slskmessages import LoginRejectReason
 from pynicotine.slskmessages import SetStatus
 from pynicotine.slskmessages import UnwatchUser
 from pynicotine.slskmessages import UserStatus
@@ -243,15 +243,15 @@ class Users:
             core.pluginhandler.server_connect_notification()
             return
 
-        if msg.reason == LoginFailure.USERNAME:
-            events.emit("invalid-username")
+        if msg.rejection_reason == LoginRejectReason.USERNAME:
+            events.emit("invalid-username", msg.rejection_detail)
             return
 
-        if msg.reason == LoginFailure.PASSWORD:
+        if msg.rejection_reason == LoginRejectReason.PASSWORD:
             events.emit("invalid-password")
             return
 
-        log.add(_("Unable to connect to the server. Reason: %s"), msg.reason, title=_("Cannot Connect"))
+        log.add(_("Unable to connect to the server. Reason: %s"), msg.rejection_reason, title=_("Cannot Connect"))
 
     def _get_peer_address(self, msg):
         """Server code 3."""

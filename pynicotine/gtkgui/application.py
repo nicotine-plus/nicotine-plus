@@ -566,7 +566,7 @@ class Application:
             callback=self.on_shares_unavailable_response
         ).present()
 
-    def on_invalid_password(self):
+    def on_invalid_password(self, *_args):
         self.on_fast_configure(invalid_password=True)
 
     def on_user_status(self, msg):

@@ -63,7 +63,7 @@ class Application:
         responses = "[y/N] "
         cli.prompt(_("Do you really want to exit? %s") % responses, callback=self.on_confirm_quit_response)
 
-    def on_invalid_password(self):
+    def on_invalid_password(self, *_args):
 
         log.add(_("User %s already exists, and the password you entered is invalid."),
                 config.sections["server"]["login"])
