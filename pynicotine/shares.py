@@ -240,9 +240,8 @@ class Scanner:
 
     __slots__ = ("writer", "share_groups", "share_dbs", "share_db_paths", "init",
                  "rescan", "rebuild", "reveal_buddy_shares", "reveal_trusted_shares",
-                 "files", "streams", "mtimes", "word_index", "processed_share_names",
-                 "processed_share_paths", "current_file_index", "current_folder_count",
-                 "lowercase_paths")
+                 "files", "streams", "mtimes", "word_index", "current_file_index",
+                 "current_folder_count", "lowercase_paths")
 
     HIDDEN_FOLDER_NAMES = {"@eaDir", "#recycle", "#snapshot"}
 
@@ -263,8 +262,6 @@ class Scanner:
         self.mtimes = {}
         self.lowercase_paths = defaultdict(dict)
         self.word_index = defaultdict(list)
-        self.processed_share_names = set()
-        self.processed_share_paths = set()
         self.current_file_index = 0
         self.current_folder_count = 0
 
@@ -461,20 +458,22 @@ class Scanner:
 
         old_files = self.share_dbs.get(f"{permission_level}_files")
         old_mtimes = self.share_dbs.get(f"{permission_level}_mtimes")
+        processed_share_names = set()
+        processed_share_paths = set()
 
         for virtual_name, folder_path, *_unused in shared_folder_paths:
-            if virtual_name in self.processed_share_names:
+            if virtual_name in processed_share_names:
                 # No duplicate names
                 continue
 
-            if folder_path in self.processed_share_paths:
+            if folder_path in processed_share_paths:
                 # No duplicate folder paths
                 continue
 
             self.scan_shared_folder(folder_path, old_mtimes, old_files)
 
-            self.processed_share_names.add(virtual_name)
-            self.processed_share_paths.add(folder_path)
+            processed_share_names.add(virtual_name)
+            processed_share_paths.add(folder_path)
 
         # Save data to databases
         Shares.close_shares(self.share_dbs)
