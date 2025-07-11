@@ -90,4 +90,4 @@ def apply_translations(language=None):
     _set_system_language(language)
 
     # Install translations for Python
-    gettext.install(TRANSLATION_DOMAIN, LOCALE_PATH)
+    gettext.install(TRANSLATION_DOMAIN, LOCALE_PATH, names=["ngettext"])
