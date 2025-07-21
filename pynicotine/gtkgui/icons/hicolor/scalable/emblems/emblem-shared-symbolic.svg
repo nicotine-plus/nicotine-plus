@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
 <svg height="16px" viewBox="0 0 16 16" width="16px" xmlns="http://www.w3.org/2000/svg">
     <g fill="#222222">
         <path d="m 5.96875 7.96875 c 0 1.640625 -1.328125 2.96875 -2.96875 2.96875 s -2.96875 -1.328125 -2.96875 -2.96875 s 1.328125 -2.96875 2.96875 -2.96875 s 2.96875 1.328125 2.96875 2.96875 z m 0 0"/>

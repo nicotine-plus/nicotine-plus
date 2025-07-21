@@ -1,6 +1,11 @@
+<!--
+  SPDX-FileCopyrightText: 2006-2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # Soulseek Protocol Documentation
 
-[Last updated on August 9, 2024](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on July 4, 2025](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -84,13 +89,25 @@ please report them.
 | `D`  | Distributed Network |
 
 
-## Login Failure Reasons
+## Login Rejection Reasons
 
-| Reason            | Description                                                                      |
-|-------------------|----------------------------------------------------------------------------------|
-| `INVALIDUSERNAME` | Username is longer than 30 characters or contains invalid characters (non-ASCII) |
-| `INVALIDPASS`     | Password for existing user is incorrect                                          |
-| `INVALIDVERSION`  | Client version is outdated                                                       |
+| Reason            | Description                             |
+|-------------------|-----------------------------------------|
+| `INVALIDUSERNAME` | Username is invalid                     |
+| `INVALIDPASS`     | Password for existing user is incorrect |
+| `INVALIDVERSION`  | Client version is outdated              |
+
+
+## Login Rejection Details
+
+### INVALIDUSERNAME
+
+| Detail                                            | Comments                                |
+|---------------------------------------------------|-----------------------------------------|
+| `Nick empty.`                                     |                                         |
+| `Nick too long.`                                  | Max 30 characters allowed               |
+| `Invalid characters in nick.`                     | Only printable ASCII characters allowed |
+| `No leading and trailing spaces allowed in nick.` |                                         |
 
 
 ## User Status Codes
@@ -355,9 +372,11 @@ Server responds with the greeting message.
         4.  **bool** *is supporter*  
             If we have donated to Soulseek at some point in the past
     3.  If *success* is false
-        1.  **bool** *failure*
-        2.  **string** *reason*
-            See [Login Failure Reasons](#login-failure-reasons)
+        1.  **string** *rejection reason*
+            See [Login Rejection Reasons](#login-rejection-reasons)
+        2.  If *rejection reason* is `INVALIDUSERNAME`
+            1.  **string** *rejection detail*
+                See [Login Rejection Details](#login-rejection-details)
 
 
 ## Server Code 2
@@ -2289,22 +2308,27 @@ a peer. In Nicotine+, these messages are defined in slskmessages.py.
 (slskd, Seeker)*
 
 1.  User A sends [ConnectToPeer](#server-code-18) to the Server with a unique
-    token (indirect connection request)
-2.  User A sends a [PeerInit](#peer-init-code-1) to User B (direct connection
-    request)
-3.  The Server sends a [ConnectToPeer](#server-code-18) response to User B with
-    the same token.  
+    token (indirect connection request) and User B's username. The token is
+    stored for later use (see step 6).
+2.  User A sends [GetPeerAddress](#server-code-3) to the Server with User B's
+    username.
+3.  The Server responds to User A with [GetPeerAddress](#server-code-3), which
+    gives User A the IP address of User B.
+4.  User A sends a [PeerInit](#peer-init-code-1) to User B (direct connection
+    request) using the IP address received in step 3.
+5.  The Server sends a [ConnectToPeer](#server-code-18) response to User B with
+    the same token as in step 1.
     If User B receives the *PeerInit* message, a connection is established, and
     user A is free to send peer messages.  
     Otherwise, once User B receives the *ConnectToPeer* message from the
-    Server, User B proceeds with step 4.
-4.  User B sends a [PierceFireWall](#peer-init-code-0) to User A with the token
+    Server, User B proceeds with step 6.
+6.  User B sends a [PierceFireWall](#peer-init-code-0) to User A with the token
     included in the *ConnectToPeer* message.  
     If this succeeds, a connection is established, and User A is free to send
     peer messages.  
-    If this fails, no connection is possible, and User B proceeds with step 5.
-5.  User B sends a [CantConnectToPeer](#server-code-1001) to the Server.
-6.  The Server sends a [CantConnectToPeer](#server-code-1001) response to
+    If this fails, no connection is possible, and User B proceeds with step 7.
+7.  User B sends a [CantConnectToPeer](#server-code-1001) to the Server.
+8.  The Server sends a [CantConnectToPeer](#server-code-1001) response to
     User A.
 
 
@@ -2313,23 +2337,28 @@ a peer. In Nicotine+, these messages are defined in slskmessages.py.
 *Used by Soulseek NS, Nicotine+ 3.2.0 and earlier (excluding step 5-7),
 Museek+ (excluding step 7), soulseeX*
 
-1.  User A sends a [PeerInit](#peer-init-code-1) to User B.  
+1.  User A sends [GetPeerAddress](#server-code-3) to the Server with User B's
+    username.
+2.  The Server responds to User A with [GetPeerAddress](#server-code-3), which
+    gives User A the IP address of User B.
+3.  User A sends a [PeerInit](#peer-init-code-1) to User B using the IP address
+    received in step 1.
     If this succeeds, a connection is established, and User A is free to send
-    peer messages.  
+    peer messages.
     If this fails (socket cannot connect), User A proceeds with an indirect
-    connection request (step 2).
-2.  User A sends [ConnectToPeer](#server-code-18) to the Server with a unique
-    token
-3.  The Server sends a [ConnectToPeer](#server-code-18) response to User B with
-    the same token
-4.  User B sends a [PierceFireWall](#peer-init-code-0) to User A with the same
+    connection request (step 4).
+4.  User A sends [ConnectToPeer](#server-code-18) to the Server with a unique
+    token.
+5.  The Server sends a [ConnectToPeer](#server-code-18) response to User B with
+    the same token.
+6.  User B sends a [PierceFireWall](#peer-init-code-0) to User A with the same
     token.  
     If this succeeds, a connection is established, and User A is free to send
     peer messages.  
-    If this fails, no connection is possible, and User B proceeds with step 5.
-5.  User B sends a [CantConnectToPeer](#server-code-1001) to the Server.
-6.  The Server sends a [CantConnectToPeer](#server-code-1001) response to User A.
-7.  After 20 seconds, user A retries an indirect connection request (step 2) up
+    If this fails, no connection is possible, and User B proceeds with step 7.
+7.  User B sends a [CantConnectToPeer](#server-code-1001) to the Server.
+8.  The Server sends a [CantConnectToPeer](#server-code-1001) response to User A.
+9.  After 20 seconds, user A retries an indirect connection request (step 2) up
     to three times before giving up.
 
 
@@ -2959,6 +2988,33 @@ consequence, the client sends an invalid file offset of -1.
     -   **uint64** *offset*
   - Receive
     -   **uint64** *offset*
+
+## Example Flow for Downloading a File
+
+1.  We send a [FileSearch](#server-code-26) message to the server, storing the
+    token for later use.
+2.  The server propagates the search query through the search network.
+3.  We receive a [ConnectToPeer](#server-code-18) message from the server for
+    any peers that have a match for the search query.  
+    See [Peer Connection Order](#modern-peer-connection-message-order) for how
+    to connect to a peer (in this scenario, we assume the role of User B).
+4.  If a connection is established, we expect the peer to send us a
+    [FileSearchResponse](#peer-code-9) message.
+5.  If we decide to download a file received in the message from step 4, we
+    send a [QueueUpload](#peer-code-43) message to the peer.
+6.  The peer sends us a [TransferRequest](#peer-code-40) message.
+7.  We send the peer a [TransferResponse](#peer-code-41-a), accepting the
+    transfer request. We store the filesize for later use.
+8.  We receive a [ConnectToPeer](#server-code-18) message from the server with
+    the username of the peer, this time with an `F` connection.
+9.  We send a [PierceFireWall](#peer-init-code-0) message to the peer, which
+    lets the peer know they can begin transferring the file to us.
+10. The peer sends us the file data in small chunks until the transfer is
+    complete, or until the connection is dropped. See [UploadFailed](#peer-code-46)
+    for handling failed transfers.  
+    We can use the filesize stored previously to check how much data we expect
+    to receive.
+11. Once the transfer is complete, we are free to persist the file to disk.
 
 
 # Distributed Messages

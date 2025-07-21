@@ -1,21 +1,7 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
+import io
 import os
 import sys
 import time
@@ -220,6 +206,37 @@ class Logger:
     def open_log(self, folder_path, basename):
         self._log_file_operation(folder_path, basename, self.open_log_callback)
 
+    def _get_log_lines(self, log_file, num_lines):
+
+        file_handle = log_file.handle
+        file_handle.seek(0, os.SEEK_END)
+
+        blocks = deque()
+        read_offset = file_handle.tell()
+        lines_left = num_lines + 1
+
+        while lines_left > 0:
+            read_size = io.DEFAULT_BUFFER_SIZE
+            read_offset -= read_size
+
+            if read_offset < 0:
+                # Reached beginning of file, read remaining data
+                read_size += read_offset
+                read_offset = 0
+
+            file_handle.seek(read_offset)
+            block = file_handle.read(read_size)
+            blocks.appendleft(block)
+
+            if read_offset <= 0:
+                # Fewer lines in file than our limit, stop here
+                break
+
+            lines_left -= block.count(b'\n')
+
+        file_handle.seek(0, os.SEEK_END)
+        return b''.join(blocks).splitlines()[-num_lines:]
+
     def read_log(self, folder_path, basename, num_lines):
 
         lines = None
@@ -229,11 +246,7 @@ class Logger:
             log_file = self._get_log_file(folder_path, basename, should_create_file=False)
 
             if log_file is not None:
-                # Read the number of lines specified from the beginning of the file,
-                # then go back to the end of the file to append new lines
-                log_file.handle.seek(0)
-                lines = deque(log_file.handle, num_lines)
-                log_file.handle.seek(0, os.SEEK_END)
+                lines = self._get_log_lines(log_file, num_lines)
 
         except Exception as error:
             self._add(_("Cannot access log file %(path)s: %(error)s"), {

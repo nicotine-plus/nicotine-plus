@@ -1,20 +1,5 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -504,23 +489,23 @@ class ChatRooms:
         is_action_message = (msg.message_type == "action")
 
         if is_action_message:
-            message = message.replace("/me ", "", 1)
+            msg.message = message = message.replace("/me ", "", 1)
 
         if config.sections["words"]["censorwords"] and username != core.users.login_username:
             message = censor_text(message, censored_patterns=config.sections["words"]["censored"])
 
-        if is_action_message:
-            msg.formatted_message = msg.message = f"* {username} {message}"
-        else:
-            msg.formatted_message = f"[{username}] {message}"
-
-        if is_global:
-            msg.formatted_message = f"{msg.room} | {msg.formatted_message}"
-
         if config.sections["logging"]["chatrooms"] or room in config.sections["logging"]["rooms"]:
+            if is_action_message:
+                formatted_message = f"* {username} {message}"
+            else:
+                formatted_message = f"[{username}] {message}"
+
+            if is_global:
+                formatted_message = f"{msg.room} | {formatted_message}"
+
             log.write_log_file(
                 folder_path=log.room_folder_path,
-                basename=room, text=msg.formatted_message
+                basename=room, text=formatted_message
             )
 
         if is_global:

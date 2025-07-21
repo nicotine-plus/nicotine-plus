@@ -1,20 +1,5 @@
-# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2021-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
 import shutil
@@ -23,7 +8,6 @@ from unittest import TestCase
 
 from pynicotine.config import config
 from pynicotine.core import core
-from pynicotine.downloads import RequestedFolder
 from pynicotine.slskmessages import FileAttribute
 from pynicotine.transfers import TransferStatus
 from pynicotine.userbrowse import BrowsedUser
@@ -56,13 +40,7 @@ class DownloadsTest(TestCase):
         core.start()
 
     def tearDown(self):
-
         core.quit()
-
-        self.assertIsNone(core.users)
-        self.assertIsNone(core.downloads)
-        self.assertIsNone(core.userbrowse)
-        self.assertIsNone(core.buddies)
 
     @classmethod
     def tearDownClass(cls):
@@ -214,14 +192,8 @@ class DownloadsTest(TestCase):
         config.sections["transfers"]["usernamesubfolders"] = False
         destination_default = core.downloads.get_folder_destination(username, folder_path)
 
-        core.downloads._requested_folders[username][folder_path] = RequestedFolder(
-            username=username, folder_path=folder_path, download_folder_path="test"
-        )
-        destination_custom = core.downloads.get_folder_destination(username, folder_path)
-        core.downloads._requested_folders.clear()
-
-        destination_custom_second = core.downloads.get_folder_destination(
-            username, folder_path, download_folder_path="test2")
+        destination_custom = core.downloads.get_folder_destination(
+            username, folder_path, download_folder_path="Hello Test Path 2")
 
         config.sections["transfers"]["usernamesubfolders"] = True
         destination_user = core.downloads.get_folder_destination(username, folder_path)
@@ -229,15 +201,14 @@ class DownloadsTest(TestCase):
         folder_path = "Hello"
         destination_root = core.downloads.get_folder_destination(username, folder_path)
 
-        folder_path = "Hello\\Path\\Depth\\Test"
+        folder_path = "Hello\\Path\\Depth\\Hello Depth Test Path"
         destination_depth = core.downloads.get_folder_destination(username, folder_path)
 
         self.assertEqual(destination_default, os.path.join(config.data_folder_path, "Path"))
-        self.assertEqual(destination_custom, os.path.join("test", "Path"))
-        self.assertEqual(destination_custom_second, os.path.join("test2", "Path"))
+        self.assertEqual(destination_custom, os.path.join("Hello Test Path 2", "Path"))
         self.assertEqual(destination_user, os.path.join(config.data_folder_path, "newuser", "Path"))
         self.assertEqual(destination_root, os.path.join(config.data_folder_path, "newuser", "Hello"))
-        self.assertEqual(destination_depth, os.path.join(config.data_folder_path, "newuser", "Test"))
+        self.assertEqual(destination_depth, os.path.join(config.data_folder_path, "newuser", "Hello Depth Test Path"))
 
     def test_download_subfolders(self):
         """Verify that subfolders are downloaded to the correct location."""

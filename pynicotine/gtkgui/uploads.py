@@ -1,26 +1,11 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-# COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
-# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2009-2011 quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2009 hedonist <ak@sensi.org>
-# COPYRIGHT (C) 2006-2008 daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2016-2018 Mutnick <mutnick@techie.com>
+# SPDX-FileCopyrightText: 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# SPDX-FileCopyrightText: 2009-2011 quinox <quinox@users.sf.net>
+# SPDX-FileCopyrightText: 2009 hedonist <ak@sensi.org>
+# SPDX-FileCopyrightText: 2006-2008 daelstorm <daelstorm@gmail.com>
+# SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
 
@@ -152,7 +137,7 @@ class Uploads(Transfers):
         toggle_status_action.set_enabled(True)
 
         self.window.user_status_icon.set_from_icon_name(icon_name, *icon_args)
-        self.window.user_status_label.set_text(_("Quitting..."))
+        self.window.user_status_label.set_text(_("Quitting…"))
 
     def shutdown_cancel(self):
         self.window.update_user_status()
@@ -180,7 +165,7 @@ class Uploads(Transfers):
             callback=self.on_clear_all_response
         ).present()
 
-    def on_copy_url(self, *_args):
+    def on_copy_file_url(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
 
@@ -235,13 +220,6 @@ class Uploads(Transfers):
                 self.selected_transfers[transfer] = None
 
         self.abort_selected_transfers()
-
-    def on_ban_users(self, *_args):
-
-        self.select_transfers()
-
-        for username in self.selected_users:
-            core.network_filter.ban_user(username)
 
     def on_clear_queued(self, *_args):
         core.uploads.clear_uploads(statuses={TransferStatus.QUEUED})

@@ -1,30 +1,15 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
+from pynicotine.gtkgui.widgets.combobox import ComboBox
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
-from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.treeview import TreeView
 
 
@@ -35,7 +20,8 @@ class WishList(Dialog):
         (
             self.container,
             self.list_container,
-            self.wish_entry
+            self.wish_entry,
+            self.wish_entry_container
         ) = ui.load(scope=self, path="dialogs/wishlist.ui")
 
         super().__init__(
@@ -50,6 +36,10 @@ class WishList(Dialog):
         application.add_window(self.widget)
 
         self.application = application
+        self.wish_combobox = ComboBox(
+            container=self.wish_entry_container, has_entry=True, has_dropdown=False,
+            entry=self.wish_entry, visible=True
+        )
         self.list_view = TreeView(
             application.window, parent=self.list_container, multi_select=True, activate_row_callback=self.on_edit_wish,
             delete_accelerator_callback=self.on_remove_wish,
@@ -62,15 +52,16 @@ class WishList(Dialog):
             }
         )
 
+        self.wish_combobox.freeze()
         self.list_view.freeze()
 
         for search_item in core.search.searches.values():
             if search_item.mode == "wishlist":
                 self.add_wish(search_item.term, select=False)
 
+        self.wish_combobox.unfreeze()
         self.list_view.unfreeze()
 
-        self.completion_entry = CompletionEntry(self.wish_entry, self.list_view.model)
         Accelerator("<Shift>Tab", self.list_view.widget, self.on_list_focus_entry_accelerator)  # skip column header
 
         self.popup_menu = PopupMenu(application, self.list_view.widget)
@@ -89,8 +80,8 @@ class WishList(Dialog):
 
     def destroy(self):
 
+        self.wish_combobox.destroy()
         self.list_view.destroy()
-        self.completion_entry.destroy()
         self.popup_menu.destroy()
 
         super().destroy()
@@ -177,6 +168,7 @@ class WishList(Dialog):
         ).present()
 
     def add_wish(self, wish, select=True):
+        self.wish_combobox.append(wish)
         self.list_view.add_row([wish], select_row=select)
 
     def remove_wish(self, wish):
@@ -184,6 +176,7 @@ class WishList(Dialog):
         iterator = self.list_view.iterators.get(wish)
 
         if iterator is not None:
+            self.wish_combobox.remove_id(wish)
             self.list_view.remove_row(iterator)
 
     def select_wish(self, wish):

@@ -1,24 +1,9 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
-# COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2009 daelstorm <daelstorm@gmail.com>
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# SPDX-FileCopyrightText: 2016 Mutnick <muhing@yahoo.com>
+# SPDX-FileCopyrightText: 2008-2011 quinox <quinox@users.sf.net>
+# SPDX-FileCopyrightText: 2009 daelstorm <daelstorm@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
 import sys
@@ -495,7 +480,7 @@ class PluginHandler:
         # Reset class attributes
         BasePlugin.internal_name = BasePlugin.human_name = BasePlugin.path = None
 
-        self.plugin_settings(plugin_name, instance)
+        self.load_plugin_settings(instance)
 
         if hasattr(plugin, "enable"):
             instance.log("top-level enable() function is obsolete, please use BasePlugin.__init__() instead")
@@ -667,6 +652,22 @@ class PluginHandler:
                     # Builtin module
                     continue
 
+            # Remove any event callbacks registered by the plugin
+            for callbacks in events._callbacks.values():  # pylint: disable=protected-access
+                for function in callbacks[:]:
+                    if function.__module__ is not None and function.__module__.split(".", 1)[0] == plugin_name:
+                        callbacks.remove(function)
+
+            # Remove any event callbacks scheduled by the plugin
+            for event_id, event in events._scheduler_events.copy().items():  # pylint: disable=protected-access
+                function = event.callback
+
+                if function is None:
+                    continue
+
+                if function.__module__ is not None and function.__module__.split(".", 1)[0] == plugin_name:
+                    events.cancel_scheduled(event_id)
+
             if is_permanent and plugin_name in config.sections["plugins"]["enabled"]:
                 config.sections["plugins"]["enabled"].remove(plugin_name)
 
@@ -689,7 +690,7 @@ class PluginHandler:
         self.disable_plugin(plugin_name)
         self.enable_plugin(plugin_name)
 
-    def get_plugin_settings(self, plugin_name):
+    def get_plugin_metasettings(self, plugin_name):
 
         if plugin_name in self.enabled_plugins:
             plugin = self.enabled_plugins[plugin_name]
@@ -729,21 +730,21 @@ class PluginHandler:
         return plugin_info
 
     @staticmethod
-    def show_plugin_error(plugin_name, exc_type, exc_value, exc_traceback):
+    def show_plugin_error(plugin_name, error):
 
         from traceback import format_tb
 
         log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
                   "Trace: %(trace)s"), {
             "module": plugin_name,
-            "errortype": exc_type,
-            "error": exc_value,
-            "trace": "".join(format_tb(exc_traceback))
+            "errortype": type(error),
+            "error": error,
+            "trace": "".join(format_tb(error.__traceback__))
         })
 
-    def plugin_settings(self, plugin_name, plugin):
+    def load_plugin_settings(self, plugin):
 
-        plugin_name = plugin_name.lower()
+        plugin_name = plugin.internal_name.lower()
 
         if not plugin.settings:
             return
@@ -911,8 +912,8 @@ class PluginHandler:
                             command_found = True
                             break
 
-            except Exception:
-                self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
+            except Exception as error:
+                self.show_plugin_error(module, error)
                 plugin = None
                 break
 
@@ -940,8 +941,8 @@ class PluginHandler:
             try:
                 return_value = getattr(plugin, function_name)(*args)
 
-            except Exception:
-                self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
+            except Exception as error:
+                self.show_plugin_error(module, error)
                 continue
 
             if return_value is None:

@@ -1,21 +1,6 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-# COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2008-2011 quinox <quinox@users.sf.net>
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import socket
 import threading
@@ -90,7 +75,7 @@ class Plugin(BasePlugin):
             return "unknown"
 
         timeout = self.settings["socket_timeout"]
-        self.log("Scanning %s:%d (socket timeout %d seconds)...", (ip_address, port, timeout))
+        self.log("Scanning %s:%d (socket timeout %d seconds)…", (ip_address, port, timeout))
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(timeout)

@@ -1,20 +1,5 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import pynicotine
 from pynicotine.config import config
@@ -274,20 +259,20 @@ class PrivateChat:
             msg.message = message = "CTCP VERSION"
 
         if is_action_message:
-            message = message.replace("/me ", "", 1)
+            msg.message = message = message.replace("/me ", "", 1)
 
         if not is_outgoing_message and config.sections["words"]["censorwords"]:
             message = censor_text(message, censored_patterns=config.sections["words"]["censored"])
 
-        if is_action_message:
-            msg.formatted_message = msg.message = f"* {tag_username} {message}"
-        else:
-            msg.formatted_message = f"[{tag_username}] {message}"
-
         if config.sections["logging"]["privatechat"] or username in config.sections["logging"]["private_chats"]:
+            if is_action_message:
+                formatted_message = f"* {tag_username} {message}"
+            else:
+                formatted_message = f"[{tag_username}] {message}"
+
             log.write_log_file(
                 folder_path=log.private_chat_folder_path,
-                basename=username, text=msg.formatted_message, timestamp=timestamp
+                basename=username, text=formatted_message, timestamp=timestamp
             )
 
         if is_outgoing_message:

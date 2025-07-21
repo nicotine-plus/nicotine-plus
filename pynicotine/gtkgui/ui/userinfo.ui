@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2004-2025 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2003-2004 Nicotine Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkButton" id="retry_button">
@@ -66,7 +71,27 @@
                                   </object>
                                 </child>
                                 <child>
+                                  <object class="GtkButton" id="privileged_user_button">
+                                    <property name="tooltip-text" translatable="yes">Privileged User</property>
+                                    <property name="valign">center</property>
+                                    <property name="visible">False</property>
+                                    <signal name="clicked" handler="on_privileged_user"/>
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="icon-name">starred-symbolic</property>
+                                        <property name="visible">True</property>
+                                      </object>
+                                    </child>
+                                    <style>
+                                      <class name="circular"/>
+                                      <class name="image-button"/>
+                                      <class name="warning"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
                                   <object class="GtkButton" id="country_button">
+                                    <property name="valign">center</property>
                                     <property name="visible">False</property>
                                     <signal name="clicked" handler="on_show_ip_address"/>
                                     <child>
@@ -99,6 +124,7 @@
                             <child>
                               <object class="GtkButton" id="edit_profile_button">
                                 <property name="tooltip-text" translatable="yes">Edit Profile</property>
+                                <property name="valign">center</property>
                                 <property name="visible">True</property>
                                 <signal name="clicked" handler="on_edit_profile"/>
                                 <child>
@@ -337,7 +363,6 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="ellipsize">end</property>
-                            <property name="hexpand">True</property>
                             <property name="label" translatable="yes">Interests</property>
                             <property name="margin-bottom">6</property>
                             <property name="margin-start">6</property>
@@ -352,18 +377,33 @@
                         </child>
                         <child>
                           <object class="GtkButton" id="edit_interests_button">
-                            <property name="tooltip-text" translatable="yes">Edit Interests</property>
+                            <property name="tooltip-text" translatable="yes">Add Interests</property>
                             <property name="visible">True</property>
                             <signal name="clicked" handler="on_edit_interests"/>
                             <child>
-                              <object class="GtkImage">
-                                <property name="icon-name">document-edit-symbolic</property>
+                              <object class="GtkBox">
+                                <property name="spacing">6</property>
                                 <property name="visible">True</property>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="icon-name">list-add-symbolic</property>
+                                    <property name="visible">True</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="ellipsize">end</property>
+                                    <property name="label" translatable="yes">Add…</property>
+                                    <property name="mnemonic-widget">edit_interests_button</property>
+                                    <property name="use-underline">True</property>
+                                    <property name="visible">True</property>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                             <style>
                               <class name="circular"/>
-                              <class name="image-button"/>
+                              <class name="count"/>
                             </style>
                           </object>
                         </child>

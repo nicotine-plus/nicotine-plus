@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2022-2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+<interface>
+  <requires lib="gtk+" version="3.0"/>
+  <object class="GtkBox" id="container">
+    <property name="visible">True</property>
+    <property name="width-request">360</property>
+    <child>
+      <object class="GtkBox">
+        <property name="margin-bottom">18</property>
+        <property name="margin-end">18</property>
+        <property name="margin-start">18</property>
+        <property name="margin-top">18</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">12</property>
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkSearchEntry" id="search_entry">
+            <property name="hexpand">True</property>
+            <property name="max-width-chars">150</property>
+            <property name="placeholder-text" translatable="yes">Search users…</property>
+            <property name="visible">True</property>
+            <property name="width-chars">15</property>
+            <signal name="activate" handler="on_show_user"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkFrame">
+            <property name="vexpand">True</property>
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="halign">center</property>
+                        <property name="hexpand">True</property>
+                        <property name="margin-bottom">30</property>
+                        <property name="margin-end">24</property>
+                        <property name="margin-start">24</property>
+                        <property name="margin-top">30</property>
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">30</property>
+                        <property name="valign">center</property>
+                        <property name="vexpand">True</property>
+                        <property name="visible" bind-source="list_container" bind-property="visible" bind-flags="bidirectional|invert-boolean|sync-create"/>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">mail-unread-symbolic</property>
+                            <property name="pixel-size">128</property>
+                            <property name="visible">True</property>
+                            <style>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">12</property>
+                            <property name="visible">True</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="justify">center</property>
+                                <property name="label" translatable="yes">No Chat History</property>
+                                <property name="visible">True</property>
+                                <property name="wrap">True</property>
+                                <style>
+                                  <class name="title-1"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="justify">center</property>
+                                <property name="label" translatable="yes">Previous private chats with others will appear here</property>
+                                <property name="max-width-chars">55</property>
+                                <property name="visible">True</property>
+                                <property name="wrap">True</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <style>
+                      <class name="view"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkScrolledWindow" id="list_container">
+                    <property name="hexpand">True</property>
+                    <property name="visible">False</property>
+                    <style>
+                      <class name="colored-icon"/>
+                      <class name="user-status"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

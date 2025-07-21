@@ -1,24 +1,9 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2008-2009 quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# SPDX-FileCopyrightText: 2008-2009 quinox <quinox@users.sf.net>
+# SPDX-FileCopyrightText: 2006-2009 daelstorm <daelstorm@gmail.com>
+# SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
 import sys
@@ -51,7 +36,11 @@ class PopupMenu:
         self.menu_button = None
         self.gesture_click = None
         self.gesture_press = None
-        self.valid_parent_widgets = Gtk.Box if GTK_API_VERSION >= 4 else (Gtk.Box, Gtk.EventBox)
+
+        if GTK_API_VERSION >= 4:
+            self.valid_parent_widgets = Gtk.Box
+        else:
+            self.valid_parent_widgets = (Gtk.Box, Gtk.EventBox)  # pylint: disable=c-extension-no-member
 
         if connect_events and parent:
             self.connect_events(parent)
@@ -113,7 +102,7 @@ class PopupMenu:
             # Workaround for wrong widget receiving focus after closing menu in GTK 4
             self.popup_menu.connect("closed", lambda *_args: self.parent.child_focus(Gtk.DirectionType.TAB_FORWARD))
         else:
-            self.popup_menu = Gtk.Menu.new_from_model(self.model)
+            self.popup_menu = Gtk.Menu.new_from_model(self.model)  # pylint: disable=c-extension-no-member
             self.popup_menu.attach_to_widget(parent)
 
         return self.popup_menu
@@ -329,13 +318,8 @@ class PopupMenu:
     def _callback_click_gtk3(self, controller, _num_p, pos_x, pos_y):
 
         sequence = controller.get_current_sequence()
-
-        if sequence is not None:
-            event = controller.get_last_event(sequence)
-            show_context_menu = event.triggers_context_menu()
-        else:
-            # Workaround for GTK 3.22.30
-            show_context_menu = (controller.get_current_button() == Gdk.BUTTON_SECONDARY)
+        event = controller.get_last_event(sequence)
+        show_context_menu = event.triggers_context_menu()
 
         if show_context_menu:
             return self._callback(controller, pos_x, pos_y)
@@ -366,7 +350,7 @@ class PopupMenu:
                 gesture_click_darwin.connect("pressed", self._callback_click_gtk4_darwin)
 
         else:
-            self.gesture_click = Gtk.GestureMultiPress(widget=parent)
+            self.gesture_click = Gtk.GestureMultiPress(widget=parent)  # pylint: disable=c-extension-no-member
             self.gesture_click.set_button(0)
             self.gesture_click.connect("pressed", self._callback_click_gtk3)
 

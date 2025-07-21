@@ -1,20 +1,5 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 from gi.repository import Gio
 from pynicotine.pluginsystem import BasePlugin
@@ -57,7 +42,7 @@ class Plugin(BasePlugin):
             member="PropertiesChanged",
             object_path="/org/mpris/MediaPlayer2",
             arg0=None,
-            flags=Gio.DBusSignalFlags.NONE,
+            flags=0,
             callback=self.song_change,
             user_data=None
         )
@@ -75,7 +60,7 @@ class Plugin(BasePlugin):
         if not player:
             dbus_proxy = Gio.DBusProxy.new_sync(
                 connection=self.bus,
-                flags=Gio.DBusProxyFlags.NONE,
+                flags=0,
                 info=None,
                 name="org.freedesktop.DBus",
                 object_path="/org/freedesktop/DBus",
@@ -96,7 +81,7 @@ class Plugin(BasePlugin):
 
         dbus_proxy = Gio.DBusProxy.new_sync(
             connection=self.bus,
-            flags=Gio.DBusProxyFlags.NONE,
+            flags=0,
             info=None,
             name=self.dbus_mpris_service + player,
             object_path="/org/mpris/MediaPlayer2",

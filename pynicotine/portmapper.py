@@ -1,20 +1,5 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import re
 import socket
@@ -139,6 +124,26 @@ class NATPMP(BaseImplementation):
                         continue
 
                     gateway_address = socket.inet_ntoa(struct.pack("<L", int(routes[2], 16)))
+                    break
+
+            return gateway_address
+
+        if sys.platform.startswith("haiku"):
+            gateway_address = None
+            output = execute_command("route", returnoutput=True, hidden=True)
+
+            for line in output.splitlines():
+                columns = line.strip().split()
+
+                if len(columns) < 5:
+                    continue
+
+                new_gateway_address = columns[2]
+                flags = columns[3]
+
+                # D = RTF_DEFAULT
+                if flags[0:1] == b"D" and new_gateway_address != b"-":
+                    gateway_address = new_gateway_address
                     break
 
             return gateway_address
@@ -367,7 +372,7 @@ class UPnP(BaseImplementation):
         @staticmethod
         def get_services(private_ip):
 
-            log.add_debug("UPnP: Discovering... delay=%s seconds", UPnP.MX_RESPONSE_DELAY)
+            log.add_debug("UPnP: Discovering… delay=%s seconds", UPnP.MX_RESPONSE_DELAY)
 
             # Create a UDP socket and set its timeout
             with socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP) as sock:
@@ -616,7 +621,7 @@ class PortMapper:
             return
 
         self._is_mapping_port = True
-        log.add_debug("Creating Port Mapping rule...")
+        log.add_debug("Creating Port Mapping rule…")
 
         try:
             self._active_implementation = self._natpmp

@@ -1,21 +1,9 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-# COPYRIGHT (C) 2009-2011 quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2007-2009 daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
-# COPYRIGHT (C) 2001-2003 Alexander Kanavin
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2009-2011 quinox <quinox@users.sf.net>
+# SPDX-FileCopyrightText: 2007-2009 daelstorm <daelstorm@gmail.com>
+# SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# SPDX-FileCopyrightText: 2001-2003 Alexander Kanavin
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import zlib
 
@@ -91,7 +79,7 @@ class ConnectionType:
     DISTRIBUTED = "D"
 
 
-class LoginFailure:
+class LoginRejectReason:
     USERNAME = "INVALIDUSERNAME"
     PASSWORD = "INVALIDPASS"
     VERSION = "INVALIDVERSION"
@@ -652,8 +640,9 @@ class Login(ServerMessage):
     established. Server responds with the greeting message.
     """
 
-    __slots__ = ("username", "passwd", "version", "minorversion", "success", "reason",
-                 "banner", "ip_address", "local_address", "server_address", "is_supporter")
+    __slots__ = ("username", "passwd", "version", "minorversion", "success", "rejection_reason",
+                 "rejection_detail", "banner", "ip_address", "local_address", "server_address",
+                 "is_supporter")
     __excluded_attrs__ = {"passwd"}
 
     def __init__(self, username=None, passwd=None, version=None, minorversion=None):
@@ -662,7 +651,8 @@ class Login(ServerMessage):
         self.version = version
         self.minorversion = minorversion
         self.success = None
-        self.reason = None
+        self.rejection_reason = None
+        self.rejection_detail = None
         self.banner = None
         self.ip_address = None
         self.local_address = None
@@ -688,7 +678,10 @@ class Login(ServerMessage):
         pos, self.success = self.unpack_bool(message)
 
         if not self.success:
-            pos, self.reason = self.unpack_string(message, pos)
+            pos, self.rejection_reason = self.unpack_string(message, pos)
+
+            if message[pos:]:
+                pos, self.rejection_detail = self.unpack_string(message, pos)
             return
 
         pos, self.banner = self.unpack_string(message, pos)
@@ -880,13 +873,12 @@ class SayChatroom(ServerMessage):
     did.
     """
 
-    __slots__ = ("room", "message", "user", "formatted_message", "message_type")
+    __slots__ = ("room", "message", "user", "message_type")
 
     def __init__(self, room=None, message=None, user=None):
         self.room = room
         self.message = message
         self.user = user
-        self.formatted_message = None
         self.message_type = None
 
     def make_network_message(self):
@@ -1066,8 +1058,7 @@ class MessageUser(ServerMessage):
     Chat phrase sent to someone or received by us in private.
     """
 
-    __slots__ = ("user", "message", "message_id", "timestamp", "is_new_message", "formatted_message",
-                 "message_type")
+    __slots__ = ("user", "message", "message_id", "timestamp", "is_new_message", "message_type")
 
     def __init__(self, user=None, message=None):
         self.user = user
@@ -1075,7 +1066,6 @@ class MessageUser(ServerMessage):
         self.message_id = None
         self.timestamp = None
         self.is_new_message = True
-        self.formatted_message = None
         self.message_type = None
 
     def make_network_message(self):

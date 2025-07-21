@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2016-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 # Auto-generated files
 *.desktop
 *.appdata.xml
@@ -33,7 +36,7 @@ build/
 dist/
 debian/files
 nicotine_plus.egg-info/
-packaging/flatpak/build-dir/
-packaging/flatpak/.flatpak-builder/
-packaging/macos/build/
-packaging/windows/build/
+build-aux/flatpak/build-dir/
+build-aux/flatpak/.flatpak-builder/
+build-aux/macos/build/
+build-aux/windows/build/

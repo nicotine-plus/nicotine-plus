@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2023-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 name: nicotine-plus
 adopt-info: nicotine-plus
 license: GPL-3.0-or-later
@@ -39,7 +42,7 @@ parts:
       craftctl default
       mkdir -p $CRAFT_PART_INSTALL/meta/gui/
       cp -r $CRAFT_PART_INSTALL/share/icons $CRAFT_PART_INSTALL/meta/gui/
-      for i in `find $CRAFT_PART_INSTALL/meta/gui/icons -name "*.svg"`; do
+      for i in `find $CRAFT_PART_INSTALL/meta/gui/icons -name "*.svg" -o -name "*.png"`; do
         mv $i "`dirname $i`/snap.$CRAFT_PROJECT_NAME.`basename $i`"
       done
 

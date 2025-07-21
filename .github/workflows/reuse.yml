@@ -1,0 +1,27 @@
+# SPDX-FileCopyrightText: 2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: REUSE Compliance
+on: [push, pull_request]
+permissions: {}
+
+jobs:
+
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: reuse
+
+      - name: Install dependencies
+        run: python -m pip install reuse
+
+      - name: REUSE compliance
+        run: python -m reuse lint

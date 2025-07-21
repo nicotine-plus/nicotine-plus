@@ -1,26 +1,11 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-# COPYRIGHT (C) 2018 Mutnick <mutnick@techie.com>
-# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2009 hedonist <ak@sensi.org>
-# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2018 Mutnick <mutnick@techie.com>
+# SPDX-FileCopyrightText: 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# SPDX-FileCopyrightText: 2008-2011 quinox <quinox@users.sf.net>
+# SPDX-FileCopyrightText: 2009 hedonist <ak@sensi.org>
+# SPDX-FileCopyrightText: 2006-2009 daelstorm <daelstorm@gmail.com>
+# SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
 
@@ -259,11 +244,14 @@ class Transfers:
         self.popup_menu_clear = PopupMenu(window.application)
         self.popup_menu_clear.set_menu_button(self.clear_all_button)
 
-        self.popup_menu_copy = PopupMenu(window.application)
-        self.popup_menu_copy.add_items(
-            ("#" + _("Copy _File Path"), self.on_copy_file_path),
-            ("#" + _("Copy _URL"), self.on_copy_url),
-            ("#" + _("Copy Folder U_RL"), self.on_copy_folder_url)
+        self.popup_menu_copy_search = PopupMenu(window.application)
+        self.popup_menu_copy_search.add_items(
+            ("#" + _("Copy File Path"), self.on_copy_file_path),
+            ("#" + _("Copy File URL"), self.on_copy_file_url),
+            ("#" + _("Copy Folder URL"), self.on_copy_folder_url),
+            ("", None),
+            ("#" + _("Search for Folder Name"), self.on_search_folder_name),
+            ("#" + _("Search for File Name"), self.on_search_filename)
         )
 
         self.popup_menu = FilePopupMenu(
@@ -283,9 +271,8 @@ class Transfers:
             ("", None),
             ("#" + _("View User _Profile"), self.on_user_profile),
             ("#" + _("_Browse Folder"), self.on_browse_folder),
-            ("#" + _("_Search"), self.on_file_search),
             ("", None),
-            (">" + _("Copy"), self.popup_menu_copy),
+            (">" + _("_Copy & Search"), self.popup_menu_copy_search),
             (">" + _("Clear All"), self.popup_menu_clear),
             (">" + _("User Actions"), self.popup_menu_users)
         )
@@ -297,7 +284,7 @@ class Transfers:
         self.popup_menu.destroy()
         self.popup_menu_users.destroy()
         self.popup_menu_clear.destroy()
-        self.popup_menu_copy.destroy()
+        self.popup_menu_copy_search.destroy()
 
         self.__dict__.clear()
 
@@ -365,7 +352,7 @@ class Transfers:
 
         self.select_child_transfers(transfer)
 
-    def on_file_search(self, *_args):
+    def on_search_filename(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
 
@@ -373,8 +360,22 @@ class Transfers:
             return
 
         _folder_path, _separator, basename = transfer.virtual_path.rpartition("\\")
+        basename_no_extension, _extension = os.path.splitext(basename)
 
-        self.window.search_entry.set_text(basename)
+        self.window.search_entry.set_text(basename_no_extension)
+        self.window.change_main_page(self.window.search_page)
+
+    def on_search_folder_name(self, *_args):
+
+        transfer = next(iter(self.selected_transfers), None)
+
+        if not transfer:
+            return
+
+        folder_path, _separator, _basename = transfer.virtual_path.rpartition("\\")
+        folder_name = folder_path.rpartition("\\")[-1]
+
+        self.window.search_entry.set_text(folder_name)
         self.window.change_main_page(self.window.search_page)
 
     def translate_status(self, status):
@@ -985,9 +986,11 @@ class Transfers:
 
         if expanded:
             icon_name = "view-restore-symbolic"
+            tooltip_text = _("Collapse All")
             self.tree_view.expand_all_rows()
         else:
             icon_name = "view-fullscreen-symbolic"
+            tooltip_text = _("Expand All")
             self.tree_view.collapse_all_rows()
 
             if self.grouping_mode == "folder_grouping":
@@ -995,6 +998,7 @@ class Transfers:
 
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
         self.expand_icon.set_from_icon_name(icon_name, *icon_args)
+        self.expand_button.set_tooltip_text(tooltip_text)
 
         config.sections["transfers"][f"{self.type}sexpanded"] = expanded
         config.write_configuration()
@@ -1061,7 +1065,7 @@ class Transfers:
             self.on_open_file_manager()
 
         elif action == 3:  # Search
-            self.on_file_search()
+            self.on_search_filename()
 
         elif action == 4:  # Pause / Abort
             self.abort_selected_transfers()
@@ -1182,7 +1186,7 @@ class Transfers:
             self.file_properties.update_properties(data, selected_size, selected_length)
             self.file_properties.present()
 
-    def on_copy_url(self, *_args):
+    def on_copy_file_url(self, *_args):
         # Implemented in subclasses
         raise NotImplementedError
 

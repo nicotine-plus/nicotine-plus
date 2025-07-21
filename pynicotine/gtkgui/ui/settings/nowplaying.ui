@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2009-2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkBox" id="container">
@@ -35,6 +39,14 @@
         <child>
           <object class="GtkRadioButton" id="lastfm_radio">
             <property name="label">Last.fm</property>
+            <property name="visible">True</property>
+            <signal name="toggled" handler="update_now_playing_info"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkRadioButton" id="librefm_radio">
+            <property name="group">lastfm_radio</property>
+            <property name="label">Libre.fm</property>
             <property name="visible">True</property>
             <signal name="toggled" handler="update_now_playing_info"/>
           </object>

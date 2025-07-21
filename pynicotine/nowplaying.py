@@ -1,24 +1,9 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2008 gallows <g4ll0ws@gmail.com>
-# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# SPDX-FileCopyrightText: 2008-2011 quinox <quinox@users.sf.net>
+# SPDX-FileCopyrightText: 2008 gallows <g4ll0ws@gmail.com>
+# SPDX-FileCopyrightText: 2006-2009 daelstorm <daelstorm@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import json
 import os
@@ -28,6 +13,10 @@ from pynicotine.config import config
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
 from pynicotine.utils import human_length
+
+
+class AudioscrobblerError(Exception):
+    pass
 
 
 class NowPlaying:
@@ -77,16 +66,19 @@ class NowPlaying:
         result = None
 
         if player == "lastfm":
-            result = self.lastfm(command)
+            result = self._lastfm(command)
+
+        elif player == "librefm":
+            result = self._librefm(command)
 
         elif player == "listenbrainz":
-            result = self.listenbrainz(command)
+            result = self._listenbrainz(command)
 
         elif player == "other":
-            result = self.other(command)
+            result = self._other(command)
 
         elif player == "mpris":
-            result = self.mpris(command)
+            result = self._mpris(command)
 
         if not result:
             return None
@@ -120,7 +112,32 @@ class NowPlaying:
 
         return None
 
-    def lastfm(self, username):
+    def _parse_audioscrobbler_response(self, response_body):
+
+        json_response = json.loads(response_body)
+
+        if "error" in json_response:
+            code = json_response["error"].get("code")
+            message = json_response["error"].get("#text")
+
+            raise AudioscrobblerError(f"{message} (error code {code})")
+
+        last_played = json_response["recenttracks"]["track"]
+
+        try:
+            # In most cases, a list containing a single track dictionary is sent
+            last_played = last_played[0]
+
+        except KeyError:
+            # On rare occasions, the track dictionary is not wrapped in a list
+            pass
+
+        self.title["artist"] = artist = last_played.get("artist", {}).get("#text") or "?"
+        self.title["title"] = title = last_played.get("name") or "?"
+        self.title["album"] = last_played.get("album", {}).get("#text") or "?"
+        self.title["nowplaying"] = f"{artist} - {title}"
+
+    def _lastfm(self, username):
         """Function to get the last song played via Last.fm API."""
 
         try:
@@ -142,21 +159,7 @@ class NowPlaying:
             return None
 
         try:
-            json_api = json.loads(response_body)
-            lastplayed = json_api["recenttracks"]["track"]
-
-            try:
-                # In most cases, a list containing a single track dictionary is sent
-                lastplayed = lastplayed[0]
-
-            except KeyError:
-                # On rare occasions, the track dictionary is not wrapped in a list
-                pass
-
-            self.title["artist"] = artist = lastplayed["artist"]["#text"]
-            self.title["title"] = title = lastplayed["name"]
-            self.title["album"] = lastplayed["album"]["#text"]
-            self.title["nowplaying"] = f"{artist} - {title}"
+            self._parse_audioscrobbler_response(response_body)
 
         except Exception as error:
             log.add(_("Last.fm: Could not get recent track from Audioscrobbler: %(error)s"),
@@ -165,7 +168,31 @@ class NowPlaying:
 
         return True
 
-    def mpris(self, player):
+    def _librefm(self, username):
+        """Function to get the last song played via Libre.fm API."""
+
+        try:
+            from urllib.request import urlopen
+            with urlopen((f"https://libre.fm/2.0/?method=user.getrecenttracks&user={username}"
+                          f"&limit=1&format=json"), timeout=10) as response:
+                response_body = response.read().decode("utf-8", "replace")
+
+        except Exception as error:
+            log.add(_("Libre.fm: Could not connect to Libre.fm: %(error)s"), {"error": error},
+                    title=_("Now Playing Error"))
+            return None
+
+        try:
+            self._parse_audioscrobbler_response(response_body)
+
+        except Exception as error:
+            log.add(_("Libre.fm: Could not get recent track: %(error)s"),
+                    {"error": error}, title=_("Now Playing Error"))
+            return None
+
+        return True
+
+    def _mpris(self, player):
         """Function to get the currently playing song via DBus MPRIS v2
         interface."""
 
@@ -178,7 +205,7 @@ class NowPlaying:
         if not player:
             dbus_proxy = Gio.DBusProxy.new_for_bus_sync(
                 bus_type=Gio.BusType.SESSION,
-                flags=Gio.DBusProxyFlags.NONE,
+                flags=0,
                 info=None,
                 name="org.freedesktop.DBus",
                 object_path="/org/freedesktop/DBus",
@@ -206,7 +233,7 @@ class NowPlaying:
         try:
             dbus_proxy = Gio.DBusProxy.new_for_bus_sync(
                 bus_type=Gio.BusType.SESSION,
-                flags=Gio.DBusProxyFlags.NONE,
+                flags=0,
                 info=None,
                 name=dbus_mpris_service + player,
                 object_path="/org/mpris/MediaPlayer2",
@@ -259,7 +286,7 @@ class NowPlaying:
 
         return True
 
-    def listenbrainz(self, username):
+    def _listenbrainz(self, username):
         """Function to get the currently playing song via ListenBrainz API."""
 
         if not username:
@@ -277,14 +304,14 @@ class NowPlaying:
             return None
 
         try:
-            json_api = json.loads(response_body)["payload"]
+            json_response = json.loads(response_body)["payload"]
 
-            if not json_api["playing_now"]:
+            if not json_response["playing_now"]:
                 log.add(_("ListenBrainz: You don't seem to be listening to anything right now"),
                         title=_("Now Playing Error"))
                 return None
 
-            track = json_api["listens"][0]["track_metadata"]
+            track = json_response["listens"][0]["track_metadata"]
 
             self.title["artist"] = artist = track.get("artist_name", "?")
             self.title["title"] = title = track.get("track_name", "?")
@@ -298,7 +325,7 @@ class NowPlaying:
                     {"error": error}, title=_("Now Playing Error"))
         return None
 
-    def other(self, command):
+    def _other(self, command):
 
         if not command:
             return None
