@@ -37,6 +37,7 @@ class PrivateChat:
                  "_ctcp_query_times")
 
     CTCP_VERSION = "\x01VERSION\x01"
+    SERVER_USERNAME = "server"
 
     def __init__(self):
 
@@ -245,15 +246,19 @@ class PrivateChat:
 
                 core.send_message_to_server(MessageAcked(msg.message_id))
 
-            if username == "server":
-                start_str = "The room you are trying to enter ("
-
-                if message.startswith(start_str) and ") " in message:
-                    # Redirect message to chat room tab if join wasn't successful
-                    msg.user = None
-                    room = message[len(start_str):message.rfind(") ")]
-                    events.emit("say-chat-room", SayChatroom(room=room, message=message, user=username))
-                    return
+            if username == self.SERVER_USERNAME:
+                # Redirect the following messages to chat room tab:
+                # - The room you are trying to enter (name) is registered as private.
+                # - Room (name) is registered as public.
+                for start_str in (
+                    "The room you are trying to enter (",
+                    "Room ("
+                ):
+                    if message.startswith(start_str) and ") " in message:
+                        msg.user = None
+                        room = message[len(start_str):message.rfind(") ")]
+                        events.emit("say-chat-room", SayChatroom(room=room, message=message, user=username))
+                        return
             else:
                 # Check ignore status for all other users except "server"
                 if core.network_filter.is_user_ignored(username):
