@@ -1379,7 +1379,7 @@ class SimilarRecommendations(ServerMessage):
     containing such recommendations, asking us if we want to add our original
     recommendation or one of the similar ones instead.
 
-    OBSOLETE
+    OBSOLETE, no longer used, server sends empty list
     """
 
     __slots__ = ("recommendation", "similar_recommendations")
@@ -1404,8 +1404,6 @@ class AddThingILike(ServerMessage):
     """Server code 51.
 
     We send this to the server when we add an item to our likes list.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ("thing",)
@@ -1422,8 +1420,6 @@ class RemoveThingILike(ServerMessage):
 
     We send this to the server when we remove an item from our likes
     list.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ("thing",)
@@ -1440,8 +1436,6 @@ class Recommendations(ServerMessage):
 
     The server sends us a list of personal recommendations and a number
     for each.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ("recommendations", "unrecommendations")
@@ -1469,7 +1463,7 @@ class MyRecommendations(ServerMessage):
     official Soulseek client would send a AddThingILike message for each
     missing item.
 
-    OBSOLETE
+    OBSOLETE, no longer used
     """
 
     __slots__ = ("my_recommendations",)
@@ -1493,8 +1487,6 @@ class GlobalRecommendations(ServerMessage):
 
     The server sends us a list of global recommendations and a number
     for each.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ("recommendations", "unrecommendations")
@@ -1515,8 +1507,6 @@ class UserInterests(ServerMessage):
 
     We ask the server for a user's liked and hated interests. The server
     responds with a list of interests.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ("user", "likes", "hates")
@@ -1552,8 +1542,7 @@ class AdminCommand(ServerMessage):
     We send this to the server to run an admin command (e.g. to ban or
     silence a user) if we have admin status on the server.
 
-    OBSOLETE, no longer used since Soulseek stopped supporting third-
-    party servers in 2002
+    OBSOLETE, no longer used
     """
 
     __slots__ = ("command", "command_args")
@@ -2084,8 +2073,6 @@ class SimilarUsers(ServerMessage):
 
     The server sends us a list of similar users related to our
     interests.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ("users",)
@@ -2112,8 +2099,6 @@ class ItemRecommendations(ServerMessage):
     The server sends us a list of recommendations related to a specific
     item, which is usually present in the like/dislike list or an
     existing recommendation list.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ("thing", "recommendations", "unrecommendations")
@@ -2137,8 +2122,6 @@ class ItemSimilarUsers(ServerMessage):
     The server sends us a list of similar users related to a specific
     item, which is usually present in the like/dislike list or
     recommendation list.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ("thing", "users")
@@ -2257,8 +2240,6 @@ class AddThingIHate(ServerMessage):
     """Server code 117.
 
     We send this to the server when we add an item to our hate list.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ("thing",)
@@ -2275,8 +2256,6 @@ class RemoveThingIHate(ServerMessage):
 
     We send this to the server when we remove an item from our hate
     list.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ("thing",)
@@ -2824,8 +2803,6 @@ class JoinGlobalRoom(ServerMessage):
 
     We ask the server to send us messages from all public rooms, also
     known as public room feed.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ()
@@ -2839,8 +2816,6 @@ class LeaveGlobalRoom(ServerMessage):
 
     We ask the server to stop sending us messages from all public rooms,
     also known as public room feed.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ()
@@ -2854,8 +2829,6 @@ class GlobalRoomMessage(ServerMessage):
 
     The server sends this when a new message has been written in the
     public room feed (every single line written in every public room).
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ("room", "user", "message", "formatted_message", "message_type")
@@ -4076,12 +4049,12 @@ SERVER_MESSAGE_CODES = {
     Relogged: 41,
     UserSearch: 42,
     SimilarRecommendations: 50,   # Obsolete
-    AddThingILike: 51,            # Deprecated
-    RemoveThingILike: 52,         # Deprecated
-    Recommendations: 54,          # Deprecated
+    AddThingILike: 51,
+    RemoveThingILike: 52,
+    Recommendations: 54,
     MyRecommendations: 55,        # Obsolete
-    GlobalRecommendations: 56,    # Deprecated
-    UserInterests: 57,            # Deprecated
+    GlobalRecommendations: 56,
+    UserInterests: 57,
     AdminCommand: 58,             # Obsolete
     PlaceInLineResponse: 60,      # Obsolete
     RoomAdded: 62,                # Obsolete
@@ -4107,15 +4080,15 @@ SERVER_MESSAGE_CODES = {
     PossibleParents: 102,
     WishlistSearch: 103,
     WishlistInterval: 104,
-    SimilarUsers: 110,            # Deprecated
-    ItemRecommendations: 111,     # Deprecated
-    ItemSimilarUsers: 112,        # Deprecated
+    SimilarUsers: 110,
+    ItemRecommendations: 111,
+    ItemSimilarUsers: 112,
     RoomTickerState: 113,
     RoomTickerAdd: 114,
     RoomTickerRemove: 115,
     RoomTickerSet: 116,
-    AddThingIHate: 117,           # Deprecated
-    RemoveThingIHate: 118,        # Deprecated
+    AddThingIHate: 117,
+    RemoveThingIHate: 118,
     RoomSearch: 120,
     SendUploadSpeed: 121,
     UserPrivileged: 122,          # Deprecated
@@ -4142,9 +4115,9 @@ SERVER_MESSAGE_CODES = {
     PrivateRoomOperatorRemoved: 146,
     PrivateRoomOperators: 148,
     MessageUsers: 149,
-    JoinGlobalRoom: 150,          # Deprecated
-    LeaveGlobalRoom: 151,         # Deprecated
-    GlobalRoomMessage: 152,       # Deprecated
+    JoinGlobalRoom: 150,
+    LeaveGlobalRoom: 151,
+    GlobalRoomMessage: 152,
     RelatedSearch: 153,           # Obsolete
     ExcludedSearchPhrases: 160,
     CantConnectToPeer: 1001,
