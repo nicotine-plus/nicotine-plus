@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-08 11:16+0200\n"
-"PO-Revision-Date: 2025-05-31 18:02+0000\n"
+"PO-Revision-Date: 2025-06-18 14:51+0000\n"
 "Last-Translator: Felix Hansen <gore-snagged-happy@duck.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12-dev\n"
+"X-Generator: Weblate 5.12.1\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -187,7 +187,7 @@ msgstr "%(user)s ist offline"
 
 #: pynicotine/buddies.py:316
 msgid "Buddy Status"
-msgstr "Freund Status"
+msgstr "Freunde Status"
 
 #: pynicotine/chatrooms.py:383
 #, python-format
@@ -355,7 +355,7 @@ msgstr "Soulseek _Privilegien"
 
 #: pynicotine/gtkgui/application.py:314
 msgid "_Preferences"
-msgstr "_Einstellungen"
+msgstr "_Benutzereinstellungen"
 
 #: pynicotine/gtkgui/application.py:320 pynicotine/gtkgui/application.py:534
 #: pynicotine/gtkgui/widgets/trayicon.py:107
@@ -368,7 +368,7 @@ msgstr "Durchsuche _Öffentliche Freigaben"
 
 #: pynicotine/gtkgui/application.py:338
 msgid "Browse _Buddy Shares"
-msgstr "Durchsuche _Freund Freigaben"
+msgstr "Durchsuche _Freunde Freigaben"
 
 #: pynicotine/gtkgui/application.py:339
 msgid "Browse _Trusted Shares"
@@ -499,11 +499,11 @@ msgstr "_Nachricht senden"
 
 #: pynicotine/gtkgui/application.py:756
 msgid "Message Buddies"
-msgstr "Freunde Nachricht senden"
+msgstr "Nachricht an Freunde"
 
 #: pynicotine/gtkgui/application.py:757
 msgid "Send private message to all online buddies:"
-msgstr "Sende eine private Nachricht an alle online Freunde:"
+msgstr "Private Nachricht an alle verfügbaren Freunde senden:"
 
 #: pynicotine/gtkgui/application.py:786
 msgid "Select a Saved Shares List File"
@@ -1320,19 +1320,19 @@ msgstr "Fenster"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1923
 msgid "Online (Tray)"
-msgstr "Online (Fach)"
+msgstr "Online (Infobereich)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1924
 msgid "Away (Tray)"
-msgstr "Abwesend (Fach)"
+msgstr "Abwesend (Infobereich)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1925
 msgid "Offline (Tray)"
-msgstr "Offline (Fach)"
+msgstr "Offline (Infobereich)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1926
 msgid "Message (Tray)"
-msgstr "Nachricht (Fach)"
+msgstr "Nachricht (Infobereich)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2495
 msgid "Protocol"
@@ -1717,7 +1717,7 @@ msgstr "Private Nachricht von %(user)s"
 
 #: pynicotine/gtkgui/mainwindow.py:429 pynicotine/gtkgui/search.py:926
 msgid "Wishlist Results Found"
-msgstr "Wunschliste Ergebnisse gefunden"
+msgstr "Ergebnis für die Wunschliste gefunden"
 
 #: pynicotine/gtkgui/mainwindow.py:757 pynicotine/gtkgui/ui/mainwindow.ui:1034
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:668
@@ -3739,7 +3739,7 @@ msgstr "Nachrichten von Benutzer oder IP-Adresse stummschalten"
 
 #: pynicotine/plugins/core_commands/__init__.py:212
 msgid "Remove user or IP address from ignore lists"
-msgstr "Benutzer oder IP-Adresse aus den Ignorierlisten entfernen"
+msgstr "Benutzer oder IP-Adresse aus der Ignorierliste entfernen"
 
 #: pynicotine/plugins/core_commands/__init__.py:220
 msgid "Add share"
@@ -3970,7 +3970,7 @@ msgstr "Private Nachricht von Benutzer '%(user)s': %(message)s"
 #: pynicotine/search.py:368
 #, python-format
 msgid "Searching for wishlist item \"%s\""
-msgstr "Wunschlisteintrag suchen \"%s\""
+msgstr "Suche nach Wunschlisteneintrag \"%s\""
 
 #: pynicotine/search.py:434
 #, python-format
@@ -4309,7 +4309,7 @@ msgid ""
 "later in the preferences."
 msgstr ""
 "Falls erforderlich, wähle unten einen anderen Empfangsport. Dies kann auch "
-"später in den Einstellungen vorgenommen werden."
+"später in den Benutzereinstellungen vorgenommen werden."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:383
 msgid "Download Files to Folder"
@@ -5831,7 +5831,7 @@ msgstr "Bild:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:49
 msgid "Prefer dark mode"
-msgstr "Bevorzuge den Dunkelmodus"
+msgstr "Dunkelmodus bevorzugen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:73
 msgid "Use header bar"
@@ -5916,7 +5916,7 @@ msgstr "Hervorgehobene Tab-Bezeichnungsfarbe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:567
 msgid "Buddy list position:"
-msgstr "Position Freunde-Liste:"
+msgstr "Position der Freundesliste:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:593
 msgid "Visible main tabs:"
