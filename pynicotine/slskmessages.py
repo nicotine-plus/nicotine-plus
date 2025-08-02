@@ -1264,7 +1264,7 @@ class SendConnectToken(ServerMessage):
 
     __slots__ = ("user", "token")
 
-    def __init__(self, user, token):
+    def __init__(self, user=None, token=None):
         self.user = user
         self.token = token
 
@@ -1448,7 +1448,7 @@ class SimilarRecommendations(ServerMessage):
 
     def parse_network_message(self, message):
         pos, self.recommendation = self.unpack_string(message)
-        pos, num = self.unpack_uint32(message)
+        pos, num = self.unpack_uint32(message, pos)
 
         for _ in range(num):
             pos, similar_recommendation = self.unpack_string(message, pos)
