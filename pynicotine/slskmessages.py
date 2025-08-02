@@ -1159,7 +1159,7 @@ class FileSearch(ServerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_uint32(self.token)
-        msg += self.pack_string(self.searchterm, is_legacy=True)
+        msg += self.pack_string(self.searchterm)
 
         return msg
 
@@ -1366,7 +1366,7 @@ class UserSearch(ServerMessage):
         msg = bytearray()
         msg += self.pack_string(self.search_username)
         msg += self.pack_uint32(self.token)
-        msg += self.pack_string(self.searchterm, is_legacy=True)
+        msg += self.pack_string(self.searchterm)
 
         return msg
 
@@ -2321,7 +2321,7 @@ class RoomSearch(ServerMessage):
         msg = bytearray()
         msg += self.pack_string(self.room)
         msg += self.pack_uint32(self.token)
-        msg += self.pack_string(self.searchterm, is_legacy=True)
+        msg += self.pack_string(self.searchterm)
 
         return msg
 
