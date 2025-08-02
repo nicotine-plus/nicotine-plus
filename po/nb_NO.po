@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-08 11:16+0200\n"
-"PO-Revision-Date: 2024-01-08 17:06+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2025-08-01 11:02+0000\n"
+"Last-Translator: whywhy123456789whylol <whywhy123456789whylol@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/nb_NO/>\n"
 "Language: nb_NO\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.4-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -27,28 +27,25 @@ msgid "Graphical client for the Soulseek peer-to-peer network"
 msgstr "Grafisk klient for Soulseek-likemannsnettverket"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:11
-#, fuzzy
 msgid "Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-peer;GTK;"
 msgstr "Soulseek;Nicotine+;deling;chat;messaging;P2P;peer-to-peer;GTK;"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:9
-#, fuzzy
 msgid "Browse the Soulseek network"
-msgstr "Grafisk klient for Soulseek-nettverket"
+msgstr "Bla gjennom Soulseek-nettverket"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:11
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
 msgstr "Nicotine+ er en grafisk klient for Soulseek-likemannsnettverket."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:15
-#, fuzzy
 msgid ""
 "Nicotine+ aims to be a lightweight, pleasant, free and open source (FOSS) "
 "alternative to the official Soulseek client, while also providing a "
 "comprehensive set of features."
 msgstr ""
 "Nicotine+ har som mål å være et lett, behagelig, gratis og åpen kildekode "
-"(FOSS) alternativ til den offisielle Soulseek-klienten, samtidig som det "
+"(FOSS) alternativ til den offisielle Soulseek-klienten, samtidig som den "
 "tilbyr et omfattende sett med funksjoner."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:27
@@ -80,9 +77,8 @@ msgstr "Nedlastinger"
 #: pynicotine/gtkgui/ui/mainwindow.ui:867
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:656
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:828
-#, fuzzy
 msgid "Browse Shares"
-msgstr "Bla gjennom Delinger"
+msgstr "Bla gjennom aksjer"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:39
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:55
@@ -100,7 +96,7 @@ msgid "Nicotine+ Team"
 msgstr "Laget bak Nicotine+"
 
 #: pynicotine/__init__.py:50
-#, fuzzy, python-format
+#, python-format
 msgid "Website: %s"
 msgstr "Nettsted: %s"
 
@@ -117,21 +113,18 @@ msgid "use non-default configuration file"
 msgstr "bruk ikke-forvalgt oppsettsfil"
 
 #: pynicotine/__init__.py:63
-#, fuzzy
 msgid "dir"
 msgstr "dir"
 
 #: pynicotine/__init__.py:64
-#, fuzzy
 msgid "alternative directory for user data and plugins"
-msgstr "alternativ mappe for brukerdata og plugins"
+msgstr "alternativ katalog for brukerdata og programtillegg"
 
 #: pynicotine/__init__.py:68
 msgid "start the program without showing window"
 msgstr "start programmet uten å vise vindu"
 
 #: pynicotine/__init__.py:71
-#, fuzzy
 msgid "ip"
 msgstr "ip"
 
@@ -169,32 +162,30 @@ msgstr ""
 "Du bør installere Python %(min_version)s eller nyere."
 
 #: pynicotine/__init__.py:192
-#, fuzzy
 msgid ""
 "Failed to scan shares. Please close other Nicotine+ instances and try again."
 msgstr ""
-"Kunne ikke skanne delinger. Vennligst lukk andre Nicotine+-instanser og prøv "
-"igjen."
+"Kunne ikke skanne aksjer. Vennligst lukk andre Nicotine+-forekomster og prøv "
+"på nytt."
 
 #: pynicotine/buddies.py:307 pynicotine/plugins/core_commands/__init__.py:337
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s is away"
 msgstr "%(user)s er borte"
 
 #: pynicotine/buddies.py:310 pynicotine/plugins/core_commands/__init__.py:335
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s is online"
 msgstr "%(user)s er pålogget"
 
 #: pynicotine/buddies.py:313 pynicotine/plugins/core_commands/__init__.py:329
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s is offline"
-msgstr "%(user)s er frakoblet"
+msgstr "%(user)s er offline"
 
 #: pynicotine/buddies.py:316
-#, fuzzy
 msgid "Buddy Status"
-msgstr "Buddy-status"
+msgstr "Kompisstatus"
 
 #: pynicotine/chatrooms.py:383
 #, python-format
@@ -202,7 +193,7 @@ msgid "You have been added to a private room: %(room)s"
 msgstr "Du har blitt lagt til i et privat rom: %(room)s"
 
 #: pynicotine/chatrooms.py:478
-#, fuzzy, python-format
+#, python-format
 msgid "Chat message from user '%(user)s' in room '%(room)s': %(message)s"
 msgstr "Chatmelding fra bruker '%(user)s' i rom '%(room)s': %(message)s"
 
@@ -212,7 +203,7 @@ msgid "Can't create directory '%(path)s', reported error: %(error)s"
 msgstr "Finner ikke mappen «%(path)s». Feil: %(error)s"
 
 #: pynicotine/config.py:816
-#, fuzzy, python-format
+#, python-format
 msgid "Error backing up config: %s"
 msgstr "Feil ved backup av konfig: %s"
 
