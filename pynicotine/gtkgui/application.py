@@ -124,6 +124,9 @@ class Application:
     def add_window(self, window):
         self._instance.add_window(window)
 
+    def get_accels_for_action(self, action_name):
+        return self._instance.get_accels_for_action(action_name)
+
     def _set_up_actions(self):
 
         # Regular actions
@@ -240,7 +243,7 @@ class Application:
             ("win.change-focus-view", ["F6"]),
             ("win.show-log-pane", ["<Primary>l"]),
             ("win.reopen-closed-tab", ["<Primary><Shift>t"]),
-            ("win.close-tab", ["<Primary>F4", "<Primary>w"]),
+            ("win.close-tab", ["<Primary>w", "<Primary>F4"]),
             ("win.cycle-tabs", ["<Control>Tab", "<Control>Page_Down"]),
             ("win.cycle-tabs-reverse", ["<Control><Shift>Tab", "<Control>Page_Up"]),
 
