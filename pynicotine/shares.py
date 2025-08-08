@@ -1267,6 +1267,8 @@ class Shares:
         ip_address, _port = msg.addr
         username = msg.username
         folder_path = msg.dir
+        # Add a debug log for folder contents requests to observe browsing activity
+        log.add_debug("Folder contents requested by %s for %s", (username, folder_path))
         permission_level, _reject_reason = self.check_user_permission(username, ip_address)
         folder_data = None
 
