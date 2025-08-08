@@ -649,8 +649,9 @@ class PortMapper:
                 self._is_mapping_port = False
                 return
 
-        log.add(_("%(protocol)s: External port %(external_port)s successfully forwarded to local "
-                  "IP address %(ip_address)s port %(local_port)s"), {
+        # Demote frequent success message to connection-level to reduce default log noise
+        log.add_conn(_("%(protocol)s: External port %(external_port)s successfully forwarded to local "
+                       "IP address %(ip_address)s port %(local_port)s"), {
             "protocol": self._active_implementation.NAME,
             "external_port": self._active_implementation.port,
             "ip_address": self._active_implementation.local_ip_address,
