@@ -264,6 +264,7 @@ class IconNotebook:
         self.reorder_page_callback = reorder_page_callback
         self.switch_page_handler = None
         self.reorder_page_handler = None
+        self.switch_page_delay_timer = None
 
         self.pages = {}
         self.tab_labels = {}
@@ -551,11 +552,21 @@ class IconNotebook:
 
     def remove_tab_changed(self, page):
 
+        if self.parent_page is not None:
+            if self.window.current_page_id != self.parent_page.id:
+                # Another tab has since been selected within 250ms
+                return
+
+            GLib.source_remove(self.switch_page_delay_timer)
+            self.switch_page_delay_timer = None
+            self._remove_unread_page(page)
+
+        if self.get_current_page() != page:
+            # Another page has since been selected within 250ms
+            return
+
         tab_label = self.get_tab_label(page)
         tab_label.remove_changed()
-
-        if self.parent_page is not None:
-            self._remove_unread_page(page)
 
     def _append_unread_page(self, page, is_important=False):
 
@@ -661,6 +672,10 @@ class IconNotebook:
 
     def on_switch_page(self, _notebook, new_page, page_num):
 
+        if self.switch_page_delay_timer is not None:
+            GLib.source_remove(self.switch_page_delay_timer)
+            self.switch_page_delay_timer = None
+
         if self.switch_page_callback is not None:
             self.switch_page_callback(self, new_page, page_num)
 
@@ -676,9 +691,9 @@ class IconNotebook:
         if self.parent_page is None or self.window.current_page_id == self.parent_page.id:
             GLib.idle_add(self.on_focus_page, new_page, priority=GLib.PRIORITY_HIGH_IDLE)
 
-        # Dismiss tab highlight
+        # Dismiss tab highlight after short delay to allow transient switching
         if self.parent_page is not None:
-            self.remove_tab_changed(new_page)
+            self.switch_page_delay_timer = GLib.timeout_add(250, self.remove_tab_changed, new_page)
 
     def on_reorder_page(self, _notebook, page, page_num):
         if self.reorder_page_callback is not None:
