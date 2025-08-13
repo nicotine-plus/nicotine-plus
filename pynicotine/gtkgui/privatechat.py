@@ -460,7 +460,7 @@ class PrivateChat:
 
         log.delete_log(log.private_chat_folder_path, self.user)
         self.chats.window.application.chat_history.remove_user(self.user)
-        self.chats.username_combobox.remove(self.user)
+        self.chats.username_combobox.remove_id(self.user)
         self.chat_view.clear()
 
     def on_delete_chat_log(self, *_args):
