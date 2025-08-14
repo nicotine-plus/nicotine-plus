@@ -78,7 +78,6 @@ jobs:
       fail-fast: false
       matrix:
         container: ['fedora:rawhide']
-        gtk: [4, 3]
         platform: ['ubuntu-latest', 'ubuntu-24.04-arm']
     runs-on: ${{ matrix.platform }}
     container: ${{ matrix.container }}
@@ -88,7 +87,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          dnf -y install gettext gtk${{ matrix.gtk }} python3 python3-build \
+          dnf -y install gettext gtk4 python3 python3-build \
             python3-gobject python3-pycodestyle python3-setuptools python3-wheel
 
       - name: PEP 8 style checks
