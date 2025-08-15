@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from math import ceil
+
 import pynicotine
 from pynicotine.config import config
 from pynicotine.core import core
@@ -18,6 +20,7 @@ from pynicotine.slskmessages import UnwatchUser
 from pynicotine.slskmessages import UserStatus
 from pynicotine.slskmessages import WatchUser
 from pynicotine.utils import UINT32_LIMIT
+from pynicotine.utils import humanize
 from pynicotine.utils import open_uri
 
 
@@ -413,26 +416,30 @@ class Users:
     def _check_privileges(self, msg):
         """Server code 92."""
 
-        mins = msg.seconds // 60
-        hours = mins // 60
-        days = hours // 24
+        seconds = msg.seconds
 
-        if msg.seconds <= 0:
+        if seconds <= 0:
             log.add(_("You have no Soulseek privileges. While privileges are active, your downloads "
                       "will be queued ahead of those of non-privileged users."))
 
             if self._should_open_privileges_url:
                 self.open_privileges_url()
-        else:
-            log.add(_("%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
-                      "Soulseek privileges left"), {
-                "days": days,
-                "hours": hours % 24,
-                "minutes": mins % 60,
-                "seconds": msg.seconds % 60
-            })
 
-        self.privileges_left = msg.seconds
+        elif seconds > 86400:
+            days = ceil(seconds / 86400)
+            log.add(_("%(num)s days of Soulseek privileges left"), {"num": humanize(days)})
+
+        else:
+            hours = ceil(seconds / 3600)
+            log.add(
+                ngettext(
+                    "%(num)s hour of Soulseek privileges left",
+                    "%(num)s hours of Soulseek privileges left",
+                    hours
+                ), {"num": hours}
+            )
+
+        self.privileges_left = seconds
         self._should_open_privileges_url = False
 
     @staticmethod
