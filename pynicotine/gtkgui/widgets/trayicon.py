@@ -290,13 +290,17 @@ class StatusNotifierImplementation(BaseImplementation):
 
         def _emit_signal(self, name, parameters=None):
 
-            self._bus.emit_signal(
-                destination_bus_name=None,
-                object_path=self._object_path,
-                interface_name=self._interface_name,
-                signal_name=name,
-                parameters=parameters
-            )
+            try:
+                self._bus.emit_signal(
+                    destination_bus_name=None,
+                    object_path=self._object_path,
+                    interface_name=self._interface_name,
+                    signal_name=name,
+                    parameters=parameters
+                )
+            except GLib.Error as error:
+                log.add_debug("Error while emitting DBus signal %s on interface %s: %s",
+                              (name, self._interface_name, error))
 
         def on_method_call(self, _connection, _sender, _path, _interface_name, method_name, parameters, invocation):
 
