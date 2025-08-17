@@ -699,9 +699,6 @@ class IconNotebook:
 
     def on_pages_button_pressed(self, *_args):
 
-        if self.pages_button.get_active():
-            return
-
         self.popup_menu_pages.clear()
 
         # Unread pages (most recently changed first)
