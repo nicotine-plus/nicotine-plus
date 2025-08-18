@@ -80,8 +80,14 @@ jobs:
         container: ['fedora:rawhide']
         gtk: [4, 3]
         platform: ['ubuntu-latest', 'ubuntu-24.04-arm']
+        exclude:
+          # glycin permission issues in arm64 container, disable for now
+          - gtk: 3
+            platform: ubuntu-24.04-arm
     runs-on: ${{ matrix.platform }}
-    container: ${{ matrix.container }}
+    container:
+      image: ${{ matrix.container }}
+      options: --privileged
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
