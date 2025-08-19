@@ -275,6 +275,7 @@ class IconNotebook:
 
         self.pages_button_container = Gtk.Box(halign=Gtk.Align.CENTER, visible=(self.parent_page is not None))
         self.pages_button = Gtk.MenuButton(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER, visible=True)
+        self.pages_button.icon_name = None
         self.widget.set_action_widget(self.pages_button_container, Gtk.PackType.END)
 
         if parent_page is not None:
@@ -451,10 +452,24 @@ class IconNotebook:
             callback=self._on_remove_all_pages
         ).present()
 
-    def _update_pages_menu_button(self, icon_name, tooltip_text):
+    def update_pages_menu_button(self):
 
-        if self.pages_button.get_tooltip_text() == tooltip_text:
+        tab_pos = self.get_tab_pos()
+
+        if self.unread_pages:
+            icon_name = "emblem-important-symbolic"
+            tooltip_text = _("%i Unread Tab(s)") % len(self.unread_pages)
+        else:
+            icon_name = "pan-down-symbolic" if tab_pos == Gtk.PositionType.TOP else "pan-up-symbolic"
+            tooltip_text = _("All Tabs")
+
+        self.pages_button.set_direction(
+            Gtk.ArrowType.DOWN if tab_pos == Gtk.PositionType.TOP else Gtk.ArrowType.UP)
+
+        if self.pages_button.icon_name == icon_name:
             return
+
+        self.pages_button.icon_name = icon_name
 
         if GTK_API_VERSION >= 4:
             self.pages_button.set_icon_name(icon_name)                   # pylint: disable=no-member
@@ -465,17 +480,6 @@ class IconNotebook:
         self.pages_button.set_visible(False)
         self.pages_button.set_tooltip_text(tooltip_text)
         self.pages_button.set_visible(True)
-
-    def update_pages_menu_button(self):
-
-        if self.unread_pages:
-            icon_name = "emblem-important-symbolic"
-            tooltip_text = _("%i Unread Tab(s)") % len(self.unread_pages)
-        else:
-            icon_name = "pan-down-symbolic"
-            tooltip_text = _("All Tabs")
-
-        self._update_pages_menu_button(icon_name, tooltip_text)
 
     def get_current_page(self):
         return self.get_nth_page(self.widget.get_current_page())
@@ -504,12 +508,12 @@ class IconNotebook:
     def set_tab_reorderable(self, page, reorderable):
         self.widget.set_tab_reorderable(page, reorderable)
 
-    def set_tab_pos(self, pos):
+    def get_tab_pos(self):
+        return self.widget.get_tab_pos()
 
-        self.pages_button.set_direction(
-            Gtk.ArrowType.DOWN if pos == Gtk.PositionType.TOP else Gtk.ArrowType.UP
-        )
+    def set_tab_pos(self, pos):
         self.widget.set_tab_pos(pos)
+        self.update_pages_menu_button()
 
     def get_n_pages(self):
         return self.widget.get_n_pages()
