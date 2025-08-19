@@ -188,7 +188,32 @@ def encode_path(path, prefix=True):
     return path.encode("utf-8")
 
 
+def human_duration_approx(seconds):
+    """Returns a string for an approximatation of any amount of time in a
+    sensible unit of measurement, for use where precision isn't required."""
+
+    seconds = int(seconds)
+
+    if seconds < 120:
+        return ngettext("%(num)s second", "%(num)s seconds", seconds) % {"num": seconds}
+
+    minutes = seconds // 60
+
+    if minutes < 60:
+        return ngettext("%(num)s minute", "%(num)s minutes", minutes) % {"num": minutes}
+
+    hours = minutes // 60
+
+    if hours < 48:
+        return ngettext("%(num)s hour", "%(num)s hours", hours) % {"num": hours}
+
+    days = hours // 24
+
+    return ngettext("%(num)s day", "%(num)s days", days) % {"num": humanize(days)}
+
+
 def human_length(seconds):
+    """Returns a string for exact ISO 8601 timestamp for track playing length"""
 
     minutes, seconds = divmod(int(seconds), 60)
     hours, minutes = divmod(minutes, 60)
