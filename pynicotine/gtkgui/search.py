@@ -209,6 +209,9 @@ class Searches(IconNotebook):
         user = self.user_search_combobox.get_text()
         users = [user] if user else []
 
+        if mode == "rooms" and not room:
+            return
+
         self.window.search_entry.set_text("")
         core.search.do_search(text, mode, room=room, users=users)
 
@@ -267,7 +270,7 @@ class Searches(IconNotebook):
         users = search.users
 
         if mode == "rooms":
-            mode_label = room.strip()
+            mode_label = room.strip() if room else ""
 
         elif mode == "user":
             mode_label = ",".join(users)
