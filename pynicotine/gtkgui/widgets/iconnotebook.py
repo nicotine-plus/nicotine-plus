@@ -505,6 +505,10 @@ class IconNotebook:
         self.widget.set_tab_reorderable(page, reorderable)
 
     def set_tab_pos(self, pos):
+
+        self.pages_button.set_direction(
+            Gtk.ArrowType.DOWN if pos == Gtk.PositionType.TOP else Gtk.ArrowType.UP
+        )
         self.widget.set_tab_pos(pos)
 
     def get_n_pages(self):
