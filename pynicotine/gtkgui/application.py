@@ -124,6 +124,9 @@ class Application:
     def add_window(self, window):
         self._instance.add_window(window)
 
+    def get_accels_for_action(self, action_name):
+        return self._instance.get_accels_for_action(action_name)
+
     def _set_up_actions(self):
 
         # Regular actions
@@ -240,11 +243,15 @@ class Application:
             ("win.change-focus-view", ["F6"]),
             ("win.show-log-pane", ["<Primary>l"]),
             ("win.reopen-closed-tab", ["<Primary><Shift>t"]),
-            ("win.close-tab", ["<Primary>F4", "<Primary>w"]),
+            ("win.close-tab", ["<Primary>w", "<Primary>F4"]),
             ("win.cycle-tabs", ["<Control>Tab", "<Control>Page_Down"]),
             ("win.cycle-tabs-reverse", ["<Control><Shift>Tab", "<Control>Page_Up"]),
 
             # Other accelerators (logic defined elsewhere, actions only used for shortcuts dialog)
+            ("accel.focus-next-widget", ["Tab"]),
+            ("accel.focus-previous-widget", ["<Shift>Tab"]),
+            ("accel.change-main-tab-start", ["<Alt>1"]),
+            ("accel.change-main-tab-end", ["<Alt>9"]),
             ("accel.cut-clipboard", ["<Primary>x"]),
             ("accel.copy-clipboard", ["<Primary>c"]),
             ("accel.paste-clipboard", ["<Primary>v"]),
@@ -259,7 +266,6 @@ class Application:
             ("accel.save", ["<Primary>s"]),
             ("accel.download-to", ["<Primary>Return"]),
             ("accel.file-properties", ["<Alt>Return"]),
-            ("accel.back", ["BackSpace"]),
             ("accel.retry-transfer", ["r"]),
             ("accel.abort-transfer", ["t"])
         ):
