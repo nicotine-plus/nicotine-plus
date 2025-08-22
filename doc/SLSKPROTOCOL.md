@@ -99,11 +99,22 @@ please report them.
 
 ## Login Rejection Reasons
 
+### In Use
+
 | Reason            | Description                             |
 |-------------------|-----------------------------------------|
 | `INVALIDUSERNAME` | Username is invalid                     |
+| `EMPTYPASSWORD`   | Password is empty                       |
 | `INVALIDPASS`     | Password for existing user is incorrect |
 | `INVALIDVERSION`  | Client version is outdated              |
+| `SVRFULL`         | Server does not accept new connections  |
+| `SVRPRIVATE`      | Server does not accept registrations    |
+
+### Obsolete
+
+| Reason            | Comments                                            |
+|-------------------|-----------------------------------------------------|
+| `BANNED`          | No longer sent, server omits login response instead |
 
 
 ## Login Rejection Details

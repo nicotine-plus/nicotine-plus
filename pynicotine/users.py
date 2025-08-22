@@ -243,11 +243,11 @@ class Users:
             core.pluginhandler.server_connect_notification()
             return
 
-        if msg.rejection_reason == LoginRejectReason.USERNAME:
+        if msg.rejection_reason == LoginRejectReason.INVALID_USERNAME:
             events.emit("invalid-username", msg.rejection_detail)
             return
 
-        if msg.rejection_reason == LoginRejectReason.PASSWORD:
+        if msg.rejection_reason == LoginRejectReason.INVALID_PASSWORD:
             events.emit("invalid-password")
             return
 
