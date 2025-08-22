@@ -945,7 +945,7 @@ class JoinRoom(ServerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_string(self.room)
-        msg += self.pack_bool(self.private)
+        msg += self.pack_uint32(1 if self.private else 0)
 
         return msg
 
