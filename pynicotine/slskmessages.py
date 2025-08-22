@@ -79,6 +79,11 @@ class ConnectionType:
     DISTRIBUTED = "D"
 
 
+class ObfuscationType:
+    NONE = 0
+    NORMAL = 1
+
+
 class LoginRejectReason:
     USERNAME = "INVALIDUSERNAME"
     PASSWORD = "INVALIDPASS"
@@ -693,8 +698,18 @@ class Login(ServerMessage):
 class SetWaitPort(ServerMessage):
     """Server code 2.
 
-    We send this to the server to indicate the port number that we
-    listen on (2234 by default).
+    We send this to the server to indicate the port number that we listen on
+    (2234 by default). Certain clients like SoulseekQt implement obfuscation of
+    peer messages, and also send the obfuscation type and obfuscated port to
+    accept such connections on.
+
+    Nicotine+ does not implement obfuscated connections, since there is no
+    evidence that ISP traffic shaping targeting the Soulseek network (the
+    original issue obfuscation attempted to mitigate) is prevalent today.
+    Forwarding multiple ports is also becoming increasingly difficult due to
+    IPv4 address exhaustion, and only requiring a single unobfuscated port
+    allows users to use their remaining free ports in other applications
+    instead.
     """
 
     __slots__ = ("port",)
@@ -713,13 +728,13 @@ class GetPeerAddress(ServerMessage):
     and port), given the peer's username.
     """
 
-    __slots__ = ("user", "ip_address", "port", "unknown", "obfuscated_port")
+    __slots__ = ("user", "ip_address", "port", "obfuscation_type", "obfuscated_port")
 
     def __init__(self, user=None):
         self.user = user
         self.ip_address = None
         self.port = None
-        self.unknown = None
+        self.obfuscation_type = None
         self.obfuscated_port = None
 
     def make_network_message(self):
@@ -729,7 +744,7 @@ class GetPeerAddress(ServerMessage):
         pos, self.user = self.unpack_string(message)
         pos, self.ip_address = self.unpack_ip(message, pos)
         pos, self.port = self.unpack_uint32(message, pos)
-        pos, self.unknown = self.unpack_uint32(message, pos)
+        pos, self.obfuscation_type = self.unpack_uint32(message, pos)
         pos, self.obfuscated_port = self.unpack_uint16(message, pos)
 
 
@@ -930,7 +945,7 @@ class JoinRoom(ServerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_string(self.room)
-        msg += self.pack_uint32(1 if self.private else 0)
+        msg += self.pack_bool(self.private)
 
         return msg
 
@@ -1021,7 +1036,8 @@ class ConnectToPeer(ServerMessage):
     a connection to our IP address and port from their end.
     """
 
-    __slots__ = ("token", "user", "conn_type", "ip_address", "port", "privileged", "unknown", "obfuscated_port")
+    __slots__ = ("token", "user", "conn_type", "ip_address", "port", "privileged", "obfuscation_type",
+                 "obfuscated_port")
 
     def __init__(self, token=None, user=None, conn_type=None):
         self.token = token
@@ -1030,7 +1046,7 @@ class ConnectToPeer(ServerMessage):
         self.ip_address = None
         self.port = None
         self.privileged = None
-        self.unknown = None
+        self.obfuscation_type = None
         self.obfuscated_port = None
 
     def make_network_message(self):
@@ -1048,7 +1064,7 @@ class ConnectToPeer(ServerMessage):
         pos, self.port = self.unpack_uint32(message, pos)
         pos, self.token = self.unpack_uint32(message, pos)
         pos, self.privileged = self.unpack_bool(message, pos)
-        pos, self.unknown = self.unpack_uint32(message, pos)
+        pos, self.obfuscation_type = self.unpack_uint32(message, pos)
         pos, self.obfuscated_port = self.unpack_uint32(message, pos)
 
 

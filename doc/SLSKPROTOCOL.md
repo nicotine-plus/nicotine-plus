@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on July 27, 2025](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on August 22, 2025](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -87,6 +87,14 @@ please report them.
 | `P`  | Peer To Peer        |
 | `F`  | File Transfer       |
 | `D`  | Distributed Network |
+
+
+## Obfuscation Types
+
+| Code | Type   |
+|------|--------|
+| `0`  | None   |
+| `1`  | Normal |
 
 
 ## Login Rejection Reasons
@@ -384,19 +392,24 @@ Server responds with the greeting message.
 ### SetWaitPort
 
 We send this to the server to indicate the port number that we listen on (2234
-by default).
+by default). Certain clients like SoulseekQt implement obfuscation of peer
+messages, and also send the obfuscation type and obfuscated port to accept such
+connections on.
 
-If this value is set to zero, or the message is not sent upon login (which
-defaults the listen port to 0), remote clients handling a [ConnectToPeer](#server-code-18)
-message will fail to properly purge the request.  Confirmed in SoulseekQt
-2020.3.12, but probably impacts most or all other versions.
+Nicotine+ does not support obfuscated connections, since there is no evidence
+that ISP traffic shaping targeting the Soulseek network (the original issue
+obfuscation attempted to mitigate) is prevalent today. Forwarding multiple
+ports is also becoming increasingly difficult due to IPv4 address exhaustion,
+and only requiring a single unobfuscated port allows users to use their
+remaining free ports in other applications instead.
 
 ### Data Order
   - Send
     1.  **uint32** *port*
-    2.  **uint32** *unknown*  
-        SoulseekQt uses a value of `1`
-    3.  **uint32** *obfuscated port*
+    2.  Optional
+        1.  **uint32** *obfuscation type*  
+            See [Obfuscation Types](#obfuscation-types)
+        2.  **uint32** *obfuscated port*
   - Receive
     -   *No Message*
 
@@ -416,8 +429,8 @@ given the peer's username.
     1.  **string** *username*
     2.  **ip** *ip*
     3.  **uint32** *port*
-    4.  **uint32** *unknown*
-        SoulseekQt uses a value of `1`
+    4.  **uint32** *obfuscation type*  
+        See [Obfuscation Types](#obfuscation-types)
     5.  **uint16** *obfuscated port*
 
 
@@ -680,8 +693,8 @@ See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
     5.  **uint32** *token*  
         Use this token for [PierceFireWall](#peer-init-code-0)
     6.  **bool** *privileged*
-    7.  **uint32** *unknown*  
-        SoulseekQt uses a value of `1`
+    7.  **uint32** *obfuscation type*  
+        See [Obfuscation Types](#obfuscation-types)
     8.  **uint32** *obfuscated port*
 
 
