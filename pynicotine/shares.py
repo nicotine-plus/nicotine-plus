@@ -533,6 +533,7 @@ class Scanner:
             self.writer.send(self.current_folder_count)
 
             file_list = []
+            virtual_folder_path_lower = virtual_folder_path.lower()
 
             try:
                 with os.scandir(encode_path(folder_path, prefix=False)) as entries:
@@ -568,7 +569,6 @@ class Scanner:
                             file_index = self.current_file_index
                             self.mtimes[path] = file_mtime = file_stat.st_mtime
                             virtual_file_path = f"{virtual_folder_path}\\{basename_escaped}"
-                            virtual_folder_path_lower = virtual_folder_path.lower()
 
                             if not self.rebuild and file_mtime == old_mtimes.get(path) and path in old_files:
                                 full_path_file_data = old_files[path]
