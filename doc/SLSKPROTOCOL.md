@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on August 22, 2025](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on September 16, 2025](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -1335,7 +1335,7 @@ is sent by the server, and we eventually become a branch root.
 ### Data Order
 
   - Send
-    1.  **bool** *have parents*
+    1.  **bool** *no parent*
   - Receive
     -   *No Message*
 
