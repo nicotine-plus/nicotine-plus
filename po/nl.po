@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-16 22:18+0300\n"
-"PO-Revision-Date: 2025-06-18 14:51+0000\n"
-"Last-Translator: Toine Rademacher <hi@toine.zip>\n"
+"PO-Revision-Date: 2025-09-17 21:02+0000\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
 "Language: nl\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.1\n"
+"X-Generator: Weblate 5.14-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -214,14 +214,14 @@ msgid "Config backed up to: %s"
 msgstr "Configuratie geback-upt naar: %s"
 
 #: pynicotine/core.py:192
-#, fuzzy, python-format
+#, python-format
 msgid "Starting %(program)s %(version)s"
-msgstr "Bezig met laden van %(program)s %(version)s"
+msgstr "Starten van %(program)s %(version)s"
 
 #: pynicotine/core.py:196 pynicotine/gtkgui/application.py:980
-#, fuzzy, python-format
+#, python-format
 msgid "Loaded %(program)s %(version)s"
-msgstr "Bezig met laden van %(program)s %(version)s"
+msgstr "%(program)s %(version)s geladen"
 
 #: pynicotine/core.py:218
 #, python-format
@@ -716,12 +716,11 @@ msgstr "Berichtweergave wissen"
 
 #: pynicotine/gtkgui/chatrooms.py:827
 msgid "Hide Room Users"
-msgstr ""
+msgstr "Verberg kamerlijst"
 
 #: pynicotine/gtkgui/chatrooms.py:827 pynicotine/gtkgui/ui/chatrooms.ui:104
-#, fuzzy
 msgid "Show Room Users"
-msgstr "Toon _kamerlijst"
+msgstr "Toon kamerlijst"
 
 #: pynicotine/gtkgui/chatrooms.py:852
 #, python-format
@@ -803,14 +802,12 @@ msgid "Latest Message"
 msgstr "Laatste bericht"
 
 #: pynicotine/gtkgui/dialogs/download.py:56
-#, fuzzy
 msgid "Download Files"
-msgstr "Download bestand"
+msgstr "Download bestanden"
 
 #: pynicotine/gtkgui/dialogs/download.py:88
-#, fuzzy
 msgid "Folder / File"
-msgstr "Map"
+msgstr "Map / bestand"
 
 #: pynicotine/gtkgui/dialogs/download.py:95 pynicotine/gtkgui/search.py:556
 #: pynicotine/gtkgui/transfers.py:179 pynicotine/gtkgui/userbrowse.py:332
@@ -819,18 +816,17 @@ msgid "Size"
 msgstr "Grootte"
 
 #: pynicotine/gtkgui/dialogs/download.py:101
-#, fuzzy
 msgid "Selected"
-msgstr "_Selecteren"
+msgstr "Geselecteerd"
 
 #: pynicotine/gtkgui/dialogs/download.py:279
 #, python-format
 msgid "Download %(num_files)s file(s)  /  %(total_size)s"
-msgstr ""
+msgstr "Download %(num_files)s file(s) / %(total_size)s"
 
 #: pynicotine/gtkgui/dialogs/download.py:363
 msgid "Failed to request folder contents."
-msgstr ""
+msgstr "Kon mapinhoud niet opvragen."
 
 #: pynicotine/gtkgui/dialogs/download.py:493
 #, fuzzy
@@ -5740,9 +5736,8 @@ msgstr ""
 "Gebruikersnamen zijn hoofdlettergevoelig en uniek."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:121
-#, fuzzy
 msgid "Listening port (TCP):"
-msgstr "Luisterpoort:"
+msgstr "Luisterpoort (TCP):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:147
 msgid "Automatically forward listening port (UPnP/NAT-PMP)"
@@ -5771,9 +5766,8 @@ msgid "Auto-reply message when away:"
 msgstr "Automatisch antwoord bij afwezigheid:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:321
-#, fuzzy
 msgid "Connect to server on startup"
-msgstr "Automatisch verbinden met server bij opstarten"
+msgstr "Verbinden met server bij opstarten"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:345
 msgid "Soulseek server:"
