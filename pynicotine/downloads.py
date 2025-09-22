@@ -1102,6 +1102,8 @@ class Downloads(Transfers):
         if download.is_preview:
             self._emit_preview_update(download, "failed", reason=status)
             self._cleanup_preview_transfer(download, delete_file=True)
+            log.add_transfer("Preview failed before connection for %s from %s (%s)",
+                             (virtual_path, username, status))
 
     def _requested_folder_timeout(self, requested_folder):
 
@@ -1189,6 +1191,10 @@ class Downloads(Transfers):
             # send a malformed file size (0 bytes) in the TransferRequest response.
             # In that case, we rely on the cached, correct file size we received when
             # we initially added the download.
+
+            if download.is_preview:
+                log.add_transfer("Preview request accepted by %s for %s (token %s)",
+                                 (username, virtual_path, token))
 
             self._unfail_transfer(download)
             self._dequeue_transfer(download)
@@ -1364,6 +1370,8 @@ class Downloads(Transfers):
                         path=download.preview_path,
                         total_bytes=download.preview_bytes
                     )
+                    log.add_transfer("Preview transfer started: user %s, file %s, bytes %s",
+                                     (username, virtual_path, download.preview_bytes))
                 else:
                     self._finish_transfer(download)
                     self._emit_preview_update(
@@ -1372,6 +1380,7 @@ class Downloads(Transfers):
                         bytes_received=download.preview_bytes
                     )
                     self._cleanup_preview_transfer(download)
+                    log.add_transfer("Preview finished immediately for %s from %s", (virtual_path, username))
             else:
                 core.statistics.append_stat_value("started_downloads", 1)
                 download_started = True
@@ -1526,6 +1535,9 @@ class Downloads(Transfers):
                     bytes_received=bytes_received,
                     total_bytes=download.preview_bytes
                 )
+                log.add_transfer("Preview buffered %d%% for %s from %s",
+                                 (int(bytes_received * 100 / max(1, download.preview_bytes)),
+                                  download.virtual_path, download.username))
 
     def _file_connection_closed(self, username, token, sock, **_unused):
         """A file download connection has closed for any reason."""

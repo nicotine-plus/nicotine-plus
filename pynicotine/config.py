@@ -225,9 +225,9 @@ class Config:
                 "downloadsexpanded": True,
                 "uploadsexpanded": True,
                 "previewenabled": True,
-                "previewseconds": 60,
+                "previewseconds": 20,
                 "previewfallbackbitrate": 192,
-                "previewmaxbytes": 16777216
+                "previewmaxbytes": 0
             },
             "userbrowse": {
                 "expand_folders": True
