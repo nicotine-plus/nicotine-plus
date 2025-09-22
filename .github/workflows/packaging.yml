@@ -141,6 +141,12 @@ jobs:
             ${{ matrix.prefix }}-python-setuptools
             ${{ matrix.prefix }}-python-wheel
             ${{ matrix.prefix }}-webp-pixbuf-loader
+            ${{ matrix.prefix }}-gstreamer
+            ${{ matrix.prefix }}-gst-plugins-base
+            ${{ matrix.prefix }}-gst-plugins-good
+            ${{ matrix.prefix }}-gst-plugins-ugly
+            ${{ matrix.prefix }}-gst-plugins-bad
+            ${{ matrix.prefix }}-gst-libav
 
       - name: Install additional dependencies
         run: python3 build-aux/windows/dependencies.py

@@ -28,12 +28,22 @@ apps:
       - network-bind
       - removable-media
       - unity7
+      - audio-playback
+      - pulseaudio
 
 parts:
   nicotine-plus:
     plugin: python
     source: .
     python-packages: []
+    stage-packages:
+      # GStreamer multimedia support for preview functionality
+      - gstreamer1.0-plugins-base
+      - gstreamer1.0-plugins-good
+      - gstreamer1.0-plugins-ugly
+      - gstreamer1.0-plugins-bad
+      - gstreamer1.0-libav
+      - gstreamer1.0-pulseaudio
     parse-info: [share/metainfo/org.nicotine_plus.Nicotine.appdata.xml]
     override-pull: |
       craftctl default

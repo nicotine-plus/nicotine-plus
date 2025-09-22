@@ -13,7 +13,14 @@ def install_brew():
                 "gobject-introspection",
                 "gtk4",
                 "libadwaita",
-                "librsvg"]
+                "librsvg",
+                # GStreamer multimedia support for preview functionality
+                "gstreamer",
+                "gst-plugins-base",
+                "gst-plugins-good",
+                "gst-plugins-ugly",
+                "gst-plugins-bad",
+                "gst-libav"]
 
     subprocess.check_call(["brew", "install", "--quiet"] + packages)
 

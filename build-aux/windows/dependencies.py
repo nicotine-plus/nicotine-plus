@@ -23,7 +23,14 @@ def install_pacman():
                 f"{prefix}-python-pylint",
                 f"{prefix}-python-setuptools",
                 f"{prefix}-python-wheel",
-                f"{prefix}-webp-pixbuf-loader"]
+                f"{prefix}-webp-pixbuf-loader",
+                # GStreamer multimedia support for preview functionality
+                f"{prefix}-gstreamer",
+                f"{prefix}-gst-plugins-base",
+                f"{prefix}-gst-plugins-good",
+                f"{prefix}-gst-plugins-ugly",
+                f"{prefix}-gst-plugins-bad",
+                f"{prefix}-gst-libav"]
 
     subprocess.check_call(["pacman", "--noconfirm", "-S", "--needed"] + packages)
 

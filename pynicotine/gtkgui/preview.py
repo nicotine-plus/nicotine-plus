@@ -19,7 +19,12 @@
 from __future__ import annotations
 
 import os
+import platform
+import subprocess
+import sys
+import tempfile
 import threading
+import urllib.request
 from gettext import gettext as _
 from typing import Callable
 from typing import Optional
@@ -33,14 +38,10 @@ from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Pango
 
-try:  # pragma: no cover - optional dependency
-    from gi.repository import Gst
-
-    Gst.init(None)
-    GST_AVAILABLE = True
-except (ImportError, ValueError):  # pragma: no cover - depends on system packages
-    Gst = None
-    GST_AVAILABLE = False
+# Initialize GStreamer availability - will be set by platform detection
+Gst = None
+GST_AVAILABLE = False
+PREVIEW_MODE = "UNKNOWN"  # INTEGRATED, EXTERNAL_ONLY, or UNAVAILABLE
 
 from pynicotine.core import core
 from pynicotine.events import events
@@ -49,7 +50,7 @@ from pynicotine.logfacility import log
 
 
 SUPPORTED_AUDIO_EXTENSIONS = {
-    '.mp3', '.ogg', '.flac', '.wav', '.m4a', '.aac', '.wma', '.opus'
+    '.mp3', '.ogg', '.flac', '.wav', '.m4a', '.aac', '.wma', '.opus', '.aiff'
 }
 
 GSTREAMER_CODEC_REQUIREMENTS = {
@@ -59,7 +60,8 @@ GSTREAMER_CODEC_REQUIREMENTS = {
     '.m4a': ['faad', 'qtdemux'],
     '.aac': ['faad'],
     '.wma': ['avdec_wmav2'],
-    '.opus': ['opusdec']
+    '.opus': ['opusdec'],
+    '.aiff': ['aiffparse']
 }
 
 SUPPORTED_VIDEO_EXTENSIONS = {
@@ -70,6 +72,231 @@ ALL_SUPPORTED_EXTENSIONS = SUPPORTED_AUDIO_EXTENSIONS | SUPPORTED_VIDEO_EXTENSIO
 EXTERNAL_CLEANUP_BASE_TIMEOUT = 300
 MAX_CLEANUP_RETRIES = 3
 MAX_FILE_SIZE_MB = 100
+
+
+class MultimediaDependencyManager:
+    """Manages multimedia dependencies across different platforms."""
+
+    def __init__(self):
+        self.system = platform.system()
+        self.deps_available = False
+        self.fallback_enabled = False
+        self.gstreamer_paths = []
+
+    def ensure_dependencies(self) -> tuple[bool, str]:
+        """Ensure multimedia dependencies are available.
+        
+        Returns:
+            tuple: (success, mode) where mode is 'INTEGRATED', 'EXTERNAL_ONLY', or 'UNAVAILABLE'
+        """
+        # 1. Check if dependencies are already available
+        if self._check_system_deps():
+            self._setup_gstreamer_environment()
+            return True, "INTEGRATED"
+        
+        # 2. Try to find and configure existing installations
+        if self._find_and_configure_deps():
+            return True, "INTEGRATED"
+        
+        # 3. Check if external player functionality is available
+        if self._check_external_player_support():
+            return True, "EXTERNAL_ONLY"
+        
+        # 4. No multimedia support available
+        return False, "UNAVAILABLE"
+
+    def _check_system_deps(self) -> bool:
+        """Check if GStreamer is available in the system."""
+        try:
+            import gi
+            gi.require_version('Gst', '1.0')
+            from gi.repository import Gst
+            
+            Gst.init(None)
+            
+            # Test critical elements
+            critical_elements = ['playbin', 'autoaudiosink']
+            for element in critical_elements:
+                if Gst.ElementFactory.make(element) is None:
+                    log.add_transfer("Missing critical GStreamer element: %s", element)
+                    return False
+            
+            return True
+        except (ImportError, ValueError, AttributeError) as e:
+            log.add_transfer("GStreamer not available: %s", e)
+            return False
+
+    def _find_and_configure_deps(self) -> bool:
+        """Find and configure GStreamer installations."""
+        if self.system == "Windows":
+            return self._configure_windows_gstreamer()
+        elif self.system == "Darwin":
+            return self._configure_macos_gstreamer()
+        else:
+            return self._configure_linux_gstreamer()
+
+    def _configure_windows_gstreamer(self) -> bool:
+        """Configure GStreamer on Windows."""
+        possible_paths = [
+            "C:\\gstreamer\\1.0\\x86_64",
+            "C:\\Program Files\\GStreamer\\1.0\\x86_64",
+            os.path.expanduser("~\\AppData\\Local\\gstreamer"),
+            "C:\\msys64\\mingw64",  # MSYS2 installation
+        ]
+        
+        for base_path in possible_paths:
+            if os.path.exists(base_path):
+                gst_bin = os.path.join(base_path, "bin")
+                gst_lib = os.path.join(base_path, "lib", "gstreamer-1.0")
+                
+                if os.path.exists(gst_bin) and os.path.exists(gst_lib):
+                    # Add to PATH
+                    if gst_bin not in os.environ.get("PATH", ""):
+                        os.environ["PATH"] = gst_bin + os.pathsep + os.environ["PATH"]
+                    
+                    # Set plugin path
+                    os.environ["GST_PLUGIN_PATH"] = gst_lib
+                    
+                    # Try to initialize GStreamer
+                    if self._test_gstreamer_init():
+                        log.add_transfer("Configured GStreamer from: %s", base_path)
+                        return True
+        
+        return False
+
+    def _configure_macos_gstreamer(self) -> bool:
+        """Configure GStreamer on macOS."""
+        possible_paths = [
+            "/usr/local",  # Homebrew Intel
+            "/opt/homebrew",  # Homebrew Apple Silicon
+            "/Library/Frameworks/GStreamer.framework",  # Official installer
+        ]
+        
+        for base_path in possible_paths:
+            if base_path.endswith(".framework"):
+                # Framework installation
+                if os.path.exists(base_path):
+                    lib_path = os.path.join(base_path, "Libraries")
+                    if os.path.exists(lib_path):
+                        os.environ["GST_PLUGIN_PATH"] = lib_path
+                        if self._test_gstreamer_init():
+                            return True
+            else:
+                # Homebrew installation
+                gst_lib = os.path.join(base_path, "lib", "gstreamer-1.0")
+                if os.path.exists(gst_lib):
+                    os.environ["GST_PLUGIN_PATH"] = gst_lib
+                    if self._test_gstreamer_init():
+                        return True
+        
+        return False
+
+    def _configure_linux_gstreamer(self) -> bool:
+        """Configure GStreamer on Linux."""
+        # On Linux, GStreamer is usually properly installed via package manager
+        return self._test_gstreamer_init()
+
+    def _test_gstreamer_init(self) -> bool:
+        """Test if GStreamer can be initialized."""
+        try:
+            import gi
+            gi.require_version('Gst', '1.0')
+            from gi.repository import Gst
+            
+            Gst.init(None)
+            
+            # Test playbin creation
+            playbin = Gst.ElementFactory.make("playbin")
+            if playbin is None:
+                return False
+            
+            return True
+        except Exception as e:
+            log.add_transfer("GStreamer test failed: %s", e)
+            return False
+
+    def _setup_gstreamer_environment(self) -> None:
+        """Setup GStreamer environment variables if needed."""
+        if self.system == "Windows":
+            # Ensure Windows-specific environment is set
+            if not os.environ.get("GST_REGISTRY"):
+                gst_cache = os.path.join(tempfile.gettempdir(), "gstreamer-registry")
+                os.environ["GST_REGISTRY"] = gst_cache
+
+    def _check_external_player_support(self) -> bool:
+        """Check if external player functionality is available."""
+        try:
+            # Test if we can open URIs (basic requirement for external player)
+            if self.system == "Windows":
+                # Windows should always be able to use default app associations
+                return True
+            elif self.system == "Darwin":
+                # macOS should always be able to use 'open' command
+                return True
+            else:
+                # Linux: check for xdg-open or similar
+                return subprocess.run(["which", "xdg-open"], 
+                                    capture_output=True).returncode == 0
+        except Exception:
+            return False
+
+    def get_capabilities_message(self, mode: str) -> str:
+        """Get user-friendly message about preview capabilities."""
+        if mode == "INTEGRATED":
+            return _("Preview: Integrated player available")
+        elif mode == "EXTERNAL_ONLY":
+            return _("Preview: External player only")
+        else:
+            return _("Preview: Not available")
+
+
+def initialize_preview_system() -> tuple[bool, str]:
+    """Initialize the preview system with automatic platform detection.
+    
+    Returns:
+        tuple: (gst_available, preview_mode)
+    """
+    global Gst, GST_AVAILABLE, PREVIEW_MODE
+    
+    log.add_transfer("Initializing preview system on %s", platform.system())
+    
+    # Create dependency manager
+    dep_manager = MultimediaDependencyManager()
+    
+    # Try to ensure dependencies
+    success, mode = dep_manager.ensure_dependencies()
+    
+    if success and mode == "INTEGRATED":
+        try:
+            # Import GStreamer after configuration
+            import gi
+            gi.require_version('Gst', '1.0')
+            from gi.repository import Gst
+            
+            Gst.init(None)
+            GST_AVAILABLE = True
+            PREVIEW_MODE = "INTEGRATED"
+            
+            log.add_transfer("Preview system initialized: Integrated player")
+            
+        except Exception as e:
+            log.add_transfer("Failed to initialize GStreamer: %s", e)
+            GST_AVAILABLE = False
+            PREVIEW_MODE = "EXTERNAL_ONLY"
+    else:
+        GST_AVAILABLE = False
+        PREVIEW_MODE = mode
+        
+        if mode == "EXTERNAL_ONLY":
+            log.add_transfer("Preview system initialized: External player only")
+        else:
+            log.add_transfer("Preview system unavailable")
+    
+    return GST_AVAILABLE, PREVIEW_MODE
+
+
+# Initialize the preview system when module is loaded
+GST_AVAILABLE, PREVIEW_MODE = initialize_preview_system()
 
 
 def _format_nanoseconds(nanoseconds: int) -> str:
@@ -139,6 +366,7 @@ class PreviewPlayer:
         self._error_callback = error_callback
         self._lock = threading.RLock()
         self._is_destroyed = False
+        self._platform = platform.system()
 
     def prepare(self, path: str) -> None:
         """Prepare the player with validated file path."""
@@ -162,6 +390,9 @@ class PreviewPlayer:
                 uri = Gst.filename_to_uri(path)
                 pipeline.set_property("uri", uri)
                 
+                # Platform-specific audio/video sink configuration
+                self._configure_platform_sinks(pipeline)
+                
                 bus = pipeline.get_bus()
                 bus.add_signal_watch()
                 bus.connect("message", self._on_bus_message)
@@ -173,6 +404,43 @@ class PreviewPlayer:
             except Exception as e:
                 self.stop()
                 raise RuntimeError(f"Failed to prepare player: {e}") from e
+    
+    def _configure_platform_sinks(self, pipeline):
+        """Configure audio/video sinks based on platform."""
+        try:
+            if self._platform == "Windows":
+                # Windows: prefer DirectSound for audio, Direct3D for video
+                audio_sink = Gst.ElementFactory.make("directsoundsink")
+                if audio_sink is None:
+                    audio_sink = Gst.ElementFactory.make("autoaudiosink")
+                
+                video_sink = Gst.ElementFactory.make("d3dvideosink")
+                if video_sink is None:
+                    video_sink = Gst.ElementFactory.make("autovideosink")
+                    
+            elif self._platform == "Darwin":
+                # macOS: prefer CoreAudio for audio, OpenGL for video
+                audio_sink = Gst.ElementFactory.make("osxaudiosink")
+                if audio_sink is None:
+                    audio_sink = Gst.ElementFactory.make("autoaudiosink")
+                
+                video_sink = Gst.ElementFactory.make("glimagesink")
+                if video_sink is None:
+                    video_sink = Gst.ElementFactory.make("autovideosink")
+                    
+            else:
+                # Linux: use auto sinks (usually ALSA/PulseAudio + X11/Wayland)
+                audio_sink = Gst.ElementFactory.make("autoaudiosink")
+                video_sink = Gst.ElementFactory.make("autovideosink")
+            
+            if audio_sink:
+                pipeline.set_property("audio-sink", audio_sink)
+            if video_sink:
+                pipeline.set_property("video-sink", video_sink)
+                
+        except Exception as e:
+            log.add_transfer("Warning: Could not configure platform sinks: %s", e)
+            # Continue with default auto sinks
 
     def play(self) -> None:
         """Start playback if pipeline is ready."""
@@ -266,7 +534,14 @@ class PreviewPlayer:
 
         elif message_type == Gst.MessageType.ERROR:
             err, debug = message.parse_error()
-            GLib.idle_add(self._error_callback, err, debug)
+            # Add platform context to error
+            platform_context = f"Platform: {self._platform}"
+            enhanced_debug = f"{debug}\n{platform_context}" if debug else platform_context
+            GLib.idle_add(self._error_callback, err, enhanced_debug)
+            
+        elif message_type == Gst.MessageType.WARNING:
+            warn, debug = message.parse_warning()
+            log.add_transfer("GStreamer warning on %s: %s", self._platform, warn.message)
 
 
 class PreviewController:
@@ -288,8 +563,12 @@ class PreviewController:
         self.player: Optional[PreviewPlayer] = None
         self._external_cleanup_id = None
 
+        # Initialize player based on available capabilities
         if GST_AVAILABLE:
             self.player = PreviewPlayer(self._on_player_finished, self._on_player_error)
+        else:
+            self.player = None
+            log.add_transfer("Preview mode: %s", PREVIEW_MODE)
 
         self._build_ui()
         events.connect("preview-update", self.on_preview_update)
@@ -478,21 +757,96 @@ class PreviewController:
     def _open_external_player(self, path: str) -> None:
         """Open file in external player with progressive cleanup timeout."""
         try:
-            uri = GLib.filename_to_uri(path, None)
-
-            if GTK_API_VERSION >= 4:
-                Gtk.show_uri(None, uri, GLib.get_monotonic_time())
-            else:
-                Gtk.show_uri_on_window(self.window.widget, uri, GLib.get_monotonic_time())
+            success = self._launch_platform_player(path)
+            if not success:
+                raise RuntimeError("Failed to launch external player")
 
         except Exception as error:
             log.add_transfer("Unable to launch external player for preview: %s", error)
-            self._set_status(_("Failed to open external player"))
+            self._set_status(self._get_platform_error_message(error))
             return
 
         self._set_status(_("Opened in external player"))
         self._cleanup_retry_count = 0
         self._schedule_external_cleanup(path)
+    
+    def _launch_platform_player(self, path: str) -> bool:
+        """Launch external player using platform-specific method."""
+        system = platform.system()
+        
+        try:
+            if system == "Windows":
+                return self._launch_windows_player(path)
+            elif system == "Darwin":
+                return self._launch_macos_player(path)
+            else:
+                return self._launch_linux_player(path)
+        except Exception as e:
+            log.add_transfer("Platform player launch failed: %s", e)
+            return False
+    
+    def _launch_windows_player(self, path: str) -> bool:
+        """Launch external player on Windows."""
+        try:
+            # Method 1: Use GTK URI handler
+            uri = GLib.filename_to_uri(path, None)
+            if GTK_API_VERSION >= 4:
+                Gtk.show_uri(None, uri, GLib.get_monotonic_time())
+            else:
+                Gtk.show_uri_on_window(self.window.widget, uri, GLib.get_monotonic_time())
+            return True
+        except Exception:
+            try:
+                # Method 2: Use Windows start command
+                subprocess.run(["start", "", path], shell=True, check=True)
+                return True
+            except Exception:
+                try:
+                    # Method 3: Use os.startfile
+                    os.startfile(path)
+                    return True
+                except Exception:
+                    return False
+    
+    def _launch_macos_player(self, path: str) -> bool:
+        """Launch external player on macOS."""
+        try:
+            # Method 1: Use GTK URI handler
+            uri = GLib.filename_to_uri(path, None)
+            if GTK_API_VERSION >= 4:
+                Gtk.show_uri(None, uri, GLib.get_monotonic_time())
+            else:
+                Gtk.show_uri_on_window(self.window.widget, uri, GLib.get_monotonic_time())
+            return True
+        except Exception:
+            try:
+                # Method 2: Use macOS open command
+                subprocess.run(["open", path], check=True)
+                return True
+            except Exception:
+                return False
+    
+    def _launch_linux_player(self, path: str) -> bool:
+        """Launch external player on Linux."""
+        try:
+            # Method 1: Use GTK URI handler
+            uri = GLib.filename_to_uri(path, None)
+            if GTK_API_VERSION >= 4:
+                Gtk.show_uri(None, uri, GLib.get_monotonic_time())
+            else:
+                Gtk.show_uri_on_window(self.window.widget, uri, GLib.get_monotonic_time())
+            return True
+        except Exception:
+            try:
+                # Method 2: Use xdg-open
+                subprocess.run(["xdg-open", path], check=True)
+                return True
+            except Exception:
+                return False
+    
+    def _is_external_player_available(self) -> bool:
+        """Check if external player functionality is available."""
+        return PREVIEW_MODE in ["INTEGRATED", "EXTERNAL_ONLY"]
     
     def _schedule_external_cleanup(self, path: str) -> None:
         """Schedule cleanup with progressive timeout increase."""
@@ -578,7 +932,7 @@ class PreviewController:
             self.current_path = path
             self.play_button.set_sensitive(True)
 
-            if self.player is not None:
+            if self.player is not None and PREVIEW_MODE == "INTEGRATED":
                 try:
                     self.player.prepare(path)
                 except Exception as error:
@@ -586,14 +940,22 @@ class PreviewController:
                     user_msg = self._get_user_friendly_error(error)
                     self._set_status(user_msg)
                     self.play_button.set_sensitive(False)
+                    
+                    # Fallback to external player if integrated fails
+                    if self._is_external_player_available():
+                        self._set_status(_("Falling back to external player"))
+                        self._open_external_player(path)
                 else:
                     self._set_status(_("Playing preview"))
                     self._set_play_icon("media-playback-pause-symbolic")
                     self.player.play()
                     self._start_progress_update()
-            else:
-                self._set_status(_("Download ready: external player required"))
+            elif PREVIEW_MODE == "EXTERNAL_ONLY":
+                self._set_status(_("Opening in external player"))
                 self._open_external_player(path)
+            else:
+                self._set_status(_("Preview not available"))
+                self.play_button.set_sensitive(False)
 
         elif state == "finished":
             self._set_status(_("Download complete"))
@@ -677,21 +1039,43 @@ class PreviewController:
     def _get_user_friendly_error(self, error) -> str:
         """Convert technical errors to user-friendly messages."""
         error_str = str(error).lower()
+        system = platform.system()
         
         if "file not found" in error_str or "no such file" in error_str:
             return _("File not found or was removed")
         elif "permission" in error_str or "access" in error_str:
             return _("Cannot access file (permission denied)")
         elif "unsupported" in error_str or "format" in error_str or "codec" in error_str:
-            return _("Unsupported file format")
+            if system == "Windows":
+                return _("Unsupported file format. Install media codecs or use external player.")
+            elif system == "Darwin":
+                return _("Unsupported file format. Install via Homebrew: brew install gst-plugins-ugly")
+            else:
+                return _("Unsupported file format. Install additional codecs.")
         elif "too large" in error_str:
             return _("File too large for preview")
         elif "gstreamer" in error_str or "playbin" in error_str:
-            return _("Media playback system unavailable")
+            if system == "Windows":
+                return _("Media system unavailable. Install GStreamer for Windows.")
+            elif system == "Darwin":
+                return _("Media system unavailable. Install via: brew install gstreamer")
+            else:
+                return _("Media system unavailable. Install gstreamer packages.")
         elif "network" in error_str or "connection" in error_str:
             return _("Network error during preview")
         else:
             return _("Preview error: {}").format(str(error)[:100])
+    
+    def _get_platform_error_message(self, error) -> str:
+        """Get platform-specific error message for external player failures."""
+        system = platform.system()
+        
+        if system == "Windows":
+            return _("Cannot open external player. Check file associations.")
+        elif system == "Darwin":
+            return _("Cannot open external player. Check default app settings.")
+        else:
+            return _("Cannot open external player. Install xdg-utils or default media player.")
     
     # Lifecycle #
 

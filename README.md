@@ -21,6 +21,69 @@ Check out the [screenshots](data/screenshots/SCREENSHOTS.md)
 and [source code](https://github.com/nicotine-plus/nicotine-plus).
 
 
+## Features
+
+### 🎵 Preview/Listen Feature
+
+Nicotine+ includes an integrated preview system that allows you to listen to audio files and watch video files directly from the download interface, without waiting for the complete download to finish.
+
+**Key Features:**
+- **Integrated Player**: Built-in media player using GStreamer for seamless playback
+- **External Player Support**: Automatic fallback to your system's default media player
+- **Wide Format Support**: MP3, FLAC, OGG, WAV, M4A, AAC, WMA, Opus, AIFF (audio) + MP4, AVI, MKV, WebM, MOV (video)
+- **Cross-Platform**: Works on Windows, macOS, and Linux with automatic dependency detection
+- **Smart Fallbacks**: Automatically adapts to available multimedia capabilities on your system
+
+The preview system automatically detects and configures multimedia dependencies, providing the best possible experience without manual setup.
+
+### Installation for Preview Support
+
+#### Windows
+Nicotine+ automatically detects GStreamer installations. Choose one of these methods:
+
+```bash
+# Option 1: MSYS2 Environment (Recommended for developers)
+# First install MSYS2 from https://www.msys2.org/
+# Then in MSYS2 terminal:
+pacman -S mingw-w64-x86_64-gstreamer mingw-w64-x86_64-gst-plugins-good
+
+# Option 2: Chocolatey Package Manager
+# First install Chocolatey from https://chocolatey.org/
+choco install gstreamer
+
+# Option 3: Official GStreamer Installer (Easiest for end users)
+# Download from: https://gstreamer.freedesktop.org/download/
+# Run the .msi installer and follow the wizard
+```
+
+#### macOS
+Install GStreamer via Homebrew for full preview support:
+
+```bash
+# Intel Macs
+brew install gstreamer gst-plugins-base gst-plugins-good gst-plugins-ugly
+
+# Apple Silicon Macs (recommended path)
+/opt/homebrew/bin/brew install gstreamer gst-plugins-base gst-plugins-good gst-plugins-ugly
+```
+
+#### Linux
+Most distributions include GStreamer by default. If needed:
+
+```bash
+# Ubuntu/Debian
+sudo apt install gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly
+
+# Fedora/RHEL
+sudo dnf install gstreamer1-plugins-base gstreamer1-plugins-good gstreamer1-plugins-ugly
+
+# Arch Linux
+sudo pacman -S gstreamer gst-plugins-base gst-plugins-good gst-plugins-ugly
+```
+
+**Note**: If multimedia dependencies are not available, Nicotine+ will automatically fall back to using your system's default media player for previews.
+
+
 ## Download
 
 The current stable version of Nicotine+ is 3.3.10, released on March 10, 2025.
