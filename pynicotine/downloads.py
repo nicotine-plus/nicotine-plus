@@ -12,6 +12,7 @@
 import os
 import re
 import shutil
+import struct
 import tempfile
 import time
 
@@ -66,6 +67,8 @@ class Downloads(Transfers):
     __slots__ = ("_requested_folders", "_requested_folder_token", "_folder_basename_byte_limits",
                  "_pending_queue_messages", "_download_queue_timer_id", "_retry_connection_downloads_timer_id",
                  "_retry_io_downloads_timer_id", "_preview_transfers", "_preview_temp_files")
+
+    PCM_PREVIEW_EXTENSIONS = {"wav", "wave", "aiff", "aif", "aifc"}
 
     def __init__(self):
 
@@ -142,19 +145,26 @@ class Downloads(Transfers):
     def _emit_preview_update(self, transfer, state, **kwargs):
         events.emit("preview-update", transfer, state, **kwargs)
 
-    def _compute_preview_bytes(self, size, file_attributes):
+    def _compute_preview_bytes(self, size, file_attributes, virtual_path):
 
         transfers_cfg = config.sections["transfers"]
         preview_seconds = max(1, int(transfers_cfg.get("previewseconds", 30)))
         fallback_bitrate = max(8, int(transfers_cfg.get("previewfallbackbitrate", 192)))
         preview_max_bytes = max(0, int(transfers_cfg.get("previewmaxbytes", 0)))
 
+        extension = virtual_path.rsplit(".", 1)[-1].lower() if "." in virtual_path else ""
+        is_pcm_container = extension in self.PCM_PREVIEW_EXTENSIONS
+
         _h_quality, bitrate, _h_length, _length = FileListMessage.parse_audio_quality_length(
             size, file_attributes
         )
 
         if bitrate <= 0:
-            bitrate = fallback_bitrate
+            bitrate = 1411 if is_pcm_container else fallback_bitrate
+
+        elif is_pcm_container and bitrate < 1024:
+            # Algunos peers no envían atributos completos; asume PCM estéreo 16-bit/44.1 kHz
+            bitrate = 1411
 
         preview_bytes = bitrate * 125 * preview_seconds
 
@@ -173,6 +183,126 @@ class Downloads(Transfers):
             preview_bytes = min(preview_bytes, size)
 
         return max(preview_bytes, 0)
+
+    def _adjust_pcm_preview_header(self, download):
+
+        preview_path = download.preview_path
+
+        if not preview_path:
+            return
+
+        extension = download.virtual_path.rsplit(".", 1)[-1].lower() if "." in download.virtual_path else ""
+
+        if extension not in self.PCM_PREVIEW_EXTENSIONS:
+            return
+
+        file_handle = download.file_handle
+
+        if file_handle is not None:
+            try:
+                file_handle.flush()
+            except OSError:
+                pass
+
+        file_path = encode_path(preview_path)
+
+        try:
+            file_size = os.path.getsize(file_path)
+        except OSError:
+            return
+
+        try:
+            with open(file_path, "r+b") as handle:
+                if extension in {"wav", "wave"}:
+                    self._fix_wav_header(handle, file_size)
+                else:
+                    self._fix_aiff_header(handle, file_size)
+
+        except (OSError, struct.error) as error:
+            log.add_transfer("Failed to adjust preview header for %s: %s", (preview_path, error))
+
+    @staticmethod
+    def _fix_wav_header(handle, file_size):
+
+        handle.seek(0)
+        header = handle.read(12)
+
+        if len(header) < 12 or header[:4] not in {b"RIFF", b"RF64"}:
+            return
+
+        handle.seek(4)
+        handle.write(struct.pack("<I", max(0, file_size - 8)))
+
+        offset = 12
+
+        while offset + 8 <= file_size:
+            handle.seek(offset)
+            chunk_id = handle.read(4)
+            chunk_size_bytes = handle.read(4)
+
+            if len(chunk_id) < 4 or len(chunk_size_bytes) < 4:
+                break
+
+            chunk_size = struct.unpack("<I", chunk_size_bytes)[0]
+            data_start = offset + 8
+
+            if chunk_id == b"data":
+                actual_data = max(0, file_size - data_start)
+                if actual_data != chunk_size:
+                    handle.seek(offset + 4)
+                    handle.write(struct.pack("<I", actual_data))
+                break
+
+            offset = data_start + chunk_size
+
+            if chunk_size % 2 == 1:
+                offset += 1
+
+    @staticmethod
+    def _fix_aiff_header(handle, file_size):
+
+        handle.seek(0)
+        header = handle.read(12)
+
+        if len(header) < 12 or header[:4] != b"FORM":
+            return
+
+        handle.seek(4)
+        handle.write(struct.pack(">I", max(0, file_size - 8)))
+
+        offset = 12
+
+        while offset + 8 <= file_size:
+            handle.seek(offset)
+            chunk_id = handle.read(4)
+            chunk_size_bytes = handle.read(4)
+
+            if len(chunk_id) < 4 or len(chunk_size_bytes) < 4:
+                break
+
+            chunk_size = struct.unpack(">I", chunk_size_bytes)[0]
+            chunk_size_pos = offset + 4
+            data_start = offset + 8
+
+            if chunk_id == b"SSND":
+                if chunk_size < 8:
+                    return
+
+                handle.read(4)  # offset value
+                handle.read(4)  # block size
+                data_start = handle.tell()
+                actual_data = max(0, file_size - data_start)
+                new_chunk_size = actual_data + 8
+
+                if new_chunk_size != chunk_size:
+                    handle.seek(chunk_size_pos)
+                    handle.write(struct.pack(">I", new_chunk_size))
+                break
+
+            offset = data_start + chunk_size
+
+            if chunk_size % 2 == 1:
+                offset += 1
 
     def preview_file(self, username, virtual_path, size, file_attributes=None):
 
@@ -193,7 +323,7 @@ class Downloads(Transfers):
         if key in self._preview_transfers:
             self.cancel_preview(username, virtual_path)
 
-        preview_bytes = self._compute_preview_bytes(size, file_attributes)
+        preview_bytes = self._compute_preview_bytes(size, file_attributes, virtual_path)
 
         if preview_bytes <= 0:
             self._emit_preview_update(None, "failed", reason="unavailable")
@@ -1374,6 +1504,7 @@ class Downloads(Transfers):
                                      (username, virtual_path, download.preview_bytes))
                 else:
                     self._finish_transfer(download)
+                    self._adjust_pcm_preview_header(download)
                     self._emit_preview_update(
                         download, "finished",
                         path=download.preview_path,
@@ -1529,6 +1660,7 @@ class Downloads(Transfers):
                 download.preview_bytes, self.PREVIEW_READY_THRESHOLD
             ):
                 download.preview_ready = True
+                self._adjust_pcm_preview_header(download)
                 self._emit_preview_update(
                     download, "ready",
                     path=download.preview_path,
@@ -1553,6 +1685,7 @@ class Downloads(Transfers):
         if download.current_byte_offset is not None and download.current_byte_offset >= download.size:
             self._finish_transfer(download)
             if download.is_preview:
+                self._adjust_pcm_preview_header(download)
                 bytes_received = download.current_byte_offset or 0
                 self._emit_preview_update(
                     download, "finished",
