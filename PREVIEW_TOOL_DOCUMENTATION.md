@@ -144,7 +144,7 @@ self.revealer.set_transition_duration(200)
 
 #### Estados del Preview
 1. **queued**: Preview solicitado, esperando
-2. **started**: Solicitud aceptada, buffering
+2. **strted**: Solicitud aceptada, buffering
 3. **ready**: Archivo listo, iniciando reproducción
 4. **finished**: Descarga completada
 5. **failed/cancelled**: Error o cancelación
