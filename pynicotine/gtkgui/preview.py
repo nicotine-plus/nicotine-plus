@@ -3,6 +3,8 @@
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
 #
+# GStreamer import fix: Module imports GStreamer dynamically to prevent errors
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -37,8 +39,8 @@ from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Pango
 
-# Initialize GStreamer availability - will be set by platform detection
-# GStreamer is imported dynamically to avoid import errors when not available
+# GStreamer is imported dynamically in initialize_preview_system() to prevent
+# import errors when GStreamer is not available in the system
 Gst = None
 GST_AVAILABLE = False
 PREVIEW_MODE = "UNKNOWN"  # INTEGRATED, EXTERNAL_ONLY, or UNAVAILABLE
