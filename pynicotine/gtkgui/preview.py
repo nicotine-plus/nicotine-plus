@@ -3,7 +3,8 @@
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
 #
-# GStreamer import fix: Module imports GStreamer dynamically to prevent errors
+# IMPORTANT: This module does NOT import GStreamer at module level
+# GStreamer is imported dynamically in initialize_preview_system() to prevent errors
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,11 +33,13 @@ from typing import Callable
 from typing import Optional
 from typing import Set
 
+# GTK imports with version requirement
 import gi
 gi.require_version('Gtk', '4.0')
+# CRITICAL: No GStreamer import here - handled dynamically in initialize_preview_system()
 
 from gi.repository import GLib
-from gi.repository import Gtk
+from gi.repository import Gtk  
 from gi.repository import Pango
 
 # GStreamer is imported dynamically in initialize_preview_system() to prevent
