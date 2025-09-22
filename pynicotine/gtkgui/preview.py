@@ -32,13 +32,13 @@ from typing import Set
 
 import gi
 gi.require_version('Gtk', '4.0')
-gi.require_version('Gst', '1.0')
 
 from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Pango
 
 # Initialize GStreamer availability - will be set by platform detection
+# GStreamer is imported dynamically to avoid import errors when not available
 Gst = None
 GST_AVAILABLE = False
 PREVIEW_MODE = "UNKNOWN"  # INTEGRATED, EXTERNAL_ONLY, or UNAVAILABLE
@@ -271,9 +271,14 @@ def initialize_preview_system() -> tuple[bool, str]:
             # Import GStreamer after configuration
             import gi
             gi.require_version('Gst', '1.0')
-            from gi.repository import Gst
+            from gi.repository import Gst as GstModule
             
-            Gst.init(None)
+            GstModule.init(None)
+            
+            # Set global Gst variable after successful initialization
+            global Gst
+            Gst = GstModule
+            
             GST_AVAILABLE = True
             PREVIEW_MODE = "INTEGRATED"
             
