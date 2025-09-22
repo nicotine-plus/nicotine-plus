@@ -603,6 +603,7 @@ class Search:
             self.window.application, parent=self.tree_view.widget, callback=self.on_popup_menu
         )
         self.popup_menu.add_items(
+            ("#" + _("Preview Audio"), self.on_preview_files),
             ("#" + _("Download _File(s)"), self.on_download_files),
             ("#" + _("_Download Folder(s)…"), self.on_download_folders),
             ("", None),
@@ -1626,6 +1627,25 @@ class Search:
 
         self.searches.download_dialog.update_files(data, select_all=True)
         self.searches.download_dialog.present()
+
+    def on_preview_files(self, *_args):
+
+        iterator = next(iter(self.selected_results.values()), None)
+
+        if iterator is None:
+            return
+
+        user = self.tree_view.get_row_value(iterator, "user")
+        file_data = self.tree_view.get_row_value(iterator, "file_data")
+        file_path = file_data.path
+        size = self.tree_view.get_row_value(iterator, "size_data")
+
+        started = core.downloads.preview_file(
+            user, file_path, size=size, file_attributes=file_data.attributes
+        )
+
+        if not started:
+            log.add_transfer("Unable to start preview for %s from %s", (file_path, user))
 
     def on_copy_file_path(self, *_args):
 

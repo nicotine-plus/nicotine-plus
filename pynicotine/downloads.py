@@ -12,6 +12,7 @@
 import os
 import re
 import shutil
+import tempfile
 import time
 
 try:
@@ -28,6 +29,7 @@ from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import ConnectionType
 from pynicotine.slskmessages import DownloadFile
+from pynicotine.slskmessages import FileListMessage
 from pynicotine.slskmessages import FileOffset
 from pynicotine.slskmessages import FolderContentsRequest
 from pynicotine.slskmessages import increment_token
@@ -63,7 +65,7 @@ class RequestedFolder:
 class Downloads(Transfers):
     __slots__ = ("_requested_folders", "_requested_folder_token", "_folder_basename_byte_limits",
                  "_pending_queue_messages", "_download_queue_timer_id", "_retry_connection_downloads_timer_id",
-                 "_retry_io_downloads_timer_id")
+                 "_retry_io_downloads_timer_id", "_preview_transfers", "_preview_temp_files")
 
     def __init__(self):
 
@@ -74,6 +76,8 @@ class Downloads(Transfers):
 
         self._folder_basename_byte_limits = {}
         self._pending_queue_messages = {}
+        self._preview_transfers = {}
+        self._preview_temp_files = set()
 
         self._download_queue_timer_id = None
         self._retry_connection_downloads_timer_id = None
@@ -108,6 +112,160 @@ class Downloads(Transfers):
         super()._quit()
 
         self._folder_basename_byte_limits.clear()
+        self._clear_preview_temps()
+
+    # Preview Helpers #
+
+    PREVIEW_READY_THRESHOLD = 64 * 1024
+
+    def _clear_preview_temps(self):
+
+        for preview_path in list(self._preview_temp_files):
+            try:
+                os.remove(preview_path)
+            except OSError:
+                pass
+            finally:
+                self._preview_temp_files.discard(preview_path)
+
+    @staticmethod
+    def _sanitize_preview_suffix(virtual_path):
+
+        basename = virtual_path.rpartition("\\")[2]
+        _, extension = os.path.splitext(basename)
+
+        if not extension:
+            return ".tmp"
+
+        return extension[:10]
+
+    def _emit_preview_update(self, transfer, state, **kwargs):
+        events.emit("preview-update", transfer, state, **kwargs)
+
+    def _compute_preview_bytes(self, size, file_attributes):
+
+        transfers_cfg = config.sections["transfers"]
+        preview_seconds = max(1, int(transfers_cfg.get("previewseconds", 30)))
+        fallback_bitrate = max(8, int(transfers_cfg.get("previewfallbackbitrate", 192)))
+        preview_max_bytes = max(0, int(transfers_cfg.get("previewmaxbytes", 0)))
+
+        _h_quality, bitrate, _h_length, _length = FileListMessage.parse_audio_quality_length(
+            size, file_attributes
+        )
+
+        if bitrate <= 0:
+            bitrate = fallback_bitrate
+
+        preview_bytes = bitrate * 125 * preview_seconds
+
+        if preview_max_bytes:
+            preview_bytes = min(preview_bytes, preview_max_bytes)
+
+        min_threshold = self.PREVIEW_READY_THRESHOLD
+
+        if size:
+            preview_bytes = min(preview_bytes, size)
+            min_threshold = min(size, self.PREVIEW_READY_THRESHOLD)
+
+        preview_bytes = max(preview_bytes, min_threshold)
+
+        if size:
+            preview_bytes = min(preview_bytes, size)
+
+        return max(preview_bytes, 0)
+
+    def preview_file(self, username, virtual_path, size, file_attributes=None):
+
+        transfers_cfg = config.sections["transfers"]
+
+        if not transfers_cfg.get("previewenabled", True):
+            log.add_transfer("Preview disabled, ignoring request for %s by %s", (virtual_path, username))
+            return False
+
+        key = (username, virtual_path)
+
+        existing = self.transfers.get(username + virtual_path)
+
+        if existing is not None and not getattr(existing, "is_preview", False):
+            self._emit_preview_update(None, "failed", reason=_("File is already queued for download"))
+            return False
+
+        if key in self._preview_transfers:
+            self.cancel_preview(username, virtual_path)
+
+        preview_bytes = self._compute_preview_bytes(size, file_attributes)
+
+        if preview_bytes <= 0:
+            self._emit_preview_update(None, "failed", reason="unavailable")
+            return False
+
+        transfer = Transfer(username, virtual_path, self.get_incomplete_download_folder(),
+                             preview_bytes, file_attributes)
+        transfer.is_preview = True
+        transfer.preview_bytes = preview_bytes
+        transfer.original_size = size
+        transfer.preview_ready = False
+
+        self._append_transfer(transfer)
+        self._preview_transfers[key] = transfer
+
+        if not self._enqueue_transfer(transfer, bypass_filter=True):
+            self._preview_transfers.pop(key, None)
+            self.transfers.pop(username + virtual_path, None)
+            self._emit_preview_update(transfer, "failed", reason="enqueue-failed")
+            return False
+
+        self._emit_preview_update(transfer, "queued", preview_bytes=preview_bytes)
+        return True
+
+    def cancel_preview(self, username, virtual_path):
+
+        transfer = self._preview_transfers.get((username, virtual_path))
+
+        if transfer is None:
+            return False
+
+        self._abort_transfer(transfer, status=TransferStatus.CANCELLED)
+        self._cleanup_preview_transfer(transfer, delete_file=True)
+        self._emit_preview_update(transfer, "cancelled")
+        return True
+
+    def _cleanup_preview_transfer(self, transfer, delete_file=False):
+
+        key = (transfer.username, transfer.virtual_path)
+
+        if self._preview_transfers.get(key) is transfer:
+            del self._preview_transfers[key]
+
+        self.transfers.pop(transfer.username + transfer.virtual_path, None)
+
+        preview_path = transfer.preview_path
+
+        if preview_path:
+            if delete_file:
+                self.discard_preview_file(preview_path)
+            else:
+                self._preview_temp_files.add(preview_path)
+
+            transfer.preview_path = None
+
+    def discard_preview_file(self, preview_path):
+
+        if not preview_path:
+            return False
+
+        removed = False
+        try:
+            os.remove(preview_path)
+        except OSError:
+            removed = False
+        else:
+            removed = True
+
+        if removed:
+            self._preview_temp_files.discard(preview_path)
+
+        return removed
 
     def _server_login(self, msg):
 
@@ -256,6 +414,8 @@ class Downloads(Transfers):
     # Transfer Actions #
 
     def _update_transfer(self, transfer, update_parent=True):
+        if getattr(transfer, "is_preview", False):
+            return
         events.emit("update-download", transfer, update_parent)
 
     def _enqueue_transfer(self, transfer, bypass_filter=False):
@@ -297,11 +457,14 @@ class Downloads(Transfers):
 
         msg = QueueUpload(virtual_path, transfer.legacy_attempt)
 
-        if not core.shares.initialized:
+        if not core.shares.initialized and not transfer.is_preview:
             # Remain queued locally until our shares have initialized, to prevent invalid
             # messages about not sharing any files
             self._pending_queue_messages[transfer] = msg
         else:
+            if transfer.is_preview:
+                log.add_transfer("Requesting preview for %s from %s (%s bytes)",
+                                 (virtual_path, username, size))
             core.send_message_to_peer(username, msg)
 
         return True
@@ -460,20 +623,22 @@ class Downloads(Transfers):
             log.add_transfer("File %s is already downloaded", virtual_path)
             return
 
-        core.statistics.append_stat_value("completed_downloads", 1)
+        # Skip notifications and actions for preview downloads
+        if not transfer.is_preview:
+            core.statistics.append_stat_value("completed_downloads", 1)
 
-        # Attempt to show notification and execute commands
-        self._file_downloaded_actions(username, download_file_path)
-        self._folder_downloaded_actions(username, transfer.folder_path)
+            # Attempt to show notification and execute commands
+            self._file_downloaded_actions(username, download_file_path)
+            self._folder_downloaded_actions(username, transfer.folder_path)
 
-        core.pluginhandler.download_finished_notification(username, virtual_path, download_file_path)
+            core.pluginhandler.download_finished_notification(username, virtual_path, download_file_path)
 
-        log.add_download(
-            _("Download finished: user %(user)s, file %(file)s"), {
-                "user": username,
-                "file": virtual_path
-            }
-        )
+            log.add_download(
+                _("Download finished: user %(user)s, file %(file)s"), {
+                    "user": username,
+                    "file": virtual_path
+                }
+            )
 
     def _abort_transfer(self, transfer, status=None, denied_message=None, update_parent=True):
 
@@ -934,6 +1099,10 @@ class Downloads(Transfers):
                          (virtual_path, username, status))
         self._abort_transfer(download, status=status)
 
+        if download.is_preview:
+            self._emit_preview_update(download, "failed", reason=status)
+            self._cleanup_preview_transfer(download, delete_file=True)
+
     def _requested_folder_timeout(self, requested_folder):
 
         if requested_folder.request_timer_id is None:
@@ -1025,11 +1194,15 @@ class Downloads(Transfers):
             self._dequeue_transfer(download)
 
             if size > 0:
-                if download.size != size:
-                    # The remote user's file contents have changed since we queued the download
-                    download.size_changed = True
+                if download.is_preview:
+                    # Preserve preview size, but keep track of the real remote size
+                    download.original_size = size
+                else:
+                    if download.size != size:
+                        # The remote user's file contents have changed since we queued the download
+                        download.size_changed = True
 
-                download.size = size
+                    download.size = size
 
             self._activate_transfer(download, token)
             self._update_transfer(download)
@@ -1087,7 +1260,11 @@ class Downloads(Transfers):
             return
 
         self._abort_transfer(download, status=TransferStatus.LOCAL_FILE_ERROR)
-        log.add(_("Download I/O error: %s"), error)
+        if download.is_preview:
+            self._emit_preview_update(download, "failed", reason="io-error", error=str(error))
+            self._cleanup_preview_transfer(download, delete_file=True)
+        else:
+            log.add(_("Download I/O error: %s"), error)
 
     def _file_transfer_init(self, msg):
         """A peer is requesting to start uploading a file to us."""
@@ -1104,49 +1281,69 @@ class Downloads(Transfers):
             return
 
         virtual_path = download.virtual_path
-        incomplete_folder_path = self.get_incomplete_download_folder()
         sock = download.sock = msg.sock
-        need_update = True
+        is_preview = download.is_preview
+        need_update = not is_preview
         download_started = False
 
         log.add_transfer("Received file download init with token %s for file %s from user %s",
                          (token, virtual_path, username))
 
         try:
-            incomplete_folder_path_encoded = encode_path(incomplete_folder_path)
+            if is_preview:
+                suffix = self._sanitize_preview_suffix(virtual_path)
+                file_handle_descriptor, preview_path = tempfile.mkstemp(prefix="nicotine-preview-", suffix=suffix)
+                os.close(file_handle_descriptor)
 
-            if not os.path.isdir(incomplete_folder_path_encoded):
-                os.makedirs(incomplete_folder_path_encoded)
+                file_handle = open(encode_path(preview_path), "wb")
+                offset = 0
 
-            incomplete_file_path = self.get_incomplete_download_file_path(username, virtual_path)
-            file_handle = open(encode_path(incomplete_file_path), "ab+")  # pylint: disable=consider-using-with
+                download.preview_path = preview_path
+                download.preview_ready = False
 
-            try:
-                import fcntl
+            else:
+                incomplete_folder_path = self.get_incomplete_download_folder()
+                incomplete_folder_path_encoded = encode_path(incomplete_folder_path)
+
+                if not os.path.isdir(incomplete_folder_path_encoded):
+                    os.makedirs(incomplete_folder_path_encoded)
+
+                incomplete_file_path = self.get_incomplete_download_file_path(username, virtual_path)
+                file_handle = open(encode_path(incomplete_file_path), "ab+")  # pylint: disable=consider-using-with
+
                 try:
-                    fcntl.lockf(file_handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                except OSError as error:
-                    log.add(_("Can't get an exclusive lock on file - I/O error: %s"), error)
-            except ImportError:
-                pass
+                    import fcntl
+                    try:
+                        fcntl.lockf(file_handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    except OSError as error:
+                        log.add(_("Can't get an exclusive lock on file - I/O error: %s"), error)
+                except ImportError:
+                    pass
 
-            if download.size_changed:
-                # Remote user sent a different file size than we originally requested,
-                # wipe any existing data in the incomplete file to avoid corruption
-                file_handle.truncate(0)
+                if download.size_changed:
+                    # Remote user sent a different file size than we originally requested,
+                    # wipe any existing data in the incomplete file to avoid corruption
+                    file_handle.truncate(0)
 
-            # Seek to the end of the file for resuming the download
-            offset = file_handle.seek(0, os.SEEK_END)
+                # Seek to the end of the file for resuming the download
+                offset = file_handle.seek(0, os.SEEK_END)
 
         except OSError as error:
-            log.add(_("Cannot save file in %(folder_path)s: %(error)s"), {
-                "folder_path": incomplete_folder_path,
-                "error": error
-            })
-            self._abort_transfer(download, status=TransferStatus.DOWNLOAD_FOLDER_ERROR)
-            core.notifications.show_download_notification(
-                str(error), title=_("Download Folder Error"), high_priority=True)
-            need_update = False
+            if is_preview:
+                log.add_transfer("Preview I/O error for file %s from user %s: %s",
+                                 (virtual_path, username, error))
+                self._abort_transfer(download, status=TransferStatus.DOWNLOAD_FOLDER_ERROR)
+                self._emit_preview_update(download, "failed", reason="filesystem", error=str(error))
+                self._cleanup_preview_transfer(download, delete_file=True)
+            else:
+                log.add(_("Cannot save file in %(folder_path)s: %(error)s"), {
+                    "folder_path": incomplete_folder_path,
+                    "error": error
+                })
+                self._abort_transfer(download, status=TransferStatus.DOWNLOAD_FOLDER_ERROR)
+                core.notifications.show_download_notification(
+                    str(error), title=_("Download Folder Error"), high_priority=True)
+                need_update = False
 
         else:
             download.file_handle = file_handle
@@ -1154,31 +1351,53 @@ class Downloads(Transfers):
             download.start_time = time.monotonic() - download.time_elapsed
             download.retry_attempt = False
 
-            core.statistics.append_stat_value("started_downloads", 1)
-            download_started = True
-
-            log.add_download(
-                _("Download started: user %(user)s, file %(file)s"), {
-                    "user": username,
-                    "file": file_handle.name.decode("utf-8", "replace")
-                }
-            )
-
-            if download.size > offset:
-                download.status = TransferStatus.TRANSFERRING
-                core.send_message_to_network_thread(DownloadFile(
-                    sock=sock, token=token, file=file_handle, leftbytes=(download.size - offset)
-                ))
-                core.send_message_to_peer(username, FileOffset(sock, offset))
-
+            if is_preview:
+                if download.preview_bytes > offset:
+                    download.status = TransferStatus.TRANSFERRING
+                    core.send_message_to_network_thread(DownloadFile(
+                        sock=sock, token=token, file=file_handle, leftbytes=(download.preview_bytes - offset)
+                    ))
+                    core.send_message_to_peer(username, FileOffset(sock, offset))
+                    download_started = True
+                    self._emit_preview_update(
+                        download, "started",
+                        path=download.preview_path,
+                        total_bytes=download.preview_bytes
+                    )
+                else:
+                    self._finish_transfer(download)
+                    self._emit_preview_update(
+                        download, "finished",
+                        path=download.preview_path,
+                        bytes_received=download.preview_bytes
+                    )
+                    self._cleanup_preview_transfer(download)
             else:
-                self._finish_transfer(download)
-                need_update = False
+                core.statistics.append_stat_value("started_downloads", 1)
+                download_started = True
+
+                log.add_download(
+                    _("Download started: user %(user)s, file %(file)s"), {
+                        "user": username,
+                        "file": file_handle.name.decode("utf-8", "replace")
+                    }
+                )
+
+                if download.size > offset:
+                    download.status = TransferStatus.TRANSFERRING
+                    core.send_message_to_network_thread(DownloadFile(
+                        sock=sock, token=token, file=file_handle, leftbytes=(download.size - offset)
+                    ))
+                    core.send_message_to_peer(username, FileOffset(sock, offset))
+
+                else:
+                    self._finish_transfer(download)
+                    need_update = False
 
         if need_update:
             self._update_transfer(download)
 
-        if download_started:
+        if download_started and not is_preview:
             # Must be emitted after the final update to prevent inconsistent state
             core.pluginhandler.download_started_notification(username, virtual_path, incomplete_file_path)
 
@@ -1220,6 +1439,11 @@ class Downloads(Transfers):
             self._user_queue_limits[username] = max(5, len(queued_downloads) - 1)
 
         self._abort_transfer(download, status=reason)
+        if download.is_preview:
+            self._emit_preview_update(download, "failed", reason=reason)
+            self._cleanup_preview_transfer(download, delete_file=True)
+            return
+
         self._update_transfer(download)
 
         log.add_transfer("Download request denied by user %s for file %s. Reason: %s",
@@ -1263,6 +1487,11 @@ class Downloads(Transfers):
         self._abort_transfer(download, status=TransferStatus.CONNECTION_CLOSED)
         download.retry_attempt = False
 
+        if download.is_preview:
+            self._emit_preview_update(download, "failed", reason=TransferStatus.CONNECTION_CLOSED)
+            self._cleanup_preview_transfer(download, delete_file=True)
+            return
+
         log.add_transfer("Upload attempt by user %s for file %s failed. Reason: %s",
                          (virtual_path, username, download.status))
 
@@ -1284,6 +1513,20 @@ class Downloads(Transfers):
         )
         self._update_transfer(download)
 
+        if download.is_preview:
+            bytes_received = download.size - bytes_left
+
+            if not download.preview_ready and bytes_received >= min(
+                download.preview_bytes, self.PREVIEW_READY_THRESHOLD
+            ):
+                download.preview_ready = True
+                self._emit_preview_update(
+                    download, "ready",
+                    path=download.preview_path,
+                    bytes_received=bytes_received,
+                    total_bytes=download.preview_bytes
+                )
+
     def _file_connection_closed(self, username, token, sock, **_unused):
         """A file download connection has closed for any reason."""
 
@@ -1297,6 +1540,15 @@ class Downloads(Transfers):
 
         if download.current_byte_offset is not None and download.current_byte_offset >= download.size:
             self._finish_transfer(download)
+            if download.is_preview:
+                bytes_received = download.current_byte_offset or 0
+                self._emit_preview_update(
+                    download, "finished",
+                    path=download.preview_path,
+                    bytes_received=bytes_received,
+                    total_bytes=download.preview_bytes
+                )
+                self._cleanup_preview_transfer(download)
             return
 
         if core.users.statuses.get(download.username) == UserStatus.OFFLINE:
@@ -1305,6 +1557,10 @@ class Downloads(Transfers):
             status = TransferStatus.CANCELLED
 
         self._abort_transfer(download, status=status)
+
+        if download.is_preview:
+            self._emit_preview_update(download, "failed", reason=status)
+            self._cleanup_preview_transfer(download, delete_file=True)
 
     def _place_in_queue_response(self, msg):
         """Peer code 44.

@@ -166,6 +166,7 @@ EVENT_NAMES = {
     "peer-connection-error",
     "place-in-queue-request",
     "place-in-queue-response",
+    "preview-update",
     "queue-upload",
     "transfer-request",
     "transfer-response",

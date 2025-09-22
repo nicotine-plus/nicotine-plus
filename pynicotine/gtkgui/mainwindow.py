@@ -27,6 +27,7 @@ from pynicotine.gtkgui.chatrooms import ChatRooms
 from pynicotine.gtkgui.downloads import Downloads
 from pynicotine.gtkgui.interests import Interests
 from pynicotine.gtkgui.privatechat import PrivateChats
+from pynicotine.gtkgui.preview import PreviewController
 from pynicotine.gtkgui.search import Searches
 from pynicotine.gtkgui.uploads import Uploads
 from pynicotine.gtkgui.userbrowse import UserBrowses
@@ -272,6 +273,8 @@ class MainWindow(Window):
             "userinfo": self.userinfo,
             "userlist": self.buddies
         }
+
+        self.preview_controller = PreviewController(self)
 
         # Actions and menu
         self.set_up_actions()
@@ -1282,5 +1285,8 @@ class MainWindow(Window):
 
         self.widget.disconnect(self.window_active_handler)
         self.widget.disconnect(self.window_visible_handler)
+
+        if getattr(self, "preview_controller", None) is not None:
+            self.preview_controller.destroy()
 
         super().destroy()

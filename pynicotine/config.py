@@ -223,7 +223,11 @@ class Config:
                 "download_doubleclick": transfer_double_click_action,
                 "upload_doubleclick": transfer_double_click_action,
                 "downloadsexpanded": True,
-                "uploadsexpanded": True
+                "uploadsexpanded": True,
+                "previewenabled": True,
+                "previewseconds": 60,
+                "previewfallbackbitrate": 192,
+                "previewmaxbytes": 16777216
             },
             "userbrowse": {
                 "expand_folders": True

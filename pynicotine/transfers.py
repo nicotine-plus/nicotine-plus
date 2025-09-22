@@ -53,7 +53,9 @@ class Transfer:
                  "speed", "avg_speed", "time_elapsed", "time_left", "modifier",
                  "queue_position", "file_attributes", "iterator", "status",
                  "legacy_attempt", "retry_attempt", "size_changed", "is_backslash_path",
-                 "is_lowercase_path", "request_timer_id")
+                 "is_lowercase_path", "request_timer_id",
+                 "is_preview", "preview_bytes", "preview_path", "original_size",
+                 "preview_ready")
 
     def __init__(self, username, virtual_path=None, folder_path=None, size=0, file_attributes=None,
                  status=None, current_byte_offset=None):
@@ -87,6 +89,12 @@ class Transfer:
 
         if file_attributes is None:
             self.file_attributes = {}
+
+        self.is_preview = False
+        self.preview_bytes = 0
+        self.preview_path = None
+        self.original_size = size
+        self.preview_ready = False
 
 
 class Transfers:
@@ -582,6 +590,8 @@ class Transfers:
     def _iter_transfer_rows(self):
         """Get a list of transfers to dump to file."""
         for transfer in self.transfers.values():
+            if getattr(transfer, "is_preview", False):
+                continue
             yield [
                 transfer.username, transfer.virtual_path, transfer.folder_path, transfer.status, transfer.size,
                 transfer.current_byte_offset, transfer.file_attributes
