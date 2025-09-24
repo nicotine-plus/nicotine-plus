@@ -138,7 +138,6 @@ EVENT_NAMES = {
     "shared-file-list-progress",
     "shared-file-list-request",
     "shared-file-list-response",
-    "shares-preparing",
     "shares-ready",
     "shares-scanning",
     "shares-unavailable",
