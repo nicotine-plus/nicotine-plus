@@ -185,7 +185,7 @@ def encode_path(path, prefix=True):
 
         path = LONG_PATH_PREFIX + path
 
-    return path.encode("utf-8")
+    return os.fsencode(path)
 
 
 def human_duration_approx(seconds):
