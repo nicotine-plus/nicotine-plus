@@ -24,6 +24,7 @@ from pynicotine.slskmessages import SEARCH_TOKENS_ALLOWED
 from pynicotine.slskmessages import UserSearch
 from pynicotine.slskmessages import WishlistSearch
 from pynicotine.utils import TRANSLATE_PUNCTUATION
+from pynicotine.utils import human_duration_approx
 
 
 class SearchRequest:
@@ -406,8 +407,10 @@ class Search:
         self.wishlist_interval = msg.seconds
 
         if self.wishlist_interval > 0:
-            log.add_search(_("Wishlist wait period set to %s seconds"), self.wishlist_interval)
-
+            log.add_search(
+                _("Wishlist wait period set to %(duration)s"),
+                {"duration": human_duration_approx(self.wishlist_interval)}
+            )
             events.cancel_scheduled(self._wishlist_timer_id)
             self._wishlist_timer_id = events.schedule(
                 delay=self.wishlist_interval, callback=self._do_next_wishlist_search, repeat=True)
