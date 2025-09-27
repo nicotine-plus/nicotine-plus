@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2024-2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+<interface>
+  <requires lib="gtk+" version="3.0"/>
+  <object class="GtkButton" id="cancel_button">
+    <property name="label" translatable="yes">_Cancel</property>
+    <property name="use-underline">True</property>
+    <property name="visible">True</property>
+    <signal name="clicked" handler="on_cancel"/>
+  </object>
+  <object class="GtkButton" id="download_button">
+    <property name="label" translatable="yes">_Download</property>
+    <property name="use-underline">True</property>
+    <property name="visible">True</property>
+    <signal name="clicked" handler="on_download"/>
+    <style>
+      <class name="suggested-action"/>
+    </style>
+  </object>
+  <object class="GtkButton" id="download_paused_button">
+    <property name="tooltip-text" translatable="yes">Download (Paused)</property>
+    <property name="visible">True</property>
+    <property name="width-request">48</property>
+    <signal name="clicked" handler="on_download_paused"/>
+    <child>
+      <object class="GtkImage">
+        <property name="icon-name">media-playback-pause-symbolic</property>
+        <property name="visible">True</property>
+      </object>
+    </child>
+  </object>
+  <object class="GtkButton" id="download_folder_default_button">
+    <property name="tooltip-text" translatable="yes">Default</property>
+    <property name="valign">center</property>
+    <property name="visible">True</property>
+    <signal name="clicked" handler="on_default_download_folder"/>
+    <child>
+      <object class="GtkImage">
+        <property name="icon-name">edit-undo-symbolic</property>
+        <property name="visible">True</property>
+      </object>
+    </child>
+  </object>
+  <object class="GtkButton" id="retry_button">
+    <property name="label" translatable="yes">Retry</property>
+    <property name="valign">center</property>
+    <property name="visible">True</property>
+    <signal name="clicked" handler="on_retry"/>
+  </object>
+  <object class="GtkBox" id="container">
+    <property name="margin-bottom">12</property>
+    <property name="margin-end">12</property>
+    <property name="margin-start">12</property>
+    <property name="margin-top">12</property>
+    <property name="orientation">vertical</property>
+    <property name="spacing">12</property>
+    <property name="visible">True</property>
+    <property name="width-request">360</property>
+    <child>
+      <object class="GtkBox">
+        <property name="homogeneous">True</property>
+        <property name="spacing">12</property>
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkLabel" id="download_folder_label">
+            <property name="label" translatable="yes">Download location:</property>
+            <property name="visible">True</property>
+            <property name="wrap">True</property>
+            <property name="wrap-mode">word-char</property>
+            <property name="xalign">0</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="spacing">12</property>
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="height-request">24</property>
+            <property name="hexpand">True</property>
+            <property name="label" translatable="yes">Store downloads in subfolders</property>
+            <property name="mnemonic-widget">enable_subfolders_toggle</property>
+            <property name="visible">True</property>
+            <property name="wrap">True</property>
+            <property name="wrap-mode">word-char</property>
+            <property name="xalign">0</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkSwitch" id="enable_subfolders_toggle">
+            <property name="valign">center</property>
+            <property name="visible">True</property>
+            <signal name="notify::active" handler="on_toggle_enable_subfolders"/>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkFrame">
+        <property name="vexpand">True</property>
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkBox" id="info_bar_container">
+                <property name="visible">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkOverlay">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkScrolledWindow" id="list_container">
+                    <property name="vexpand">True</property>
+                    <property name="visible">True</property>
+                    <style>
+                      <class name="border-bottom"/>
+                    </style>
+                  </object>
+                </child>
+                <child type="overlay">
+                  <object class="GtkRevealer">
+                    <property name="reveal-child">True</property>
+                    <property name="transition-type">slide-up</property>
+                    <property name="valign">end</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkProgressBar" id="progress_bar">
+                        <property name="pulse-step">0.72</property>
+                        <property name="visible">True</property>
+                        <style>
+                          <class name="osd"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="margin-bottom">6</property>
+                <property name="margin-end">6</property>
+                <property name="margin-start">6</property>
+                <property name="margin-top">6</property>
+                <property name="spacing">6</property>
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkButton" id="rename_button">
+                    <property name="tooltip-text" translatable="yes">Rename…</property>
+                    <property name="visible">True</property>
+                    <signal name="clicked" handler="on_rename"/>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="spacing">6</property>
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">document-edit-symbolic</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="ellipsize">end</property>
+                            <property name="label" translatable="yes">Rename…</property>
+                            <property name="mnemonic-widget">rename_button</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <style>
+                      <class name="flat"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="halign">end</property>
+                    <property name="hexpand">True</property>
+                    <property name="spacing">6</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkButton" id="_select_all_button">
+                        <property name="tooltip-text" translatable="yes">Select All</property>
+                        <property name="visible">True</property>
+                        <signal name="clicked" handler="on_select_all"/>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="spacing">6</property>
+                            <property name="visible">True</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="icon-name">view-list-symbolic</property>
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="ellipsize">end</property>
+                                <property name="label" translatable="yes">Select All</property>
+                                <property name="mnemonic-widget">_select_all_button</property>
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <style>
+                          <class name="flat"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="unselect_all_button">
+                        <property name="tooltip-text" translatable="yes">Unselect All</property>
+                        <property name="visible" bind-source="_select_all_button" bind-property="visible" bind-flags="bidirectional|invert-boolean|sync-create"/>
+                        <signal name="clicked" handler="on_unselect_all"/>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="spacing">6</property>
+                            <property name="visible">True</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="icon-name">view-list-symbolic</property>
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="ellipsize">end</property>
+                                <property name="label" translatable="yes">Unselect All</property>
+                                <property name="mnemonic-widget">unselect_all_button</property>
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <style>
+                          <class name="flat"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="select_initial_button">
+                        <property name="tooltip-text" translatable="yes">Select Initial</property>
+                        <property name="visible">True</property>
+                        <signal name="clicked" handler="on_select_initial"/>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="spacing">6</property>
+                            <property name="visible">True</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="icon-name">object-select-symbolic</property>
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="ellipsize">end</property>
+                                <property name="label" translatable="yes">Select Initial</property>
+                                <property name="mnemonic-widget">select_initial_button</property>
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <style>
+                          <class name="flat"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkToggleButton" id="expand_button">
+                        <property name="tooltip-text" translatable="yes">Expand All</property>
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkImage" id="expand_icon">
+                            <property name="icon-name">view-fullscreen-symbolic</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                        <style>
+                          <class name="circular"/>
+                          <class name="flat"/>
+                          <class name="image-button"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

@@ -1,45 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkScrolledWindow" id="container">
-    <property name="visible">True</property>
     <property name="hscrollbar-policy">never</property>
     <property name="vexpand">True</property>
+    <property name="visible">True</property>
+    <property name="width-request">360</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
         <property name="halign">center</property>
-        <property name="valign">center</property>
-        <property name="margin-start">30</property>
-        <property name="margin-end">30</property>
-        <property name="margin-top">24</property>
         <property name="margin-bottom">30</property>
+        <property name="margin-end">30</property>
+        <property name="margin-start">30</property>
+        <property name="margin-top">24</property>
         <property name="orientation">vertical</property>
         <property name="spacing">30</property>
+        <property name="valign">center</property>
+        <property name="visible">True</property>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
             <property name="orientation">vertical</property>
             <property name="spacing">24</property>
+            <property name="visible">True</property>
             <child>
               <object class="GtkImage" id="main_icon">
-                <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="halign">center</property>
                 <property name="pixel-size">128</property>
+                <property name="visible">True</property>
               </object>
             </child>
             <child>
               <object class="GtkBox">
-                <property name="visible">True</property>
                 <property name="orientation">vertical</property>
                 <property name="spacing">18</property>
+                <property name="visible">True</property>
                 <child>
-                  <object class="GtkLabel" id="application_name_label">
-                    <property name="visible">True</property>
-                    <property name="selectable">True</property>
+                  <object class="GtkLabel" id="application_version_label">
                     <property name="halign">center</property>
                     <property name="justify">center</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
                     <property name="wrap">True</property>
                     <style>
                       <class name="title-1"/>
@@ -47,19 +52,45 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="version_label">
-                    <property name="visible">True</property>
-                    <property name="selectable">True</property>
+                  <object class="GtkLabel" id="dependency_versions_label">
                     <property name="halign">center</property>
                     <property name="justify">center</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
                     <property name="wrap">True</property>
                   </object>
                 </child>
                 <child>
+                  <object class="GtkBox" id="status_container">
+                    <property name="halign">center</property>
+                    <property name="spacing">6</property>
+                    <property name="visible">False</property>
+                    <child>
+                      <object class="GtkLabel" id="status_label">
+                        <property name="justify">center</property>
+                        <property name="selectable">True</property>
+                        <property name="visible">True</property>
+                        <property name="wrap">True</property>
+                        <property name="wrap-mode">word-char</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImage" id="status_icon">
+                        <property name="visible" bind-source="status_spinner" bind-property="visible" bind-flags="bidirectional|invert-boolean|sync-create"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSpinner" id="status_spinner">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
                   <object class="GtkLabel" id="website_label">
-                    <property name="visible">True</property>
                     <property name="halign">center</property>
                     <property name="justify">center</property>
+                    <property name="visible">True</property>
                     <property name="wrap">True</property>
                   </object>
                 </child>
@@ -67,10 +98,11 @@
             </child>
             <child>
               <object class="GtkLabel" id="copyright_label">
-                <property name="visible">True</property>
-                <property name="selectable">True</property>
                 <property name="halign">center</property>
                 <property name="justify">center</property>
+                <property name="margin-top">6</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
                 <property name="wrap">True</property>
               </object>
             </child>
@@ -78,24 +110,24 @@
         </child>
         <child>
           <object class="GtkFrame">
-            <property name="visible">True</property>
             <property name="margin-top">12</property>
+            <property name="visible">True</property>
             <child>
               <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="orientation">vertical</property>
-                <property name="margin-start">24</property>
-                <property name="margin-end">24</property>
-                <property name="margin-top">18</property>
                 <property name="margin-bottom">24</property>
+                <property name="margin-end">24</property>
+                <property name="margin-start">24</property>
+                <property name="margin-top">18</property>
+                <property name="orientation">vertical</property>
                 <property name="spacing">18</property>
+                <property name="visible">True</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Created by</property>
-                    <property name="selectable">True</property>
                     <property name="halign">center</property>
                     <property name="justify">center</property>
+                    <property name="label" translatable="yes">Created by</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
                     <property name="wrap">True</property>
                     <style>
                       <class name="title-2"/>
@@ -104,9 +136,9 @@
                 </child>
                 <child>
                   <object class="GtkBox" id="authors_container">
-                    <property name="visible">True</property>
                     <property name="orientation">vertical</property>
                     <property name="spacing">18</property>
+                    <property name="visible">True</property>
                   </object>
                 </child>
               </object>
@@ -121,20 +153,20 @@
             <property name="visible">True</property>
             <child>
               <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="orientation">vertical</property>
-                <property name="margin-start">24</property>
-                <property name="margin-end">24</property>
-                <property name="margin-top">18</property>
                 <property name="margin-bottom">24</property>
+                <property name="margin-end">24</property>
+                <property name="margin-start">24</property>
+                <property name="margin-top">18</property>
+                <property name="orientation">vertical</property>
                 <property name="spacing">18</property>
+                <property name="visible">True</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Translated by</property>
-                    <property name="selectable">True</property>
                     <property name="halign">center</property>
                     <property name="justify">center</property>
+                    <property name="label" translatable="yes">Translated by</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
                     <property name="wrap">True</property>
                     <style>
                       <class name="title-2"/>
@@ -143,9 +175,9 @@
                 </child>
                 <child>
                   <object class="GtkBox" id="translators_container">
-                    <property name="visible">True</property>
                     <property name="orientation">vertical</property>
                     <property name="spacing">18</property>
+                    <property name="visible">True</property>
                   </object>
                 </child>
               </object>
@@ -160,20 +192,20 @@
             <property name="visible">True</property>
             <child>
               <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="orientation">vertical</property>
-                <property name="margin-start">24</property>
-                <property name="margin-end">24</property>
-                <property name="margin-top">18</property>
                 <property name="margin-bottom">24</property>
+                <property name="margin-end">24</property>
+                <property name="margin-start">24</property>
+                <property name="margin-top">18</property>
+                <property name="orientation">vertical</property>
                 <property name="spacing">18</property>
+                <property name="visible">True</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">License</property>
-                    <property name="selectable">True</property>
                     <property name="halign">center</property>
                     <property name="justify">center</property>
+                    <property name="label" translatable="yes">License</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
                     <property name="wrap">True</property>
                     <style>
                       <class name="title-2"/>
@@ -182,9 +214,9 @@
                 </child>
                 <child>
                   <object class="GtkBox" id="license_container">
-                    <property name="visible">True</property>
                     <property name="orientation">vertical</property>
                     <property name="spacing">18</property>
+                    <property name="visible">True</property>
                   </object>
                 </child>
               </object>

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  SPDX-FileCopyrightText: 2010-2023 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
 <svg
    width="48"
    height="48"
    version="1.1"
    id="svg10"
-   sodipodi:docname="source-disconnect-square.svg"
-   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="source-msg-square.svg"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -39,18 +43,26 @@
      inkscape:window-height="1011"
      id="namedview12"
      showgrid="true"
-     inkscape:zoom="8.2708334"
-     inkscape:cx="11.546599"
-     inkscape:cy="22.851385"
+     inkscape:zoom="16"
+     inkscape:cx="36.5"
+     inkscape:cy="11.75"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg10"
      inkscape:document-rotation="0"
-     inkscape:pagecheckerboard="0">
+     inkscape:pagecheckerboard="0"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1">
     <inkscape:grid
        type="xygrid"
-       id="grid841" />
+       id="grid841"
+       originx="0"
+       originy="0"
+       spacingy="1"
+       spacingx="1"
+       units="px"
+       visible="true" />
   </sodipodi:namedview>
   <path
      d="M 0,3 V 48 H 9 V 15 h 3 c 3,0 6,3 6,6 v 27 h 9 v -6 h 6 v 6 h 9 v -6 h 6 v -9 h -6 v -9 h -9 v 9 H 27 V 21 C 12,3 27,21 12,3 Z"
@@ -62,16 +74,24 @@
      fill="#f9aa40"
      id="path4"
      sodipodi:nodetypes="ccccssccccccccccccccssc" />
-  <circle
-     cx="39"
-     cy="11"
-     r="9"
-     fill="#113768"
-     id="circle6" />
-  <circle
-     cx="39"
-     cy="9"
-     r="9"
-     fill="#3d73b9"
-     id="circle8" />
+  <rect
+     style="fill:#3065a7;fill-opacity:1;stroke-width:0.777303"
+     id="rect1-0"
+     width="14"
+     height="14"
+     x="29.061731"
+     y="-24.81909"
+     transform="rotate(45)"
+     ry="1"
+     rx="1" />
+  <rect
+     style="fill:#6193d2;fill-opacity:1;stroke-width:0.777303"
+     id="rect1"
+     width="14"
+     height="14"
+     x="26.940411"
+     y="-26.940411"
+     transform="rotate(45)"
+     rx="1"
+     ry="1" />
 </svg>

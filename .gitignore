@@ -1,9 +1,9 @@
+# SPDX-FileCopyrightText: 2016-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 # Auto-generated files
 *.desktop
 *.appdata.xml
-
-# Translation Machine Object files
-*.mo
 
 # Python byte code files
 *.pyc
@@ -11,24 +11,32 @@
 # Pot backup files
 *.po~
 
+# Translation Machine Object files
+*.mo
+pynicotine/locale/
+
 # Temporary test files
-test/**/*temp_config*
-test/**/*.db
-test/**/*.json
-test/**/*.old
+pynicotine/tests/**/*temp_config*
+pynicotine/tests/**/*.db
+pynicotine/tests/**/*.dbn
+pynicotine/tests/**/*.json
+pynicotine/tests/**/*.old
+pynicotine/tests/**/*.wav
 
 # Ignore venv files
 venv/*
 .env/
 
 # Ignore packaging directories and files
+*.json~
 install.txt
 MANIFEST
+.flatpak-builder/
 build/
 dist/
 debian/files
 nicotine_plus.egg-info/
-packaging/flatpak/build-dir/
-packaging/flatpak/.flatpak-builder/
-packaging/macos/build/
-packaging/windows/build/
+build-aux/flatpak/build-dir/
+build-aux/flatpak/.flatpak-builder/
+build-aux/macos/build/
+build-aux/windows/build/

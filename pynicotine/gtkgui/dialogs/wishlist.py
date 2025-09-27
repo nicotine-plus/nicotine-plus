@@ -1,30 +1,15 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
-from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
+from pynicotine.gtkgui.widgets.combobox import ComboBox
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
-from pynicotine.gtkgui.widgets.textentry import CompletionEntry
+from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
 
 
@@ -35,7 +20,8 @@ class WishList(Dialog):
         (
             self.container,
             self.list_container,
-            self.wish_entry
+            self.wish_entry,
+            self.wish_entry_container
         ) = ui.load(scope=self, path="dialogs/wishlist.ui")
 
         super().__init__(
@@ -45,36 +31,60 @@ class WishList(Dialog):
             show_callback=self.on_show,
             title=_("Wishlist"),
             width=600,
-            height=600,
-            close_destroy=False
+            height=600
         )
+        application.add_window(self.widget)
 
         self.application = application
+        self.wish_combobox = ComboBox(
+            container=self.wish_entry_container, has_entry=True, has_dropdown=False,
+            entry=self.wish_entry, visible=True
+        )
         self.list_view = TreeView(
             application.window, parent=self.list_container, multi_select=True, activate_row_callback=self.on_edit_wish,
+            delete_accelerator_callback=self.on_remove_wish,
             columns={
                 "wish": {
                     "column_type": "text",
                     "title": _("Wish"),
-                    "default_sort_column": "ascending"
+                    "default_sort_type": "ascending"
                 }
             }
         )
 
-        for wish in config.sections["server"]["autosearch"]:
-            wish = str(wish)
-            self.list_view.add_row([wish], select_row=False)
+        self.wish_combobox.freeze()
+        self.list_view.freeze()
 
-        CompletionEntry(self.wish_entry, self.list_view.model)
+        for search_item in core.search.searches.values():
+            if search_item.mode == "wishlist":
+                self.add_wish(search_item.term, select=False)
 
-        Accelerator("Delete", self.list_view.widget, self.on_remove_wish)
+        self.wish_combobox.unfreeze()
+        self.list_view.unfreeze()
+
         Accelerator("<Shift>Tab", self.list_view.widget, self.on_list_focus_entry_accelerator)  # skip column header
+
+        self.popup_menu = PopupMenu(application, self.list_view.widget)
+        self.popup_menu.add_items(
+            ("#" + _("_Search for Item"), self.on_search_wish),
+            ("#" + _("Edit…"), self.on_edit_wish),
+            ("", None),
+            ("#" + _("Remove"), self.on_remove_wish)
+        )
 
         for event_name, callback in (
             ("add-wish", self.add_wish),
             ("remove-wish", self.remove_wish)
         ):
             events.connect(event_name, callback)
+
+    def destroy(self):
+
+        self.wish_combobox.destroy()
+        self.list_view.destroy()
+        self.popup_menu.destroy()
+
+        super().destroy()
 
     def on_list_focus_entry_accelerator(self, *_args):
         self.wish_entry.grab_focus()
@@ -118,25 +128,32 @@ class WishList(Dialog):
                 title=_("Edit Wish"),
                 message=_("Enter new value for wish '%s':") % old_wish,
                 default=old_wish,
+                action_button_label=_("_Edit"),
                 callback=self.on_edit_wish_response,
                 callback_data=old_wish
-            ).show()
+            ).present()
+            return
+
+    def on_search_wish(self, *_args):
+
+        for iterator in self.list_view.get_selected_rows():
+            wish = self.list_view.get_row_value(iterator, "wish")
+            core.search.do_search(wish, mode="global")
             return
 
     def on_remove_wish(self, *_args):
 
-        for iterator in reversed(self.list_view.get_selected_rows()):
+        for iterator in reversed(list(self.list_view.get_selected_rows())):
             wish = self.list_view.get_row_value(iterator, "wish")
             core.search.remove_wish(wish)
 
         self.wish_entry.grab_focus()
         return True
 
-    def clear_wishlist_response(self, _dialog, response_id, _data):
+    def clear_wishlist_response(self, *_args):
 
-        if response_id == 2:
-            for wish in self.list_view.iterators.copy():
-                core.search.remove_wish(wish)
+        for wish in self.list_view.iterators.copy():
+            core.search.remove_wish(wish)
 
         self.wish_entry.grab_focus()
 
@@ -146,18 +163,20 @@ class WishList(Dialog):
             parent=self,
             title=_("Clear Wishlist?"),
             message=_("Do you really want to clear your wishlist?"),
+            destructive_response_id="ok",
             callback=self.clear_wishlist_response
-        ).show()
+        ).present()
 
-    def add_wish(self, wish):
-        if wish not in self.list_view.iterators:
-            self.list_view.add_row([wish])
+    def add_wish(self, wish, select=True):
+        self.wish_combobox.append(wish)
+        self.list_view.add_row([wish], select_row=select)
 
     def remove_wish(self, wish):
 
         iterator = self.list_view.iterators.get(wish)
 
         if iterator is not None:
+            self.wish_combobox.remove_id(wish)
             self.list_view.remove_row(iterator)
 
     def select_wish(self, wish):

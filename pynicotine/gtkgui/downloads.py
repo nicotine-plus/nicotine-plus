@@ -1,59 +1,53 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
-# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
-# COPYRIGHT (C) 2013 eLvErDe <gandalf@le-vert.net>
-# COPYRIGHT (C) 2008-2012 quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2009 hedonist <ak@sensi.org>
-# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# SPDX-FileCopyrightText: 2016-2018 Mutnick <mutnick@techie.com>
+# SPDX-FileCopyrightText: 2013 eLvErDe <gandalf@le-vert.net>
+# SPDX-FileCopyrightText: 2008-2012 quinox <quinox@users.sf.net>
+# SPDX-FileCopyrightText: 2009 hedonist <ak@sensi.org>
+# SPDX-FileCopyrightText: 2006-2009 daelstorm <daelstorm@gmail.com>
+# SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
 
-from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.downloadspeeds import DownloadSpeeds
-from pynicotine.gtkgui.transferlist import TransferList
+from pynicotine.gtkgui.transfers import Transfers
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
+from pynicotine.transfers import TransferStatus
+from pynicotine.utils import human_speed
+from pynicotine.utils import humanize
 from pynicotine.utils import open_file_path
+from pynicotine.utils import open_folder_path
 
 
-class Downloads(TransferList):
+class Downloads(Transfers):
 
     def __init__(self, window):
 
-        self.path_separator = "/"
+        self.path_separator = os.sep
         self.path_label = _("Path")
         self.retry_label = _("_Resume")
         self.abort_label = _("P_ause")
-        self.deprioritized_statuses = {"Paused", "Finished", "Filtered"}
 
-        self.transfer_page = window.downloads_page
+        self.transfer_page = self.page = window.downloads_page
+        self.page.id = "downloads"
+        self.toolbar = window.downloads_toolbar
+        self.toolbar_start_content = window.downloads_title
+        self.toolbar_end_content = window.downloads_end
+        self.toolbar_default_widget = window.download_users_button
+
         self.user_counter = window.download_users_label
         self.file_counter = window.download_files_label
         self.expand_button = window.downloads_expand_button
         self.expand_icon = window.downloads_expand_icon
         self.grouping_button = window.downloads_grouping_button
+        self.status_label = window.download_status_label
 
-        TransferList.__init__(self, window, transfer_type="download")
+        super().__init__(window, transfer_type="download")
 
         if GTK_API_VERSION >= 4:
             window.downloads_content.append(self.container)
@@ -79,30 +73,49 @@ class Downloads(TransferList):
             ("clear-download", self.clear_transfer),
             ("clear-downloads", self.clear_transfers),
             ("download-large-folder", self.download_large_folder),
-            ("download-notification", self.new_transfer_notification),
+            ("folder-download-finished", self.folder_download_finished),
+            ("set-connection-stats", self.set_connection_stats),
             ("start", self.start),
             ("update-download", self.update_model),
-            ("update-downloads", self.update_model)
+            ("update-download-limits", self.update_limits)
         ):
             events.connect(event_name, callback)
 
         self.download_speeds = DownloadSpeeds(window)
 
     def start(self):
-        self.init_transfers(core.transfers.downloads)
+        self.init_transfers(core.downloads.transfers.values())
+
+    def destroy(self):
+        self.download_speeds.destroy()
+        super().destroy()
+
+    def get_transfer_folder_path(self, transfer):
+        return transfer.folder_path
 
     def retry_selected_transfers(self):
-        core.transfers.retry_downloads(self.selected_transfers)
+        core.downloads.retry_downloads(self.selected_transfers)
 
     def abort_selected_transfers(self):
-        core.transfers.abort_downloads(self.selected_transfers)
+        core.downloads.abort_downloads(self.selected_transfers)
 
-    def clear_selected_transfers(self):
-        core.transfers.clear_downloads(downloads=self.selected_transfers)
+    def remove_selected_transfers(self):
+        core.downloads.clear_downloads(downloads=self.selected_transfers)
 
-    def on_clear_queued_response(self, _dialog, response_id, _data):
-        if response_id == 2:
-            core.transfers.clear_downloads(statuses=["Queued"])
+    def set_connection_stats(self, download_bandwidth=0, **_kwargs):
+
+        # Sync parent row updates with connection stats
+        self._update_pending_parent_rows()
+
+        download_bandwidth = human_speed(download_bandwidth)
+        download_bandwidth_text = f"{download_bandwidth} ( {len(core.downloads.active_users)} )"
+
+        if self.window.download_status_label.get_text() == download_bandwidth_text:
+            return
+
+        self.window.download_status_label.set_text(download_bandwidth_text)
+        self.window.application.tray_icon.set_download_status(
+            _("Downloads: %(speed)s") % {"speed": download_bandwidth})
 
     def on_try_clear_queued(self, *_args):
 
@@ -110,12 +123,12 @@ class Downloads(TransferList):
             parent=self.window,
             title=_("Clear Queued Downloads"),
             message=_("Do you really want to clear all queued downloads?"),
-            callback=self.on_clear_queued_response
-        ).show()
+            destructive_response_id="ok",
+            callback=self.on_clear_queued
+        ).present()
 
-    def on_clear_all_response(self, _dialog, response_id, _data):
-        if response_id == 2:
-            core.transfers.clear_downloads()
+    def on_clear_all_response(self, *_args):
+        core.downloads.clear_downloads()
 
     def on_try_clear_all(self, *_args):
 
@@ -123,91 +136,104 @@ class Downloads(TransferList):
             parent=self.window,
             title=_("Clear All Downloads"),
             message=_("Do you really want to clear all downloads?"),
+            destructive_response_id="ok",
             callback=self.on_clear_all_response
-        ).show()
+        ).present()
 
-    def folder_download_response(self, _dialog, response_id, msg):
-        if response_id == 2:
-            events.emit("folder-contents-response", msg, check_num_files=False)
+    def folder_download_response(self, _dialog, _response_id, data):
+        download_callback, callback_args = data
+        download_callback(*callback_args)
 
-    def download_large_folder(self, username, folder, numfiles, msg):
+    def folder_download_finished(self, _folder_path):
+        if self.window.current_page_id != self.transfer_page.id:
+            self.window.notebook.request_tab_changed(self.transfer_page, is_important=True)
+
+    def download_large_folder(self, username, folder, num_files, download_callback, callback_args):
 
         OptionDialog(
             parent=self.window,
-            title=_("Download %(num)i files?") % {"num": numfiles},
-            message=_("Do you really want to download %(num)i files from %(user)s's folder %(folder)s?") % {
-                "num": numfiles, "user": username, "folder": folder},
+            title=ngettext(
+                "Download %(num)s File?",
+                "Download %(num)s Files?",
+                num_files
+            ) % {"num": humanize(num_files)},
+            message=ngettext(
+                "Do you really want to download %(num)s file from %(user)s's folder %(folder)s?",
+                "Do you really want to download %(num)s files from %(user)s's folder %(folder)s?",
+                num_files
+            ) % {"num": humanize(num_files), "user": username, "folder": folder},
+            buttons=[
+                ("cancel", _("_Cancel")),
+                ("download", _("_Download Folder"))
+            ],
             callback=self.folder_download_response,
-            callback_data=msg
-        ).show()
+            callback_data=(download_callback, callback_args)
+        ).present()
 
-    def on_copy_url(self, *_args):
+    def on_copy_file_url(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            url = core.userbrowse.get_soulseek_url(transfer.user, transfer.filename)
+            url = core.userbrowse.get_soulseek_url(transfer.username, transfer.virtual_path)
             clipboard.copy_text(url)
 
-    def on_copy_dir_url(self, *_args):
+    def on_copy_folder_url(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            url = core.userbrowse.get_soulseek_url(
-                transfer.user, transfer.filename.rsplit("\\", 1)[0] + "\\")
+            folder_path, separator, _basename = transfer.virtual_path.rpartition("\\")
+            url = core.userbrowse.get_soulseek_url(transfer.username, folder_path + separator)
+
             clipboard.copy_text(url)
 
     def on_open_file_manager(self, *_args):
 
+        folder_path = None
+
         for transfer in self.selected_transfers:
-            file_path = core.transfers.get_current_download_file_path(
-                transfer.user, transfer.filename, transfer.path, transfer.size)
+            file_path = core.downloads.get_current_download_file_path(transfer)
             folder_path = os.path.dirname(file_path)
 
-            if transfer.status == "Finished":
+            if transfer.status == TransferStatus.FINISHED:
                 # Prioritize finished downloads
                 break
 
-        open_file_path(folder_path, command=config.sections["ui"]["filemanager"])
+        open_folder_path(folder_path)
 
-    def on_play_files(self, *_args):
+    def on_open_file(self, *_args):
 
         for transfer in self.selected_transfers:
-            file_path = core.transfers.get_current_download_file_path(
-                transfer.user, transfer.filename, transfer.path, transfer.size)
-
-            open_file_path(file_path, command=config.sections["players"]["default"])
+            file_path = core.downloads.get_current_download_file_path(transfer)
+            open_file_path(file_path)
 
     def on_browse_folder(self, *_args):
 
-        requested_users = set()
-        requested_folders = set()
+        transfer = next(iter(self.selected_transfers), None)
 
-        for transfer in self.selected_transfers:
-            user = transfer.user
-            folder = transfer.filename.rsplit("\\", 1)[0] + "\\"
+        if not transfer:
+            return
 
-            if user not in requested_users and folder not in requested_folders:
-                core.userbrowse.browse_user(user, path=folder)
+        user = transfer.username
+        path = transfer.virtual_path
 
-                requested_users.add(user)
-                requested_folders.add(folder)
+        core.userbrowse.browse_user(user, path=path)
 
     def on_clear_queued(self, *_args):
-        core.transfers.clear_downloads(statuses=["Queued"])
+        core.downloads.clear_downloads(statuses={TransferStatus.QUEUED})
 
     def on_clear_finished(self, *_args):
-        core.transfers.clear_downloads(statuses=["Finished"])
+        core.downloads.clear_downloads(statuses={TransferStatus.FINISHED})
 
     def on_clear_paused(self, *_args):
-        core.transfers.clear_downloads(statuses=["Paused"])
+        core.downloads.clear_downloads(statuses={TransferStatus.PAUSED})
 
     def on_clear_finished_filtered(self, *_args):
-        core.transfers.clear_downloads(statuses=["Finished", "Filtered"])
+        core.downloads.clear_downloads(statuses={TransferStatus.FINISHED, TransferStatus.FILTERED})
 
     def on_clear_filtered(self, *_args):
-        core.transfers.clear_downloads(statuses=["Filtered"])
+        core.downloads.clear_downloads(statuses={TransferStatus.FILTERED})
 
     def on_clear_deleted(self, *_args):
-        core.transfers.clear_downloads(clear_deleted=True)
+        core.downloads.clear_downloads(clear_deleted=True)

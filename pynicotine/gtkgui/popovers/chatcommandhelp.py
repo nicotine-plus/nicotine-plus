@@ -1,20 +1,5 @@
-# COPYRIGHT (C) 2022-2023 Nicotine+ Contributors
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2022-2023 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 from gi.repository import Gtk
 
@@ -29,14 +14,15 @@ class ChatCommandHelp(Popover):
     def __init__(self, window, interface):
 
         self.interface = interface
-        self.scrollable = Gtk.ScrolledWindow(visible=True)
+        self.scrollable = Gtk.ScrolledWindow(
+            propagate_natural_height=True, propagate_natural_width=True, visible=True
+        )
         self.container = None
 
         super().__init__(
             window=window,
             content_box=self.scrollable,
             show_callback=self._on_show,
-            close_callback=self._on_close,
             width=600,
             height=450
         )
@@ -60,11 +46,17 @@ class ChatCommandHelp(Popover):
 
         return section_container
 
-    def _create_command_row(self, parent, command, description):
+    def _create_command_row(self, parent, command, aliases, parameters, description):
 
         row = Gtk.Box(homogeneous=True, spacing=12, visible=True)
-        command_label = Gtk.Label(label=command, selectable=True, wrap=True, xalign=0, visible=True)
-        description_label = Gtk.Label(label=description, selectable=True, wrap=True, xalign=0, visible=True)
+        command_label = Gtk.Label(
+            label=f"/{', /'.join([command] + aliases)} {' '.join(parameters)}".strip(),
+            selectable=True, wrap=True, xalign=0, yalign=0, visible=True
+        )
+        description_label = Gtk.Label(
+            label=description, selectable=True, wrap=True, xalign=0, yalign=0,
+            visible=True
+        )
 
         add_css_class(command_label, "italic")
 
@@ -83,23 +75,23 @@ class ChatCommandHelp(Popover):
 
     def _on_show(self, *_args):
 
+        if self.container is not None:
+            if GTK_API_VERSION >= 4:
+                self.scrollable.set_child(None)         # pylint: disable=no-member
+            else:
+                self.scrollable.remove(self.container)  # pylint: disable=no-member
+
         self.container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, visible=True)
 
-        for group_name, commands in core.pluginhandler.get_command_descriptions(self.interface).items():
+        for group_name, command_data in core.pluginhandler.get_command_groups_data(self.interface).items():
             section_container = self._create_command_section(group_name)
 
-            for command_usage, description in commands:
-                self._create_command_row(section_container, command_usage, description)
-
-        self.scrollable.set_property("child", self.container)
-        self.container.child_focus(Gtk.DirectionType.TAB_FORWARD)
-
-    def _on_close(self, *_args):
-
-        if not self.container:
-            return
+            for command, aliases, parameters, description in command_data:
+                self._create_command_row(section_container, command, aliases, parameters, description)
 
         if GTK_API_VERSION >= 4:
-            self.scrollable.set_child(None)         # pylint: disable=no-member
+            self.scrollable.set_child(self.container)  # pylint: disable=no-member
         else:
-            self.scrollable.remove(self.container)  # pylint: disable=no-member
+            self.scrollable.add(self.container)        # pylint: disable=no-member
+
+        self.container.child_focus(Gtk.DirectionType.TAB_FORWARD)

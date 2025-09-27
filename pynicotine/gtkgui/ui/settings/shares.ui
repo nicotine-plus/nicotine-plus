@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2004-2025 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2003-2004 Nicotine Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkBox" id="Main">
-    <property name="visible">True</property>
-    <property name="spacing">12</property>
+  <object class="GtkBox" id="container">
     <property name="orientation">vertical</property>
+    <property name="spacing">12</property>
+    <property name="visible">True</property>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
-        <property name="label" translatable="yes">Shares</property>
         <property name="halign">start</property>
+        <property name="label" translatable="yes">Shares</property>
         <property name="selectable">True</property>
-        <property name="xalign">0</property>
+        <property name="visible">True</property>
         <property name="wrap">True</property>
+        <property name="xalign">0</property>
         <style>
           <class name="heading"/>
         </style>
@@ -20,48 +25,102 @@
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
-        <property name="xalign">0</property>
-        <property name="label" translatable="yes">Soulseek users will be able to download from your shares. Contribute to the Soulseek network by sharing your own collection and by resharing what you downloaded from other users.</property>
+        <property name="label" translatable="yes">Soulseek users will be able to download from your shares. Contribute to the Soulseek network by sharing your own files and by resharing what you downloaded from other users.</property>
         <property name="selectable">True</property>
+        <property name="visible">True</property>
         <property name="wrap">True</property>
+        <property name="xalign">0</property>
       </object>
     </child>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
+        <property name="margin-top">6</property>
         <property name="spacing">12</property>
-        <property name="orientation">vertical</property>
+        <property name="visible">True</property>
         <child>
-          <object class="GtkCheckButton" id="rescan_on_startup_toggle">
-            <property name="label" translatable="yes">Rescan shares on startup</property>
-            <property name="tooltip-text" translatable="yes">Automatically rescans the contents of your shared folders on startup. If disabled, your shares are only updated when you manually initiate a rescan.</property>
+          <object class="GtkLabel">
+            <property name="hexpand">True</property>
+            <property name="label" translatable="yes">Rescan shares:</property>
+            <property name="mnemonic-widget">rescan_on_startup_toggle</property>
             <property name="visible">True</property>
-            <property name="use-underline">True</property>
+            <property name="wrap">True</property>
+            <property name="wrap-mode">word-char</property>
+            <property name="xalign">0</property>
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="buddy_shares_trusted_only_toggle">
-            <property name="label" translatable="yes">Limit buddy-only shares to trusted buddies</property>
+          <object class="GtkBox">
+            <property name="spacing">6</property>
             <property name="visible">True</property>
-            <property name="use-underline">True</property>
+            <child>
+              <object class="GtkCheckButton" id="rescan_on_startup_toggle">
+                <property name="label" translatable="yes">On startup</property>
+                <property name="use-underline">True</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="rescan_daily_toggle">
+                <property name="label" translatable="yes">At midnight</property>
+                <property name="use-underline">True</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="spacing">12</property>
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="hexpand">True</property>
+            <property name="label" translatable="yes">Visible to everyone:</property>
+            <property name="mnemonic-widget">reveal_buddy_shares_toggle</property>
+            <property name="visible">True</property>
+            <property name="wrap">True</property>
+            <property name="wrap-mode">word-char</property>
+            <property name="xalign">0</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="spacing">6</property>
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkCheckButton" id="reveal_buddy_shares_toggle">
+                <property name="label" translatable="yes">Buddy shares</property>
+                <property name="use-underline">True</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="reveal_trusted_shares_toggle">
+                <property name="label" translatable="yes">Trusted shares</property>
+                <property name="use-underline">True</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
           </object>
         </child>
       </object>
     </child>
     <child>
       <object class="GtkFrame">
-        <property name="visible">True</property>
+        <property name="margin-top">6</property>
         <property name="vexpand">True</property>
+        <property name="visible">True</property>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
             <property name="orientation">vertical</property>
+            <property name="visible">True</property>
             <child>
               <object class="GtkScrolledWindow" id="shares_list_container">
-                <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
+                <property name="visible">True</property>
                 <style>
                   <class name="border-bottom"/>
                 </style>
@@ -69,34 +128,34 @@
             </child>
             <child>
               <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="margin-start">6</property>
-                <property name="margin-end">6</property>
-                <property name="margin-top">6</property>
                 <property name="margin-bottom">6</property>
+                <property name="margin-end">6</property>
+                <property name="margin-start">6</property>
+                <property name="margin-top">6</property>
                 <property name="spacing">6</property>
+                <property name="visible">True</property>
                 <child>
                   <object class="GtkButton" id="_add_shared_folder_button">
-                    <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Add…</property>
+                    <property name="visible">True</property>
                     <signal name="clicked" handler="on_add_shared_folder"/>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">True</property>
                         <property name="spacing">6</property>
+                        <property name="visible">True</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="visible">True</property>
                             <property name="icon-name">list-add-symbolic</property>
+                            <property name="visible">True</property>
                           </object>
                         </child>
                         <child>
                           <object class="GtkLabel">
-                            <property name="visible">True</property>
                             <property name="ellipsize">end</property>
                             <property name="label" translatable="yes">Add…</property>
-                            <property name="use-underline">True</property>
                             <property name="mnemonic-widget">_add_shared_folder_button</property>
+                            <property name="use-underline">True</property>
+                            <property name="visible">True</property>
                           </object>
                         </child>
                       </object>
@@ -108,26 +167,26 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="_edit_shared_folder_button">
-                    <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Edit…</property>
+                    <property name="visible">True</property>
                     <signal name="clicked" handler="on_edit_shared_folder"/>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">True</property>
                         <property name="spacing">6</property>
+                        <property name="visible">True</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="visible">True</property>
                             <property name="icon-name">document-edit-symbolic</property>
+                            <property name="visible">True</property>
                           </object>
                         </child>
                         <child>
                           <object class="GtkLabel">
-                            <property name="visible">True</property>
                             <property name="ellipsize">end</property>
                             <property name="label" translatable="yes">Edit…</property>
-                            <property name="use-underline">True</property>
                             <property name="mnemonic-widget">_edit_shared_folder_button</property>
+                            <property name="use-underline">True</property>
+                            <property name="visible">True</property>
                           </object>
                         </child>
                       </object>
@@ -139,26 +198,26 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="_remove_shared_folder_button">
-                    <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Remove</property>
+                    <property name="visible">True</property>
                     <signal name="clicked" handler="on_remove_shared_folder"/>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">True</property>
                         <property name="spacing">6</property>
+                        <property name="visible">True</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="visible">True</property>
                             <property name="icon-name">list-remove-symbolic</property>
+                            <property name="visible">True</property>
                           </object>
                         </child>
                         <child>
                           <object class="GtkLabel">
-                            <property name="visible">True</property>
                             <property name="ellipsize">end</property>
                             <property name="label" translatable="yes">Remove</property>
-                            <property name="use-underline">True</property>
                             <property name="mnemonic-widget">_remove_shared_folder_button</property>
+                            <property name="use-underline">True</property>
+                            <property name="visible">True</property>
                           </object>
                         </child>
                       </object>

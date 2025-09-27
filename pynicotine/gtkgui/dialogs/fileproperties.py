@@ -1,24 +1,10 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 from pynicotine.core import core
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import Dialog
+from pynicotine.slskmessages import FileListMessage
 from pynicotine.utils import human_length
 from pynicotine.utils import human_size
 from pynicotine.utils import human_speed
@@ -27,7 +13,7 @@ from pynicotine.utils import humanize
 
 class FileProperties(Dialog):
 
-    def __init__(self, application, download_button=True):
+    def __init__(self, application):
 
         self.properties = {}
         self.total_size = 0
@@ -35,87 +21,85 @@ class FileProperties(Dialog):
         self.current_index = 0
 
         (
-            self.bitrate_row,
-            self.bitrate_value_label,
             self.container,
             self.country_row,
             self.country_value_label,
-            self.download_button,
-            self.filename_value_label,
-            self.filesize_value_label,
             self.folder_value_label,
             self.length_row,
             self.length_value_label,
+            self.name_value_label,
             self.next_button,
             self.path_row,
             self.path_value_label,
             self.previous_button,
+            self.quality_row,
+            self.quality_value_label,
             self.queue_row,
             self.queue_value_label,
+            self.size_value_label,
             self.speed_row,
             self.speed_value_label,
             self.username_value_label
         ) = ui.load(scope=self, path="dialogs/fileproperties.ui")
 
-        Dialog.__init__(
-            self,
+        super().__init__(
             parent=application.window,
             content_box=self.container,
             buttons_start=(self.previous_button, self.next_button),
-            buttons_end=(self.download_button,) if download_button else (),
             default_button=self.next_button,
             title=_("File Properties"),
-            width=600,
-            close_destroy=False
+            width=600
         )
 
     def update_title(self):
 
-        index = self.current_index + 1
-        total_files = len(self.properties)
+        index = humanize(self.current_index + 1)
+        total_files = humanize(len(self.properties))
         total_size = human_size(self.total_size)
 
         if self.total_length:
-            self.set_title(_("File Properties (%(num)i of %(total)i  /  %(size)s  /  %(length)s)") % {
+            self.set_title(_("File Properties  -  %(num)s of %(total)s  /  %(size)s  /  %(length)s") % {
                 "num": index, "total": total_files, "size": total_size,
                 "length": human_length(self.total_length)
             })
             return
 
-        self.set_title(_("File Properties (%(num)i of %(total)i  /  %(size)s)") % {
+        self.set_title(_("File Properties  -  %(num)s of %(total)s  /  %(size)s") % {
                        "num": index, "total": total_files, "size": total_size})
 
     def update_current_file(self):
-        """ Updates the UI with properties for the selected file """
+        """Updates the UI with properties for the selected file."""
 
         properties = self.properties[self.current_index]
 
         for button in (self.previous_button, self.next_button):
             button.set_visible(len(self.properties) > 1)
 
-        h_size = human_size(properties["size"])
-        bytes_size = humanize(properties["size"])
+        size = properties["size"]
+        h_size = human_size(size)
 
-        self.filename_value_label.set_text(properties["filename"])
-        self.folder_value_label.set_text(properties["directory"])
-        self.filesize_value_label.set_text(f"{h_size} ({bytes_size} B)")
+        self.name_value_label.set_text(properties["basename"])
+        self.folder_value_label.set_text(properties["virtual_folder_path"])
+        self.size_value_label.set_text(f"{h_size} ({size} B)")  # Don't humanize exact size for easier use in filter
         self.username_value_label.set_text(properties["user"])
 
-        path = properties.get("path") or ""
-        bitrate = properties.get("bitrate") or ""
-        length = properties.get("length") or ""
-        queue_position = properties.get("queue_position") or 0
-        speed = properties.get("speed") or 0
-        country = properties.get("country") or ""
+        real_folder_path = properties.get("real_folder_path", "")
+        h_quality, _bitrate, h_length, _length = FileListMessage.parse_audio_quality_length(
+            size, properties.get("file_attributes"), always_show_bitrate=True)
+        queue_position = properties.get("queue_position", 0)
+        speed = properties.get("speed", 0)
+        country_code = properties.get("country_code")
+        country_name = core.network_filter.COUNTRIES.get(country_code)
+        country = f"{country_name} ({country_code})" if country_name else ""
 
-        self.path_value_label.set_text(path)
-        self.path_row.set_visible(bool(path))
+        self.path_value_label.set_text(real_folder_path)
+        self.path_row.set_visible(bool(real_folder_path))
 
-        self.bitrate_value_label.set_text(bitrate)
-        self.bitrate_row.set_visible(bool(bitrate))
+        self.quality_value_label.set_text(h_quality)
+        self.quality_row.set_visible(bool(h_quality))
 
-        self.length_value_label.set_text(length)
-        self.length_row.set_visible(bool(length))
+        self.length_value_label.set_text(h_length)
+        self.length_row.set_visible(bool(h_length))
 
         self.queue_value_label.set_text(humanize(queue_position))
         self.queue_row.set_visible(bool(queue_position))
@@ -154,12 +138,3 @@ class FileProperties(Dialog):
             self.current_index = 0
 
         self.update_current_file()
-
-    def on_download_item(self, *_args):
-
-        properties = self.properties[self.current_index]
-
-        core.transfers.get_file(
-            properties["user"], properties["fn"], size=properties["size"],
-            bitrate=properties.get("bitrate"), length=properties.get("length")
-        )

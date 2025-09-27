@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  SPDX-FileCopyrightText: 2010-2024 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+<svg
+   width="48"
+   height="48"
+   version="1.1"
+   id="svg3"
+   sodipodi:docname="trayicon_connect.svg"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs3" />
+  <sodipodi:namedview
+     id="namedview3"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="16.645833"
+     inkscape:cx="24"
+     inkscape:cy="24"
+     inkscape:window-width="1920"
+     inkscape:window-height="1008"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg3" />
+  <path
+     fill="#d38c2d"
+     d="M0 5v41a2 2 0 0 0 2 2h5a2 2 0 0 0 2-2V15h1c1.105 0 2.93-.014 3.946.403 1.6.658 2.993 2.05 3.651 3.65C18.014 20.07 18 21.896 18 23v23a2 2 0 0 0 2 2h5a2 2 0 0 0 2-2v-4h6v4a2 2 0 0 0 2 2h5a2 2 0 0 0 2-2v-4h4a2 2 0 0 0 2-2v-5l-2-2h-4v-7l-2-2h-5l-2 2v7h-6V23L10 3H2Z"
+     id="path1"
+     style="fill:#808080" />
+  <path
+     fill="#f9aa40"
+     d="M0 5v38a2 2 45 0 0 2 2h5a2 2 135 0 0 2-2V12h1c1.105 0 2.93-.014 3.946.403 1.6.658 2.993 2.05 3.651 3.65C18.014 17.07 18 18.896 18 20v23a2 2 45 0 0 2 2h5a2 2 135 0 0 2-2v-4h6v4a2 2 45 0 0 2 2h5a2 2 135 0 0 2-2v-4h4a2 2 135 0 0 2-2v-2a2 2 45 0 0-2-2h-4v-7a2 2 45 0 0-2-2h-5a2 2 135 0 0-2 2v7h-6V20c0-1.105-.021-2.902-.242-3.982-.85-4.164-4.134-11.864-12.763-12.901C12.9 2.985 11.105 3 10 3H2a2 2 135 0 0-2 2Z"
+     id="path2"
+     style="fill:#ffffff" />
+  <circle
+     cx="39"
+     cy="11"
+     r="9"
+     fill="#007a2c"
+     id="circle2"
+     style="fill:#808080" />
+  <circle
+     cx="39"
+     cy="9"
+     r="9"
+     fill="#1bc563"
+     id="circle3"
+     style="fill:#ffffff" />
+</svg>

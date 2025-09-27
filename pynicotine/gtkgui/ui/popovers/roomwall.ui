@@ -1,51 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2021-2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkBox" id="container">
+  <object class="GtkScrolledWindow" id="container">
+    <property name="propagate-natural-height">True</property>
+    <property name="propagate-natural-width">True</property>
     <property name="visible">True</property>
-    <property name="orientation">vertical</property>
-    <property name="margin-start">18</property>
-    <property name="margin-end">18</property>
-    <property name="margin-top">18</property>
-    <property name="margin-bottom">18</property>
-    <property name="spacing">12</property>
     <child>
-      <object class="GtkLabel">
+      <object class="GtkBox">
+        <property name="margin-bottom">18</property>
+        <property name="margin-end">18</property>
+        <property name="margin-start">18</property>
+        <property name="margin-top">18</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">12</property>
         <property name="visible">True</property>
-        <property name="xalign">0</property>
-        <property name="label" translatable="yes">The room wall feature allows users in a room to specify a unique message to display to others. Recent messages are shown at the top.</property>
-        <property name="max-width-chars">55</property>
-        <property name="wrap">True</property>
-        <property name="mnemonic-widget">message_view_container</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkFrame">
-        <property name="visible">True</property>
-        <property name="vexpand">True</property>
         <child>
-          <object class="GtkBox">
+          <object class="GtkLabel">
+            <property name="label" translatable="yes">Write a single message that other room users can read later. Recent messages are shown at the top.</property>
+            <property name="max-width-chars">70</property>
+            <property name="mnemonic-widget">message_view_container</property>
+            <property name="visible">True</property>
+            <property name="wrap">True</property>
+            <property name="xalign">0</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkFrame">
+            <property name="vexpand">True</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkScrolledWindow" id="message_view_container">
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
+                <child>
+                  <object class="GtkScrolledWindow" id="message_view_container">
+                    <property name="hexpand">True</property>
+                    <property name="min-content-height">175</property>
+                    <property name="propagate-natural-height">True</property>
+                    <property name="visible">True</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
         </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">True</property>
         <child>
           <object class="GtkEntry" id="message_entry">
-            <property name="visible">True</property>
             <property name="hexpand">True</property>
+            <property name="max-width-chars">150</property>
             <property name="placeholder-text" translatable="yes">Set wall message…</property>
             <property name="primary-icon-name">user-available-symbolic</property>
             <property name="secondary-icon-name">edit-clear-symbolic</property>
+            <property name="visible">True</property>
+            <property name="width-chars">15</property>
             <signal name="activate" handler="on_set_room_wall_message"/>
             <signal name="icon-press" handler="on_icon_pressed"/>
           </object>

@@ -1,22 +1,7 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
-# COPYRIGHT (C) 2009 daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2009 quinox <quinox@users.sf.net>
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2023 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2009 daelstorm <daelstorm@gmail.com>
+# SPDX-FileCopyrightText: 2009 quinox <quinox@users.sf.net>
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 from pynicotine.pluginsystem import BasePlugin
 from pynicotine.pluginsystem import returncode
@@ -32,7 +17,7 @@ class Plugin(BasePlugin):
             "minlength": 200,
             "maxlength": 400,
             "maxdiffcharacters": 10,
-            "badprivatephrases": ["buy viagra now", "mybrute.com", "mybrute.es", "0daymusic.biz"]
+            "badprivatephrases": []
         }
         self.metasettings = {
             "minlength": {
@@ -48,7 +33,7 @@ class Plugin(BasePlugin):
                 "type": "integer"
             },
             "badprivatephrases": {
-                "description": "Filter chat room and private messages containing the following phrases:",
+                "description": "Filter chat messages containing phrase:",
                 "type": "list string"
             }
         }

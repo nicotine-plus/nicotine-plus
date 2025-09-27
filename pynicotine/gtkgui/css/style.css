@@ -1,0 +1,145 @@
+/*
+ * SPDX-FileCopyrightText: 2023-2025 Nicotine+ Contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+/* Borders */
+
+.border-top,
+.preferences-border .action-area {
+    border-top: 1px solid @borders;
+}
+
+.border-bottom {
+    border-bottom: 1px solid @borders;
+}
+
+.border-start:dir(ltr),
+.border-end:dir(rtl) {
+    /* Use box-shadow to avoid double window border in narrow flowbox */
+    box-shadow: -1px 0 0 0 @borders;
+}
+
+.border-start-dim:dir(ltr),
+.border-end-dim:dir(rtl) {
+    box-shadow: -1px 0 0 0 alpha(@borders, 0.75);
+}
+
+.border-end:dir(ltr),
+.border-start:dir(rtl) {
+    box-shadow: 1px 0 0 0 @borders;
+}
+
+.border-end-dim:dir(ltr),
+.border-start-dim:dir(rtl) {
+    box-shadow: 1px 0 0 0 alpha(@borders, 0.75);
+}
+
+/* Buttons */
+
+.count {
+    min-width: 12px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+/* Headings */
+
+.title-1 {
+    font-weight: 800;
+    font-size: 181%;
+}
+
+.title-2 {
+    font-weight: 800;
+    font-size: 136%;
+}
+
+.heading {
+    font-weight: bold;
+    font-size: inherit;
+}
+
+/* Text Formatting */
+
+.bold {
+    font-weight: bold;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.normal {
+    font-weight: normal;
+}
+
+.underline {
+    text-decoration-line: underline;
+}
+
+/* Tweaks */
+
+flowbox:not(.emoji-toolbar),
+flowbox:not(.emoji-toolbar) flowboxchild {
+    /* GTK adds unwanted padding to flowbox children by default */
+    border: 0;
+    background: inherit;
+    padding: 0;
+}
+
+scrollbar {
+    /* Workaround for themes breaking scrollbar hitbox with margins */
+    margin: 0;
+}
+
+treeview .cell:disabled {
+    /* Grey out disabled rows */
+    color: alpha(alpha(currentColor, 1.12), .6);
+}
+
+treeview .cell:disabled:selected {
+    /* Grey out disabled rows */
+    color: alpha(alpha(currentColor, 1.12), .7);
+}
+
+treeview .progressbar:disabled {
+    /* Grey out disabled progress bars */
+    background: alpha(@theme_selected_bg_color, .5);
+    color: alpha(alpha(currentColor, 1.12), .8);
+}
+
+treeview button > box {
+    /* Column header padding to match rows */
+    padding-right: 11px;
+}
+
+treeview button {
+    /* Remove bottom border from column headers */
+    border: 0;
+
+    /* Column header padding to match rows */
+    padding-left: 11px;
+    padding-right: 1px;
+    padding-bottom: 3px;
+    padding-top: 3px;
+}
+
+infobar box {
+    /* Remove unwanted padding from info bars */
+    padding: 0;
+}
+
+progressbar.osd trough,
+progressbar.osd progress {
+    /* Make overlay progress bars slightly more legible */
+    min-height: 4px;
+    min-width: 4px;
+}
+
+treeview button:not(:last-child):dir(ltr) > box,
+treeview button:not(:first-child):dir(rtl) > box {
+    /* Add column header separators */
+    box-shadow: 1px 0 0 0 alpha(@borders, 2.8);
+}
+

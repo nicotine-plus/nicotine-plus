@@ -1,34 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2004-2025 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2003-2004 Nicotine Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkBox" id="container">
     <property name="visible">True</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
         <property name="hexpand">True</property>
         <property name="orientation">vertical</property>
+        <property name="visible">True</property>
         <child>
           <object class="GtkSearchBar" id="search_bar">
-            <property name="visible">True</property>
             <property name="show-close-button">True</property>
-            <child>
-              <object class="GtkSearchEntry" id="search_entry">
-                <property name="visible">True</property>
-                <property name="max-width-chars">75</property>
-                <property name="width-chars">24</property>
-              </object>
-            </child>
+            <property name="visible">True</property>
           </object>
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
             <property name="vexpand">True</property>
+            <property name="visible">True</property>
             <child>
               <object class="GtkScrolledWindow" id="chat_view_container">
-                <property name="visible">True</property>
                 <property name="hexpand">True</property>
+                <property name="visible">True</property>
                 <style>
                   <class name="chat-view"/>
                 </style>
@@ -38,44 +36,25 @@
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="margin-start">8</property>
-            <property name="margin-end">8</property>
-            <property name="margin-top">8</property>
             <property name="margin-bottom">8</property>
+            <property name="margin-end">8</property>
+            <property name="margin-start">8</property>
+            <property name="margin-top">8</property>
             <property name="spacing">6</property>
+            <property name="visible">True</property>
             <child>
-              <object class="GtkEntry" id="chat_entry">
+              <object class="GtkBox" id="chat_entry_container">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
-                <property name="placeholder-text" translatable="yes">Send message…</property>
-                <property name="width-chars">8</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkToggleButton" id="speech_toggle">
-                <property name="visible">True</property>
-                <property name="tooltip-text" translatable="yes">Toggle Text-to-Speech</property>
-                <property name="active">True</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="icon-name">audio-volume-high-symbolic</property>
-                  </object>
-                </child>
-                <style>
-                  <class name="image-button"/>
-                </style>
               </object>
             </child>
             <child>
               <object class="GtkMenuButton" id="help_button">
-                <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Private Chat Command Help</property>
+                <property name="visible">True</property>
                 <child>
                   <object class="GtkImage">
-                    <property name="visible">True</property>
                     <property name="icon-name">dialog-question-symbolic</property>
+                    <property name="visible">True</property>
                   </object>
                 </child>
                 <style>
@@ -86,8 +65,9 @@
             <child>
               <object class="GtkCheckButton" id="log_toggle">
                 <property name="label" translatable="yes">_Log</property>
-                <property name="visible">True</property>
                 <property name="use-underline">True</property>
+                <property name="visible">True</property>
+                <signal name="toggled" handler="on_log_toggled"/>
               </object>
             </child>
           </object>

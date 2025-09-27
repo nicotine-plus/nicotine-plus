@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  SPDX-FileCopyrightText: 2010-2023 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
 <svg
    width="48"
    height="48"
    version="1.1"
    id="svg10"
    sodipodi:docname="source-disconnect-square.svg"
-   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -39,18 +43,26 @@
      inkscape:window-height="1011"
      id="namedview12"
      showgrid="true"
-     inkscape:zoom="8.2708334"
-     inkscape:cx="11.546599"
-     inkscape:cy="22.851385"
+     inkscape:zoom="1.0338542"
+     inkscape:cx="-186.6801"
+     inkscape:cy="-87.052896"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg10"
      inkscape:document-rotation="0"
-     inkscape:pagecheckerboard="0">
+     inkscape:pagecheckerboard="0"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1">
     <inkscape:grid
        type="xygrid"
-       id="grid841" />
+       id="grid841"
+       originx="0"
+       originy="0"
+       spacingy="1"
+       spacingx="1"
+       units="px"
+       visible="true" />
   </sodipodi:namedview>
   <path
      d="M 0,3 V 48 H 9 V 15 h 3 c 3,0 6,3 6,6 v 27 h 9 v -6 h 6 v 6 h 9 v -6 h 6 v -9 h -6 v -9 h -9 v 9 H 27 V 21 C 12,3 27,21 12,3 Z"
@@ -62,16 +74,12 @@
      fill="#f9aa40"
      id="path4"
      sodipodi:nodetypes="ccccssccccccccccccccssc" />
-  <circle
-     cx="39"
-     cy="11"
-     r="9"
-     fill="#88101c"
-     id="circle6" />
-  <circle
-     cx="39"
-     cy="9"
-     r="9"
-     fill="#da4453"
-     id="circle8" />
+  <path
+     id="circle6"
+     d="m 39,2 a 9,9 0 0 0 -9,9 9,9 0 0 0 9,9 9,9 0 0 0 9,-9 9,9 0 0 0 -9,-9 z m 0,5 a 4,4 0 0 1 4,4 4,4 0 0 1 -4,4 4,4 0 0 1 -4,-4 4,4 0 0 1 4,-4 z"
+     style="fill:#af1f2d;fill-opacity:1" />
+  <path
+     id="circle8"
+     d="M 39 0 A 9 9 0 0 0 30 9 A 9 9 0 0 0 39 18 A 9 9 0 0 0 48 9 A 9 9 0 0 0 39 0 z M 39 5 A 4 4 0 0 1 43 9 A 4 4 0 0 1 39 13 A 4 4 0 0 1 35 9 A 4 4 0 0 1 39 5 z "
+     style="fill:#e15b68;fill-opacity:1" />
 </svg>

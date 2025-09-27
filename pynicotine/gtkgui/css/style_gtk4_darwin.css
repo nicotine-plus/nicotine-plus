@@ -1,0 +1,14 @@
+/*
+ * SPDX-FileCopyrightText: 2024-2025 Nicotine+ Contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+/* Tweaks (GTK 4+ on macOS) */
+
+window {
+  /* Remove GTK's window border, since macOS provides one */
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+

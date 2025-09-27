@@ -1,0 +1,7 @@
+# SPDX-FileCopyrightText: 2023-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+Version = "2023-07-31r00"
+Authors = ["Nicotine+"]
+Name = "Sample Commands"
+Description = "Plugin to demonstrate the new plugin command system in Nicotine+ 3.3.0 and above."
