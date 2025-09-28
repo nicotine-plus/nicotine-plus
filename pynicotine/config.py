@@ -57,16 +57,22 @@ class Config:
         - the data folder
         """
 
-        if sys.platform == "win32":
-            try:
-                data_folder_path = os.path.join(os.path.normpath(os.environ["APPDATA"]), "nicotine")
-            except KeyError:
-                data_folder_path = os.path.dirname(sys.argv[0])
+        script_folder_path = os.path.dirname(sys.argv[0])
+        portable_folder_path = os.path.join(script_folder_path, "portable")
 
+        if os.path.isdir(portable_folder_path):
+            data_folder_path = os.path.join(portable_folder_path, "data")
             config_folder_path = os.path.join(data_folder_path, "config")
             return config_folder_path, data_folder_path
 
         home = os.path.expanduser("~")
+
+        if sys.platform == "win32":
+            appdata_folder_path = os.environ.get("APPDATA", os.path.join(home, "AppData", "Roaming"))
+            data_folder_path = os.path.join(os.path.normpath(appdata_folder_path), "nicotine")
+            config_folder_path = os.path.join(data_folder_path, "config")
+            return config_folder_path, data_folder_path
+
         legacy_folder_path = os.path.join(home, ".nicotine")
 
         if os.path.isdir(encode_path(legacy_folder_path)):
