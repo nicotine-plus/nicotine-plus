@@ -70,10 +70,12 @@ class Downloads(Transfers):
         for event_name, callback in (
             ("abort-download", self.abort_transfer),
             ("abort-downloads", self.abort_transfers),
+            ("add-buddy", self.update_buddy),
             ("clear-download", self.clear_transfer),
             ("clear-downloads", self.clear_transfers),
             ("download-large-folder", self.download_large_folder),
             ("folder-download-finished", self.folder_download_finished),
+            ("remove-buddy", self.update_buddy),
             ("set-connection-stats", self.set_connection_stats),
             ("start", self.start),
             ("update-download", self.update_model),
