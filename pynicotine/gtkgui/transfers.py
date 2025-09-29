@@ -13,6 +13,7 @@ from itertools import islice
 
 from gi.repository import GObject
 from gi.repository import Gtk
+from gi.repository import Pango
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -131,7 +132,9 @@ class Transfers:
                     "column_type": "text",
                     "title": _("User"),
                     "width": 200,
-                    "sensitive_column": "is_sensitive_data"
+                    "tooltip_callback": self.on_username_tooltip,
+                    "sensitive_column": "is_sensitive_data",
+                    "text_underline_column": "username_underline_data"
                 },
                 "path": {
                     "column_type": "text",
@@ -211,6 +214,7 @@ class Transfers:
                 "time_elapsed_data": {"data_type": GObject.TYPE_INT},
                 "time_left_data": {"data_type": GObject.TYPE_UINT64},
                 "is_sensitive_data": {"data_type": GObject.TYPE_BOOLEAN},
+                "username_underline_data": {"data_type": Pango.Weight},
                 "transfer_data": {"data_type": GObject.TYPE_PYOBJECT},
                 "id_data": {
                     "data_type": GObject.TYPE_INT,
@@ -721,6 +725,7 @@ class Transfers:
         folder_path, _separator, basename = transfer.virtual_path.rpartition("\\")
         original_folder_path = folder_path = self.get_transfer_folder_path(transfer)
         is_sensitive = (status != TransferStatus.USER_LOGGED_OFF)
+        username_underline_data = Pango.Underline.SINGLE if user in core.buddies.users else Pango.Underline.NONE
 
         if use_reverse_file_path:
             parts = folder_path.split(self.path_separator)
@@ -759,6 +764,7 @@ class Transfers:
                         empty_int,
                         empty_int,
                         is_sensitive,
+                        username_underline_data,
                         Transfer(user, status=status),  # Dummy Transfer object
                         self.row_id
                     ], select_row=False
@@ -806,6 +812,7 @@ class Transfers:
                             empty_int,
                             empty_int,
                             is_sensitive,
+                            username_underline_data,
                             path_transfer,
                             self.row_id
                         ], select_row=False, parent_iterator=user_iterator
@@ -854,6 +861,7 @@ class Transfers:
             elapsed,
             left,
             is_sensitive,
+            username_underline_data,
             transfer,
             self.row_id
         ], select_row=False, parent_iterator=parent_iterator)
@@ -946,6 +954,37 @@ class Transfers:
 
     def clear_transfers(self, *_args):
         self.update_parent_rows()
+
+    def update_buddy(self, user, user_data=None):
+
+        if user not in self.users:
+            return
+
+        column_key = "username_underline_data"
+        underline_data = Pango.Underline.SINGLE if user_data is not None else Pango.Underline.NONE
+        user_iterator, user_child_transfers = self.users[user]
+
+        if user_iterator is not None:
+            self.tree_view.set_row_value(user_iterator, column_key, underline_data)
+
+        for transfer in user_child_transfers:
+            iterator = transfer.iterator
+
+            if iterator is not None:
+                self.tree_view.set_row_value(iterator, column_key, underline_data)
+                continue
+
+            user_folder_path = transfer.username + self.get_transfer_folder_path(transfer)
+            user_folder_path_data = self.paths.get(user_folder_path)
+
+            if not user_folder_path_data:
+                continue
+
+            user_folder_path_iter, user_folder_path_child_transfers = user_folder_path_data
+            self.tree_view.set_row_value(user_folder_path_iter, column_key, underline_data)
+
+            for i_transfer in user_folder_path_child_transfers:
+                self.tree_view.set_row_value(i_transfer.iterator, column_key, underline_data)
 
     def add_popup_menu_user(self, popup, user):
 
@@ -1041,6 +1080,15 @@ class Transfers:
         menu.update_item_label("open_file", _("_Open File") if num_files == 1 else _("_Open Files"))
 
         self.populate_popup_menu_users()
+
+    def on_username_tooltip(self, treeview, iterator):
+        username = treeview.get_row_value(iterator, "user")
+        username_underline = treeview.get_row_value(iterator, "username_underline_data")
+
+        if username_underline != Pango.Underline.NONE:
+            return _("%(username)s (%(status)s)") % {"username": username, "status": _("Buddy")}
+
+        return username
 
     def on_file_path_tooltip(self, treeview, iterator):
         transfer = treeview.get_row_value(iterator, "transfer_data")
