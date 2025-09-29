@@ -224,8 +224,8 @@ class Transfers:
             }
         )
 
-        Accelerator("t", self.tree_view.widget, self.on_abort_transfers_accelerator)
-        Accelerator("r", self.tree_view.widget, self.on_retry_transfers_accelerator)
+        Accelerator("<Primary>t", self.tree_view.widget, self.on_abort_transfers_accelerator)
+        Accelerator("<Primary>s", self.tree_view.widget, self.on_retry_transfers_accelerator)
         Accelerator("<Alt>Return", self.tree_view.widget, self.on_file_properties_accelerator)
 
         menu = create_grouping_menu(

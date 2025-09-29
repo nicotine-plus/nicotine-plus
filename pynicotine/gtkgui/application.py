@@ -260,8 +260,8 @@ class Application:
             ("accel.download-to", ["<Primary>Return"]),
             ("accel.file-properties", ["<Alt>Return"]),
             ("accel.back", ["BackSpace"]),
-            ("accel.retry-transfer", ["r"]),
-            ("accel.abort-transfer", ["t"])
+            ("accel.retry-transfer", ["<Primary>s"]),
+            ("accel.abort-transfer", ["<Primary>t"])
         ):
             self._set_accels_for_action(action_name, accelerators)
 
