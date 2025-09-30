@@ -19,7 +19,7 @@ from pynicotine.gtkgui.widgets.window import Window
 
 class Dialog(Window):
 
-    def __init__(self, widget=None, parent=None, content_box=None, buttons_start=(), buttons_end=(),
+    def __init__(self, parent=None, content_box=None, buttons_start=(), buttons_end=(),
                  default_button=None, show_callback=None, close_callback=None, title="", width=0, height=0,
                  modal=True, show_title=True, show_title_buttons=True):
 
@@ -31,11 +31,6 @@ class Dialog(Window):
 
         self.show_callback = show_callback
         self.close_callback = close_callback
-
-        if widget:
-            super().__init__(widget=widget)
-            self._set_dialog_properties()
-            return
 
         container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, vexpand=True, visible=True)
         widget = Gtk.Window(
