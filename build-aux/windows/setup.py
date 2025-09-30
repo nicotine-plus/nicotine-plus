@@ -11,13 +11,9 @@ import sys
 import tempfile
 
 from cx_Freeze import Executable, setup     # pylint: disable=import-error
+from cx_Freeze.hooks import _gi_ as gi      # pylint: disable=import-private-name
 
-try:
-    from cx_Freeze.hooks import gi          # pylint: disable=import-error
-except ImportError:
-    from cx_Freeze.hooks import _gi_ as gi  # pylint: disable=import-error,import-private-name
-
-del gi.load_gi
+gi.__all__ = []
 
 # pylint: disable=duplicate-code
 
@@ -299,7 +295,8 @@ setup(
                 ("CFBundleShortVersionString", pynicotine.__version__),
                 ("CFBundleVersion", pynicotine.__version__),
                 ("CFBundleInfoDictionaryVersion", "6.0"),
-                ("NSHumanReadableCopyright", pynicotine.__copyright__)
+                ("NSHumanReadableCopyright", pynicotine.__copyright__),
+                ("NSSupportsAutomaticGraphicsSwitching", True)  # Prefer integrated GPU
             ],
             "codesign_identity": "-",
             "codesign_deep": True,

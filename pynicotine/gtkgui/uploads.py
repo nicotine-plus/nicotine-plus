@@ -72,8 +72,10 @@ class Uploads(Transfers):
         for event_name, callback in (
             ("abort-upload", self.abort_transfer),
             ("abort-uploads", self.abort_transfers),
+            ("add-buddy", self.update_buddy),
             ("clear-upload", self.clear_transfer),
             ("clear-uploads", self.clear_transfers),
+            ("remove-buddy", self.update_buddy),
             ("set-connection-stats", self.set_connection_stats),
             ("start", self.start),
             ("update-upload", self.update_model),

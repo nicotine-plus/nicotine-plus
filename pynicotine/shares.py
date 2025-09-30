@@ -39,6 +39,7 @@ from pynicotine.slskmessages import SharedFoldersFiles
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 from pynicotine.utils import UINT32_LIMIT
 from pynicotine.utils import encode_path
+from pynicotine.utils import humanize
 
 
 class FileTypes:
@@ -316,8 +317,12 @@ class Scanner:
 
                 self.writer.send(
                     ScannerLogMessage(
-                        _("Rescan complete: %(num)s folders found"),
-                        {"num": self.current_folder_count}
+                        ngettext(
+                            "Rescan complete: %(num)s folder found",
+                            "Rescan complete: %(num)s folders found",
+                            self.current_folder_count
+                        ),
+                        {"num": humanize(self.current_folder_count)}
                     )
                 )
 
@@ -533,6 +538,7 @@ class Scanner:
             self.writer.send(self.current_folder_count)
 
             file_list = []
+            virtual_folder_path_lower = virtual_folder_path.lower()
 
             try:
                 with os.scandir(encode_path(folder_path, prefix=False)) as entries:
@@ -568,7 +574,6 @@ class Scanner:
                             file_index = self.current_file_index
                             self.mtimes[path] = file_mtime = file_stat.st_mtime
                             virtual_file_path = f"{virtual_folder_path}\\{basename_escaped}"
-                            virtual_folder_path_lower = virtual_folder_path.lower()
 
                             if not self.rebuild and file_mtime == old_mtimes.get(path) and path in old_files:
                                 full_path_file_data = old_files[path]

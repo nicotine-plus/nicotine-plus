@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         python: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14-dev',
-                 'pypy-3.10']
+                 'pypy-3.10', 'pypy-3.11']
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -80,22 +80,25 @@ jobs:
         container: ['fedora:rawhide']
         gtk: [4, 3]
         platform: ['ubuntu-latest', 'ubuntu-24.04-arm']
+        exclude:
+          # glycin permission issues in arm64 container, disable for now
+          - gtk: 3
+            platform: ubuntu-24.04-arm
     runs-on: ${{ matrix.platform }}
-    container: ${{ matrix.container }}
+    container:
+      image: ${{ matrix.container }}
+      options: --privileged
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
-          dnf -y install gettext gtk${{ matrix.gtk }} pylint python3 python3-build \
+          dnf -y install gettext gtk${{ matrix.gtk }} python3 python3-build \
             python3-gobject python3-pycodestyle python3-setuptools python3-wheel
 
       - name: PEP 8 style checks
         run: python3 -m pycodestyle
-
-      - name: Linting
-        run: python3 -m pylint --recursive=y .
 
       - name: Integration and unit tests
         run: python3 -m unittest -v

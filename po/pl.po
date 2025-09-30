@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-08 11:16+0200\n"
-"PO-Revision-Date: 2025-03-02 14:14+0000\n"
-"Last-Translator: Matthaiks <kitynska@gmail.com>\n"
+"PO-Revision-Date: 2025-07-19 16:02+0000\n"
+"Last-Translator: KOXXPL <koxiu@pm.me>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
 "Language: pl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.10.3-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -1125,7 +1125,7 @@ msgstr "Pierwsze weszło, pierwsze wyszło (FIFO)"
 #: pynicotine/gtkgui/dialogs/preferences.py:1150
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:239
 msgid "Username"
-msgstr "Użytkownik"
+msgstr "Nazwa użytkownika"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:991
 #: pynicotine/gtkgui/dialogs/preferences.py:1163 pynicotine/users.py:320

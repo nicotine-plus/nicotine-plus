@@ -24,6 +24,8 @@ from pynicotine.slskmessages import SEARCH_TOKENS_ALLOWED
 from pynicotine.slskmessages import UserSearch
 from pynicotine.slskmessages import WishlistSearch
 from pynicotine.utils import TRANSLATE_PUNCTUATION
+from pynicotine.utils import human_duration_approx
+from pynicotine.utils import humanize
 
 
 class SearchRequest:
@@ -406,8 +408,10 @@ class Search:
         self.wishlist_interval = msg.seconds
 
         if self.wishlist_interval > 0:
-            log.add_search(_("Wishlist wait period set to %s seconds"), self.wishlist_interval)
-
+            log.add_search(
+                _("Wishlist wait period set to %(duration)s"),
+                {"duration": human_duration_approx(self.wishlist_interval)}
+            )
             events.cancel_scheduled(self._wishlist_timer_id)
             self._wishlist_timer_id = events.schedule(
                 delay=self.wishlist_interval, callback=self._do_next_wishlist_search, repeat=True)
@@ -419,10 +423,16 @@ class Search:
             log.add_search("Previous list of excluded search phrases: %s", self.excluded_phrases)
 
         self.excluded_phrases = msg.phrases
-        log.add_search("Server provided %(num_phrases)s excluded search phrase(s): %(phrases)s", {
-            "num_phrases": len(msg.phrases),
-            "phrases": str(msg.phrases)
-        })
+        log.add_search(
+            ngettext(
+                "Server provided %(num_phrases)s excluded search phrase: %(phrases)s",
+                "Server provided %(num_phrases)s excluded search phrases: %(phrases)s",
+                len(msg.phrases)
+            ), {
+                "num_phrases": len(msg.phrases),
+                "phrases": str(msg.phrases)
+            }
+        )
 
     def _file_search_response(self, msg):
         """Peer code 9."""
@@ -732,8 +742,14 @@ class Search:
             private_shares=private_fileinfos
         ))
 
-        log.add_search(_('User %(user)s is searching for "%(query)s", found %(num)i results'), {
-            "user": username,
-            "query": original_search_term,
-            "num": num_results
-        })
+        log.add_search(
+            ngettext(
+                'User %(user)s is searching for "%(query)s", found %(num)s result',
+                'User %(user)s is searching for "%(query)s", found %(num)s results',
+                num_results
+            ), {
+                "user": username,
+                "query": original_search_term,
+                "num": humanize(num_results)
+            }
+        )
