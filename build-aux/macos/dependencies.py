@@ -12,8 +12,7 @@ def install_brew():
     packages = ["gettext",
                 "gobject-introspection",
                 "gtk4",
-                "libadwaita",
-                "librsvg"]
+                "libadwaita"]
 
     subprocess.check_call(["brew", "install", "--quiet"] + packages)
 
