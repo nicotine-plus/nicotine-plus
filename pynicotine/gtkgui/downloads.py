@@ -118,9 +118,9 @@ class Downloads(Transfers):
 
         self.window.download_status_label.set_text(download_bandwidth_text)
         self.window.application.tray_icon.set_download_status(
-            _("Downloading: %(speed)s ( %(num_active)s )") % {
-                "num_active": active_users,
-                "speed": download_bandwidth
+            _("Downloading: %(speed)s ( %(active_users)s )") % {
+                "speed": download_bandwidth,
+                "active_users": active_users
             }
         )
 

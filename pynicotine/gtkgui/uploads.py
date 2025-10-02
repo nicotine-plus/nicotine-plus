@@ -127,9 +127,9 @@ class Uploads(Transfers):
 
         self.window.upload_status_label.set_text(upload_bandwidth_text)
         self.window.application.tray_icon.set_upload_status(
-            _("Uploading: %(speed)s ( %(num_active)s )") % {
-                "num_active": active_users,
-                "speed": upload_bandwidth
+            _("Uploading: %(speed)s ( %(active_users)s )") % {
+                "speed": upload_bandwidth,
+                "active_users": active_users
             }
         )
 
