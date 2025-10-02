@@ -110,14 +110,19 @@ class Downloads(Transfers):
         self._update_pending_parent_rows()
 
         download_bandwidth = human_speed(download_bandwidth)
-        download_bandwidth_text = f"{download_bandwidth} ( {len(core.downloads.active_users)} )"
+        active_users = len(core.downloads.active_users)
+        download_bandwidth_text = f"{download_bandwidth} ( {active_users} )"
 
         if self.window.download_status_label.get_text() == download_bandwidth_text:
             return
 
         self.window.download_status_label.set_text(download_bandwidth_text)
         self.window.application.tray_icon.set_download_status(
-            _("Downloads: %(speed)s") % {"speed": download_bandwidth})
+            _("Downloading: %(speed)s ( %(num_active)s )") % {
+                "num_active": active_users,
+                "speed": download_bandwidth
+            }
+        )
 
     def on_try_clear_queued(self, *_args):
 

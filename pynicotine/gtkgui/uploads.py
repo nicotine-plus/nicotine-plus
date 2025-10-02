@@ -119,14 +119,19 @@ class Uploads(Transfers):
         self._update_pending_parent_rows()
 
         upload_bandwidth = human_speed(upload_bandwidth)
-        upload_bandwidth_text = f"{upload_bandwidth} ( {len(core.uploads.active_users)} )"
+        active_users = len(core.uploads.active_users)
+        upload_bandwidth_text = f"{upload_bandwidth} ( {active_users} )"
 
         if self.window.upload_status_label.get_text() == upload_bandwidth_text:
             return
 
         self.window.upload_status_label.set_text(upload_bandwidth_text)
         self.window.application.tray_icon.set_upload_status(
-            _("Uploads: %(speed)s") % {"speed": upload_bandwidth})
+            _("Uploading: %(speed)s ( %(num_active)s )") % {
+                "num_active": active_users,
+                "speed": upload_bandwidth
+            }
+        )
 
     def shutdown_request(self):
 
