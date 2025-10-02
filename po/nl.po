@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-16 22:18+0300\n"
 "PO-Revision-Date: 2025-09-21 13:02+0000\n"
-"Last-Translator: Jan Wesselink <wesselaar@gmail.com>\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
 "Language: nl\n"
@@ -838,9 +838,8 @@ msgid "Enter new folder name for '%s':"
 msgstr "Voer een nieuwe mapnaam in voor '%s’:"
 
 #: pynicotine/gtkgui/dialogs/download.py:496
-#, fuzzy
 msgid "_Rename"
-msgstr "Hernoemen"
+msgstr "_Hernoemen"
 
 #: pynicotine/gtkgui/dialogs/download.py:574 pynicotine/gtkgui/search.py:1708
 #: pynicotine/gtkgui/transfers.py:989 pynicotine/gtkgui/userbrowse.py:1429
@@ -937,8 +936,7 @@ msgstr ""
 #: pynicotine/gtkgui/dialogs/fileproperties.py:67
 #, python-format
 msgid "File Properties  -  %(num)s of %(total)s  /  %(size)s"
-msgstr ""
-"Bestandseigenschappen  -  %(num)s of %(total)s  /  %(size)s  /  %(length)"
+msgstr "Bestandseigenschappen  -  %(num)s van %(total)s  /  %(size)s"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:30
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:21
@@ -2336,14 +2334,12 @@ msgid "Cannot request information from the user, since they are offline."
 msgstr "Kan geen informatie opvragen bij de gebruiker, omdat deze offline is."
 
 #: pynicotine/gtkgui/userbrowse.py:606 pynicotine/gtkgui/userinfo.py:498
-#, fuzzy
 msgid ""
 "Cannot request information from the user, possibly due to a closed listening "
 "port or temporary connectivity issue."
 msgstr ""
-"Kan geen informatie van gebruiker opvragen. Jullie hebben allebei een "
-"gesloten luisterpoort, of de gebruiker is offline, of is er een tijdelijk "
-"verbindingsprobleem."
+"Kan geen informatie van gebruiker opvragen. Misschien een gesloten "
+"luisterpoort of een tijdelijk verbindingsprobleem."
 
 #: pynicotine/gtkgui/userbrowse.py:992
 msgid "Upload Folder (with Subfolders) To User"
@@ -2420,9 +2416,8 @@ msgstr ""
 "downloads voorrang gegeven boven die van niet-geprivilegieerde gebruikers."
 
 #: pynicotine/gtkgui/userinfo.py:764 pynicotine/gtkgui/ui/userinfo.ui:75
-#, fuzzy
 msgid "Privileged User"
-msgstr "Heeft privileges"
+msgstr "Gebruiker met privileges"
 
 #: pynicotine/gtkgui/userinfo.py:777
 msgid "Please enter number of days."
