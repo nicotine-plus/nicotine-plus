@@ -329,8 +329,13 @@ class Downloads(Transfers):
             self._emit_preview_update(None, "failed", reason="unavailable")
             return False
 
-        transfer = Transfer(username, virtual_path, self.get_incomplete_download_folder(),
-                             preview_bytes, file_attributes)
+        transfer = Transfer(
+            username,
+            virtual_path,
+            self.get_incomplete_download_folder(),
+            preview_bytes,
+            file_attributes,
+        )
         transfer.is_preview = True
         transfer.preview_bytes = preview_bytes
         transfer.original_size = size

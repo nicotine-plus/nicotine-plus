@@ -3,7 +3,9 @@
 
 name: REUSE Compliance
 on: [push, pull_request]
-permissions: {}
+permissions:
+  contents: read
+  actions: write
 
 jobs:
 

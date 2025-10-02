@@ -3,7 +3,8 @@
 
 name: Tests
 on: [push, pull_request]
-permissions: {}
+permissions:
+  contents: read
 
 env:
   NICOTINE_NETWORK_TESTS: 1

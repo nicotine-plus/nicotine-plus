@@ -39,21 +39,21 @@ import gi
 gi.require_version('Gtk', '4.0')
 # CRITICAL: No GStreamer import here - handled dynamically in initialize_preview_system()
 
-from gi.repository import GLib
-from gi.repository import Gtk  
-from gi.repository import Pango
+from gi.repository import GLib  # noqa: E402
+from gi.repository import Gtk  # noqa: E402
+from gi.repository import Pango  # noqa: E402
+
+from pynicotine.core import core  # noqa: E402
+from pynicotine.events import events  # noqa: E402
+from pynicotine.gtkgui.application import GTK_API_VERSION  # noqa: E402
+from pynicotine.logfacility import log  # noqa: E402
+
 
 # GStreamer is imported dynamically in initialize_preview_system() to prevent
 # import errors when GStreamer is not available in the system
 Gst = None
 GST_AVAILABLE = False
 PREVIEW_MODE = "UNKNOWN"  # INTEGRATED, EXTERNAL_ONLY, or UNAVAILABLE
-
-from pynicotine.core import core
-from pynicotine.events import events
-from pynicotine.gtkgui.application import GTK_API_VERSION
-from pynicotine.logfacility import log
-
 
 SUPPORTED_AUDIO_EXTENSIONS = {
     '.mp3', '.ogg', '.flac', '.wav', '.m4a', '.aac', '.wma', '.opus', '.aiff'
@@ -91,7 +91,7 @@ class MultimediaDependencyManager:
 
     def ensure_dependencies(self) -> tuple[bool, str]:
         """Ensure multimedia dependencies are available.
-        
+
         Returns:
             tuple: (success, mode) where mode is 'INTEGRATED', 'EXTERNAL_ONLY', or 'UNAVAILABLE'
         """
@@ -99,15 +99,15 @@ class MultimediaDependencyManager:
         if self._check_system_deps():
             self._setup_gstreamer_environment()
             return True, "INTEGRATED"
-        
+
         # 2. Try to find and configure existing installations
         if self._find_and_configure_deps():
             return True, "INTEGRATED"
-        
+
         # 3. Check if external player functionality is available
         if self._check_external_player_support():
             return True, "EXTERNAL_ONLY"
-        
+
         # 4. No multimedia support available
         return False, "UNAVAILABLE"
 
@@ -117,16 +117,16 @@ class MultimediaDependencyManager:
             import gi
             gi.require_version('Gst', '1.0')
             from gi.repository import Gst
-            
+
             Gst.init(None)
-            
+
             # Test critical elements
             critical_elements = ['playbin', 'autoaudiosink']
             for element in critical_elements:
                 if Gst.ElementFactory.make(element) is None:
                     log.add_transfer("Missing critical GStreamer element: %s", element)
                     return False
-            
+
             return True
         except (ImportError, ValueError, AttributeError) as e:
             log.add_transfer("GStreamer not available: %s", e)
@@ -149,25 +149,25 @@ class MultimediaDependencyManager:
             os.path.expanduser("~\\AppData\\Local\\gstreamer"),
             "C:\\msys64\\mingw64",  # MSYS2 installation
         ]
-        
+
         for base_path in possible_paths:
             if os.path.exists(base_path):
                 gst_bin = os.path.join(base_path, "bin")
                 gst_lib = os.path.join(base_path, "lib", "gstreamer-1.0")
-                
+
                 if os.path.exists(gst_bin) and os.path.exists(gst_lib):
                     # Add to PATH
                     if gst_bin not in os.environ.get("PATH", ""):
                         os.environ["PATH"] = gst_bin + os.pathsep + os.environ["PATH"]
-                    
+
                     # Set plugin path
                     os.environ["GST_PLUGIN_PATH"] = gst_lib
-                    
+
                     # Try to initialize GStreamer
                     if self._test_gstreamer_init():
                         log.add_transfer("Configured GStreamer from: %s", base_path)
                         return True
-        
+
         return False
 
     def _configure_macos_gstreamer(self) -> bool:
@@ -177,7 +177,7 @@ class MultimediaDependencyManager:
             "/opt/homebrew",  # Homebrew Apple Silicon
             "/Library/Frameworks/GStreamer.framework",  # Official installer
         ]
-        
+
         for base_path in possible_paths:
             if base_path.endswith(".framework"):
                 # Framework installation
@@ -194,7 +194,7 @@ class MultimediaDependencyManager:
                     os.environ["GST_PLUGIN_PATH"] = gst_lib
                     if self._test_gstreamer_init():
                         return True
-        
+
         return False
 
     def _configure_linux_gstreamer(self) -> bool:
@@ -208,14 +208,14 @@ class MultimediaDependencyManager:
             import gi
             gi.require_version('Gst', '1.0')
             from gi.repository import Gst
-            
+
             Gst.init(None)
-            
+
             # Test playbin creation
             playbin = Gst.ElementFactory.make("playbin")
             if playbin is None:
                 return False
-            
+
             return True
         except Exception as e:
             log.add_transfer("GStreamer test failed: %s", e)
@@ -241,8 +241,9 @@ class MultimediaDependencyManager:
                 return True
             else:
                 # Linux: check for xdg-open or similar
-                return subprocess.run(["which", "xdg-open"], 
-                                    capture_output=True).returncode == 0
+                return subprocess.run(
+                    ["which", "xdg-open"], capture_output=True
+                ).returncode == 0
         except Exception:
             return False
 
@@ -258,38 +259,38 @@ class MultimediaDependencyManager:
 
 def initialize_preview_system() -> tuple[bool, str]:
     """Initialize the preview system with automatic platform detection.
-    
+
     Returns:
         tuple: (gst_available, preview_mode)
     """
     global Gst, GST_AVAILABLE, PREVIEW_MODE
-    
+
     log.add_transfer("Initializing preview system on %s", platform.system())
-    
+
     # Create dependency manager
     dep_manager = MultimediaDependencyManager()
-    
+
     # Try to ensure dependencies
     success, mode = dep_manager.ensure_dependencies()
-    
+
     if success and mode == "INTEGRATED":
         try:
             # Import GStreamer after configuration
             import gi
             gi.require_version('Gst', '1.0')
             from gi.repository import Gst as GstModule
-            
+
             GstModule.init(None)
-            
+
             # Set global Gst variable after successful initialization
             global Gst
             Gst = GstModule
-            
+
             GST_AVAILABLE = True
             PREVIEW_MODE = "INTEGRATED"
-            
+
             log.add_transfer("Preview system initialized: Integrated player")
-            
+
         except Exception as e:
             log.add_transfer("Failed to initialize GStreamer: %s", e)
             GST_AVAILABLE = False
@@ -297,12 +298,12 @@ def initialize_preview_system() -> tuple[bool, str]:
     else:
         GST_AVAILABLE = False
         PREVIEW_MODE = mode
-        
+
         if mode == "EXTERNAL_ONLY":
             log.add_transfer("Preview system initialized: External player only")
         else:
             log.add_transfer("Preview system unavailable")
-    
+
     return GST_AVAILABLE, PREVIEW_MODE
 
 
@@ -324,17 +325,17 @@ def _check_gstreamer_codecs(file_ext: str) -> bool:
     """Check if required GStreamer elements are available for file type."""
     if not GST_AVAILABLE:
         return False
-        
+
     required_elements = GSTREAMER_CODEC_REQUIREMENTS.get(file_ext, [])
     if not required_elements:
         return True
-        
+
     for element_name in required_elements:
         element = Gst.ElementFactory.make(element_name, None)
         if element is None:
             log.add_transfer("Missing GStreamer element for %s: %s", (file_ext, element_name))
             return False
-    
+
     return True
 
 
@@ -342,25 +343,25 @@ def _validate_preview_file(path: str) -> None:
     """Validate that a file is safe and suitable for preview."""
     if not path:
         raise ValueError("File path cannot be empty")
-    
+
     if not os.path.exists(path):
         raise FileNotFoundError(f"Preview file not found: {path}")
-    
+
     if not os.path.isfile(path):
         raise ValueError(f"Path is not a file: {path}")
-    
+
     if not os.access(path, os.R_OK):
         raise PermissionError(f"Cannot read preview file: {path}")
-    
+
     file_size = os.path.getsize(path)
     max_size_bytes = MAX_FILE_SIZE_MB * 1024 * 1024
     if file_size > max_size_bytes:
         raise ValueError(f"File too large for preview: {file_size / 1024 / 1024:.1f}MB > {MAX_FILE_SIZE_MB}MB")
-    
+
     file_ext = os.path.splitext(path)[1].lower()
     if file_ext not in ALL_SUPPORTED_EXTENSIONS:
         raise ValueError(f"Unsupported file type: {file_ext}")
-    
+
     if not _check_gstreamer_codecs(file_ext):
         raise ValueError(f"Required codecs not available for {file_ext}")
 
@@ -384,38 +385,38 @@ class PreviewPlayer:
         with self._lock:
             if self._is_destroyed:
                 raise RuntimeError("Player has been destroyed")
-            
+
             if not GST_AVAILABLE:
                 raise RuntimeError("GStreamer support is not available")
-            
+
             _validate_preview_file(path)
-            
+
             self.stop()
-            
+
             try:
                 pipeline = Gst.ElementFactory.make("playbin", "preview-playbin")
-                
+
                 if pipeline is None:
                     raise RuntimeError("Unable to initialise GStreamer playbin element")
-                
+
                 uri = Gst.filename_to_uri(path)
                 pipeline.set_property("uri", uri)
-                
+
                 # Platform-specific audio/video sink configuration
                 self._configure_platform_sinks(pipeline)
-                
+
                 bus = pipeline.get_bus()
                 bus.add_signal_watch()
                 bus.connect("message", self._on_bus_message)
-                
+
                 self._pipeline = pipeline
                 self._bus = bus
                 self._uri = uri
-                
+
             except Exception as e:
                 self.stop()
                 raise RuntimeError(f"Failed to prepare player: {e}") from e
-    
+
     def _configure_platform_sinks(self, pipeline):
         """Configure audio/video sinks based on platform."""
         try:
@@ -424,31 +425,31 @@ class PreviewPlayer:
                 audio_sink = Gst.ElementFactory.make("directsoundsink")
                 if audio_sink is None:
                     audio_sink = Gst.ElementFactory.make("autoaudiosink")
-                
+
                 video_sink = Gst.ElementFactory.make("d3dvideosink")
                 if video_sink is None:
                     video_sink = Gst.ElementFactory.make("autovideosink")
-                    
+
             elif self._platform == "Darwin":
                 # macOS: prefer CoreAudio for audio, OpenGL for video
                 audio_sink = Gst.ElementFactory.make("osxaudiosink")
                 if audio_sink is None:
                     audio_sink = Gst.ElementFactory.make("autoaudiosink")
-                
+
                 video_sink = Gst.ElementFactory.make("glimagesink")
                 if video_sink is None:
                     video_sink = Gst.ElementFactory.make("autovideosink")
-                    
+
             else:
                 # Linux: use auto sinks (usually ALSA/PulseAudio + X11/Wayland)
                 audio_sink = Gst.ElementFactory.make("autoaudiosink")
                 video_sink = Gst.ElementFactory.make("autovideosink")
-            
+
             if audio_sink:
                 pipeline.set_property("audio-sink", audio_sink)
             if video_sink:
                 pipeline.set_property("video-sink", video_sink)
-                
+
         except Exception as e:
             log.add_transfer("Warning: Could not configure platform sinks: %s", e)
             # Continue with default auto sinks
@@ -458,7 +459,7 @@ class PreviewPlayer:
         with self._lock:
             if self._is_destroyed or self._pipeline is None:
                 return
-            
+
             try:
                 self._pipeline.set_state(Gst.State.PLAYING)
             except Exception as e:
@@ -469,7 +470,7 @@ class PreviewPlayer:
         with self._lock:
             if self._is_destroyed or self._pipeline is None:
                 return
-            
+
             try:
                 self._pipeline.set_state(Gst.State.PAUSED)
             except Exception as e:
@@ -480,19 +481,19 @@ class PreviewPlayer:
         with self._lock:
             if self._is_destroyed:
                 return
-                
+
             if self._pipeline is not None:
                 try:
                     self._pipeline.set_state(Gst.State.NULL)
                 except Exception as e:
                     log.add_transfer("Error stopping pipeline: %s", e)
-            
+
             if self._bus is not None:
                 try:
                     self._bus.remove_signal_watch()
                 except Exception as e:
                     log.add_transfer("Error removing bus signal watch: %s", e)
-            
+
             self._pipeline = None
             self._bus = None
             self._uri = None
@@ -502,7 +503,7 @@ class PreviewPlayer:
         with self._lock:
             if self._is_destroyed or self._pipeline is None:
                 return False
-            
+
             try:
                 _res, state, _pending = self._pipeline.get_state(0)
                 return state == Gst.State.PLAYING
@@ -514,16 +515,16 @@ class PreviewPlayer:
         with self._lock:
             if self._is_destroyed or self._pipeline is None:
                 return (0, 0)
-            
+
             try:
                 success, position = self._pipeline.query_position(Gst.Format.TIME)
                 success_duration, duration = self._pipeline.query_duration(Gst.Format.TIME)
-                
+
                 if not success:
                     position = 0
                 if not success_duration:
                     duration = 0
-                
+
                 return position, duration
             except Exception:
                 return (0, 0)
@@ -533,7 +534,7 @@ class PreviewPlayer:
         with self._lock:
             self._is_destroyed = True
             self.stop()
-    
+
     # Internal #
 
     def _on_bus_message(self, _bus, message):
@@ -549,7 +550,7 @@ class PreviewPlayer:
             platform_context = f"Platform: {self._platform}"
             enhanced_debug = f"{debug}\n{platform_context}" if debug else platform_context
             GLib.idle_add(self._error_callback, err, enhanced_debug)
-            
+
         elif message_type == Gst.MessageType.WARNING:
             warn, debug = message.parse_warning()
             log.add_transfer("GStreamer warning on %s: %s", self._platform, warn.message)
@@ -713,7 +714,7 @@ class PreviewController:
         """Stop playback and cleanup resources safely."""
         if self._is_destroyed:
             return
-            
+
         self._cancel_progress_update()
 
         if self.player is not None:
@@ -743,23 +744,23 @@ class PreviewController:
             self.progress_bar.set_text("")
         except Exception as e:
             log.add_transfer("Error updating UI during stop: %s", e)
-            
+
         self.current_path = None
 
     def _close_panel(self, delete_file: bool = False) -> None:
         """Close preview panel and cleanup state."""
         if self._is_destroyed:
             return
-            
+
         self._stop_playback(delete_file=delete_file)
-        
+
         try:
             self.revealer.set_reveal_child(False)
             self.title_label.set_text("")
             self._set_status("")
         except Exception as e:
             log.add_transfer("Error updating UI during panel close: %s", e)
-            
+
         self.current_transfer = None
         self.current_key = None
         self.current_state = None
@@ -780,11 +781,11 @@ class PreviewController:
         self._set_status(_("Opened in external player"))
         self._cleanup_retry_count = 0
         self._schedule_external_cleanup(path)
-    
+
     def _launch_platform_player(self, path: str) -> bool:
         """Launch external player using platform-specific method."""
         system = platform.system()
-        
+
         try:
             if system == "Windows":
                 return self._launch_windows_player(path)
@@ -795,7 +796,7 @@ class PreviewController:
         except Exception as e:
             log.add_transfer("Platform player launch failed: %s", e)
             return False
-    
+
     def _launch_windows_player(self, path: str) -> bool:
         """Launch external player on Windows."""
         try:
@@ -818,7 +819,7 @@ class PreviewController:
                     return True
                 except Exception:
                     return False
-    
+
     def _launch_macos_player(self, path: str) -> bool:
         """Launch external player on macOS."""
         try:
@@ -836,7 +837,7 @@ class PreviewController:
                 return True
             except Exception:
                 return False
-    
+
     def _launch_linux_player(self, path: str) -> bool:
         """Launch external player on Linux."""
         try:
@@ -854,29 +855,29 @@ class PreviewController:
                 return True
             except Exception:
                 return False
-    
+
     def _is_external_player_available(self) -> bool:
         """Check if external player functionality is available."""
         return PREVIEW_MODE in ["INTEGRATED", "EXTERNAL_ONLY"]
-    
+
     def _schedule_external_cleanup(self, path: str) -> None:
         """Schedule cleanup with progressive timeout increase."""
         if self._is_destroyed:
             return
-            
+
         timeout = EXTERNAL_CLEANUP_BASE_TIMEOUT * (self._cleanup_retry_count + 1)
-        
+
         def cleanup_external_preview():
             if self._is_destroyed:
                 return False
-                
+
             try:
                 core.downloads.discard_preview_file(path)
                 self._external_cleanup_id = None
                 return False
             except Exception as e:
                 log.add_transfer("Error during external cleanup: %s", e)
-                
+
                 self._cleanup_retry_count += 1
                 if self._cleanup_retry_count < MAX_CLEANUP_RETRIES:
                     self._schedule_external_cleanup(path)
@@ -951,7 +952,7 @@ class PreviewController:
                     user_msg = self._get_user_friendly_error(error)
                     self._set_status(user_msg)
                     self.play_button.set_sensitive(False)
-                    
+
                     # Fallback to external player if integrated fails
                     if self._is_external_player_available():
                         self._set_status(_("Falling back to external player"))
@@ -1051,7 +1052,7 @@ class PreviewController:
         """Convert technical errors to user-friendly messages."""
         error_str = str(error).lower()
         system = platform.system()
-        
+
         if "file not found" in error_str or "no such file" in error_str:
             return _("File not found or was removed")
         elif "permission" in error_str or "access" in error_str:
@@ -1076,32 +1077,32 @@ class PreviewController:
             return _("Network error during preview")
         else:
             return _("Preview error: {}").format(str(error)[:100])
-    
+
     def _get_platform_error_message(self, error) -> str:
         """Get platform-specific error message for external player failures."""
         system = platform.system()
-        
+
         if system == "Windows":
             return _("Cannot open external player. Check file associations.")
         elif system == "Darwin":
             return _("Cannot open external player. Check default app settings.")
         else:
             return _("Cannot open external player. Install xdg-utils or default media player.")
-    
+
     # Lifecycle #
 
     def destroy(self):
         """Cleanup all resources safely."""
         self._is_destroyed = True
-        
+
         self._close_panel(delete_file=True)
-        
+
         if self.player is not None:
             try:
                 self.player.destroy()
             except Exception as e:
                 log.add_transfer("Error destroying player: %s", e)
-                
+
         try:
             events.disconnect("preview-update", self.on_preview_update)
         except (ValueError, AttributeError):

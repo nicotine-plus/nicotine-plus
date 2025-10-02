@@ -3,7 +3,9 @@
 
 name: Build
 on: [push, pull_request]
-permissions: {}
+permissions:
+  contents: read
+  actions: write
 
 jobs:
 

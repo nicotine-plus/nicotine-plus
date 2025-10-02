@@ -1,0 +1,36 @@
+Metadata-Version: 2.4
+Name: nicotine-audio-preview
+Version: 3.4.0.dev1
+Summary: Nicotine Audio Preview – experimental Soulseek client with integrated previews
+Home-page: https://nicotine-plus.org
+Author: Nicotine Audio Preview Team
+Author-email: nicotine-team@lists.launchpad.net
+License: GPLv3+
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: X11 Applications :: GTK
+Classifier: Intended Audience :: End Users/Desktop
+Classifier: License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Topic :: Communications :: Chat
+Classifier: Topic :: Communications :: File Sharing
+Classifier: Topic :: Internet
+Classifier: Topic :: System :: Networking
+Requires-Python: >=3.9
+License-File: COPYING
+License-File: AUTHORS.md
+Requires-Dist: PyGObject>=3.38
+Provides-Extra: packaging
+Requires-Dist: cx_Freeze; extra == "packaging"
+Provides-Extra: tests
+Requires-Dist: pycodestyle; extra == "tests"
+Requires-Dist: pylint; extra == "tests"
+Dynamic: license-file
+
+
+Nicotine Audio Preview is an experimental fork of Nicotine+
+focused on the integrated media preview feature for the Soulseek
+peer-to-peer network.
+
+The project keeps the lightweight, FOSS spirit of Nicotine+
+while showcasing the early preview experience across platforms.

@@ -1,0 +1,8 @@
+PyGObject>=3.38
+
+[packaging]
+cx_Freeze
+
+[tests]
+pycodestyle
+pylint
