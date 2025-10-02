@@ -739,7 +739,9 @@ class Downloads(Transfers):
 
         super()._finish_transfer(transfer)
 
-        if not already_exists:
+        download_file_path = incomplete_file_path
+
+        if not transfer.is_preview and not already_exists:
             download_file_path = self._move_finished_transfer(transfer, incomplete_file_path)
 
             if download_file_path is None:

@@ -39,22 +39,69 @@ The preview system automatically detects and configures multimedia dependencies,
 ### Installation for Preview Support
 
 #### Windows
-Nicotine+ automatically detects GStreamer installations. Choose one of these methods:
 
-```bash
-# Option 1: MSYS2 Environment (Recommended for developers)
-# First install MSYS2 from https://www.msys2.org/
-# Then in MSYS2 terminal:
-pacman -S mingw-w64-x86_64-gstreamer mingw-w64-x86_64-gst-plugins-good
+Nicotine+ relies on MSYS2 (CLANG64) to provide full preview support on Windows. Puedes automatizar casi todo el proceso con el script incluido o seguir los pasos manuales descritos mas abajo.
 
-# Option 2: Chocolatey Package Manager
-# First install Chocolatey from https://chocolatey.org/
-choco install gstreamer
+**Quick Start / Guia rapida (script automatizado)**
+1. Instala Python 3.11+ desde https://www.python.org/downloads/ marcando "Add Python to PATH" y reinicia Windows.
+2. Abre PowerShell como administrador en la carpeta del repositorio de Nicotine+.
+3. Ejecuta el instalador automatizado:
+   ```powershell
+   python build-aux/windows/setup_windows_env.py --create-symlink
+   ```
+   El script descarga MSYS2, aplica las actualizaciones con pacman, instala las dependencias de CLANG64, anade MSYS2 al PATH y crea `run_nicotine.bat` junto a un enlace opcional en el escritorio.
+4. Cuando el script termine, abre `run_nicotine.bat` (o el enlace del escritorio) para iniciar Nicotine+.
 
-# Option 3: Official GStreamer Installer (Easiest for end users)
-# Download from: https://gstreamer.freedesktop.org/download/
-# Run the .msi installer and follow the wizard
-```
+**Opciones utiles del script**
+- `--installer RUTA`: usa un instalador de MSYS2 ya descargado.
+- `--installer-url URL`: indica una URL alternativa del instalador.
+- `--skip-install`: omite la instalacion si ya tienes MSYS2.
+- `--no-path-update`: evita modificar el PATH del sistema.
+- `--skip-run-script`: no genera `run_nicotine.bat`.
+- `--create-symlink`: crea un enlace simbolico en el escritorio apuntando a `run_nicotine.bat` (requiere privilegios suficientes).
+
+**Guia manual paso a paso**
+1. **Instalar Python 3.11 o superior**: descarga el instalador oficial, marca "Add Python to PATH" y confirma en PowerShell con `python --version`.
+2. **Instalar MSYS2 en `C\msys64`** ejecutandolo como administrador.
+3. **Actualizar MSYS2** desde la terminal "MSYS2 MSYS": ejecuta `pacman -Syu`, cierra cuando lo pida, vuelve a abrir y ejecuta `pacman -Su`.
+4. **Instalar dependencias en CLANG64**: abre "MSYS2 CLANG64" y pega el comando agrupado mostrado en la guia rapida (instala Python, PyGObject, GTK, GStreamer y gettext).
+5. **Configurar el `PATH` de Windows** anadiendo `C\msys64\clang64\bin` y `C\msys64\usr\bin` en *Variables de entorno del sistema*; reinicia Windows para aplicar cambios.
+6. **Crear el script de lanzamiento** `run_nicotine.bat` o, si prefieres trabajar desde MSYS directamente, crea un alias en tu home:
+   ```bash
+   ln -s /c/Users/Usuario/Downloads/nicotine-plus-master ~/nicotine-plus
+   ```
+7. **Verificar dependencias** ejecutando en CLANG64:
+   ```bash
+   python3 -c "
+   import sys; print(f'✅ Python: {sys.version}')
+   import gi; print('✅ PyGObject OK')
+   gi.require_version('Gtk', '3.0'); from gi.repository import Gtk; print('✅ GTK3 OK')
+   gi.require_version('Gst', '1.0'); from gi.repository import Gst; Gst.init(None); print('✅ GStreamer OK')
+   import pynicotine; print('✅ Nicotine+ Module OK')
+   print('🎉 Installation Complete!')
+   "
+   ```
+8. **Actualizar Nicotine+** mas adelante con:
+   ```bash
+   git pull
+   python3 -m pip install --user .
+   ```
+
+**Crear enlace simbolico o acceso directo en Windows**
+- Para un acceso directo clasico, puedes usar `crear_acceso_simple.ps1` o crear uno manual apuntando a `run_nicotine.bat`.
+- Para un enlace simbolico (requiere modo desarrollador o PowerShell como administrador):
+  ```powershell
+  New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\Desktop\NicotinePlus.bat" -Target "C:\Users\Usuario\Downloads\nicotine-plus-master\run_nicotine.bat"
+  ```
+  > Ajusta las rutas a tu instalacion. El enlace simbolico te permite iniciar Nicotine+ desde otra ubicacion manteniendo el script original intacto.
+
+**Solucion de problemas**
+- `No module named 'gi'`: `pacman -S mingw-w64-clang-x86_64-python-gobject` (MSYS2 CLANG64).
+- `python3: command not found`: asegurate de que la terminal diga `CLANG64`.
+- `Gtk not found`: `pacman -S mingw-w64-clang-x86_64-gtk3`.
+- `bash.exe not found`: revisa las entradas del `PATH` y reinicia Windows.
+
+**Note**: If multimedia dependencies are missing, Nicotine+ automatically falls back to your system's default media player for previews.
 
 #### macOS
 Install GStreamer via Homebrew for full preview support:
