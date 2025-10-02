@@ -41,12 +41,11 @@ class TabLabel:
 
             self.eventbox = Gtk.Box()
         else:
-            self.gesture_click = Gtk.GestureMultiPress(widget=self.container)  # pylint: disable=c-extension-no-member
+            self.gesture_click = Gtk.GestureMultiPress(widget=self.container)
 
-            self.eventbox = Gtk.EventBox(visible=True)   # pylint: disable=c-extension-no-member
+            self.eventbox = Gtk.EventBox(visible=True)
             self.eventbox.add_events(
-                int(Gdk.EventMask.SCROLL_MASK            # pylint: disable=c-extension-no-member
-                    | Gdk.EventMask.SMOOTH_SCROLL_MASK)  # pylint: disable=c-extension-no-member
+                int(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK)
             )
 
         self.box = Gtk.Box(spacing=6, visible=True)
@@ -101,8 +100,7 @@ class TabLabel:
             self.close_button = Gtk.Button(image=Gtk.Image(icon_name="window-close-symbolic"))
             self.container.add(self.close_button)        # pylint: disable=no-member
             self.close_button.add_events(                # pylint: disable=no-member
-                int(Gdk.EventMask.SCROLL_MASK            # pylint: disable=c-extension-no-member
-                    | Gdk.EventMask.SMOOTH_SCROLL_MASK)  # pylint: disable=c-extension-no-member
+                int(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK)
             )
 
         add_css_class(self.close_button, "flat")
@@ -321,8 +319,7 @@ class IconNotebook:
             self.pages_button_container.add(self.pages_button)  # pylint: disable=no-member
 
             self.widget.add_events(                      # pylint: disable=no-member
-                int(Gdk.EventMask.SCROLL_MASK            # pylint: disable=c-extension-no-member
-                    | Gdk.EventMask.SMOOTH_SCROLL_MASK)  # pylint: disable=c-extension-no-member
+                int(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK)
             )
             self.widget.connect("scroll-event", self.on_tab_scroll_event)
 
@@ -743,7 +740,7 @@ class IconNotebook:
         if not current_page:
             return False
 
-        if Gtk.get_event_widget(event).is_ancestor(current_page):  # pylint: disable=c-extension-no-member
+        if Gtk.get_event_widget(event).is_ancestor(current_page):
             return False
 
         if event.direction == Gdk.ScrollDirection.SMOOTH:

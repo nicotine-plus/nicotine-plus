@@ -117,7 +117,7 @@ class PluginSettings(Dialog):
             if GTK_API_VERSION >= 4:
                 widget_class = Gtk.CheckButton
             else:
-                widget_class = Gtk.RadioButton  # pylint: disable=c-extension-no-member
+                widget_class = Gtk.RadioButton
             radio = widget_class(group=last_radio, label=option_label, receives_default=True, visible=True)
 
             if not last_radio:

@@ -1093,9 +1093,7 @@ class StatusIconImplementation(BaseImplementation):
             # GtkStatusIcon does not work on Wayland
             raise ImplementationUnavailable("StatusIcon implementation not available")
 
-        self.tray_icon = Gtk.StatusIcon(  # pylint: disable=c-extension-no-member
-            tooltip_text=pynicotine.__application_name__
-        )
+        self.tray_icon = Gtk.StatusIcon(tooltip_text=pynicotine.__application_name__)
         self.tray_icon.connect("activate", self.activate_callback)
         self.tray_icon.connect("popup-menu", self.on_status_icon_popup)
 
@@ -1105,7 +1103,7 @@ class StatusIconImplementation(BaseImplementation):
     def on_status_icon_popup(self, _status_icon, button, _activate_time):
 
         if button == 3:
-            time = Gtk.get_current_event_time()  # pylint: disable=c-extension-no-member
+            time = Gtk.get_current_event_time()
             self.gtk_menu.popup(None, None, None, None, button, time)
 
     def _set_item_text(self, item, text):
@@ -1126,7 +1124,6 @@ class StatusIconImplementation(BaseImplementation):
 
     def _build_gtk_menu(self):
 
-        # pylint: disable=c-extension-no-member
         gtk_menu = Gtk.Menu()
 
         for item in self.menu_items.values():
