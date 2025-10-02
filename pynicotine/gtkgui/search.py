@@ -834,7 +834,7 @@ class Search:
 
             h_size = human_size(size, config.sections["ui"]["file_size_unit"])
             h_quality, bitrate, h_length, length = FileListMessage.parse_audio_quality_length(size, file_attributes)
-            private_icon_name = "security-medium-symbolic" if is_private else ""
+            private_icon_name = "changes-prevent-symbolic" if is_private else ""
 
             is_result_visible = self.append(
                 [
