@@ -240,7 +240,7 @@ jobs:
       matrix:
         include:
           - arch: x86_64
-            platform: macos-13
+            platform: macos-15-intel
           - arch: arm64
             platform: macos-14
     runs-on: ${{ matrix.platform }}
@@ -248,9 +248,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Set system language
-        run: defaults write NSGlobalDomain AppleLanguages "(en-US)"
 
       - name: Create Python virtual environment
         run: |
