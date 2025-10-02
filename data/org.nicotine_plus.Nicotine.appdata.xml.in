@@ -8,17 +8,18 @@
   <launchable type="desktop-id">org.nicotine_plus.Nicotine.desktop</launchable>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
-  <name translate="no">Nicotine+</name>
-  <summary>Browse the Soulseek network</summary>
+  <name translate="no">Nicotine Audio Preview</name>
+  <summary>Browse the Soulseek network with integrated previews</summary>
   <description>
     <p>
-      Nicotine+ is a graphical client for the Soulseek peer-to-peer
-      network.
+      Nicotine Audio Preview is an experimental fork of Nicotine+
+      focused on the media preview pipeline for the Soulseek
+      peer-to-peer network.
     </p>
     <p>
-      Nicotine+ aims to be a lightweight, pleasant, free and open
-      source (FOSS) alternative to the official Soulseek client, while
-      also providing a comprehensive set of features.
+      It keeps the lightweight, pleasant, free and open source (FOSS)
+      spirit of Nicotine+ while showcasing early preview features
+      across platforms.
     </p>
   </description>
   <branding>
@@ -77,7 +78,7 @@
   <url type="bugtracker">https://github.com/nicotine-plus/nicotine-plus/issues</url>
   <url type="translate">https://nicotine-plus.org/doc/TRANSLATIONS</url>
   <url type="vcs-browser">https://github.com/nicotine-plus/nicotine-plus</url>
-  <developer_name>Nicotine+ Team</developer_name>  <!-- deprecated in AppStream 1.0 (2023) -->
+  <developer_name>Nicotine Audio Preview Team</developer_name>  <!-- deprecated in AppStream 1.0 (2023) -->
   <developer id="org.nicotine-plus">
     <name>Nicotine+ Team</name>
   </developer>

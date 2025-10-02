@@ -1,4 +1,5 @@
-# COPYRIGHT (C) 2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007

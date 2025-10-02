@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Automate MSYS2 installation and dependency setup for Nicotine+ on Windows."""
 
 import argparse
@@ -81,20 +83,53 @@ def is_admin() -> bool:
 
 def require_admin() -> None:
     if not is_admin():
-        raise SystemExit("Debes ejecutar este script desde una consola de PowerShell o CMD con permisos de administrador.")
+        raise SystemExit(
+            "Debes ejecutar este script desde una consola de PowerShell o CMD "
+            "con permisos de administrador."
+        )
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Instala MSYS2, actualiza pacman e instala dependencias para Nicotine+ en Windows."
     )
-    parser.add_argument("--msys-root", default=str(MSYS_DEFAULT_ROOT), help=r"Directorio de instalacion de MSYS2 (por defecto C:\msys64)")
-    parser.add_argument("--installer", help="Ruta a un instalador de MSYS2 ya descargado (opcional)")
-    parser.add_argument("--installer-url", default=DEFAULT_INSTALLER_URL, help="URL del instalador de MSYS2 si es necesario descargarlo")
-    parser.add_argument("--skip-install", action="store_true", help="No intenta instalar MSYS2 si ya esta presente")
-    parser.add_argument("--no-path-update", action="store_true", help="No agrega MSYS2 al PATH del sistema")
-    parser.add_argument("--skip-run-script", action="store_true", help="No genera el archivo run_nicotine.bat")
-    parser.add_argument("--create-symlink", action="store_true", help="Crea un enlace simbolico a run_nicotine.bat en el escritorio (requiere permisos)")
+    parser.add_argument(
+        "--msys-root",
+        default=str(MSYS_DEFAULT_ROOT),
+        help=r"Directorio de instalacion de MSYS2 (por defecto C:\msys64)",
+    )
+    parser.add_argument(
+        "--installer",
+        help="Ruta a un instalador de MSYS2 ya descargado (opcional)",
+    )
+    parser.add_argument(
+        "--installer-url",
+        default=DEFAULT_INSTALLER_URL,
+        help="URL del instalador de MSYS2 si es necesario descargarlo",
+    )
+    parser.add_argument(
+        "--skip-install",
+        action="store_true",
+        help="No intenta instalar MSYS2 si ya esta presente",
+    )
+    parser.add_argument(
+        "--no-path-update",
+        action="store_true",
+        help="No agrega MSYS2 al PATH del sistema",
+    )
+    parser.add_argument(
+        "--skip-run-script",
+        action="store_true",
+        help="No genera el archivo run_nicotine.bat",
+    )
+    parser.add_argument(
+        "--create-symlink",
+        action="store_true",
+        help=(
+            "Crea un enlace simbolico a run_nicotine.bat en el escritorio "
+            "(requiere permisos)"
+        ),
+    )
     return parser.parse_args()
 
 
@@ -211,11 +246,17 @@ def create_run_script(project_dir: Path, msys_root: Path) -> Path:
     msys_project_path = to_msys_path(project_dir)
     bash_path = msys_root / "usr" / "bin" / "bash.exe"
 
+    command = (
+        f"{bash_path} -l -c "
+        f"\\\"export MSYSTEM=CLANG64 && source /etc/profile && cd "
+        f"\\\"{msys_project_path}\\\" && python3 nicotine\\\"\\r\\n"
+    )
+
     content = (
         "@echo off\r\n"
         "echo Iniciando Nicotine+ con soporte completo...\r\n"
         "echo.\r\n"
-        f"{bash_path} -l -c \"export MSYSTEM=CLANG64 && source /etc/profile && cd \"{msys_project_path}\" && python3 nicotine\"\r\n"
+        f"{command}"
         "pause\r\n"
     )
 
@@ -297,7 +338,8 @@ def main() -> None:
     if not msys_already_present:
         if args.skip_install:
             raise SystemExit(
-                f"MSYS2 no esta instalado en {msys_root} y se indico --skip-install. Elimina esa opcion para instalarlo."
+                f"MSYS2 no esta instalado en {msys_root} y se indico --skip-install. "
+                "Elimina esa opcion para instalarlo."
             )
 
         if args.installer:

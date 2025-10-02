@@ -1,3 +1,8 @@
+<!--
+  SPDX-FileCopyrightText: 2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # Documentación de la Herramienta de Previsualización de Nicotine+
 
 ## Descripción General

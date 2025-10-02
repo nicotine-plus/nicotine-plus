@@ -1,3 +1,8 @@
+<!--
+  SPDX-FileCopyrightText: 2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # Propuesta: Bundling Automático de GStreamer con Nicotine+
 
 ## Objetivo
