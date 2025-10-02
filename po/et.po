@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-16 22:18+0300\n"
-"PO-Revision-Date: 2025-03-27 09:01+0000\n"
+"PO-Revision-Date: 2025-09-19 13:02+0000\n"
 "Last-Translator: rimasx <riks_12@hot.ee>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/et/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.11-dev\n"
+"X-Generator: Weblate 5.14-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -714,11 +714,11 @@ msgstr "Tühjenda sõnumivaade"
 
 #: pynicotine/gtkgui/chatrooms.py:827
 msgid "Hide Room Users"
-msgstr ""
+msgstr "Peida ruumi kasutajad"
 
 #: pynicotine/gtkgui/chatrooms.py:827 pynicotine/gtkgui/ui/chatrooms.ui:104
 msgid "Show Room Users"
-msgstr ""
+msgstr "Kuva ruumi kasutajad"
 
 #: pynicotine/gtkgui/chatrooms.py:852
 #, python-format
@@ -824,11 +824,11 @@ msgstr "_Vali"
 #: pynicotine/gtkgui/dialogs/download.py:279
 #, python-format
 msgid "Download %(num_files)s file(s)  /  %(total_size)s"
-msgstr ""
+msgstr "Laadi alla %(num_files)s faili  /  %(total_size)s"
 
 #: pynicotine/gtkgui/dialogs/download.py:363
 msgid "Failed to request folder contents."
-msgstr ""
+msgstr "Kausta sisu taotlemine nurjus."
 
 #: pynicotine/gtkgui/dialogs/download.py:493
 #, fuzzy
@@ -1902,7 +1902,7 @@ msgstr "Jagatud kataloogide skaneerimine"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:53
 msgid "You are offline"
-msgstr ""
+msgstr "Sa oled võrguühenduseta"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:54
 #, fuzzy
@@ -1916,36 +1916,38 @@ msgstr "Uusima versiooni kontrollimine…"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:60
 msgid "Waiting for response from port checker."
-msgstr ""
+msgstr "Pordi kontrolli vastuse ootel."
 
 #: pynicotine/gtkgui/popovers/portchecker.py:75
 #, python-format
 msgid "Port %i (TCP) status unknown"
-msgstr ""
+msgstr "Pordi %i (TCP) olek on teadmata"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:76
 msgid "Cannot check connection status."
-msgstr ""
+msgstr "Ühenduse olekut ei saa kontrollida."
 
 #: pynicotine/gtkgui/popovers/portchecker.py:81
 #, python-format
 msgid "Port %i (TCP) is open"
-msgstr ""
+msgstr "Port %i (TCP) on avatud"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:82
 msgid "Most users can connect to you."
-msgstr ""
+msgstr "Enamik kasutajaid saab sinuga ühenduda."
 
 #: pynicotine/gtkgui/popovers/portchecker.py:87
 #, python-format
 msgid "Port %i (TCP) is closed"
-msgstr ""
+msgstr "Port %i (TCP) on suletud"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:88
 msgid ""
 "You can only connect to a few users. Ensure the port is forwarded and your "
 "device's firewall is not blocking it."
 msgstr ""
+"Saad ühenduda ainult mõne kasutajaga. Veendu, et port on suunatud ja "
+"tulemüür seda ei blokeeri."
 
 #: pynicotine/gtkgui/privatechat.py:355 pynicotine/gtkgui/search.py:626
 #: pynicotine/gtkgui/userbrowse.py:273 pynicotine/gtkgui/userinfo.py:341
@@ -2079,7 +2081,7 @@ msgstr "Eemalda kõik tulemused"
 
 #: pynicotine/gtkgui/search.py:693
 msgid "Cannot receive search results while offline."
-msgstr ""
+msgstr "Võrguühenduseta ei saa otsingutulemusi."
 
 #: pynicotine/gtkgui/search.py:719
 msgid "Clear Filters"
@@ -2395,7 +2397,7 @@ msgstr "Salvesta pilt"
 
 #: pynicotine/gtkgui/userinfo.py:367
 msgid "_Hide"
-msgstr ""
+msgstr "_Peida"
 
 #: pynicotine/gtkgui/userinfo.py:459
 #, python-format
@@ -2641,15 +2643,15 @@ msgstr "Kuva Nicotine+"
 
 #: pynicotine/gtkgui/widgets/treeview.py:810
 msgid "A_scending"
-msgstr ""
+msgstr "_Kasvav"
 
 #: pynicotine/gtkgui/widgets/treeview.py:810
 msgid "De_scending"
-msgstr ""
+msgstr "_Kahanev"
 
 #: pynicotine/gtkgui/widgets/treeview.py:815
 msgid "_Reset Sort Column"
-msgstr ""
+msgstr "_Lähtesta tulba järjestus"
 
 #: pynicotine/gtkgui/widgets/treeview.py:822
 #, python-format
@@ -2658,11 +2660,11 @@ msgstr "Veerg #%i"
 
 #: pynicotine/gtkgui/widgets/treeview.py:837
 msgid "_Sort Order"
-msgstr ""
+msgstr "_Järjestus"
 
 #: pynicotine/gtkgui/widgets/treeview.py:838
 msgid "Reset Columns"
-msgstr ""
+msgstr "Lähtesta tulbad"
 
 #: pynicotine/gtkgui/widgets/treeview.py:1008
 msgid "Ungrouped"
@@ -2679,7 +2681,7 @@ msgstr "Rühmita kasutaja järgi"
 #: pynicotine/headless/application.py:39
 #, python-format
 msgid "Type %s to connect to Soulseek"
-msgstr ""
+msgstr "Soulseekiga ühenduse loomiseks sisesta %s"
 
 #: pynicotine/headless/application.py:64
 #, python-format
@@ -4271,7 +4273,7 @@ msgstr ""
 #, python-format
 msgid ""
 "%(user)s is downloading %(files)s files (%(size)s) from %(folders)s folders"
-msgstr ""
+msgstr "%(user)s laadib alla %(files)s faili (%(size)s) kaustast %(folders)s"
 
 #: pynicotine/uploads.py:668 pynicotine/gtkgui/ui/userinfo.ui:310
 msgid "Queued Uploads"
@@ -4315,6 +4317,8 @@ msgid ""
 "User %(user)s is sharing %(num_files)s files totaling %(shared_size)s across "
 "%(num_folders)s folders."
 msgstr ""
+"Kasutaja %(user)s jagab %(num_files)s faili, mille kogumaht on %(shared_size)"
+"s, %(num_folders)s kausta vahel."
 
 #: pynicotine/userbrowse.py:361
 #, fuzzy
@@ -4468,7 +4472,7 @@ msgstr "Vestluse _ajalugu"
 
 #: pynicotine/gtkgui/ui/dialogs/chathistory.ui:82
 msgid "Previous private chats with others will appear here"
-msgstr ""
+msgstr "Siin kuvatakse varasemad privaatsed vestlused"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:15
 #, fuzzy
@@ -4651,7 +4655,7 @@ msgstr "_Ruumid"
 
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:104
 msgid "All available rooms will appear here"
-msgstr ""
+msgstr "Siin kuvatakse kõik saadaolevad ruumid"
 
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:138
 msgid "_Show feed of public chat room messages"
@@ -5412,6 +5416,9 @@ msgid ""
 "a '|' to specify multiple words or phrases, for example: long trail|till we "
 "meet again"
 msgstr ""
+"Lisa filter, et kuvada ainult tulemusi, mille failiteedel on antud tekst. "
+"Kasuta '|' sümbolit mitme sõna või fraasi määramiseks, näiteks: pikk tee|"
+"meie järgmise kohtumiseni"
 
 #: pynicotine/gtkgui/ui/search.ui:29
 msgid "Exclude text…"
@@ -5424,6 +5431,9 @@ msgid ""
 "to specify multiple words or phrases, for example: long trail|till we meet "
 "again"
 msgstr ""
+"Lisa filter, et peita tulemused, mille failiteedel on antud tekst. Kasuta '|"
+"' sümbolit mitme sõna või fraasi määramiseks, näiteks: pikk tee|kuni me "
+"jälle kohtume"
 
 #: pynicotine/gtkgui/ui/search.ui:41
 msgid "File type…"
@@ -5727,7 +5737,7 @@ msgstr "Avalik IP aadress:"
 #: pynicotine/gtkgui/ui/settings/network.ui:195
 #: pynicotine/gtkgui/ui/settings/network.ui:210
 msgid "Port Check"
-msgstr ""
+msgstr "Pordi kontroll"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:233
 msgid "Away Status"
@@ -5755,6 +5765,8 @@ msgid ""
 "Makes sure a VPN is used by binding connections to a specific network "
 "interface. Usually left empty to use all the interfaces available."
 msgstr ""
+"Tagab VPN-i kasutamise, sidudes ühendused kindla võrguliidesega. Tavaliselt "
+"jäetakse see tühjaks, et kasutada kõiki saadaolevaid liideseid."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:374
 msgid "Network interface:"
@@ -5877,7 +5889,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/search.ui:442
 msgid "Only show files that are shared publicly."
-msgstr ""
+msgstr "Kuva ainult avalikult jagatud faile."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:465
 msgid "Network Searches"
@@ -5910,11 +5922,11 @@ msgstr "Skaneeri jagatud katalooge"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:57
 msgid "On startup"
-msgstr ""
+msgstr "Käivitamisel"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:64
 msgid "At midnight"
-msgstr ""
+msgstr "Keskööl"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:80
 msgid "Visible to everyone:"
