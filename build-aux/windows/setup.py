@@ -215,16 +215,17 @@ def add_gtk():
             output_path="lib/libadwaita-1.0.dylib"
         )
 
+    # Fontconfig
+    if sys.platform != "darwin":
+        add_files(
+            folder_path=os.path.join(SYS_BASE_PATH, "etc/fonts"), output_path="share/fonts",
+            ends_with=".conf", recursive=True
+        )
+
     # Schemas
     add_file(
         file_path=os.path.join(SYS_BASE_PATH, "share/glib-2.0/schemas/gschemas.compiled"),
         output_path="lib/schemas/gschemas.compiled"
-    )
-
-    # Fontconfig
-    add_files(
-        folder_path=os.path.join(SYS_BASE_PATH, "etc/fonts"), output_path="share/fonts",
-        ends_with=".conf", recursive=True
     )
 
     # Pixbuf loaders
