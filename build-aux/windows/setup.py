@@ -13,10 +13,15 @@ import tempfile
 from cx_Freeze import Executable, setup     # pylint: disable=import-error
 from cx_Freeze.hooks import _gi_ as gi      # pylint: disable=import-private-name
 
-gi.__all__ = []
-
 # pylint: disable=duplicate-code
 
+
+class DummyHook:
+    pass
+
+
+# Disable cx_Freeze's gi hook, since it conflicts with our script
+gi.Hook = DummyHook
 
 if sys.platform == "win32":
     GUI_BASE = "Win32GUI"
