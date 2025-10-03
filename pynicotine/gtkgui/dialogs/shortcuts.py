@@ -128,7 +128,7 @@ class Shortcuts(Dialog):
         add_css_class(section_label, "heading")
 
         if GTK_API_VERSION >= 4:
-            flowbox_child.set_focusable(False)
+            flowbox_child.set_focusable(False)                  # pylint: disable=no-member
             section_label_container.append(section_icon)        # pylint: disable=no-member
             section_label_container.append(section_label)       # pylint: disable=no-member
             section_container.append(section_label_container)   # pylint: disable=no-member
