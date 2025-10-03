@@ -26,6 +26,7 @@ from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.combobox import ComboBox
+from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -604,6 +605,7 @@ class Search:
         )
         self.popup_menu.add_items(
             ("#" + "download_files", self.on_download_files),
+            ("#" + "download_files_to", self.on_download_files_to),
             ("#" + "download_folders", self.on_download_folders),
             ("", None),
             ("#" + _("F_ile Properties"), self.on_file_properties),
@@ -1522,6 +1524,10 @@ class Search:
             "download_files",
             _("Download _File") if num_results == 1 else _("Download _Files")
         )
+        self.popup_menu.update_item_label(
+            "download_files_to",
+            _("Download File _To…") if num_results == 1 else _("Download Files _To…")
+        )
 
         user_folder_paths = set()
 
@@ -1604,6 +1610,18 @@ class Search:
             core.downloads.enqueue_download(
                 user, file_path, folder_path=download_folder_path, size=size,
                 file_attributes=file_data.attributes)
+
+    def on_download_files_to_selected(self, selected_folder_paths, _data):
+        self.on_download_files(download_folder_path=next(iter(selected_folder_paths), None))
+
+    def on_download_files_to(self, *_args):
+
+        FolderChooser(
+            parent=self.window,
+            title=_("Select Destination Folder for Files"),
+            callback=self.on_download_files_to_selected,
+            initial_folder=core.downloads.get_default_download_folder()
+        ).present()
 
     def on_download_folders(self, *_args):
 
