@@ -27,7 +27,6 @@ if sys.platform == "win32":
     GUI_BASE = "Win32GUI"
     SYS_BASE_PATH = sys.prefix
     LIB_PATH = os.path.join(SYS_BASE_PATH, "bin")
-    LIB_EXTENSION = ".dll"
     UNAVAILABLE_MODULES = [
         "fcntl", "grp", "nis", "ossaudiodev", "posix", "pwd", "readline", "resource", "spwd", "syslog", "termios"
     ]
@@ -37,7 +36,6 @@ elif sys.platform == "darwin":
     GUI_BASE = None
     SYS_BASE_PATH = "/opt/homebrew" if platform.machine() == "arm64" else "/usr/local"
     LIB_PATH = os.path.join(SYS_BASE_PATH, "lib")
-    LIB_EXTENSION = (".dylib", ".so")
     UNAVAILABLE_MODULES = ["msvcrt", "nt", "nturl2path", "ossaudiodev", "spwd", "winreg", "winsound"]
     ICON_NAME = "icon.icns"
 
@@ -102,27 +100,23 @@ def add_files(folder_path, output_path, starts_with=None, ends_with=None, recurs
 
 def add_pixbuf_loaders():
 
-    loaders_file = "lib/gdk-pixbuf-2.0/2.10.0/loaders.cache"
-    temp_loaders_file = os.path.join(TEMP_PATH, "loaders.cache")
+    pixbuf_loaders_path = os.path.join(SYS_BASE_PATH, "lib/gdk-pixbuf-2.0/2.10.0/loaders")
+    loader_extension = "dll" if sys.platform == "win32" else "so"
 
-    with open(temp_loaders_file, "w", encoding="utf-8") as temp_file_handle, \
-         open(os.path.join(SYS_BASE_PATH, loaders_file), "r", encoding="utf-8") as real_file_handle:
-        data = real_file_handle.read()
+    add_file(file_path=os.path.join(CURRENT_PATH, "pixbuf-loaders.cache"), output_path="lib/pixbuf-loaders.cache")
 
-        if sys.platform == "win32":
-            data = data.replace("lib\\\\gdk-pixbuf-2.0\\\\2.10.0\\\\loaders", "lib")
+    for image_format in ("bmp", "gif", "svg", "webp"):
+        basename = f"libpixbufloader-{image_format}"
 
-        elif sys.platform == "darwin":
-            data = data.replace(
-                os.path.join(SYS_BASE_PATH, "lib/gdk-pixbuf-2.0/2.10.0/loaders"), "@executable_path/lib")
+        if image_format == "svg":
+            if sys.platform == "win32":
+                basename = basename.replace("lib", "")
+            basename = basename.replace("-", "_")
 
-        temp_file_handle.write(data)
-
-    add_file(file_path=temp_loaders_file, output_path="lib/pixbuf-loaders.cache")
-    add_files(
-        folder_path=os.path.join(SYS_BASE_PATH, "lib/gdk-pixbuf-2.0/2.10.0/loaders"), output_path="lib",
-        ends_with=LIB_EXTENSION
-    )
+        add_file(
+            file_path=os.path.realpath(os.path.join(pixbuf_loaders_path, f"{basename}.{loader_extension}")),
+            output_path=f"lib/libpixbufloader-{image_format}.{loader_extension}"
+        )
 
 
 def _add_typelibs_callback(full_path, short_path, _callback_data=None):

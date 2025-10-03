@@ -1,0 +1,27 @@
+# SPDX-FileCopyrightText: 2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+"lib\\libpixbufloader-bmp.dll"
+"bmp" 5 "gdk-pixbuf" "BMP" "LGPL"
+"image/bmp" "image/x-bmp" "image/x-MS-bmp" ""
+"bmp" ""
+"BM" "" 100
+
+"lib\\libpixbufloader-gif.dll"
+"gif" 4 "gdk-pixbuf" "GIF" "LGPL"
+"image/gif" ""
+"gif" ""
+"GIF8" "" 100
+
+"lib\\libpixbufloader-svg.dll"
+"svg" 6 "gdk-pixbuf" "Scalable Vector Graphics" "LGPL"
+"image/svg+xml" "image/svg" "image/svg-xml" "image/vnd.adobe.svg+xml" "text/xml-svg" "image/svg+xml-compressed" ""
+"svg" "svgz" "svg.gz" ""
+" <svg" "*    " 100
+" <!DOCTYPE svg" "*             " 100
+
+"lib\\libpixbufloader-webp.dll"
+"webp" 5 "gdk-pixbuf" "The WebP image format" "LGPL"
+"image/webp" "audio/x-riff" ""
+"webp" ""
+"RIFFsizeWEBP" "    xxxx    " 100
