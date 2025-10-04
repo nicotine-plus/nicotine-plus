@@ -962,7 +962,7 @@ class Shares:
 
         public_shares, buddy_shares, trusted_shares = share_groups
         virtual_name = core.shares.get_normalized_virtual_name(
-            virtual_name or os.path.basename(folder_path),
+            virtual_name or folder_path.rstrip(os.sep).rpartition(os.sep)[-1],
             shared_folders=(public_shares + buddy_shares + trusted_shares)
         )
         permission_level_shares = {
