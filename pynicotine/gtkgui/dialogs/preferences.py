@@ -579,11 +579,15 @@ class SharesPage:
 
         (
             self.container,
+            self.filter_list_container,
+            self.filter_list_page,
             self.rescan_daily_toggle,
             self.rescan_on_startup_toggle,
             self.reveal_buddy_shares_toggle,
             self.reveal_trusted_shares_toggle,
-            self.shares_list_container
+            self.shares_list_container,
+            self.shares_list_page,
+            self.stack
         ) = self.widgets = ui.load(scope=self, path="settings/shares.ui")
 
         self.application = application
@@ -592,6 +596,7 @@ class SharesPage:
         self.shared_folders = []
         self.buddy_shared_folders = []
         self.trusted_shared_folders = []
+        self.share_filters = []
 
         self.shares_list_view = TreeView(
             application.window, parent=self.shares_list_container, multi_select=True,
@@ -619,8 +624,33 @@ class SharesPage:
             }
         )
 
+        self.filter_syntax_description = _("Syntax: Case-insensitive. Wildcard * matches are supported. "
+                                           "Backslash \\ for path separator. End with path separator "
+                                           "to match folder.")
+        self.filter_list_view = TreeView(
+            application.window, parent=self.filter_list_container, multi_select=True,
+            activate_row_callback=self.on_edit_filter,
+            delete_accelerator_callback=self.on_remove_filter,
+            columns={
+                "filter": {
+                    "column_type": "text",
+                    "title": _("Filter"),
+                    "width": 150,
+                    "expand_column": True,
+                    "default_sort_type": "ascending"
+                }
+            }
+        )
+
+        for widget, name, title in (
+            (self.shares_list_page, "shared_folders", _("Shared Folders")),
+            (self.filter_list_page, "filters", _("Filters")),
+        ):
+            self.stack.add_titled(widget, name, title)
+
         self.options = {
             "transfers": {
+                "share_filters": self.filter_list_view,
                 "rescanonstartup": self.rescan_on_startup_toggle,
                 "rescan_shares_daily": self.rescan_daily_toggle,
                 "reveal_buddy_shares": self.reveal_buddy_shares_toggle,
@@ -642,6 +672,7 @@ class SharesPage:
         self.shared_folders = config.sections["transfers"]["shared"][:]
         self.buddy_shared_folders = config.sections["transfers"]["buddyshared"][:]
         self.trusted_shared_folders = config.sections["transfers"]["trustedshared"][:]
+        self.share_filters = config.sections["transfers"]["share_filters"][:]
 
         for virtual_name, folder_path, *_unused in self.shared_folders:
             self.shares_list_view.add_row(
@@ -664,6 +695,7 @@ class SharesPage:
                 "shared": self.shared_folders[:],
                 "buddyshared": self.buddy_shared_folders[:],
                 "trustedshared": self.trusted_shared_folders[:],
+                "share_filters": self.share_filters[:],
                 "rescanonstartup": self.rescan_on_startup_toggle.get_active(),
                 "rescan_shares_daily": self.rescan_daily_toggle.get_active(),
                 "reveal_buddy_shares": self.reveal_buddy_shares_toggle.get_active(),
@@ -765,6 +797,79 @@ class SharesPage:
                 virtual_name, share_groups=(self.shared_folders, self.buddy_shared_folders, self.trusted_shared_folders)
             )
             self.shares_list_view.remove_row(orig_iterator)
+
+    def on_add_filter_response(self, dialog, _response_id, _data):
+
+        sfilter = dialog.get_entry_value()
+        iterator = self.filter_list_view.iterators.get(sfilter)
+
+        if iterator is not None:
+            return
+
+        self.share_filters.append(sfilter)
+        self.filter_list_view.add_row([sfilter])
+
+    def on_add_filter(self, *_args):
+
+        EntryDialog(
+            parent=self.application.preferences,
+            title=_("Add Share Filter"),
+            message=self.filter_syntax_description + "\n\n" + _("Enter a new share filter:"),
+            action_button_label=_("_Add"),
+            callback=self.on_add_filter_response,
+            droplist=self.filter_list_view.iterators
+        ).present()
+
+    def on_edit_filter_response(self, dialog, _response_id, iterator):
+
+        new_sfilter = dialog.get_entry_value()
+
+        sfilter = self.filter_list_view.get_row_value(iterator, "filter")
+        orig_iterator = self.filter_list_view.iterators[sfilter]
+
+        self.share_filters.remove(sfilter)
+        self.filter_list_view.remove_row(orig_iterator)
+
+        self.share_filters.append(new_sfilter)
+        self.filter_list_view.add_row([new_sfilter])
+
+    def on_edit_filter(self, *_args):
+
+        for iterator in self.filter_list_view.get_selected_rows():
+            sfilter = self.filter_list_view.get_row_value(iterator, "filter")
+
+            EntryDialog(
+                parent=self.application.preferences,
+                title=_("Edit Share Filter"),
+                message=self.filter_syntax_description + "\n\n" + _("Modify the following share filter:"),
+                action_button_label=_("_Edit"),
+                callback=self.on_edit_filter_response,
+                callback_data=iterator,
+                default=sfilter
+            ).present()
+            return
+
+    def on_remove_filter(self, *_args):
+
+        for iterator in reversed(list(self.filter_list_view.get_selected_rows())):
+            sfilter = self.filter_list_view.get_row_value(iterator, "filter")
+            orig_iterator = self.filter_list_view.iterators[sfilter]
+
+            self.share_filters.remove(sfilter)
+            self.filter_list_view.remove_row(orig_iterator)
+
+    def on_default_filters(self, *_args):
+
+        self.share_filters.clear()
+        self.filter_list_view.clear()
+        self.filter_list_view.freeze()
+
+        self.share_filters = config.defaults["transfers"]["share_filters"][:]
+
+        for sfilter in config.defaults["transfers"]["share_filters"]:
+            self.filter_list_view.add_row([sfilter], select_row=False)
+
+        self.filter_list_view.unfreeze()
 
 
 class UploadsPage:
@@ -3193,7 +3298,8 @@ class Preferences(Dialog):
         for section, key in (
             ("transfers", "shared"),
             ("transfers", "buddyshared"),
-            ("transfers", "trustedshared")
+            ("transfers", "trustedshared"),
+            ("transfers", "share_filters")
         ):
             rescan_required = self.has_option_changed(options, section, key)
 
