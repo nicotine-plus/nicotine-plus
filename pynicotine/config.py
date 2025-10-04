@@ -230,7 +230,8 @@ class Config:
             },
             "userinfo": {
                 "descr": "''",
-                "pic": ""
+                "pic": "",
+                "picture_visible": True
             },
             "words": {
                 "censored": [],
