@@ -227,6 +227,45 @@
                     </style>
                   </object>
                 </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="halign">end</property>
+                    <property name="hexpand">True</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkButton" id="file_manager_button">
+                        <property name="sensitive">False</property>
+                        <property name="tooltip-text" translatable="yes">File Manager</property>
+                        <property name="visible">True</property>
+                        <signal name="clicked" handler="on_open_file_manager"/>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="spacing">6</property>
+                            <property name="visible">True</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="icon-name">external-link-symbolic</property>
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="ellipsize">end</property>
+                                <property name="label" translatable="yes">File Manager</property>
+                                <property name="mnemonic-widget">file_manager_button</property>
+                                <property name="use-underline">True</property>
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <style>
+                          <class name="flat"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
