@@ -774,7 +774,7 @@ class SharesPage:
             open_folder_path(folder_path, create_folder=True)
             return
 
-    def on_select_row(self, list_view, iterator):
+    def on_select_row(self, _list_view, iterator):
         self.file_manager_button.set_sensitive(iterator is not None)
 
 
