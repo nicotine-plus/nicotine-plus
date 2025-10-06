@@ -551,6 +551,7 @@ class Scanner:
             self.queue.put(self.current_folder_count)
 
             file_list = []
+            virtual_folder_words = virtual_folder_path.lower().translate(TRANSLATE_PUNCTUATION).split()
 
             try:
                 with os.scandir(encode_path(folder_path, prefix=False)) as entries:
@@ -575,7 +576,6 @@ class Scanner:
                                 continue
 
                             file_stat = entry.stat()
-                            file_index = self.current_file_index
                             self.mtimes[path] = file_mtime = file_stat.st_mtime
                             virtual_file_path = f"{virtual_folder_path}\\{basename}"
 
@@ -590,7 +590,11 @@ class Scanner:
                             basename_file_data[0] = basename
                             file_list.append(basename_file_data)
 
-                            for k in set(virtual_file_path.lower().translate(TRANSLATE_PUNCTUATION).split()):
+                            file_index = self.current_file_index
+
+                            for k in set(
+                                virtual_folder_words + basename.lower().translate(TRANSLATE_PUNCTUATION).split()
+                            ):
                                 self.word_index[k].append(file_index)
 
                             self.files[path] = full_path_file_data
