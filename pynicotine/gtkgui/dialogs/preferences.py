@@ -1308,6 +1308,7 @@ class ChatsPage:
         (
             self.auto_replace_words_toggle,
             self.censor_list_container,
+            self.censor_list_page,
             self.censor_text_patterns_toggle,
             self.complete_buddy_names_toggle,
             self.complete_commands_toggle,
@@ -1325,6 +1326,8 @@ class ChatsPage:
             self.recent_room_messages_spinner,
             self.reopen_private_chats_toggle,
             self.replacement_list_container,
+            self.replacement_list_page,
+            self.stack,
             self.timestamp_private_chat_entry,
             self.timestamp_room_entry,
         ) = self.widgets = ui.load(scope=self, path="settings/chats.ui")
@@ -1372,6 +1375,12 @@ class ChatsPage:
                 }
             }
         )
+
+        for widget, name, title in (
+            (self.replacement_list_page, "auto_replace", _("Auto-Replace")),
+            (self.censor_list_page, "censor", _("Censor"))
+        ):
+            self.stack.add_titled(widget, name, title)
 
         self.options = {
             "server": {
