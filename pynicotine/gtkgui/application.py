@@ -80,6 +80,9 @@ class Application:
         self.tray_icon = None
         self.spell_checker = None
 
+        self.previous_download_folder = None
+        self.previous_file_download_folder = None
+
         # Show errors in the GUI from here on
         sys.excepthook = self.on_critical_error
 

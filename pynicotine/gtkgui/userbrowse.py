@@ -1192,8 +1192,9 @@ class UserBrowse:
             core.userbrowse.download_file(
                 self.user, folder_path, file_data, download_folder_path=download_folder_path)
 
-    def on_download_files_to_selected(self, selected_download_folder_paths, _data):
-        self.on_download_files(download_folder_path=next(iter(selected_download_folder_paths), None))
+    def on_download_files_to_selected(self, selected_folder_paths, _data):
+        self.window.application.previous_file_download_folder = next(iter(selected_folder_paths), None)
+        self.on_download_files(download_folder_path=self.window.application.previous_file_download_folder)
 
     def on_download_files_to(self, *_args):
 
@@ -1201,7 +1202,10 @@ class UserBrowse:
             parent=self.window,
             title=_("Select Destination Folder for Files"),
             callback=self.on_download_files_to_selected,
-            initial_folder=core.downloads.get_default_download_folder()
+            initial_folder=(
+                self.window.application.previous_file_download_folder
+                or core.downloads.get_default_download_folder()
+            )
         ).present()
 
     def on_upload_files_to_response(self, dialog, _response_id, _data):
