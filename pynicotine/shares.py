@@ -539,6 +539,7 @@ class Scanner:
 
             file_list = []
             virtual_folder_path_lower = virtual_folder_path.lower()
+            virtual_folder_words = virtual_folder_path_lower.translate(TRANSLATE_PUNCTUATION).split()
 
             try:
                 with os.scandir(encode_path(folder_path, prefix=False)) as entries:
@@ -571,7 +572,6 @@ class Scanner:
                                 continue
 
                             file_stat = entry.stat()
-                            file_index = self.current_file_index
                             self.mtimes[path] = file_mtime = file_stat.st_mtime
                             virtual_file_path = f"{virtual_folder_path}\\{basename_escaped}"
 
@@ -585,11 +585,16 @@ class Scanner:
                             basename_file_data[0] = basename_escaped
                             file_list.append(basename_file_data)
 
-                            for k in set(virtual_file_path.lower().translate(TRANSLATE_PUNCTUATION).split()):
+                            file_index = self.current_file_index
+                            basename_escaped_lower = basename_escaped.lower()
+
+                            for k in set(
+                                virtual_folder_words + basename_escaped_lower.translate(TRANSLATE_PUNCTUATION).split()
+                            ):
                                 self.word_index[k].append(file_index)
 
                             self.files[path] = full_path_file_data
-                            self.lowercase_paths[virtual_folder_path_lower][basename_escaped.lower()] = file_index
+                            self.lowercase_paths[virtual_folder_path_lower][basename_escaped_lower] = file_index
 
                             self.current_file_index += 1
 
