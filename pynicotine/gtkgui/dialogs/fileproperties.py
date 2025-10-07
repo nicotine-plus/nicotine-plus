@@ -13,7 +13,7 @@ from pynicotine.utils import humanize
 
 class FileProperties(Dialog):
 
-    def __init__(self, application):
+    def __init__(self, application, parent=None):
 
         self.properties = {}
         self.total_size = 0
@@ -43,7 +43,7 @@ class FileProperties(Dialog):
         ) = ui.load(scope=self, path="dialogs/fileproperties.ui")
 
         super().__init__(
-            parent=application.window,
+            parent=parent or application.window,
             content_box=self.container,
             buttons_start=(self.previous_button, self.next_button),
             default_button=self.next_button,

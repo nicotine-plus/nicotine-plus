@@ -12,7 +12,9 @@ from gi.repository import Gtk
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.widgets import ui
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
@@ -60,6 +62,7 @@ class Download(Dialog):
         application.add_window(self.widget)
 
         self.application = application
+        self.file_properties = None
         self.parent_iterators = {}
         self.initial_selected_iterators = set()
         self.folder_names = {}
@@ -106,13 +109,13 @@ class Download(Dialog):
                 },
 
                 # Hidden data columns
-                "user_data": {"data_type": str},
-                "folder_path_data": {"data_type": str},
+                "user_data": {"data_type": GObject.TYPE_STRING},
+                "folder_path_data": {"data_type": GObject.TYPE_STRING},
                 "size_data": {"data_type": GObject.TYPE_UINT64},
                 "file_attributes_data": {"data_type": GObject.TYPE_PYOBJECT},
-                "inconsistent_data": {"data_type": bool},
+                "inconsistent_data": {"data_type": GObject.TYPE_BOOLEAN},
                 "id_data": {
-                    "data_type": str,
+                    "data_type": GObject.TYPE_STRING,
                     "iterator_key": True
                 }
             }
@@ -123,8 +126,11 @@ class Download(Dialog):
             ("#" + _("_Select"), self.on_select_files),
             ("#" + _("_Deselect"), self.on_unselect_files),
             ("", None),
-            ("#" + _("_Rename…"), self.on_rename)
+            ("#" + _("_Rename…"), self.on_rename),
+            ("#" + _("F_ile Properties"), self.on_file_properties)
         )
+
+        Accelerator("<Alt>Return", self.tree_view.widget, self.on_file_properties_accelerator)
 
         self.expand_button.connect("toggled", self.on_expand_tree)
 
@@ -182,7 +188,7 @@ class Download(Dialog):
 
             folder_path, _separator, file_name = file_path.rpartition("\\")
             folder_path_parent, _separator, folder_name = folder_path.rpartition("\\")
-            parent_iterator = self.parent_iterators.get(username + folder_path)
+            parent_iterator_data = self.parent_iterators.get(username + folder_path)
 
             if root_folder_path is not None:
                 common_path, separator, _unused = root_folder_path.rpartition("\\")
@@ -198,7 +204,7 @@ class Download(Dialog):
             folder_name = folder_name.replace("\\", os.sep)
             self.folder_names[folder_path] = folder_name
 
-            if parent_iterator is None:
+            if parent_iterator_data is None:
                 if partial_files:
                     core.downloads.request_folder(username, folder_path)
 
@@ -220,7 +226,7 @@ class Download(Dialog):
                 else:
                     inconsistent = False
 
-                parent_iterator = self.parent_iterators[username + folder_path] = self.tree_view.add_row(
+                parent_iterator = self.tree_view.add_row(
                     [
                         folder_name,
                         "",
@@ -234,8 +240,10 @@ class Download(Dialog):
                     ],
                     select_row=False
                 )
+                self.parent_iterators[username + folder_path] = (parent_iterator, [])
                 self.initial_selected_iterators.add(parent_iterator)
 
+            parent_iterator, child_iterators = self.parent_iterators[username + folder_path]
             iterator = self.tree_view.add_row(
                 [
                     file_name,
@@ -250,6 +258,7 @@ class Download(Dialog):
                 ],
                 select_row=False, parent_iterator=parent_iterator
             )
+            child_iterators.append(iterator)
             self.num_files[username][folder_path] += 1
 
             if selected:
@@ -401,7 +410,7 @@ class Download(Dialog):
             if folder_path not in self.pending_folders[username]:
                 continue
 
-            parent_iterator = self.parent_iterators[username + folder_path]
+            parent_iterator, child_iterators = self.parent_iterators[username + folder_path]
             unselected_parent = False
 
             for _code, file_name, size, _ext, file_attributes, *_unused in files:
@@ -410,7 +419,7 @@ class Download(Dialog):
                 if username + file_path in self.tree_view.iterators:
                     continue
 
-                self.tree_view.add_row(
+                iterator = self.tree_view.add_row(
                     [
                         file_name,
                         human_size(size),
@@ -424,6 +433,7 @@ class Download(Dialog):
                     ],
                     select_row=False, parent_iterator=parent_iterator
                 )
+                child_iterators.append(iterator)
                 self.num_files[username][folder_path] += 1
                 has_added_file = True
 
@@ -520,7 +530,7 @@ class Download(Dialog):
             username = self.tree_view.get_row_value(iterator, "user_data")
             folder_path = self.tree_view.get_row_value(iterator, "folder_path_data")
             folder_name = self.folder_names[folder_path]
-            parent_iterator = self.parent_iterators[username + folder_path]
+            parent_iterator, _child_iterators = self.parent_iterators[username + folder_path]
 
             EntryDialog(
                 parent=self,
@@ -532,6 +542,73 @@ class Download(Dialog):
                 callback_data=parent_iterator
             ).present()
             return
+
+    def on_file_properties(self, *_args):
+
+        data = []
+        selected_size = 0
+        processed_row_ids = set()
+
+        for iterator in self.tree_view.get_selected_rows():
+            row_id = self.tree_view.get_row_value(iterator, "id_data")
+
+            if row_id in processed_row_ids:
+                continue
+
+            processed_row_ids.add(row_id)
+
+            username = self.tree_view.get_row_value(iterator, "user_data")
+            folder_path = self.tree_view.get_row_value(iterator, "folder_path_data")
+
+            if row_id in self.parent_iterators:
+                _parent_iterator, child_iterators = self.parent_iterators[row_id]
+
+                for i_iterator in child_iterators:
+                    i_basename = self.tree_view.get_row_value(i_iterator, "name")
+                    i_file_path = "\\".join([folder_path, i_basename])
+                    i_row_id = username + i_file_path
+
+                    if i_row_id in processed_row_ids:
+                        continue
+
+                    processed_row_ids.add(i_row_id)
+
+                    i_file_size = self.tree_view.get_row_value(i_iterator, "size_data")
+                    i_file_attributes = self.tree_view.get_row_value(i_iterator, "file_attributes_data")
+                    selected_size += i_file_size
+
+                    data.append({
+                        "user": username,
+                        "file_path": i_file_path,
+                        "basename": i_basename,
+                        "virtual_folder_path": folder_path,
+                        "size": i_file_size,
+                        "file_attributes": i_file_attributes
+                    })
+
+                continue
+
+            basename = self.tree_view.get_row_value(iterator, "name")
+            file_path = "\\".join([folder_path, basename])
+            file_size = self.tree_view.get_row_value(iterator, "size_data")
+            file_attributes = self.tree_view.get_row_value(iterator, "file_attributes_data")
+            selected_size += file_size
+
+            data.append({
+                "user": username,
+                "file_path": file_path,
+                "basename": basename,
+                "virtual_folder_path": folder_path,
+                "size": file_size,
+                "file_attributes": file_attributes
+            })
+
+        if data:
+            if self.file_properties is None:
+                self.file_properties = FileProperties(self.application, parent=self)
+
+            self.file_properties.update_properties(data, selected_size)
+            self.file_properties.present()
 
     def on_select_all(self, *_args):
 
@@ -585,7 +662,7 @@ class Download(Dialog):
 
             self.total_selected_size += self.tree_view.get_row_value(iterator, "size_data")
             self.num_selected_files[username][folder_path] += 1
-            parent_iterator = self.parent_iterators[username + folder_path]
+            parent_iterator, _child_iterators = self.parent_iterators[username + folder_path]
 
             self.tree_view.set_row_value(
                 parent_iterator, "inconsistent_data",
@@ -629,25 +706,22 @@ class Download(Dialog):
         tree_view.set_row_value(iterator, "inconsistent_data", False)
 
         if row_id in self.parent_iterators:
-            for i_iterator in tree_view.iterators.values():
-                i_folder_path = tree_view.get_row_value(i_iterator, "folder_path_data")
+            _parent_iterator, child_iterators = self.parent_iterators[row_id]
 
-                if i_folder_path != folder_path:
-                    continue
-
+            for i_iterator in child_iterators:
                 i_selected = tree_view.get_row_value(i_iterator, "selected")
 
                 if selected and not i_selected:
                     self.total_selected_size += self.tree_view.get_row_value(i_iterator, "size_data")
-                    self.num_selected_files[username][i_folder_path] += 1
+                    self.num_selected_files[username][folder_path] += 1
 
                 elif not selected and i_selected:
                     self.total_selected_size -= self.tree_view.get_row_value(i_iterator, "size_data")
-                    self.num_selected_files[username][i_folder_path] -= 1
+                    self.num_selected_files[username][folder_path] -= 1
 
                 tree_view.set_row_value(i_iterator, "selected", selected)
         else:
-            parent_iterator = self.parent_iterators[username + folder_path]
+            parent_iterator, _child_iterators = self.parent_iterators[username + folder_path]
 
             if selected:
                 self.total_selected_size += tree_view.get_row_value(iterator, "size_data")
@@ -706,6 +780,12 @@ class Download(Dialog):
 
         is_folder = tree_view.get_row_value(iterator, "id_data") in self.parent_iterators
         self.rename_button.set_sensitive(is_folder)
+
+    def on_file_properties_accelerator(self, *_args):
+        """Alt+Return - show file properties dialog."""
+
+        self.on_file_properties()
+        return True
 
     def on_cancel(self, *_args):
         self.close()
