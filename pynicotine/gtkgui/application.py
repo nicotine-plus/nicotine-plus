@@ -243,8 +243,9 @@ class Application:
             # Window accelerators
             ("win.main-menu", ["F10"]),
             ("win.context-menu", ["<Shift>F10"]),
+            ("win.focus-top-bar", ["<Primary>l"]),
             ("win.change-focus-view", ["F6"]),
-            ("win.show-log-pane", ["<Primary>l"]),
+            ("win.show-log-pane", ["F9"]),
             ("win.reopen-closed-tab", ["<Primary><Shift>t"]),
             ("win.close-tab", ["<Primary>w", "<Primary>F4"]),
             ("win.cycle-tabs", ["<Control>Tab", "<Control>Page_Down"]),

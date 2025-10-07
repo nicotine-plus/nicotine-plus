@@ -47,6 +47,7 @@ class Shortcuts(Dialog):
                 _("Main Menu"): "win.main-menu",
                 _("Context Menu"): "win.context-menu",
                 _("Change Main Tab"): ("accel.change-main-tab-start", "accel.change-main-tab-end"),
+                _("Focus Top Bar"): "win.focus-top-bar",
                 _("Focus Next View"): "win.change-focus-view",
                 _("Show Log Pane"): "win.show-log-pane"
             },
