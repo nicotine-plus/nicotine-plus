@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2004-2025 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2003-2004 Nicotine Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkBox" id="container">
@@ -29,14 +34,13 @@
     </child>
     <child>
       <object class="GtkBox">
+        <property name="margin-top">6</property>
         <property name="spacing">12</property>
-        <property name="tooltip-text" translatable="yes">Automatically rescans the contents of your shared folders on startup. If disabled, your shares are only updated when you manually initiate a rescan.</property>
         <property name="visible">True</property>
         <child>
           <object class="GtkLabel">
-            <property name="height-request">24</property>
             <property name="hexpand">True</property>
-            <property name="label" translatable="yes">Rescan shares on startup</property>
+            <property name="label" translatable="yes">Rescan shares:</property>
             <property name="mnemonic-widget">rescan_on_startup_toggle</property>
             <property name="visible">True</property>
             <property name="wrap">True</property>
@@ -45,15 +49,23 @@
           </object>
         </child>
         <child>
-          <object class="GtkImage">
-            <property name="icon-name">dialog-question-symbolic</property>
+          <object class="GtkBox">
+            <property name="spacing">6</property>
             <property name="visible">True</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkSwitch" id="rescan_on_startup_toggle">
-            <property name="valign">center</property>
-            <property name="visible">True</property>
+            <child>
+              <object class="GtkCheckButton" id="rescan_on_startup_toggle">
+                <property name="label" translatable="yes">On startup</property>
+                <property name="use-underline">True</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="rescan_daily_toggle">
+                <property name="label" translatable="yes">At midnight</property>
+                <property name="use-underline">True</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
           </object>
         </child>
       </object>
@@ -213,6 +225,45 @@
                     <style>
                       <class name="flat"/>
                     </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="halign">end</property>
+                    <property name="hexpand">True</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkButton" id="file_manager_button">
+                        <property name="sensitive">False</property>
+                        <property name="tooltip-text" translatable="yes">File Manager</property>
+                        <property name="visible">True</property>
+                        <signal name="clicked" handler="on_open_file_manager"/>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="spacing">6</property>
+                            <property name="visible">True</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="icon-name">external-link-symbolic</property>
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="ellipsize">end</property>
+                                <property name="label" translatable="yes">File Manager</property>
+                                <property name="mnemonic-widget">file_manager_button</property>
+                                <property name="use-underline">True</property>
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <style>
+                          <class name="flat"/>
+                        </style>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>

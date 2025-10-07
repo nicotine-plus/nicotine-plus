@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2004-2025 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2003-2004 Nicotine Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkButton" id="retry_button">
@@ -56,6 +61,7 @@
                             <child>
                               <object class="GtkButton" id="_num_folders_button">
                                 <property name="visible">True</property>
+                                <signal name="clicked" handler="on_user_statistics"/>
                                 <child>
                                   <object class="GtkLabel" id="num_folders_label">
                                     <property name="label">0</property>
@@ -70,12 +76,14 @@
                                 <style>
                                   <class name="circular"/>
                                   <class name="count"/>
+                                  <class name="tabular"/>
                                 </style>
                               </object>
                             </child>
                             <child>
                               <object class="GtkButton" id="_share_size_button">
                                 <property name="visible">True</property>
+                                <signal name="clicked" handler="on_user_statistics"/>
                                 <child>
                                   <object class="GtkLabel" id="share_size_label">
                                     <property name="label">0 B</property>
@@ -90,6 +98,7 @@
                                 <style>
                                   <class name="circular"/>
                                   <class name="count"/>
+                                  <class name="tabular"/>
                                 </style>
                               </object>
                             </child>
@@ -100,7 +109,7 @@
                         </child>
                         <child>
                           <object class="GtkToggleButton" id="expand_button">
-                            <property name="tooltip-text" translatable="yes">Expand / Collapse All</property>
+                            <property name="tooltip-text" translatable="yes">Expand All</property>
                             <property name="visible">True</property>
                             <signal name="toggled" handler="on_expand"/>
                             <child>

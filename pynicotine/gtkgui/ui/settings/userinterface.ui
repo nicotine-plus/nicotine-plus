@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2004-2025 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2003-2004 Nicotine Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkButton" id="icon_theme_clear_button">
@@ -315,6 +320,30 @@
                         <property name="can-focus">False</property>
                         <property name="visible">True</property>
                         <child>
+                          <object class="GtkCheckButton" id="notification_queued_upload_toggle">
+                            <property name="label" translatable="yes">Queued uploads</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkFlowBoxChild">
+                        <property name="can-focus">False</property>
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkCheckButton" id="notification_wish_toggle">
+                            <property name="label" translatable="yes">Wishlist results found</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkFlowBoxChild">
+                        <property name="can-focus">False</property>
+                        <property name="visible">True</property>
+                        <child>
                           <object class="GtkCheckButton" id="notification_private_message_toggle">
                             <property name="label" translatable="yes">Private messages</property>
                             <property name="visible">True</property>
@@ -341,18 +370,6 @@
                         <child>
                           <object class="GtkCheckButton" id="notification_chatroom_mention_toggle">
                             <property name="label" translatable="yes">Chat room mentions</property>
-                            <property name="visible">True</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkFlowBoxChild">
-                        <property name="can-focus">False</property>
-                        <property name="visible">True</property>
-                        <child>
-                          <object class="GtkCheckButton" id="notification_wish_toggle">
-                            <property name="label" translatable="yes">Wishlist results found</property>
                             <property name="visible">True</property>
                           </object>
                         </child>
@@ -691,6 +708,7 @@
                           <object class="GtkCheckButton" id="tab_visible_userlist_toggle">
                             <property name="label" translatable="yes">Buddies</property>
                             <property name="visible">True</property>
+                            <signal name="toggled" handler="on_buddy_list_tab_toggled"/>
                           </object>
                         </child>
                       </object>

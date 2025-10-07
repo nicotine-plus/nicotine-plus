@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2009-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 Version = "2021-05-11r00"
 Authors = ["Nicotine+"]
 Name = "Spamfilter"

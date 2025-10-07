@@ -1,20 +1,5 @@
-# COPYRIGHT (C) 2020-2025 Nicotine+ Contributors
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import sys
 
@@ -109,6 +94,11 @@ class About(Dialog):
          "\n •  Some GNU/Linux packaging"
          "\n •  Nicotine+ on Win32"
          "\n •  Author of Nicotine+ guide"),
+
+        ("<b>OffHand</b>"
+         "\n •  Website and Trac maintenance"
+         "\n •  Tester"
+         "\n •  Nicotine+ dinosaur"),
 
         ("<b>Mutnick</b>"
          "\n •  Created Nicotine+ GitHub organization"
@@ -351,7 +341,8 @@ class About(Dialog):
          "GNU General Public License v3.0 or later</a>, with the following exceptions:"),
 
         ("<b><a href='https://github.com/tinytag/tinytag'>tinytag</a> licensed under the MIT License.</b>"
-         "\nCopyright (c) 2014-2023 Tom Wallroth, Mat (mathiascode)"
+         "\nCopyright (c) 2014-2025 Tom Wallroth, Mat (mathiascode), et al."
+         "\nCopyright (c) 2020-2025 Nicotine+ Contributors"
          "\n\nPermission is hereby granted, free of charge, to any person obtaining a copy "
          'of this software and associated documentation files (the "Software"), to deal '
          "in the Software without restriction, including without limitation the rights "

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+<interface>
+  <requires lib="gtk+" version="3.0"/>
+  <object class="GtkScrolledWindow" id="container">
+    <property name="propagate-natural-height">True</property>
+    <property name="propagate-natural-width">True</property>
+    <property name="visible">True</property>
+    <child>
+      <object class="GtkBox">
+        <property name="margin-bottom">18</property>
+        <property name="margin-end">18</property>
+        <property name="margin-start">18</property>
+        <property name="margin-top">18</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">6</property>
+        <property name="valign">center</property>
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkBox" id="status_container">
+            <property name="halign">center</property>
+            <property name="spacing">6</property>
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkLabel" id="status_label">
+                <property name="justify">center</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <style>
+                  <class name="heading"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkImage" id="status_icon">
+                <property name="visible" bind-source="status_spinner" bind-property="visible" bind-flags="bidirectional|invert-boolean|sync-create"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSpinner" id="status_spinner">
+                <property name="visible">False</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="description_label">
+            <property name="max-width-chars">40</property>
+            <property name="selectable">True</property>
+            <property name="visible">True</property>
+            <property name="wrap">True</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

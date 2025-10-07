@@ -1,28 +1,13 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
-# COPYRIGHT (C) 2013 eLvErDe <gandalf@le-vert.net>
-# COPYRIGHT (C) 2008-2012 quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2009 hedonist <ak@sensi.org>
-# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
-# COPYRIGHT (C) 2001-2003 Alexander Kanavin
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# SPDX-FileCopyrightText: 2016 Mutnick <muhing@yahoo.com>
+# SPDX-FileCopyrightText: 2013 eLvErDe <gandalf@le-vert.net>
+# SPDX-FileCopyrightText: 2008-2012 quinox <quinox@users.sf.net>
+# SPDX-FileCopyrightText: 2009 hedonist <ak@sensi.org>
+# SPDX-FileCopyrightText: 2006-2009 daelstorm <daelstorm@gmail.com>
+# SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# SPDX-FileCopyrightText: 2001-2003 Alexander Kanavin
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import json
 import os
@@ -67,7 +52,8 @@ class Transfer:
                  "current_byte_offset", "last_byte_offset", "transferred_bytes_total",
                  "speed", "avg_speed", "time_elapsed", "time_left", "modifier",
                  "queue_position", "file_attributes", "iterator", "status",
-                 "legacy_attempt", "retry_attempt", "size_changed", "request_timer_id")
+                 "legacy_attempt", "retry_attempt", "size_changed", "is_backslash_path",
+                 "is_lowercase_path", "request_timer_id")
 
     def __init__(self, username, virtual_path=None, folder_path=None, size=0, file_attributes=None,
                  status=None, current_byte_offset=None):
@@ -96,6 +82,8 @@ class Transfer:
         self.legacy_attempt = False
         self.retry_attempt = False
         self.size_changed = False
+        self.is_backslash_path = False
+        self.is_lowercase_path = False
 
         if file_attributes is None:
             self.file_attributes = {}
@@ -494,6 +482,8 @@ class Transfers:
         self.queued_transfers[transfer] = None
         self._user_queue_sizes[transfer.username] += transfer.size
 
+        return True
+
     def _enqueue_limited_transfers(self, username):
         # Optional method
         pass
@@ -504,7 +494,7 @@ class Transfers:
         virtual_path = transfer.virtual_path
 
         if virtual_path not in self.queued_users.get(username, {}):
-            return
+            return False
 
         self._user_queue_sizes[username] -= transfer.size
         del self.queued_transfers[transfer]
@@ -520,6 +510,7 @@ class Transfers:
             self._enqueue_limited_transfers(username)
 
         transfer.queue_position = 0
+        return True
 
     def _activate_transfer(self, transfer, token):
 
@@ -548,7 +539,7 @@ class Transfers:
         token = transfer.token
 
         if token is None or token not in self.active_users.get(username, {}):
-            return
+            return False
 
         del self.active_users[username][token]
 
@@ -566,6 +557,8 @@ class Transfers:
         transfer.sock = None
         transfer.token = None
 
+        return True
+
     def _fail_transfer(self, transfer):
         self.failed_users[transfer.username][transfer.virtual_path] = transfer
 
@@ -575,12 +568,14 @@ class Transfers:
         virtual_path = transfer.virtual_path
 
         if virtual_path not in self.failed_users.get(username, {}):
-            return
+            return False
 
         del self.failed_users[username][virtual_path]
 
         if not self.failed_users[username]:
             del self.failed_users[username]
+
+        return True
 
     # Saving #
 

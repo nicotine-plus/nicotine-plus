@@ -1,3 +1,8 @@
+<!--
+  SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # Development
 
 This document contains important information about Nicotine+ design decisions
@@ -28,9 +33,10 @@ allows for running Nicotine+ on almost any system without compiling anything.
 Developing in a single language is also easier for everyone involved in the
 project.
 
-We aim to support the oldest minor Python 3 version still used by supported
-releases of distributions and operating systems. The minimum version Nicotine+
-currently supports is 3.6.
+We aim to support the oldest [Python version](https://devguide.python.org/versions/)
+still receiving security updates, up to the latest. There is no rush to bump the
+minimum version requirement, since LTS distributions may use older Python
+versions, but a smaller range of versions is easier to test.
 
 ### GTK
 
@@ -145,60 +151,43 @@ by the Nicotine+ team.
 
 ## Continuous Integration Testing
 
-It is important that all patches pass unit testing. Unfortunately developers
-make all kinds of changes to their local development environment that can have
-unintended consequences. This means sometimes tests on the developer's computer
-pass when they should not, and other times failing when they should not have.
-
-To properly validate that things are working, continuous integration (CI) is
-required. This means compiling, performing local in-tree unit tests,
-installing through the system package manager, and finally testing the actually
-installed build artifacts to ensure they do what the user expects them to do.
-
-The key thing to remember is that in order to do this properly, this all needs
-to be done within a realistic end user system that has not been unintentionally
-modified by a developer. This might mean a chroot container with the help of
-QEMU and KVM to verify that everything is working as expected. The hermetically
-sealed test environment validates that the developer's expected steps for, as
-an example in the case of a library, compilation, linking, unit testing, and
-post installation testing are actually replicable.
-
-There are [different ways](https://wiki.debian.org/qa.debian.org#Other_distributions)
-of performing CI on different distros. The most common one is via the
-international [DEP-8](https://dep-team.pages.debian.net/deps/dep8/) standard as
-used by hundreds of different operating systems.
-
-### Autopkgtest
-
-On Debian based distributions, `autopkgtest` implements the DEP-8 standard.
-To create and use a build image environment for Ubuntu, follow these steps.
-First install the `autopkgtest(1)` tools:
-
-```sh
-sudo apt install autopkgtest
-```
-
-Next create the test image, substituting `hirsute` or `amd64` for other
-releases or architectures:
-
-```sh
-autopkgtest-buildvm-ubuntu-cloud -r hirsute -a amd64
-```
-
-Test your changes on the host architecture in QEMU with KVM support and 8GB of
-RAM and four CPUs:
-
-```sh
-autopkgtest --shell-fail --apt-upgrade . -- \
-      qemu --ram-size=8192 --cpus=4 --show-boot path_to_build_image.img \
-      --qemu-options='-enable-kvm'
-```
+It is important that all changes pass unit and integration testing. To properly
+validate that things are working, continuous integration (CI) is implemented
+using GitHub Actions workflows, which run tests on various platforms for each
+commit.
 
 ### Creating Tests
 
 Tests are defined in the [pynicotine/tests/](https://github.com/nicotine-plus/nicotine-plus/tree/HEAD/pynicotine/tests/)
 folder, and should be expanded to cover larger parts of the client when
 possible.
+
+### Running Tests
+
+Although GitHub Actions runs tests automatically when pushing changes to the
+repository, it is also possible to run them locally. This can be helpful to
+quickly test smaller changes, but local testing should not be relied upon for
+changes that affect packaging or are likely to break on other platforms.
+
+To run unit and integration tests using Python's unittest module:
+```sh
+python3 -m unittest
+```
+
+To check the code style using pycodestyle:
+```sh
+python3 -m pycodestyle
+```
+
+To perform code linting using Pylint:
+```sh
+python3 -m pylint --recursive=y .
+```
+
+To test building the application:
+```sh
+python3 -m build
+```
 
 
 ## Translations
@@ -213,8 +202,8 @@ When Nicotine+ is translated into a new language, the following should be done:
  - Update the copyright header of the `XX.po` file:
 
    ```
-   # Copyright (C) 20XX Nicotine+ Translators
-   # This file is distributed under the same license as the Nicotine+ package.
+   # SPDX-FileCopyrightText: 20XX Nicotine+ Translators
+   # SPDX-License-Identifier: GPL-3.0-or-later
    ```
 
  - Remove the `PACKAGE VERSION` value of `Project-Id-Version` in the `XX.po`
@@ -226,7 +215,7 @@ When Nicotine+ is translated into a new language, the following should be done:
 
  - Add the language code to the [po/LINGUAS](https://github.com/nicotine-plus/nicotine-plus/blob/HEAD/po/LINGUAS)
    and [pynicotine/i18n.py](https://github.com/nicotine-plus/nicotine-plus/blob/HEAD/pynicotine/i18n.py)
-   files
+   files once the translation is close to completion
 
 ### Updating Translation Template
 
@@ -247,18 +236,19 @@ within 24 hours. In order to preserve author information for commits, use the
 
 ## Releases
 
-Nicotine+ tries to follow [Semantic Versioning](https://semver.org/) when
-possible. As cited in the specification:
+Nicotine+ uses the following versioning scheme: `A.B.C`, e.g. `3.3.8`
 
-> Given a version number MAJOR.MINOR.PATCH, increment the:
-> 
->   MAJOR version when you make incompatible API changes,  
->   MINOR version when you add functionality in a backwards compatible manner,
->   and  
->   PATCH version when you make backwards compatible bug fixes.
->
-> Additional labels for pre-release and build metadata are available as
-> extensions to the MAJOR.MINOR.PATCH format.
+  - `A` is incremented when major changes are made to the user interface that
+    significantly change the workflow of the application. In practice, this is
+    unlikely to happen.
+  - `B` is incremented when significant features or new dependencies are added,
+    version requirements are increased, or in the case of major changes to
+    existing code that are deemed too intrusive for a smaller release. The
+    previous feature branch (e.g. `3.3.x`) is created in case any critical bugs
+    are discovered while the next planned release is still in development.
+  - `C` is incremented when bug fixes, performance improvements or smaller
+    tweaks to existing functionality are made. Low-risk functionality that does
+    not affect translatable strings can also be added.
 
 Release dates are not set in stone, as Nicotine+ development is done by
 volunteers in their spare time. However, keep the following points in mind:
@@ -272,6 +262,9 @@ volunteers in their spare time. However, keep the following points in mind:
    releases before they can be delivered to users.
  - Releasing large updates can make it more difficult to pinpoint eventual
    issues that were introduced since the previous release.
+ - The final bug fix release (`C`) of each feature branch (`B`) has to be very
+   stable before any dependency requirements are bumped, because legacy users
+   might end up needing to use an old version for a long time.
 
 ### Creating a Nicotine+ Release
 
@@ -304,7 +297,7 @@ should do when releasing a new version of Nicotine+.
     of commits), as well as a list of closed issues on GitHub.
 
  5. Increase the Nicotine+ version number / add new version entries in the
-    master branch. Nicotine+ uses [Semantic Versioning](https://semver.org/).
+    master branch.
     The following files need to be modified:
     - [NEWS.md](https://github.com/nicotine-plus/nicotine-plus/blob/HEAD/NEWS.md)
     - [README.md](https://github.com/nicotine-plus/nicotine-plus/blob/HEAD/README.md)
@@ -320,9 +313,9 @@ should do when releasing a new version of Nicotine+.
       e.g. `3.2.1`.
     - Include the release notes from NEWS.md as the description.
     - Download the Windows and macOS packages previously generated by GitHub
-      Actions to `packaging/release/` and run
+      Actions to `build-aux/release/` and run
     ```sh
-    python3 packaging/release/generate_sha256_checksums.py
+    python3 build-aux/release/generate_sha256_checksums.py
     ```
     - Attach the resulting files to the new release.
     - Once the release is published, verify that GitHub Actions successfully

@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2004-2025 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2003-2004 Nicotine Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkHeaderBar" id="header_bar">
@@ -39,6 +44,7 @@
   </object>
   <object class="GtkEntry" id="room_search_entry">
     <property name="hexpand">False</property>
+    <property name="input-hints">no-emoji</property>
     <property name="max-width-chars">20</property>
     <property name="placeholder-text" translatable="yes">Room…</property>
     <property name="visible">True</property>
@@ -47,6 +53,7 @@
   </object>
   <object class="GtkEntry" id="user_search_entry">
     <property name="hexpand">False</property>
+    <property name="input-hints">no-emoji</property>
     <property name="max-width-chars">20</property>
     <property name="placeholder-text" translatable="yes">Username…</property>
     <property name="visible">True</property>
@@ -58,7 +65,7 @@
     <property name="placeholder-text" translatable="yes">Search term…</property>
     <property name="primary-icon-name">system-search-symbolic</property>
     <property name="secondary-icon-tooltip-text" translatable="yes">Clear</property>
-    <property name="tooltip-text" translatable="yes">Search patterns: with a word = term, without a word = -term, partial word = *erm</property>
+    <property name="tooltip-text" translatable="yes">Search patterns: with a word = term, without a word = -term, partial word = *erm, exact phrase = "search term"</property>
     <property name="visible">True</property>
     <property name="width-chars">5</property>
     <signal name="activate" handler="on_search"/>
@@ -88,7 +95,6 @@
                 <child>
                   <object class="GtkBox" id="search_title">
                     <property name="hexpand">True</property>
-                    <property name="sensitive">False</property>
                     <property name="spacing">4</property>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
@@ -311,6 +317,7 @@
                             <style>
                               <class name="circular"/>
                               <class name="count"/>
+                              <class name="tabular"/>
                             </style>
                           </object>
                         </child>
@@ -351,6 +358,7 @@
                             <style>
                               <class name="circular"/>
                               <class name="count"/>
+                              <class name="tabular"/>
                             </style>
                           </object>
                         </child>
@@ -368,7 +376,7 @@
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkToggleButton" id="downloads_expand_button">
-                            <property name="tooltip-text" translatable="yes">Expand / Collapse All</property>
+                            <property name="tooltip-text" translatable="yes">Expand All</property>
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkImage" id="downloads_expand_icon">
@@ -441,7 +449,7 @@
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkImage">
-                    <property name="icon-name">document-save-symbolic</property>
+                    <property name="icon-name">folder-download-symbolic</property>
                     <property name="pixel-size">128</property>
                     <property name="visible">True</property>
                     <style>
@@ -550,6 +558,7 @@
                             <style>
                               <class name="circular"/>
                               <class name="count"/>
+                              <class name="tabular"/>
                             </style>
                           </object>
                         </child>
@@ -590,6 +599,7 @@
                             <style>
                               <class name="circular"/>
                               <class name="count"/>
+                              <class name="tabular"/>
                             </style>
                           </object>
                         </child>
@@ -607,7 +617,7 @@
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkToggleButton" id="uploads_expand_button">
-                            <property name="tooltip-text" translatable="yes">Expand / Collapse All</property>
+                            <property name="tooltip-text" translatable="yes">Expand All</property>
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkImage" id="uploads_expand_icon">
@@ -728,6 +738,7 @@
     </child>
   </object>
   <object class="GtkEntry" id="userbrowse_entry">
+    <property name="input-hints">no-emoji</property>
     <property name="max-width-chars">45</property>
     <property name="placeholder-text" translatable="yes">Username…</property>
     <property name="primary-icon-name">avatar-default-symbolic</property>
@@ -896,6 +907,7 @@
     </child>
   </object>
   <object class="GtkEntry" id="userinfo_entry">
+    <property name="input-hints">no-emoji</property>
     <property name="max-width-chars">45</property>
     <property name="placeholder-text" translatable="yes">Username…</property>
     <property name="primary-icon-name">avatar-default-symbolic</property>
@@ -1062,6 +1074,16 @@
       </object>
     </child>
   </object>
+  <object class="GtkEntry" id="private_entry">
+    <property name="input-hints">no-emoji</property>
+    <property name="max-width-chars">40</property>
+    <property name="placeholder-text" translatable="yes">Username…</property>
+    <property name="primary-icon-name">avatar-default-symbolic</property>
+    <property name="visible">True</property>
+    <property name="width-chars">5</property>
+    <signal name="activate" handler="on_get_private_chat"/>
+    <signal name="icon-press" handler="on_get_private_chat"/>
+  </object>
   <object class="GtkBox" id="private_page">
     <property name="visible">False</property>
     <property name="width-request">580</property>
@@ -1090,39 +1112,37 @@
                     <property name="valign">center</property>
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkEntry" id="private_entry">
-                        <property name="max-width-chars">40</property>
-                        <property name="placeholder-text" translatable="yes">Username…</property>
-                        <property name="primary-icon-name">avatar-default-symbolic</property>
+                      <object class="GtkBox" id="private_entry_container">
                         <property name="visible">True</property>
-                        <property name="width-chars">5</property>
-                        <signal name="activate" handler="on_get_private_chat"/>
-                        <signal name="icon-press" handler="on_get_private_chat"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuButton" id="private_history_button">
+                      <object class="GtkButton" id="_private_history_button">
+                        <property name="action-name">app.chat-history</property>
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkBox">
                             <property name="spacing">6</property>
                             <property name="visible">True</property>
                             <child>
-                              <object class="GtkLabel" id="private_history_label">
-                                <property name="label" translatable="yes">Chat _History</property>
-                                <property name="mnemonic-widget">private_history_button</property>
-                                <property name="use-underline">True</property>
+                              <object class="GtkImage">
+                                <property name="icon-name">mail-unread-symbolic</property>
                                 <property name="visible">True</property>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkImage">
-                                <property name="icon-name">pan-down-symbolic</property>
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">Chat _History</property>
+                                <property name="mnemonic-widget">_private_history_button</property>
+                                <property name="use-underline">True</property>
                                 <property name="visible">True</property>
                               </object>
                             </child>
                           </object>
                         </child>
+                        <style>
+                          <class name="image-text-button"/>
+                        </style>
                       </object>
                     </child>
                   </object>
@@ -1250,6 +1270,7 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkEntry" id="add_buddy_entry">
+                        <property name="input-hints">no-emoji</property>
                         <property name="max-width-chars">45</property>
                         <property name="placeholder-text" translatable="yes">Add buddy…</property>
                         <property name="primary-icon-name">system-users-symbolic</property>
@@ -1391,6 +1412,16 @@
       </object>
     </child>
   </object>
+  <object class="GtkEntry" id="chatrooms_entry">
+    <property name="input-hints">no-emoji</property>
+    <property name="max-width-chars">40</property>
+    <property name="placeholder-text" translatable="yes">Join or create room…</property>
+    <property name="primary-icon-name">user-available-symbolic</property>
+    <property name="visible">True</property>
+    <property name="width-chars">5</property>
+    <signal name="activate" handler="on_create_room"/>
+    <signal name="icon-press" handler="on_create_room"/>
+  </object>
   <object class="GtkBox" id="chatrooms_page">
     <property name="visible">False</property>
     <property name="width-request">580</property>
@@ -1418,45 +1449,41 @@
                       <object class="GtkBox" id="chatrooms_title">
                         <property name="halign">start</property>
                         <property name="hexpand">True</property>
-                        <property name="sensitive">False</property>
                         <property name="spacing">4</property>
                         <property name="valign">center</property>
                         <property name="visible">True</property>
                         <child>
-                          <object class="GtkEntry" id="chatrooms_entry">
-                            <property name="input-hints">no-emoji</property>
-                            <property name="max-width-chars">40</property>
-                            <property name="placeholder-text" translatable="yes">Join or create room…</property>
-                            <property name="primary-icon-name">user-available-symbolic</property>
+                          <object class="GtkBox" id="chatrooms_entry_container">
                             <property name="visible">True</property>
-                            <property name="width-chars">5</property>
-                            <signal name="activate" handler="on_create_room"/>
-                            <signal name="icon-press" handler="on_create_room"/>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkMenuButton" id="room_list_button">
+                          <object class="GtkButton" id="_room_list_button">
+                            <property name="action-name">app.room-list</property>
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkBox">
                                 <property name="spacing">6</property>
                                 <property name="visible">True</property>
                                 <child>
-                                  <object class="GtkLabel" id="room_list_label">
-                                    <property name="label" translatable="yes">_Rooms</property>
-                                    <property name="mnemonic-widget">room_list_button</property>
-                                    <property name="use-underline">True</property>
+                                  <object class="GtkImage">
+                                    <property name="icon-name">view-list-symbolic</property>
                                     <property name="visible">True</property>
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkImage">
-                                    <property name="icon-name">pan-down-symbolic</property>
+                                  <object class="GtkLabel">
+                                    <property name="label" translatable="yes">All _Rooms</property>
+                                    <property name="mnemonic-widget">_room_list_button</property>
+                                    <property name="use-underline">True</property>
                                     <property name="visible">True</property>
                                   </object>
                                 </child>
                               </object>
                             </child>
+                            <style>
+                              <class name="image-text-button"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -1655,6 +1682,9 @@
                         <property name="hexpand">True</property>
                         <property name="min-content-height">90</property>
                         <property name="visible">True</property>
+                        <style>
+                          <class name="tabular"/>
+                        </style>
                       </object>
                     </child>
                   </object>
@@ -1699,13 +1729,11 @@
                 <property name="ellipsize">end</property>
                 <property name="selectable">True</property>
                 <property name="visible">True</property>
-                <attributes>
-                  <attribute name="font-features" value="tnum=1"/>
-                </attributes>
                 <style>
                   <class name="caption"/>
                   <class name="dim-label"/>
                   <class name="normal"/>
+                  <class name="tabular"/>
                 </style>
               </object>
             </child>
@@ -1754,6 +1782,7 @@
                 </child>
                 <style>
                   <class name="flat"/>
+                  <class name="tabular"/>
                 </style>
               </object>
             </child>
@@ -1785,6 +1814,7 @@
                 </child>
                 <style>
                   <class name="flat"/>
+                  <class name="tabular"/>
                 </style>
               </object>
             </child>
@@ -1816,6 +1846,7 @@
                 </child>
                 <style>
                   <class name="flat"/>
+                  <class name="tabular"/>
                 </style>
               </object>
             </child>

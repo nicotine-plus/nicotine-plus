@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2004-2025 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2003-2004 Nicotine Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkAdjustment" id="_max_displayed_results_adjustment">
@@ -218,7 +223,7 @@
                         </child>
                         <child>
                           <object class="GtkEntry" id="filter_include_entry">
-                            <property name="tooltip-text" translatable="yes">Filter in results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
+                            <property name="tooltip-text" translatable="yes">Add a filter to only show results whose file paths have the given text. Use a '|' to specify multiple words or phrases, for example: long trail|till we meet again</property>
                             <property name="valign">center</property>
                             <property name="visible">True</property>
                             <property name="width-chars">8</property>
@@ -243,7 +248,7 @@
                         </child>
                         <child>
                           <object class="GtkEntry" id="filter_exclude_entry">
-                            <property name="tooltip-text" translatable="yes">Filter out results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
+                            <property name="tooltip-text" translatable="yes">Add a filter to hide results whose file paths have the given text. Use a '|' to specify multiple words or phrases, for example: long trail|till we meet again</property>
                             <property name="valign">center</property>
                             <property name="visible">True</property>
                             <property name="width-chars">8</property>
@@ -269,6 +274,7 @@
                         <child>
                           <object class="GtkEntry" id="filter_file_type_entry">
                             <property name="halign">end</property>
+                            <property name="input-hints">no-emoji</property>
                             <property name="max-width-chars">26</property>
                             <property name="tooltip-text" translatable="yes">File type, e.g. flac wav or !mp3 !m4a</property>
                             <property name="valign">center</property>
@@ -296,11 +302,15 @@
                         <child>
                           <object class="GtkEntry" id="filter_file_size_entry">
                             <property name="halign">end</property>
+                            <property name="input-hints">no-emoji</property>
                             <property name="max-width-chars">26</property>
                             <property name="tooltip-text" translatable="yes">File size, e.g. &gt;10.5m &lt;1g</property>
                             <property name="valign">center</property>
                             <property name="visible">True</property>
                             <property name="width-chars">8</property>
+                            <style>
+                              <class name="tabular"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -323,11 +333,15 @@
                         <child>
                           <object class="GtkEntry" id="filter_bitrate_entry">
                             <property name="halign">end</property>
+                            <property name="input-hints">no-emoji</property>
                             <property name="max-width-chars">26</property>
                             <property name="tooltip-text" translatable="yes">Bitrate, e.g. 256 &lt;1412</property>
                             <property name="valign">center</property>
                             <property name="visible">True</property>
                             <property name="width-chars">8</property>
+                            <style>
+                              <class name="tabular"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -350,11 +364,15 @@
                         <child>
                           <object class="GtkEntry" id="filter_length_entry">
                             <property name="halign">end</property>
+                            <property name="input-hints">no-emoji</property>
                             <property name="max-width-chars">26</property>
                             <property name="tooltip-text" translatable="yes">Duration, e.g. &gt;6:00 &lt;12:00 !6:54</property>
                             <property name="valign">center</property>
                             <property name="visible">True</property>
                             <property name="width-chars">8</property>
+                            <style>
+                              <class name="tabular"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -377,6 +395,7 @@
                         <child>
                           <object class="GtkEntry" id="filter_country_entry">
                             <property name="halign">end</property>
+                            <property name="input-hints">no-emoji</property>
                             <property name="max-width-chars">26</property>
                             <property name="tooltip-text" translatable="yes">Country code, e.g. US ES or !DE !GB</property>
                             <property name="valign">center</property>
@@ -405,6 +424,31 @@
                         <child>
                           <object class="GtkSwitch" id="filter_free_slot_toggle">
                             <property name="tooltip-text" translatable="yes">Only show results from users with an available upload slot.</property>
+                            <property name="valign">center</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="spacing">12</property>
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="height-request">24</property>
+                            <property name="hexpand">True</property>
+                            <property name="label" translatable="yes">Public Files</property>
+                            <property name="mnemonic-widget">filter_public_files_toggle</property>
+                            <property name="visible">True</property>
+                            <property name="wrap">True</property>
+                            <property name="wrap-mode">word-char</property>
+                            <property name="xalign">0</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkSwitch" id="filter_public_files_toggle">
+                            <property name="tooltip-text" translatable="yes">Only show files that are shared publicly.</property>
                             <property name="valign">center</property>
                             <property name="visible">True</property>
                           </object>

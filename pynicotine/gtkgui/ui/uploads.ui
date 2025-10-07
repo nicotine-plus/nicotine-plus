@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2004-2025 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2003-2004 Nicotine Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkBox" id="container">
@@ -95,36 +100,6 @@
                 </style>
               </object>
             </child>
-            <child>
-              <object class="GtkButton" id="_ban_users_button">
-                <property name="tooltip-text" bind-source="_ban_users_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
-                <property name="visible">True</property>
-                <signal name="clicked" handler="on_ban_users"/>
-                <child>
-                  <object class="GtkBox">
-                    <property name="spacing">6</property>
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="icon-name">action-unavailable-symbolic</property>
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="_ban_users_label">
-                        <property name="ellipsize">end</property>
-                        <property name="label" translatable="yes">Ban User(s)</property>
-                        <property name="mnemonic-widget">_ban_users_button</property>
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <style>
-                  <class name="flat"/>
-                </style>
-              </object>
-            </child>
           </object>
         </child>
         <child>
@@ -133,36 +108,6 @@
             <property name="hexpand">True</property>
             <property name="spacing">6</property>
             <property name="visible">True</property>
-            <child>
-              <object class="GtkButton" id="_clear_finished_button">
-                <property name="tooltip-text" translatable="yes">Clear All Finished/Cancelled Uploads</property>
-                <property name="visible">True</property>
-                <signal name="clicked" handler="on_clear_finished_cancelled"/>
-                <child>
-                  <object class="GtkBox">
-                    <property name="spacing">6</property>
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="icon-name">edit-clear-symbolic</property>
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="ellipsize">end</property>
-                        <property name="label" translatable="yes">Clear Finished</property>
-                        <property name="mnemonic-widget">_clear_finished_button</property>
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <style>
-                  <class name="flat"/>
-                </style>
-              </object>
-            </child>
             <child>
               <object class="GtkButton" id="_message_all_button">
                 <property name="action-name">app.message-downloading-users</property>
@@ -183,6 +128,36 @@
                         <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Message All</property>
                         <property name="mnemonic-widget">_message_all_button</property>
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <style>
+                  <class name="flat"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="_clear_finished_button">
+                <property name="tooltip-text" translatable="yes">Clear All Finished/Cancelled Uploads</property>
+                <property name="visible">True</property>
+                <signal name="clicked" handler="on_clear_finished_cancelled"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="spacing">6</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="icon-name">edit-clear-symbolic</property>
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="ellipsize">end</property>
+                        <property name="label" translatable="yes">Clear Finished</property>
+                        <property name="mnemonic-widget">_clear_finished_button</property>
                         <property name="visible">True</property>
                       </object>
                     </child>

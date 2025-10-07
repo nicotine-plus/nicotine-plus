@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2004-2025 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2003-2004 Nicotine Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkAdjustment" id="_speed_adjustment">
@@ -62,7 +67,7 @@
               <object class="GtkLabel">
                 <property name="height-request">24</property>
                 <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Autoclear finished/cancelled uploads from transfer list</property>
+                <property name="label" translatable="yes">Automatically remove finished and cancelled uploads from list</property>
                 <property name="mnemonic-widget">autoclear_uploads_toggle</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>

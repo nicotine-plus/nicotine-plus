@@ -1,20 +1,5 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import pynicotine
 from pynicotine.config import config
@@ -27,12 +12,13 @@ from pynicotine.slskmessages import GetPeerAddress
 from pynicotine.slskmessages import GetUserStats
 from pynicotine.slskmessages import GetUserStatus
 from pynicotine.slskmessages import GivePrivileges
-from pynicotine.slskmessages import LoginFailure
+from pynicotine.slskmessages import LoginRejectReason
 from pynicotine.slskmessages import SetStatus
 from pynicotine.slskmessages import UnwatchUser
 from pynicotine.slskmessages import UserStatus
 from pynicotine.slskmessages import WatchUser
 from pynicotine.utils import UINT32_LIMIT
+from pynicotine.utils import human_duration_approx
 from pynicotine.utils import open_uri
 
 
@@ -53,8 +39,7 @@ class WatchedUser:
 class Users:
     __slots__ = ("login_status", "login_username", "public_ip_address", "public_port",
                  "server_hostname", "server_port", "privileges_left", "_should_open_privileges_url",
-                 "addresses", "countries", "statuses", "watched", "privileged", "_ip_requested",
-                 "_pending_watch_removals")
+                 "addresses", "countries", "statuses", "watched", "privileged", "_ip_requested")
     USERNAME_MAX_LENGTH = 30
 
     def __init__(self):
@@ -74,7 +59,6 @@ class Users:
         self.watched = {}
         self.privileged = set()
         self._ip_requested = {}
-        self._pending_watch_removals = set()
 
         for event_name, callback in (
             ("admin-message", self._admin_message),
@@ -226,7 +210,6 @@ class Users:
         self.watched.clear()
         self.privileged.clear()
         self._ip_requested.clear()
-        self._pending_watch_removals.clear()
 
         self.login_username = None
         self.public_ip_address = None
@@ -261,15 +244,15 @@ class Users:
             core.pluginhandler.server_connect_notification()
             return
 
-        if msg.reason == LoginFailure.USERNAME:
-            events.emit("invalid-username")
+        if msg.rejection_reason == LoginRejectReason.INVALID_USERNAME:
+            events.emit("invalid-username", msg.rejection_detail)
             return
 
-        if msg.reason == LoginFailure.PASSWORD:
+        if msg.rejection_reason == LoginRejectReason.INVALID_PASSWORD:
             events.emit("invalid-password")
             return
 
-        log.add(_("Unable to connect to the server. Reason: %s"), msg.reason, title=_("Cannot Connect"))
+        log.add(_("Unable to connect to the server. Reason: %s"), msg.rejection_reason, title=_("Cannot Connect"))
 
     def _get_peer_address(self, msg):
         """Server code 3."""
@@ -317,18 +300,14 @@ class Users:
             "ip": msg.ip_address,
             "port": msg.port,
             "country": country
-        }, title=_("IP Address"))
+        }, title=_("User IP Address"))
 
     def _watch_user(self, msg):
         """Server code 5."""
 
         if not msg.userexists:
-            # User does not exist. The server will not keep us informed if the user is created
-            # later, so we need to remove the user from our list.
-            # Due to a bug, the server will in rare cases tell us a user doesn't exist, while
-            # the user is actually online. Remove the user when we receive a UserStatus message
-            # telling us the user is offline.
-            self._pending_watch_removals.add(msg.user)
+            log.add_conn("Unwatching non-existent user %s", msg.user)
+            self.watched.pop(msg.user, None)
             return
 
         if msg.contains_stats:
@@ -365,11 +344,6 @@ class Users:
             self.addresses.pop(username, None)
             self.countries.pop(username, None)
 
-            if username in self._pending_watch_removals:
-                # User does not exist, remove it from list
-                log.add_conn("Unwatching non-existent user %s", username)
-                self.watched.pop(username, None)
-
         elif is_watched:
             user_status = self.statuses.get(username)
 
@@ -385,7 +359,6 @@ class Users:
         if is_watched:
             self.statuses[username] = status
 
-        self._pending_watch_removals.discard(username)
         core.pluginhandler.user_status_notification(username, status, msg.privileged)
 
     def _connect_to_peer(self, msg):
@@ -441,26 +414,18 @@ class Users:
     def _check_privileges(self, msg):
         """Server code 92."""
 
-        mins = msg.seconds // 60
-        hours = mins // 60
-        days = hours // 24
+        seconds = msg.seconds
 
-        if msg.seconds <= 0:
+        if seconds <= 0:
             log.add(_("You have no Soulseek privileges. While privileges are active, your downloads "
                       "will be queued ahead of those of non-privileged users."))
 
             if self._should_open_privileges_url:
                 self.open_privileges_url()
         else:
-            log.add(_("%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
-                      "Soulseek privileges left"), {
-                "days": days,
-                "hours": hours % 24,
-                "minutes": mins % 60,
-                "seconds": msg.seconds % 60
-            })
+            log.add(_("%(duration)s of Soulseek privileges left"), {"duration": human_duration_approx(seconds)})
 
-        self.privileges_left = msg.seconds
+        self.privileges_left = seconds
         self._should_open_privileges_url = False
 
     @staticmethod

@@ -1,25 +1,10 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-# COPYRIGHT (C) 2020 Lene Preuss <lene.preuss@gmail.com>
-# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2007 daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
-# COPYRIGHT (C) 2001-2003 Alexander Kanavin
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2020 Lene Preuss <lene.preuss@gmail.com>
+# SPDX-FileCopyrightText: 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# SPDX-FileCopyrightText: 2007 daelstorm <daelstorm@gmail.com>
+# SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# SPDX-FileCopyrightText: 2001-2003 Alexander Kanavin
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
 import sys
@@ -203,7 +188,32 @@ def encode_path(path, prefix=True):
     return path.encode("utf-8")
 
 
+def human_duration_approx(seconds):
+    """Returns a string for an approximatation of any amount of time in a
+    sensible unit of measurement, for use where precision isn't required."""
+
+    seconds = int(seconds)
+
+    if seconds < 120:
+        return ngettext("%(num)s second", "%(num)s seconds", seconds) % {"num": seconds}
+
+    minutes = seconds // 60
+
+    if minutes < 60:
+        return ngettext("%(num)s minute", "%(num)s minutes", minutes) % {"num": minutes}
+
+    hours = minutes // 60
+
+    if hours < 48:
+        return ngettext("%(num)s hour", "%(num)s hours", hours) % {"num": hours}
+
+    days = hours // 24
+
+    return ngettext("%(num)s day", "%(num)s days", days) % {"num": humanize(days)}
+
+
 def human_length(seconds):
+    """Returns a string for exact ISO 8601 timestamp for track playing length"""
 
     minutes, seconds = divmod(int(seconds), 60)
     hours, minutes = divmod(minutes, 60)
@@ -586,15 +596,14 @@ def open_folder_path(folder_path, create_folder=False):
 
 
 def open_uri(uri):
-    """Open a URI in an external (web) browser.
-
-    The given argument has to be a properly formed URI including the
-    scheme (fe. HTTP).
-    """
+    """Open a URI in an external (web) browser."""
 
     from pynicotine.config import config
 
     try:
+        if uri.startswith("www."):
+            uri = "http://" + uri
+
         # Situation 1, user defined a way of handling the protocol
         protocol = uri[:uri.find(":")]
 

@@ -1,0 +1,6 @@
+version = 1
+
+[[annotations]]
+path = ["*"]
+SPDX-FileCopyrightText = "2016 Bowtie AB"
+SPDX-License-Identifier = "MIT"

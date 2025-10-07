@@ -1,7 +1,7 @@
 {
     "id" : "org.nicotine_plus.Nicotine",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "47",
+    "runtime-version" : "49",
     "sdk" : "org.gnome.Sdk",
     "command" : "nicotine",
     "separate-locales" : false,
@@ -32,6 +32,10 @@
                     "path" : "../../",
                     "type" : "dir"
                 }
+            ],
+            "run-tests" : true,
+            "test-commands" : [
+                "python3 -m unittest -v"
             ]
         }
     ],

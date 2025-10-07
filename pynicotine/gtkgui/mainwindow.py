@@ -1,31 +1,17 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
-# COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2009 hedonist <ak@sensi.org>
-# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# SPDX-FileCopyrightText: 2016-2018 Mutnick <mutnick@techie.com>
+# SPDX-FileCopyrightText: 2008-2011 quinox <quinox@users.sf.net>
+# SPDX-FileCopyrightText: 2006-2009 daelstorm <daelstorm@gmail.com>
+# SPDX-FileCopyrightText: 2009 hedonist <ak@sensi.org>
+# SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
 import sys
 import time
 
+from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -72,6 +58,7 @@ class MainWindow(Window):
         self.auto_away = False
         self.away_timer_id = None
         self.away_cooldown_time = 0
+        self.is_fullscreen = False
         self.gesture_click = None
         self.window_active_handler = None
         self.window_visible_handler = None
@@ -86,6 +73,7 @@ class MainWindow(Window):
             self.chatrooms_content,
             self.chatrooms_end,
             self.chatrooms_entry,
+            self.chatrooms_entry_container,
             self.chatrooms_page,
             self.chatrooms_paned,
             self.chatrooms_title,
@@ -124,13 +112,10 @@ class MainWindow(Window):
             self.private_content,
             self.private_end,
             self.private_entry,
-            self.private_history_button,
-            self.private_history_label,
+            self.private_entry_container,
             self.private_page,
             self.private_title,
             self.private_toolbar,
-            self.room_list_button,
-            self.room_list_label,
             self.room_search_entry,
             self.scan_progress_container,
             self.scan_progress_label,
@@ -185,6 +170,13 @@ class MainWindow(Window):
         self.header_bar.pack_end(self.header_end)
 
         if GTK_API_VERSION >= 4:
+            try:
+                self.header_bar.set_use_native_controls(True)  # pylint: disable=no-member
+
+            except AttributeError:
+                # Older GTK version
+                pass
+
             self.header_bar.set_show_title_buttons(True)
 
             self.horizontal_paned.set_resize_start_child(True)
@@ -201,8 +193,6 @@ class MainWindow(Window):
             # Workaround for screen reader support in GTK <4.12
             for label, button in (
                 (self.search_mode_label, self.search_mode_button),
-                (self.private_history_label, self.private_history_button),
-                (self.room_list_label, self.room_list_button),
                 (self.download_status_label, self.download_status_button),
                 (self.upload_status_label, self.upload_status_button)
             ):
@@ -360,11 +350,13 @@ class MainWindow(Window):
         self.window_active_handler = self.widget.connect("notify::is-active", self.on_window_active_changed)
         self.window_visible_handler = self.widget.connect("notify::visible", self.on_window_visible_changed)
 
-        # System window close (X)
+        # System window close (X) and fullscreen
         if GTK_API_VERSION >= 4:
             self.widget.connect("close-request", self.on_close_window_request)
+            self.widget.connect("notify::fullscreened", self.on_window_fullscreen_changed_gtk4)
         else:
             self.widget.connect("delete-event", self.on_close_window_request)
+            self.widget.connect("window-state-event", self.on_window_state_changed_gtk3)
 
         self.application.add_window(self.widget)
 
@@ -385,6 +377,18 @@ class MainWindow(Window):
         self.on_cancel_auto_away()
 
         self.set_urgency_hint(False)
+
+    def on_window_fullscreen_changed_gtk4(self, *_args):
+        self.is_fullscreen = self.widget.is_fullscreen()
+        self.toggle_fullscreen_toolbar()
+
+    def on_window_state_changed_gtk3(self, _window, event):
+
+        if not event.changed_mask & Gdk.WindowState.FULLSCREEN:
+            return
+
+        self.is_fullscreen = (event.new_window_state & Gdk.WindowState.FULLSCREEN)
+        self.toggle_fullscreen_toolbar()
 
     def on_window_visible_changed(self, *_args):
         self.application.tray_icon.update()
@@ -541,12 +545,14 @@ class MainWindow(Window):
 
     # Headerbar/Toolbar #
 
-    def show_header_bar(self, page_id):
+    def show_header_bar(self, page_id, leaving_fullscreen=False):
         """Set a headerbar for the main window (client side decorations
         enabled)"""
 
-        if self.widget.get_titlebar() != self.header_bar:
-            self.widget.set_titlebar(self.header_bar)
+        if leaving_fullscreen or self.widget.get_titlebar() != self.header_bar:
+            if not leaving_fullscreen:
+                self.widget.set_titlebar(self.header_bar)
+
             self.widget.set_show_menubar(False)
 
             if GTK_API_VERSION == 3:
@@ -602,7 +608,7 @@ class MainWindow(Window):
             toolbar_content.add(title_widget)
             toolbar_content.add(end_widget)
 
-    def show_toolbar(self, page_id):
+    def show_toolbar(self, page_id, entering_fullscreen=False):
         """Show the non-CSD toolbar."""
 
         if not self.widget.get_show_menubar():
@@ -613,7 +619,7 @@ class MainWindow(Window):
                 # Don't override builtin accelerator for menu bar
                 self.lookup_action("main-menu").set_enabled(False)
 
-            if self.widget.get_titlebar():
+            if not entering_fullscreen and self.widget.get_titlebar():
                 self.widget.unrealize()
                 self.widget.set_titlebar(None)
                 self.widget.map()
@@ -645,7 +651,7 @@ class MainWindow(Window):
         This is used when changing the active notebook tab.
         """
 
-        if config.sections["ui"]["header_bar"]:
+        if config.sections["ui"]["header_bar"] and not self.is_fullscreen:
             self.hide_current_header_bar()
             self.show_header_bar(page_id)
         else:
@@ -683,6 +689,19 @@ class MainWindow(Window):
         # Show active dialogs again after a slight delay
         if active_dialogs:
             GLib.idle_add(self._show_dialogs, active_dialogs, priority=GLib.PRIORITY_HIGH_IDLE)
+
+    def toggle_fullscreen_toolbar(self):
+
+        if not config.sections["ui"]["header_bar"]:
+            return
+
+        if self.is_fullscreen:
+            self.hide_current_header_bar()
+            self.show_toolbar(self.current_page_id, entering_fullscreen=True)
+            return
+
+        self.hide_current_toolbar()
+        self.show_header_bar(self.current_page_id, leaving_fullscreen=True)
 
     def on_change_focus_view(self, *_args):
         """F6 - move focus between header bar/toolbar and main content."""
@@ -1115,7 +1134,7 @@ class MainWindow(Window):
         if level not in {"transfer", "connection", "message", "miscellaneous"}:
             self.set_status_text(msg)
 
-        self.log_view.append_line(msg, timestamp_format=timestamp_format)
+        self.log_view.add_line(msg, timestamp_format=timestamp_format)
 
     def on_popup_menu_log(self, menu, _textview):
         menu.actions[_("_Copy")].set_enabled(self.log_view.get_has_selection())
@@ -1176,13 +1195,12 @@ class MainWindow(Window):
 
     def shares_scanning(self, folder_count=None):
 
-        label = _("Scanning Shares")
-
         if folder_count is not None:
-            # TODO: turn this into a proper translated string in 3.4.0
             self.scan_progress_label.set_label(
-                f"{_('Shared Folders')}: {humanize(folder_count)}")
+                _("Scanned Folders: %s") % humanize(folder_count))
             return
+
+        label = _("Scanning Shares")
 
         # Hide widget to keep tooltips for other widgets visible
         self.scan_progress_container.set_visible(False)

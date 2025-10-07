@@ -1,20 +1,5 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
 import sys
@@ -34,7 +19,7 @@ class Core:
     __slots__ = ("shares", "users", "network_filter", "statistics", "search", "downloads",
                  "uploads", "interests", "userbrowse", "userinfo", "buddies", "privatechat",
                  "chatrooms", "pluginhandler", "now_playing", "portmapper", "notifications",
-                 "update_checker", "_network_thread", "cli_interface_address",
+                 "port_checker", "update_checker", "_network_thread", "cli_interface_address",
                  "cli_listen_port", "enabled_components")
 
     def __init__(self):
@@ -56,6 +41,7 @@ class Core:
         self.now_playing = None
         self.portmapper = None
         self.notifications = None
+        self.port_checker = None
         self.update_checker = None
         self._network_thread = None
 
@@ -70,7 +56,7 @@ class Core:
         if enabled_components is None:
             enabled_components = {
                 "error_handler", "signal_handler", "cli", "portmapper", "network_thread", "shares", "users",
-                "notifications", "network_filter", "now_playing", "statistics", "update_checker",
+                "notifications", "network_filter", "now_playing", "statistics", "port_checker", "update_checker",
                 "search", "downloads", "uploads", "interests", "userbrowse", "userinfo", "buddies",
                 "chatrooms", "privatechat", "pluginhandler"
             }
@@ -96,20 +82,7 @@ class Core:
         ):
             events.connect(event_name, callback)
 
-        script_folder_path = os.path.dirname(__file__)
-
-        log.add(_("Loading %(program)s %(version)s"), {
-            "program": "Python",
-            "version": sys.version.split()[0]
-        })
-        log.add_debug("Using %s executable: %s", ("Python", sys.executable))
-        log.add(_("Loading %(program)s %(version)s"), {
-            "program": pynicotine.__application_name__,
-            "version": pynicotine.__version__
-        })
-        log.add_debug("Using %s executable: %s", (pynicotine.__application_name__, script_folder_path))
-
-        if "portmapper" in enabled_components:
+        if not isolated_mode and "portmapper" in enabled_components:
             from pynicotine.portmapper import PortMapper
             self.portmapper = PortMapper()
 
@@ -144,6 +117,10 @@ class Core:
         if "statistics" in enabled_components:
             from pynicotine.transfers import Statistics
             self.statistics = Statistics()
+
+        if "port_checker" in enabled_components:
+            from pynicotine.portchecker import PortChecker
+            self.port_checker = PortChecker()
 
         if "update_checker" in enabled_components:
             self.update_checker = UpdateChecker()
@@ -193,7 +170,12 @@ class Core:
 
         import signal
 
-        for signal_type in (signal.SIGINT, signal.SIGTERM):
+        signals = [signal.SIGINT, signal.SIGTERM]
+
+        if hasattr(signal, "SIGHUP"):
+            signals.append(signal.SIGHUP)  # Terminal was closed
+
+        for signal_type in signals:
             signal.signal(signal_type, self.quit)
 
     def _init_error_handler(self):
@@ -201,29 +183,22 @@ class Core:
         def thread_excepthook(args):
             sys.excepthook(*args[:3])
 
-        if hasattr(threading, "excepthook"):
-            threading.excepthook = thread_excepthook
-            return
-
-        # Workaround for Python <= 3.7
-        init_thread = threading.Thread.__init__
-
-        def init_thread_excepthook(self, *args, **kwargs):
-
-            init_thread(self, *args, **kwargs)
-            run_thread = self.run
-
-            def run_with_excepthook(*args2, **kwargs2):
-                try:
-                    run_thread(*args2, **kwargs2)
-                except Exception:
-                    thread_excepthook(sys.exc_info())
-
-            self.run = run_with_excepthook
-
-        threading.Thread.__init__ = init_thread_excepthook
+        threading.excepthook = thread_excepthook
 
     def start(self):
+
+        script_folder_path = os.path.dirname(__file__)
+
+        log.add(_("Starting %(program)s %(version)s"), {
+            "program": pynicotine.__application_name__,
+            "version": pynicotine.__version__
+        })
+        log.add(_("Loaded %(program)s %(version)s"), {
+            "program": "Python",
+            "version": sys.version.split()[0]
+        })
+        log.add_debug("Using %s executable: %s", (pynicotine.__application_name__, script_folder_path))
+        log.add_debug("Using %s executable: %s", ("Python", sys.executable))
 
         if "cli" in self.enabled_components:
             from pynicotine.cli import cli

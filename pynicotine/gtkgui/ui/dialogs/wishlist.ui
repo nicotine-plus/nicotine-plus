@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
 <interface>
   <requires lib="gtk+" version="3.0"/>
+  <object class="GtkEntry" id="wish_entry">
+    <property name="hexpand">True</property>
+    <property name="placeholder-text" translatable="yes">Add Wish…</property>
+    <property name="primary-icon-name">list-add-symbolic</property>
+    <property name="visible">True</property>
+    <signal name="activate" handler="on_add_wish"/>
+    <signal name="icon-press" handler="on_add_wish"/>
+  </object>
   <object class="GtkBox" id="container">
-    <property name="height-request">300</property>
     <property name="margin-bottom">12</property>
     <property name="margin-end">12</property>
     <property name="margin-start">12</property>
@@ -10,7 +21,7 @@
     <property name="orientation">vertical</property>
     <property name="spacing">12</property>
     <property name="visible">True</property>
-    <property name="width-request">320</property>
+    <property name="width-request">360</property>
     <child>
       <object class="GtkLabel">
         <property name="label" translatable="yes">Wishlist items are auto-searched at regular intervals, for discovering uncommon files.</property>
@@ -22,12 +33,8 @@
       </object>
     </child>
     <child>
-      <object class="GtkEntry" id="wish_entry">
-        <property name="placeholder-text" translatable="yes">Add Wish…</property>
-        <property name="primary-icon-name">list-add-symbolic</property>
+      <object class="GtkBox" id="wish_entry_container">
         <property name="visible">True</property>
-        <signal name="activate" handler="on_add_wish"/>
-        <signal name="icon-press" handler="on_add_wish"/>
       </object>
     </child>
     <child>

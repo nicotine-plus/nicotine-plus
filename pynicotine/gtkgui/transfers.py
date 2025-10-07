@@ -1,26 +1,11 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-# COPYRIGHT (C) 2018 Mutnick <mutnick@techie.com>
-# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2009 hedonist <ak@sensi.org>
-# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2018 Mutnick <mutnick@techie.com>
+# SPDX-FileCopyrightText: 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# SPDX-FileCopyrightText: 2008-2011 quinox <quinox@users.sf.net>
+# SPDX-FileCopyrightText: 2009 hedonist <ak@sensi.org>
+# SPDX-FileCopyrightText: 2006-2009 daelstorm <daelstorm@gmail.com>
+# SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
 
@@ -28,6 +13,7 @@ from itertools import islice
 
 from gi.repository import GObject
 from gi.repository import Gtk
+from gi.repository import Pango
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -146,7 +132,9 @@ class Transfers:
                     "column_type": "text",
                     "title": _("User"),
                     "width": 200,
-                    "sensitive_column": "is_sensitive_data"
+                    "tooltip_callback": self.on_username_tooltip,
+                    "sensitive_column": "is_sensitive_data",
+                    "text_underline_column": "username_underline_data"
                 },
                 "path": {
                     "column_type": "text",
@@ -226,6 +214,7 @@ class Transfers:
                 "time_elapsed_data": {"data_type": GObject.TYPE_INT},
                 "time_left_data": {"data_type": GObject.TYPE_UINT64},
                 "is_sensitive_data": {"data_type": GObject.TYPE_BOOLEAN},
+                "username_underline_data": {"data_type": Pango.Weight},
                 "transfer_data": {"data_type": GObject.TYPE_PYOBJECT},
                 "id_data": {
                     "data_type": GObject.TYPE_INT,
@@ -235,8 +224,8 @@ class Transfers:
             }
         )
 
-        Accelerator("t", self.tree_view.widget, self.on_abort_transfers_accelerator)
-        Accelerator("r", self.tree_view.widget, self.on_retry_transfers_accelerator)
+        Accelerator("<Primary>t", self.tree_view.widget, self.on_abort_transfers_accelerator)
+        Accelerator("<Primary>s", self.tree_view.widget, self.on_retry_transfers_accelerator)
         Accelerator("<Alt>Return", self.tree_view.widget, self.on_file_properties_accelerator)
 
         menu = create_grouping_menu(
@@ -259,11 +248,14 @@ class Transfers:
         self.popup_menu_clear = PopupMenu(window.application)
         self.popup_menu_clear.set_menu_button(self.clear_all_button)
 
-        self.popup_menu_copy = PopupMenu(window.application)
-        self.popup_menu_copy.add_items(
-            ("#" + _("Copy _File Path"), self.on_copy_file_path),
-            ("#" + _("Copy _URL"), self.on_copy_url),
-            ("#" + _("Copy Folder U_RL"), self.on_copy_folder_url)
+        self.popup_menu_copy_search = PopupMenu(window.application)
+        self.popup_menu_copy_search.add_items(
+            ("#" + _("Copy File Path"), self.on_copy_file_path),
+            ("#" + _("Copy File URL"), self.on_copy_file_url),
+            ("#" + _("Copy Folder URL"), self.on_copy_folder_url),
+            ("", None),
+            ("#" + _("Search for Folder Name"), self.on_search_folder_name),
+            ("#" + _("Search for File Name"), self.on_search_filename)
         )
 
         self.popup_menu = FilePopupMenu(
@@ -271,7 +263,7 @@ class Transfers:
         )
         if not self.window.application.isolated_mode:
             self.popup_menu.add_items(
-                ("#" + _("_Open File"), self.on_open_file),
+                ("#" + "open_file", self.on_open_file),
                 ("#" + _("Open in File _Manager"), self.on_open_file_manager)
             )
         self.popup_menu.add_items(
@@ -283,9 +275,8 @@ class Transfers:
             ("", None),
             ("#" + _("View User _Profile"), self.on_user_profile),
             ("#" + _("_Browse Folder"), self.on_browse_folder),
-            ("#" + _("_Search"), self.on_file_search),
             ("", None),
-            (">" + _("Copy"), self.popup_menu_copy),
+            (">" + _("_Copy & Search"), self.popup_menu_copy_search),
             (">" + _("Clear All"), self.popup_menu_clear),
             (">" + _("User Actions"), self.popup_menu_users)
         )
@@ -297,7 +288,7 @@ class Transfers:
         self.popup_menu.destroy()
         self.popup_menu_users.destroy()
         self.popup_menu_clear.destroy()
-        self.popup_menu_copy.destroy()
+        self.popup_menu_copy_search.destroy()
 
         self.__dict__.clear()
 
@@ -365,7 +356,7 @@ class Transfers:
 
         self.select_child_transfers(transfer)
 
-    def on_file_search(self, *_args):
+    def on_search_filename(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
 
@@ -373,8 +364,22 @@ class Transfers:
             return
 
         _folder_path, _separator, basename = transfer.virtual_path.rpartition("\\")
+        basename_no_extension, _extension = os.path.splitext(basename)
 
-        self.window.search_entry.set_text(basename)
+        self.window.search_entry.set_text(basename_no_extension)
+        self.window.change_main_page(self.window.search_page)
+
+    def on_search_folder_name(self, *_args):
+
+        transfer = next(iter(self.selected_transfers), None)
+
+        if not transfer:
+            return
+
+        folder_path, _separator, _basename = transfer.virtual_path.rpartition("\\")
+        folder_name = folder_path.rpartition("\\")[-1]
+
+        self.window.search_entry.set_text(folder_name)
         self.window.change_main_page(self.window.search_page)
 
     def translate_status(self, status):
@@ -720,6 +725,7 @@ class Transfers:
         folder_path, _separator, basename = transfer.virtual_path.rpartition("\\")
         original_folder_path = folder_path = self.get_transfer_folder_path(transfer)
         is_sensitive = (status != TransferStatus.USER_LOGGED_OFF)
+        username_underline_data = Pango.Underline.SINGLE if user in core.buddies.users else Pango.Underline.NONE
 
         if use_reverse_file_path:
             parts = folder_path.split(self.path_separator)
@@ -758,6 +764,7 @@ class Transfers:
                         empty_int,
                         empty_int,
                         is_sensitive,
+                        username_underline_data,
                         Transfer(user, status=status),  # Dummy Transfer object
                         self.row_id
                     ], select_row=False
@@ -805,6 +812,7 @@ class Transfers:
                             empty_int,
                             empty_int,
                             is_sensitive,
+                            username_underline_data,
                             path_transfer,
                             self.row_id
                         ], select_row=False, parent_iterator=user_iterator
@@ -853,6 +861,7 @@ class Transfers:
             elapsed,
             left,
             is_sensitive,
+            username_underline_data,
             transfer,
             self.row_id
         ], select_row=False, parent_iterator=parent_iterator)
@@ -946,6 +955,37 @@ class Transfers:
     def clear_transfers(self, *_args):
         self.update_parent_rows()
 
+    def update_buddy(self, user, user_data=None):
+
+        if user not in self.users:
+            return
+
+        column_key = "username_underline_data"
+        underline_data = Pango.Underline.SINGLE if user_data is not None else Pango.Underline.NONE
+        user_iterator, user_child_transfers = self.users[user]
+
+        if user_iterator is not None:
+            self.tree_view.set_row_value(user_iterator, column_key, underline_data)
+
+        for transfer in user_child_transfers:
+            iterator = transfer.iterator
+
+            if iterator is not None:
+                self.tree_view.set_row_value(iterator, column_key, underline_data)
+                continue
+
+            user_folder_path = transfer.username + self.get_transfer_folder_path(transfer)
+            user_folder_path_data = self.paths.get(user_folder_path)
+
+            if not user_folder_path_data:
+                continue
+
+            user_folder_path_iter, user_folder_path_child_transfers = user_folder_path_data
+            self.tree_view.set_row_value(user_folder_path_iter, column_key, underline_data)
+
+            for i_transfer in user_folder_path_child_transfers:
+                self.tree_view.set_row_value(i_transfer.iterator, column_key, underline_data)
+
     def add_popup_menu_user(self, popup, user):
 
         popup.add_items(
@@ -985,9 +1025,11 @@ class Transfers:
 
         if expanded:
             icon_name = "view-restore-symbolic"
+            tooltip_text = _("Collapse All")
             self.tree_view.expand_all_rows()
         else:
             icon_name = "view-fullscreen-symbolic"
+            tooltip_text = _("Expand All")
             self.tree_view.collapse_all_rows()
 
             if self.grouping_mode == "folder_grouping":
@@ -995,6 +1037,7 @@ class Transfers:
 
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
         self.expand_icon.set_from_icon_name(icon_name, *icon_args)
+        self.expand_button.set_tooltip_text(tooltip_text)
 
         config.sections["transfers"][f"{self.type}sexpanded"] = expanded
         config.write_configuration()
@@ -1031,9 +1074,21 @@ class Transfers:
     def on_popup_menu(self, menu, _widget):
 
         self.select_transfers()
-        menu.set_num_selected_files(len(self.selected_transfers))
+
+        num_files = len(self.selected_transfers)
+        menu.set_num_selected_files(num_files)
+        menu.update_item_label("open_file", _("_Open File") if num_files == 1 else _("_Open Files"))
 
         self.populate_popup_menu_users()
+
+    def on_username_tooltip(self, treeview, iterator):
+        username = treeview.get_row_value(iterator, "user")
+        username_underline = treeview.get_row_value(iterator, "username_underline_data")
+
+        if username_underline != Pango.Underline.NONE:
+            return _("%(username)s (%(status)s)") % {"username": username, "status": _("Buddy")}
+
+        return username
 
     def on_file_path_tooltip(self, treeview, iterator):
         transfer = treeview.get_row_value(iterator, "transfer_data")
@@ -1061,7 +1116,7 @@ class Transfers:
             self.on_open_file_manager()
 
         elif action == 3:  # Search
-            self.on_file_search()
+            self.on_search_filename()
 
         elif action == 4:  # Pause / Abort
             self.abort_selected_transfers()
@@ -1182,7 +1237,7 @@ class Transfers:
             self.file_properties.update_properties(data, selected_size, selected_length)
             self.file_properties.present()
 
-    def on_copy_url(self, *_args):
+    def on_copy_file_url(self, *_args):
         # Implemented in subclasses
         raise NotImplementedError
 

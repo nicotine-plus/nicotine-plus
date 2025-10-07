@@ -1,20 +1,5 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
 import sys
@@ -34,7 +19,7 @@ from pynicotine.gtkgui.widgets.window import Window
 
 class Dialog(Window):
 
-    def __init__(self, widget=None, parent=None, content_box=None, buttons_start=(), buttons_end=(),
+    def __init__(self, parent=None, content_box=None, buttons_start=(), buttons_end=(),
                  default_button=None, show_callback=None, close_callback=None, title="", width=0, height=0,
                  modal=True, show_title=True, show_title_buttons=True):
 
@@ -46,11 +31,6 @@ class Dialog(Window):
 
         self.show_callback = show_callback
         self.close_callback = close_callback
-
-        if widget:
-            super().__init__(widget=widget)
-            self._set_dialog_properties()
-            return
 
         container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, vexpand=True, visible=True)
         widget = Gtk.Window(
@@ -101,6 +81,13 @@ class Dialog(Window):
         self.widget.set_titlebar(header_bar)
 
         if GTK_API_VERSION >= 4:
+            try:
+                header_bar.set_use_native_controls(True)             # pylint: disable=no-member
+
+            except AttributeError:
+                # Older GTK version
+                pass
+
             header_bar.set_show_title_buttons(show_title_buttons)    # pylint: disable=no-member
 
             if not show_title:
@@ -143,10 +130,14 @@ class Dialog(Window):
             action_area.add(action_area_end)          # pylint: disable=no-member
 
         for button in buttons_start:
+            # Cancel button is to the left in header bars, but always to the right in action areas.
+            # This matches built-in GTK dialogs (color and font choosers).
+            action_area = action_area_end if button.get_label() == _("_Cancel") else action_area_start
+
             if GTK_API_VERSION >= 4:
-                action_area_start.append(button)      # pylint: disable=no-member
+                action_area.append(button)      # pylint: disable=no-member
             else:
-                action_area_start.add(button)         # pylint: disable=no-member
+                action_area.add(button)         # pylint: disable=no-member
 
         for button in buttons_end:
             if GTK_API_VERSION >= 4:
@@ -175,10 +166,16 @@ class Dialog(Window):
         # Hide the dialog
         self.widget.set_visible(False)
 
-        # "Soft-delete" the dialog. This is necessary to prevent the dialog from
-        # appearing in window peek on Windows
-        if sys.platform == "win32" and self.widget.get_titlebar() is None:
-            self.widget.unrealize()
+        if sys.platform == "win32":
+            # "Soft-delete" the dialog. This is necessary to prevent the dialog from
+            # appearing in window peek on Windows
+            if self.widget.get_titlebar() is None:
+                self.widget.unrealize()
+
+            # Workaround for parent window minimizing when closing dialog
+            # https://gitlab.gnome.org/GNOME/gtk/-/issues/7313
+            if self.parent is not None and self.parent.is_visible():
+                self.parent.present()
 
         return True
 
@@ -431,7 +428,7 @@ class MessageDialog(Window):
             self.container.add(frame)     # pylint: disable=no-member
 
         textview = self.default_focus_widget = TextView(scrolled_window, editable=False)
-        textview.append_line(text)
+        textview.add_line(text)
 
         self.container.set_visible(True)
 

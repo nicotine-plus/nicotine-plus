@@ -1,24 +1,9 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2008-2009 quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# SPDX-FileCopyrightText: 2008-2009 quinox <quinox@users.sf.net>
+# SPDX-FileCopyrightText: 2006-2009 daelstorm <daelstorm@gmail.com>
+# SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import time
 
@@ -28,6 +13,7 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
+from gi.repository import Pango
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -36,6 +22,7 @@ from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import FILE_TYPE_ICON_LABELS
+from pynicotine.gtkgui.widgets.theme import PRIVATE_ICON_LABELS
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_LABELS
 from pynicotine.gtkgui.widgets.theme import add_css_class
 
@@ -307,9 +294,8 @@ class TreeView:
                 column_properties = column_config.get(column_id, {})
                 column_sort_type = column_properties.get("sort")
 
-                # Restore saved column width if the column size is fixed. For expandable
-                # columns, the width becomes the minimum width, so use the default value in those cases.
-                if not should_expand_column and column_type != "icon":
+                # Restore saved column width
+                if column_type != "icon":
                     width = column_properties.get("width", width)
 
                 if column_sort_type and self._persistent_sort:
@@ -322,10 +308,16 @@ class TreeView:
             # Allow individual cells to receive visual focus
             mode = Gtk.CellRendererMode.ACTIVATABLE if len(columns) > 1 else Gtk.CellRendererMode.INERT
             xalign = 0.0
+            attributes = None
+
+            if column_type == "number" or column_data.get("tabular"):
+                attributes = Pango.AttrList()
+                attributes.insert(Pango.attr_font_features_new("tnum=1"))
 
             if column_type == "text":
                 renderer = Gtk.CellRendererText(
-                    mode=mode, single_paragraph_mode=True, xpad=width_padding, ypad=height_padding
+                    mode=mode, single_paragraph_mode=True, attributes=attributes, xpad=width_padding,
+                    ypad=height_padding
                 )
                 column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, text=column_index)
                 text_underline_column = column_data.get("text_underline_column")
@@ -339,7 +331,9 @@ class TreeView:
 
             elif column_type == "number":
                 xalign = 1
-                renderer = Gtk.CellRendererText(mode=mode, xalign=xalign, xpad=width_padding, ypad=height_padding)
+                renderer = Gtk.CellRendererText(
+                    mode=mode, attributes=attributes, xalign=xalign, xpad=width_padding, ypad=height_padding
+                )
                 column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, text=column_index)
                 column.set_alignment(xalign)
 
@@ -355,6 +349,10 @@ class TreeView:
                 renderer.connect("toggled", self.on_toggle, column_data["toggle_callback"])
 
                 column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, active=column_index)
+                inconsistent_column = column_data.get("inconsistent_column")
+
+                if inconsistent_column is not None:
+                    column.add_attribute(renderer, "inconsistent", self._column_ids[inconsistent_column])
 
             elif column_type == "icon":
                 icon_args = {}
@@ -374,7 +372,7 @@ class TreeView:
 
             if GTK_API_VERSION >= 4:
                 gesture_click = Gtk.GestureClick()
-                column_header.add_controller(gesture_click)  # pylint: disable=no-member
+                column_header.add_controller(gesture_click)                  # pylint: disable=no-member
             else:
                 gesture_click = Gtk.GestureMultiPress(widget=column_header)
 
@@ -691,6 +689,9 @@ class TreeView:
         if column.id == "status":
             return USER_STATUS_ICON_LABELS[icon_name]
 
+        if column.id == "private":
+            return PRIVATE_ICON_LABELS.get(icon_name, "")
+
         if column.id == "file_type":
             return FILE_TYPE_ICON_LABELS[icon_name]
 
@@ -766,11 +767,62 @@ class TreeView:
         column.set_visible(not column.get_visible())
         self._update_column_properties()
 
+    def on_invert_sort_order(self, *_args):
+
+        self._sort_type = (Gtk.SortType.DESCENDING if self._sort_type == Gtk.SortType.ASCENDING
+                           else Gtk.SortType.ASCENDING)
+
+        self.model.set_sort_column_id(self._sort_column, self._sort_type)
+        self.save_columns()
+
+    def on_reset_sort_column(self, *_args):
+
+        self._sort_column = self._default_sort_column
+        self._sort_type = self._default_sort_type
+
+        self.model.set_sort_column_id(self._sort_column, self._sort_type)
+        self.save_columns()
+
+    def on_reset_columns(self, *_args):
+
+        sorted_columns = sorted(
+            self.widget.get_columns(),
+            key=lambda column: list(self._columns.keys()).index(column.id)
+        )
+
+        for column_index, column_data in reversed(list(enumerate(self._columns.values()))):
+            if column_index >= len(sorted_columns):
+                continue
+
+            column = sorted_columns[column_index]
+            width = column_data.get("width")
+
+            if width is not None:
+                column.set_resizable(column.type != "icon")
+
+            if not width:
+                width = -1
+
+            column.set_fixed_width(width)
+            column.set_visible(True)
+
+            self.widget.move_column_after(column, None)
+
+        self.on_reset_sort_column()
+
     def on_column_header_menu(self, menu, _treeview):
 
         columns = self.widget.get_columns()
         visible_columns = [column for column in columns if column.get_visible()]
         menu.clear()
+
+        sort_label = _("A_scending") if self._sort_type == Gtk.SortType.DESCENDING else _("De_scending")
+        sort_menu = PopupMenu(self.window.application)
+        sort_menu.add_items(
+            ("#" + sort_label, self.on_invert_sort_order),
+            ("", None),
+            ("#" + _("_Reset Sort Column"), self.on_reset_sort_column)
+        )
 
         for column_num, column in enumerate(columns, start=1):
             title = column.get_title()
@@ -788,6 +840,13 @@ class TreeView:
                 menu.actions[title].set_enabled(len(visible_columns) > 1)
 
             menu.actions[title].connect("activate", self.on_column_header_toggled, column)
+
+        menu.add_items(
+            ("", None),
+            (">" + _("_Sort Order"), sort_menu),
+            ("#" + _("Reset Columns"), self.on_reset_columns)
+        )
+        menu.update_model()
 
     def on_column_position_changed(self, column, _param):
         """Save column position and width to config."""

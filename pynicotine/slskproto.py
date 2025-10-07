@@ -1,21 +1,9 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-# COPYRIGHT (C) 2008-2012 quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2007-2009 daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
-# COPYRIGHT (C) 2001-2003 Alexander Kanavin
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2008-2012 quinox <quinox@users.sf.net>
+# SPDX-FileCopyrightText: 2007-2009 daelstorm <daelstorm@gmail.com>
+# SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# SPDX-FileCopyrightText: 2001-2003 Alexander Kanavin
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import errno
 import random
@@ -26,8 +14,8 @@ import sys
 import time
 
 from collections import defaultdict
-from collections import deque
 from os import strerror
+from queue import Empty, SimpleQueue
 from threading import Thread
 
 from pynicotine.events import events
@@ -87,6 +75,7 @@ from pynicotine.slskmessages import UserStatus
 from pynicotine.slskmessages import WatchUser
 from pynicotine.slskmessages import increment_token
 from pynicotine.slskmessages import initial_token
+from pynicotine.utils import human_duration_approx
 from pynicotine.utils import human_speed
 
 
@@ -195,6 +184,9 @@ class NetworkInterfaces:
     elif sys.platform.startswith("sunos"):
         SIOCGIFADDR = -0x3fdf96f3  # Solaris
 
+    elif sys.platform.startswith("haiku"):
+        SIOCGIFADDR = 0x22c7
+
     else:
         SIOCGIFADDR = 0xc0206921   # macOS, *BSD
 
@@ -262,7 +254,7 @@ class NetworkInterfaces:
                 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
                     ip_interface = fcntl.ioctl(sock.fileno(),
                                                cls.SIOCGIFADDR,
-                                               struct.pack("256s", interface_name.encode()[:15]))
+                                               struct.pack("256s", interface_name.encode()))
 
                     ip_address = socket.inet_ntoa(ip_interface[20:24])
                     interface_addresses[interface_name] = ip_address
@@ -378,7 +370,7 @@ class NetworkThread(Thread):
 
         super().__init__(name="NetworkThread")
 
-        self._message_queue = deque()
+        self._message_queue = SimpleQueue()
         self._pending_peer_conns = {}
         self._pending_init_msgs = defaultdict(list)
         self._token_init_msgs = {}
@@ -449,7 +441,7 @@ class NetworkThread(Thread):
 
     def _queue_network_message(self, msg):
         if self._should_process_queue:
-            self._message_queue.append(msg)
+            self._message_queue.put_nowait(msg)
 
     def _schedule_quit(self):
         self._want_abort = True
@@ -1092,7 +1084,8 @@ class NetworkThread(Thread):
             self._server_timeout_value *= 2
 
         self._server_timeout_time = time.monotonic() + self._server_timeout_value
-        log.add(_("Reconnecting to server in %s seconds"), self._server_timeout_value)
+        log.add(_("Reconnecting to server in %(duration)s"),
+                {"duration": human_duration_approx(self._server_timeout_value)})
 
     @staticmethod
     def _set_server_socket_keepalive(sock, idle=10, interval=2):
@@ -1260,8 +1253,10 @@ class NetworkThread(Thread):
                 # Ensure listening port is open
                 msg.local_address = self._user_addresses[self._server_username]
                 local_ip_address, port = msg.local_address
-                self._portmapper.set_port(port, local_ip_address)
-                self._portmapper.add_port_mapping(blocking=True)
+
+                if self._portmapper is not None:
+                    self._portmapper.set_port(port, local_ip_address)
+                    self._portmapper.add_port_mapping(blocking=True)
 
                 msg.username = self._server_username
                 msg.server_address = self._server_address
@@ -1475,7 +1470,12 @@ class NetworkThread(Thread):
         for conn in self._conns.copy().values():
             self._close_connection(conn)
 
-        self._message_queue.clear()
+        while True:
+            try:
+                self._message_queue.get_nowait()
+            except Empty:
+                break
+
         self._pending_peer_conns.clear()
         self._pending_init_msgs.clear()
         self._username_init_msgs.clear()
@@ -2607,8 +2607,11 @@ class NetworkThread(Thread):
 
         msgs = []
 
-        while self._message_queue:
-            msgs.append(self._message_queue.popleft())
+        while True:
+            try:
+                msgs.append(self._message_queue.get_nowait())
+            except Empty:
+                break
 
         self._process_outgoing_messages(msgs)
 

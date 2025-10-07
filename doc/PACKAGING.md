@@ -1,3 +1,8 @@
+<!--
+  SPDX-FileCopyrightText: 2016-2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # Packaging
 
 > **NOTE**: For distribution packagers: There is a standard feature of GitHub
@@ -58,7 +63,7 @@ your own machine.
 ### Building a Frozen Application with cx_Freeze
 
 Follow the instructions on [installing MSYS2](https://www.msys2.org/#installation).
-Once MSYS2 is installed, launch the MINGW64 environment.
+Once MSYS2 is installed, launch the CLANG64 environment.
 
 Clone the `nicotine-plus` Git repository:
 
@@ -72,21 +77,21 @@ Install dependencies:
 
 ```sh
 export ARCH=x86_64
-pacman --noconfirm -S --needed mingw-w64-$ARCH-python
-python3 packaging/windows/dependencies.py
+pacman --noconfirm -S --needed mingw-w64-clang-$ARCH-python
+python3 build-aux/windows/dependencies.py
 ```
 
 Build the application:
 
 ```sh
-python3 packaging/windows/setup.py bdist_msi
+python3 build-aux/windows/setup.py bdist_msi
 ```
 
 When the application has finished building, it is located in the
-`packaging\windows\build\` subfolder.
+`build-aux\windows\build\` subfolder.
 
 If you want to run the application, you can launch the executable
-`packaging\windows\build\package\Nicotine+\Nicotine+.exe`.
+`build-aux\windows\build\package\Nicotine+\Nicotine+.exe`.
 
 
 ## macOS
@@ -109,17 +114,17 @@ cd nicotine-plus
 Install dependencies:
 
 ```sh
-brew install python@3.11
-python3.11 -m venv venv
-venv/bin/python3 packaging/macos/dependencies.py
+brew install python@3.13
+python3.13 -m venv venv
+venv/bin/python3 build-aux/macos/dependencies.py
 ```
 
 Build the application:
 
 ```sh
-venv/bin/python3 packaging/macos/setup.py bdist_dmg
+venv/bin/python3 build-aux/macos/setup.py bdist_dmg
 ```
 
 When the application has finished building, it is located in the
-`packaging/macos/build/` subfolder as a .dmg file.
+`build-aux/macos/build/` subfolder as a .dmg file.
 

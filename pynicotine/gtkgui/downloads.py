@@ -1,27 +1,12 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
-# COPYRIGHT (C) 2013 eLvErDe <gandalf@le-vert.net>
-# COPYRIGHT (C) 2008-2012 quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2009 hedonist <ak@sensi.org>
-# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# SPDX-FileCopyrightText: 2016-2018 Mutnick <mutnick@techie.com>
+# SPDX-FileCopyrightText: 2013 eLvErDe <gandalf@le-vert.net>
+# SPDX-FileCopyrightText: 2008-2012 quinox <quinox@users.sf.net>
+# SPDX-FileCopyrightText: 2009 hedonist <ak@sensi.org>
+# SPDX-FileCopyrightText: 2006-2009 daelstorm <daelstorm@gmail.com>
+# SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
 
@@ -34,6 +19,7 @@ from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.transfers import TransferStatus
 from pynicotine.utils import human_speed
+from pynicotine.utils import humanize
 from pynicotine.utils import open_file_path
 from pynicotine.utils import open_folder_path
 
@@ -84,10 +70,12 @@ class Downloads(Transfers):
         for event_name, callback in (
             ("abort-download", self.abort_transfer),
             ("abort-downloads", self.abort_transfers),
+            ("add-buddy", self.update_buddy),
             ("clear-download", self.clear_transfer),
             ("clear-downloads", self.clear_transfers),
             ("download-large-folder", self.download_large_folder),
             ("folder-download-finished", self.folder_download_finished),
+            ("remove-buddy", self.update_buddy),
             ("set-connection-stats", self.set_connection_stats),
             ("start", self.start),
             ("update-download", self.update_model),
@@ -122,14 +110,19 @@ class Downloads(Transfers):
         self._update_pending_parent_rows()
 
         download_bandwidth = human_speed(download_bandwidth)
-        download_bandwidth_text = f"{download_bandwidth} ( {len(core.downloads.active_users)} )"
+        active_users = len(core.downloads.active_users)
+        download_bandwidth_text = f"{download_bandwidth} ( {active_users} )"
 
         if self.window.download_status_label.get_text() == download_bandwidth_text:
             return
 
         self.window.download_status_label.set_text(download_bandwidth_text)
         self.window.application.tray_icon.set_download_status(
-            _("Downloads: %(speed)s") % {"speed": download_bandwidth})
+            _("Downloading: %(speed)s ( %(active_users)s )") % {
+                "speed": download_bandwidth,
+                "active_users": active_users
+            }
+        )
 
     def on_try_clear_queued(self, *_args):
 
@@ -162,13 +155,20 @@ class Downloads(Transfers):
         if self.window.current_page_id != self.transfer_page.id:
             self.window.notebook.request_tab_changed(self.transfer_page, is_important=True)
 
-    def download_large_folder(self, username, folder, numfiles, download_callback, callback_args):
+    def download_large_folder(self, username, folder, num_files, download_callback, callback_args):
 
         OptionDialog(
             parent=self.window,
-            title=_("Download %(num)i files?") % {"num": numfiles},
-            message=_("Do you really want to download %(num)i files from %(user)s's folder %(folder)s?") % {
-                "num": numfiles, "user": username, "folder": folder},
+            title=ngettext(
+                "Download %(num)s File?",
+                "Download %(num)s Files?",
+                num_files
+            ) % {"num": humanize(num_files)},
+            message=ngettext(
+                "Do you really want to download %(num)s file from %(user)s's folder %(folder)s?",
+                "Do you really want to download %(num)s files from %(user)s's folder %(folder)s?",
+                num_files
+            ) % {"num": humanize(num_files), "user": username, "folder": folder},
             buttons=[
                 ("cancel", _("_Cancel")),
                 ("download", _("_Download Folder"))
@@ -177,7 +177,7 @@ class Downloads(Transfers):
             callback_data=(download_callback, callback_args)
         ).present()
 
-    def on_copy_url(self, *_args):
+    def on_copy_file_url(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
 

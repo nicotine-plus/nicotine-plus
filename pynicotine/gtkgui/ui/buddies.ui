@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2009-2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkBox" id="container">
@@ -28,6 +32,7 @@
           <object class="GtkEntry">
             <property name="height-request">0</property>
             <property name="hexpand">True</property>
+            <property name="input-hints">no-emoji</property>
             <property name="placeholder-text" translatable="yes">Add buddy…</property>
             <property name="primary-icon-name">system-users-symbolic</property>
             <property name="visible">True</property>

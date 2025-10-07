@@ -1,20 +1,5 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import json
 import os
@@ -32,6 +17,8 @@ from pynicotine.slskmessages import SharedFileListResponse
 from pynicotine.slskmessages import UploadQueueNotification
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
+from pynicotine.utils import human_size
+from pynicotine.utils import humanize
 
 
 class BrowsedUser:
@@ -86,12 +73,15 @@ class UserBrowse:
 
         core.send_message_to_peer(username, UploadQueueNotification())
 
-    def _show_user(self, username, path=None, switch_page=True):
+    def _show_user(self, username, path=None, new_request=False, switch_page=True):
 
         if username not in self.users:
             self.users[username] = BrowsedUser(username)
 
-        events.emit("user-browse-show-user", user=username, path=path, switch_page=switch_page)
+        events.emit(
+            "user-browse-show-user", user=username, path=path, new_request=new_request,
+            switch_page=switch_page
+        )
 
     def remove_user(self, username):
 
@@ -120,7 +110,10 @@ class UserBrowse:
             core.setup()
             return
 
-        if username not in self.users or new_request:
+        if username not in self.users:
+            new_request = True
+
+        if new_request:
             if not permission_level:
                 # Check our own permission level, and show relevant shares for it
                 current_permission_level, _reason = core.shares.check_user_permission(username)
@@ -132,7 +125,7 @@ class UserBrowse:
                 target=self._parse_local_shares, args=(username, msg), name="LocalShareParser", daemon=True
             ).start()
 
-        self._show_user(username, path=path, switch_page=switch_page)
+        self._show_user(username, path=path, new_request=new_request, switch_page=switch_page)
         core.users.watch_user(username, context="userbrowse")
 
     def request_user_shares(self, username):
@@ -147,17 +140,20 @@ class UserBrowse:
         browsed_user = self.users.get(username)
         local_username = core.users.login_username or config.sections["server"]["login"]
 
-        if browsed_user is not None and new_request:
+        if browsed_user is None:
+            new_request = True
+
+        elif new_request:
             browsed_user.clear()
 
         if username == local_username:
-            self.browse_local_shares(path, new_request, switch_page=switch_page)
+            self.browse_local_shares(path, new_request=new_request, switch_page=switch_page)
             return
 
-        self._show_user(username, path=path, switch_page=switch_page)
+        self._show_user(username, path=path, new_request=new_request, switch_page=switch_page)
         core.users.watch_user(username, context="userbrowse")
 
-        if browsed_user is None or new_request:
+        if new_request:
             self.request_user_shares(username)
 
     def create_user_shares_folder(self):
@@ -348,6 +344,21 @@ class UserBrowse:
             for _code, basename, *_unused in files:
                 file_path = "\\".join([folder_path, basename])
                 core.uploads.enqueue_upload(username, file_path)
+
+    def show_user_statistics(self, username):
+
+        browsed_user = self.users.get(username)
+
+        if browsed_user is None:
+            return
+
+        log.add(_("User %(user)s is sharing %(num_files)s files totaling %(shared_size)s across "
+                  "%(num_folders)s folders."), {
+            "user": username,
+            "num_files": humanize(browsed_user.num_files or 0),
+            "shared_size": human_size(browsed_user.shared_size or 0),
+            "num_folders": humanize(browsed_user.num_folders or 0)
+        }, title=_("User Statistics"))
 
     @staticmethod
     def get_soulseek_url(username, path):

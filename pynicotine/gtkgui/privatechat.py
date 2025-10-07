@@ -1,25 +1,10 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2007 gallows <g4ll0ws@gmail.com>
-# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# SPDX-FileCopyrightText: 2008-2011 quinox <quinox@users.sf.net>
+# SPDX-FileCopyrightText: 2007 gallows <g4ll0ws@gmail.com>
+# SPDX-FileCopyrightText: 2006-2009 daelstorm <daelstorm@gmail.com>
+# SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 from gi.repository import GLib
 
@@ -28,8 +13,8 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.chatcommandhelp import ChatCommandHelp
-from pynicotine.gtkgui.popovers.chathistory import ChatHistory
 from pynicotine.gtkgui.widgets import ui
+from pynicotine.gtkgui.widgets.combobox import ComboBox
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
@@ -66,7 +51,10 @@ class PrivateChats(IconNotebook):
             command_callback=core.pluginhandler.trigger_private_chat_command_event,
             enable_spell_check=config.sections["ui"]["spellcheck"]
         )
-        self.history = ChatHistory(window)
+        self.username_combobox = ComboBox(
+            container=window.private_entry_container, has_entry=True, has_dropdown=False,
+            entry=window.private_entry, visible=True
+        )
         self.command_help = None
         self.highlighted_users = []
 
@@ -88,7 +76,11 @@ class PrivateChats(IconNotebook):
         self.freeze()
 
     def start(self):
+
         self.unfreeze()
+
+        for username in self.window.application.chat_history.list_view.iterators:
+            self.username_combobox.append(username)
 
     def quit(self):
         self.freeze()
@@ -96,7 +88,7 @@ class PrivateChats(IconNotebook):
     def destroy(self):
 
         self.chat_entry.destroy()
-        self.history.destroy()
+        self.username_combobox.destroy()
 
         if self.command_help is not None:
             self.command_help.destroy()
@@ -318,8 +310,7 @@ class PrivateChat:
             self.container,
             self.help_button,
             self.log_toggle,
-            self.search_bar,
-            self.speech_toggle
+            self.search_bar
         ) = ui.load(scope=self, path="privatechat.ui")
 
         self.user = user
@@ -411,7 +402,10 @@ class PrivateChat:
             num_lines=config.sections["logging"]["readprivatelines"]
         )
 
-        self.chat_view.append_log_lines(log_lines, login_username=config.sections["server"]["login"])
+        if not log_lines:
+            return
+
+        self.chat_view.prepend_log_lines(log_lines, login_username=config.sections["server"]["login"])
 
     def server_disconnect(self):
         self.offline_message = False
@@ -445,7 +439,6 @@ class PrivateChat:
 
     def toggle_chat_buttons(self):
         self.log_toggle.set_visible(not config.sections["logging"]["privatechat"])
-        self.speech_toggle.set_visible(config.sections["ui"]["speechenabled"])
 
     def on_log_toggled(self, *_args):
 
@@ -466,7 +459,8 @@ class PrivateChat:
     def on_delete_chat_log_response(self, *_args):
 
         log.delete_log(log.private_chat_folder_path, self.user)
-        self.chats.history.remove_user(self.user)
+        self.chats.window.application.chat_history.remove_user(self.user)
+        self.chats.username_combobox.remove_id(self.user)
         self.chat_view.clear()
 
     def on_delete_chat_log(self, *_args):
@@ -507,24 +501,17 @@ class PrivateChat:
 
         username = msg.user
         tag_username = (core.users.login_username if is_outgoing_message else username)
-        usertag = self.chat_view.get_user_tag(tag_username)
 
         timestamp = msg.timestamp if not is_new_message else None
         timestamp_format = config.sections["logging"]["private_timestamp"]
         message = msg.message
-        formatted_message = msg.formatted_message
 
         if not is_outgoing_message:
             self._show_notification(message, is_mentioned=(message_type == "hilite"))
 
-            if self.speech_toggle.get_active():
-                core.notifications.new_tts(
-                    config.sections["ui"]["speechprivate"], {"user": tag_username, "message": message}
-                )
-
         if not is_outgoing_message and not is_new_message:
             if not self.offline_message:
-                self.chat_view.append_line(
+                self.chat_view.add_line(
                     _("* Messages sent while you were offline"), message_type="hilite",
                     timestamp_format=timestamp_format
                 )
@@ -533,20 +520,21 @@ class PrivateChat:
         else:
             self.offline_message = False
 
-        self.chat_view.append_line(
-            formatted_message, message_type=message_type, timestamp=timestamp, timestamp_format=timestamp_format,
-            username=tag_username, usertag=usertag
+        self.chat_view.add_line(
+            message, message_type=message_type, timestamp=timestamp, timestamp_format=timestamp_format,
+            username=tag_username
         )
-        self.chats.history.update_user(username, formatted_message)
+        self.chats.window.application.chat_history.update_user(username, message)
+        self.chats.username_combobox.append(username)
 
-    def echo_private_message(self, text, message_type):
+    def echo_private_message(self, message, message_type):
 
         if message_type != "command":
             timestamp_format = config.sections["logging"]["private_timestamp"]
         else:
             timestamp_format = None
 
-        self.chat_view.append_line(text, message_type=message_type, timestamp_format=timestamp_format)
+        self.chat_view.add_line(message, message_type=message_type, timestamp_format=timestamp_format)
 
     def username_event(self, pos_x, pos_y, user):
 

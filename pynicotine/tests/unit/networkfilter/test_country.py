@@ -1,20 +1,5 @@
-# COPYRIGHT (C) 2024 Nicotine+ Contributors
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2024-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
 import shutil
@@ -66,11 +51,11 @@ class CountryTest(TestCase):
 
         for ip_address, country_code in (
             ("0.255.255.255", ""),
-            ("1.0.0.0", "US"),
-            ("1.0.0.255", "US"),
+            ("1.0.0.0", "AU"),
+            ("1.0.0.255", "AU"),
             ("1.0.1.0", "CN"),
             ("1.255.255.255", "KR"),
-            ("2.0.0.0", "GB"),
+            ("2.0.0.0", "US"),
             ("4.255.255.255", "US"),
             ("5.0.0.0", "SY"),
             ("9.255.255.255", "US"),

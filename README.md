@@ -1,3 +1,8 @@
+<!--
+  SPDX-FileCopyrightText: 2013-2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # Nicotine+
 
 <img src="data/icons/icon.svg" alt="Nicotine+ Logo" align="right"
@@ -16,12 +21,12 @@ and [source code](https://github.com/nicotine-plus/nicotine-plus).
 
 ## Download
 
-The current stable version of Nicotine+ is 3.3.7, released on December 15, 2024.
+The current stable version of Nicotine+ is 3.3.10, released on March 10, 2025.
 See the [release notes](NEWS.md).
 
 Downloads are available for:
 
- - [GNU/Linux, *BSD and Solaris](doc/DOWNLOADS.md#gnulinux-bsd-solaris)
+ - [GNU/Linux, *BSD, Haiku and Solaris](doc/DOWNLOADS.md#gnulinux-bsd-haiku-solaris)
  - [Windows](doc/DOWNLOADS.md#windows)
  - [macOS](doc/DOWNLOADS.md#macos)
 

@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2004-2025 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2003-2004 Nicotine Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkBox" id="container">
@@ -24,6 +29,7 @@
                 <property name="visible">True</property>
                 <style>
                   <class name="chat-view"/>
+                  <class name="tabular"/>
                 </style>
               </object>
             </child>
@@ -40,22 +46,6 @@
             <child>
               <object class="GtkBox" id="chat_entry_container">
                 <property name="visible">True</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkToggleButton" id="speech_toggle">
-                <property name="active">True</property>
-                <property name="tooltip-text" translatable="yes">Toggle Text-to-Speech</property>
-                <property name="visible">True</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="icon-name">audio-volume-high-symbolic</property>
-                    <property name="visible">True</property>
-                  </object>
-                </child>
-                <style>
-                  <class name="image-button"/>
-                </style>
               </object>
             </child>
             <child>

@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2004-2025 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2003-2004 Nicotine Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
 <interface>
   <requires lib="gtk+" version="3.0"/>
+  <object class="GtkButton" id="retry_button">
+    <property name="label" translatable="yes">Retry</property>
+    <property name="valign">center</property>
+    <property name="visible">True</property>
+    <signal name="clicked" handler="on_search_again"/>
+  </object>
   <object class="GtkEntry" id="filter_include_entry">
     <property name="hexpand">True</property>
     <property name="max-width-chars">0</property>
     <property name="placeholder-text" translatable="yes">Include text…</property>
     <property name="primary-icon-name">object-select-symbolic</property>
-    <property name="tooltip-text" translatable="yes">Filter in results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
+    <property name="tooltip-text" translatable="yes">Add a filter to only show results whose file paths have the given text. Use a '|' to specify multiple words or phrases, for example: long trail|till we meet again</property>
     <property name="visible">True</property>
     <property name="width-chars">14</property>
     <signal name="activate" handler="on_refilter"/>
@@ -17,7 +28,7 @@
     <property name="max-width-chars">0</property>
     <property name="placeholder-text" translatable="yes">Exclude text…</property>
     <property name="primary-icon-name">action-unavailable-symbolic</property>
-    <property name="tooltip-text" translatable="yes">Filter out results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
+    <property name="tooltip-text" translatable="yes">Add a filter to hide results whose file paths have the given text. Use a '|' to specify multiple words or phrases, for example: long trail|till we meet again</property>
     <property name="visible">True</property>
     <property name="width-chars">14</property>
     <signal name="activate" handler="on_refilter"/>
@@ -25,6 +36,7 @@
   </object>
   <object class="GtkEntry" id="filter_file_type_entry">
     <property name="hexpand">True</property>
+    <property name="input-hints">no-emoji</property>
     <property name="max-width-chars">0</property>
     <property name="placeholder-text" translatable="yes">File type…</property>
     <property name="primary-icon-name">folder-documents-symbolic</property>
@@ -36,6 +48,7 @@
   </object>
   <object class="GtkEntry" id="filter_file_size_entry">
     <property name="hexpand">True</property>
+    <property name="input-hints">no-emoji</property>
     <property name="max-width-chars">0</property>
     <property name="placeholder-text" translatable="yes">File size…</property>
     <property name="primary-icon-name">drive-harddisk-symbolic</property>
@@ -47,6 +60,7 @@
   </object>
   <object class="GtkEntry" id="filter_bitrate_entry">
     <property name="hexpand">True</property>
+    <property name="input-hints">no-emoji</property>
     <property name="max-width-chars">0</property>
     <property name="placeholder-text" translatable="yes">Bitrate…</property>
     <property name="primary-icon-name">audio-volume-high-symbolic</property>
@@ -58,6 +72,7 @@
   </object>
   <object class="GtkEntry" id="filter_length_entry">
     <property name="hexpand">True</property>
+    <property name="input-hints">no-emoji</property>
     <property name="max-width-chars">0</property>
     <property name="placeholder-text" translatable="yes">Duration…</property>
     <property name="primary-icon-name">media-playback-start-symbolic</property>
@@ -69,12 +84,13 @@
   </object>
   <object class="GtkEntry" id="filter_country_entry">
     <property name="hexpand">True</property>
+    <property name="input-hints">no-emoji</property>
     <property name="max-width-chars">0</property>
     <property name="placeholder-text" translatable="yes">Country code…</property>
     <property name="primary-icon-name">mark-location-symbolic</property>
     <property name="tooltip-text" translatable="yes">Country code, e.g. US ES or !DE !GB</property>
     <property name="visible">True</property>
-    <property name="width-chars">12</property>
+    <property name="width-chars">8</property>
     <signal name="activate" handler="on_refilter"/>
     <signal name="icon-press" handler="on_filter_entry_icon_press"/>
   </object>
@@ -85,6 +101,11 @@
         <property name="orientation">vertical</property>
         <property name="vexpand">True</property>
         <property name="visible">True</property>
+        <child>
+          <object class="GtkBox" id="info_bar_container">
+            <property name="visible">True</property>
+          </object>
+        </child>
         <child>
           <object class="GtkBox">
             <property name="margin-bottom">6</property>
@@ -128,6 +149,7 @@
                     <style>
                       <class name="circular"/>
                       <class name="count"/>
+                      <class name="tabular"/>
                     </style>
                   </object>
                 </child>
@@ -188,6 +210,7 @@
                 </child>
                 <style>
                   <class name="flat"/>
+                  <class name="tabular"/>
                 </style>
               </object>
             </child>
@@ -196,7 +219,7 @@
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkToggleButton" id="expand_button">
-                    <property name="tooltip-text" translatable="yes">Expand / Collapse All</property>
+                    <property name="tooltip-text" translatable="yes">Expand All</property>
                     <signal name="toggled" handler="on_toggle_expand_all"/>
                     <child>
                       <object class="GtkImage" id="expand_icon">
@@ -289,6 +312,9 @@
                         <child>
                           <object class="GtkBox" id="filter_file_size_container">
                             <property name="visible">True</property>
+                            <style>
+                              <class name="tabular"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -300,6 +326,9 @@
                         <child>
                           <object class="GtkBox" id="filter_bitrate_container">
                             <property name="visible">True</property>
+                            <style>
+                              <class name="tabular"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -311,6 +340,9 @@
                         <child>
                           <object class="GtkBox" id="filter_length_container">
                             <property name="visible">True</property>
+                            <style>
+                              <class name="tabular"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -329,18 +361,42 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkToggleButton" id="filter_free_slot_button">
-                                <property name="tooltip-text" translatable="yes">Free Slot</property>
+                              <object class="GtkBox">
                                 <property name="visible">True</property>
-                                <signal name="toggled" handler="on_refilter"/>
                                 <child>
-                                  <object class="GtkImage">
-                                    <property name="icon-name">document-open-recent-symbolic</property>
+                                  <object class="GtkToggleButton" id="filter_free_slot_button">
+                                    <property name="tooltip-text" translatable="yes">Free Slot</property>
                                     <property name="visible">True</property>
+                                    <signal name="toggled" handler="on_refilter"/>
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="icon-name">document-open-recent-symbolic</property>
+                                        <property name="visible">True</property>
+                                      </object>
+                                    </child>
+                                    <style>
+                                      <class name="image-button"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkToggleButton" id="filter_public_files_button">
+                                    <property name="tooltip-text" translatable="yes">Public Files</property>
+                                    <property name="visible">True</property>
+                                    <signal name="toggled" handler="on_refilter"/>
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="icon-name">changes-allow-symbolic</property>
+                                        <property name="visible">True</property>
+                                      </object>
+                                    </child>
+                                    <style>
+                                      <class name="image-button"/>
+                                    </style>
                                   </object>
                                 </child>
                                 <style>
-                                  <class name="image-button"/>
+                                  <class name="linked"/>
                                 </style>
                               </object>
                             </child>

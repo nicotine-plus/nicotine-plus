@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2004-2025 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2003-2004 Nicotine Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkSizeGroup">
@@ -7,6 +12,25 @@
       <widget name="_recommendations_label_container"/>
       <widget name="similar_users_label"/>
     </widgets>
+  </object>
+  <object class="GtkEntry" id="add_like_entry">
+    <property name="hexpand">True</property>
+    <property name="max-width-chars">26</property>
+    <property name="placeholder-text" translatable="yes">Add something you like…</property>
+    <property name="primary-icon-name">emblem-default-symbolic</property>
+    <property name="visible">True</property>
+    <property name="width-chars">15</property>
+    <signal name="activate" handler="on_add_thing_i_like"/>
+    <signal name="icon-press" handler="on_add_thing_i_like"/>
+  </object>
+  <object class="GtkEntry" id="add_dislike_entry">
+    <property name="hexpand">True</property>
+    <property name="placeholder-text" translatable="yes">Add something you dislike…</property>
+    <property name="primary-icon-name">user-trash-symbolic</property>
+    <property name="visible">True</property>
+    <property name="width-chars">15</property>
+    <signal name="activate" handler="on_add_thing_i_dislike"/>
+    <signal name="icon-press" handler="on_add_thing_i_dislike"/>
   </object>
   <object class="GtkBox" id="container">
     <property name="spacing">1</property>
@@ -31,18 +55,11 @@
           </object>
         </child>
         <child>
-          <object class="GtkEntry" id="add_like_entry">
-            <property name="hexpand">True</property>
+          <object class="GtkBox" id="add_like_container">
             <property name="margin-bottom">12</property>
             <property name="margin-end">6</property>
             <property name="margin-start">6</property>
-            <property name="max-width-chars">30</property>
-            <property name="placeholder-text" translatable="yes">Add something you like…</property>
-            <property name="primary-icon-name">emblem-default-symbolic</property>
             <property name="visible">True</property>
-            <property name="width-chars">15</property>
-            <signal name="activate" handler="on_add_thing_i_like"/>
-            <signal name="icon-press" handler="on_add_thing_i_like"/>
           </object>
         </child>
         <child>
@@ -72,17 +89,11 @@
           </object>
         </child>
         <child>
-          <object class="GtkEntry" id="add_dislike_entry">
-            <property name="hexpand">True</property>
+          <object class="GtkBox" id="add_dislike_container">
             <property name="margin-bottom">12</property>
             <property name="margin-end">6</property>
             <property name="margin-start">6</property>
-            <property name="placeholder-text" translatable="yes">Add something you dislike…</property>
-            <property name="primary-icon-name">user-trash-symbolic</property>
             <property name="visible">True</property>
-            <property name="width-chars">15</property>
-            <signal name="activate" handler="on_add_thing_i_dislike"/>
-            <signal name="icon-press" handler="on_add_thing_i_dislike"/>
           </object>
         </child>
         <child>

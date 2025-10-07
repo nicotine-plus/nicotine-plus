@@ -1,22 +1,7 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2006-2009 daelstorm <daelstorm@gmail.com>
+# SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 from gi.repository import GLib
 from gi.repository import GObject
@@ -26,6 +11,7 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import ui
+from pynicotine.gtkgui.widgets.combobox import ComboBox
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
@@ -41,7 +27,9 @@ class Interests:
     def __init__(self, window):
 
         (
+            self.add_dislike_container,
             self.add_dislike_entry,
+            self.add_like_container,
             self.add_like_entry,
             self.container,
             self.dislikes_list_container,
@@ -179,6 +167,17 @@ class Interests:
         self.likes_list_view.unfreeze()
         self.dislikes_list_view.unfreeze()
 
+        # Comboboxes
+
+        self.add_like_combobox = ComboBox(
+            container=self.add_like_container, has_entry=True,
+            entry=self.add_like_entry, item_selected_callback=self.on_add_thing_i_like
+        )
+        self.add_dislike_combobox = ComboBox(
+            container=self.add_dislike_container, has_entry=True,
+            entry=self.add_dislike_entry, item_selected_callback=self.on_add_thing_i_dislike
+        )
+
         # Popup menus
         popup = PopupMenu(self.window.application, self.likes_list_view.widget)
         popup.add_items(
@@ -281,12 +280,12 @@ class Interests:
 
         self.show_recommendations()
 
-    def show_recommendations(self):
+    def show_recommendations(self, always_global=False):
 
         self.recommendations_label.set_label(_("Recommendations"))
         self.similar_users_label.set_label(_("Similar Users"))
 
-        if not self.likes_list_view.iterators and not self.dislikes_list_view.iterators:
+        if always_global or (not self.likes_list_view.iterators and not self.dislikes_list_view.iterators):
             core.interests.request_global_recommendations()
         else:
             core.interests.request_recommendations()
@@ -353,6 +352,7 @@ class Interests:
             return
 
         self.add_like_entry.set_text("")
+        self.add_like_combobox.remove_id(item)
         core.interests.add_thing_i_like(item)
 
     def on_add_thing_i_dislike(self, *_args):
@@ -363,6 +363,7 @@ class Interests:
             return
 
         self.add_dislike_entry.set_text("")
+        self.add_dislike_combobox.remove_id(item)
         core.interests.add_thing_i_hate(item)
 
     def on_remove_thing_i_like(self, *_args):
@@ -421,29 +422,48 @@ class Interests:
     def on_refresh_recommendations(self, *_args):
         self.show_recommendations()
 
-    def set_recommendations(self, recommendations, item=None):
+    def set_recommendations(self, recommendations, unrecommendations, item=None):
 
         if item:
             self.recommendations_label.set_label(_("Recommendations (%s)") % item)
         else:
             self.recommendations_label.set_label(_("Recommendations"))
 
-        self.recommendations_list_view.clear()
-        self.recommendations_list_view.freeze()
+        widgets = (self.add_like_combobox, self.add_dislike_combobox, self.recommendations_list_view)
+
+        for widget in widgets:
+            widget.clear()
+            widget.freeze()
 
         for thing, rating in recommendations:
+            if thing not in self.likes_list_view.iterators:
+                self.add_like_combobox.append(thing)
+
             self.recommendations_list_view.add_row([humanize(rating), thing, rating], select_row=False)
 
-        self.recommendations_list_view.unfreeze()
+        for thing, rating in unrecommendations:
+            if thing not in self.dislikes_list_view.iterators:
+                self.add_dislike_combobox.append(thing)
+
+            self.recommendations_list_view.add_row([humanize(rating), thing, rating], select_row=False)
+
+        for widget in widgets:
+            widget.unfreeze()
 
     def global_recommendations(self, msg):
-        self.set_recommendations(msg.recommendations + msg.unrecommendations)
+        self.set_recommendations(msg.recommendations, msg.unrecommendations)
 
     def recommendations(self, msg):
-        self.set_recommendations(msg.recommendations + msg.unrecommendations)
+
+        if msg.recommendations or msg.unrecommendations:
+            self.set_recommendations(msg.recommendations, msg.unrecommendations)
+            return
+
+        # No personal recommendations, fall back to global ones
+        self.show_recommendations(always_global=True)
 
     def item_recommendations(self, msg):
-        self.set_recommendations(msg.recommendations + msg.unrecommendations, msg.thing)
+        self.set_recommendations(msg.recommendations, msg.unrecommendations, msg.thing)
 
     def set_similar_users(self, users, item=None):
 
@@ -463,13 +483,13 @@ class Interests:
 
             if stats is not None:
                 speed = stats.upload_speed or 0
-                files = stats.files
+                files = stats.files or 0
             else:
                 speed = 0
-                files = None
+                files = 0
 
-            h_files = humanize(files) if files is not None else ""
             h_speed = human_speed(speed) if speed > 0 else ""
+            h_files = humanize(files)
 
             self.similar_users_list_view.add_row([
                 USER_STATUS_ICON_NAMES[status],
@@ -478,7 +498,7 @@ class Interests:
                 h_speed,
                 h_files,
                 speed,
-                files or 0,
+                files,
                 rating
             ], select_row=False)
 

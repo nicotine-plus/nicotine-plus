@@ -1,6 +1,9 @@
-name: Tests
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
+name: Tests
 on: [push, pull_request]
+permissions: {}
 
 env:
   NICOTINE_NETWORK_TESTS: 1
@@ -8,13 +11,13 @@ env:
 jobs:
 
   python:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
-        python: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', '3.12', '3.13',
-                 'pypy-3.6', 'pypy-3.7', 'pypy-3.8', 'pypy-3.9', 'pypy-3.10']
+        python: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14-dev',
+                 'pypy-3.10', 'pypy-3.11']
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -29,7 +32,8 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install gettext gir1.2-gtk-3.0 libgirepository1.0-dev libgtk-3-bin
+          sudo apt install gettext gir1.2-gtk-4.0 libcairo2-dev \
+            libgirepository-2.0-dev libgtk-4-bin
           python -m pip install build setuptools wheel .[tests]
 
       - name: PEP 8 style checks
@@ -54,7 +58,7 @@ jobs:
       fail-fast: false
       matrix:
         container: ['debian:bullseye', 'debian:bookworm', 'debian:unstable',
-                    'ubuntu:focal', 'ubuntu:jammy', 'ubuntu:noble', 'ubuntu:devel']
+                    'ubuntu:jammy', 'ubuntu:noble', 'ubuntu:devel']
     container: ${{ matrix.container }}
     steps:
       - name: Checkout code
@@ -74,7 +78,7 @@ jobs:
       fail-fast: false
       matrix:
         container: ['fedora:rawhide']
-        gtk: [3, 4]
+        gtk: [4, 3]
         platform: ['ubuntu-latest', 'ubuntu-24.04-arm']
     runs-on: ${{ matrix.platform }}
     container: ${{ matrix.container }}
@@ -117,24 +121,24 @@ jobs:
       - name: Install dependencies
         run: |
           zypper refresh
-          zypper -n install dejavu-fonts gettext-tools python312-build python312-gobject \
-            python312-gobject-Gdk python312-pycodestyle python312-pylint \
-            python312-setuptools python312-wheel typelib-1_0-Gtk-4_0
+          zypper -n install dejavu-fonts gettext-tools python313-build python313-gobject \
+            python313-gobject-Gdk python313-pycodestyle python313-pylint \
+            python313-setuptools python313-wheel typelib-1_0-Gtk-4_0
 
       - name: PEP 8 style checks
-        run: python3.12 -m pycodestyle
+        run: python3.13 -m pycodestyle
 
       - name: Linting
-        run: python3.12 -m pylint --recursive=y .
+        run: python3.13 -m pylint --recursive=y .
 
       - name: Integration and unit tests
-        run: python3.12 -m unittest -v
+        run: python3.13 -m unittest -v
 
       - name: Build
-        run: python3.12 -m build
+        run: python3.13 -m build
 
       - name: Build without isolation
-        run: python3.12 -m build --no-isolation
+        run: python3.13 -m build --no-isolation
 
   alpine:
     runs-on: ubuntu-latest
@@ -170,14 +174,22 @@ jobs:
         run: python3 -m build --no-isolation
 
   windows:
-    runs-on: windows-latest
     timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
         include:
           - arch: x86_64
-            prefix: mingw-w64-x86_64
+            prefix: mingw-w64-clang-x86_64
+            msystem: clang64
+            platform: windows-latest
+          - arch: arm64
+            prefix: mingw-w64-clang-aarch64
+            msystem: clangarm64
+            platform: windows-11-arm
+    runs-on: ${{ matrix.platform }}
+    env:
+      ARCH: ${{ matrix.arch }}
     defaults:
       run:
         shell: msys2 {0}
@@ -188,8 +200,7 @@ jobs:
       - name: Setup msys2
         uses: msys2/setup-msys2@v2
         with:
-          msystem: mingw64
-          release: false
+          msystem: ${{ matrix.msystem }}
           update: true
           install: >-
             ${{ matrix.prefix }}-ca-certificates
@@ -206,7 +217,7 @@ jobs:
             ${{ matrix.prefix }}-webp-pixbuf-loader
 
       - name: Install additional dependencies
-        run: python3 packaging/windows/dependencies.py
+        run: python3 build-aux/windows/dependencies.py
 
       - name: PEP 8 style checks
         run: python3 -m pycodestyle
@@ -217,9 +228,6 @@ jobs:
       - name: Integration and unit tests
         run: python3 -m unittest -v
 
-      - name: Build
-        run: python3 -m build
-
       - name: Build without isolation
         run: python3 -m build --no-isolation
 
@@ -229,7 +237,7 @@ jobs:
       matrix:
         include:
           - arch: x86_64
-            platform: macos-13
+            platform: macos-15-intel
           - arch: arm64
             platform: macos-14
     runs-on: ${{ matrix.platform }}
@@ -238,17 +246,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set system language
-        run: defaults write NSGlobalDomain AppleLanguages "(en-US)"
-
       - name: Create Python virtual environment
         run: |
-          brew uninstall --ignore-dependencies python@3.12
-          brew install --overwrite python@3.12
-          python3.12 -m venv venv
+          brew uninstall --ignore-dependencies python@3.13
+          brew install --overwrite python@3.13
+          python3.13 -m venv venv
 
       - name: Install dependencies
-        run: venv/bin/python3 packaging/macos/dependencies.py
+        run: venv/bin/python3 build-aux/macos/dependencies.py
 
       - name: PEP 8 style checks
         run: venv/bin/python3 -m pycodestyle

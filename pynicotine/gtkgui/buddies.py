@@ -1,25 +1,10 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-# COPYRIGHT (C) 2018 Mutnick <mutnick@techie.com>
-# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2009 quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2018 Mutnick <mutnick@techie.com>
+# SPDX-FileCopyrightText: 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# SPDX-FileCopyrightText: 2009 quinox <quinox@users.sf.net>
+# SPDX-FileCopyrightText: 2006-2009 daelstorm <daelstorm@gmail.com>
+# SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import time
 
@@ -118,8 +103,9 @@ class Buddies:
                 "last_seen": {
                     "column_type": "text",
                     "title": _("Last Seen"),
-                    "width": 160,
-                    "sort_column": "last_seen_data"
+                    "width": 240,
+                    "sort_column": "last_seen_data",
+                    "tabular": True
                 },
                 "comments": {
                     "column_type": "text",
@@ -313,6 +299,7 @@ class Buddies:
 
         speed = msg.avgspeed or 0
         num_files = msg.files or 0
+        h_num_files = humanize(num_files)
         column_ids = []
         column_values = []
 
@@ -322,9 +309,7 @@ class Buddies:
             column_ids.extend(("speed", "speed_data"))
             column_values.extend((h_speed, speed))
 
-        if num_files != self.list_view.get_row_value(iterator, "files_data"):
-            h_num_files = humanize(num_files)
-
+        if h_num_files != self.list_view.get_row_value(iterator, "files"):
             column_ids.extend(("files", "files_data"))
             column_values.extend((h_num_files, num_files))
 

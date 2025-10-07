@@ -1,1 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="#c9ae13" d="M8 3a5 5 0 0 0-5 5 5 5 0 0 0 5 5 5 5 0 0 0 5-5 5 5 0 0 0-.006-.223A3.75 3.75 0 0 1 11.75 8 3.75 3.75 0 0 1 8 4.25a3.75 3.75 0 0 1 .223-1.244A5 5 0 0 0 8 3z"/></svg>
+<!--
+  SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path fill="#c9ae13" d="M8 3a5 5 0 0 0-5 5 5 5 0 0 0 5 5 5 5 0 0 0 5-5 5 5 0 0 0-.006-.223A3.75 3.75 0 0 1 11.75 8 3.75 3.75 0 0 1 8 4.25a3.75 3.75 0 0 1 .223-1.244A5 5 0 0 0 8 3z"/></svg>

@@ -1,3 +1,8 @@
+<!--
+  SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # Downloads
 
 Download the current stable version of Nicotine+ for your operating system.
@@ -7,7 +12,7 @@ If you want to download the latest unstable build and help test Nicotine+,
 see [TESTING.md](TESTING.md).
 
 
-## GNU/Linux, *BSD, Solaris
+## GNU/Linux, *BSD, Haiku, Solaris
 
 ### Operating System Packages
 
@@ -23,6 +28,8 @@ using the package manager.
 | [Fedora](https://packages.fedoraproject.org/pkgs/nicotine+/nicotine+/)                   | `nicotine+`                |
 | [FreeBSD Ports](https://www.freshports.org/net-p2p/py-nicotine-plus)                     | `net-p2p/py-nicotine-plus` |
 | [Gentoo](https://packages.gentoo.org/packages/net-p2p/nicotine+)                         | `net-p2p/nicotine+`        |
+| [GNU Guix](https://packages.guix.gnu.org/packages/nicotine+/)                            | `nicotine+`                |
+| [Haiku Ports](https://depot.haiku-os.org/#!/pkg/nicotineplus)                            | `nicotineplus`             |
 | [Mageia](https://madb.mageialinux-online.org/show?distribution=cauldron&rpm=nicotine%2B) | `nicotine+`                |
 | [Manjaro](https://manjaristas.org/branch_compare?q=nicotine%2B)                          | `nicotine+`                |
 | [NixOS](https://search.nixos.org/packages?show=nicotine-plus)                            | `nicotine-plus`            |
@@ -105,6 +112,11 @@ Stable installers are available for download.
 Standalone executables are also available. They can be run from any folder and
 do not require installation.
 
+Please note that application data and
+configuration files are still stored in the same folder as the installed
+variant, i.e. they will conflict. There are plans to add a portable package
+that stores configuration independently at some point.
+
  - [Download Windows Standalone Package](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip)
     — [`SHA256`](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip.sha256)  
    for Windows 10 or later
@@ -139,8 +151,8 @@ using them.
     — [`SHA256`](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-x86_64-installer.zip.sha256)  
    for macOS 13 Ventura or later
 
- - [Download macOS Apple Silicon Installer](https://github.com/nicotine-plus/nicotine-plus/releases/download/3.3.6/macos-arm64-installer.zip)
-    — [`SHA256`](https://github.com/nicotine-plus/nicotine-plus/releases/download/3.3.6/macos-arm64-installer.zip.sha256)  
+ - [Download macOS Apple Silicon Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-arm64-installer.zip)
+    — [`SHA256`](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-arm64-installer.zip.sha256)  
    for macOS 14 Sonoma or later
 
 ### Package Managers
@@ -151,4 +163,4 @@ using them.
 | Package Manager                                                     | Package Name    |
 |---------------------------------------------------------------------|-----------------|
 | [Homebrew Formulae](https://formulae.brew.sh/formula/nicotine-plus) | `nicotine-plus` |
-| [MacPorts](https://ports.macports.org/port/nicotine-plus/)          | `nicotine-plus` |
+| [PowerPC Ports](https://macos-powerpc.org/packages/nicotine-plus/)  | `nicotine-plus` |

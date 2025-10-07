@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: 2023-2025 Nicotine+ Contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 /* Borders */
 
 .border-top,
@@ -71,6 +76,10 @@
 
 .underline {
     text-decoration-line: underline;
+}
+
+.tabular {
+    font-feature-settings: "tnum";
 }
 
 /* Tweaks */

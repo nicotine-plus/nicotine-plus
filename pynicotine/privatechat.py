@@ -1,20 +1,5 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import pynicotine
 from pynicotine.config import config
@@ -33,7 +18,7 @@ from pynicotine.utils import find_whole_word
 class PrivateChat:
     __slots__ = ("completions", "private_message_queue", "away_message_users", "users")
 
-    CTCP_VERSION = "\x01VERSION\x01"
+    SERVER_USERNAME = "server"
 
     def __init__(self):
 
@@ -140,7 +125,7 @@ class PrivateChat:
 
         username, message = user_text
 
-        if config.sections["words"]["replacewords"] and message != self.CTCP_VERSION:
+        if config.sections["words"]["replacewords"] and not message.startswith("\x01"):
             for word, replacement in config.sections["words"]["autoreplaced"].items():
                 message = message.replace(str(word), str(replacement))
 
@@ -224,15 +209,19 @@ class PrivateChat:
 
                 core.send_message_to_server(MessageAcked(msg.message_id))
 
-            if username == "server":
-                start_str = "The room you are trying to enter ("
-
-                if message.startswith(start_str) and ") " in message:
-                    # Redirect message to chat room tab if join wasn't successful
-                    msg.user = None
-                    room = message[len(start_str):message.rfind(") ")]
-                    events.emit("say-chat-room", SayChatroom(room=room, message=message, user=username))
-                    return
+            if username == self.SERVER_USERNAME:
+                # Redirect the following messages to chat room tab:
+                # - The room you are trying to enter (name) is registered as private.
+                # - Room (name) is registered as public.
+                for start_str in (
+                    "The room you are trying to enter (",
+                    "Room ("
+                ):
+                    if message.startswith(start_str) and ") " in message:
+                        msg.user = None
+                        room = message[len(start_str):message.rfind(") ")]
+                        events.emit("say-chat-room", SayChatroom(room=room, message=message, user=username))
+                        return
             else:
                 # Check ignore status for all other users except "server"
                 if core.network_filter.is_user_ignored(username):
@@ -267,27 +256,27 @@ class PrivateChat:
 
         msg.message_type = self.get_message_type(message, is_outgoing_message)
         is_action_message = (msg.message_type == "action")
-        is_ctcp_version = (message == self.CTCP_VERSION)
+        ctcp_query = ""
 
-        # SEND CLIENT VERSION to user if the following string is sent
-        if is_ctcp_version:
-            msg.message = message = "CTCP VERSION"
+        if message.startswith("\x01") and message.endswith("\x01"):
+            ctcp_query = msg.message[1:-1].strip()
+            msg.message = message = f"CTCP {ctcp_query}"
 
-        if is_action_message:
-            message = message.replace("/me ", "", 1)
+        elif is_action_message:
+            msg.message = message = message.replace("/me ", "", 1)
 
         if not is_outgoing_message and config.sections["words"]["censorwords"]:
             message = censor_text(message, censored_patterns=config.sections["words"]["censored"])
 
-        if is_action_message:
-            msg.formatted_message = msg.message = f"* {tag_username} {message}"
-        else:
-            msg.formatted_message = f"[{tag_username}] {message}"
-
         if config.sections["logging"]["privatechat"] or username in config.sections["logging"]["private_chats"]:
+            if is_action_message:
+                formatted_message = f"* {tag_username} {message}"
+            else:
+                formatted_message = f"[{tag_username}] {message}"
+
             log.write_log_file(
                 folder_path=log.private_chat_folder_path,
-                basename=username, text=msg.formatted_message, timestamp=timestamp
+                basename=username, text=formatted_message, timestamp=timestamp
             )
 
         if is_outgoing_message:
@@ -295,8 +284,13 @@ class PrivateChat:
 
         core.pluginhandler.incoming_private_chat_notification(username, msg.message)
 
-        if is_ctcp_version and not config.sections["server"]["ctcpmsgs"]:
-            self.send_message(username, f"{pynicotine.__application_name__} {pynicotine.__version__}")
+        if ctcp_query and not config.sections["server"]["ctcpmsgs"]:
+            if ctcp_query == "VERSION":
+                ctcp_reply = f"{ctcp_query}: {pynicotine.__application_name__} {pynicotine.__version__}"
+            else:
+                ctcp_reply = f"ERRMSG {ctcp_query}: Unknown query, available CTCP keywords are VERSION"
+
+            self.send_message(username, ctcp_reply)
 
         if not msg.is_new_message:
             # Message was sent while offline, don't auto-reply

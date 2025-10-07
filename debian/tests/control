@@ -1,11 +1,12 @@
+# SPDX-FileCopyrightText: 2016-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 ## DEP-8 continuous integration tests.
 
 # Verify that package is installed...
 Test-Command: nicotine --version | grep Nicotine+
 Depends: @
-Restrictions: isolation-container
 
 # Perform integration and unit tests...
 Test-Command: pytest-3
 Depends: @
-Restrictions: isolation-container

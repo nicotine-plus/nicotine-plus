@@ -1,20 +1,5 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
 import random
@@ -65,7 +50,7 @@ if USE_COLOR_SCHEME_PORTAL:
                     GLib.Variant.new_string("org.freedesktop.appearance"),
                     GLib.Variant.new_string("color-scheme")
                 ),
-                flags=Gio.DBusCallFlags.NONE,
+                flags=0,
                 timeout_msec=1000,
                 cancellable=None
             )
@@ -92,7 +77,7 @@ if USE_COLOR_SCHEME_PORTAL:
     try:
         SETTINGS_PORTAL = Gio.DBusProxy.new_for_bus_sync(
             bus_type=Gio.BusType.SESSION,
-            flags=Gio.DBusProxyFlags.NONE,
+            flags=0,
             info=None,
             name="org.freedesktop.portal.Desktop",
             object_path="/org/freedesktop/portal/desktop",
@@ -249,6 +234,9 @@ FILE_TYPE_ICON_LABELS = {
     "x-office-document-symbolic": _("Document"),
     "emblem-documents-symbolic": _("Text")
 }
+PRIVATE_ICON_LABELS = {
+    "changes-prevent-symbolic": _("Private")
+}
 USER_STATUS_ICON_LABELS = {
     "nplus-status-available": _("Online"),
     "nplus-status-away": _("Away"),
@@ -391,29 +379,31 @@ def get_flag_icon_name(country_code):
 
 def get_file_type_icon_name(basename):
 
-    _basename_no_extension, _separator, extension = basename.rpartition(".")
-    extension = extension.lower()
+    _basename_no_extension, separator, extension = basename.rpartition(".")
 
-    if extension in FileTypes.AUDIO:
-        return "folder-music-symbolic"
+    if separator:
+        extension = extension.lower()
 
-    if extension in FileTypes.IMAGE:
-        return "folder-pictures-symbolic"
+        if extension in FileTypes.AUDIO:
+            return "folder-music-symbolic"
 
-    if extension in FileTypes.VIDEO:
-        return "folder-videos-symbolic"
+        if extension in FileTypes.IMAGE:
+            return "folder-pictures-symbolic"
 
-    if extension in FileTypes.ARCHIVE:
-        return "package-x-generic-symbolic"
+        if extension in FileTypes.VIDEO:
+            return "folder-videos-symbolic"
 
-    if extension in FileTypes.DOCUMENT:
-        return "x-office-document-symbolic"
+        if extension in FileTypes.ARCHIVE:
+            return "package-x-generic-symbolic"
 
-    if extension in FileTypes.TEXT:
-        return "emblem-documents-symbolic"
+        if extension in FileTypes.DOCUMENT:
+            return "x-office-document-symbolic"
 
-    if extension in FileTypes.EXECUTABLE:
-        return "application-x-executable-symbolic"
+        if extension in FileTypes.TEXT:
+            return "emblem-documents-symbolic"
+
+        if extension in FileTypes.EXECUTABLE:
+            return "application-x-executable-symbolic"
 
     return "folder-documents-symbolic"
 
@@ -613,14 +603,12 @@ def update_custom_css():
     load_css(CUSTOM_CSS_PROVIDER, css)
 
 
-def update_tag_visuals(tag, color_id):
+def update_tag_visuals(tag):
 
-    enable_colored_usernames = config.sections["ui"]["usernamehotspots"]
-    is_hotspot_tag = (color_id in {"useraway", "useronline", "useroffline"})
-    color_hex = config.sections["ui"].get(color_id)
+    color_hex = config.sections["ui"].get(tag.color_id)
     tag_props = tag.props
 
-    if is_hotspot_tag and not enable_colored_usernames:
+    if tag.secondary_callback and not config.sections["ui"]["usernamehotspots"]:
         color_hex = None
 
     if not color_hex:
@@ -635,11 +623,11 @@ def update_tag_visuals(tag, color_id):
             tag_props.foreground_rgba = new_rgba
 
     # URLs
-    if color_id == "urlcolor" and tag_props.underline != Pango.Underline.SINGLE:
+    if tag.url and tag_props.underline != Pango.Underline.SINGLE:
         tag_props.underline = Pango.Underline.SINGLE
 
     # Hotspots
-    if not is_hotspot_tag:
+    if not tag.callback_arg:
         return
 
     username_style = config.sections["ui"]["usernamestyle"]

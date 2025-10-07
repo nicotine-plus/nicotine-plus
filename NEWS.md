@@ -1,3 +1,10 @@
+<!--
+  SPDX-FileCopyrightText: 2004-2025 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2003-2004 Nicotine Contributors
+  SPDX-FileCopyrightText: 2002-2003 PySoulSeek Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # Release Notes
 
 The current stable version of Nicotine+ is available at [DOWNLOADS.md](doc/DOWNLOADS.md).
@@ -5,7 +12,34 @@ The current stable version of Nicotine+ is available at [DOWNLOADS.md](doc/DOWNL
 You can run the latest unstable build of Nicotine+ to test recent changes and bug fixes, see [TESTING.md](doc/TESTING.md).
 
 
-## Version 3.3.8 (Release Candidate 2)
+## Version 3.3.10 (March 10, 2025)
+
+### Corrections
+
+ * Fixed file transfers not starting
+
+### Issues closed on GitHub
+
+ * Downloads stuck on Queued ([#3320](https://github.com/nicotine-plus/nicotine-plus/issues/3320))
+
+
+## Version 3.3.9 (March 9, 2025)
+
+### Corrections
+
+ * Fixed a crash when rescanning shared files in some cases
+ * Fixed column widths not being remembered for certain columns
+ * Improved readability of long file paths in File Properties dialog
+ * Fixed minor inconsistencies in the GUI
+
+### Issues closed on GitHub
+
+ * Diacritics starting names are in wrong order (at the end of the list) - languages drop-down menu ([#3295](https://github.com/nicotine-plus/nicotine-plus/issues/3295))
+ * Setting the width of the columns is not remembered ([#3296](https://github.com/nicotine-plus/nicotine-plus/issues/3296))
+ * Can't boot after deleting app and reinstalling it ([#3308](https://github.com/nicotine-plus/nicotine-plus/issues/3308))
+
+
+## Version 3.3.8 (February 24, 2025)
 
 ### Changes
 
@@ -13,6 +47,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Added Czech translation (thank you @slrslr)
  * Added Tamil translation (thank you @TamilNeram)
  * Optimized reading of large chat logs
+ * Optimized upload queue position requests
  * Show number of scanned folders while rescanning shares
  * Skip unit tests requiring network connection by default
 
@@ -21,21 +56,27 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Fixed a crash when closing font chooser dialogs in older GTK 4 versions
  * Fixed broken tray icons in the Flatpak package
  * Fixed incorrect download folder names in rare cases
+ * Fixed RTL text direction being used with LTR languages
  * Fixed libadwaita being enabled by accident in Budgie desktop environment
  * Windows: Fixed a crash on systems with outdated Vulkan drivers
- * Windows: Fixed a crash when Proxifier is enabled
+ * Windows: Fixed a crash on systems with Proxifier enabled
+ * Windows: Fixed main window minimizing when closing dialogs
  * Windows: Fixed broken window size when restoring from tray
  * macOS: Fixed a crash on startup with Apple Silicon build
 
 ### Issues closed on GitHub
 
+ * Slowness when uploading large amount of files ([#3199](https://github.com/nicotine-plus/nicotine-plus/issues/3199))
  * App told me to report this. ([#3218](https://github.com/nicotine-plus/nicotine-plus/issues/3218))
  * Nicotine 3.3.7 issue with Sonoma 14.7.2 : impossible to start app ! ([#3227](https://github.com/nicotine-plus/nicotine-plus/issues/3227))
+ * Closing the lil Wishlist window minimizes the entire app ([#3230](https://github.com/nicotine-plus/nicotine-plus/issues/3230))
  * Remember and restore window size and position when opening an application from the tray ([#3236](https://github.com/nicotine-plus/nicotine-plus/issues/3236))
  * Progress indication when (re-)scanning shares ([#3246](https://github.com/nicotine-plus/nicotine-plus/issues/3246))
  * Czech language translation status ([#3248](https://github.com/nicotine-plus/nicotine-plus/issues/3248))
  * removed_parent_folders should only remove first occurence ([#3255](https://github.com/nicotine-plus/nicotine-plus/issues/3255))
  * Crash after update to newer version and found that older versions also crash now ([#3265](https://github.com/nicotine-plus/nicotine-plus/issues/3265))
+ * The only valid location for the SVG icon on Linux is /usr/share/icons/hicolor/scalable/apps ([#3273](https://github.com/nicotine-plus/nicotine-plus/issues/3273))
+ * UI layout with text direction Right-to-Left ([#3285](https://github.com/nicotine-plus/nicotine-plus/issues/3285))
 
 
 ## Version 3.3.7 (December 15, 2024)

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2007-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 # This file is responsible for including all necessary files in the source distribution
 # https://packaging.python.org/en/latest/guides/using-manifest-in/
 

@@ -1,31 +1,17 @@
-# COPYRIGHT (C) 2022-2024 Nicotine+ Contributors
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2022-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import time
 
 from collections import defaultdict
-from collections import deque
+from queue import Empty, SimpleQueue
 from threading import Thread
 
 
 EVENT_NAMES = {
     # General
     "check-latest-version",
+    "check-port-status",
     "cli-command",
     "cli-prompt-finished",
     "confirm-quit",
@@ -62,6 +48,7 @@ EVENT_NAMES = {
     "show-download-notification",
     "show-private-chat-notification",
     "show-search-notification",
+    "show-upload-notification",
 
     # Buddy list
     "add-buddy",
@@ -173,6 +160,7 @@ EVENT_NAMES = {
     "file-transfer-init",
     "file-upload-progress",
     "folder-contents-response",
+    "folder-contents-timeout",
     "folder-download-finished",
     "peer-connection-closed",
     "peer-connection-error",
@@ -236,8 +224,8 @@ class Events:
     def __init__(self):
 
         self._callbacks = defaultdict(list)
-        self._thread_events = deque()
-        self._pending_scheduler_events = deque()
+        self._thread_events = SimpleQueue()
+        self._pending_scheduler_events = SimpleQueue()
         self._scheduler_events = {}
         self._scheduler_event_id = 0
         self._is_active = False
@@ -291,12 +279,15 @@ class Events:
                 core.pluginhandler.show_plugin_error(module_name, error)
 
     def emit_main_thread(self, event_name, *args, **kwargs):
-        self._thread_events.append(ThreadEvent(event_name, args, kwargs))
+        self._thread_events.put_nowait(ThreadEvent(event_name, args, kwargs))
 
     def invoke_main_thread(self, callback, *args, **kwargs):
         self.emit_main_thread("thread-callback", callback, *args, **kwargs)
 
     def schedule(self, delay, callback, callback_args=None, repeat=False):
+
+        if delay <= 0:
+            return None
 
         self._scheduler_event_id += 1
         next_time = (time.monotonic() + delay)
@@ -304,13 +295,17 @@ class Events:
         if callback_args is None:
             callback_args = ()
 
-        self._pending_scheduler_events.append(
+        self._pending_scheduler_events.put_nowait(
             SchedulerEvent(self._scheduler_event_id, next_time, delay, repeat, callback, callback_args)
         )
         return self._scheduler_event_id
 
+    def schedule_at(self, timestamp, callback, callback_args=None):
+        delay = (timestamp - time.time())
+        return self.schedule(delay, callback, callback_args, repeat=False)
+
     def cancel_scheduled(self, event_id):
-        self._pending_scheduler_events.append(SchedulerEvent(event_id, next_time=None))
+        self._pending_scheduler_events.put_nowait(SchedulerEvent(event_id, next_time=None))
 
     def process_thread_events(self):
         """Called by the main loop 10 times per second to emit thread events in
@@ -320,16 +315,19 @@ class Events:
         processing events.
         """
 
-        if not self._thread_events:
+        event_list = []
+
+        while True:
+            try:
+                event_list.append(self._thread_events.get_nowait())
+            except Empty:
+                break
+
+        if not event_list:
             if not self._is_active:
                 return False
 
             return True
-
-        event_list = []
-
-        while self._thread_events:
-            event_list.append(self._thread_events.popleft())
 
         for event in event_list:
             self.emit(event.event_name, *event.args, **event.kwargs)
@@ -340,8 +338,11 @@ class Events:
 
         while self._is_active:
             # Scheduled events additions/removals from other threads
-            while self._pending_scheduler_events:
-                event = self._pending_scheduler_events.popleft()
+            while True:
+                try:
+                    event = self._pending_scheduler_events.get_nowait()
+                except Empty:
+                    break
 
                 if event.next_time is not None:
                     self._scheduler_events[event.event_id] = event
@@ -382,7 +383,13 @@ class Events:
 
         self._is_active = False
         self._callbacks.clear()
-        self._pending_scheduler_events.clear()
+
+        while True:
+            try:
+                self._pending_scheduler_events.get_nowait()
+            except Empty:
+                break
+
         self._scheduler_events.clear()
 
 

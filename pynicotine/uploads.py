@@ -1,31 +1,19 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
-# COPYRIGHT (C) 2013 eLvErDe <gandalf@le-vert.net>
-# COPYRIGHT (C) 2008-2012 quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2009 hedonist <ak@sensi.org>
-# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
-# COPYRIGHT (C) 2001-2003 Alexander Kanavin
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# SPDX-FileCopyrightText: 2016 Mutnick <muhing@yahoo.com>
+# SPDX-FileCopyrightText: 2013 eLvErDe <gandalf@le-vert.net>
+# SPDX-FileCopyrightText: 2008-2012 quinox <quinox@users.sf.net>
+# SPDX-FileCopyrightText: 2009 hedonist <ak@sensi.org>
+# SPDX-FileCopyrightText: 2006-2009 daelstorm <daelstorm@gmail.com>
+# SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# SPDX-FileCopyrightText: 2001-2003 Alexander Kanavin
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
+import sys
 import time
+
+from collections import defaultdict
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -52,12 +40,14 @@ from pynicotine.transfers import Transfer
 from pynicotine.transfers import Transfers
 from pynicotine.transfers import TransferStatus
 from pynicotine.utils import encode_path
+from pynicotine.utils import human_size
 
 
 class Uploads(Transfers):
-    __slots__ = ("pending_shutdown", "upload_speed", "token", "_pending_network_msgs",
-                 "_user_update_counter", "_user_update_counters", "_upload_queue_timer_id",
-                 "_retry_failed_uploads_timer_id")
+    __slots__ = ("pending_shutdown", "upload_speed", "token", "_queue_positions",
+                 "_queue_position_users", "_privileged_position_requested", "_pending_network_msgs",
+                 "_queue_notification_users", "_user_update_counter", "_user_update_counters",
+                 "_queue_notification_timer_id", "_upload_queue_timer_id", "_retry_failed_uploads_timer_id")
 
     def __init__(self):
 
@@ -67,10 +57,15 @@ class Uploads(Transfers):
         self.upload_speed = 0
         self.token = initial_token()
 
+        self._queue_positions = {}
+        self._queue_position_users = defaultdict(dict)
+        self._queue_notification_users = defaultdict(list)
+        self._privileged_position_requested = False
         self._pending_network_msgs = []
         self._user_update_counter = 0
         self._user_update_counters = {}
 
+        self._queue_notification_timer_id = None
         self._upload_queue_timer_id = None
         self._retry_failed_uploads_timer_id = None
 
@@ -108,6 +103,10 @@ class Uploads(Transfers):
 
         super()._server_login(msg)
 
+        # Show notifications for newly queued uploads every 10 seconds
+        self._queue_notification_timer_id = events.schedule(
+            delay=10, callback=self._show_queued_upload_notifications, repeat=True)
+
         # Check if queued uploads can be started every 10 seconds
         self._upload_queue_timer_id = events.schedule(delay=10, callback=self._check_upload_queue, repeat=True)
 
@@ -119,9 +118,16 @@ class Uploads(Transfers):
 
         super()._server_disconnect(msg)
 
-        for timer_id in (self._upload_queue_timer_id, self._retry_failed_uploads_timer_id):
+        for timer_id in (
+            self._queue_notification_timer_id,
+            self._upload_queue_timer_id,
+            self._retry_failed_uploads_timer_id
+        ):
             events.cancel_scheduled(timer_id)
 
+        self._queue_positions.clear()
+        self._queue_position_users.clear()
+        self._queue_notification_users.clear()
         self._pending_network_msgs.clear()
         self._user_update_counters.clear()
         self._user_update_counter = 0
@@ -305,7 +311,7 @@ class Uploads(Transfers):
 
     # Transfer Actions #
 
-    def _enqueue_transfer(self, transfer):
+    def _enqueue_transfer(self, transfer, show_notification=False):
 
         username = transfer.username
 
@@ -314,16 +320,32 @@ class Uploads(Transfers):
         if self.is_privileged(username):
             transfer.modifier = "privileged" if username in core.users.privileged else "prioritized"
 
+        # Clear queue position cache until next position request
+        self._queue_positions.clear()
+        self._queue_position_users.pop(username, None)
+
+        if show_notification and config.sections["notifications"]["notification_popup_queued_upload"]:
+            self._queue_notification_users[username].append(transfer)
+
+        return True
+
     def _dequeue_transfer(self, transfer):
 
         username = transfer.username
 
-        super()._dequeue_transfer(transfer)
+        if not super()._dequeue_transfer(transfer):
+            return False
 
         if username not in self.queued_users:
             self._user_update_counters.pop(username, None)
 
         transfer.modifier = None
+
+        # Clear queue position cache until next position request
+        self._queue_positions.clear()
+        self._queue_position_users.pop(username, None)
+
+        return True
 
     def _activate_transfer(self, transfer, token):
         super()._activate_transfer(transfer, token)
@@ -354,7 +376,11 @@ class Uploads(Transfers):
         if not already_exists:
             core.statistics.append_stat_value("completed_uploads", 1)
 
-            real_path = core.shares.virtual2real(virtual_path)
+            real_path = core.shares.virtual2real(
+                virtual_path,
+                revert_backslash=transfer.is_backslash_path,
+                is_lowercase_path=transfer.is_lowercase_path
+            )
             core.pluginhandler.upload_finished_notification(username, virtual_path, real_path)
 
             log.add_upload(
@@ -389,13 +415,7 @@ class Uploads(Transfers):
         username = transfer.username
 
         log.add_transfer("Clearing upload %s to user %s", (virtual_path, username))
-
-        try:
-            super()._clear_transfer(transfer, denied_message=denied_message)
-
-        except KeyError:
-            log.add("FIXME: failed to remove upload %s to user %s, not present in list",
-                    (virtual_path, username))
+        super()._clear_transfer(transfer, denied_message=denied_message)
 
         events.emit("clear-upload", transfer, update_parent)
 
@@ -458,6 +478,20 @@ class Uploads(Transfers):
 
         return True, None, size
 
+    def _check_backslash_path_exists(self, username, virtual_path):
+        """Replace a backslash sentinel with an actual backslash in a file path, and check
+        if a file for the resulting path exists and is shared."""
+
+        is_shared = False
+        real_path = None
+        size = None
+
+        if sys.platform != "win32" and core.shares.BACKSLASH_SENTINEL in virtual_path:
+            real_path = core.shares.virtual2real(virtual_path, revert_backslash=True)
+            is_shared, size = core.shares.file_is_shared(username, virtual_path, real_path)
+
+        return is_shared, real_path, size
+
     def _get_upload_candidate(self):
         """Retrieve a suitable queued transfer for uploading.
 
@@ -471,6 +505,10 @@ class Uploads(Transfers):
         target_username = None
         upload_candidate = None
         privileged_users = set()
+
+        if not self._user_update_counters:
+            # No queued uploads to start right now
+            return upload_candidate, has_active_uploads
 
         for username in self._user_update_counters:
             if self.is_privileged(username):
@@ -550,7 +588,11 @@ class Uploads(Transfers):
                 continue
 
             virtual_path = upload_candidate.virtual_path
-            real_path = core.shares.virtual2real(virtual_path)
+            real_path = core.shares.virtual2real(
+                virtual_path,
+                revert_backslash=upload_candidate.is_backslash_path,
+                is_lowercase_path=upload_candidate.is_lowercase_path
+            )
             is_file_shared, _new_size = core.shares.file_is_shared(username, virtual_path, real_path)
 
             if not is_file_shared:
@@ -588,6 +630,44 @@ class Uploads(Transfers):
                 filesize=final_upload_candidate.size))
 
         self._update_transfer(final_upload_candidate)
+
+    def _show_queued_upload_notifications(self):
+
+        if not config.sections["notifications"]["notification_popup_queued_upload"]:
+            self._queue_notification_users.clear()
+            return
+
+        for username, queued_uploads in self._queue_notification_users.copy().items():
+            num_files = len(queued_uploads)
+            num_folders = len(set(transfer.folder_path for transfer in queued_uploads))
+            total_size = human_size(sum(transfer.size for transfer in queued_uploads))
+
+            if num_files == 1:
+                folder_path, _separator, basename = next(iter(queued_uploads)).virtual_path.rpartition("\\")
+                message = _("%(user)s is downloading file %(file)s (%(size)s) from folder %(folder)s") % {
+                    "user": username,
+                    "file": basename,
+                    "size": total_size,
+                    "folder": folder_path
+                }
+            elif num_folders == 1:
+                message = _("%(user)s is downloading %(files)s files (%(size)s) from folder %(folder)s") % {
+                    "user": username,
+                    "files": num_files,
+                    "size": total_size,
+                    "folder": next(iter(queued_uploads)).virtual_path.rpartition("\\")[0]
+                }
+            else:
+                message = _("%(user)s is downloading %(files)s files (%(size)s) from %(folders)s folders") % {
+                    "user": username,
+                    "files": num_files,
+                    "size": total_size,
+                    "folders": num_folders
+                }
+
+            core.notifications.show_upload_notification(message, title=_("Queued Uploads"))
+
+        self._queue_notification_users.clear()
 
     def enqueue_upload(self, username, virtual_path):
 
@@ -847,6 +927,29 @@ class Uploads(Transfers):
         virtual_path = msg.file
         real_path = core.shares.virtual2real(virtual_path)
         allowed, reason, size = self._check_queue_upload_allowed(username, msg.addr, virtual_path, real_path, msg)
+        is_backslash_path = False
+        is_lowercase_path = False
+
+        if reason == TransferRejectReason.FILE_NOT_SHARED:
+            real_path_index = core.shares.get_lowercase_path_index(virtual_path)
+
+            if real_path_index is not None:
+                # Soulseek NS client erroneously converted the virtual path to lowercase.
+                # Retrieve the real path anyway.
+                real_path = core.shares.file_path_index[real_path_index]
+                allowed, size = core.shares.file_is_shared(username, virtual_path, real_path)
+                is_lowercase_path = True
+
+                if allowed:
+                    reason = None
+            else:
+                # Possibly a file path with a backslash sentinel that should be substituted
+                allowed, real_path_reverted, size = self._check_backslash_path_exists(username, virtual_path)
+
+                if allowed:
+                    is_backslash_path = True
+                    real_path = real_path_reverted
+                    reason = None
 
         log.add_transfer("Upload request for file %s from user: %s, allowed: %s, "
                          "reason: %s", (virtual_path, username, allowed, reason))
@@ -873,7 +976,10 @@ class Uploads(Transfers):
             transfer = Transfer(username, virtual_path, folder_path, size)
             self._append_transfer(transfer)
 
-        self._enqueue_transfer(transfer)
+        transfer.is_backslash_path = is_backslash_path
+        transfer.is_lowercase_path = is_lowercase_path
+
+        self._enqueue_transfer(transfer, show_notification=True)
         self._update_transfer(transfer)
 
         # Must be emitted after the final update to prevent inconsistent state
@@ -911,6 +1017,7 @@ class Uploads(Transfers):
         username = msg.username
         virtual_path = msg.file
         token = msg.token
+        is_backslash_path = False
 
         log.add_transfer("Received legacy upload request %s for file %s from user %s",
                          (token, virtual_path, username))
@@ -918,6 +1025,15 @@ class Uploads(Transfers):
         # Is user allowed to download?
         real_path = core.shares.virtual2real(virtual_path)
         allowed, reason, size = self._check_queue_upload_allowed(username, msg.addr, virtual_path, real_path, msg)
+
+        if reason == TransferRejectReason.FILE_NOT_SHARED:
+            # Possibly a file path with a backslash sentinel that should be substituted
+            allowed, real_path_reverted, size = self._check_backslash_path_exists(username, virtual_path)
+
+            if allowed:
+                is_backslash_path = True
+                real_path = real_path_reverted
+                reason = None
 
         if not allowed:
             if reason:
@@ -942,8 +1058,10 @@ class Uploads(Transfers):
             transfer = Transfer(username, virtual_path, folder_path, size)
             self._append_transfer(transfer)
 
+        transfer.is_backslash_path = is_backslash_path
+
         if not self.is_new_upload_accepted() or username in self.active_users:
-            self._enqueue_transfer(transfer)
+            self._enqueue_transfer(transfer, show_notification=True)
             self._update_transfer(transfer)
 
             # Must be emitted after the final update to prevent inconsistent state
@@ -1056,7 +1174,11 @@ class Uploads(Transfers):
         log.add_transfer("Initializing upload with token %s for file %s to user %s",
                          (token, virtual_path, username))
 
-        real_path = core.shares.virtual2real(virtual_path)
+        real_path = core.shares.virtual2real(
+            virtual_path,
+            revert_backslash=upload.is_backslash_path,
+            is_lowercase_path=upload.is_lowercase_path
+        )
 
         try:
             # Open File
@@ -1171,32 +1293,49 @@ class Uploads(Transfers):
 
         is_fifo_queue = config.sections["transfers"]["fifoqueue"]
         is_privileged_queue = self.is_privileged(username)
-        privileged_queued_users = {k: v for k, v in self.queued_users.items() if self.is_privileged(k)}
+        privileged_queued_users = {k: len(v) for k, v in self.queued_users.items() if self.is_privileged(k)}
         queue_position = 0
 
         if is_fifo_queue:
-            num_non_privileged = 0
+            if is_privileged_queue != self._privileged_position_requested or upload not in self._queue_positions:
+                self._queue_position_users.clear()
 
-            for position, i_upload in enumerate(self.queued_transfers, start=1):
-                if is_privileged_queue and i_upload.username not in privileged_queued_users:
-                    num_non_privileged += 1
+                if is_privileged_queue:
+                    self._queue_positions.clear()
+                    position = 1
 
-                if i_upload == upload:
-                    queue_position += position - num_non_privileged
-                    break
+                    for i_upload in self.queued_transfers:
+                        if i_upload.username in privileged_queued_users:
+                            self._queue_positions[i_upload] = position
+                            position += 1
+                else:
+                    self._queue_positions = {
+                        i_upload: position
+                        for position, i_upload in enumerate(self.queued_transfers, start=1)
+                    }
+
+            queue_position = self._queue_positions[upload]
         else:
-            for position, i_upload in enumerate(self.queued_users.get(username, {}).values(), start=1):
-                if i_upload == upload:
-                    if is_privileged_queue:
-                        num_queued_users = len(privileged_queued_users)
-                    else:
-                        # Cycling through privileged users first
-                        queue_position += sum(
-                            len(queued_uploads) for queued_uploads in privileged_queued_users.values())
-                        num_queued_users = len(self.queued_users)
+            user_queue_positions = self._queue_position_users[username]
 
-                    queue_position += position * num_queued_users
-                    break
+            if upload not in user_queue_positions:
+                self._queue_positions.clear()
+                user_queue_positions.update({
+                    i_upload: position
+                    for position, i_upload in enumerate(self.queued_users[username].values(), start=1)
+                })
+
+            if is_privileged_queue:
+                num_queued_users = len(privileged_queued_users)
+            else:
+                # Cycling through privileged users first
+                queue_position += sum(
+                    num_queued_uploads for num_queued_uploads in privileged_queued_users.values())
+                num_queued_users = len(self.queued_users)
+
+            queue_position += num_queued_users + user_queue_positions[upload]
+
+        self._privileged_position_requested = is_privileged_queue
 
         if queue_position > 0:
             core.send_message_to_peer(

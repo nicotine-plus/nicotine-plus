@@ -1,25 +1,9 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
 import sys
 
-from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -202,7 +186,7 @@ class ImageChooser(FileChooser):
         file_filter = Gtk.FileFilter()
         file_filter.set_name(_("All images"))
 
-        for pattern in ("*.png", "*.jpg", "*.jpeg", "*.bmp", "*.tiff", "*.gif"):
+        for pattern in ("*.png", "*.jpg", "*.jpeg", "*.bmp", "*.tiff", "*.gif", "*.svg", "*.webp"):
             file_filter.add_pattern(pattern)
 
         if self.using_new_api:
@@ -224,6 +208,8 @@ class ImageChooser(FileChooser):
             self.file_chooser.set_preview_widget(self.preview)  # pylint: disable=no-member
 
     def on_update_image_preview(self, chooser):
+
+        from gi.repository import GdkPixbuf
 
         file_path = chooser.get_preview_filename()
 
@@ -395,8 +381,11 @@ class FileChooserButton:
 
         self.path = path = os.path.normpath(path)
 
+        # More lenient solution than os.path.basename() to avoid empty strings
+        basename = path.rstrip(os.sep).rpartition(os.sep)[-1] or path
+
         self.chooser_button.set_tooltip_text(os.path.expandvars(path))  # Show path without env variables
-        self.label.set_label(os.path.basename(path))
+        self.label.set_label(basename)
         self.open_folder_button.set_visible(self.show_open_external_button)
 
     def clear(self):

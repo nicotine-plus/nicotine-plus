@@ -1,6 +1,9 @@
-name: Packaging
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
+name: Packaging
 on: [push, pull_request]
+permissions: {}
 
 jobs:
 
@@ -43,14 +46,20 @@ jobs:
           - arch: x86_64
             platform: ubuntu-latest
     container:
-      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-47
+      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-49
       options: --privileged
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Validate manifest
+        run: flatpak-builder-lint --exceptions manifest build-aux/flatpak/org.nicotine_plus.Nicotine.json
+
+      - name: Validate appstream
+        run: flatpak-builder-lint appstream data/org.nicotine_plus.Nicotine.appdata.xml.in
+
       - name: Build Flatpak package
-        uses: flathub-infra/flatpak-github-actions/flatpak-builder@master
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
           bundle: org.nicotine_plus.Nicotine-${{ matrix.arch }}.flatpak
           manifest-path: build-aux/flatpak/org.nicotine_plus.Nicotine.json
@@ -92,13 +101,21 @@ jobs:
           path: ${{ steps.build-snap.outputs.snap }}
 
   windows:
-    runs-on: windows-latest
     timeout-minutes: 15
     strategy:
       matrix:
         include:
           - arch: x86_64
-            prefix: mingw-w64-x86_64
+            prefix: mingw-w64-clang-x86_64
+            msystem: clang64
+            platform: windows-latest
+          - arch: arm64
+            prefix: mingw-w64-clang-aarch64
+            msystem: clangarm64
+            platform: windows-11-arm
+    runs-on: ${{ matrix.platform }}
+    env:
+      ARCH: ${{ matrix.arch }}
     defaults:
       run:
         shell: msys2 {0}
@@ -109,8 +126,7 @@ jobs:
       - name: Setup msys2
         uses: msys2/setup-msys2@v2
         with:
-          msystem: mingw64
-          release: false
+          msystem: ${{ matrix.msystem }}
           update: true
           install: >-
             ${{ matrix.prefix }}-ca-certificates
@@ -127,29 +143,29 @@ jobs:
             ${{ matrix.prefix }}-webp-pixbuf-loader
 
       - name: Install additional dependencies
-        run: python3 packaging/windows/dependencies.py
+        run: python3 build-aux/windows/dependencies.py
 
       - name: Freeze application
-        run: python3 packaging/windows/setup.py bdist_msi
+        run: python3 build-aux/windows/setup.py bdist_msi
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v4
         with:
           name: windows-${{ matrix.arch }}-installer
-          path: packaging/windows/build/*.msi
+          path: build-aux/windows/build/*.msi
 
       - name: Archive package artifacts
         uses: actions/upload-artifact@v4
         with:
           name: windows-${{ matrix.arch }}-package
-          path: packaging/windows/build/package
+          path: build-aux/windows/build/package
 
   macos:
     strategy:
       matrix:
         include:
           - arch: x86_64
-            platform: macos-13
+            platform: macos-15-intel
           - arch: arm64
             platform: macos-14
     runs-on: ${{ matrix.platform }}
@@ -158,23 +174,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set system language
-        run: defaults write NSGlobalDomain AppleLanguages "(en-US)"
-
       - name: Create Python virtual environment
         run: |
-          brew uninstall --ignore-dependencies python@3.12
-          brew install --overwrite python@3.12
-          python3.12 -m venv venv
+          brew uninstall --ignore-dependencies python@3.13
+          brew install --overwrite python@3.13
+          python3.13 -m venv venv
 
       - name: Install build dependencies
-        run: venv/bin/python3 packaging/macos/dependencies.py
+        run: venv/bin/python3 build-aux/macos/dependencies.py
 
       - name: Freeze application
-        run: venv/bin/python3 packaging/macos/setup.py bdist_dmg
+        run: venv/bin/python3 build-aux/macos/setup.py bdist_dmg
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v4
         with:
           name: macos-${{ matrix.arch }}-installer
-          path: packaging/macos/build/*.dmg
+          path: build-aux/macos/build/*.dmg

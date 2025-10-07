@@ -1,3 +1,10 @@
+<!--
+  SPDX-FileCopyrightText: 2004-2025 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2003-2004 Nicotine Contributors
+  SPDX-FileCopyrightText: 2002-2003 PySoulSeek Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # Authors
 
 ## Nicotine+ Team
@@ -74,6 +81,11 @@
  - Some GNU/Linux packaging
  - Nicotine+ on Win32
  - Author of Nicotine+ guide
+
+### OffHand
+ - Website and Trac maintenance
+ - Tester
+ - Nicotine+ dinosaur
 
 ### Mutnick
  - Created Nicotine+ GitHub organization
@@ -320,6 +332,7 @@
  - (._.)
  - Adam Cécile
  - AHOHNMYC
+ - Airn Here
  - alekksander
  - Alexander Kanavin
  - Alexey Vyskubov
@@ -329,22 +342,27 @@
  - Artem
  - AtticFinder65536
  - Attila Fidan
+ - Aubin Paul
  - Avery
  - b1llso
  - baloo79
  - bgo-eiu
  - blueboy
  - Bonislaw
+ - boredcar
+ - Boris Topalov
  - Brett W. Thompson
  - Bugmenot
  - burnmail123
  - ButterflyOfFire
+ - Carlos Laviola
  - Cata
  - César Augusto do Nascimento
  - Chris McKenzie
  - Christian Swinehart
  - chz
  - Coda
+ - cravings
  - cwpute
  - daelstorm
  - David Balazs
@@ -353,9 +371,11 @@
  - dtalens
  - Elias Groß
  - Emily
+ - Enr1X
  - Eryk Michalak
  - Everly
  - Felipe Nogaroto Gonzalez
+ - Felix Hansen
  - fkobi
  - Gabriele
  - gahag
@@ -375,11 +395,13 @@
  - hylau
  - ian andrew remsen
  - Ilya
+ - infinito
  - Ingmar K. Steen
  - INMCM
  - Inso-m-niaC
  - Jackson Baber
  - Jason Green
+ - jat
  - Jean-Baptiste ALLAIN
  - Jimmy
  - J. Lavoie
@@ -402,6 +424,8 @@
  - Kian-Meng Ang
  - Kip Warner
  - Kirill Feoktistov
+ - KOXXPL
+ - Kylie McClain
  - lee8oi
  - Lene Preuss
  - Lev Gorodetskiy
@@ -409,6 +433,7 @@
  - Lucas Vieites
  - m-balthazar
  - Maite Guix
+ - mala
  - mantas
  - ManWell
  - marciozomb13
@@ -422,6 +447,7 @@
  - MELERIX
  - MendelGusmao
  - Meokater
+ - Merlin Erdogmus
  - Michael Labouebe
  - Micke Nilsson
  - Miodrag Milić
@@ -433,6 +459,7 @@
  - Mutnick
  - mzf-guest
  - Nachtalb
+ - Nguyen Tuan Khoi
  - nicola
  - Nicolas Abril
  - Nick Voronin
@@ -440,7 +467,7 @@
  - nince78
  - Nir Arbel
  - nyoooooooooooooooom
- - Offhand
+ - OffHand
  - Oğuz Ersen
  - Oleg Gritsun
  - Oliver Hattshire
@@ -448,11 +475,13 @@
  - Pagal3
  - Patrik
  - phelissimo_
+ - Phil Cryer
  - phlostically
  - Piotr Strebski
  - Poesty Li
  - PriitUring
  - quinox
+ - Ramsey Harrison
  - redactedscribe
  - rimasx
  - Saumon
@@ -483,12 +512,16 @@
  - Vladimir Sedach
  - Vladyslav Anisimov
  - wanderer
+ - waxed
+ - whywhy123456789whylol
  - Wojciech Owczarek
  - Wretched
+ - Wynfyd
  - W L
  - X Kowalsky
  - Ys413
  - yyyyyyyan
+ - Ziabice
  - zniavre
  - ZTetriminos
  - Žygimantas Beručka
@@ -501,7 +534,8 @@ Nicotine+ is licensed under the [GNU General Public License v3.0 or later](https
 with the following exceptions:
 
 **[tinytag](https://github.com/tinytag/tinytag) licensed under the MIT License.**  
-Copyright (c) 2014-2023 Tom Wallroth, Mat (mathiascode)
+Copyright (c) 2014-2025 Tom Wallroth, Mat (mathiascode), et al.  
+Copyright (c) 2020-2025 Nicotine+ Contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

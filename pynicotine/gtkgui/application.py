@@ -1,20 +1,5 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
 import sys
@@ -86,6 +71,8 @@ class Application:
         self.about = None
         self.fast_configure = None
         self.preferences = None
+        self.chat_history = None
+        self.room_list = None
         self.file_properties = None
         self.shortcuts = None
         self.statistics = None
@@ -93,8 +80,15 @@ class Application:
         self.tray_icon = None
         self.spell_checker = None
 
+        self.previous_download_folder = None
+        self.previous_file_download_folder = None
+
         # Show errors in the GUI from here on
         sys.excepthook = self.on_critical_error
+
+        # Always use LTR text direction for now. Once we add complete translations for a RTL
+        # language, we need to revise this.
+        Gtk.Widget.set_default_direction(Gtk.TextDirection.LTR)
 
         self._instance.connect("activate", self.on_activate)
         self._instance.connect("shutdown", self.on_shutdown)
@@ -113,6 +107,7 @@ class Application:
             ("show-download-notification", self._show_download_notification),
             ("show-private-chat-notification", self._show_private_chat_notification),
             ("show-search-notification", self._show_search_notification),
+            ("show-upload-notification", self._show_upload_notification),
             ("user-status", self.on_user_status)
         ):
             events.connect(event_name, callback)
@@ -132,6 +127,9 @@ class Application:
     def add_window(self, window):
         self._instance.add_window(window)
 
+    def get_accels_for_action(self, action_name):
+        return self._instance.get_accels_for_action(action_name)
+
     def _set_up_actions(self):
 
         # Regular actions
@@ -144,6 +142,8 @@ class Application:
             ("soulseek-privileges", self.on_soulseek_privileges, None, False),
             ("away", self.on_away, None, True),
             ("away-accel", self.on_away_accelerator, None, False),
+            ("chat-history", self.on_chat_history, None, True),
+            ("room-list", self.on_room_list, None, True),
             ("message-downloading-users", self.on_message_downloading_users, None, False),
             ("message-buddies", self.on_message_buddies, None, False),
             ("wishlist", self.on_wishlist, None, True),
@@ -159,7 +159,6 @@ class Application:
             ("load-shares-from-disk", self.on_load_shares_from_disk, None, True),
 
             # Configuration
-
             ("preferences", self.on_preferences, None, True),
             ("configure-shares", self.on_configure_shares, None, True),
             ("configure-downloads", self.on_configure_downloads, None, True),
@@ -176,6 +175,7 @@ class Application:
             ("download-notification-activated", self.on_downloads, None, True),
             ("private-chat-notification-activated", self.on_private_chat_notification_activated, "s", True),
             ("search-notification-activated", self.on_search_notification_activated, "s", True),
+            ("upload-notification-activated", self.on_uploads, None, True),
 
             # Help
             ("keyboard-shortcuts", self.on_keyboard_shortcuts, None, True),
@@ -246,11 +246,15 @@ class Application:
             ("win.change-focus-view", ["F6"]),
             ("win.show-log-pane", ["<Primary>l"]),
             ("win.reopen-closed-tab", ["<Primary><Shift>t"]),
-            ("win.close-tab", ["<Primary>F4", "<Primary>w"]),
-            ("win.cycle-tabs", ["<Control>Tab"]),
-            ("win.cycle-tabs-reverse", ["<Control><Shift>Tab"]),
+            ("win.close-tab", ["<Primary>w", "<Primary>F4"]),
+            ("win.cycle-tabs", ["<Control>Tab", "<Control>Page_Down"]),
+            ("win.cycle-tabs-reverse", ["<Control><Shift>Tab", "<Control>Page_Up"]),
 
             # Other accelerators (logic defined elsewhere, actions only used for shortcuts dialog)
+            ("accel.focus-next-widget", ["Tab"]),
+            ("accel.focus-previous-widget", ["<Shift>Tab"]),
+            ("accel.change-main-tab-start", ["<Alt>1"]),
+            ("accel.change-main-tab-end", ["<Alt>9"]),
             ("accel.cut-clipboard", ["<Primary>x"]),
             ("accel.copy-clipboard", ["<Primary>c"]),
             ("accel.paste-clipboard", ["<Primary>v"]),
@@ -265,9 +269,8 @@ class Application:
             ("accel.save", ["<Primary>s"]),
             ("accel.download-to", ["<Primary>Return"]),
             ("accel.file-properties", ["<Alt>Return"]),
-            ("accel.back", ["BackSpace"]),
-            ("accel.retry-transfer", ["r"]),
-            ("accel.abort-transfer", ["t"])
+            ("accel.retry-transfer", ["<Primary>s"]),
+            ("accel.abort-transfer", ["<Primary>t"])
         ):
             self._set_accels_for_action(action_name, accelerators)
 
@@ -492,6 +495,12 @@ class Application:
             high_priority=True
         )
 
+    def _show_upload_notification(self, message, title=None):
+
+        self._show_notification(
+            message, title, action="app.upload-notification-activated"
+        )
+
     # Core Events #
 
     def on_confirm_quit_response(self, dialog, response_id, _data):
@@ -566,7 +575,7 @@ class Application:
             callback=self.on_shares_unavailable_response
         ).present()
 
-    def on_invalid_password(self):
+    def on_invalid_password(self, *_args):
         self.on_fast_configure(invalid_password=True)
 
     def on_user_status(self, msg):
@@ -648,6 +657,12 @@ class Application:
             self.shortcuts = Shortcuts(self)
 
         self.shortcuts.present()
+
+    def on_chat_history(self, *_args):
+        self.chat_history.present()
+
+    def on_room_list(self, *_args):
+        self.room_list.present()
 
     def on_transfer_statistics(self, *_args):
 
@@ -947,6 +962,8 @@ class Application:
             self.window.present()
             return
 
+        from pynicotine.gtkgui.dialogs.chathistory import ChatHistory
+        from pynicotine.gtkgui.dialogs.roomlist import RoomList
         from pynicotine.gtkgui.mainwindow import MainWindow
         from pynicotine.gtkgui.widgets.theme import load_icons
         from pynicotine.gtkgui.widgets.trayicon import TrayIcon
@@ -963,8 +980,13 @@ class Application:
 
         self.tray_icon = TrayIcon(self)
         self.window = MainWindow(self)
+        self.chat_history = ChatHistory(self)
+        self.room_list = RoomList(self)
 
         core.start()
+
+        gtk_version = f"{Gtk.get_major_version()}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
+        log.add(_("Loaded %(program)s %(version)s"), {"program": "GTK", "version": gtk_version})
 
         if config.sections["server"]["auto_connect_startup"]:
             core.connect()
@@ -1001,6 +1023,12 @@ class Application:
 
         if self.preferences is not None:
             self.preferences.destroy()
+
+        if self.chat_history is not None:
+            self.chat_history.destroy()
+
+        if self.room_list is not None:
+            self.room_list.destroy()
 
         if self.file_properties is not None:
             self.file_properties.destroy()

@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2004-2025 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2003-2004 Nicotine Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkAdjustment" id="_listen_port_adjustment">
@@ -108,59 +113,16 @@
         </child>
         <child>
           <object class="GtkBox">
-            <property name="margin-bottom">4</property>
-            <property name="margin-top">4</property>
             <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>
               <object class="GtkLabel">
                 <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Public IP address:</property>
-                <property name="mnemonic-widget">current_port_label</property>
-                <property name="visible">True</property>
-                <property name="wrap">True</property>
-                <property name="wrap-mode">word-char</property>
-                <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkBox">
-                <property name="spacing">18</property>
-                <property name="visible">True</property>
-                <child>
-                  <object class="GtkLabel" id="current_port_label">
-                    <property name="label" translatable="yes">Unknown</property>
-                    <property name="selectable">True</property>
-                    <property name="visible">True</property>
-                    <property name="wrap">True</property>
-                    <property name="wrap-mode">word</property>
-                    <property name="xalign">0</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="check_port_status_label">
-                    <property name="label" translatable="yes">Check Port Status</property>
-                    <property name="visible">True</property>
-                    <property name="wrap">True</property>
-                    <property name="wrap-mode">word-char</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="spacing">12</property>
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Listening port:</property>
+                <property name="label" translatable="yes">Listening port (TCP):</property>
                 <property name="mnemonic-widget">listen_port_spinner</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
-                <property name="wrap-mode">word-char</property>
+                <property name="wrap-mode">word</property>
                 <property name="xalign">0</property>
               </object>
             </child>
@@ -194,6 +156,66 @@
               <object class="GtkSwitch" id="upnp_toggle">
                 <property name="valign">center</property>
                 <property name="visible">True</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="spacing">12</property>
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="hexpand">True</property>
+                <property name="label" translatable="yes">Public IP address:</property>
+                <property name="mnemonic-widget">current_port_label</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="spacing">12</property>
+                <property name="valign">center</property>
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkLabel" id="current_port_label">
+                    <property name="label" translatable="yes">Unknown</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="wrap-mode">word</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkMenuButton" id="check_port_status_button">
+                    <property name="tooltip-text" translatable="yes">Port Check</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="spacing">6</property>
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">network-wired-symbolic</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="check_port_status_label">
+                            <property name="ellipsize">end</property>
+                            <property name="label" translatable="yes">Port Check</property>
+                            <property name="mnemonic-widget">check_port_status_button</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -296,7 +318,7 @@
               <object class="GtkLabel">
                 <property name="height-request">24</property>
                 <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Auto-connect to server on startup</property>
+                <property name="label" translatable="yes">Connect to server on startup</property>
                 <property name="mnemonic-widget">auto_connect_startup_toggle</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
@@ -330,6 +352,7 @@
             </child>
             <child>
               <object class="GtkEntry" id="soulseek_server_entry">
+                <property name="input-hints">no-emoji</property>
                 <property name="secondary-icon-name">edit-undo-symbolic</property>
                 <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                 <property name="valign">center</property>
@@ -344,7 +367,7 @@
           <object class="GtkBox">
             <property name="homogeneous">True</property>
             <property name="spacing">12</property>
-            <property name="tooltip-text" translatable="yes">Binds connections to a specific network interface, useful for e.g. ensuring a VPN is used at all times. Leave empty to use any available interface. Only change this value if you know what you are doing.</property>
+            <property name="tooltip-text" translatable="yes">Makes sure a VPN is used by binding connections to a specific network interface. Usually left empty to use all the interfaces available.</property>
             <property name="visible">True</property>
             <child>
               <object class="GtkLabel" id="network_interface_label">

@@ -1,24 +1,9 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
-# COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2009 daelstorm <daelstorm@gmail.com>
-#
-# GNU GENERAL PUBLIC LICENSE
-#    Version 3, 29 June 2007
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# SPDX-FileCopyrightText: 2016 Mutnick <muhing@yahoo.com>
+# SPDX-FileCopyrightText: 2008-2011 quinox <quinox@users.sf.net>
+# SPDX-FileCopyrightText: 2009 daelstorm <daelstorm@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
 import sys
@@ -417,7 +402,7 @@ class PluginHandler:
             return
 
         to_enable = config.sections["plugins"]["enabled"]
-        log.add_debug("Enabled plugin(s): %s", ', '.join(to_enable))
+        log.add_debug("Enabled plugins: %s", ', '.join(to_enable))
 
         for plugin in to_enable:
             self.enable_plugin(plugin)
@@ -495,7 +480,7 @@ class PluginHandler:
         # Reset class attributes
         BasePlugin.internal_name = BasePlugin.human_name = BasePlugin.path = None
 
-        self.plugin_settings(plugin_name, instance)
+        self.load_plugin_settings(instance)
 
         if hasattr(plugin, "enable"):
             instance.log("top-level enable() function is obsolete, please use BasePlugin.__init__() instead")
@@ -705,7 +690,7 @@ class PluginHandler:
         self.disable_plugin(plugin_name)
         self.enable_plugin(plugin_name)
 
-    def get_plugin_settings(self, plugin_name):
+    def get_plugin_metasettings(self, plugin_name):
 
         if plugin_name in self.enabled_plugins:
             plugin = self.enabled_plugins[plugin_name]
@@ -757,9 +742,9 @@ class PluginHandler:
             "trace": "".join(format_tb(error.__traceback__))
         })
 
-    def plugin_settings(self, plugin_name, plugin):
+    def load_plugin_settings(self, plugin):
 
-        plugin_name = plugin_name.lower()
+        plugin_name = plugin.internal_name.lower()
 
         if not plugin.settings:
             return

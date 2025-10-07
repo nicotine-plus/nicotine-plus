@@ -1,9 +1,12 @@
+# SPDX-FileCopyrightText: 2024-2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 name: Website
 
 on:
   push:
-    branches: ["master"]
-    paths: ["**.md"]
+    branches: ['master']
+    paths: ['**.md']
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
@@ -15,7 +18,7 @@ permissions:
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
-  group: "pages"
+  group: 'pages'
   cancel-in-progress: false
 
 jobs:
@@ -41,6 +44,9 @@ jobs:
           cp README.md $WEBSITE_ROOT/
           cp NEWS.md $WEBSITE_ROOT/
           cp data/icons/icon.svg $WEBSITE_ROOT/data/icons/
+
+      - name: Strip headers
+        run: find $WEBSITE_ROOT -name '*.md' -exec sed -i '/<!--/,/-->/d' {} +
 
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1

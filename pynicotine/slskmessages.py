@@ -1,21 +1,9 @@
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
-# COPYRIGHT (C) 2009-2011 quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2007-2009 daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
-# COPYRIGHT (C) 2001-2003 Alexander Kanavin
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2009-2011 quinox <quinox@users.sf.net>
+# SPDX-FileCopyrightText: 2007-2009 daelstorm <daelstorm@gmail.com>
+# SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# SPDX-FileCopyrightText: 2001-2003 Alexander Kanavin
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import zlib
 
@@ -91,10 +79,18 @@ class ConnectionType:
     DISTRIBUTED = "D"
 
 
-class LoginFailure:
-    USERNAME = "INVALIDUSERNAME"
-    PASSWORD = "INVALIDPASS"
-    VERSION = "INVALIDVERSION"
+class ObfuscationType:
+    NONE = 0
+    NORMAL = 1
+
+
+class LoginRejectReason:
+    INVALID_USERNAME = "INVALIDUSERNAME"
+    EMPTY_PASSWORD = "EMPTYPASSWORD"
+    INVALID_PASSWORD = "INVALIDPASS"
+    INVALID_VERSION = "INVALIDVERSION"
+    SERVER_FULL = "SVRFULL"
+    SERVER_PRIVATE = "SVRPRIVATE"
 
 
 class UserStatus:
@@ -652,8 +648,9 @@ class Login(ServerMessage):
     established. Server responds with the greeting message.
     """
 
-    __slots__ = ("username", "passwd", "version", "minorversion", "success", "reason",
-                 "banner", "ip_address", "local_address", "server_address", "is_supporter")
+    __slots__ = ("username", "passwd", "version", "minorversion", "success", "rejection_reason",
+                 "rejection_detail", "banner", "ip_address", "local_address", "server_address",
+                 "is_supporter")
     __excluded_attrs__ = {"passwd"}
 
     def __init__(self, username=None, passwd=None, version=None, minorversion=None):
@@ -662,7 +659,8 @@ class Login(ServerMessage):
         self.version = version
         self.minorversion = minorversion
         self.success = None
-        self.reason = None
+        self.rejection_reason = None
+        self.rejection_detail = None
         self.banner = None
         self.ip_address = None
         self.local_address = None
@@ -688,7 +686,10 @@ class Login(ServerMessage):
         pos, self.success = self.unpack_bool(message)
 
         if not self.success:
-            pos, self.reason = self.unpack_string(message, pos)
+            pos, self.rejection_reason = self.unpack_string(message, pos)
+
+            if message[pos:]:
+                pos, self.rejection_detail = self.unpack_string(message, pos)
             return
 
         pos, self.banner = self.unpack_string(message, pos)
@@ -700,8 +701,18 @@ class Login(ServerMessage):
 class SetWaitPort(ServerMessage):
     """Server code 2.
 
-    We send this to the server to indicate the port number that we
-    listen on (2234 by default).
+    We send this to the server to indicate the port number that we listen on
+    (2234 by default). Certain clients like SoulseekQt implement obfuscation of
+    peer messages, and also send the obfuscation type and obfuscated port to
+    accept such connections on.
+
+    Nicotine+ does not implement obfuscated connections, since there is no
+    evidence that ISP traffic shaping targeting the Soulseek network (the
+    original issue obfuscation attempted to mitigate) is prevalent today.
+    Forwarding multiple ports is also becoming increasingly difficult due to
+    IPv4 address exhaustion, and only requiring a single unobfuscated port
+    allows users to use their remaining free ports in other applications
+    instead.
     """
 
     __slots__ = ("port",)
@@ -720,13 +731,13 @@ class GetPeerAddress(ServerMessage):
     and port), given the peer's username.
     """
 
-    __slots__ = ("user", "ip_address", "port", "unknown", "obfuscated_port")
+    __slots__ = ("user", "ip_address", "port", "obfuscation_type", "obfuscated_port")
 
     def __init__(self, user=None):
         self.user = user
         self.ip_address = None
         self.port = None
-        self.unknown = None
+        self.obfuscation_type = None
         self.obfuscated_port = None
 
     def make_network_message(self):
@@ -736,7 +747,7 @@ class GetPeerAddress(ServerMessage):
         pos, self.user = self.unpack_string(message)
         pos, self.ip_address = self.unpack_ip(message, pos)
         pos, self.port = self.unpack_uint32(message, pos)
-        pos, self.unknown = self.unpack_uint32(message, pos)
+        pos, self.obfuscation_type = self.unpack_uint32(message, pos)
         pos, self.obfuscated_port = self.unpack_uint16(message, pos)
 
 
@@ -880,13 +891,12 @@ class SayChatroom(ServerMessage):
     did.
     """
 
-    __slots__ = ("room", "message", "user", "formatted_message", "message_type")
+    __slots__ = ("room", "message", "user", "message_type")
 
     def __init__(self, room=None, message=None, user=None):
         self.room = room
         self.message = message
         self.user = user
-        self.formatted_message = None
         self.message_type = None
 
     def make_network_message(self):
@@ -1029,7 +1039,8 @@ class ConnectToPeer(ServerMessage):
     a connection to our IP address and port from their end.
     """
 
-    __slots__ = ("token", "user", "conn_type", "ip_address", "port", "privileged", "unknown", "obfuscated_port")
+    __slots__ = ("token", "user", "conn_type", "ip_address", "port", "privileged", "obfuscation_type",
+                 "obfuscated_port")
 
     def __init__(self, token=None, user=None, conn_type=None):
         self.token = token
@@ -1038,7 +1049,7 @@ class ConnectToPeer(ServerMessage):
         self.ip_address = None
         self.port = None
         self.privileged = None
-        self.unknown = None
+        self.obfuscation_type = None
         self.obfuscated_port = None
 
     def make_network_message(self):
@@ -1056,7 +1067,7 @@ class ConnectToPeer(ServerMessage):
         pos, self.port = self.unpack_uint32(message, pos)
         pos, self.token = self.unpack_uint32(message, pos)
         pos, self.privileged = self.unpack_bool(message, pos)
-        pos, self.unknown = self.unpack_uint32(message, pos)
+        pos, self.obfuscation_type = self.unpack_uint32(message, pos)
         pos, self.obfuscated_port = self.unpack_uint32(message, pos)
 
 
@@ -1066,8 +1077,7 @@ class MessageUser(ServerMessage):
     Chat phrase sent to someone or received by us in private.
     """
 
-    __slots__ = ("user", "message", "message_id", "timestamp", "is_new_message", "formatted_message",
-                 "message_type")
+    __slots__ = ("user", "message", "message_id", "timestamp", "is_new_message", "message_type")
 
     def __init__(self, user=None, message=None):
         self.user = user
@@ -1075,7 +1085,6 @@ class MessageUser(ServerMessage):
         self.message_id = None
         self.timestamp = None
         self.is_new_message = True
-        self.formatted_message = None
         self.message_type = None
 
     def make_network_message(self):
@@ -1159,7 +1168,7 @@ class FileSearch(ServerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_uint32(self.token)
-        msg += self.pack_string(self.searchterm, is_legacy=True)
+        msg += self.pack_string(self.searchterm)
 
         return msg
 
@@ -1219,7 +1228,7 @@ class SendConnectToken(ServerMessage):
 
     __slots__ = ("user", "token")
 
-    def __init__(self, user, token):
+    def __init__(self, user=None, token=None):
         self.user = user
         self.token = token
 
@@ -1366,7 +1375,7 @@ class UserSearch(ServerMessage):
         msg = bytearray()
         msg += self.pack_string(self.search_username)
         msg += self.pack_uint32(self.token)
-        msg += self.pack_string(self.searchterm, is_legacy=True)
+        msg += self.pack_string(self.searchterm)
 
         return msg
 
@@ -1389,7 +1398,7 @@ class SimilarRecommendations(ServerMessage):
     containing such recommendations, asking us if we want to add our original
     recommendation or one of the similar ones instead.
 
-    OBSOLETE
+    OBSOLETE, no longer used, server sends empty list
     """
 
     __slots__ = ("recommendation", "similar_recommendations")
@@ -1403,7 +1412,7 @@ class SimilarRecommendations(ServerMessage):
 
     def parse_network_message(self, message):
         pos, self.recommendation = self.unpack_string(message)
-        pos, num = self.unpack_uint32(message)
+        pos, num = self.unpack_uint32(message, pos)
 
         for _ in range(num):
             pos, similar_recommendation = self.unpack_string(message, pos)
@@ -1414,8 +1423,6 @@ class AddThingILike(ServerMessage):
     """Server code 51.
 
     We send this to the server when we add an item to our likes list.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ("thing",)
@@ -1432,8 +1439,6 @@ class RemoveThingILike(ServerMessage):
 
     We send this to the server when we remove an item from our likes
     list.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ("thing",)
@@ -1450,8 +1455,6 @@ class Recommendations(ServerMessage):
 
     The server sends us a list of personal recommendations and a number
     for each.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ("recommendations", "unrecommendations")
@@ -1479,7 +1482,7 @@ class MyRecommendations(ServerMessage):
     official Soulseek client would send a AddThingILike message for each
     missing item.
 
-    OBSOLETE
+    OBSOLETE, no longer used
     """
 
     __slots__ = ("my_recommendations",)
@@ -1503,8 +1506,6 @@ class GlobalRecommendations(ServerMessage):
 
     The server sends us a list of global recommendations and a number
     for each.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ("recommendations", "unrecommendations")
@@ -1525,8 +1526,6 @@ class UserInterests(ServerMessage):
 
     We ask the server for a user's liked and hated interests. The server
     responds with a list of interests.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ("user", "likes", "hates")
@@ -1562,8 +1561,7 @@ class AdminCommand(ServerMessage):
     We send this to the server to run an admin command (e.g. to ban or
     silence a user) if we have admin status on the server.
 
-    OBSOLETE, no longer used since Soulseek stopped supporting third-
-    party servers in 2002
+    OBSOLETE, no longer used
     """
 
     __slots__ = ("command", "command_args")
@@ -2094,8 +2092,6 @@ class SimilarUsers(ServerMessage):
 
     The server sends us a list of similar users related to our
     interests.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ("users",)
@@ -2122,8 +2118,6 @@ class ItemRecommendations(ServerMessage):
     The server sends us a list of recommendations related to a specific
     item, which is usually present in the like/dislike list or an
     existing recommendation list.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ("thing", "recommendations", "unrecommendations")
@@ -2147,8 +2141,6 @@ class ItemSimilarUsers(ServerMessage):
     The server sends us a list of similar users related to a specific
     item, which is usually present in the like/dislike list or
     recommendation list.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ("thing", "users")
@@ -2267,8 +2259,6 @@ class AddThingIHate(ServerMessage):
     """Server code 117.
 
     We send this to the server when we add an item to our hate list.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ("thing",)
@@ -2285,8 +2275,6 @@ class RemoveThingIHate(ServerMessage):
 
     We send this to the server when we remove an item from our hate
     list.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ("thing",)
@@ -2321,7 +2309,7 @@ class RoomSearch(ServerMessage):
         msg = bytearray()
         msg += self.pack_string(self.room)
         msg += self.pack_uint32(self.token)
-        msg += self.pack_string(self.searchterm, is_legacy=True)
+        msg += self.pack_string(self.searchterm)
 
         return msg
 
@@ -2834,8 +2822,6 @@ class JoinGlobalRoom(ServerMessage):
 
     We ask the server to send us messages from all public rooms, also
     known as public room feed.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ()
@@ -2849,8 +2835,6 @@ class LeaveGlobalRoom(ServerMessage):
 
     We ask the server to stop sending us messages from all public rooms,
     also known as public room feed.
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ()
@@ -2864,8 +2848,6 @@ class GlobalRoomMessage(ServerMessage):
 
     The server sends this when a new message has been written in the
     public room feed (every single line written in every public room).
-
-    DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
     __slots__ = ("room", "user", "message", "formatted_message", "message_type")
@@ -4086,12 +4068,12 @@ SERVER_MESSAGE_CODES = {
     Relogged: 41,
     UserSearch: 42,
     SimilarRecommendations: 50,   # Obsolete
-    AddThingILike: 51,            # Deprecated
-    RemoveThingILike: 52,         # Deprecated
-    Recommendations: 54,          # Deprecated
+    AddThingILike: 51,
+    RemoveThingILike: 52,
+    Recommendations: 54,
     MyRecommendations: 55,        # Obsolete
-    GlobalRecommendations: 56,    # Deprecated
-    UserInterests: 57,            # Deprecated
+    GlobalRecommendations: 56,
+    UserInterests: 57,
     AdminCommand: 58,             # Obsolete
     PlaceInLineResponse: 60,      # Obsolete
     RoomAdded: 62,                # Obsolete
@@ -4117,15 +4099,15 @@ SERVER_MESSAGE_CODES = {
     PossibleParents: 102,
     WishlistSearch: 103,
     WishlistInterval: 104,
-    SimilarUsers: 110,            # Deprecated
-    ItemRecommendations: 111,     # Deprecated
-    ItemSimilarUsers: 112,        # Deprecated
+    SimilarUsers: 110,
+    ItemRecommendations: 111,
+    ItemSimilarUsers: 112,
     RoomTickerState: 113,
     RoomTickerAdd: 114,
     RoomTickerRemove: 115,
     RoomTickerSet: 116,
-    AddThingIHate: 117,           # Deprecated
-    RemoveThingIHate: 118,        # Deprecated
+    AddThingIHate: 117,
+    RemoveThingIHate: 118,
     RoomSearch: 120,
     SendUploadSpeed: 121,
     UserPrivileged: 122,          # Deprecated
@@ -4152,9 +4134,9 @@ SERVER_MESSAGE_CODES = {
     PrivateRoomOperatorRemoved: 146,
     PrivateRoomOperators: 148,
     MessageUsers: 149,
-    JoinGlobalRoom: 150,          # Deprecated
-    LeaveGlobalRoom: 151,         # Deprecated
-    GlobalRoomMessage: 152,       # Deprecated
+    JoinGlobalRoom: 150,
+    LeaveGlobalRoom: 151,
+    GlobalRoomMessage: 152,
     RelatedSearch: 153,           # Obsolete
     ExcludedSearchPhrases: 160,
     CantConnectToPeer: 1001,
