@@ -9,7 +9,6 @@ from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -160,7 +159,9 @@ class Download(Dialog):
         self.expand_button.set_active(True)
         self.enable_subfolders_toggle.set_active(True)
         self.enable_subfolders_toggle.get_parent().set_visible(partial_files)
-        self.download_folder_button.set_path(config.sections["transfers"]["downloaddir"])
+        self.download_folder_button.set_path(
+            self.application.previous_download_folder or core.downloads.get_default_download_folder()
+        )
 
         self.select_all = select_all
         has_unselected_files = False
@@ -313,7 +314,7 @@ class Download(Dialog):
             if self.enable_subfolders_toggle.get_active():
                 download_folder_path = self.download_folder_button.get_path()
 
-                if download_folder_path == config.sections["transfers"]["downloaddir"]:
+                if download_folder_path == core.downloads.get_default_download_folder():
                     download_folder_path = core.downloads.get_default_download_folder(username)
 
                 destination_folder_name = self.folder_names[folder_path]
@@ -329,6 +330,7 @@ class Download(Dialog):
                 file_attributes=file_attributes, paused=paused
             )
 
+        self.application.previous_download_folder = self.download_folder_button.get_path()
         self.close()
 
     def pulse_progress(self, repeat=True):
@@ -642,7 +644,7 @@ class Download(Dialog):
         self.rename_button.set_visible(self.enable_subfolders_toggle.get_active())
 
     def on_default_download_folder(self, *_args):
-        self.download_folder_button.set_path(config.sections["transfers"]["downloaddir"])
+        self.download_folder_button.set_path(core.downloads.get_default_download_folder())
 
     def on_row_activated(self, tree_view, iterator, column_id):
 
