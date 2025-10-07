@@ -149,6 +149,7 @@
                     <style>
                       <class name="circular"/>
                       <class name="count"/>
+                      <class name="tabular"/>
                     </style>
                   </object>
                 </child>
@@ -209,6 +210,7 @@
                 </child>
                 <style>
                   <class name="flat"/>
+                  <class name="tabular"/>
                 </style>
               </object>
             </child>
@@ -310,6 +312,9 @@
                         <child>
                           <object class="GtkBox" id="filter_file_size_container">
                             <property name="visible">True</property>
+                            <style>
+                              <class name="tabular"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -321,6 +326,9 @@
                         <child>
                           <object class="GtkBox" id="filter_bitrate_container">
                             <property name="visible">True</property>
+                            <style>
+                              <class name="tabular"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -332,6 +340,9 @@
                         <child>
                           <object class="GtkBox" id="filter_length_container">
                             <property name="visible">True</property>
+                            <style>
+                              <class name="tabular"/>
+                            </style>
                           </object>
                         </child>
                       </object>

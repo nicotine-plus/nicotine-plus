@@ -510,7 +510,7 @@ class Search:
                 "speed": {
                     "column_type": "number",
                     "title": _("Speed"),
-                    "width": 120,
+                    "width": 125,
                     "sort_column": "speed_data",
                     "sensitive_column": "public_data"
                 },
@@ -555,14 +555,14 @@ class Search:
                 "size": {
                     "column_type": "number",
                     "title": _("Size"),
-                    "width": 180,
+                    "width": 170,
                     "sort_column": "size_data",
                     "sensitive_column": "public_data"
                 },
                 "quality": {
                     "column_type": "number",
                     "title": _("Quality"),
-                    "width": 150,
+                    "width": 160,
                     "sort_column": "bitrate_data",
                     "sensitive_column": "public_data"
                 },

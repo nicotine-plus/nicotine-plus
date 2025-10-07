@@ -103,8 +103,9 @@ class Buddies:
                 "last_seen": {
                     "column_type": "text",
                     "title": _("Last Seen"),
-                    "width": 225,
-                    "sort_column": "last_seen_data"
+                    "width": 240,
+                    "sort_column": "last_seen_data",
+                    "tabular": True
                 },
                 "comments": {
                     "column_type": "text",

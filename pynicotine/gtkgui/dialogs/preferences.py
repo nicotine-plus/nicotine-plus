@@ -993,7 +993,8 @@ class IgnoredUsersPage:
                     "column_type": "text",
                     "title": _("IP Address"),
                     "width": 50,
-                    "expand_column": True
+                    "expand_column": True,
+                    "tabular": True
                 },
                 "user": {
                     "column_type": "text",
@@ -1165,7 +1166,8 @@ class BannedUsersPage:
                     "column_type": "text",
                     "title": _("IP Address"),
                     "width": 50,
-                    "expand_column": True
+                    "expand_column": True,
+                    "tabular": True
                 },
                 "user": {
                     "column_type": "text",

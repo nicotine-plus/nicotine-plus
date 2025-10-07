@@ -308,6 +308,9 @@
                             <property name="valign">center</property>
                             <property name="visible">True</property>
                             <property name="width-chars">8</property>
+                            <style>
+                              <class name="tabular"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -336,6 +339,9 @@
                             <property name="valign">center</property>
                             <property name="visible">True</property>
                             <property name="width-chars">8</property>
+                            <style>
+                              <class name="tabular"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -364,6 +370,9 @@
                             <property name="valign">center</property>
                             <property name="visible">True</property>
                             <property name="width-chars">8</property>
+                            <style>
+                              <class name="tabular"/>
+                            </style>
                           </object>
                         </child>
                       </object>

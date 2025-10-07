@@ -39,6 +39,7 @@
                         <property name="visible">True</property>
                         <style>
                           <class name="chat-view"/>
+                          <class name="tabular"/>
                         </style>
                       </object>
                     </child>
@@ -66,6 +67,7 @@
                         <property name="visible">True</property>
                         <style>
                           <class name="chat-view"/>
+                          <class name="tabular"/>
                         </style>
                       </object>
                     </child>
@@ -181,6 +183,7 @@
                         <style>
                           <class name="circular"/>
                           <class name="count"/>
+                          <class name="tabular"/>
                         </style>
                       </object>
                     </child>
