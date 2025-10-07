@@ -14,6 +14,8 @@ from pynicotine.events import events
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import Dialog
+from pynicotine.gtkgui.widgets.dialogs import OptionDialog
+from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.logfacility import log
@@ -38,6 +40,7 @@ class ChatHistory(Dialog):
             width=960,
             height=700
         )
+        application.add_window(self.widget)
 
         self.list_view = TreeView(
             application.window, parent=self.list_container, activate_row_callback=self.on_show_user,
@@ -68,6 +71,13 @@ class ChatHistory(Dialog):
             }
         )
 
+        self.popup_menu = PopupMenu(application, self.list_view.widget)
+        self.popup_menu.add_items(
+            ("#" + _("_Open Chat"), self.on_show_user),
+            ("", None),
+            ("#" + _("Delete Chat Log…"), self.on_delete_chat_log)
+        )
+
         Accelerator("<Primary>f", self.widget, self.on_search_accelerator)
 
         self.load_users()
@@ -80,7 +90,10 @@ class ChatHistory(Dialog):
             events.connect(event_name, callback)
 
     def destroy(self):
+
+        self.popup_menu.destroy()
         self.list_view.destroy()
+
         super().destroy()
 
     def server_login(self, msg):
@@ -233,6 +246,25 @@ class ChatHistory(Dialog):
 
             core.privatechat.show_user(username)
             self.close()
+            return
+
+    def on_delete_chat_log_response(self, _dialog, _response_id, username):
+        log.delete_log(log.private_chat_folder_path, username)
+        self.remove_user(username)
+
+    def on_delete_chat_log(self, *_args):
+
+        for iterator in self.list_view.get_selected_rows():
+            username = self.list_view.get_row_value(iterator, "user")
+
+            OptionDialog(
+                parent=self.parent,
+                title=_("Delete Logged Messages?"),
+                message=_("Do you really want to permanently delete all logged messages for this user?"),
+                destructive_response_id="ok",
+                callback=self.on_delete_chat_log_response,
+                callback_data=username
+            ).present()
             return
 
     def on_search_accelerator(self, *_args):

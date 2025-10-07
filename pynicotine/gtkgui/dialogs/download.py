@@ -17,6 +17,7 @@ from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.infobar import InfoBar
+from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.utils import human_size
 from pynicotine.utils import humanize
@@ -58,6 +59,7 @@ class Download(Dialog):
             show_title_buttons=False
         )
         application.add_window(self.widget)
+
         self.application = application
         self.parent_iterators = {}
         self.initial_selected_iterators = set()
@@ -117,6 +119,11 @@ class Download(Dialog):
             }
         )
 
+        self.popup_menu = PopupMenu(application, self.tree_view.widget, self.on_popup_menu)
+        self.popup_menu.add_items(
+            ("#" + _("_Rename…"), self.on_rename)
+        )
+
         self.expand_button.connect("toggled", self.on_expand_tree)
 
         for event_name, callback in (
@@ -130,6 +137,7 @@ class Download(Dialog):
 
         self.clear()
 
+        self.popup_menu.destroy()
         self.download_folder_button.destroy()
         self.info_bar.destroy()
         self.tree_view.destroy()
@@ -467,6 +475,9 @@ class Download(Dialog):
     def server_disconnect(self, *_args):
         if self.indeterminate_progress:
             self.set_failed()
+
+    def on_popup_menu(self, menu, _widget):
+        menu.actions[_("_Rename…")].set_enabled(self.rename_button.get_sensitive())
 
     def on_retry(self, *_args):
 

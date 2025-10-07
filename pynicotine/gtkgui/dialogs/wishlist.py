@@ -67,7 +67,7 @@ class WishList(Dialog):
         self.popup_menu = PopupMenu(application, self.list_view.widget)
         self.popup_menu.add_items(
             ("#" + _("_Search for Item"), self.on_search_wish),
-            ("#" + _("Edit…"), self.on_edit_wish),
+            ("#" + _("_Edit…"), self.on_edit_wish),
             ("", None),
             ("#" + _("Remove"), self.on_remove_wish)
         )
@@ -80,9 +80,9 @@ class WishList(Dialog):
 
     def destroy(self):
 
+        self.popup_menu.destroy()
         self.wish_combobox.destroy()
         self.list_view.destroy()
-        self.popup_menu.destroy()
 
         super().destroy()
 
