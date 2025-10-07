@@ -31,6 +31,10 @@
         <property name="visible">True</property>
       </object>
     </child>
+    <style>
+      <class name="image-button"/>
+      <class name="raised"/>
+    </style>
   </object>
   <object class="GtkButton" id="download_folder_default_button">
     <property name="tooltip-text" translatable="yes">Default</property>
@@ -43,6 +47,9 @@
         <property name="visible">True</property>
       </object>
     </child>
+    <style>
+      <class name="image-button"/>
+    </style>
   </object>
   <object class="GtkButton" id="retry_button">
     <property name="label" translatable="yes">Retry</property>
