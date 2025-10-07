@@ -477,6 +477,10 @@ class MainWindow(Window):
             action.connect("activate", self.on_menu)
             self.add_action(action)
 
+        action = Gio.SimpleAction(name="focus-top-bar")
+        action.connect("activate", self.on_focus_top_bar)
+        self.add_action(action)
+
         action = Gio.SimpleAction(name="change-focus-view")
         action.connect("activate", self.on_change_focus_view)
         self.add_action(action)
@@ -702,6 +706,14 @@ class MainWindow(Window):
 
         self.hide_current_toolbar()
         self.show_header_bar(self.current_page_id, leaving_fullscreen=True)
+
+    def on_focus_top_bar(self, *_args):
+        """Ctrl+L - focus top bar."""
+
+        tab = self.tabs[self.current_page_id]
+
+        if tab.toolbar_default_widget is not None:
+            tab.toolbar_default_widget.grab_focus()
 
     def on_change_focus_view(self, *_args):
         """F6 - move focus between header bar/toolbar and main content."""
