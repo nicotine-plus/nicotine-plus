@@ -786,12 +786,6 @@ class ChatRoom:
         menu.set_user(user)
         menu.toggle_user_items()
 
-    def on_find_activity_log(self, *_args):
-        self.activity_search_bar.set_visible(True)
-
-    def on_find_room_log(self, *_args):
-        self.chat_search_bar.set_visible(True)
-
     def get_selected_username(self):
 
         for iterator in self.users_list_view.get_selected_rows():
@@ -816,18 +810,6 @@ class ChatRoom:
     def on_popup_menu_chat(self, menu, _textview):
         menu.actions[_("Copy")].set_enabled(self.chat_view.get_has_selection())
         menu.actions[_("Copy Link")].set_enabled(bool(self.chat_view.get_url_for_current_pos()))
-
-    def on_toggle_user_list_visibility(self, *_args):
-
-        if self.is_global:
-            return
-
-        visible = self.user_list_button.get_active()
-        config.sections["chatrooms"]["user_list_visible"] = visible
-        tooltip = _("Hide Room Users") if visible else _("Show Room Users")
-
-        self.user_list_button.set_tooltip_text(tooltip)
-        self.users_container.set_visible(visible)
 
     def toggle_chat_buttons(self):
 
@@ -1183,6 +1165,12 @@ class ChatRoom:
 
         return True
 
+    def on_find_activity_log(self, *_args):
+        self.activity_search_bar.set_visible(True)
+
+    def on_find_room_log(self, *_args):
+        self.chat_search_bar.set_visible(True)
+
     def on_leave_room(self, *_args):
         core.chatrooms.remove_room(self.room)
 
@@ -1214,6 +1202,18 @@ class ChatRoom:
             destructive_response_id="ok",
             callback=self.on_delete_room_log_response
         ).present()
+
+    def on_toggle_user_list_visibility(self, *_args):
+
+        if self.is_global:
+            return
+
+        visible = self.user_list_button.get_active()
+        config.sections["chatrooms"]["user_list_visible"] = visible
+        tooltip = _("Hide Room Users") if visible else _("Show Room Users")
+
+        self.user_list_button.set_tooltip_text(tooltip)
+        self.users_container.set_visible(visible)
 
     def update_room_user_completions(self):
         self.update_completions(core.chatrooms.completions.copy())
