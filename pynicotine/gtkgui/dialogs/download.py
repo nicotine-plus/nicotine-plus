@@ -79,7 +79,7 @@ class Download(Dialog):
         self.info_bar = InfoBar(parent=self.info_bar_container, button=self.retry_button)
 
         self.tree_view = TreeView(
-            application.window, parent=self.list_container, has_tree=True,
+            application.window, parent=self.list_container, has_tree=True, multi_select=True,
             activate_row_callback=self.on_row_activated,
             select_row_callback=self.on_row_selected,
             columns={
@@ -101,7 +101,7 @@ class Download(Dialog):
                     "column_type": "toggle",
                     "title": _("Selected"),
                     "width": 0,
-                    "toggle_callback": self.on_select_file,
+                    "toggle_callback": self.on_toggle_file,
                     "inconsistent_column": "inconsistent_data",
                     "hide_header": True
                 },
@@ -121,6 +121,9 @@ class Download(Dialog):
 
         self.popup_menu = PopupMenu(application, self.tree_view.widget, self.on_popup_menu)
         self.popup_menu.add_items(
+            ("#" + _("_Select"), self.on_select_files),
+            ("#" + _("_Deselect"), self.on_unselect_files),
+            ("", None),
             ("#" + _("_Rename…"), self.on_rename)
         )
 
@@ -477,6 +480,23 @@ class Download(Dialog):
             self.set_failed()
 
     def on_popup_menu(self, menu, _widget):
+
+        is_selectable = False
+        is_unselectable = False
+
+        for iterator in self.tree_view.get_selected_rows():
+            is_selected = self.tree_view.get_row_value(iterator, "selected")
+
+            if is_selected:
+                is_unselectable = True
+            else:
+                is_selectable = True
+
+            if is_selectable and is_unselectable:
+                break
+
+        menu.actions[_("_Select")].set_enabled(is_selectable)
+        menu.actions[_("_Deselect")].set_enabled(is_unselectable)
         menu.actions[_("_Rename…")].set_enabled(self.rename_button.get_sensitive())
 
     def on_retry(self, *_args):
@@ -601,9 +621,11 @@ class Download(Dialog):
         self.expand_icon.set_from_icon_name(icon_name, *icon_args)
         self.expand_button.set_tooltip_text(tooltip_text)
 
-    def on_select_file(self, tree_view, iterator):
+    def on_toggle_file(self, tree_view, iterator, selected=None):
 
-        selected = not tree_view.get_row_value(iterator, "selected")
+        if selected is None:
+            selected = not tree_view.get_row_value(iterator, "selected")
+
         username = tree_view.get_row_value(iterator, "user_data")
         folder_path = tree_view.get_row_value(iterator, "folder_path_data")
         row_id = tree_view.get_row_value(iterator, "id_data")
@@ -651,6 +673,18 @@ class Download(Dialog):
 
         self.update_title()
 
+    def on_select_files(self, *_args):
+
+        for iterator in self.tree_view.get_selected_rows():
+            if not self.tree_view.get_row_value(iterator, "selected"):
+                self.on_toggle_file(self.tree_view, iterator, selected=True)
+
+    def on_unselect_files(self, *_args):
+
+        for iterator in self.tree_view.get_selected_rows():
+            if self.tree_view.get_row_value(iterator, "selected"):
+                self.on_toggle_file(self.tree_view, iterator, selected=False)
+
     def on_toggle_enable_subfolders(self, *_args):
         self.rename_button.set_visible(self.enable_subfolders_toggle.get_active())
 
@@ -665,7 +699,7 @@ class Download(Dialog):
         is_file = tree_view.get_row_value(iterator, "id_data") not in self.parent_iterators
 
         if is_file:
-            self.on_select_file(tree_view, iterator)
+            self.on_toggle_file(tree_view, iterator)
             return
 
         if tree_view.is_row_expanded(iterator):
