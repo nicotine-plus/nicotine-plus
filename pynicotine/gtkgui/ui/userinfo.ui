@@ -684,7 +684,7 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="toggle_picture_button_label">
+                              <object class="GtkLabel" id="toggle_picture_label">
                                 <property name="ellipsize">end</property>
                                 <property name="label" translatable="yes">Show Pi_cture</property>
                                 <property name="mnemonic-widget">toggle_picture_button</property>

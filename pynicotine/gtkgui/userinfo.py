@@ -267,7 +267,7 @@ class UserInfo:
             self.shared_files_label,
             self.shared_folders_label,
             self.toggle_picture_button,
-            self.toggle_picture_button_label,
+            self.toggle_picture_label,
             self.upload_slots_label,
             self.upload_speed_label,
             self.user_info_container,
@@ -484,7 +484,7 @@ class UserInfo:
 
         self.picture_view.set_visible(True)
         self.picture_view.set_hexpand(True)
-        self.toggle_picture_button_label.set_label(_("Hide Pi_cture"))
+        self.toggle_picture_label.set_label(_("Hide Pi_cture"))
 
         add_css_class(self.interests_container, "border-end")
 
@@ -496,7 +496,7 @@ class UserInfo:
 
         self.picture_view.set_visible(False)
         self.picture_view.set_hexpand(False)
-        self.toggle_picture_button_label.set_label(_("Show Pi_cture"))
+        self.toggle_picture_label.set_label(_("Show Pi_cture"))
 
         remove_css_class(self.interests_container, "border-end")
 
