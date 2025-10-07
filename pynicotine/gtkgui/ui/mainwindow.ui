@@ -317,6 +317,7 @@
                             <style>
                               <class name="circular"/>
                               <class name="count"/>
+                              <class name="tabular"/>
                             </style>
                           </object>
                         </child>
@@ -357,6 +358,7 @@
                             <style>
                               <class name="circular"/>
                               <class name="count"/>
+                              <class name="tabular"/>
                             </style>
                           </object>
                         </child>
@@ -556,6 +558,7 @@
                             <style>
                               <class name="circular"/>
                               <class name="count"/>
+                              <class name="tabular"/>
                             </style>
                           </object>
                         </child>
@@ -596,6 +599,7 @@
                             <style>
                               <class name="circular"/>
                               <class name="count"/>
+                              <class name="tabular"/>
                             </style>
                           </object>
                         </child>
@@ -1678,6 +1682,9 @@
                         <property name="hexpand">True</property>
                         <property name="min-content-height">90</property>
                         <property name="visible">True</property>
+                        <style>
+                          <class name="tabular"/>
+                        </style>
                       </object>
                     </child>
                   </object>
@@ -1722,13 +1729,11 @@
                 <property name="ellipsize">end</property>
                 <property name="selectable">True</property>
                 <property name="visible">True</property>
-                <attributes>
-                  <attribute name="font-features" value="tnum=1"/>
-                </attributes>
                 <style>
                   <class name="caption"/>
                   <class name="dim-label"/>
                   <class name="normal"/>
+                  <class name="tabular"/>
                 </style>
               </object>
             </child>
@@ -1777,6 +1782,7 @@
                 </child>
                 <style>
                   <class name="flat"/>
+                  <class name="tabular"/>
                 </style>
               </object>
             </child>
@@ -1808,6 +1814,7 @@
                 </child>
                 <style>
                   <class name="flat"/>
+                  <class name="tabular"/>
                 </style>
               </object>
             </child>
@@ -1839,6 +1846,7 @@
                 </child>
                 <style>
                   <class name="flat"/>
+                  <class name="tabular"/>
                 </style>
               </object>
             </child>

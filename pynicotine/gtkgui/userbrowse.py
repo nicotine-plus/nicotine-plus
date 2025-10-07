@@ -330,13 +330,13 @@ class UserBrowse:
                 "size": {
                     "column_type": "number",
                     "title": _("Size"),
-                    "width": 100,
+                    "width": 170,
                     "sort_column": "size_data"
                 },
                 "quality": {
                     "column_type": "number",
                     "title": _("Quality"),
-                    "width": 150,
+                    "width": 160,
                     "sort_column": "bitrate_data"
                 },
                 "length": {

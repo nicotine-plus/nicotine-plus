@@ -29,6 +29,7 @@
                 <property name="visible">True</property>
                 <style>
                   <class name="chat-view"/>
+                  <class name="tabular"/>
                 </style>
               </object>
             </child>

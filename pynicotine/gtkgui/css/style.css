@@ -78,6 +78,10 @@
     text-decoration-line: underline;
 }
 
+.tabular {
+    font-feature-settings: "tnum";
+}
+
 /* Tweaks */
 
 flowbox:not(.emoji-toolbar),
