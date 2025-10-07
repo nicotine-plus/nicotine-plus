@@ -227,7 +227,7 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="unselect_all_button">
-                        <property name="tooltip-text" translatable="yes">Unselect All</property>
+                        <property name="tooltip-text" translatable="yes">Deselect All</property>
                         <property name="visible" bind-source="_select_all_button" bind-property="visible" bind-flags="bidirectional|invert-boolean|sync-create"/>
                         <signal name="clicked" handler="on_unselect_all"/>
                         <child>
@@ -243,7 +243,7 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="ellipsize">end</property>
-                                <property name="label" translatable="yes">Unselect All</property>
+                                <property name="label" translatable="yes">Deselect All</property>
                                 <property name="mnemonic-widget">unselect_all_button</property>
                                 <property name="visible">True</property>
                               </object>
