@@ -451,7 +451,7 @@ class Search:
         self.filters_undo = self.FILTERS_EMPTY
         self.populating_filters = False
         self.refiltering = False
-        self.active_filter_count = 0
+        self.num_active_filters = 0
         self.num_results_found = 0
         self.num_results_visible = 0
 
@@ -715,7 +715,7 @@ class Search:
 
     def update_filter_widgets(self):
 
-        self.update_filter_counter(self.active_filter_count)
+        self.update_result_filters_label()
 
         if self.filters_undo == self.FILTERS_EMPTY:
             tooltip_text = _("Clear Filters")
@@ -1235,7 +1235,7 @@ class Search:
 
     def check_filter(self, row):
 
-        if self.active_filter_count <= 0:
+        if self.num_active_filters <= 0:
             return True
 
         for filter_id, (filter_value, _h_filter_value) in self.filters.items():
@@ -1271,15 +1271,19 @@ class Search:
 
         return True
 
-    def update_filter_counter(self, count):
+    def update_result_filters_label(self):
 
-        if count > 0:
-            self.filters_label.set_label(_("_Result Filters [%d]") % count)
+        if self.num_active_filters > 0:
+            label = _("_Result Filters [%d]") % self.num_active_filters
         else:
-            self.filters_label.set_label(_("_Result Filters"))
+            label = _("_Result Filters")
 
-        self.filters_label.set_tooltip_text(
-            ngettext("%(num)s active filter", "%(num)s active filters", count) % {"num": count})
+        self.filters_label.set_label(label)
+        self.filters_button.set_tooltip_text(
+            ngettext("%(num)s Active Filter", "%(num)s Active Filters", self.num_active_filters) % {
+                "num": self.num_active_filters
+            }
+        )
 
     def clear_model(self, stored_results=False):
 
@@ -1894,7 +1898,7 @@ class Search:
             # Filters active, enable Clear Filters
             self.filters_undo = self.FILTERS_EMPTY
 
-        self.active_filter_count = 0
+        self.num_active_filters = 0
 
         # Add filters to history
         for filter_id, (_value, h_value) in filters.items():
@@ -1905,7 +1909,7 @@ class Search:
                 continue
 
             self.push_history(filter_id, h_value)
-            self.active_filter_count += 1
+            self.num_active_filters += 1
 
         # Apply the new filters
         self.filters = filters
