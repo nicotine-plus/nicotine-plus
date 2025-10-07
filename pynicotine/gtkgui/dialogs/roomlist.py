@@ -72,8 +72,8 @@ class RoomList(Dialog):
         self.popup_room = None
         self.popup_menu = PopupMenu(application, self.list_view.widget, self.on_popup_menu)
         self.popup_menu.add_items(
-            ("=" + _("Join Room"), self.on_popup_join),
-            ("=" + _("Leave Room"), self.on_popup_leave),
+            ("=" + _("_Join Room"), self.on_popup_join),
+            ("=" + _("_Leave Room"), self.on_popup_leave),
             ("", None),
             ("=" + _("Disown Private Room"), self.on_popup_private_room_disown),
             ("=" + _("Cancel Room Membership"), self.on_popup_private_room_cancel_membership)
@@ -110,8 +110,8 @@ class RoomList(Dialog):
 
     def destroy(self):
 
-        self.list_view.destroy()
         self.popup_menu.destroy()
+        self.list_view.destroy()
 
         super().destroy()
 
