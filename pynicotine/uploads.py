@@ -103,9 +103,9 @@ class Uploads(Transfers):
 
         super()._server_login(msg)
 
-        # Show notifications for newly queued uploads every second
+        # Show notifications for newly queued uploads every 10 seconds
         self._queue_notification_timer_id = events.schedule(
-            delay=1, callback=self._show_queued_upload_notifications, repeat=True)
+            delay=10, callback=self._show_queued_upload_notifications, repeat=True)
 
         # Check if queued uploads can be started every 10 seconds
         self._upload_queue_timer_id = events.schedule(delay=10, callback=self._check_upload_queue, repeat=True)
