@@ -213,14 +213,15 @@ def human_duration_approx(seconds):
 
 
 def human_length(seconds):
-    """Returns a string for exact ISO 8601 timestamp for track playing length"""
+    """Returns a string for exact ISO 8601 timestamp for track playing length
+    when appropriate, approximate length otherwise."""
+
+    # Use approximate length for days
+    if seconds >= 86400:
+        return human_duration_approx(seconds)
 
     minutes, seconds = divmod(int(seconds), 60)
     hours, minutes = divmod(minutes, 60)
-    days, hours = divmod(hours, 24)
-
-    if days > 0:
-        return f"{days}:{hours:02d}:{minutes:02d}:{seconds:02d}"
 
     if hours > 0:
         return f"{hours}:{minutes:02d}:{seconds:02d}"
