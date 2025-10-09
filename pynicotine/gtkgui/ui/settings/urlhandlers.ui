@@ -94,7 +94,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="ellipsize">end</property>
-                            <property name="label" translatable="yes">Add…</property>
+                            <property name="label" translatable="yes">_Add…</property>
                             <property name="mnemonic-widget">_add_handler_button</property>
                             <property name="use-underline">True</property>
                             <property name="visible">True</property>
@@ -125,7 +125,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="ellipsize">end</property>
-                            <property name="label" translatable="yes">Edit…</property>
+                            <property name="label" translatable="yes">_Edit…</property>
                             <property name="mnemonic-widget">_edit_handler_button</property>
                             <property name="use-underline">True</property>
                             <property name="visible">True</property>
@@ -158,7 +158,6 @@
                             <property name="ellipsize">end</property>
                             <property name="label" translatable="yes">Remove</property>
                             <property name="mnemonic-widget">_remove_handler_button</property>
-                            <property name="use-underline">True</property>
                             <property name="visible">True</property>
                           </object>
                         </child>

@@ -42,7 +42,7 @@
             <property name="visible">True</property>
             <child>
               <object class="GtkButton" id="_abort_button">
-                <property name="tooltip-text" bind-source="_abort_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
+                <property name="tooltip-text" translatable="yes">Abort</property>
                 <property name="visible">True</property>
                 <signal name="clicked" handler="on_abort_transfer"/>
                 <child>
@@ -56,10 +56,11 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="_abort_label">
+                      <object class="GtkLabel">
                         <property name="ellipsize">end</property>
-                        <property name="label" translatable="yes">Abort</property>
+                        <property name="label" translatable="yes">Abor_t</property>
                         <property name="mnemonic-widget">_abort_button</property>
+                        <property name="use-underline">True</property>
                         <property name="visible">True</property>
                       </object>
                     </child>
@@ -72,7 +73,7 @@
             </child>
             <child>
               <object class="GtkButton" id="_abort_users_button">
-                <property name="tooltip-text" bind-source="_abort_users_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
+                <property name="tooltip-text" translatable="yes">Abort Users</property>
                 <property name="visible">True</property>
                 <signal name="clicked" handler="on_abort_users"/>
                 <child>
@@ -86,10 +87,11 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="_abort_users_label">
+                      <object class="GtkLabel">
                         <property name="ellipsize">end</property>
-                        <property name="label" translatable="yes">Abort User(s)</property>
+                        <property name="label" translatable="yes">Abort _Users</property>
                         <property name="mnemonic-widget">_abort_users_button</property>
+                        <property name="use-underline">True</property>
                         <property name="visible">True</property>
                       </object>
                     </child>
@@ -126,8 +128,9 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="ellipsize">end</property>
-                        <property name="label" translatable="yes">Message All</property>
+                        <property name="label" translatable="yes">_Message All</property>
                         <property name="mnemonic-widget">_message_all_button</property>
+                        <property name="use-underline">True</property>
                         <property name="visible">True</property>
                       </object>
                     </child>
