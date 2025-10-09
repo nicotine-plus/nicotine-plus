@@ -69,7 +69,7 @@ Nicotine+ on other distributions.
 
 ## Windows
 
-Unstable packages are built after every commit to the master branch.
+Unstable installers are built after every commit to the master branch.
 
  - [Download Unstable Windows x64 Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer.zip)
     — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer)  
@@ -79,24 +79,24 @@ Unstable packages are built after every commit to the master branch.
     — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-arm64-installer)  
    for Windows 11 or later
 
-Standalone executables are also available. They can be run from any folder and
-do not require installation.
+Portable packages are also available. They can be run from any folder and
+do not require installation. User data files are stored in a `portable\data`
+folder next to the executable.
 
-Please note that application data and
-configuration files are still stored in the same folder as the installed
-variant, i.e. they will conflict. There are plans to add a portable package
-that stores configuration independently at some point.
+> **IMPORTANT**: If you are upgrading from the standalone package, and wish to
+> use your previous data files, you can rename the
+> `C:\Users\<USERNAME>\AppData\Roaming\nicotine` folder to `data`, and place it
+> inside the `portable` folder next to the executable. Alternatively, remove
+> the `portable` folder to continue using the old AppData path.
 
- - [Download Unstable Windows x64 Standalone Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package.zip)
-    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package)  
+ - [Download Unstable Windows x64 Portable Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-portable.zip)
+    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-portable)  
    for Windows 10 or later
 
- - [Download Unstable Windows ARM64 Standalone Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-arm64-package.zip)
-    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-arm64-package)  
+ - [Download Unstable Windows ARM64 Portable Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-arm64-portable.zip)
+    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-arm64-portable)  
    for Windows 11 or later
 
-> **NOTE**: Configuration files are always stored in  
-> *C:\Users\\<USERNAME\>\AppData\Roaming\nicotine*
 
 ## macOS
 
