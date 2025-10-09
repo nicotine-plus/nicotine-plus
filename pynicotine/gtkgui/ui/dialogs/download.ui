@@ -177,8 +177,9 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="ellipsize">end</property>
-                            <property name="label" translatable="yes">Rename…</property>
+                            <property name="label" translatable="yes">_Rename…</property>
                             <property name="mnemonic-widget">rename_button</property>
+                            <property name="use-underline">True</property>
                             <property name="visible">True</property>
                           </object>
                         </child>
@@ -213,8 +214,9 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="ellipsize">end</property>
-                                <property name="label" translatable="yes">Select All</property>
+                                <property name="label" translatable="yes">Select _All</property>
                                 <property name="mnemonic-widget">_select_all_button</property>
+                                <property name="use-underline">True</property>
                                 <property name="visible">True</property>
                               </object>
                             </child>
@@ -243,8 +245,9 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="ellipsize">end</property>
-                                <property name="label" translatable="yes">Deselect All</property>
+                                <property name="label" translatable="yes">Deselect _All</property>
                                 <property name="mnemonic-widget">unselect_all_button</property>
+                                <property name="use-underline">True</property>
                                 <property name="visible">True</property>
                               </object>
                             </child>
@@ -273,8 +276,9 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="ellipsize">end</property>
-                                <property name="label" translatable="yes">Select Initial</property>
+                                <property name="label" translatable="yes">Select _Initial</property>
                                 <property name="mnemonic-widget">select_initial_button</property>
+                                <property name="use-underline">True</property>
                                 <property name="visible">True</property>
                               </object>
                             </child>

@@ -42,7 +42,7 @@
             <property name="visible">True</property>
             <child>
               <object class="GtkButton" id="_resume_button">
-                <property name="tooltip-text" bind-source="_resume_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
+                <property name="tooltip-text" translatable="yes">Resume</property>
                 <property name="visible">True</property>
                 <signal name="clicked" handler="on_retry_transfer"/>
                 <child>
@@ -58,8 +58,9 @@
                     <child>
                       <object class="GtkLabel" id="_resume_label">
                         <property name="ellipsize">end</property>
-                        <property name="label" translatable="yes">Resume</property>
+                        <property name="label" translatable="yes">Re_sume</property>
                         <property name="mnemonic-widget">_resume_button</property>
+                        <property name="use-underline">True</property>
                         <property name="visible">True</property>
                       </object>
                     </child>
@@ -72,7 +73,7 @@
             </child>
             <child>
               <object class="GtkButton" id="_pause_button">
-                <property name="tooltip-text" bind-source="_pause_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
+                <property name="tooltip-text" translatable="yes">Pause</property>
                 <property name="visible">True</property>
                 <signal name="clicked" handler="on_abort_transfer"/>
                 <child>
@@ -88,8 +89,9 @@
                     <child>
                       <object class="GtkLabel" id="_pause_label">
                         <property name="ellipsize">end</property>
-                        <property name="label" translatable="yes">Pause</property>
+                        <property name="label" translatable="yes">_Pause</property>
                         <property name="mnemonic-widget">_pause_button</property>
+                        <property name="use-underline">True</property>
                         <property name="visible">True</property>
                       </object>
                     </child>
@@ -102,7 +104,7 @@
             </child>
             <child>
               <object class="GtkButton" id="_remove_button">
-                <property name="tooltip-text" bind-source="_remove_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
+                <property name="tooltip-text" translatable="yes">Remove</property>
                 <property name="visible">True</property>
                 <signal name="clicked" handler="on_remove_transfer"/>
                 <child>

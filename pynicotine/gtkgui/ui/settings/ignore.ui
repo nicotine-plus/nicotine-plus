@@ -115,7 +115,7 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="ellipsize">end</property>
-                                        <property name="label" translatable="yes">Add…</property>
+                                        <property name="label" translatable="yes">_Add…</property>
                                         <property name="mnemonic-widget">_add_ignored_user_button</property>
                                         <property name="use-underline">True</property>
                                         <property name="visible">True</property>
@@ -148,7 +148,6 @@
                                         <property name="ellipsize">end</property>
                                         <property name="label" translatable="yes">Remove</property>
                                         <property name="mnemonic-widget">_remove_ignored_user_button</property>
-                                        <property name="use-underline">True</property>
                                         <property name="visible">True</property>
                                       </object>
                                     </child>
@@ -236,7 +235,7 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="ellipsize">end</property>
-                                        <property name="label" translatable="yes">Add…</property>
+                                        <property name="label" translatable="yes">_Add…</property>
                                         <property name="mnemonic-widget">_add_ignored_ip_button</property>
                                         <property name="use-underline">True</property>
                                         <property name="visible">True</property>
@@ -269,7 +268,6 @@
                                         <property name="ellipsize">end</property>
                                         <property name="label" translatable="yes">Remove</property>
                                         <property name="mnemonic-widget">_remove_ignored_ip_button</property>
-                                        <property name="use-underline">True</property>
                                         <property name="visible">True</property>
                                       </object>
                                     </child>

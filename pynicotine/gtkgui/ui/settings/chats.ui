@@ -97,7 +97,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="ellipsize">end</property>
-                            <property name="label" translatable="yes">Add…</property>
+                            <property name="label" translatable="yes">_Add…</property>
                             <property name="mnemonic-widget">_add_replacement_button</property>
                             <property name="use-underline">True</property>
                             <property name="visible">True</property>
@@ -128,7 +128,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="ellipsize">end</property>
-                            <property name="label" translatable="yes">Edit…</property>
+                            <property name="label" translatable="yes">_Edit…</property>
                             <property name="mnemonic-widget">_edit_replacement_button</property>
                             <property name="use-underline">True</property>
                             <property name="visible">True</property>
@@ -161,7 +161,6 @@
                             <property name="ellipsize">end</property>
                             <property name="label" translatable="yes">Remove</property>
                             <property name="mnemonic-widget">_remove_replacement_button</property>
-                            <property name="use-underline">True</property>
                             <property name="visible">True</property>
                           </object>
                         </child>
@@ -253,7 +252,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="ellipsize">end</property>
-                            <property name="label" translatable="yes">Add…</property>
+                            <property name="label" translatable="yes">_Add…</property>
                             <property name="mnemonic-widget">_add_censored_button</property>
                             <property name="use-underline">True</property>
                             <property name="visible">True</property>
@@ -268,7 +267,7 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="_edit_censored_button">
-                    <property name="tooltip-text" translatable="yes">Edit…</property>
+                    <property name="tooltip-text" translatable="yes">_Edit…</property>
                     <property name="visible">True</property>
                     <signal name="clicked" handler="on_edit_censored"/>
                     <child>
@@ -317,7 +316,6 @@
                             <property name="ellipsize">end</property>
                             <property name="label" translatable="yes">Remove</property>
                             <property name="mnemonic-widget">_remove_censored_button</property>
-                            <property name="use-underline">True</property>
                             <property name="visible">True</property>
                           </object>
                         </child>
@@ -365,9 +363,8 @@
               <object class="GtkLabel">
                 <property name="height-request">24</property>
                 <property name="hexpand">True</property>
-                <property name="label" translatable="yes">_Accept private room invitations</property>
+                <property name="label" translatable="yes">Accept private room invitations</property>
                 <property name="mnemonic-widget">private_room_toggle</property>
-                <property name="use-underline">True</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>

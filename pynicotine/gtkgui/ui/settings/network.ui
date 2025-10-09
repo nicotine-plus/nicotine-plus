@@ -98,8 +98,9 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="ellipsize">end</property>
-                            <property name="label" translatable="yes">Change Password</property>
+                            <property name="label" translatable="yes">Change Pass_word</property>
                             <property name="mnemonic-widget">_change_password_button</property>
+                            <property name="use-underline">True</property>
                             <property name="visible">True</property>
                           </object>
                         </child>
@@ -207,8 +208,9 @@
                         <child>
                           <object class="GtkLabel" id="check_port_status_label">
                             <property name="ellipsize">end</property>
-                            <property name="label" translatable="yes">Port Check</property>
+                            <property name="label" translatable="yes">_Port Check</property>
                             <property name="mnemonic-widget">check_port_status_button</property>
+                            <property name="use-underline">True</property>
                             <property name="visible">True</property>
                           </object>
                         </child>

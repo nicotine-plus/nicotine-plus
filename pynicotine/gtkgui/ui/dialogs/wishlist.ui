@@ -80,8 +80,9 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="ellipsize">end</property>
-                            <property name="label" translatable="yes">Edit…</property>
+                            <property name="label" translatable="yes">_Edit…</property>
                             <property name="mnemonic-widget">_edit_button</property>
+                            <property name="use-underline">True</property>
                             <property name="visible">True</property>
                           </object>
                         </child>
