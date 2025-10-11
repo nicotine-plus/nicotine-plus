@@ -72,8 +72,8 @@ class RoomList(Dialog):
         self.popup_room = None
         self.popup_menu = PopupMenu(application, self.list_view.widget, self.on_popup_menu)
         self.popup_menu.add_items(
-            ("=" + _("Join Room"), self.on_popup_join),
-            ("=" + _("Leave Room"), self.on_popup_leave),
+            ("=" + _("_Join Room"), self.on_popup_join),
+            ("=" + _("_Leave Room"), self.on_popup_leave),
             ("", None),
             ("=" + _("Disown Private Room"), self.on_popup_private_room_disown),
             ("=" + _("Cancel Room Membership"), self.on_popup_private_room_cancel_membership)
@@ -87,7 +87,7 @@ class RoomList(Dialog):
                 parent.add_controller(parent.gesture_click)
             else:
                 parent.set_has_window(True)
-                parent.gesture_click = Gtk.GestureMultiPress(widget=parent)  # pylint: disable=c-extension-no-member
+                parent.gesture_click = Gtk.GestureMultiPress(widget=parent)
 
             parent.gesture_click.connect("released", self.on_toggle_label_pressed, toggle)
 
@@ -110,8 +110,8 @@ class RoomList(Dialog):
 
     def destroy(self):
 
-        self.list_view.destroy()
         self.popup_menu.destroy()
+        self.list_view.destroy()
 
         super().destroy()
 

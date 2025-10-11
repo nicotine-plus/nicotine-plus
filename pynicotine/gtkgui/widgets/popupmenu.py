@@ -19,6 +19,7 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.utils import TRANSLATE_PUNCTUATION
+from pynicotine.utils import humanize
 
 
 class PopupMenu:
@@ -40,7 +41,7 @@ class PopupMenu:
         if GTK_API_VERSION >= 4:
             self.valid_parent_widgets = Gtk.Box
         else:
-            self.valid_parent_widgets = (Gtk.Box, Gtk.EventBox)  # pylint: disable=c-extension-no-member
+            self.valid_parent_widgets = (Gtk.Box, Gtk.EventBox)
 
         if connect_events and parent:
             self.connect_events(parent)
@@ -102,7 +103,7 @@ class PopupMenu:
             # Workaround for wrong widget receiving focus after closing menu in GTK 4
             self.popup_menu.connect("closed", lambda *_args: self.parent.child_focus(Gtk.DirectionType.TAB_FORWARD))
         else:
-            self.popup_menu = Gtk.Menu.new_from_model(self.model)  # pylint: disable=c-extension-no-member
+            self.popup_menu = Gtk.Menu.new_from_model(self.model)
             self.popup_menu.attach_to_widget(parent)
 
         return self.popup_menu
@@ -198,6 +199,25 @@ class PopupMenu:
 
         menuitem = self._create_menu_item(item)
         self.menu_section.append_item(menuitem)
+
+    def update_item_label(self, item_id, label):
+
+        item = self.items[item_id]
+        variant_type = GLib.VariantType("s")
+        old_label = item.get_attribute_value(Gio.MENU_ATTRIBUTE_LABEL, variant_type)
+
+        for i in range(self.model.get_n_items()):
+            section = self.model.get_item_link(i, Gio.MENU_LINK_SECTION)
+
+            if section is None:
+                continue
+
+            for j in range(section.get_n_items()):
+                if section.get_item_attribute_value(j, Gio.MENU_ATTRIBUTE_LABEL, variant_type) == old_label:
+                    item.set_label(label)
+                    section.remove(j)
+                    section.insert_item(j, item)
+                    break
 
     def update_model(self):
         """This function is called before a menu model needs to be manipulated
@@ -350,7 +370,7 @@ class PopupMenu:
                 gesture_click_darwin.connect("pressed", self._callback_click_gtk4_darwin)
 
         else:
-            self.gesture_click = Gtk.GestureMultiPress(widget=parent)  # pylint: disable=c-extension-no-member
+            self.gesture_click = Gtk.GestureMultiPress(widget=parent)
             self.gesture_click.set_button(0)
             self.gesture_click.connect("pressed", self._callback_click_gtk3)
 
@@ -385,9 +405,10 @@ class FilePopupMenu(PopupMenu):
     def set_num_selected_files(self, num_files):
 
         self.actions["selected_files"].set_enabled(False)
-        self.items["selected_files"].set_label(_("%s File(s) Selected") % num_files)
-        self.model.remove(0)
-        self.model.prepend_item(self.items["selected_files"])
+        self.update_item_label(
+            "selected_files",
+            ngettext("%(num)s File Selected", "%(num)s Files Selected", num_files) % {"num": humanize(num_files)}
+        )
 
 
 class UserPopupMenu(PopupMenu):
@@ -440,18 +461,8 @@ class UserPopupMenu(PopupMenu):
         )
 
     def update_username_item(self):
-
-        if not self.username:
-            return
-
-        user_item = self.items.get("username")
-
-        if not user_item:
-            return
-
-        user_item.set_label(self.username.replace("_", "__"))  # Escape underscores to disable mnemonics
-        self.model.remove(0)
-        self.model.prepend_item(user_item)
+        if self.username and "username" in self.items:
+            self.update_item_label("username", self.username.replace("_", "__"))
 
     def set_user(self, username):
 

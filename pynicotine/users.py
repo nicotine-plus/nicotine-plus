@@ -12,12 +12,13 @@ from pynicotine.slskmessages import GetPeerAddress
 from pynicotine.slskmessages import GetUserStats
 from pynicotine.slskmessages import GetUserStatus
 from pynicotine.slskmessages import GivePrivileges
-from pynicotine.slskmessages import LoginFailure
+from pynicotine.slskmessages import LoginRejectReason
 from pynicotine.slskmessages import SetStatus
 from pynicotine.slskmessages import UnwatchUser
 from pynicotine.slskmessages import UserStatus
 from pynicotine.slskmessages import WatchUser
 from pynicotine.utils import UINT32_LIMIT
+from pynicotine.utils import human_duration_approx
 from pynicotine.utils import open_uri
 
 
@@ -243,15 +244,15 @@ class Users:
             core.pluginhandler.server_connect_notification()
             return
 
-        if msg.reason == LoginFailure.USERNAME:
-            events.emit("invalid-username")
+        if msg.rejection_reason == LoginRejectReason.INVALID_USERNAME:
+            events.emit("invalid-username", msg.rejection_detail)
             return
 
-        if msg.reason == LoginFailure.PASSWORD:
+        if msg.rejection_reason == LoginRejectReason.INVALID_PASSWORD:
             events.emit("invalid-password")
             return
 
-        log.add(_("Unable to connect to the server. Reason: %s"), msg.reason, title=_("Cannot Connect"))
+        log.add(_("Unable to connect to the server. Reason: %s"), msg.rejection_reason, title=_("Cannot Connect"))
 
     def _get_peer_address(self, msg):
         """Server code 3."""
@@ -413,26 +414,18 @@ class Users:
     def _check_privileges(self, msg):
         """Server code 92."""
 
-        mins = msg.seconds // 60
-        hours = mins // 60
-        days = hours // 24
+        seconds = msg.seconds
 
-        if msg.seconds <= 0:
+        if seconds <= 0:
             log.add(_("You have no Soulseek privileges. While privileges are active, your downloads "
                       "will be queued ahead of those of non-privileged users."))
 
             if self._should_open_privileges_url:
                 self.open_privileges_url()
         else:
-            log.add(_("%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
-                      "Soulseek privileges left"), {
-                "days": days,
-                "hours": hours % 24,
-                "minutes": mins % 60,
-                "seconds": msg.seconds % 60
-            })
+            log.add(_("%(duration)s of Soulseek privileges left"), {"duration": human_duration_approx(seconds)})
 
-        self.privileges_left = msg.seconds
+        self.privileges_left = seconds
         self._should_open_privileges_url = False
 
     @staticmethod

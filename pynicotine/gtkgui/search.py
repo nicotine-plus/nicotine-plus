@@ -26,6 +26,7 @@ from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.combobox import ComboBox
+from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -195,6 +196,9 @@ class Searches(IconNotebook):
         user = self.user_search_combobox.get_text()
         users = [user] if user else []
 
+        if mode == "rooms" and not room:
+            return
+
         self.window.search_entry.set_text("")
         core.search.do_search(text, mode, room=room, users=users)
 
@@ -253,7 +257,7 @@ class Searches(IconNotebook):
         users = search.users
 
         if mode == "rooms":
-            mode_label = room.strip()
+            mode_label = room.strip() if room else ""
 
         elif mode == "user":
             mode_label = ",".join(users)
@@ -447,7 +451,7 @@ class Search:
         self.filters_undo = self.FILTERS_EMPTY
         self.populating_filters = False
         self.refiltering = False
-        self.active_filter_count = 0
+        self.num_active_filters = 0
         self.num_results_found = 0
         self.num_results_visible = 0
 
@@ -506,7 +510,7 @@ class Search:
                 "speed": {
                     "column_type": "number",
                     "title": _("Speed"),
-                    "width": 120,
+                    "width": 125,
                     "sort_column": "speed_data",
                     "sensitive_column": "public_data"
                 },
@@ -551,14 +555,14 @@ class Search:
                 "size": {
                     "column_type": "number",
                     "title": _("Size"),
-                    "width": 180,
+                    "width": 170,
                     "sort_column": "size_data",
                     "sensitive_column": "public_data"
                 },
                 "quality": {
                     "column_type": "number",
                     "title": _("Quality"),
-                    "width": 150,
+                    "width": 160,
                     "sort_column": "bitrate_data",
                     "sensitive_column": "public_data"
                 },
@@ -600,8 +604,9 @@ class Search:
             self.window.application, parent=self.tree_view.widget, callback=self.on_popup_menu
         )
         self.popup_menu.add_items(
-            ("#" + _("Download _File(s)"), self.on_download_files),
-            ("#" + _("_Download Folder(s)…"), self.on_download_folders),
+            ("#" + "download_files", self.on_download_files),
+            ("#" + "download_files_to", self.on_download_files_to),
+            ("#" + "download_folders", self.on_download_folders),
             ("", None),
             ("#" + _("F_ile Properties"), self.on_file_properties),
             ("", None),
@@ -710,7 +715,7 @@ class Search:
 
     def update_filter_widgets(self):
 
-        self.update_filter_counter(self.active_filter_count)
+        self.update_result_filters_label()
 
         if self.filters_undo == self.FILTERS_EMPTY:
             tooltip_text = _("Clear Filters")
@@ -831,7 +836,7 @@ class Search:
 
             h_size = human_size(size, config.sections["ui"]["file_size_unit"])
             h_quality, bitrate, h_length, length = FileListMessage.parse_audio_quality_length(size, file_attributes)
-            private_icon_name = "security-medium-symbolic" if is_private else ""
+            private_icon_name = "changes-prevent-symbolic" if is_private else ""
 
             is_result_visible = self.append(
                 [
@@ -1230,7 +1235,7 @@ class Search:
 
     def check_filter(self, row):
 
-        if self.active_filter_count <= 0:
+        if self.num_active_filters <= 0:
             return True
 
         for filter_id, (filter_value, _h_filter_value) in self.filters.items():
@@ -1266,14 +1271,19 @@ class Search:
 
         return True
 
-    def update_filter_counter(self, count):
+    def update_result_filters_label(self):
 
-        if count > 0:
-            self.filters_label.set_label(_("_Result Filters [%d]") % count)
+        if self.num_active_filters > 0:
+            label = _("_Result Filters [%d]") % self.num_active_filters
         else:
-            self.filters_label.set_label(_("_Result Filters"))
+            label = _("_Result Filters")
 
-        self.filters_label.set_tooltip_text(_("%d active filter(s)") % count)
+        self.filters_label.set_label(label)
+        self.filters_button.set_tooltip_text(
+            ngettext("%(num)s Active Filter", "%(num)s Active Filters", self.num_active_filters) % {
+                "num": self.num_active_filters
+            }
+        )
 
     def clear_model(self, stored_results=False):
 
@@ -1510,8 +1520,32 @@ class Search:
     def on_popup_menu(self, menu, _widget):
 
         self.select_results()
+
+        num_results = len(self.selected_results)
+        menu.set_num_selected_files(num_results)
+
+        self.popup_menu.update_item_label(
+            "download_files",
+            _("Download _File") if num_results == 1 else _("Download _Files")
+        )
+        self.popup_menu.update_item_label(
+            "download_files_to",
+            _("Download File _To…") if num_results == 1 else _("Download Files _To…")
+        )
+
+        user_folder_paths = set()
+
+        for iterator in self.selected_results.values():
+            user = self.tree_view.get_row_value(iterator, "user")
+            file_data = self.tree_view.get_row_value(iterator, "file_data")
+            user_folder_paths.add((user, file_data.path.rpartition("\\")[0]))
+
+        self.popup_menu.update_item_label(
+            "download_folders",
+            _("_Download Folder…") if len(user_folder_paths) == 1 else _("_Download Folders…")
+        )
+
         self.populate_popup_menu_users()
-        menu.set_num_selected_files(len(self.selected_results))
 
     def on_browse_folder(self, *_args):
 
@@ -1580,6 +1614,22 @@ class Search:
             core.downloads.enqueue_download(
                 user, file_path, folder_path=download_folder_path, size=size,
                 file_attributes=file_data.attributes)
+
+    def on_download_files_to_selected(self, selected_folder_paths, _data):
+        self.window.application.previous_file_download_folder = next(iter(selected_folder_paths), None)
+        self.on_download_files(download_folder_path=self.window.application.previous_file_download_folder)
+
+    def on_download_files_to(self, *_args):
+
+        FolderChooser(
+            parent=self.window,
+            title=_("Select Destination Folder for Files"),
+            callback=self.on_download_files_to_selected,
+            initial_folder=(
+                self.window.application.previous_file_download_folder
+                or core.downloads.get_default_download_folder()
+            )
+        ).present()
 
     def on_download_folders(self, *_args):
 
@@ -1680,7 +1730,7 @@ class Search:
             self.grouping_button.set_has_frame(active)
         else:
             self.grouping_button.set_relief(
-                Gtk.ReliefStyle.NORMAL if active else Gtk.ReliefStyle.NONE  # pylint: disable=c-extension-no-member
+                Gtk.ReliefStyle.NORMAL if active else Gtk.ReliefStyle.NONE
             )
 
         config.sections["searches"]["group_searches"] = mode
@@ -1852,7 +1902,7 @@ class Search:
             # Filters active, enable Clear Filters
             self.filters_undo = self.FILTERS_EMPTY
 
-        self.active_filter_count = 0
+        self.num_active_filters = 0
 
         # Add filters to history
         for filter_id, (_value, h_value) in filters.items():
@@ -1863,7 +1913,7 @@ class Search:
                 continue
 
             self.push_history(filter_id, h_value)
-            self.active_filter_count += 1
+            self.num_active_filters += 1
 
         # Apply the new filters
         self.filters = filters

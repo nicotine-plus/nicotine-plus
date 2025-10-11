@@ -198,7 +198,7 @@ def set_global_css():
 
     else:
         add_provider_func = Gtk.StyleContext.add_provider_for_screen  # pylint: disable=no-member
-        display = Gdk.Screen.get_default()  # pylint: disable=c-extension-no-member
+        display = Gdk.Screen.get_default()
 
         with open(encode_path(os.path.join(css_folder_path, "style_gtk3.css")), "rb") as file_handle:
             css += file_handle.read()
@@ -235,7 +235,7 @@ FILE_TYPE_ICON_LABELS = {
     "emblem-documents-symbolic": _("Text")
 }
 PRIVATE_ICON_LABELS = {
-    "security-medium-symbolic": _("Private")
+    "changes-prevent-symbolic": _("Private")
 }
 USER_STATUS_ICON_LABELS = {
     "nplus-status-available": _("Online"),

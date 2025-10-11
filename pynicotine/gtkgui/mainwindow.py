@@ -320,7 +320,7 @@ class MainWindow(Window):
             y_pos = config.sections["ui"]["yposition"]
 
             if x_pos == -1 and y_pos == -1:
-                self.widget.set_position(Gtk.WindowPosition.CENTER)  # pylint: disable=c-extension-no-member
+                self.widget.set_position(Gtk.WindowPosition.CENTER)
             else:
                 self.widget.move(x_pos, y_pos)
 
@@ -339,7 +339,7 @@ class MainWindow(Window):
             self.widget.add_controller(key_controller)
 
         else:
-            self.gesture_click = Gtk.GestureMultiPress(widget=self.widget)  # pylint: disable=c-extension-no-member
+            self.gesture_click = Gtk.GestureMultiPress(widget=self.widget)
             self.widget.connect("key-release-event", self.on_cancel_auto_away)
 
         self.gesture_click.set_button(0)
@@ -384,12 +384,10 @@ class MainWindow(Window):
 
     def on_window_state_changed_gtk3(self, _window, event):
 
-        if not event.changed_mask & Gdk.WindowState.FULLSCREEN:  # pylint: disable=c-extension-no-member
+        if not event.changed_mask & Gdk.WindowState.FULLSCREEN:
             return
 
-        self.is_fullscreen = (
-            event.new_window_state & Gdk.WindowState.FULLSCREEN  # pylint: disable=c-extension-no-member
-        )
+        self.is_fullscreen = (event.new_window_state & Gdk.WindowState.FULLSCREEN)
         self.toggle_fullscreen_toolbar()
 
     def on_window_visible_changed(self, *_args):
@@ -478,6 +476,10 @@ class MainWindow(Window):
             action = Gio.SimpleAction(name="main-menu")
             action.connect("activate", self.on_menu)
             self.add_action(action)
+
+        action = Gio.SimpleAction(name="focus-top-bar")
+        action.connect("activate", self.on_focus_top_bar)
+        self.add_action(action)
 
         action = Gio.SimpleAction(name="change-focus-view")
         action.connect("activate", self.on_change_focus_view)
@@ -704,6 +706,14 @@ class MainWindow(Window):
 
         self.hide_current_toolbar()
         self.show_header_bar(self.current_page_id, leaving_fullscreen=True)
+
+    def on_focus_top_bar(self, *_args):
+        """Ctrl+L - focus top bar."""
+
+        tab = self.tabs[self.current_page_id]
+
+        if tab.toolbar_default_widget is not None:
+            tab.toolbar_default_widget.grab_focus()
 
     def on_change_focus_view(self, *_args):
         """F6 - move focus between header bar/toolbar and main content."""

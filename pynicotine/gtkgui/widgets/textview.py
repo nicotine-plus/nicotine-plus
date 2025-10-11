@@ -81,12 +81,8 @@ class TextView:
             self.motion_controller.connect("motion", self.on_move_cursor)
             self.widget.add_controller(self.motion_controller)     # pylint: disable=no-member
         else:
-            self.gesture_click_primary = Gtk.GestureMultiPress(    # pylint: disable=c-extension-no-member
-                widget=scrollable_container
-            )
-            self.gesture_click_secondary = Gtk.GestureMultiPress(  # pylint: disable=c-extension-no-member
-                widget=scrollable_container
-            )
+            self.gesture_click_primary = Gtk.GestureMultiPress(widget=scrollable_container)
+            self.gesture_click_secondary = Gtk.GestureMultiPress(widget=scrollable_container)
 
             self.cursor_window = None
 

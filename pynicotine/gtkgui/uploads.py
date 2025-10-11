@@ -72,8 +72,10 @@ class Uploads(Transfers):
         for event_name, callback in (
             ("abort-upload", self.abort_transfer),
             ("abort-uploads", self.abort_transfers),
+            ("add-buddy", self.update_buddy),
             ("clear-upload", self.clear_transfer),
             ("clear-uploads", self.clear_transfers),
+            ("remove-buddy", self.update_buddy),
             ("set-connection-stats", self.set_connection_stats),
             ("start", self.start),
             ("update-upload", self.update_model),
@@ -117,14 +119,19 @@ class Uploads(Transfers):
         self._update_pending_parent_rows()
 
         upload_bandwidth = human_speed(upload_bandwidth)
-        upload_bandwidth_text = f"{upload_bandwidth} ( {len(core.uploads.active_users)} )"
+        active_users = len(core.uploads.active_users)
+        upload_bandwidth_text = f"{upload_bandwidth} ( {active_users} )"
 
         if self.window.upload_status_label.get_text() == upload_bandwidth_text:
             return
 
         self.window.upload_status_label.set_text(upload_bandwidth_text)
         self.window.application.tray_icon.set_upload_status(
-            _("Uploads: %(speed)s") % {"speed": upload_bandwidth})
+            _("Uploading: %(speed)s ( %(active_users)s )") % {
+                "speed": upload_bandwidth,
+                "active_users": active_users
+            }
+        )
 
     def shutdown_request(self):
 

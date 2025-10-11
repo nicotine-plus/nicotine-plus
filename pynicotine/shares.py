@@ -39,6 +39,7 @@ from pynicotine.slskmessages import SharedFoldersFiles
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 from pynicotine.utils import UINT32_LIMIT
 from pynicotine.utils import encode_path
+from pynicotine.utils import humanize
 
 
 class FileTypes:
@@ -316,8 +317,12 @@ class Scanner:
 
                 self.writer.send(
                     ScannerLogMessage(
-                        _("Rescan complete: %(num)s folders found"),
-                        {"num": self.current_folder_count}
+                        ngettext(
+                            "Rescan complete: %(num)s folder found",
+                            "Rescan complete: %(num)s folders found",
+                            self.current_folder_count
+                        ),
+                        {"num": humanize(self.current_folder_count)}
                     )
                 )
 
@@ -533,6 +538,8 @@ class Scanner:
             self.writer.send(self.current_folder_count)
 
             file_list = []
+            virtual_folder_path_lower = virtual_folder_path.lower()
+            virtual_folder_words = virtual_folder_path_lower.translate(TRANSLATE_PUNCTUATION).split()
 
             try:
                 with os.scandir(encode_path(folder_path, prefix=False)) as entries:
@@ -565,10 +572,8 @@ class Scanner:
                                 continue
 
                             file_stat = entry.stat()
-                            file_index = self.current_file_index
                             self.mtimes[path] = file_mtime = file_stat.st_mtime
                             virtual_file_path = f"{virtual_folder_path}\\{basename_escaped}"
-                            virtual_folder_path_lower = virtual_folder_path.lower()
 
                             if not self.rebuild and file_mtime == old_mtimes.get(path) and path in old_files:
                                 full_path_file_data = old_files[path]
@@ -580,11 +585,16 @@ class Scanner:
                             basename_file_data[0] = basename_escaped
                             file_list.append(basename_file_data)
 
-                            for k in set(virtual_file_path.lower().translate(TRANSLATE_PUNCTUATION).split()):
+                            file_index = self.current_file_index
+                            basename_escaped_lower = basename_escaped.lower()
+
+                            for k in set(
+                                virtual_folder_words + basename_escaped_lower.translate(TRANSLATE_PUNCTUATION).split()
+                            ):
                                 self.word_index[k].append(file_index)
 
                             self.files[path] = full_path_file_data
-                            self.lowercase_paths[virtual_folder_path_lower][basename_escaped.lower()] = file_index
+                            self.lowercase_paths[virtual_folder_path_lower][basename_escaped_lower] = file_index
 
                             self.current_file_index += 1
 
@@ -991,7 +1001,7 @@ class Shares:
 
         public_shares, buddy_shares, trusted_shares = share_groups
         virtual_name = core.shares.get_normalized_virtual_name(
-            virtual_name or os.path.basename(folder_path),
+            virtual_name or folder_path.rstrip(os.sep).rpartition(os.sep)[-1],
             shared_folders=(public_shares + buddy_shares + trusted_shares)
         )
         permission_level_shares = {

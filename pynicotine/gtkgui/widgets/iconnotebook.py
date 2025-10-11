@@ -22,6 +22,7 @@ from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.slskmessages import UserStatus
+from pynicotine.utils import humanize
 
 
 class TabLabel:
@@ -40,12 +41,11 @@ class TabLabel:
 
             self.eventbox = Gtk.Box()
         else:
-            self.gesture_click = Gtk.GestureMultiPress(widget=self.container)  # pylint: disable=c-extension-no-member
+            self.gesture_click = Gtk.GestureMultiPress(widget=self.container)
 
-            self.eventbox = Gtk.EventBox(visible=True)   # pylint: disable=c-extension-no-member
+            self.eventbox = Gtk.EventBox(visible=True)
             self.eventbox.add_events(
-                int(Gdk.EventMask.SCROLL_MASK            # pylint: disable=c-extension-no-member
-                    | Gdk.EventMask.SMOOTH_SCROLL_MASK)  # pylint: disable=c-extension-no-member
+                int(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK)
             )
 
         self.box = Gtk.Box(spacing=6, visible=True)
@@ -100,8 +100,7 @@ class TabLabel:
             self.close_button = Gtk.Button(image=Gtk.Image(icon_name="window-close-symbolic"))
             self.container.add(self.close_button)        # pylint: disable=no-member
             self.close_button.add_events(                # pylint: disable=no-member
-                int(Gdk.EventMask.SCROLL_MASK            # pylint: disable=c-extension-no-member
-                    | Gdk.EventMask.SMOOTH_SCROLL_MASK)  # pylint: disable=c-extension-no-member
+                int(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK)
             )
 
         add_css_class(self.close_button, "flat")
@@ -275,6 +274,7 @@ class IconNotebook:
 
         self.pages_button_container = Gtk.Box(halign=Gtk.Align.CENTER, visible=(self.parent_page is not None))
         self.pages_button = Gtk.MenuButton(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER, visible=True)
+        self.pages_button.icon_name = None
         self.widget.set_action_widget(self.pages_button_container, Gtk.PackType.END)
 
         if parent_page is not None:
@@ -319,8 +319,7 @@ class IconNotebook:
             self.pages_button_container.add(self.pages_button)  # pylint: disable=no-member
 
             self.widget.add_events(                      # pylint: disable=no-member
-                int(Gdk.EventMask.SCROLL_MASK            # pylint: disable=c-extension-no-member
-                    | Gdk.EventMask.SMOOTH_SCROLL_MASK)  # pylint: disable=c-extension-no-member
+                int(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK)
             )
             self.widget.connect("scroll-event", self.on_tab_scroll_event)
 
@@ -451,10 +450,25 @@ class IconNotebook:
             callback=self._on_remove_all_pages
         ).present()
 
-    def _update_pages_menu_button(self, icon_name, tooltip_text):
+    def update_pages_menu_button(self):
 
-        if self.pages_button.get_tooltip_text() == tooltip_text:
+        tab_pos = self.get_tab_pos()
+
+        if self.unread_pages:
+            icon_name = "emblem-important-symbolic"
+            num_pages = len(self.unread_pages)
+            tooltip_text = ngettext("%s Unread Tab", "%s Unread Tabs", num_pages) % humanize(num_pages)
+        else:
+            icon_name = "pan-down-symbolic" if tab_pos == Gtk.PositionType.TOP else "pan-up-symbolic"
+            tooltip_text = _("All Tabs")
+
+        self.pages_button.set_direction(
+            Gtk.ArrowType.DOWN if tab_pos == Gtk.PositionType.TOP else Gtk.ArrowType.UP)
+
+        if self.pages_button.icon_name == icon_name:
             return
+
+        self.pages_button.icon_name = icon_name
 
         if GTK_API_VERSION >= 4:
             self.pages_button.set_icon_name(icon_name)                   # pylint: disable=no-member
@@ -465,17 +479,6 @@ class IconNotebook:
         self.pages_button.set_visible(False)
         self.pages_button.set_tooltip_text(tooltip_text)
         self.pages_button.set_visible(True)
-
-    def update_pages_menu_button(self):
-
-        if self.unread_pages:
-            icon_name = "emblem-important-symbolic"
-            tooltip_text = _("%i Unread Tab(s)") % len(self.unread_pages)
-        else:
-            icon_name = "pan-down-symbolic"
-            tooltip_text = _("All Tabs")
-
-        self._update_pages_menu_button(icon_name, tooltip_text)
 
     def get_current_page(self):
         return self.get_nth_page(self.widget.get_current_page())
@@ -504,8 +507,12 @@ class IconNotebook:
     def set_tab_reorderable(self, page, reorderable):
         self.widget.set_tab_reorderable(page, reorderable)
 
+    def get_tab_pos(self):
+        return self.widget.get_tab_pos()
+
     def set_tab_pos(self, pos):
         self.widget.set_tab_pos(pos)
+        self.update_pages_menu_button()
 
     def get_n_pages(self):
         return self.widget.get_n_pages()
@@ -692,9 +699,6 @@ class IconNotebook:
 
     def on_pages_button_pressed(self, *_args):
 
-        if self.pages_button.get_active():
-            return
-
         self.popup_menu_pages.clear()
 
         # Unread pages (most recently changed first)
@@ -736,7 +740,7 @@ class IconNotebook:
         if not current_page:
             return False
 
-        if Gtk.get_event_widget(event).is_ancestor(current_page):  # pylint: disable=c-extension-no-member
+        if Gtk.get_event_widget(event).is_ancestor(current_page):
             return False
 
         if event.direction == Gdk.ScrollDirection.SMOOTH:

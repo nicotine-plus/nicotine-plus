@@ -8,7 +8,6 @@
 import time
 
 from gi.repository import Gdk
-from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -267,6 +266,8 @@ class UserInfo:
             self.retry_button,
             self.shared_files_label,
             self.shared_folders_label,
+            self.toggle_picture_button,
+            self.toggle_picture_label,
             self.upload_slots_label,
             self.upload_speed_label,
             self.user_info_container,
@@ -294,7 +295,7 @@ class UserInfo:
             # Setting a pixel size of 21 results in a misaligned country flag
             self.country_icon.set_pixel_size(0)
 
-            self.picture = Gtk.EventBox(           # pylint: disable=c-extension-no-member
+            self.picture = Gtk.EventBox(
                 can_focus=True, hexpand=True, vexpand=True, visible=True
             )
             self.picture.connect("draw", self.on_draw_picture)
@@ -302,6 +303,7 @@ class UserInfo:
             self.picture_view.add(self.picture)    # pylint: disable=no-member
 
         self.user = user
+        self.picture_bytes = None
         self.picture_data = None
         self.picture_surface = None
         self.indeterminate_progress = False
@@ -365,7 +367,7 @@ class UserInfo:
             ("#" + _("_Copy Picture"), self.on_copy_picture),
             ("#" + _("_Save Picture"), self.on_save_picture),
             ("", None),
-            ("#" + _("_Hide"), self.on_hide_picture)
+            ("#" + _("_Hide Picture"), self.on_hide_picture)
         )
 
         self.popup_menus = (
@@ -433,25 +435,28 @@ class UserInfo:
             # Empty paintable to prevent container width from shrinking
             self.picture.set_paintable(Gdk.Paintable.new_empty(intrinsic_width=1, intrinsic_height=1))
 
+        self.picture_bytes = None
         self.picture_data = None
         self.picture_surface = None
 
+        self.toggle_picture_button.set_sensitive(False)
         self.hide_picture()
 
-    def load_picture(self, data):
+    def load_picture(self):
 
-        if not data:
-            self.remove_picture()
-            return
+        picture_bytes = self.picture_bytes
+        self.picture_bytes = None
 
         try:
             if GTK_API_VERSION >= 4:
-                self.picture_data = Gdk.Texture.new_from_bytes(GLib.Bytes(data))
+                self.picture_data = Gdk.Texture.new_from_bytes(GLib.Bytes(picture_bytes))
                 self.picture.set_paintable(self.picture_data)
             else:
-                data_stream = Gio.MemoryInputStream.new_from_bytes(GLib.Bytes(data))
+                from gi.repository import GdkPixbuf
+
+                data_stream = Gio.MemoryInputStream.new_from_bytes(GLib.Bytes(picture_bytes))
                 self.picture_data = GdkPixbuf.Pixbuf.new_from_stream(data_stream, cancellable=None)
-                self.picture_surface = Gdk.cairo_surface_create_from_pixbuf(  # pylint: disable=c-extension-no-member
+                self.picture_surface = Gdk.cairo_surface_create_from_pixbuf(
                     self.picture_data, scale=1, for_window=None)
 
         except Exception as error:
@@ -460,11 +465,18 @@ class UserInfo:
                 "error": error
             })
             self.remove_picture()
-            return
+            return False
 
-        self.show_picture()
+        self.toggle_picture_button.set_sensitive(True)
+        return True
 
     def show_picture(self):
+
+        if self.picture_bytes and not self.load_picture():
+            return
+
+        if self.picture_data is None:
+            return
 
         if GTK_API_VERSION == 3:
             self.user_info_container.set_hexpand(False)
@@ -472,6 +484,7 @@ class UserInfo:
 
         self.picture_view.set_visible(True)
         self.picture_view.set_hexpand(True)
+        self.toggle_picture_label.set_label(_("Hide Pi_cture"))
 
         add_css_class(self.interests_container, "border-end")
 
@@ -483,6 +496,7 @@ class UserInfo:
 
         self.picture_view.set_visible(False)
         self.picture_view.set_hexpand(False)
+        self.toggle_picture_label.set_label(_("Show Pi_cture"))
 
         remove_css_class(self.interests_container, "border-end")
 
@@ -610,8 +624,17 @@ class UserInfo:
 
         self.queued_uploads_label.get_parent().set_visible(bool(msg.queuesize))
 
+        self.picture_bytes = msg.pic
         self.picture_data = None
-        self.load_picture(msg.pic)
+
+        if not self.picture_bytes:
+            self.remove_picture()
+
+        elif config.sections["userinfo"]["picture_visible"]:
+            self.show_picture()
+
+        else:
+            self.toggle_picture_button.set_sensitive(True)
 
         self.info_bar.set_visible(False)
         self.set_finished()
@@ -839,6 +862,17 @@ class UserInfo:
 
     def on_hide_picture(self, *_args):
         self.hide_picture()
+        config.sections["userinfo"]["picture_visible"] = False
+
+    def on_toggle_picture(self, *_args):
+
+        picture_visible = config.sections["userinfo"]["picture_visible"] = (not self.picture_view.get_visible())
+
+        if not picture_visible:
+            self.hide_picture()
+            return
+
+        self.show_picture()
 
     def on_refresh(self, *_args):
         core.userinfo.show_user(self.user, refresh=True)

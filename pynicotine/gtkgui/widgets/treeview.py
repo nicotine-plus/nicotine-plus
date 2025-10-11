@@ -13,6 +13,7 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
+from gi.repository import Pango
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -307,10 +308,16 @@ class TreeView:
             # Allow individual cells to receive visual focus
             mode = Gtk.CellRendererMode.ACTIVATABLE if len(columns) > 1 else Gtk.CellRendererMode.INERT
             xalign = 0.0
+            attributes = None
+
+            if column_type == "number" or column_data.get("tabular"):
+                attributes = Pango.AttrList()
+                attributes.insert(Pango.attr_font_features_new("tnum=1"))
 
             if column_type == "text":
                 renderer = Gtk.CellRendererText(
-                    mode=mode, single_paragraph_mode=True, xpad=width_padding, ypad=height_padding
+                    mode=mode, single_paragraph_mode=True, attributes=attributes, xpad=width_padding,
+                    ypad=height_padding
                 )
                 column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, text=column_index)
                 text_underline_column = column_data.get("text_underline_column")
@@ -324,7 +331,9 @@ class TreeView:
 
             elif column_type == "number":
                 xalign = 1
-                renderer = Gtk.CellRendererText(mode=mode, xalign=xalign, xpad=width_padding, ypad=height_padding)
+                renderer = Gtk.CellRendererText(
+                    mode=mode, attributes=attributes, xalign=xalign, xpad=width_padding, ypad=height_padding
+                )
                 column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, text=column_index)
                 column.set_alignment(xalign)
 
@@ -365,7 +374,7 @@ class TreeView:
                 gesture_click = Gtk.GestureClick()
                 column_header.add_controller(gesture_click)                  # pylint: disable=no-member
             else:
-                gesture_click = Gtk.GestureMultiPress(widget=column_header)  # pylint: disable=c-extension-no-member
+                gesture_click = Gtk.GestureMultiPress(widget=column_header)
 
             gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
             gesture_click.connect("released", self.on_column_header_pressed, column_id, sort_column_id)

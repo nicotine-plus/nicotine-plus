@@ -402,7 +402,7 @@ class PluginHandler:
             return
 
         to_enable = config.sections["plugins"]["enabled"]
-        log.add_debug("Enabled plugin(s): %s", ', '.join(to_enable))
+        log.add_debug("Enabled plugins: %s", ', '.join(to_enable))
 
         for plugin in to_enable:
             self.enable_plugin(plugin)

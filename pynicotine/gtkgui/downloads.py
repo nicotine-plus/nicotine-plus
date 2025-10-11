@@ -19,6 +19,7 @@ from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.transfers import TransferStatus
 from pynicotine.utils import human_speed
+from pynicotine.utils import humanize
 from pynicotine.utils import open_file_path
 from pynicotine.utils import open_folder_path
 
@@ -69,10 +70,12 @@ class Downloads(Transfers):
         for event_name, callback in (
             ("abort-download", self.abort_transfer),
             ("abort-downloads", self.abort_transfers),
+            ("add-buddy", self.update_buddy),
             ("clear-download", self.clear_transfer),
             ("clear-downloads", self.clear_transfers),
             ("download-large-folder", self.download_large_folder),
             ("folder-download-finished", self.folder_download_finished),
+            ("remove-buddy", self.update_buddy),
             ("set-connection-stats", self.set_connection_stats),
             ("start", self.start),
             ("update-download", self.update_model),
@@ -107,14 +110,19 @@ class Downloads(Transfers):
         self._update_pending_parent_rows()
 
         download_bandwidth = human_speed(download_bandwidth)
-        download_bandwidth_text = f"{download_bandwidth} ( {len(core.downloads.active_users)} )"
+        active_users = len(core.downloads.active_users)
+        download_bandwidth_text = f"{download_bandwidth} ( {active_users} )"
 
         if self.window.download_status_label.get_text() == download_bandwidth_text:
             return
 
         self.window.download_status_label.set_text(download_bandwidth_text)
         self.window.application.tray_icon.set_download_status(
-            _("Downloads: %(speed)s") % {"speed": download_bandwidth})
+            _("Downloading: %(speed)s ( %(active_users)s )") % {
+                "speed": download_bandwidth,
+                "active_users": active_users
+            }
+        )
 
     def on_try_clear_queued(self, *_args):
 
@@ -147,13 +155,20 @@ class Downloads(Transfers):
         if self.window.current_page_id != self.transfer_page.id:
             self.window.notebook.request_tab_changed(self.transfer_page, is_important=True)
 
-    def download_large_folder(self, username, folder, numfiles, download_callback, callback_args):
+    def download_large_folder(self, username, folder, num_files, download_callback, callback_args):
 
         OptionDialog(
             parent=self.window,
-            title=_("Download %(num)i files?") % {"num": numfiles},
-            message=_("Do you really want to download %(num)i files from %(user)s's folder %(folder)s?") % {
-                "num": numfiles, "user": username, "folder": folder},
+            title=ngettext(
+                "Download %(num)s File?",
+                "Download %(num)s Files?",
+                num_files
+            ) % {"num": humanize(num_files)},
+            message=ngettext(
+                "Do you really want to download %(num)s file from %(user)s's folder %(folder)s?",
+                "Do you really want to download %(num)s files from %(user)s's folder %(folder)s?",
+                num_files
+            ) % {"num": humanize(num_files), "user": username, "folder": folder},
             buttons=[
                 ("cancel", _("_Cancel")),
                 ("download", _("_Download Folder"))

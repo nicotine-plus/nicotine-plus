@@ -32,15 +32,19 @@ from io import BytesIO
 from os import PathLike, SEEK_CUR, SEEK_END, environ, fsdecode
 from struct import unpack
 
+TYPE_CHECKING = False
+
 # Lazy imports for type checking
-if False:  # pylint: disable=using-constant-test
+if TYPE_CHECKING:
     from collections.abc import Callable, Iterator  # pylint: disable-all
-    from typing import Any, BinaryIO, Dict, List
+    from typing import Any, BinaryIO, Dict, List, Union
 
     _StringListDict = Dict[str, List[str]]
     _ImageListDict = Dict[str, List["Image"]]
+    _DataTreeDict = Dict[
+        bytes, Union['_DataTreeDict', Callable[..., Dict[str, Any]]]]
 else:
-    _StringListDict = _ImageListDict = dict
+    _StringListDict = _ImageListDict = _DataTreeDict = dict
 
 # some of the parsers can print debug info
 _DEBUG = bool(environ.get('TINYTAG_DEBUG'))
@@ -104,7 +108,7 @@ class TinyTag:
         self._parse_tags = True
         self._load_image = False
         self._tags_parsed = False
-        self.__dict__: dict[str, str | float | Images | OtherFields]
+        self.__dict__: dict[str, str | float | Images | OtherFields | None]
 
     @classmethod
     def get(cls,
@@ -256,7 +260,7 @@ class TinyTag:
         self._parse_duration = duration
         self._load_image = image
         if self._filehandler is None:
-            return
+            raise ValueError("File handle is required")
         if tags:
             self._parse_tag(self._filehandler)
         if duration:
@@ -270,14 +274,11 @@ class TinyTag:
             fieldname = fieldname[len(self._OTHER_PREFIX):]
             if check_conflict and fieldname in self.__dict__:
                 fieldname = '_' + fieldname
-            other_values = self.other.get(fieldname, [])
-            if not isinstance(value, str) or value in other_values:
-                return
-            other_values.append(value)
+            if fieldname not in self.other:
+                self.other[fieldname] = []
+            self.other[fieldname].append(str(value))
             if _DEBUG:
-                print(
-                    f'Setting other field "{fieldname}" to "{other_values!r}"')
-            self.other[fieldname] = other_values
+                print(f'Adding value "{value} to field "{fieldname}"')
             return
         old_value = self.__dict__.get(fieldname)
         new_value = value
@@ -366,7 +367,7 @@ class Images:
         self.media: Image | None = None
 
         self.other: _ImageListDict = OtherImages()
-        self.__dict__: dict[str, Image | OtherImages]
+        self.__dict__: dict[str, Image | OtherImages | None]
 
     @property
     def any(self) -> Image | None:
@@ -485,9 +486,10 @@ class _MP4(TinyTag):
     }
     _VERSIONED_ATOMS = {b'meta', b'stsd'}  # those have an extra 4 byte header
     _FLAGGED_ATOMS = {b'stsd'}  # these also have an extra 4 byte header
+    _ILST_PATH = [b'ftyp', b'moov', b'udta', b'meta', b'ilst']
 
-    _audio_data_tree: dict[bytes, Any] | None = None
-    _meta_data_tree: dict[bytes, Any] | None = None
+    _audio_data_tree: _DataTreeDict | None = None
+    _meta_data_tree: _DataTreeDict | None = None
 
     def _determine_duration(self, fh: BinaryIO) -> None:
         # https://developer.apple.com/library/mac/documentation/QuickTime/QTFF/QTFFChap3/qtff3.html
@@ -515,9 +517,8 @@ class _MP4(TinyTag):
                 b'\xa9ART': {b'data': _MP4._data_parser('artist')},
                 b'\xa9alb': {b'data': _MP4._data_parser('album')},
                 b'\xa9cmt': {b'data': _MP4._data_parser('comment')},
+                b'\xa9com': {b'data': _MP4._data_parser('composer')},
                 b'\xa9con': {b'data': _MP4._data_parser('other.conductor')},
-                # need test-data for this
-                # b'cpil':  {b'data': _MP4._data_parser('other.compilation')},
                 b'\xa9day': {b'data': _MP4._data_parser('year')},
                 b'\xa9des': {b'data': _MP4._data_parser('other.description')},
                 b'\xa9dir': {b'data': _MP4._data_parser('other.director')},
@@ -542,7 +543,7 @@ class _MP4(TinyTag):
 
     def _traverse_atoms(self,
                         fh: BinaryIO,
-                        path: dict[bytes, Any],
+                        path: _DataTreeDict,
                         stop_pos: int | None = None,
                         curr_path: list[bytes] | None = None) -> None:
         header_len = 8
@@ -574,13 +575,25 @@ class _MP4(TinyTag):
                 for fieldname, value in sub_path(fh.read(atom_size)).items():
                     if _DEBUG:
                         print(' ' * 4 * len(curr_path), 'FIELD: ', fieldname)
-                    if fieldname.startswith('images.'):
+                    if isinstance(value, Image):
                         if self._load_image:
                             # pylint: disable=protected-access
                             self.images._set_field(
                                 fieldname[len('images.'):], value)
-                    elif fieldname:
+                    elif isinstance(value, list):
+                        for subval in value:
+                            self._set_field(fieldname, subval)
+                    else:
                         self._set_field(fieldname, value)
+            # unknown data atom, try to parse it
+            elif curr_path == self._ILST_PATH:
+                atom_end_pos = fh.tell() + atom_size
+                field_name = self._OTHER_PREFIX + atom_type.decode('latin-1')
+                fh.seek(-header_len, SEEK_CUR)
+                self._traverse_atoms(
+                    fh,
+                    path={atom_type: {b'data': self._data_parser(field_name)}},
+                    stop_pos=atom_end_pos, curr_path=curr_path + [atom_type])
             # if no action was specified using dict or callable, jump over atom
             else:
                 fh.seek(atom_size, SEEK_CUR)
@@ -590,12 +603,8 @@ class _MP4(TinyTag):
             atom_header = fh.read(header_len)  # read next atom
 
     @classmethod
-    def _data_parser(
-        cls, fieldname: str
-    ) -> Callable[[bytes], dict[str, int | str | bytes | None]]:
-        def _parse_data_atom(
-            data_atom: bytes
-        ) -> dict[str, int | str | bytes | None]:
+    def _data_parser(cls, fieldname: str) -> Callable[[bytes], dict[str, str]]:
+        def _parse_data_atom(data_atom: bytes) -> dict[str, str]:
             data_type = unpack('>I', data_atom[:4])[0]
             data = data_atom[8:]
             value = None
@@ -606,7 +615,9 @@ class _MP4(TinyTag):
                 data_len = len(data)
                 if data_len in fmts:
                     value = str(unpack(fmts[data_len], data)[0])
-            return {fieldname: value}
+            if value:
+                return {fieldname: value}
+            return {}
         return _parse_data_atom
 
     @classmethod
@@ -644,13 +655,11 @@ class _MP4(TinyTag):
                 break
 
     @classmethod
-    def _parse_custom_field(
-        cls, data: bytes
-    ) -> dict[str, int | str | bytes | None]:
+    def _parse_custom_field(cls, data: bytes) -> dict[str, list[str]]:
         fh = BytesIO(data)
         header_len = 8
         field_name = None
-        data_atom = b''
+        values = []
         atom_header = fh.read(header_len)
         while len(atom_header) == header_len:
             atom_size = unpack('>I', atom_header[:4])[0] - header_len
@@ -661,15 +670,18 @@ class _MP4(TinyTag):
                 # pylint: disable=protected-access
                 field_name = cls._CUSTOM_FIELD_NAME_MAPPING.get(
                     field_name, TinyTag._OTHER_PREFIX + field_name)
-            elif atom_type == b'data':
+            elif atom_type == b'data' and field_name:
                 data_atom = fh.read(atom_size)
+                parser = cls._data_parser(field_name)
+                atom_values = parser(data_atom)
+                if field_name in atom_values:
+                    values.append(atom_values[field_name])
             else:
                 fh.seek(atom_size, SEEK_CUR)
             atom_header = fh.read(header_len)  # read next atom
-        if len(data_atom) < 8 or field_name is None:
-            return {}
-        parser = cls._data_parser(field_name)
-        return parser(data_atom)
+        if field_name and values:
+            return {field_name: values}
+        return {}
 
     @classmethod
     def _parse_audio_sample_entry_mp4a(cls, data: bytes) -> dict[str, int]:
@@ -916,20 +928,17 @@ class _ID3(TinyTag):
         max_estimation_frames = (
             (self._MAX_ESTIMATION_SEC * 44100) // self._SAMPLES_PER_FRAME)
         frame_size_accu = 0
-        audio_offset = 0
+        audio_offset = self._bytepos_after_id3v2
         frames = 0  # count frames for determining mp3 duration
         bitrate_accu = 0    # add up bitrates to find average bitrate to detect
         last_bitrates = set()  # CBR mp3s (multiple frames with same bitrates)
         # seek to first position after id3 tag (speedup for large header)
         first_mpeg_id = None
         fh.seek(self._bytepos_after_id3v2)
-        file_offset = fh.tell()
-        walker = BytesIO(fh.read())
         while True:
             # reading through garbage until 11 '1' sync-bits are found
-            header = walker.read(4)
+            header = fh.read(4)
             header_len = len(header)
-            walker.seek(-header_len, SEEK_CUR)
             if header_len < 4:
                 if frames:
                     self.bitrate = bitrate_accu / frames
@@ -948,10 +957,12 @@ class _ID3(TinyTag):
                     or mpeg_id == 1):
                 # invalid frame, find next sync header
                 idx = header.find(b'\xFF', 1)
-                if idx == -1:
-                    # not found: jump over the current peek buffer
-                    idx = header_len
-                walker.seek(max(idx, 1), SEEK_CUR)
+                next_offset = header_len
+                if idx != -1:
+                    next_offset -= idx
+                    fh.seek(idx - header_len, SEEK_CUR)
+                if frames == 0:
+                    audio_offset += next_offset
                 continue
             if first_mpeg_id is None:
                 first_mpeg_id = mpeg_id
@@ -963,12 +974,12 @@ class _ID3(TinyTag):
             # all the info we need, otherwise parse multiple frames to find the
             # accurate average bitrate
             if frames == 0 and self._USE_XING_HEADER:
-                walker_offset = walker.tell()
-                frame_content = walker.read(frame_length)
+                prev_offset = header_len + audio_offset
+                frame_content = fh.read(frame_length)
                 xing_header_offset = frame_content.find(b'Xing')
                 if xing_header_offset != -1:
-                    walker.seek(walker_offset + xing_header_offset)
-                    xframes, byte_count = self._parse_xing_header(walker)
+                    fh.seek(prev_offset + xing_header_offset)
+                    xframes, byte_count = self._parse_xing_header(fh)
                     if xframes > 0 and byte_count > 0:
                         # MPEG-2 Audio Layer III uses 576 samples per frame
                         samples_pf = self._SAMPLES_PER_FRAME
@@ -978,12 +989,10 @@ class _ID3(TinyTag):
                         self.bitrate = byte_count * 8 / dur / 1000
                         self.is_vbr = True
                         return
-                walker.seek(walker_offset)
+                fh.seek(prev_offset)
 
             frames += 1  # it's most probably a mp3 frame
             bitrate_accu += frame_br
-            if frames == 1:
-                audio_offset = file_offset + walker.tell()
             if frames <= self._CBR_DETECTION_FRAME_COUNT:
                 last_bitrates.add(frame_br)
 
@@ -1002,7 +1011,7 @@ class _ID3(TinyTag):
                 return
 
             if frame_length > 1:  # jump over current frame body
-                walker.seek(frame_length, SEEK_CUR)
+                fh.seek(frame_length - header_len, SEEK_CUR)
         if self.samplerate:
             self.duration = frames * self._SAMPLES_PER_FRAME / self.samplerate
 
@@ -1045,7 +1054,8 @@ class _ID3(TinyTag):
         fh.seek(end_pos)
 
     def _parse_id3v1(self, fh: BinaryIO) -> None:
-        if fh.read(3) != b'TAG':  # check if this is an ID3 v1 tag
+        content = fh.read(3 + 30 + 30 + 30 + 4 + 30 + 1)
+        if content[:3] != b'TAG':  # check if this is an ID3 v1 tag
             return
 
         def asciidecode(x: bytes) -> str:
@@ -1053,24 +1063,23 @@ class _ID3(TinyTag):
                 x.decode(self._default_encoding or 'latin1', 'replace'))
         # Only set fields that were not set by ID3v2 tags, as ID3v1
         # tags are more likely to be outdated or have encoding issues
-        fields = fh.read(30 + 30 + 30 + 4 + 30 + 1)
         if not self.title:
-            value = asciidecode(fields[:30])
+            value = asciidecode(content[3:33])
             if value:
                 self._set_field('title', value)
         if not self.artist:
-            value = asciidecode(fields[30:60])
+            value = asciidecode(content[33:63])
             if value:
                 self._set_field('artist', value)
         if not self.album:
-            value = asciidecode(fields[60:90])
+            value = asciidecode(content[63:93])
             if value:
                 self._set_field('album', value)
         if not self.year:
-            value = asciidecode(fields[90:94])
+            value = asciidecode(content[93:97])
             if value:
                 self._set_field('year', value)
-        comment = fields[94:124]
+        comment = content[97:127]
         if b'\x00\x00' < comment[-2:] < b'\x01\x00':
             if self.track is None:
                 self._set_field('track', ord(comment[-1:]))
@@ -1080,7 +1089,7 @@ class _ID3(TinyTag):
             if value:
                 self._set_field('comment', value)
         if not self.genre:
-            genre_id = ord(fields[124:125])
+            genre_id = ord(content[127:128])
             if genre_id < len(self._ID3V1_GENRES):
                 self._set_field('genre', self._ID3V1_GENRES[genre_id])
 
@@ -1140,14 +1149,13 @@ class _ID3(TinyTag):
         if frame_size > total_size:
             # invalid frame size, stop here
             return 0
-        content = fh.read(frame_size)
-        fieldname = self._ID3_MAPPING.get(frame_id)
         should_set_field = True
-        if fieldname:
+        if frame_id in self._ID3_MAPPING:
             if not self._parse_tags:
                 return frame_size
+            fieldname = self._ID3_MAPPING[frame_id]
             language = fieldname in {'comment', 'other.lyrics'}
-            value = self._decode_string(content, language)
+            value = self._decode_string(fh.read(frame_size), language)
             if not value:
                 return frame_size
             if fieldname == "comment":
@@ -1179,12 +1187,13 @@ class _ID3(TinyTag):
         elif frame_id in self._CUSTOM_FRAME_IDS:
             # custom fields
             if self._parse_tags:
-                value = self._decode_string(content)
+                value = self._decode_string(fh.read(frame_size))
                 if value:
                     self.__parse_custom_field(value)
         elif frame_id in self._IMAGE_FRAME_IDS:
             if self._load_image:
                 # See section 4.14: http://id3.org/id3v2.4.0-frames
+                content = fh.read(frame_size)
                 encoding = content[:1]
                 if frame_id == 'PIC':  # ID3 v2.2:
                     imgformat = self._decode_string(content[1:4]).lower()
@@ -1207,6 +1216,11 @@ class _ID3(TinyTag):
                         if content[i:i + 2] == b'\x00\x00':
                             desc_end_pos = i + 2
                             break
+                    # skip stray null byte in broken file
+                    if (desc_end_pos + 1 < len(content)
+                            and content[desc_end_pos] == 0
+                            and content[desc_end_pos + 1] != 0):
+                        desc_end_pos += 1
                 desc = self._decode_string(
                     encoding + content[desc_start_pos:desc_end_pos])
                 field_name, image = self._create_tag_image(
@@ -1216,10 +1230,12 @@ class _ID3(TinyTag):
         elif frame_id not in self._IGNORED_FRAME_IDS:
             # unknown, try to add to other dict
             if self._parse_tags:
-                value = self._decode_string(content)
+                value = self._decode_string(fh.read(frame_size))
                 if value:
                     self._set_field(
                         self._OTHER_PREFIX + frame_id.lower(), value)
+        else:  # skip frame
+            fh.seek(frame_size, SEEK_CUR)
         return frame_size
 
     def _decode_string(self, value: bytes, language: bool = False) -> str:
@@ -1450,7 +1466,7 @@ class _Ogg(TinyTag):
                     elif value:
                         self._set_field(fieldname, value)
 
-    def _parse_pages(self, fh: BinaryIO) -> Iterator[bytes]:
+    def _parse_pages(self, fh: BinaryIO) -> Iterator[bytearray]:
         # for the spec, see: https://wiki.xiph.org/Ogg
         packet_data = bytearray()
         current_serial = None
@@ -1582,8 +1598,8 @@ class _Wave(TinyTag):
                         data_length += data_length % 2
                         # strip zero-byte
                         data = walker.read(data_length).split(b'\x00', 1)[0]
-                        fieldname = self._RIFF_MAPPING.get(field)
-                        if fieldname:
+                        if field in self._RIFF_MAPPING:
+                            fieldname = self._RIFF_MAPPING[field]
                             value = data.decode('utf-8', 'replace')
                             if fieldname == 'track':
                                 if value.isdecimal():
@@ -1804,8 +1820,9 @@ class _Wma(TinyTag):
                         walker.seek(value_len, SEEK_CUR)  # skip other values
                         continue
                     # try to get normalized field name
-                    field_name = self._ASF_MAPPING.get(name)
-                    if field_name is None:  # custom field
+                    if name in self._ASF_MAPPING:
+                        field_name = self._ASF_MAPPING[name]
+                    else:  # custom field
                         if name.startswith('WM/'):
                             name = name[3:]
                         field_name = self._OTHER_PREFIX + name.lower()

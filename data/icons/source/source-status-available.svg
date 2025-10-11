@@ -1,5 +1,5 @@
 <!--
-  SPDX-FileCopyrightText: 2020-2024 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
   SPDX-License-Identifier: GPL-3.0-or-later
 -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5" class="success" fill="#16bb5c"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><circle cx="8" cy="8" r="5" class="success" fill="#16bb5c"/></svg>

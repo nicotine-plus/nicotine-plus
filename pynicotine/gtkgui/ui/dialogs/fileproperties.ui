@@ -112,6 +112,9 @@
             <property name="wrap">True</property>
             <property name="wrap-mode">word-char</property>
             <property name="xalign">0</property>
+            <style>
+              <class name="tabular"/>
+            </style>
           </object>
         </child>
       </object>
@@ -201,6 +204,9 @@
             <property name="wrap">True</property>
             <property name="wrap-mode">word-char</property>
             <property name="xalign">0</property>
+            <style>
+              <class name="tabular"/>
+            </style>
           </object>
         </child>
       </object>
@@ -230,6 +236,9 @@
             <property name="wrap">True</property>
             <property name="wrap-mode">word-char</property>
             <property name="xalign">0</property>
+            <style>
+              <class name="tabular"/>
+            </style>
           </object>
         </child>
       </object>
@@ -290,6 +299,9 @@
             <property name="wrap">True</property>
             <property name="wrap-mode">word-char</property>
             <property name="xalign">0</property>
+            <style>
+              <class name="tabular"/>
+            </style>
           </object>
         </child>
       </object>
@@ -319,6 +331,9 @@
             <property name="wrap">True</property>
             <property name="wrap-mode">word-char</property>
             <property name="xalign">0</property>
+            <style>
+              <class name="tabular"/>
+            </style>
           </object>
         </child>
       </object>

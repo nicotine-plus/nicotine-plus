@@ -424,6 +424,7 @@
  - Kian-Meng Ang
  - Kip Warner
  - Kirill Feoktistov
+ - KOXXPL
  - Kylie McClain
  - lee8oi
  - Lene Preuss
@@ -432,6 +433,7 @@
  - Lucas Vieites
  - m-balthazar
  - Maite Guix
+ - mala
  - mantas
  - ManWell
  - marciozomb13
@@ -445,6 +447,7 @@
  - MELERIX
  - MendelGusmao
  - Meokater
+ - Merlin Erdogmus
  - Michael Labouebe
  - Micke Nilsson
  - Miodrag Milić
@@ -456,6 +459,7 @@
  - Mutnick
  - mzf-guest
  - Nachtalb
+ - Nguyen Tuan Khoi
  - nicola
  - Nicolas Abril
  - Nick Voronin
@@ -471,6 +475,7 @@
  - Pagal3
  - Patrik
  - phelissimo_
+ - Phil Cryer
  - phlostically
  - Piotr Strebski
  - Poesty Li
@@ -508,6 +513,7 @@
  - Vladyslav Anisimov
  - wanderer
  - waxed
+ - whywhy123456789whylol
  - Wojciech Owczarek
  - Wretched
  - Wynfyd

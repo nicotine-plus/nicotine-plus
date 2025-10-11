@@ -46,14 +46,14 @@ jobs:
           - arch: x86_64
             platform: ubuntu-latest
     container:
-      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-48
+      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-49
       options: --privileged
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Validate manifest
-        run: flatpak-builder-lint manifest build-aux/flatpak/org.nicotine_plus.Nicotine.json
+        run: flatpak-builder-lint --exceptions manifest build-aux/flatpak/org.nicotine_plus.Nicotine.json
 
       - name: Validate appstream
         run: flatpak-builder-lint appstream data/org.nicotine_plus.Nicotine.appdata.xml.in
@@ -148,16 +148,21 @@ jobs:
       - name: Freeze application
         run: python3 build-aux/windows/setup.py bdist_msi
 
+      - name: Make package portable
+        run: |
+          mkdir build-aux/windows/build/package/Nicotine+/portable/
+          cp build-aux/windows/readme-portable.txt build-aux/windows/build/package/Nicotine+/portable/README.txt
+
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v4
         with:
           name: windows-${{ matrix.arch }}-installer
           path: build-aux/windows/build/*.msi
 
-      - name: Archive package artifacts
+      - name: Archive portable artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: windows-${{ matrix.arch }}-package
+          name: windows-${{ matrix.arch }}-portable
           path: build-aux/windows/build/package
 
   macos:
@@ -165,7 +170,7 @@ jobs:
       matrix:
         include:
           - arch: x86_64
-            platform: macos-13
+            platform: macos-15-intel
           - arch: arm64
             platform: macos-14
     runs-on: ${{ matrix.platform }}
@@ -173,9 +178,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Set system language
-        run: defaults write NSGlobalDomain AppleLanguages "(en-US)"
 
       - name: Create Python virtual environment
         run: |

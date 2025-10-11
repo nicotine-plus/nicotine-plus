@@ -101,6 +101,8 @@ class ChatRooms(IconNotebook):
             ("server-disconnect", self.server_disconnect),
             ("show-room", self.show_room),
             ("start", self.start),
+            ("ticker-add", self.ticker_add),
+            ("ticker-remove", self.ticker_remove),
             ("unignore-user", self.unignore_user),
             ("unignore-user-ip", self.unignore_user),
             ("user-country", self.user_country),
@@ -433,6 +435,20 @@ class ChatRooms(IconNotebook):
         if page is not None:
             page.private_room_remove_user(msg)
 
+    def ticker_add(self, msg):
+
+        page = self.pages.get(msg.room)
+
+        if page is not None:
+            page.ticker_add(msg)
+
+    def ticker_remove(self, msg):
+
+        page = self.pages.get(msg.room)
+
+        if page is not None:
+            page.ticker_remove(msg)
+
     def update_completions(self, completions):
 
         page = self.get_current_page()
@@ -499,6 +515,7 @@ class ChatRoom:
             self.chat_paned.child_set_property(self.chat_container, "shrink", False)
 
         self.loaded = False
+        self.unread_room_wall_users = set()
 
         self.activity_view = TextView(
             self.activity_view_container, parse_urls=False, editable=False,
@@ -534,6 +551,12 @@ class ChatRoom:
         if GTK_API_VERSION >= 4:
             inner_button = next(iter(self.help_button))
             add_css_class(widget=inner_button, css_class="image-button")
+
+            room_wall_button = next(iter(self.room_wall_button))
+        else:
+            room_wall_button = self.room_wall_button
+
+        room_wall_button.connect("clicked", self.on_show_room_wall)
 
         self.users_list_view = TreeView(
             self.window, parent=self.users_list_container, name="chat_room", secondary_name=room,
@@ -664,6 +687,7 @@ class ChatRoom:
         for menu in self.popup_menus:
             menu.destroy()
 
+        self.unread_room_wall_users.clear()
         self.activity_view.destroy()
         self.chat_view.destroy()
         self.users_list_view.destroy()
@@ -786,12 +810,6 @@ class ChatRoom:
         menu.set_user(user)
         menu.toggle_user_items()
 
-    def on_find_activity_log(self, *_args):
-        self.activity_search_bar.set_visible(True)
-
-    def on_find_room_log(self, *_args):
-        self.chat_search_bar.set_visible(True)
-
     def get_selected_username(self):
 
         for iterator in self.users_list_view.get_selected_rows():
@@ -816,18 +834,6 @@ class ChatRoom:
     def on_popup_menu_chat(self, menu, _textview):
         menu.actions[_("Copy")].set_enabled(self.chat_view.get_has_selection())
         menu.actions[_("Copy Link")].set_enabled(bool(self.chat_view.get_url_for_current_pos()))
-
-    def on_toggle_user_list_visibility(self, *_args):
-
-        if self.is_global:
-            return
-
-        visible = self.user_list_button.get_active()
-        config.sections["chatrooms"]["user_list_visible"] = visible
-        tooltip = _("Hide Room Users") if visible else _("Show Room Users")
-
-        self.user_list_button.set_tooltip_text(tooltip)
-        self.users_container.set_visible(visible)
 
     def toggle_chat_buttons(self):
 
@@ -1017,6 +1023,14 @@ class ChatRoom:
         self.chat_view.update_user_tag(username)
         self.update_user_count()
 
+    def ticker_add(self, msg):
+        self.unread_room_wall_users.add(msg.user)
+        self.update_room_wall_label()
+
+    def ticker_remove(self, msg):
+        self.unread_room_wall_users.discard(msg.user)
+        self.update_room_wall_label()
+
     def update_user_count(self):
         user_count = len(self.users_list_view.iterators)
         self.users_label.set_text(humanize(user_count))
@@ -1183,6 +1197,12 @@ class ChatRoom:
 
         return True
 
+    def on_find_activity_log(self, *_args):
+        self.activity_search_bar.set_visible(True)
+
+    def on_find_room_log(self, *_args):
+        self.chat_search_bar.set_visible(True)
+
     def on_leave_room(self, *_args):
         core.chatrooms.remove_room(self.room)
 
@@ -1214,6 +1234,38 @@ class ChatRoom:
             destructive_response_id="ok",
             callback=self.on_delete_room_log_response
         ).present()
+
+    def on_toggle_user_list_visibility(self, *_args):
+
+        if self.is_global:
+            return
+
+        visible = self.user_list_button.get_active()
+        config.sections["chatrooms"]["user_list_visible"] = visible
+        tooltip = _("Hide Room Users") if visible else _("Show Room Users")
+
+        self.user_list_button.set_tooltip_text(tooltip)
+        self.users_container.set_visible(visible)
+
+    def on_show_room_wall(self, *_args):
+        self.unread_room_wall_users.clear()
+        self.update_room_wall_label()
+
+    def update_room_wall_label(self):
+
+        num_unread_messages = len(self.unread_room_wall_users)
+
+        if num_unread_messages > 0:
+            label = _("R_oom Wall [%d]") % num_unread_messages
+            tooltip_text = ngettext("%(num)s Unread Message", "%(num)s Unread Messages", num_unread_messages) % {
+                "num": num_unread_messages
+            }
+        else:
+            label = _("R_oom Wall")
+            tooltip_text = _("Room Wall")
+
+        self.room_wall_label.set_label(label)
+        self.room_wall_button.set_tooltip_text(tooltip_text)
 
     def update_room_user_completions(self):
         self.update_completions(core.chatrooms.completions.copy())

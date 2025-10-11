@@ -35,6 +35,7 @@ from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
+from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import SpellChecker
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
@@ -327,6 +328,13 @@ class DownloadsPage:
             }
         )
 
+        self.filter_popup_menu = PopupMenu(application, self.filter_list_view.widget)
+        self.filter_popup_menu.add_items(
+            ("#" + _("_Edit…"), self.on_edit_filter),
+            ("", None),
+            ("#" + _("Remove"), self.on_remove_filter)
+        )
+
         self.options = {
             "transfers": {
                 "autoclear_downloads": self.autoclear_downloads_toggle,
@@ -347,6 +355,7 @@ class DownloadsPage:
 
     def destroy(self):
 
+        self.filter_popup_menu.destroy()
         self.download_folder_button.destroy()
         self.incomplete_folder_button.destroy()
         self.received_folder_button.destroy()
@@ -579,6 +588,7 @@ class SharesPage:
 
         (
             self.container,
+            self.file_manager_button,
             self.rescan_daily_toggle,
             self.rescan_on_startup_toggle,
             self.reveal_buddy_shares_toggle,
@@ -595,7 +605,7 @@ class SharesPage:
 
         self.shares_list_view = TreeView(
             application.window, parent=self.shares_list_container, multi_select=True,
-            activate_row_callback=self.on_edit_shared_folder,
+            activate_row_callback=self.on_edit_shared_folder, select_row_callback=self.on_select_row,
             delete_accelerator_callback=self.on_remove_shared_folder,
             columns={
                 "virtual_name": {
@@ -619,6 +629,14 @@ class SharesPage:
             }
         )
 
+        self.shares_popup_menu = PopupMenu(application, self.shares_list_view.widget)
+        self.shares_popup_menu.add_items(
+            ("#" + _("_Edit…"), self.on_edit_shared_folder),
+            ("#" + _("Open in File _Manager"), self.on_open_file_manager),
+            ("", None),
+            ("#" + _("Remove"), self.on_remove_shared_folder)
+        )
+
         self.options = {
             "transfers": {
                 "rescanonstartup": self.rescan_on_startup_toggle,
@@ -629,6 +647,8 @@ class SharesPage:
         }
 
     def destroy(self):
+
+        self.shares_popup_menu.destroy()
         self.shares_list_view.destroy()
         self.__dict__.clear()
 
@@ -765,6 +785,16 @@ class SharesPage:
                 virtual_name, share_groups=(self.shared_folders, self.buddy_shared_folders, self.trusted_shared_folders)
             )
             self.shares_list_view.remove_row(orig_iterator)
+
+    def on_open_file_manager(self, *_args):
+
+        for iterator in self.shares_list_view.get_selected_rows():
+            folder_path = self.shares_list_view.get_row_value(iterator, "folder")
+            open_folder_path(folder_path, create_folder=True)
+            return
+
+    def on_select_row(self, _list_view, iterator):
+        self.file_manager_button.set_sensitive(iterator is not None)
 
 
 class UploadsPage:
@@ -973,6 +1003,11 @@ class IgnoredUsersPage:
             }
         )
 
+        self.ignored_users_popup_menu = PopupMenu(application, self.ignored_users_list_view.widget)
+        self.ignored_users_popup_menu.add_items(
+            ("#" + _("Remove"), self.on_remove_ignored_user)
+        )
+
         self.ignored_ips = {}
         self.ignored_ips_list_view = TreeView(
             application.window, parent=self.ignored_ips_container, multi_select=True,
@@ -982,7 +1017,8 @@ class IgnoredUsersPage:
                     "column_type": "text",
                     "title": _("IP Address"),
                     "width": 50,
-                    "expand_column": True
+                    "expand_column": True,
+                    "tabular": True
                 },
                 "user": {
                     "column_type": "text",
@@ -993,6 +1029,15 @@ class IgnoredUsersPage:
             }
         )
 
+        self.ignored_ips_popup_menu = PopupMenu(application, self.ignored_ips_list_view.widget)
+        self.ignored_ips_popup_menu.add_items(
+            ("#" + _("Remove"), self.on_remove_ignored_ip)
+        )
+
+        self.popup_menus = (
+            self.ignored_users_popup_menu, self.ignored_ips_popup_menu
+        )
+
         self.options = {
             "server": {
                 "ignorelist": self.ignored_users_list_view,
@@ -1001,6 +1046,9 @@ class IgnoredUsersPage:
         }
 
     def destroy(self):
+
+        for menu in self.popup_menus:
+            menu.destroy()
 
         self.ignored_users_list_view.destroy()
         self.ignored_ips_list_view.destroy()
@@ -1145,6 +1193,11 @@ class BannedUsersPage:
             }
         )
 
+        self.banned_users_popup_menu = PopupMenu(application, self.banned_users_list_view.widget)
+        self.banned_users_popup_menu.add_items(
+            ("#" + _("Remove"), self.on_remove_banned_user)
+        )
+
         self.banned_ips = {}
         self.banned_ips_list_view = TreeView(
             application.window, parent=self.banned_ips_container, multi_select=True,
@@ -1154,7 +1207,8 @@ class BannedUsersPage:
                     "column_type": "text",
                     "title": _("IP Address"),
                     "width": 50,
-                    "expand_column": True
+                    "expand_column": True,
+                    "tabular": True
                 },
                 "user": {
                     "column_type": "text",
@@ -1163,6 +1217,15 @@ class BannedUsersPage:
                     "default_sort_type": "ascending"
                 }
             }
+        )
+
+        self.banned_ips_popup_menu = PopupMenu(application, self.banned_ips_list_view.widget)
+        self.banned_ips_popup_menu.add_items(
+            ("#" + _("Remove"), self.on_remove_banned_ip)
+        )
+
+        self.popup_menus = (
+            self.banned_users_popup_menu, self.banned_ips_popup_menu
         )
 
         self.options = {
@@ -1181,6 +1244,9 @@ class BannedUsersPage:
         }
 
     def destroy(self):
+
+        for menu in self.popup_menus:
+            menu.destroy()
 
         self.banned_users_list_view.destroy()
         self.banned_ips_list_view.destroy()
@@ -1308,6 +1374,7 @@ class ChatsPage:
         (
             self.auto_replace_words_toggle,
             self.censor_list_container,
+            self.censor_list_page,
             self.censor_text_patterns_toggle,
             self.complete_buddy_names_toggle,
             self.complete_commands_toggle,
@@ -1325,6 +1392,8 @@ class ChatsPage:
             self.recent_room_messages_spinner,
             self.reopen_private_chats_toggle,
             self.replacement_list_container,
+            self.replacement_list_page,
+            self.stack,
             self.timestamp_private_chat_entry,
             self.timestamp_room_entry,
         ) = self.widgets = ui.load(scope=self, path="settings/chats.ui")
@@ -1352,6 +1421,13 @@ class ChatsPage:
             }
         )
 
+        self.censor_popup_menu = PopupMenu(application, self.censor_list_view.widget)
+        self.censor_popup_menu.add_items(
+            ("#" + _("_Edit…"), self.on_edit_censored),
+            ("", None),
+            ("#" + _("Remove"), self.on_remove_censored)
+        )
+
         self.replacements = {}
         self.replacement_list_view = TreeView(
             application.window, parent=self.replacement_list_container, multi_select=True,
@@ -1372,6 +1448,23 @@ class ChatsPage:
                 }
             }
         )
+
+        self.replacement_popup_menu = PopupMenu(application, self.replacement_list_view.widget)
+        self.replacement_popup_menu.add_items(
+            ("#" + _("_Edit…"), self.on_edit_replacement),
+            ("", None),
+            ("#" + _("Remove"), self.on_remove_replacement)
+        )
+
+        self.popup_menus = (
+            self.censor_popup_menu, self.replacement_popup_menu
+        )
+
+        for widget, name, title in (
+            (self.replacement_list_page, "auto_replace", _("Auto-Replace")),
+            (self.censor_list_page, "censor", _("Censor"))
+        ):
+            self.stack.add_titled(widget, name, title)
 
         self.options = {
             "server": {
@@ -1406,6 +1499,9 @@ class ChatsPage:
         }
 
     def destroy(self):
+
+        for menu in self.popup_menus:
+            menu.destroy()
 
         self.censor_list_view.destroy()
         self.replacement_list_view.destroy()
@@ -2477,8 +2573,16 @@ class UrlHandlersPage:
             }
         )
 
+        self.protocol_popup_menu = PopupMenu(application, self.protocol_list_view.widget)
+        self.protocol_popup_menu.add_items(
+            ("#" + _("_Edit…"), self.on_edit_handler),
+            ("", None),
+            ("#" + _("Remove"), self.on_remove_handler)
+        )
+
     def destroy(self):
 
+        self.protocol_popup_menu.destroy()
         self.file_manager_combobox.destroy()
         self.protocol_list_view.destroy()
 
@@ -2853,10 +2957,20 @@ class PluginsPage:
                 "name_data": {"data_type": GObject.TYPE_STRING, "iterator_key": True}
             }
         )
+
+        self.plugin_popup_menu = PopupMenu(application, self.plugin_list_view.widget, self.on_plugin_popup_menu)
+        self.plugin_popup_menu.add_items(
+            ("=" + _("_Enable"), self.on_toggle_selected_plugin),
+            ("=" + _("_Disable"), self.on_toggle_selected_plugin),
+            ("", None),
+            ("#" + _("_Settings"), self.on_show_plugin_settings)
+        )
+
         self.add_plugins_button.set_visible(not self.application.isolated_mode)
 
     def destroy(self):
 
+        self.plugin_popup_menu.destroy()
         self.plugin_description_view.destroy()
         self.plugin_list_view.destroy()
 
@@ -2895,6 +3009,17 @@ class PluginsPage:
     def check_plugin_settings_button(self, plugin_name):
         self.plugin_settings_button.set_sensitive(bool(core.pluginhandler.get_plugin_metasettings(plugin_name)))
 
+    def on_plugin_popup_menu(self, menu, _widget):
+
+        for iterator in self.plugin_list_view.get_selected_rows():
+            enabled = self.plugin_list_view.get_row_value(iterator, "enabled")
+
+            menu.actions[_("_Enable")].set_enabled(not enabled)
+            menu.actions[_("_Disable")].set_enabled(enabled)
+            break
+
+        menu.actions[_("_Settings")].set_enabled(self.plugin_settings_button.get_sensitive())
+
     def on_select_plugin(self, list_view, iterator):
 
         if iterator is None:
@@ -2926,6 +3051,12 @@ class PluginsPage:
 
         list_view.set_row_value(iterator, "enabled", enabled)
         self.check_plugin_settings_button(plugin_name)
+
+    def on_toggle_selected_plugin(self, *_args):
+
+        for iterator in self.plugin_list_view.get_selected_rows():
+            self.on_toggle_plugin(self.plugin_list_view, iterator)
+            return
 
     def on_toggle_enable_plugins(self, *_args):
 
@@ -3000,8 +3131,8 @@ class Preferences(Dialog):
             height=650,
             show_title_buttons=False
         )
-
         add_css_class(self.widget, "preferences-border")
+        application.add_window(self.widget)
 
         if GTK_API_VERSION == 3:
             # Scroll to focused widgets
@@ -3486,8 +3617,7 @@ class Preferences(Dialog):
                         switch_label.add_controller(switch_label.gesture_click)
                     else:
                         switch_label.set_has_window(True)
-                        switch_label.gesture_click = Gtk.GestureMultiPress(  # pylint: disable=c-extension-no-member
-                            widget=switch_label)
+                        switch_label.gesture_click = Gtk.GestureMultiPress(widget=switch_label)
 
                     obj.set_receives_default(True)
                     switch_label.gesture_click.connect("released", self.on_toggle_label_pressed, obj)

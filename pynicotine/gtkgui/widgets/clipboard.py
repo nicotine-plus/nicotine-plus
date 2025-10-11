@@ -14,7 +14,7 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 if GTK_API_VERSION >= 4:
     _clipboard = Gdk.Display.get_default().get_clipboard()
 else:
-    _clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)  # pylint: disable=c-extension-no-member
+    _clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
 
 
 def copy_text(text):

@@ -80,6 +80,9 @@ class Application:
         self.tray_icon = None
         self.spell_checker = None
 
+        self.previous_download_folder = None
+        self.previous_file_download_folder = None
+
         # Show errors in the GUI from here on
         sys.excepthook = self.on_critical_error
 
@@ -123,6 +126,9 @@ class Application:
 
     def add_window(self, window):
         self._instance.add_window(window)
+
+    def get_accels_for_action(self, action_name):
+        return self._instance.get_accels_for_action(action_name)
 
     def _set_up_actions(self):
 
@@ -237,14 +243,19 @@ class Application:
             # Window accelerators
             ("win.main-menu", ["F10"]),
             ("win.context-menu", ["<Shift>F10"]),
+            ("win.focus-top-bar", ["<Primary>l"]),
             ("win.change-focus-view", ["F6"]),
-            ("win.show-log-pane", ["<Primary>l"]),
+            ("win.show-log-pane", ["F9"]),
             ("win.reopen-closed-tab", ["<Primary><Shift>t"]),
-            ("win.close-tab", ["<Primary>F4", "<Primary>w"]),
+            ("win.close-tab", ["<Primary>w", "<Primary>F4"]),
             ("win.cycle-tabs", ["<Control>Tab", "<Control>Page_Down"]),
             ("win.cycle-tabs-reverse", ["<Control><Shift>Tab", "<Control>Page_Up"]),
 
             # Other accelerators (logic defined elsewhere, actions only used for shortcuts dialog)
+            ("accel.focus-next-widget", ["Tab"]),
+            ("accel.focus-previous-widget", ["<Shift>Tab"]),
+            ("accel.change-main-tab-start", ["<Alt>1"]),
+            ("accel.change-main-tab-end", ["<Alt>9"]),
             ("accel.cut-clipboard", ["<Primary>x"]),
             ("accel.copy-clipboard", ["<Primary>c"]),
             ("accel.paste-clipboard", ["<Primary>v"]),
@@ -259,9 +270,8 @@ class Application:
             ("accel.save", ["<Primary>s"]),
             ("accel.download-to", ["<Primary>Return"]),
             ("accel.file-properties", ["<Alt>Return"]),
-            ("accel.back", ["BackSpace"]),
-            ("accel.retry-transfer", ["r"]),
-            ("accel.abort-transfer", ["t"])
+            ("accel.retry-transfer", ["<Primary>s"]),
+            ("accel.abort-transfer", ["<Primary>t"])
         ):
             self._set_accels_for_action(action_name, accelerators)
 
@@ -566,7 +576,7 @@ class Application:
             callback=self.on_shares_unavailable_response
         ).present()
 
-    def on_invalid_password(self):
+    def on_invalid_password(self, *_args):
         self.on_fast_configure(invalid_password=True)
 
     def on_user_status(self, msg):

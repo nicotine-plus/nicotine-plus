@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on April 25, 2025](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on September 16, 2025](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -89,13 +89,44 @@ please report them.
 | `D`  | Distributed Network |
 
 
-## Login Failure Reasons
+## Obfuscation Types
 
-| Reason            | Description                                                                      |
-|-------------------|----------------------------------------------------------------------------------|
-| `INVALIDUSERNAME` | Username is longer than 30 characters or contains invalid characters (non-ASCII) |
-| `INVALIDPASS`     | Password for existing user is incorrect                                          |
-| `INVALIDVERSION`  | Client version is outdated                                                       |
+| Code | Type   |
+|------|--------|
+| `0`  | None   |
+| `1`  | Normal |
+
+
+## Login Rejection Reasons
+
+### In Use
+
+| Reason            | Description                             |
+|-------------------|-----------------------------------------|
+| `INVALIDUSERNAME` | Username is invalid                     |
+| `EMPTYPASSWORD`   | Password is empty                       |
+| `INVALIDPASS`     | Password for existing user is incorrect |
+| `INVALIDVERSION`  | Client version is outdated              |
+| `SVRFULL`         | Server does not accept new connections  |
+| `SVRPRIVATE`      | Server does not accept registrations    |
+
+### Obsolete
+
+| Reason            | Comments                                            |
+|-------------------|-----------------------------------------------------|
+| `BANNED`          | No longer sent, server omits login response instead |
+
+
+## Login Rejection Details
+
+### INVALIDUSERNAME
+
+| Detail                                            | Comments                                |
+|---------------------------------------------------|-----------------------------------------|
+| `Nick empty.`                                     |                                         |
+| `Nick too long.`                                  | Max 30 characters allowed               |
+| `Invalid characters in nick.`                     | Only printable ASCII characters allowed |
+| `No leading and trailing spaces allowed in nick.` |                                         |
 
 
 ## User Status Codes
@@ -233,12 +264,12 @@ server, but it handles the protocol well enough (and can be modified).
 | `41`   | [Kicked from Server](#server-code-41)                          |
 | `42`   | [User Search](#server-code-42)                                 |
 | `50`   | [Similar Recommendations](#server-code-50) `OBSOLETE`          |
-| `51`   | [Interest Add](#server-code-51) `DEPRECATED`                   |
-| `52`   | [Interest Remove](#server-code-52) `DEPRECATED`                |
-| `54`   | [Get Recommendations](#server-code-54) `DEPRECATED`            |
+| `51`   | [Interest Add](#server-code-51)                                |
+| `52`   | [Interest Remove](#server-code-52)                             |
+| `54`   | [Get Recommendations](#server-code-54)                         |
 | `55`   | [My Recommendations](#server-code-55) `OBSOLETE`               |
-| `56`   | [Get Global Recommendations](#server-code-56) `DEPRECATED`     |
-| `57`   | [Get User Interests](#server-code-57) `DEPRECATED`             |
+| `56`   | [Get Global Recommendations](#server-code-56)                  |
+| `57`   | [Get User Interests](#server-code-57)                          |
 | `58`   | [Admin Command](#server-code-58) `OBSOLETE`                    |
 | `60`   | [Place In Line Response](#server-code-60) `OBSOLETE`           |
 | `62`   | [Room Added](#server-code-62) `OBSOLETE`                       |
@@ -264,15 +295,15 @@ server, but it handles the protocol well enough (and can be modified).
 | `102`  | [Possible Parents](#server-code-102)                           |
 | `103`  | [Wishlist Search](#server-code-103)                            |
 | `104`  | [Wishlist Interval](#server-code-104)                          |
-| `110`  | [Get Similar Users](#server-code-110) `DEPRECATED`             |
-| `111`  | [Get Item Recommendations](#server-code-111) `DEPRECATED`      |
-| `112`  | [Get Item Similar Users](#server-code-112) `DEPRECATED`        |
+| `110`  | [Get Similar Users](#server-code-110)                          |
+| `111`  | [Get Item Recommendations](#server-code-111)                   |
+| `112`  | [Get Item Similar Users](#server-code-112)                     |
 | `113`  | [Room Tickers](#server-code-113)                               |
 | `114`  | [Room Ticker Add](#server-code-114)                            |
 | `115`  | [Room Ticker Remove](#server-code-115)                         |
 | `116`  | [Set Room Ticker](#server-code-116)                            |
-| `117`  | [Hated Interest Add](#server-code-117) `DEPRECATED`            |
-| `118`  | [Hated Interest Remove](#server-code-118) `DEPRECATED`         |
+| `117`  | [Hated Interest Add](#server-code-117)                         |
+| `118`  | [Hated Interest Remove](#server-code-118)                      |
 | `120`  | [Room Search](#server-code-120)                                |
 | `121`  | [Send Upload Speed](#server-code-121)                          |
 | `122`  | [User Privileges](#server-code-122) `DEPRECATED`               |
@@ -299,9 +330,9 @@ server, but it handles the protocol well enough (and can be modified).
 | `146`  | [Private Room Operator Removed](#server-code-146)              |
 | `148`  | [Private Room Operators](#server-code-148)                     |
 | `149`  | [Message Users](#server-code-149)                              |
-| `150`  | [Join Global Room](#server-code-150) `DEPRECATED`              |
-| `151`  | [Leave Global Room](#server-code-151) `DEPRECATED`             |
-| `152`  | [Global Room Message](#server-code-152) `DEPRECATED`           |
+| `150`  | [Join Global Room](#server-code-150)                           |
+| `151`  | [Leave Global Room](#server-code-151)                          |
+| `152`  | [Global Room Message](#server-code-152)                        |
 | `153`  | [Related Searches](#server-code-153) `OBSOLETE`                |
 | `160`  | [Excluded Search Phrases](#server-code-160)                    |
 | `1001` | [Can't Connect To Peer](#server-code-1001)                     |
@@ -360,9 +391,11 @@ Server responds with the greeting message.
         4.  **bool** *is supporter*  
             If we have donated to Soulseek at some point in the past
     3.  If *success* is false
-        1.  **bool** *failure*
-        2.  **string** *reason*
-            See [Login Failure Reasons](#login-failure-reasons)
+        1.  **string** *rejection reason*
+            See [Login Rejection Reasons](#login-rejection-reasons)
+        2.  If *rejection reason* is `INVALIDUSERNAME`
+            1.  **string** *rejection detail*
+                See [Login Rejection Details](#login-rejection-details)
 
 
 ## Server Code 2
@@ -370,19 +403,24 @@ Server responds with the greeting message.
 ### SetWaitPort
 
 We send this to the server to indicate the port number that we listen on (2234
-by default).
+by default). Certain clients like SoulseekQt implement obfuscation of peer
+messages, and also send the obfuscation type and obfuscated port to accept such
+connections on.
 
-If this value is set to zero, or the message is not sent upon login (which
-defaults the listen port to 0), remote clients handling a [ConnectToPeer](#server-code-18)
-message will fail to properly purge the request.  Confirmed in SoulseekQt
-2020.3.12, but probably impacts most or all other versions.
+Nicotine+ does not support obfuscated connections, since there is no evidence
+that ISP traffic shaping targeting the Soulseek network (the original issue
+obfuscation attempted to mitigate) is prevalent today. Forwarding multiple
+ports is also becoming increasingly difficult due to IPv4 address exhaustion,
+and only requiring a single unobfuscated port allows users to use their
+remaining free ports in other applications instead.
 
 ### Data Order
   - Send
     1.  **uint32** *port*
-    2.  **uint32** *unknown*  
-        SoulseekQt uses a value of `1`
-    3.  **uint32** *obfuscated port*
+    2.  Optional
+        1.  **uint32** *obfuscation type*  
+            See [Obfuscation Types](#obfuscation-types)
+        2.  **uint32** *obfuscated port*
   - Receive
     -   *No Message*
 
@@ -402,8 +440,8 @@ given the peer's username.
     1.  **string** *username*
     2.  **ip** *ip*
     3.  **uint32** *port*
-    4.  **uint32** *unknown*
-        SoulseekQt uses a value of `1`
+    4.  **uint32** *obfuscation type*  
+        See [Obfuscation Types](#obfuscation-types)
     5.  **uint16** *obfuscated port*
 
 
@@ -666,8 +704,8 @@ See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
     5.  **uint32** *token*  
         Use this token for [PierceFireWall](#peer-init-code-0)
     6.  **bool** *privileged*
-    7.  **uint32** *unknown*  
-        SoulseekQt uses a value of `1`
+    7.  **uint32** *obfuscation type*  
+        See [Obfuscation Types](#obfuscation-types)
     8.  **uint32** *obfuscated port*
 
 
@@ -921,7 +959,7 @@ users. Today, the server sends a [FileSearch](#server-code-26) message instead.
 
 ### SimilarRecommendations
 
-**OBSOLETE**
+**OBSOLETE, no longer used, server sends empty list**
 
 We send this to the server when we are adding a recommendation to our
 "My recommendations" list, and want to receive a list of similar
@@ -947,8 +985,6 @@ recommendation or one of the similar ones instead.
 
 ### AddThingILike
 
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
-
 We send this to the server when we add an item to our likes list.
 
 ### Data Order
@@ -963,8 +999,6 @@ We send this to the server when we add an item to our likes list.
 
 ### RemoveThingILike
 
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
-
 We send this to the server when we remove an item from our likes list.
 
 ### Data Order
@@ -978,8 +1012,6 @@ We send this to the server when we remove an item from our likes list.
 ## Server Code 54
 
 ### Recommendations
-
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends us a list of personal recommendations and a number for each.
 
@@ -1002,7 +1034,7 @@ The server sends us a list of personal recommendations and a number for each.
 
 ### MyRecommendations
 
-**OBSOLETE**
+**OBSOLETE, no longer used**
 
 We send this to the server to ask for our own list of added
 likes/recommendations (called "My recommendations" in older versions
@@ -1027,8 +1059,6 @@ message for each missing item.
 
 ### GlobalRecommendations
 
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
-
 The server sends us a list of global recommendations and a number for each.
 
 ### Data Order
@@ -1049,8 +1079,6 @@ The server sends us a list of global recommendations and a number for each.
 ## Server Code 57
 
 ### UserInterests
-
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 We ask the server for a user's liked and hated interests. The server responds
 with a list of interests.
@@ -1073,7 +1101,7 @@ with a list of interests.
 
 ### AdminCommand
 
-**OBSOLETE**
+**OBSOLETE, no longer used**
 
 We send this to the server to run an admin command (e.g. to ban or silence a
 user) if we have admin status on the server.
@@ -1307,7 +1335,7 @@ is sent by the server, and we eventually become a branch root.
 ### Data Order
 
   - Send
-    1.  **bool** *have parents*
+    1.  **bool** *no parent*
   - Receive
     -   *No Message*
 
@@ -1543,8 +1571,6 @@ This interval is almost always 12 minutes, or 2 minutes for privileged users.
 
 ### SimilarUsers
 
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
-
 The server sends us a list of similar users related to our interests.
 
 ### Data Order
@@ -1561,8 +1587,6 @@ The server sends us a list of similar users related to our interests.
 ## Server Code 111
 
 ### ItemRecommendations
-
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends us a list of recommendations related to a specific item, which
 is usually present in the like/dislike list or an existing recommendation list.
@@ -1582,8 +1606,6 @@ is usually present in the like/dislike list or an existing recommendation list.
 ## Server Code 112
 
 ### ItemSimilarUsers
-
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends us a list of similar users related to a specific item, which
 is usually present in the like/dislike list or recommendation list.
@@ -1680,8 +1702,6 @@ walls.
 
 ### AddThingIHate
 
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
-
 We send this to the server when we add an item to our hate list.
 
 ### Data Order
@@ -1695,8 +1715,6 @@ We send this to the server when we add an item to our hate list.
 ## Server Code 118
 
 ### RemoveThingIHate
-
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 We send this to the server when we remove an item from our hate list.
 
@@ -2137,8 +2155,6 @@ Sends a broadcast private message to the given list of online users.
 
 ### JoinGlobalRoom
 
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
-
 We ask the server to send us messages from all public rooms, also known as
 public room feed.
 
@@ -2154,8 +2170,6 @@ public room feed.
 
 ### LeaveGlobalRoom
 
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
-
 We ask the server to stop sending us messages from all public rooms, also known
 as public room feed.
 
@@ -2170,8 +2184,6 @@ as public room feed.
 ## Server Code 152
 
 ### GlobalRoomMessage
-
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends this when a new message has been written in the public room
 feed (every single line written in every public room).

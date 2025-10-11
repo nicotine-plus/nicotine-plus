@@ -14,6 +14,7 @@ from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
+from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.slskmessages import UserStatus
 
@@ -62,6 +63,7 @@ class FastConfigure(Dialog):
             height=450,
             show_title=False
         )
+        application.add_window(self.widget)
 
         icon_name = pynicotine.__application_id__
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
@@ -96,10 +98,18 @@ class FastConfigure(Dialog):
             }
         )
 
+        self.shares_popup_menu = PopupMenu(application, self.shares_list_view.widget)
+        self.shares_popup_menu.add_items(
+            ("#" + _("_Edit…"), self.on_edit_shared_folder),
+            ("", None),
+            ("#" + _("Remove"), self.on_remove_shared_folder)
+        )
+
         self.reset_completeness()
 
     def destroy(self):
 
+        self.shares_popup_menu.destroy()
         self.download_folder_button.destroy()
         self.shares_list_view.destroy()
 

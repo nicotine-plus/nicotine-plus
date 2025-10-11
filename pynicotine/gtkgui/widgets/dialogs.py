@@ -19,7 +19,7 @@ from pynicotine.gtkgui.widgets.window import Window
 
 class Dialog(Window):
 
-    def __init__(self, widget=None, parent=None, content_box=None, buttons_start=(), buttons_end=(),
+    def __init__(self, parent=None, content_box=None, buttons_start=(), buttons_end=(),
                  default_button=None, show_callback=None, close_callback=None, title="", width=0, height=0,
                  modal=True, show_title=True, show_title_buttons=True):
 
@@ -31,11 +31,6 @@ class Dialog(Window):
 
         self.show_callback = show_callback
         self.close_callback = close_callback
-
-        if widget:
-            super().__init__(widget=widget)
-            self._set_dialog_properties()
-            return
 
         container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, vexpand=True, visible=True)
         widget = Gtk.Window(
@@ -50,12 +45,12 @@ class Dialog(Window):
         if GTK_API_VERSION == 3:
             if os.environ.get("GDK_BACKEND") == "broadway":
                 # Workaround for dialogs being centered at (0,0) coords on startup
-                position = Gtk.WindowPosition.CENTER            # pylint: disable=c-extension-no-member
+                position = Gtk.WindowPosition.CENTER
             else:
-                position = Gtk.WindowPosition.CENTER_ON_PARENT  # pylint: disable=c-extension-no-member
+                position = Gtk.WindowPosition.CENTER_ON_PARENT
 
             widget.set_position(position)                    # pylint: disable=no-member
-            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)  # pylint: disable=c-extension-no-member,no-member
+            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)  # pylint: disable=no-member
 
         if content_box:
             content_box.set_vexpand(True)
@@ -367,9 +362,9 @@ class MessageDialog(Window):
 
             action_box.append(action_area)                            # pylint: disable=no-member
         else:
-            widget.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)  # pylint: disable=c-extension-no-member,no-member
+            widget.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)  # pylint: disable=no-member
             widget.set_skip_taskbar_hint(True)                        # pylint: disable=no-member
-            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)           # pylint: disable=c-extension-no-member,no-member
+            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)           # pylint: disable=no-member
             widget.set_titlebar(header_bar)
             widget.connect("delete-event", self._on_close_request)
 

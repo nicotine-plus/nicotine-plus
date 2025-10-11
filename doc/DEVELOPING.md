@@ -202,8 +202,8 @@ When Nicotine+ is translated into a new language, the following should be done:
  - Update the copyright header of the `XX.po` file:
 
    ```
-   # Copyright (C) 20XX Nicotine+ Translators
-   # This file is distributed under the same license as the Nicotine+ package.
+   # SPDX-FileCopyrightText: 20XX Nicotine+ Translators
+   # SPDX-License-Identifier: GPL-3.0-or-later
    ```
 
  - Remove the `PACKAGE VERSION` value of `Project-Id-Version` in the `XX.po`
@@ -215,7 +215,7 @@ When Nicotine+ is translated into a new language, the following should be done:
 
  - Add the language code to the [po/LINGUAS](https://github.com/nicotine-plus/nicotine-plus/blob/HEAD/po/LINGUAS)
    and [pynicotine/i18n.py](https://github.com/nicotine-plus/nicotine-plus/blob/HEAD/pynicotine/i18n.py)
-   files
+   files once the translation is close to completion
 
 ### Updating Translation Template
 

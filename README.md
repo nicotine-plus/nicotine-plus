@@ -28,7 +28,7 @@ See the [release notes](NEWS.md).
 
 Downloads are available for:
 
- - [GNU/Linux, *BSD and Solaris](doc/DOWNLOADS.md#gnulinux-bsd-solaris)
+ - [GNU/Linux, *BSD, Haiku and Solaris](doc/DOWNLOADS.md#gnulinux-bsd-haiku-solaris)
  - [Windows](doc/DOWNLOADS.md#windows)
  - [macOS](doc/DOWNLOADS.md#macos)
 

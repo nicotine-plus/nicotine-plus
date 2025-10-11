@@ -113,13 +113,14 @@ class Plugin(BasePlugin):
                 "parameters_chatroom": ["<user>"],
                 "parameters_private_chat": ["[user]"]
             },
-            "ctcpversion": {
-                "callback": self.ctcpversion_command,
-                "description": _("Request user's client version"),
+            "ctcp": {
+                "callback": self.ctcp_command,
+                "callback_chatroom": self.ctcp_chatroom_command,
+                "description": _("Send client-to-client protocol query"),
                 "disable": ["cli"],
-                "group": _CommandGroup.PRIVATE_CHAT,
-                "parameters_chatroom": ["<user>"],
-                "parameters_private_chat": ["[user]"]
+                "group": _CommandGroup.CHAT,
+                "parameters": ["<user>", "<query>"],
+                "parameters_private_chat": ["<query>"]
             },
             "msg": {
                 "aliases": ["m"],
@@ -278,9 +279,17 @@ class Plugin(BasePlugin):
         output_text = ""
 
         if not search_query:
-            output_text += _("Listing %(num)i available commands:") % {"num": num_commands}
+            output_text += ngettext(
+                "Listing %(num)s available command:",
+                "Listing %(num)s available commands:",
+                num_commands
+            ) % {"num": num_commands}
         else:
-            output_text += _('Listing %(num)i available commands matching "%(query)s":') % {
+            output_text += ngettext(
+                'Listing %(num)s available command matching "%(query)s":',
+                'Listing %(num)s available commands matching "%(query)s":',
+                num_commands
+            ) % {
                 "num": num_commands,
                 "query": search_query
             }
@@ -393,12 +402,16 @@ class Plugin(BasePlugin):
         self.output(_("Closed private chat of user %s") % user)
         return True
 
-    def ctcpversion_command(self, args, user=None, **_unused):
+    def ctcp_chatroom_command(self, args, **_unused):
 
-        if args:
-            user = args
+        args_split = args.split(maxsplit=1)
+        user, query = args_split[0], args_split[1]
 
-        self.send_private(user, self.core.privatechat.CTCP_VERSION, show_ui=True)
+        self.ctcp_command(query, user)
+
+    def ctcp_command(self, args, user=None, **_unused):
+        ctcp_query = f"\x01{args.upper()}\x01"
+        self.send_private(user, ctcp_query, show_ui=True)
 
     def msg_command(self, args, **_unused):
         user, text = args.split(maxsplit=1)
