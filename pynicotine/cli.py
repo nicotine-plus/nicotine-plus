@@ -4,6 +4,12 @@
 try:
     # Enable line editing and history
     import readline
+
+    try:
+        readline.get_line_buffer()  # pylint: disable=no-member
+    except Exception as curses_error:
+        raise ImportError from curses_error
+
     READLINE_ENABLED = True
 
 except ImportError:
@@ -95,7 +101,7 @@ class CLIInputProcessor(Thread):
         if not READLINE_ENABLED or not self.is_alive():
             return ""
 
-        return f"{self.prompt_message}{readline.get_line_buffer()}"
+        return f"{self.prompt_message}{readline.get_line_buffer()}"  # pylint: disable=no-member
 
 
 class CLI:
@@ -135,13 +141,14 @@ class CLI:
         self._input_processor.prompt_callback = callback
         self._input_processor.prompt_silent = is_silent
 
-    def _print_log_message(self, log_message):
-
-        prompt_line = self._input_processor.get_prompt_line()
+    def _print_log_message(self, log_message, prompt_line=None):
 
         try:
-            print(f"\r{' ' * len(prompt_line)}\r{log_message}", flush=False)
-            print(prompt_line, end="", flush=True)
+            if prompt_line:
+                print(f"\r{' ' * len(prompt_line)}\r{log_message}", flush=False)
+                print(prompt_line, end="", flush=True)
+            else:
+                print(log_message)
 
         except OSError:
             # stdout is gone, prevent future errors
@@ -166,7 +173,7 @@ class CLI:
             self._log_message_queue.append(log_message)
             return
 
-        self._print_log_message(log_message)
+        self._print_log_message(log_message, prompt_line=self._input_processor.get_prompt_line())
 
     def _quit(self):
         """Restores TTY attributes and re-enables echo on quit."""
