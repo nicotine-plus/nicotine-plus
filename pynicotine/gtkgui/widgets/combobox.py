@@ -87,6 +87,7 @@ class ComboBox:
   </object>
 </interface>""", -1)
         self.dropdown = self._button = builder.get_object("dropdown")
+        self.dropdown.set_valign(Gtk.Align.CENTER)
         self.dropdown.set_model(self._model)
 
         list_factory = self.dropdown.get_factory()
