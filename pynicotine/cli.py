@@ -1,6 +1,21 @@
 # SPDX-FileCopyrightText: 2022-2025 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+try:
+    # Enable line editing and history
+    import readline
+
+    try:
+        readline.get_line_buffer()  # pylint: disable=no-member
+    except Exception as curses_error:
+        raise ImportError from curses_error
+
+    READLINE_ENABLED = True
+
+except ImportError:
+    # Readline is not available on this OS
+    READLINE_ENABLED = False
+
 import sys
 import time
 
@@ -18,14 +33,6 @@ class CLIInputProcessor(Thread):
     def __init__(self):
 
         super().__init__(name="CLIInputProcessor", daemon=True)
-
-        try:
-            # Enable line editing and history
-            import readline  # noqa: F401  # pylint:disable=unused-import
-
-        except ImportError:
-            # Readline is not available on this OS
-            pass
 
         self.has_custom_prompt = False
         self.prompt_message = ""
@@ -89,6 +96,13 @@ class CLIInputProcessor(Thread):
         # No custom prompt, treat input as command
         self._handle_prompt_command(user_input)
 
+    def get_prompt_line(self):
+
+        if not READLINE_ENABLED or not self.is_alive():
+            return ""
+
+        return f"{self.prompt_message}{readline.get_line_buffer()}"  # pylint: disable=no-member
+
 
 class CLI:
     __slots__ = ("_input_processor", "_log_message_queue", "_tty_attributes")
@@ -127,10 +141,14 @@ class CLI:
         self._input_processor.prompt_callback = callback
         self._input_processor.prompt_silent = is_silent
 
-    def _print_log_message(self, log_message):
+    def _print_log_message(self, log_message, prompt_line=None):
 
         try:
-            print(log_message, flush=True)
+            if prompt_line:
+                print(f"\r{' ' * len(prompt_line)}\r{log_message}", flush=False)
+                print(prompt_line, end="", flush=True)
+            else:
+                print(log_message)
 
         except OSError:
             # stdout is gone, prevent future errors
@@ -149,12 +167,13 @@ class CLI:
         else:
             log_message = msg
 
-        if self._input_processor.has_custom_prompt:
-            # Don't print log messages while custom prompt is active
+        if self._input_processor.has_custom_prompt and not READLINE_ENABLED:
+            # Unless there's a way to avoid overwriting the prompt and user
+            # input, don't print log messages while custom prompt is active
             self._log_message_queue.append(log_message)
             return
 
-        self._print_log_message(log_message)
+        self._print_log_message(log_message, prompt_line=self._input_processor.get_prompt_line())
 
     def _quit(self):
         """Restores TTY attributes and re-enables echo on quit."""
