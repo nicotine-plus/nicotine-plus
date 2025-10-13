@@ -31,7 +31,7 @@ class Plugin(BasePlugin):
             "color": {
                 "description": "Message color:",
                 "type": "dropdown",
-                "options": ("Remote", "Local", "Action", "Hilite", "Command")
+                "options": ("Remote", "Local", "Action", "Hilite")
             },
             "format": {
                 "description": "Message format",
