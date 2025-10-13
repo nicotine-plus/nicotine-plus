@@ -28,11 +28,13 @@ from pynicotine.utils import encode_path
 
 CUSTOM_CSS_PROVIDER = Gtk.CssProvider()
 GTK_SETTINGS = Gtk.Settings.get_default()
-use_color_scheme_portal = (sys.platform not in {"win32", "darwin"} and not LIBADWAITA_API_VERSION)
+use_color_scheme_portal = (  # pylint: disable=invalid-name
+    sys.platform not in {"win32", "darwin"} and not LIBADWAITA_API_VERSION
+)
 
 if use_color_scheme_portal:
     # GNOME 42+ system-wide dark mode for GTK without libadwaita
-    settings_portal = None
+    settings_portal = None  # pylint: disable=invalid-name
 
     class ColorScheme:
         NO_PREFERENCE = 0
@@ -89,7 +91,7 @@ if use_color_scheme_portal:
     except Exception as portal_error:
         log.add_debug("Cannot start color scheme settings portal, falling back to GTK theme preference: %s",
                       portal_error)
-        use_color_scheme_portal = False
+        use_color_scheme_portal = False  # pylint: disable=invalid-name
 else:
     def read_color_scheme():
         return None
