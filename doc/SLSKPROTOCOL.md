@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on September 16, 2025](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on October 20, 2025](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -2739,7 +2739,9 @@ recipient, either allowing or rejecting the upload attempt.
 
 This message was formerly used to send a download request (direction 0) as
 well, but Nicotine+ >= 3.0.3, Museek+ and the official clients use the
-[QueueUpload](#peer-code-43) peer message for this purpose today.
+[QueueUpload](#peer-code-43) peer message for this purpose today. Clients like
+slskd and Seeker still use this method for downloading, so we need to ensure we
+still understand such requests.
 
 ### Data Order
 
@@ -2767,8 +2769,13 @@ well, but Nicotine+ >= 3.0.3, Museek+ and the official clients use the
 
 Response to [TransferRequest](#peer-code-40)
 
-We (or the other peer) either agrees, or tells the reason for rejecting the
-file download.
+We either accept the download request, or tell the reason for rejecting it.
+
+Note that accepting a download request is discouraged, since it allows a
+possibly spoofed peer to initialize the file transfer connection from their
+end. Reject the download request with a 'Queued' reason, add the file to the
+upload queue, and start the next upload as usual, since it ensures a connection
+attempt to a valid user address provided by the server.
 
 ### Data Order
 
@@ -2796,8 +2803,7 @@ file download.
 
 Response to [TransferRequest](#peer-code-40)
 
-We (or the other peer) either agrees, or tells the reason for rejecting the
-file upload.
+We either accept the upload request, or tell the reason for rejecting it.
 
 ### Data Order
 
@@ -2956,9 +2962,6 @@ messages codes associated with them.
 We send this to a peer via a 'F' connection to tell them that we want to start
 uploading a file. The token is the same as the one previously included in the
 [TransferRequest](#peer-code-40) peer message.
-
-Note that slskd and Nicotine+ <= 3.0.2 use legacy download requests, and send
-this message when initializing our file upload connection from their end.
 
 ### Data Order
 

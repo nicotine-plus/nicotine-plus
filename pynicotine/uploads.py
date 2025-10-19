@@ -20,6 +20,7 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.shares import PermissionLevel
+from pynicotine.slskmessages import CloseConnection
 from pynicotine.slskmessages import ConnectionType
 from pynicotine.slskmessages import EmitNetworkMessageEvents
 from pynicotine.slskmessages import FileTransferInit
@@ -1006,6 +1007,9 @@ class Uploads(Transfers):
 
         core.send_message_to_peer(username, response)
 
+        if response.reason == TransferRejectReason.QUEUED:
+            self._check_upload_queue()
+
     def _transfer_request_uploads(self, msg):
         """Remote peer is requesting to download a file through your upload
         queue.
@@ -1060,28 +1064,13 @@ class Uploads(Transfers):
 
         transfer.is_backslash_path = is_backslash_path
 
-        if not self.is_new_upload_accepted() or username in self.active_users:
-            self._enqueue_transfer(transfer, show_notification=True)
-            self._update_transfer(transfer)
-
-            # Must be emitted after the final update to prevent inconsistent state
-            core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
-
-            return TransferResponse(allowed=False, reason=TransferRejectReason.QUEUED, token=token)
-
-        # All checks passed, starting a new upload.
-        current_size = self._get_current_file_size(real_path)
-
-        if current_size is not None:
-            transfer.size = current_size
-
-        self._activate_transfer(transfer, token)
+        self._enqueue_transfer(transfer, show_notification=True)
         self._update_transfer(transfer)
 
         # Must be emitted after the final update to prevent inconsistent state
         core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
 
-        return TransferResponse(allowed=True, token=token, filesize=size)
+        return TransferResponse(allowed=False, reason=TransferRejectReason.QUEUED, token=token)
 
     def _transfer_response(self, msg):
         """Peer code 41.
@@ -1159,11 +1148,17 @@ class Uploads(Transfers):
     def _file_transfer_init(self, msg):
         """We are requesting to start uploading a file to a peer."""
 
+        if not msg.is_outgoing:
+            # Transfer init message received from another peer, ignore
+            return
+
         username = msg.username
         token = msg.token
         upload = self.active_users.get(username, {}).get(token)
 
         if upload is None or upload.sock is not None:
+            log.add_transfer("Sending file upload init message with unknown token %s, closing connection", token)
+            core.send_message_to_network_thread(CloseConnection(msg.sock))
             return
 
         virtual_path = upload.virtual_path
