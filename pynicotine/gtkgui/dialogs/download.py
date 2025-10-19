@@ -323,7 +323,7 @@ class Download(Dialog):
             destination_folder_path = None
 
             if self.enable_subfolders_toggle.get_active():
-                download_folder_path = self.download_folder_button.get_path()
+                download_folder_path = self.download_folder_button.get_path(dynamic=False)
 
                 if download_folder_path == core.downloads.get_default_download_folder():
                     download_folder_path = core.downloads.get_default_download_folder(username)
@@ -341,7 +341,7 @@ class Download(Dialog):
                 file_attributes=file_attributes, paused=paused
             )
 
-        self.application.previous_download_folder = self.download_folder_button.get_path()
+        self.application.previous_download_folder = self.download_folder_button.get_path(dynamic=False)
         self.close()
 
     def pulse_progress(self, repeat=True):

@@ -28,11 +28,13 @@ from pynicotine.utils import encode_path
 
 CUSTOM_CSS_PROVIDER = Gtk.CssProvider()
 GTK_SETTINGS = Gtk.Settings.get_default()
-USE_COLOR_SCHEME_PORTAL = (sys.platform not in {"win32", "darwin"} and not LIBADWAITA_API_VERSION)
+use_color_scheme_portal = (  # pylint: disable=invalid-name
+    sys.platform not in {"win32", "darwin"} and not LIBADWAITA_API_VERSION
+)
 
-if USE_COLOR_SCHEME_PORTAL:
+if use_color_scheme_portal:
     # GNOME 42+ system-wide dark mode for GTK without libadwaita
-    SETTINGS_PORTAL = None
+    settings_portal = None  # pylint: disable=invalid-name
 
     class ColorScheme:
         NO_PREFERENCE = 0
@@ -44,7 +46,7 @@ if USE_COLOR_SCHEME_PORTAL:
         color_scheme = None
 
         try:
-            result = SETTINGS_PORTAL.call_sync(
+            result = settings_portal.call_sync(
                 method_name="Read",
                 parameters=GLib.Variant.new_tuple(
                     GLib.Variant.new_string("org.freedesktop.appearance"),
@@ -75,7 +77,7 @@ if USE_COLOR_SCHEME_PORTAL:
         set_dark_mode(color_scheme == ColorScheme.PREFER_DARK)
 
     try:
-        SETTINGS_PORTAL = Gio.DBusProxy.new_for_bus_sync(
+        settings_portal = Gio.DBusProxy.new_for_bus_sync(
             bus_type=Gio.BusType.SESSION,
             flags=0,
             info=None,
@@ -84,12 +86,15 @@ if USE_COLOR_SCHEME_PORTAL:
             interface_name="org.freedesktop.portal.Settings",
             cancellable=None
         )
-        SETTINGS_PORTAL.connect("g-signal", on_color_scheme_changed)
+        settings_portal.connect("g-signal", on_color_scheme_changed)
 
     except Exception as portal_error:
         log.add_debug("Cannot start color scheme settings portal, falling back to GTK theme preference: %s",
                       portal_error)
-        USE_COLOR_SCHEME_PORTAL = False
+        use_color_scheme_portal = False  # pylint: disable=invalid-name
+else:
+    def read_color_scheme():
+        return None
 
 
 def set_dark_mode(enabled):
@@ -101,7 +106,7 @@ def set_dark_mode(enabled):
         Adw.StyleManager.get_default().set_color_scheme(color_scheme)
         return
 
-    if USE_COLOR_SCHEME_PORTAL and not enabled:
+    if use_color_scheme_portal and not enabled:
         color_scheme = read_color_scheme()
 
         if color_scheme is not None:

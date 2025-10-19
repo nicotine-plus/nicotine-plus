@@ -72,7 +72,7 @@ class Accelerator:
 
         activated_mods = event.state
         required_mods = self.required_mods
-        excluded_mods = ALL_MODIFIERS & ~required_mods
+        excluded_mods = all_modifiers & ~required_mods
 
         if required_mods & ~activated_mods:
             # Missing required modifiers
@@ -90,8 +90,8 @@ class Accelerator:
 
 
 if GTK_API_VERSION == 3:
-    ALL_MODIFIERS = (Accelerator.parse_accelerator("<Primary>")[1]
+    all_modifiers = (Accelerator.parse_accelerator("<Primary>")[1]
                      | Accelerator.parse_accelerator("<Shift>")[1]
                      | Accelerator.parse_accelerator("<Alt>")[1])
 else:
-    ALL_MODIFIERS = []
+    all_modifiers = []

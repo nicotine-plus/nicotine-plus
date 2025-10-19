@@ -791,7 +791,7 @@ class Shares:
 
     def get_lowercase_path_index(self, virtual_path):
 
-        virtual_folder_path, basename = virtual_path.rsplit("\\", 1)
+        virtual_folder_path, _separator, basename = virtual_path.rpartition("\\")
         lowercase_paths = core.shares.share_dbs.get("lowercase_paths", {})
         index = None
 
