@@ -3531,7 +3531,9 @@ class TransferRequest(PeerMessage):
 
     This message was formerly used to send a download request (direction
     0) as well, but Nicotine+ >= 3.0.3, Museek+ and the official clients
-    use the QueueUpload message for this purpose today.
+    use the QueueUpload message for this purpose today.  Clients like
+    slskd and Seeker still use this method for downloading, so we need to
+    ensure we still understand such requests.
     """
 
     __slots__ = ("direction", "token", "file", "filesize")
@@ -3566,8 +3568,15 @@ class TransferRequest(PeerMessage):
 class TransferResponse(PeerMessage):
     """Peer code 41.
 
-    Response to TransferRequest - We (or the other peer) either agrees,
-    or tells the reason for rejecting the file transfer.
+    Response to TransferRequest - We either accept the transfer request,
+    or tell the reason for rejecting it.
+
+    Note that accepting a download request is discouraged, since it allows
+    a possibly spoofed peer to initialize the file transfer connection
+    from their end. Reject the download request with a 'Queued' reason, add
+    the ile to the upload queue, and start the next upload as usual, since
+    it ensures a connection attempt to a valid user address provided by the
+    server.
     """
 
     __slots__ = ("allowed", "token", "reason", "filesize")
@@ -3788,9 +3797,6 @@ class FileTransferInit(FileMessage):
     """We send this to a peer via a 'F' connection to tell them that we want to
     start uploading a file. The token is the same as the one previously included in the
     TransferRequest peer message.
-
-    Note that slskd and Nicotine+ <= 3.0.2 use legacy download requests, and send this
-    message when initializing our file upload connection from their end.
     """
 
     __slots__ = ("token", "is_outgoing")
