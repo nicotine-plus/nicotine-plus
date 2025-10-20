@@ -886,8 +886,12 @@ class NetworkThread(Thread):
             if error.errno != errno.ENOTCONN:
                 log.add_conn("Failed to shut down socket %s: %s", (sock, error))
 
-        log.add_conn("Closing socket %s", sock)
-        sock.close()
+        try:
+            log.add_conn("Closing socket %s", sock)
+            sock.close()
+
+        except OSError as error:
+            log.add_conn("Failed to close socket %s: %s", (sock, error))
 
     def _close_connection(self, conn):
 
