@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-20 21:17+0300\n"
-"PO-Revision-Date: 2025-09-17 21:01+0000\n"
+"PO-Revision-Date: 2025-10-21 19:02+0000\n"
 "Last-Translator: Tagomago <tagomago@disroot.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
@@ -785,16 +785,16 @@ msgid "Show Room Users"
 msgstr "Mostrar usuarios de la sala"
 
 #: pynicotine/gtkgui/chatrooms.py:1259
-#, fuzzy, python-format
+#, python-format
 msgid "R_oom Wall [%d]"
-msgstr "Mur_o de la sala"
+msgstr "Mur_o de la sala [%d]"
 
 #: pynicotine/gtkgui/chatrooms.py:1260
 #, python-format
 msgid "%(num)s Unread Message"
 msgid_plural "%(num)s Unread Messages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(num)s mensaje sin leer"
+msgstr[1] "%(num)s mensajes sin leer"
 
 #: pynicotine/gtkgui/chatrooms.py:1264 pynicotine/gtkgui/ui/chatrooms.ui:209
 msgid "R_oom Wall"
@@ -839,9 +839,8 @@ msgid "Latest Message"
 msgstr "Último mensaje"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:76
-#, fuzzy
 msgid "_Open Chat"
-msgstr "_Abrir lista"
+msgstr "_Abrir chat"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:78
 #: pynicotine/gtkgui/privatechat.py:373
@@ -882,22 +881,20 @@ msgstr "_Seleccionar"
 
 #: pynicotine/gtkgui/dialogs/download.py:125
 #: pynicotine/gtkgui/dialogs/download.py:499
-#, fuzzy
 msgid "_Deselect"
-msgstr "_Seleccionar"
+msgstr "_Deseleccionar"
 
 #: pynicotine/gtkgui/dialogs/download.py:127
 #: pynicotine/gtkgui/dialogs/download.py:500
-#, fuzzy
 msgid "_Rename…"
-msgstr "Renombrar…"
+msgstr "_Renombrar…"
 
 #: pynicotine/gtkgui/dialogs/download.py:293
-#, fuzzy, python-format
+#, python-format
 msgid "Download %(num_files)s file  /  %(total_size)s"
 msgid_plural "Download %(num_files)s files  /  %(total_size)s"
-msgstr[0] "Descargar %(num_files)s fichero(s)  /  %(total_size)s"
-msgstr[1] "Descargar %(num_files)s fichero(s)  /  %(total_size)s"
+msgstr[0] "Descargar %(num_files)s fichero  /  %(total_size)s"
+msgstr[1] "Descargar %(num_files)s ficheros  /  %(total_size)s"
 
 #: pynicotine/gtkgui/dialogs/download.py:382
 msgid "Failed to request folder contents."
@@ -955,9 +952,8 @@ msgstr "Carpeta"
 #: pynicotine/gtkgui/dialogs/preferences.py:1454
 #: pynicotine/gtkgui/dialogs/preferences.py:2578
 #: pynicotine/gtkgui/dialogs/wishlist.py:70
-#, fuzzy
 msgid "_Edit…"
-msgstr "Editar…"
+msgstr "_Editar…"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:128
 msgid "_Previous"
@@ -1601,14 +1597,13 @@ msgstr "Complemento"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2963
 #: pynicotine/gtkgui/dialogs/preferences.py:3017
-#, fuzzy
 msgid "_Enable"
-msgstr "Habilitado"
+msgstr "_Habilitar"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2964
 #: pynicotine/gtkgui/dialogs/preferences.py:3018
 msgid "_Disable"
-msgstr ""
+msgstr "_Deshabilitar"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2966
 #: pynicotine/gtkgui/dialogs/preferences.py:3021
@@ -1720,7 +1715,6 @@ msgid "Users"
 msgstr "Usuarios"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:75
-#, fuzzy
 msgid "_Join Room"
 msgstr "Unirse a la sala"
 
@@ -1774,19 +1768,16 @@ msgstr "Salir"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:44
 #: pynicotine/gtkgui/dialogs/shortcuts.py:99
-#, fuzzy
 msgid "View"
 msgstr "_Ver"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:45
-#, fuzzy
 msgid "Next Widget"
-msgstr "Archivo siguiente"
+msgstr "Widget siguiente"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:46
-#, fuzzy
 msgid "Previous Widget"
-msgstr "Archivo anterior"
+msgstr "Widget anterior"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:47
 #: pynicotine/gtkgui/ui/mainwindow.ui:31
@@ -1794,9 +1785,8 @@ msgid "Main Menu"
 msgstr "Menú principal"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:48
-#, fuzzy
 msgid "Context Menu"
-msgstr "Abrir menú contextual"
+msgstr "Menú contextual"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:49
 msgid "Change Main Tab"
@@ -1804,11 +1794,11 @@ msgstr "Cambiar pestaña principal"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:50
 msgid "Focus Top Bar"
-msgstr ""
+msgstr "Enfocar barra superior"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:51
 msgid "Focus Next View"
-msgstr ""
+msgstr "Enfocar siguiente vista"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:52
 #: pynicotine/gtkgui/ui/mainwindow.ui:1892
@@ -1821,19 +1811,16 @@ msgid "Secondary Tabs"
 msgstr "Pestañas secundarias"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:55
-#, fuzzy
 msgid "Previous Tab"
-msgstr "_Anterior"
+msgstr "Pestaña anterior"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:56
-#, fuzzy
 msgid "Next Tab"
-msgstr "_Siguiente"
+msgstr "Pestaña siguiente"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:57
-#, fuzzy
 msgid "Reopen Tab"
-msgstr "Re_abrir la pestaña cerrada"
+msgstr "Re_abrir la pestaña"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:58
 #: pynicotine/gtkgui/widgets/iconnotebook.py:107
@@ -1847,9 +1834,8 @@ msgid "Lists"
 msgstr "Listas"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:61
-#, fuzzy
 msgid "Copy Cell"
-msgstr "Copiar todo"
+msgstr "Copiar celda"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:62
 #: pynicotine/gtkgui/dialogs/shortcuts.py:71
@@ -1865,9 +1851,8 @@ msgid "Find"
 msgstr "Encontrar"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:64
-#, fuzzy
 msgid "Remove Row"
-msgstr "Eliminar"
+msgstr "Eliminar fila"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:66
 #: pynicotine/gtkgui/dialogs/shortcuts.py:103
@@ -1888,20 +1873,17 @@ msgstr "Insertar emoji"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:73
 #: pynicotine/gtkgui/dialogs/shortcuts.py:82
-#, fuzzy
 msgid "Next Match"
-msgstr "Buscar siguiente coincidencia"
+msgstr "Siguiente coincidencia"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:74
 #: pynicotine/gtkgui/dialogs/shortcuts.py:83
-#, fuzzy
 msgid "Previous Match"
-msgstr "Buscar coincidencia anterior"
+msgstr "Coincidencia anterior"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:77
-#, fuzzy
 msgid "Transfer To"
-msgstr "Transferencias"
+msgstr "Transferir a"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:79
 msgid "Save List to Disk"
@@ -1931,17 +1913,14 @@ msgid "File Transfers"
 msgstr "Transferencias de archivos"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:92
-#, fuzzy
 msgid "Resume Transfer"
-msgstr "Reanudar/reintentar transferencia"
+msgstr "Reanudar transferencia"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:93
-#, fuzzy
 msgid "Abort Transfer"
-msgstr "Pausar/interrumpir transferencia"
+msgstr "Cancelar transferencia"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:100
-#, fuzzy
 msgid "Main Tabs"
 msgstr "Pestañas principales"
 
@@ -2032,9 +2011,9 @@ msgid "Everything…"
 msgstr "Todo…"
 
 #: pynicotine/gtkgui/downloads.py:121
-#, fuzzy, python-format
+#, python-format
 msgid "Downloading: %(speed)s ( %(active_users)s )"
-msgstr "Descarga (Velocidad / Usuarios activos)"
+msgstr "Descargando: %(speed)s ( %(active_users)s )"
 
 #: pynicotine/gtkgui/downloads.py:131
 msgid "Clear Queued Downloads"
@@ -2053,14 +2032,14 @@ msgid "Do you really want to clear all downloads?"
 msgstr "¿De verdad quieres limpiar todas las descargas?"
 
 #: pynicotine/gtkgui/downloads.py:163
-#, fuzzy, python-format
+#, python-format
 msgid "Download %(num)s File?"
 msgid_plural "Download %(num)s Files?"
-msgstr[0] "¿Descargar %(num)i archivos?"
-msgstr[1] "¿Descargar %(num)i archivos?"
+msgstr[0] "¿Descargar %(num)s fichero?"
+msgstr[1] "¿Descargar %(num)s ficheros?"
 
 #: pynicotine/gtkgui/downloads.py:168
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Do you really want to download %(num)s file from %(user)s's folder "
 "%(folder)s?"
@@ -2068,11 +2047,11 @@ msgid_plural ""
 "Do you really want to download %(num)s files from %(user)s's folder "
 "%(folder)s?"
 msgstr[0] ""
-"¿De verdad quieres descargar %(num)i archivos de la carpeta %(folder)s de "
-"%(user)s?"
+"¿De verdad quieres descargar %(num)s fichero de la carpeta %(folder)s de %"
+"(user)s?"
 msgstr[1] ""
-"¿De verdad quieres descargar %(num)i archivos de la carpeta %(folder)s de "
-"%(user)s?"
+"¿De verdad quieres descargar %(num)s ficheros de la carpeta %(folder)s de %"
+"(user)s?"
 
 #: pynicotine/gtkgui/downloads.py:174
 msgid "_Download Folder"
