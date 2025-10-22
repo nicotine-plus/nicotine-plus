@@ -223,15 +223,18 @@ class PluginSettings(Dialog):
         button_container = Gtk.Box(margin_end=6, margin_bottom=6, margin_start=6, margin_top=6,
                                    spacing=6, visible=True)
 
-        for icon_name, label_text, callback in (
-            ("list-add-symbolic", _("Add…"), self.on_add),
-            ("document-edit-symbolic", _("Edit…"), self.on_edit),
-            ("list-remove-symbolic", _("Remove"), self.on_remove)
+        for icon_name, label_text, tooltip_text, callback in (
+            ("list-add-symbolic", _("_Add…"), _("_Add…"), self.on_add),
+            ("document-edit-symbolic", _("_Edit…"), _("Edit…"), self.on_edit),
+            ("list-remove-symbolic", _("Remove"), _("Remove"), self.on_remove)
         ):
             button = Gtk.Button(visible=True)
             label_container = Gtk.Box(spacing=6, visible=True)
             icon = Gtk.Image(icon_name=icon_name, visible=True)
-            label = Gtk.Label(label=label_text, mnemonic_widget=button, visible=True)
+            label = Gtk.Label(
+                label=label_text, mnemonic_widget=button, tooltip_text=tooltip_text,
+                use_underline=True, visible=True
+            )
 
             button.connect("clicked", callback, treeview)
             add_css_class(button, "flat")
