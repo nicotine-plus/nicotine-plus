@@ -556,7 +556,7 @@ class ChatRoom:
         else:
             room_wall_button = self.room_wall_button
 
-        room_wall_button.connect("clicked", self.on_show_room_wall)
+        room_wall_button.connect("toggled", self.on_show_room_wall)
 
         self.users_list_view = TreeView(
             self.window, parent=self.users_list_container, name="chat_room", secondary_name=room,
@@ -1024,6 +1024,10 @@ class ChatRoom:
         self.update_user_count()
 
     def ticker_add(self, msg):
+
+        if msg.user == core.users.login_username:
+            return
+
         self.unread_room_wall_users.add(msg.user)
         self.update_room_wall_label()
 
@@ -1247,7 +1251,11 @@ class ChatRoom:
         self.user_list_button.set_tooltip_text(tooltip)
         self.users_container.set_visible(visible)
 
-    def on_show_room_wall(self, *_args):
+    def on_show_room_wall(self, button):
+
+        if button.get_active():
+            return
+
         self.unread_room_wall_users.clear()
         self.update_room_wall_label()
 
