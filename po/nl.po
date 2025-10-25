@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-20 21:17+0300\n"
-"PO-Revision-Date: 2025-09-21 13:02+0000\n"
+"PO-Revision-Date: 2025-10-24 12:04+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14-dev\n"
+"X-Generator: Weblate 5.14.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -789,8 +789,8 @@ msgstr "_Kamermuur"
 #, python-format
 msgid "%(num)s Unread Message"
 msgid_plural "%(num)s Unread Messages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(num)s ongelezen bericht"
+msgstr[1] "%(num)s ongelezen berichten"
 
 #: pynicotine/gtkgui/chatrooms.py:1264 pynicotine/gtkgui/ui/chatrooms.ui:209
 msgid "R_oom Wall"
@@ -1603,7 +1603,7 @@ msgstr "Ingeschakeld"
 #: pynicotine/gtkgui/dialogs/preferences.py:2964
 #: pynicotine/gtkgui/dialogs/preferences.py:3018
 msgid "_Disable"
-msgstr ""
+msgstr "_Uitschakelen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2966
 #: pynicotine/gtkgui/dialogs/preferences.py:3021
@@ -1798,11 +1798,11 @@ msgstr "Hoofd-tab wijzigen"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:50
 msgid "Focus Top Bar"
-msgstr ""
+msgstr "Focus top balk"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:51
 msgid "Focus Next View"
-msgstr ""
+msgstr "Focus volgende weergave"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:52
 #: pynicotine/gtkgui/ui/mainwindow.ui:1892
@@ -2560,7 +2560,7 @@ msgstr "_Bestand openen"
 #: pynicotine/gtkgui/transfers.py:1089
 #, python-format
 msgid "%(username)s (%(status)s)"
-msgstr ""
+msgstr "%(username)s (%(status)s)"
 
 #: pynicotine/gtkgui/transfers.py:1089
 #, fuzzy
@@ -4225,7 +4225,7 @@ msgstr "Privéchat sluiten"
 
 #: pynicotine/plugins/core_commands/__init__.py:119
 msgid "Send client-to-client protocol query"
-msgstr ""
+msgstr "cliënt-naar-cliënt-protocolaanvraag versturen"
 
 #: pynicotine/plugins/core_commands/__init__.py:128
 msgid "Send private message to user"
@@ -4509,8 +4509,8 @@ msgstr "Wachttijd voor verlanglijst ingesteld op %s seconden"
 msgid "Server provided %(num_phrases)s excluded search phrase: %(phrases)s"
 msgid_plural ""
 "Server provided %(num_phrases)s excluded search phrases: %(phrases)s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Server gaf %(num_phrases)s uitgesloten zoekterm: %(phrases)s"
+msgstr[1] "Server gaf %(num_phrases)s uitgesloten zoektermen: %(phrases)s"
 
 #: pynicotine/search.py:747
 #, fuzzy, python-format
@@ -4754,9 +4754,9 @@ msgstr ""
 "downloads voorrang gegeven boven die van niet-geprivilegieerde gebruikers."
 
 #: pynicotine/users.py:426
-#, fuzzy, python-format
+#, python-format
 msgid "%(duration)s of Soulseek privileges left"
-msgstr "Koop Soulseek _Privileges…"
+msgstr "%(duration)s Soulseek privelege over"
 
 #: pynicotine/users.py:438
 msgid "Your password has been changed"
@@ -4770,29 +4770,29 @@ msgstr "Wachtwoord gewijzigd"
 #, python-format
 msgid "%(num)s second"
 msgid_plural "%(num)s seconds"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(num)s seconde"
+msgstr[1] "%(num)s seconden"
 
 #: pynicotine/utils.py:203
-#, fuzzy, python-format
+#, python-format
 msgid "%(num)s minute"
 msgid_plural "%(num)s minutes"
-msgstr[0] "%(number)2s bestanden "
-msgstr[1] "%(number)2s bestanden "
+msgstr[0] "%(num)s minuut"
+msgstr[1] "%(num)s minuten"
 
 #: pynicotine/utils.py:208
 #, python-format
 msgid "%(num)s hour"
 msgid_plural "%(num)s hours"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(num)s uur"
+msgstr[1] "%(num)s uren"
 
 #: pynicotine/utils.py:212
 #, python-format
 msgid "%(num)s day"
 msgid_plural "%(num)s days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(num)s dag"
+msgstr[1] "%(num)s dagen"
 
 #: pynicotine/utils.py:584
 #, python-format
