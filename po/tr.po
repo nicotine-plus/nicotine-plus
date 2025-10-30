@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-20 21:17+0300\n"
-"PO-Revision-Date: 2025-10-11 17:07+0000\n"
+"PO-Revision-Date: 2025-10-25 13:03+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14-dev\n"
+"X-Generator: Weblate 5.14.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -785,16 +785,16 @@ msgid "Show Room Users"
 msgstr "Oda Kullanıcılarını Göster"
 
 #: pynicotine/gtkgui/chatrooms.py:1259
-#, fuzzy, python-format
+#, python-format
 msgid "R_oom Wall [%d]"
-msgstr "_Oda duvarı"
+msgstr "_Oda Duvarı [%d]"
 
 #: pynicotine/gtkgui/chatrooms.py:1260
 #, python-format
 msgid "%(num)s Unread Message"
 msgid_plural "%(num)s Unread Messages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(num)s Okunmayan Mesaj"
+msgstr[1] "%(num)s Okunmayan Mesaj"
 
 #: pynicotine/gtkgui/chatrooms.py:1264 pynicotine/gtkgui/ui/chatrooms.ui:209
 msgid "R_oom Wall"
@@ -839,9 +839,8 @@ msgid "Latest Message"
 msgstr "Son Mesaj"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:76
-#, fuzzy
 msgid "_Open Chat"
-msgstr "Listeyi _Aç"
+msgstr "Sohbeti _Aç"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:78
 #: pynicotine/gtkgui/privatechat.py:373
@@ -882,18 +881,16 @@ msgstr "_Seç"
 
 #: pynicotine/gtkgui/dialogs/download.py:125
 #: pynicotine/gtkgui/dialogs/download.py:499
-#, fuzzy
 msgid "_Deselect"
-msgstr "_Seç"
+msgstr "Seçimi _Kaldır"
 
 #: pynicotine/gtkgui/dialogs/download.py:127
 #: pynicotine/gtkgui/dialogs/download.py:500
-#, fuzzy
 msgid "_Rename…"
-msgstr "Yeniden Adlandır…"
+msgstr "_Yeniden Adlandır…"
 
 #: pynicotine/gtkgui/dialogs/download.py:293
-#, fuzzy, python-format
+#, python-format
 msgid "Download %(num_files)s file  /  %(total_size)s"
 msgid_plural "Download %(num_files)s files  /  %(total_size)s"
 msgstr[0] "%(num_files)s dosyayı  /  %(total_size)s indir"
@@ -955,9 +952,8 @@ msgstr "Klasör"
 #: pynicotine/gtkgui/dialogs/preferences.py:1454
 #: pynicotine/gtkgui/dialogs/preferences.py:2578
 #: pynicotine/gtkgui/dialogs/wishlist.py:70
-#, fuzzy
 msgid "_Edit…"
-msgstr "Düzenle…"
+msgstr "_Düzenle…"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:128
 msgid "_Previous"
@@ -1600,14 +1596,13 @@ msgstr "Eklenti"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2963
 #: pynicotine/gtkgui/dialogs/preferences.py:3017
-#, fuzzy
 msgid "_Enable"
-msgstr "Etkin"
+msgstr "_Etkinleştir"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2964
 #: pynicotine/gtkgui/dialogs/preferences.py:3018
 msgid "_Disable"
-msgstr ""
+msgstr "_Devre Dışı Bırak"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2966
 #: pynicotine/gtkgui/dialogs/preferences.py:3021
@@ -1718,9 +1713,8 @@ msgid "Users"
 msgstr "Kullanıcılar"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:75
-#, fuzzy
 msgid "_Join Room"
-msgstr "Odaya Katıl"
+msgstr "Odaya _Katıl"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:78
 #: pynicotine/gtkgui/dialogs/roomlist.py:259
@@ -1772,19 +1766,16 @@ msgstr "Çıkış"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:44
 #: pynicotine/gtkgui/dialogs/shortcuts.py:99
-#, fuzzy
 msgid "View"
-msgstr "_Görünüm"
+msgstr "Görünüm"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:45
-#, fuzzy
 msgid "Next Widget"
-msgstr "Sonraki Dosya"
+msgstr "Sonraki Widget"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:46
-#, fuzzy
 msgid "Previous Widget"
-msgstr "Önceki Dosya"
+msgstr "Önceki Widget"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:47
 #: pynicotine/gtkgui/ui/mainwindow.ui:31
@@ -1792,9 +1783,8 @@ msgid "Main Menu"
 msgstr "Ana Menü"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:48
-#, fuzzy
 msgid "Context Menu"
-msgstr "Bağlam Menüsünü Aç"
+msgstr "Bağlam Menüsü"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:49
 msgid "Change Main Tab"
@@ -1802,11 +1792,11 @@ msgstr "Ana Sekmeyi Değiştir"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:50
 msgid "Focus Top Bar"
-msgstr ""
+msgstr "Üst Çubuğa Odaklan"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:51
 msgid "Focus Next View"
-msgstr ""
+msgstr "Sonraki Görünüme Odaklan"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:52
 #: pynicotine/gtkgui/ui/mainwindow.ui:1892
@@ -1819,19 +1809,16 @@ msgid "Secondary Tabs"
 msgstr "İkincil Sekmeler"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:55
-#, fuzzy
 msgid "Previous Tab"
-msgstr "_Önceki"
+msgstr "Önceki Sekme"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:56
-#, fuzzy
 msgid "Next Tab"
-msgstr "_Sonraki"
+msgstr "Sonraki Sekme"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:57
-#, fuzzy
 msgid "Reopen Tab"
-msgstr "Kapatılan Sekmeyi _Yeniden Aç"
+msgstr "Sekmeyi Yeniden Aç"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:58
 #: pynicotine/gtkgui/widgets/iconnotebook.py:107
@@ -1845,9 +1832,8 @@ msgid "Lists"
 msgstr "Listeler"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:61
-#, fuzzy
 msgid "Copy Cell"
-msgstr "Tümünü Kopyala"
+msgstr "Hücreyi Kopyala"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:62
 #: pynicotine/gtkgui/dialogs/shortcuts.py:71
@@ -1863,9 +1849,8 @@ msgid "Find"
 msgstr "Bul"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:64
-#, fuzzy
 msgid "Remove Row"
-msgstr "Kaldır"
+msgstr "Satırı Kaldır"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:66
 #: pynicotine/gtkgui/dialogs/shortcuts.py:103
@@ -1886,20 +1871,17 @@ msgstr "Emoji Ekle"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:73
 #: pynicotine/gtkgui/dialogs/shortcuts.py:82
-#, fuzzy
 msgid "Next Match"
-msgstr "Sonraki Eşleşmeyi Bul"
+msgstr "Sonraki Eşleşme"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:74
 #: pynicotine/gtkgui/dialogs/shortcuts.py:83
-#, fuzzy
 msgid "Previous Match"
-msgstr "Önceki Eşleşmeyi Bul"
+msgstr "Önceki Eşleşme"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:77
-#, fuzzy
 msgid "Transfer To"
-msgstr "Aktarımlar"
+msgstr "Şuraya Aktar"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:79
 msgid "Save List to Disk"
@@ -1929,19 +1911,16 @@ msgid "File Transfers"
 msgstr "Dosya Aktarımları"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:92
-#, fuzzy
 msgid "Resume Transfer"
-msgstr "Aktarımı Devam Ettir / Yeniden Dene"
+msgstr "Aktarımı Devam Ettir"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:93
-#, fuzzy
 msgid "Abort Transfer"
-msgstr "Aktarımı Duraklat / İptal Et"
+msgstr "Aktarımı İptal Et"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:100
-#, fuzzy
 msgid "Main Tabs"
-msgstr "Ana sekmeler"
+msgstr "Ana Sekmeler"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:60
 msgid "Transfer Statistics"
@@ -2030,9 +2009,9 @@ msgid "Everything…"
 msgstr "Her şey…"
 
 #: pynicotine/gtkgui/downloads.py:121
-#, fuzzy, python-format
+#, python-format
 msgid "Downloading: %(speed)s ( %(active_users)s )"
-msgstr "İndirme (Hız / Etkin Kullanıcılar)"
+msgstr "İndiriliyor: %(speed)s ( %(active_users)s )"
 
 #: pynicotine/gtkgui/downloads.py:131
 msgid "Clear Queued Downloads"
@@ -2051,14 +2030,14 @@ msgid "Do you really want to clear all downloads?"
 msgstr "Tüm indirmeleri temizlemek istediğinizden emin misiniz?"
 
 #: pynicotine/gtkgui/downloads.py:163
-#, fuzzy, python-format
+#, python-format
 msgid "Download %(num)s File?"
 msgid_plural "Download %(num)s Files?"
-msgstr[0] "%(num)i dosya indirilsin mi?"
-msgstr[1] "%(num)i dosya indirilsin mi?"
+msgstr[0] "%(num)s dosya indirilsin mi?"
+msgstr[1] "%(num)s dosya indirilsin mi?"
 
 #: pynicotine/gtkgui/downloads.py:168
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Do you really want to download %(num)s file from %(user)s's folder "
 "%(folder)s?"
@@ -2066,10 +2045,10 @@ msgid_plural ""
 "Do you really want to download %(num)s files from %(user)s's folder "
 "%(folder)s?"
 msgstr[0] ""
-"%(user)s kullanıcısının %(folder)s klasöründen %(num)i dosyayı indirmek "
+"%(user)s kullanıcısının %(folder)s klasöründen %(num)s dosyayı indirmek "
 "istediğinizden emin misiniz?"
 msgstr[1] ""
-"%(user)s kullanıcısının %(folder)s klasöründen %(num)i dosyayı indirmek "
+"%(user)s kullanıcısının %(folder)s klasöründen %(num)s dosyayı indirmek "
 "istediğinizden emin misiniz?"
 
 #: pynicotine/gtkgui/downloads.py:174
@@ -2398,11 +2377,11 @@ msgid "_Result Filters"
 msgstr "_Sonuç Filtreleri"
 
 #: pynicotine/gtkgui/search.py:1283
-#, fuzzy, python-format
+#, python-format
 msgid "%(num)s Active Filter"
 msgid_plural "%(num)s Active Filters"
-msgstr[0] "Etkin Filtreleri Temizle"
-msgstr[1] "Etkin Filtreleri Temizle"
+msgstr[0] "%(num)s Etkin Filtre"
+msgstr[1] "%(num)s Etkin Filtre"
 
 #: pynicotine/gtkgui/search.py:1336
 msgid "Add Wi_sh"
@@ -2426,34 +2405,28 @@ msgid "Results"
 msgstr "Sonuçlar"
 
 #: pynicotine/gtkgui/search.py:1529
-#, fuzzy
 msgid "Download _File"
-msgstr "Dosyaları İndir"
+msgstr "_Dosyayı İndir"
 
 #: pynicotine/gtkgui/search.py:1529
-#, fuzzy
 msgid "Download _Files"
-msgstr "Dosyaları İndir"
+msgstr "_Dosyaları İndir"
 
 #: pynicotine/gtkgui/search.py:1533 pynicotine/gtkgui/userbrowse.py:1140
-#, fuzzy
 msgid "Download File _To…"
-msgstr "Dosya(lar)ı _Şuraya İndir…"
+msgstr "Dosyayı _Şuraya İndir…"
 
 #: pynicotine/gtkgui/search.py:1533 pynicotine/gtkgui/userbrowse.py:1140
-#, fuzzy
 msgid "Download Files _To…"
-msgstr "Dosya(lar)ı _Şuraya İndir…"
+msgstr "Dosyaları _Şuraya İndir…"
 
 #: pynicotine/gtkgui/search.py:1545
-#, fuzzy
 msgid "_Download Folder…"
-msgstr "K_lasör(ler)i İndir…"
+msgstr "K_lasörü İndir…"
 
 #: pynicotine/gtkgui/search.py:1545
-#, fuzzy
 msgid "_Download Folders…"
-msgstr "K_lasör(ler)i İndir…"
+msgstr "K_lasörleri İndir…"
 
 #: pynicotine/gtkgui/search.py:1626 pynicotine/gtkgui/userbrowse.py:1203
 msgid "Select Destination Folder for Files"
@@ -2560,19 +2533,17 @@ msgid "_Open File"
 msgstr "Dosya _Aç"
 
 #: pynicotine/gtkgui/transfers.py:1080
-#, fuzzy
 msgid "_Open Files"
-msgstr "Dosya _Aç"
+msgstr "Dosyaları _Aç"
 
 #: pynicotine/gtkgui/transfers.py:1089
 #, python-format
 msgid "%(username)s (%(status)s)"
-msgstr ""
+msgstr "%(username)s (%(status)s)"
 
 #: pynicotine/gtkgui/transfers.py:1089
-#, fuzzy
 msgid "Buddy"
-msgstr "Arkadaş _Ekle"
+msgstr "Arkadaş"
 
 #: pynicotine/gtkgui/uploads.py:35
 msgid "_Abort"
@@ -2595,9 +2566,9 @@ msgid "User Logged Off"
 msgstr "Kullanıcı Oturumu Kapattı"
 
 #: pynicotine/gtkgui/uploads.py:130
-#, fuzzy, python-format
+#, python-format
 msgid "Uploading: %(speed)s ( %(active_users)s )"
-msgstr "Yükleme (Hız / Etkin Kullanıcılar)"
+msgstr "Yükleniyor: %(speed)s ( %(active_users)s )"
 
 #: pynicotine/gtkgui/uploads.py:147
 msgid "Quitting…"
@@ -2677,45 +2648,40 @@ msgid "Upload Folder & Subfolders…"
 msgstr "Klasörü ve Alt Klasörleri Yükle…"
 
 #: pynicotine/gtkgui/userbrowse.py:925
-#, fuzzy
 msgid "Upload Folders & Subfolders…"
-msgstr "Klasörü ve Alt Klasörleri Yükle…"
+msgstr "Klasörleri ve Alt Klasörleri Yükle…"
 
 #: pynicotine/gtkgui/userbrowse.py:931
 msgid "_Download Folder & Subfolders"
 msgstr "Klasörü ve Alt Klasörleri İn_dir"
 
 #: pynicotine/gtkgui/userbrowse.py:931
-#, fuzzy
 msgid "_Download Folders & Subfolders"
-msgstr "Klasörü ve Alt Klasörleri İn_dir"
+msgstr "Klasörleri ve Alt Klasörleri İn_dir"
 
 #: pynicotine/gtkgui/userbrowse.py:935
 msgid "Download Folder & Subfolders _To…"
 msgstr "Klasörü ve Al_t Klasörleri Şuraya İndir…"
 
 #: pynicotine/gtkgui/userbrowse.py:935
-#, fuzzy
 msgid "Download Folders & Subfolders _To…"
-msgstr "Klasörü ve Al_t Klasörleri Şuraya İndir…"
+msgstr "Klasörleri ve Al_t Klasörleri Şuraya İndir…"
 
 #: pynicotine/gtkgui/userbrowse.py:1014
 msgid "Upload Folder (with Subfolders) To User"
 msgstr "Klasörü (Alt Klasörlerle) Kullanıcıya Yükle"
 
 #: pynicotine/gtkgui/userbrowse.py:1015
-#, fuzzy
 msgid "Upload Folders (with Subfolders) To User"
-msgstr "Klasörü (Alt Klasörlerle) Kullanıcıya Yükle"
+msgstr "Klasörleri (Alt Klasörlerle) Kullanıcıya Yükle"
 
 #: pynicotine/gtkgui/userbrowse.py:1017
 msgid "Upload Folder To User"
 msgstr "Klasörü Kullanıcıya Yükle"
 
 #: pynicotine/gtkgui/userbrowse.py:1017
-#, fuzzy
 msgid "Upload Folders To User"
-msgstr "Klasörü Kullanıcıya Yükle"
+msgstr "Klasörleri Kullanıcıya Yükle"
 
 #: pynicotine/gtkgui/userbrowse.py:1022 pynicotine/gtkgui/userbrowse.py:1229
 msgid "Enter the name of the user you want to upload to:"
@@ -2726,29 +2692,24 @@ msgid "_Upload"
 msgstr "_Yükle"
 
 #: pynicotine/gtkgui/userbrowse.py:1130
-#, fuzzy
 msgid "Up_load File…"
-msgstr "_Dosya(lar)ı Yükle…"
+msgstr "_Dosyayı Yükle…"
 
 #: pynicotine/gtkgui/userbrowse.py:1130
-#, fuzzy
 msgid "Up_load Files…"
-msgstr "_Dosya(lar)ı Yükle…"
+msgstr "_Dosyaları Yükle…"
 
 #: pynicotine/gtkgui/userbrowse.py:1136
-#, fuzzy
 msgid "_Download File"
-msgstr "Dosyaları İndir"
+msgstr "_Dosyayı İndir"
 
 #: pynicotine/gtkgui/userbrowse.py:1136
-#, fuzzy
 msgid "_Download Files"
-msgstr "Dosyaları İndir"
+msgstr "_Dosyaları İndir"
 
 #: pynicotine/gtkgui/userbrowse.py:1228
-#, fuzzy
 msgid "Upload File To User"
-msgstr "Dosya(lar)ı Kullanıcıya Yükle"
+msgstr "Dosyayı Kullanıcıya Yükle"
 
 #: pynicotine/gtkgui/userinfo.py:367
 msgid "_Copy Picture"
@@ -2759,9 +2720,8 @@ msgid "_Save Picture"
 msgstr "Resmi Ka_ydet"
 
 #: pynicotine/gtkgui/userinfo.py:370
-#, fuzzy
 msgid "_Hide Picture"
-msgstr "Resmi Ka_ydet"
+msgstr "Resmi _Gizle"
 
 #: pynicotine/gtkgui/userinfo.py:463
 #, python-format
@@ -2769,14 +2729,12 @@ msgid "Failed to load picture for user %(user)s: %(error)s"
 msgstr "%(user)s kullanıcısı için resim yüklenemedi: %(error)s"
 
 #: pynicotine/gtkgui/userinfo.py:487
-#, fuzzy
 msgid "Hide Pi_cture"
-msgstr "Kullanıcı Resmi"
+msgstr "Resmi _Gizle"
 
 #: pynicotine/gtkgui/userinfo.py:499 pynicotine/gtkgui/ui/userinfo.ui:704
-#, fuzzy
 msgid "Show Pi_cture"
-msgstr "Resmi _Kopyala"
+msgstr "Resmi _Göster"
 
 #: pynicotine/gtkgui/userinfo.py:585
 msgid "Remove _Buddy"
@@ -2887,11 +2845,11 @@ msgid "Do you really want to close all tabs?"
 msgstr "Tüm sekmeleri gerçekten kapatmak istiyor musunuz?"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:460
-#, fuzzy, python-format
+#, python-format
 msgid "%s Unread Tab"
 msgid_plural "%s Unread Tabs"
-msgstr[0] "%i Okunmayan Sekme"
-msgstr[1] "%i Okunmayan Sekme"
+msgstr[0] "%s Okunmayan Sekme"
+msgstr[1] "%s Okunmayan Sekme"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:463
 msgid "All Tabs"
@@ -2903,11 +2861,11 @@ msgid "Re_open Closed Tab"
 msgstr "Kapatılan Sekmeyi _Yeniden Aç"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:410
-#, fuzzy, python-format
+#, python-format
 msgid "%(num)s File Selected"
 msgid_plural "%(num)s Files Selected"
-msgstr[0] "%s Dosya Seçildi"
-msgstr[1] "%s Dosya Seçildi"
+msgstr[0] "%(num)s Dosya Seçildi"
+msgstr[1] "%(num)s Dosya Seçildi"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:446
 #: pynicotine/gtkgui/ui/userinfo.ui:538
@@ -4231,7 +4189,7 @@ msgstr "Özel sohbeti kapat"
 
 #: pynicotine/plugins/core_commands/__init__.py:119
 msgid "Send client-to-client protocol query"
-msgstr ""
+msgstr "İstemciden istemciye protokol sorgusu gönder"
 
 #: pynicotine/plugins/core_commands/__init__.py:128
 msgid "Send private message to user"
@@ -4306,20 +4264,18 @@ msgid "Search a user's shared files"
 msgstr "Bir kullanıcının paylaşılan dosyalarını ara"
 
 #: pynicotine/plugins/core_commands/__init__.py:283
-#, fuzzy, python-format
+#, python-format
 msgid "Listing %(num)s available command:"
 msgid_plural "Listing %(num)s available commands:"
-msgstr[0] "%(num)i kullanılabilir komut listeleniyor:"
-msgstr[1] "%(num)i kullanılabilir komut listeleniyor:"
+msgstr[0] "%(num)s kullanılabilir komut listeleniyor:"
+msgstr[1] "%(num)s kullanılabilir komut listeleniyor:"
 
 #: pynicotine/plugins/core_commands/__init__.py:289
-#, fuzzy, python-format
+#, python-format
 msgid "Listing %(num)s available command matching \"%(query)s\":"
 msgid_plural "Listing %(num)s available commands matching \"%(query)s\":"
-msgstr[0] ""
-"\"%(query)s\" ile eşleşen %(num)i kullanılabilir komut listeleniyor:"
-msgstr[1] ""
-"\"%(query)s\" ile eşleşen %(num)i kullanılabilir komut listeleniyor:"
+msgstr[0] "\"%(query)s\" ile eşleşen %(num)s kullanılabilir komut listeleniyor:"
+msgstr[1] "\"%(query)s\" ile eşleşen %(num)s kullanılabilir komut listeleniyor:"
 
 #: pynicotine/plugins/core_commands/__init__.py:305
 #, python-format
@@ -4508,27 +4464,27 @@ msgid "Searching for wishlist item \"%s\""
 msgstr "\"%s\" dilek listesi ögesi aranıyor"
 
 #: pynicotine/search.py:412
-#, fuzzy, python-format
+#, python-format
 msgid "Wishlist wait period set to %(duration)s"
-msgstr "Dilek listesi bekleme süresi %s saniyeye ayarlandı"
+msgstr "Dilek listesi bekleme süresi %(duration)s olarak ayarlandı"
 
 #: pynicotine/search.py:428
 #, python-format
 msgid "Server provided %(num_phrases)s excluded search phrase: %(phrases)s"
 msgid_plural ""
 "Server provided %(num_phrases)s excluded search phrases: %(phrases)s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Sunucu %(num_phrases)s hariç tutulan arama ifadesi sağladı: %(phrases)s"
+msgstr[1] "Sunucu %(num_phrases)s hariç tutulan arama ifadesi sağladı: %(phrases)s"
 
 #: pynicotine/search.py:747
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)s result"
 msgid_plural ""
 "User %(user)s is searching for \"%(query)s\", found %(num)s results"
 msgstr[0] ""
-"%(user)s kullanıcısı \"%(query)s\" için arama yapıyor, %(num)i sonuç bulundu"
+"%(user)s kullanıcısı \"%(query)s\" için arama yapıyor, %(num)s sonuç bulundu"
 msgstr[1] ""
-"%(user)s kullanıcısı \"%(query)s\" için arama yapıyor, %(num)i sonuç bulundu"
+"%(user)s kullanıcısı \"%(query)s\" için arama yapıyor, %(num)s sonuç bulundu"
 
 #: pynicotine/shares.py:297
 msgid "Rebuilding shares…"
@@ -4539,7 +4495,7 @@ msgid "Rescanning shares…"
 msgstr "Paylaşımlar yeniden taranıyor…"
 
 #: pynicotine/shares.py:321
-#, fuzzy, python-format
+#, python-format
 msgid "Rescan complete: %(num)s folder found"
 msgid_plural "Rescan complete: %(num)s folders found"
 msgstr[0] "Yeniden tarama tamamlandı: %(num)s klasör bulundu"
@@ -4614,9 +4570,9 @@ msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "%(host)s:%(port)s sunucusuna bağlanılamıyor: %(error)s"
 
 #: pynicotine/slskproto.py:1091
-#, fuzzy, python-format
+#, python-format
 msgid "Reconnecting to server in %(duration)s"
-msgstr "Sunucuya %s saniye içinde yeniden bağlanılıyor"
+msgstr "Sunucuya %(duration)s içinde yeniden bağlanılıyor"
 
 #: pynicotine/slskproto.py:1167
 #, python-format
@@ -4769,9 +4725,9 @@ msgstr ""
 "ayrıcalıklı olmayan kullanıcılarınkinden önce sıraya alınır."
 
 #: pynicotine/users.py:426
-#, fuzzy, python-format
+#, python-format
 msgid "%(duration)s of Soulseek privileges left"
-msgstr "Soulseek Ayrıcalıkları Edin…"
+msgstr "%(duration)s Soulseek ayrıcalığı kaldı"
 
 #: pynicotine/users.py:438
 msgid "Your password has been changed"
@@ -4785,29 +4741,29 @@ msgstr "Parola Değiştirildi"
 #, python-format
 msgid "%(num)s second"
 msgid_plural "%(num)s seconds"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(num)s saniye"
+msgstr[1] "%(num)s saniye"
 
 #: pynicotine/utils.py:203
-#, fuzzy, python-format
+#, python-format
 msgid "%(num)s minute"
 msgid_plural "%(num)s minutes"
-msgstr[0] "%(number)2s dosya "
-msgstr[1] "%(number)2s dosya "
+msgstr[0] "%(num)s dakika"
+msgstr[1] "%(num)s dakika"
 
 #: pynicotine/utils.py:208
 #, python-format
 msgid "%(num)s hour"
 msgid_plural "%(num)s hours"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(num)s saat"
+msgstr[1] "%(num)s saat"
 
 #: pynicotine/utils.py:212
 #, python-format
 msgid "%(num)s day"
 msgid_plural "%(num)s days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(num)s gün"
+msgstr[1] "%(num)s gün"
 
 #: pynicotine/utils.py:584
 #, python-format
@@ -4934,7 +4890,6 @@ msgstr "Yeniden Adlandır…"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:230
 #: pynicotine/gtkgui/ui/dialogs/download.ui:246
-#, fuzzy
 msgid "Deselect All"
 msgstr "Tümünün Seçimini Kaldır"
 
@@ -6181,9 +6136,8 @@ msgstr "Güvenilir paylaşımlar"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:238
 #: pynicotine/gtkgui/ui/settings/shares.ui:254
-#, fuzzy
 msgid "File Manager"
-msgstr "Dosya Yöneticisinde Aç"
+msgstr "Dosya Yöneticisi"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:70
 msgid "Automatically remove finished and cancelled uploads from list"
