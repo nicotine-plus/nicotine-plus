@@ -253,8 +253,8 @@ class RoomList(Dialog):
         is_private_room_owned = core.chatrooms.is_private_room_owned(room)
         is_private_room_member = core.chatrooms.is_private_room_member(room)
 
-        menu.actions[_("Join Room")].set_enabled(room not in core.chatrooms.joined_rooms)
-        menu.actions[_("Leave Room")].set_enabled(room in core.chatrooms.joined_rooms)
+        menu.actions[_("_Join Room")].set_enabled(room not in core.chatrooms.joined_rooms)
+        menu.actions[_("_Leave Room")].set_enabled(room in core.chatrooms.joined_rooms)
 
         menu.actions[_("Disown Private Room")].set_enabled(is_private_room_owned)
         menu.actions[_("Cancel Room Membership")].set_enabled(is_private_room_member and not is_private_room_owned)
