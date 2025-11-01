@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-20 21:17+0300\n"
-"PO-Revision-Date: 2025-10-24 12:04+0000\n"
+"PO-Revision-Date: 2025-10-31 02:34+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -4754,7 +4754,7 @@ msgstr ""
 "downloads voorrang gegeven boven die van niet-geprivilegieerde gebruikers."
 
 #: pynicotine/users.py:426
-#, python-format
+#, fuzzy, python-format
 msgid "%(duration)s of Soulseek privileges left"
 msgstr "%(duration)s Soulseek privelege over"
 

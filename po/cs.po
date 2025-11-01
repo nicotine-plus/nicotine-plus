@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-20 21:17+0300\n"
-"PO-Revision-Date: 2025-10-30 04:25+0000\n"
+"PO-Revision-Date: 2025-10-31 02:34+0000\n"
 "Last-Translator: slrslr <adm@prnet.info>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
@@ -2025,7 +2025,7 @@ msgid "Do you really want to clear all downloads?"
 msgstr "Opravdu chcete odebrat všechna stahování?"
 
 #: pynicotine/gtkgui/downloads.py:163
-#, python-format
+#, fuzzy, python-format
 msgid "Download %(num)s File?"
 msgid_plural "Download %(num)s Files?"
 msgstr[0] "Stáhnout %(num)s soubor?"
