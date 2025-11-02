@@ -250,10 +250,12 @@ class Events:
         if event_name not in EVENT_NAMES:
             raise ValueError(f"Unknown event {event_name}")
 
-        # Event and log modules register callbacks first, but need to quit last
-        position = (0 if event_name == "quit" else -1)
+        if event_name == "quit":
+            # Event and log modules register callbacks first, but need to quit last
+            self._callbacks[event_name].insert(0, function)
+            return
 
-        self._callbacks[event_name].insert(position, function)
+        self._callbacks[event_name].append(function)
 
     def disconnect(self, event_name, function):
         self._callbacks[event_name].remove(function)
