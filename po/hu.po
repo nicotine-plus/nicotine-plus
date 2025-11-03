@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-20 21:17+0300\n"
 "PO-Revision-Date: 2025-11-03 21:03+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
 "Language: hu\n"
@@ -4262,7 +4262,7 @@ msgid "Search a user's shared files"
 msgstr "Keresés egy felhasználó megosztott fájljaiban"
 
 #: pynicotine/plugins/core_commands/__init__.py:283
-#, fuzzy, python-format
+#, python-format
 msgid "Listing %(num)s available command:"
 msgid_plural "Listing %(num)s available commands:"
 msgstr[0] "Az elérhető parancs:"
