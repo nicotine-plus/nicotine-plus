@@ -552,21 +552,11 @@ class IconNotebook:
 
     def remove_tab_changed(self, page):
 
-        if self.parent_page is not None:
-            if self.window.current_page_id != self.parent_page.id:
-                # Another tab has since been selected within 250ms
-                return
-
-            GLib.source_remove(self.switch_page_delay_timer)
-            self.switch_page_delay_timer = None
-            self._remove_unread_page(page)
-
-        if self.get_current_page() != page:
-            # Another page has since been selected within 250ms
-            return
-
         tab_label = self.get_tab_label(page)
         tab_label.remove_changed()
+
+        if self.parent_page is not None:
+            self._remove_unread_page(page)
 
     def _append_unread_page(self, page, is_important=False):
 
@@ -693,7 +683,11 @@ class IconNotebook:
 
         # Dismiss tab highlight after short delay to allow transient switching
         if self.parent_page is not None:
-            self.switch_page_delay_timer = GLib.timeout_add(250, self.remove_tab_changed, new_page)
+            self.switch_page_delay_timer = GLib.timeout_add(250, self.on_remove_tab_changed, new_page)
+
+    def on_remove_tab_changed(self, new_page):
+        self.switch_page_delay_timer = None
+        self.remove_tab_changed(new_page)
 
     def on_reorder_page(self, _notebook, page, page_num):
         if self.reorder_page_callback is not None:
