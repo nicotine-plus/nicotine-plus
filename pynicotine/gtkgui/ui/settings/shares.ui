@@ -61,9 +61,19 @@
             </child>
             <child>
               <object class="GtkCheckButton" id="rescan_daily_toggle">
-                <property name="label" translatable="yes">At midnight</property>
+                <property name="label" translatable="yes">Daily:</property>
                 <property name="use-underline">True</property>
                 <property name="visible">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox" id="rescan_hour_container">
+                <property name="homogeneous">True</property>
+                <property name="sensitive" bind-source="rescan_daily_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
+                <property name="visible">True</property>
+                <style>
+                  <class name="tabular"/>
+                </style>
               </object>
             </child>
           </object>

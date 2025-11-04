@@ -12,6 +12,8 @@ import re
 import sys
 import time
 
+from datetime import datetime
+
 from gi.repository import Gdk
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -590,6 +592,7 @@ class SharesPage:
             self.container,
             self.file_manager_button,
             self.rescan_daily_toggle,
+            self.rescan_hour_container,
             self.rescan_on_startup_toggle,
             self.reveal_buddy_shares_toggle,
             self.reveal_trusted_shares_toggle,
@@ -602,6 +605,21 @@ class SharesPage:
         self.shared_folders = []
         self.buddy_shared_folders = []
         self.trusted_shared_folders = []
+
+        items = []
+        for hour in range(24):
+            h_time = datetime.now().replace(hour=hour, minute=0, second=0, microsecond=0).strftime("%X")
+
+            for sep in (":", "."):
+                if h_time.count(sep) >= 2:
+                    # Remove seconds
+                    start, end = h_time.rsplit(sep, 1)
+                    h_time = start + end[2:]
+                    break
+
+            items.append((h_time, hour))
+
+        self.rescan_hour_combobox = ComboBox(container=self.rescan_hour_container, items=items)
 
         self.shares_list_view = TreeView(
             application.window, parent=self.shares_list_container, multi_select=True,
@@ -641,6 +659,7 @@ class SharesPage:
             "transfers": {
                 "rescanonstartup": self.rescan_on_startup_toggle,
                 "rescan_shares_daily": self.rescan_daily_toggle,
+                "rescan_shares_hour": self.rescan_hour_combobox,
                 "reveal_buddy_shares": self.reveal_buddy_shares_toggle,
                 "reveal_trusted_shares": self.reveal_trusted_shares_toggle
             }
@@ -686,6 +705,7 @@ class SharesPage:
                 "trustedshared": self.trusted_shared_folders[:],
                 "rescanonstartup": self.rescan_on_startup_toggle.get_active(),
                 "rescan_shares_daily": self.rescan_daily_toggle.get_active(),
+                "rescan_shares_hour": self.rescan_hour_combobox.get_selected_id(),
                 "reveal_buddy_shares": self.reveal_buddy_shares_toggle.get_active(),
                 "reveal_trusted_shares": self.reveal_trusted_shares_toggle.get_active()
             }
@@ -3331,7 +3351,14 @@ class Preferences(Dialog):
             if rescan_required:
                 break
 
-        rescan_daily_required = self.has_option_changed(options, "transfers", "rescan_shares_daily")
+        for section, key in (
+            ("transfers", "rescan_shares_daily"),
+            ("transfers", "rescan_shares_hour")
+        ):
+            rescan_daily_required = self.has_option_changed(options, section, key)
+
+            if rescan_daily_required:
+                break
 
         for section, key in (
             ("transfers", "reveal_buddy_shares"),

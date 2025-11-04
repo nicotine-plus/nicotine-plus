@@ -217,6 +217,7 @@ class Config:
                 "autoclear_uploads": False,
                 "rescanonstartup": True,
                 "rescan_shares_daily": True,
+                "rescan_shares_hour": 0,
                 "enablefilters": False,
                 "downloadregexp": "",
                 "downloadfilters": [
