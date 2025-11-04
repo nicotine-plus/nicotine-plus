@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-20 21:17+0300\n"
-"PO-Revision-Date: 2025-10-31 02:34+0000\n"
+"PO-Revision-Date: 2025-11-02 14:51+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -2026,10 +2026,10 @@ msgid "Do you really want to clear all downloads?"
 msgstr "Valóban törölni szeretné az összes letöltést?"
 
 #: pynicotine/gtkgui/downloads.py:163
-#, fuzzy, python-format
+#, python-format
 msgid "Download %(num)s File?"
 msgid_plural "Download %(num)s Files?"
-msgstr[0] "Letölti a(z) %(num)s fájlt?"
+msgstr[0] "Letölti a fájlt?"
 msgstr[1] "Letölti a(z) %(num)s fájlt?"
 
 #: pynicotine/gtkgui/downloads.py:168
@@ -4265,14 +4265,14 @@ msgstr "Keresés egy felhasználó megosztott fájljaiban"
 #, python-format
 msgid "Listing %(num)s available command:"
 msgid_plural "Listing %(num)s available commands:"
-msgstr[0] "%(num)s elérhető parancs:"
-msgstr[1] "%(num)s elérhető parancs listája:"
+msgstr[0] "Az elérhető parancs:"
+msgstr[1] "Az elérhető %(num)s parancs listája:"
 
 #: pynicotine/plugins/core_commands/__init__.py:289
 #, python-format
 msgid "Listing %(num)s available command matching \"%(query)s\":"
 msgid_plural "Listing %(num)s available commands matching \"%(query)s\":"
-msgstr[0] "A „%(query)s” kifejezésnek megfelelő %(num)s elérhető parancs:"
+msgstr[0] "A „%(query)s” kifejezésnek megfelelő elérhető parancs:"
 msgstr[1] "A „%(query)s” kifejezésnek megfelelő %(num)s elérhető parancs listája:"
 
 #: pynicotine/plugins/core_commands/__init__.py:305
