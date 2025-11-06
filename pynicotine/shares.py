@@ -1141,11 +1141,15 @@ class Shares:
         if not config.sections["transfers"]["rescan_shares_daily"]:
             return
 
-        timestamp_midnight = (datetime.now() + timedelta(days=1)).replace(
-            hour=0, minute=0, second=0, microsecond=0).timestamp()
+        current_time = datetime.now()
+        target_time = current_time.replace(
+            hour=config.sections["transfers"]["rescan_shares_hour"], minute=0, second=0, microsecond=0)
+
+        if target_time <= current_time:
+            target_time += timedelta(days=1)
 
         self._rescan_daily_timer_id = events.schedule_at(
-            timestamp=timestamp_midnight, callback=self.rescan_shares)
+            timestamp=target_time.timestamp(), callback=self.rescan_shares)
 
     def _build_scanner_process(self, share_groups=None, init=False, rescan=True, rebuild=False):
 
