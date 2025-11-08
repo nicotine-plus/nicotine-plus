@@ -421,6 +421,14 @@ class IconNotebook:
 
     def remove_page(self, page, page_args=None):
 
+        # Cancel any pending delayed tab-remove callback to avoid races
+        if getattr(self, "switch_page_delay_timer", None) is not None:
+            try:
+                GLib.source_remove(self.switch_page_delay_timer)
+            except Exception:
+                pass
+            self.switch_page_delay_timer = None
+
         self.widget.remove_page(self.page_num(page))
         self._remove_unread_page(page)
         self.popup_menu_pages.clear()
@@ -560,6 +568,10 @@ class IconNotebook:
     def remove_tab_changed(self, page):
 
         tab_label = self.get_tab_label(page)
+        if tab_label is None:
+            # Tab was removed while the delayed timer was pending; nothing to do.
+            return
+
         tab_label.remove_changed()
 
         if self.parent_page is not None:
