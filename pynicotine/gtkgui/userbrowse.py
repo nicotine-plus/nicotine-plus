@@ -279,7 +279,8 @@ class UserBrowse:
 
         if user == config.sections["server"]["login"]:
             self.folder_popup_menu.add_items(
-                ("#" + "upload_folder", self.on_upload_folder_recursive_to),
+                ("#" + "upload_folder", self.on_upload_folder),
+                ("#" + "upload_folder_recursive", self.on_upload_folder_recursive),
                 ("", None)
             )
             if not self.window.application.isolated_mode:
@@ -296,8 +297,8 @@ class UserBrowse:
             )
         else:
             self.folder_popup_menu.add_items(
-                ("#" + "download_folder", self.on_download_folder_recursive),
-                ("#" + "download_folder_to", self.on_download_folder_recursive_to),
+                ("#" + "download_folder", self.on_download_folder),
+                ("#" + "download_folder_recursive", self.on_download_folder_recursive),
                 ("", None),
                 ("#" + _("F_ile Properties"), self.on_file_properties, True),
                 ("", None),
@@ -360,8 +361,7 @@ class UserBrowse:
         )
         if user == config.sections["server"]["login"]:
             self.file_popup_menu.add_items(
-                ("#" + "upload_files", self.on_upload_files_to),
-                ("#" + _("Upload Folder…"), self.on_upload_folder_to),
+                ("#" + "upload_files", self.on_upload_files),
                 ("", None)
             )
             if not self.window.application.isolated_mode:
@@ -394,7 +394,7 @@ class UserBrowse:
         Accelerator("Right", self.folder_tree_view.widget, self.on_folder_expand_accelerator)
 
         Accelerator("<Shift>Return", self.folder_tree_view.widget, self.on_folder_focus_filetree_accelerator)
-        Accelerator("<Primary>Return", self.folder_tree_view.widget, self.on_folder_transfer_to_accelerator)
+        Accelerator("<Primary>Return", self.folder_tree_view.widget, self.on_folder_transfer_recursive_accelerator)
         Accelerator("<Shift><Primary>Return", self.folder_tree_view.widget, self.on_folder_transfer_accelerator)
         Accelerator("<Primary><Alt>Return", self.folder_tree_view.widget, self.on_folder_open_manager_accelerator)
         Accelerator("<Alt>Return", self.folder_tree_view.widget, self.on_file_properties_accelerator, True)
@@ -922,36 +922,30 @@ class UserBrowse:
         if self.user == config.sections["server"]["login"]:
             self.folder_popup_menu.update_item_label(
                 "upload_folder",
-                _("Upload Folder & Subfolders…") if num_folders == 1 else _("Upload Folders & Subfolders…")
+                _("Upload _Folder…") if num_folders == 1 else _("Upload _Folders…")
+            )
+            self.folder_popup_menu.update_item_label(
+                "upload_folder_recursive",
+                _("Upload Folder & _Subfolders…") if num_folders == 1 else _("Upload Folders & _Subfolders…")
             )
             return
 
         self.folder_popup_menu.update_item_label(
             "download_folder",
-            _("_Download Folder & Subfolders") if num_folders == 1 else _("_Download Folders & Subfolders")
+            _("Download _Folder") if num_folders == 1 else _("Download _Folders")
         )
         self.folder_popup_menu.update_item_label(
-            "download_folder_to",
-            _("Download Folder & Subfolders _To…") if num_folders == 1 else _("Download Folders & Subfolders _To…")
+            "download_folder_recursive",
+            _("Download Folder & _Subfolders…") if num_folders == 1 else _("Download Folders & _Subfolders…")
         )
 
-    def on_download_folder_recursive(self, *_args, download_folder_path=None):
-
-        prev_folder_path = None
+    def on_download_folder(self, *_args):
 
         for iterator in self.folder_tree_view.get_selected_rows():
             folder_path = self.folder_tree_view.get_row_value(iterator, "folder_path_data")
+            core.userbrowse.download_folder(self.user, folder_path)
 
-            if prev_folder_path and prev_folder_path in folder_path:
-                # Already recursing, avoid redundant request for subfolder
-                continue
-
-            core.userbrowse.download_folder(
-                self.user, folder_path, download_folder_path=download_folder_path, recurse=True)
-
-            prev_folder_path = folder_path
-
-    def on_download_folder_recursive_to(self, *_args):
+    def on_download_folder_recursive(self, *_args):
 
         data = []
         prev_folder_path = None
@@ -979,7 +973,7 @@ class UserBrowse:
         self.userbrowses.download_dialog.update_files(data, partial_files=False)
         self.userbrowses.download_dialog.present()
 
-    def on_upload_folder_to_response(self, dialog, _response_id, recurse):
+    def on_upload_folder_response(self, dialog, _response_id, recurse):
 
         user = dialog.get_entry_value()
 
@@ -1005,7 +999,7 @@ class UserBrowse:
 
             prev_folder_path = folder_path
 
-    def on_upload_folder_to(self, *_args, recurse=False):
+    def on_upload_folder(self, *_args, recurse=False):
 
         num_folders = self.folder_tree_view.get_num_selected_rows()
 
@@ -1021,13 +1015,13 @@ class UserBrowse:
             title=str_title,
             message=_("Enter the name of the user you want to upload to:"),
             action_button_label=_("_Upload"),
-            callback=self.on_upload_folder_to_response,
+            callback=self.on_upload_folder_response,
             callback_data=recurse,
             droplist=sorted(core.buddies.users)
         ).present()
 
-    def on_upload_folder_recursive_to(self, *_args):
-        self.on_upload_folder_to(recurse=True)
+    def on_upload_folder_recursive(self, *_args):
+        self.on_upload_folder(recurse=True)
 
     def on_copy_folder_path(self, *_args):
         folder_path = self.get_selected_folder_path()
@@ -1086,23 +1080,23 @@ class UserBrowse:
         self.folder_tree_view.expand_row(iterator)
         return True
 
-    def on_folder_transfer_to_accelerator(self, *_args):
-        """Ctrl+Enter - Upload Folder To, Download Folder Into."""
+    def on_folder_transfer_recursive_accelerator(self, *_args):
+        """Ctrl+Enter - Upload Folder & Subfolders, Download Folder & Subfolders."""
 
         if self.user == config.sections["server"]["login"]:
-            self.on_upload_folder_recursive_to()
+            self.on_upload_folder_recursive()
         else:
-            self.on_download_folder_recursive_to()
+            self.on_download_folder_recursive()
 
         return True
 
     def on_folder_transfer_accelerator(self, *_args):
-        """Shift+Ctrl+Enter - Upload Folder Recursive To, Download Folder (without prompt)."""
+        """Shift+Ctrl+Enter - Upload Folder, Download Folder (without prompt)."""
 
         if self.user == config.sections["server"]["login"]:
-            self.on_upload_folder_recursive_to()
+            self.on_upload_folder()
         else:
-            self.on_download_folder_recursive()  # without prompt
+            self.on_download_folder()  # without prompt
 
         return True
 
@@ -1208,7 +1202,7 @@ class UserBrowse:
             )
         ).present()
 
-    def on_upload_files_to_response(self, dialog, _response_id, _data):
+    def on_upload_files_response(self, dialog, _response_id, _data):
 
         user = dialog.get_entry_value()
         folder_path = self.active_folder_path
@@ -1221,14 +1215,14 @@ class UserBrowse:
         for basename, size in self.selected_files.items():
             core.userbrowse.upload_file(user, folder_path, (None, basename, size))
 
-    def on_upload_files_to(self, *_args):
+    def on_upload_files(self, *_args):
 
         EntryDialog(
             parent=self.window,
             title=_("Upload File To User") if len(self.selected_files) == 1 else ("Upload Files To User"),
             message=_("Enter the name of the user you want to upload to:"),
             action_button_label=_("_Upload"),
-            callback=self.on_upload_files_to_response,
+            callback=self.on_upload_files_response,
             droplist=sorted(core.buddies.users)
         ).present()
 
@@ -1367,9 +1361,9 @@ class UserBrowse:
 
         if self.user == config.sections["server"]["login"]:
             if self.file_list_view.is_selection_empty():
-                self.on_upload_folder_to()
+                self.on_upload_folder()
             else:
-                self.on_upload_files_to()
+                self.on_upload_files()
 
             return True
 
@@ -1387,9 +1381,9 @@ class UserBrowse:
 
         if self.user == config.sections["server"]["login"]:
             if self.file_list_view.is_selection_empty():
-                self.on_upload_folder_to()
+                self.on_upload_folder()
             else:
-                self.on_upload_files_to()
+                self.on_upload_files()
 
             return True
 
