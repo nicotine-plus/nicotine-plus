@@ -34,7 +34,6 @@ class Download(Dialog):
             self.download_folder_default_button,
             self.download_folder_label,
             self.download_paused_button,
-            self.enable_subfolders_toggle,
             self.expand_button,
             self.expand_icon,
             self.info_bar_container,
@@ -168,8 +167,6 @@ class Download(Dialog):
 
         self.rename_button.set_sensitive(False)
         self.expand_button.set_active(True)
-        self.enable_subfolders_toggle.set_active(True)
-        self.enable_subfolders_toggle.get_parent().set_visible(partial_files)
         self.download_folder_button.set_path(
             self.application.previous_download_folder or core.downloads.get_default_download_folder()
         )
@@ -320,16 +317,14 @@ class Download(Dialog):
             file_path = "\\".join([folder_path, file_name])
             size = self.tree_view.get_row_value(iterator, "size_data")
             file_attributes = self.tree_view.get_row_value(iterator, "file_attributes_data")
-            destination_folder_path = None
 
-            if self.enable_subfolders_toggle.get_active():
-                download_folder_path = self.download_folder_button.get_path(dynamic=False)
+            download_folder_path = self.download_folder_button.get_path(dynamic=False)
 
-                if download_folder_path == core.downloads.get_default_download_folder():
-                    download_folder_path = core.downloads.get_default_download_folder(username)
+            if download_folder_path == core.downloads.get_default_download_folder():
+                download_folder_path = core.downloads.get_default_download_folder(username)
 
-                destination_folder_name = self.folder_names[folder_path]
-                destination_folder_path = os.path.join(download_folder_path, destination_folder_name)
+            destination_folder_name = self.folder_names[folder_path]
+            destination_folder_path = os.path.join(download_folder_path, destination_folder_name)
 
             files.append((username, file_path, destination_folder_path, size, file_attributes))
 
@@ -684,9 +679,6 @@ class Download(Dialog):
         for iterator in self.tree_view.get_selected_rows():
             if self.tree_view.get_row_value(iterator, "selected"):
                 self.on_toggle_file(self.tree_view, iterator, selected=False)
-
-    def on_toggle_enable_subfolders(self, *_args):
-        self.rename_button.set_visible(self.enable_subfolders_toggle.get_active())
 
     def on_default_download_folder(self, *_args):
         self.download_folder_button.set_path(core.downloads.get_default_download_folder())
