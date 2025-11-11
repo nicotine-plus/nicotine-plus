@@ -2332,8 +2332,8 @@ a peer. In Nicotine+, these messages are defined in slskmessages.py.
 
 ## Legacy Peer Connection Message Order
 
-*Used by Soulseek NS, Nicotine+ 3.2.0 and earlier (excluding step 5-7),
-Museek+ (excluding step 7), soulseeX*
+*Used by Soulseek NS, Nicotine+ 3.2.0 and earlier (excluding step 7-9),
+Museek+ (excluding step 9), soulseeX*
 
 1.  User A sends [GetPeerAddress](#server-code-3) to the Server with User B's
     username.
@@ -2356,7 +2356,7 @@ Museek+ (excluding step 7), soulseeX*
     If this fails, no connection is possible, and User B proceeds with step 7.
 7.  User B sends a [CantConnectToPeer](#server-code-1001) to the Server.
 8.  The Server sends a [CantConnectToPeer](#server-code-1001) response to User A.
-9.  After 20 seconds, user A retries an indirect connection request (step 2) up
+9.  After 20 seconds, user A retries an indirect connection request (step 4) up
     to three times before giving up.
 
 
