@@ -194,7 +194,7 @@ class ChatHistory(Dialog):
 
         self.list_view.unfreeze()
 
-    def remove_user(self, username):
+    def remove_user(self, username, unwatch_user=True):
 
         iterator = self.list_view.iterators.get(username)
 
@@ -204,9 +204,12 @@ class ChatHistory(Dialog):
         if not self.list_view.iterators:
             self.list_container.set_visible(False)
 
+        if unwatch_user:
+            core.users.unwatch_user(username, context="chathistory")
+
     def update_user(self, username, message, timestamp=None):
 
-        self.remove_user(username)
+        self.remove_user(username, unwatch_user=False)
         core.users.watch_user(username, context="chathistory")
 
         if not timestamp:
