@@ -3142,7 +3142,7 @@ class SharedFileListResponse(PeerMessage):
 
     __slots__ = ("list", "unknown", "privatelist", "built", "permission_level",
                  "public_shares", "buddy_shares", "trusted_shares")
-    __excluded_attrs__ = {"list", "privatelist"}
+    __excluded_attrs__ = {"list", "privatelist", "built"}
 
     def __init__(self, public_shares=None, buddy_shares=None, trusted_shares=None,
                  permission_level=None):
@@ -3530,6 +3530,7 @@ class FolderContentsResponse(PeerMessage):
     """
 
     __slots__ = ("dir", "token", "list")
+    __excluded_attrs__ = {"list"}
 
     def __init__(self, directory=None, token=None, shares=None):
         PeerMessage.__init__(self)
