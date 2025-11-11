@@ -705,13 +705,8 @@ class NetworkThread(Thread):
 
     def _send_message_to_peer(self, username, msg):
 
-        conn_type = msg.msg_type
-
-        if conn_type not in self.ALLOWED_PEER_CONN_TYPES:
-            log.add_conn("Unknown connection type %s", conn_type)
-            return
-
         init = None
+        conn_type = msg.msg_type
         init_key = username + conn_type
 
         # Check if there's already a connection for the specified username
@@ -782,10 +777,6 @@ class NetworkThread(Thread):
         """Initiate a connection with a peer."""
 
         conn_type = init.conn_type
-
-        if conn_type not in self.ALLOWED_PEER_CONN_TYPES:
-            log.add_conn("Unknown connection type %s", conn_type)
-            return
 
         if not self._add_init_message(init):
             log.add_conn("Direct connection of type %s to user %s (%s) requested, "
@@ -1270,12 +1261,15 @@ class NetworkThread(Thread):
             addr = (msg.ip_address, msg.port)
             conn_type = msg.conn_type
             pierce_token = msg.token
-            init = PeerInit(init_user=username, target_user=username, conn_type=conn_type)
 
             log.add_conn("Received indirect connection request of type %s from user %s, "
                          "token %s, address %s", (conn_type, username, pierce_token, addr))
 
-            self._connect_to_peer(username, addr, init, pierce_token=pierce_token)
+            if conn_type in self.ALLOWED_PEER_CONN_TYPES:
+                init = PeerInit(init_user=username, target_user=username, conn_type=conn_type)
+                self._connect_to_peer(username, addr, init, pierce_token=pierce_token)
+            else:
+                log.add_conn("Unknown connection type %s", conn_type)
 
         elif msg_class is CantConnectToPeer:
             pierce_token = msg.token
