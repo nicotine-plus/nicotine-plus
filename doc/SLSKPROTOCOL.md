@@ -2995,21 +2995,19 @@ consequence, the client sends an invalid file offset of -1.
 1.  We send a [FileSearch](#server-code-26) message to the server, storing the
     token for later use.
 2.  The server propagates the search query through the search network.
-3.  We receive a [ConnectToPeer](#server-code-18) message from the server for
-    any peers that have a match for the search query.  
+3.  Any peers that have a match for the search query establish a `P` connection
+    with us, and send a [FileSearchResponse](#peer-code-9) message.  
     See [Peer Connection Order](#modern-peer-connection-message-order) for how
     to connect to a peer (in this scenario, we assume the role of User B).
-4.  If a connection is established, we expect the peer to send us a
-    [FileSearchResponse](#peer-code-9) message.
-5.  If we decide to download a file received in the message from step 4, we
+5.  If we decide to download a file received in the message from step 3, we
     send a [QueueUpload](#peer-code-43) message to the peer.
 6.  The peer sends us a [TransferRequest](#peer-code-40) message.
 7.  We send the peer a [TransferResponse](#peer-code-41-a), accepting the
     transfer request. We store the filesize for later use.
-8.  We receive a [ConnectToPeer](#server-code-18) message from the server with
-    the username of the peer, this time with an `F` connection.
-9.  We send a [PierceFireWall](#peer-init-code-0) message to the peer, which
-    lets the peer know they can begin transferring the file to us.
+8.  The peer establishes a `F` connection with us.
+9.  We send a [FileOffset](#file-offset) message to the peer, letting them
+    know how much we have downloaded so far. The peer starts the upload from
+    the file offset.
 10. The peer sends us the file data in small chunks until the transfer is
     complete, or until the connection is dropped. See [UploadFailed](#peer-code-46)
     for handling failed transfers.  
