@@ -330,10 +330,6 @@ class NetworkThread(Thread):
     data.
     """
 
-    __slots__ = ("pending_shutdown", "upload_speed", "token", "_pending_network_msgs",
-                 "_user_update_counter", "_user_update_counters", "_upload_queue_timer_id",
-                 "_retry_failed_uploads_timer_id")
-
     IN_PROGRESS_STALE_AFTER = 2
     INDIRECT_REQUEST_TIMEOUT = 20
     CONNECTION_MAX_IDLE = 60
