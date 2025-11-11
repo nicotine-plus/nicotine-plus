@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on October 20, 2025](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on November 11, 2025](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -91,10 +91,10 @@ please report them.
 
 ## Obfuscation Types
 
-| Code | Type   |
-|------|--------|
-| `0`  | None   |
-| `1`  | Normal |
+| Code | Type    |
+|------|---------|
+| `0`  | None    |
+| `1`  | Rotated |
 
 
 ## Login Rejection Reasons

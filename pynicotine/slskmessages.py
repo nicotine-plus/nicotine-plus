@@ -81,7 +81,7 @@ class ConnectionType:
 
 class ObfuscationType:
     NONE = 0
-    NORMAL = 1
+    ROTATED = 1
 
 
 class LoginRejectReason:
