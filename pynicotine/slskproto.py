@@ -1406,7 +1406,7 @@ class NetworkThread(Thread):
         if idx:
             del in_buffer[:idx]
 
-    def _process_server_output(self, msg):
+    def _process_server_output(self, conn, msg):
 
         msg_content = self._pack_network_message(msg)
 
@@ -1423,7 +1423,6 @@ class NetworkThread(Thread):
         elif msg_class is UnwatchUser and msg.user != self._server_username:
             self._user_addresses.pop(msg.user, None)
 
-        conn = self._server_conn
         out_buffer = conn.out_buffer
 
         out_buffer += msg.pack_uint32(len(msg_content) + 4)
@@ -1629,10 +1628,9 @@ class NetworkThread(Thread):
         self._accept_child_peer_connection(conn)
         return init
 
-    def _process_peer_init_output(self, msg):
+    def _process_peer_init_output(self, conn, msg):
 
         # Pack peer init messages
-        conn = self._conns[msg.sock]
         msg_content = self._pack_network_message(msg)
 
         if msg_content is None:
@@ -1794,7 +1792,7 @@ class NetworkThread(Thread):
 
             self._close_connection(conn)
 
-    def _process_peer_output(self, msg):
+    def _process_peer_output(self, conn, msg):
 
         # Pack peer messages
         msg_content = self._pack_network_message(msg)
@@ -1802,7 +1800,6 @@ class NetworkThread(Thread):
         if msg_content is None:
             return
 
-        conn = self._conns[msg.sock]
         out_buffer = conn.out_buffer
 
         out_buffer += msg.pack_uint32(len(msg_content) + 4)
@@ -2009,7 +2006,7 @@ class NetworkThread(Thread):
             del in_buffer[:idx]
             conn.has_post_init_activity = True
 
-    def _process_file_output(self, msg):
+    def _process_file_output(self, conn, msg):
 
         msg_class = msg.__class__
 
@@ -2020,7 +2017,6 @@ class NetworkThread(Thread):
             if msg_content is None:
                 return
 
-            conn = self._conns[msg.sock]
             self._file_init_msgs[conn] = msg
             conn.out_buffer += msg_content
 
@@ -2032,7 +2028,6 @@ class NetworkThread(Thread):
             if msg_content is None:
                 return
 
-            conn = self._conns[msg.sock]
             conn.out_buffer += msg_content
 
         conn.has_post_init_activity = True
@@ -2102,18 +2097,13 @@ class NetworkThread(Thread):
 
         log.add_conn("Number of current child peers: %s", len(self._child_peers))
 
-    def _send_message_to_child_peers(self, msg):
+    def _send_message_to_child_peers(self, msg, msg_content=None):
 
-        msg_class = msg.__class__
-        msg_attrs = [getattr(msg, s) for s in msg.__slots__]
-        msgs = []
+        if msg_content is None:
+            msg_content = self._pack_network_message(msg)
 
         for conn in self._child_peers.values():
-            msg_child = msg_class(*msg_attrs)
-            msg_child.sock = conn.sock
-            msgs.append(msg_child)
-
-        self._process_outgoing_messages(msgs)
+            self._process_distrib_output(conn, msg, msg_content)
 
     def _distribute_embedded_message(self, msg):
         """Distributes an embedded message from the server to our child
@@ -2223,7 +2213,7 @@ class NetworkThread(Thread):
             if not self._verify_parent_connection(conn, msg_class):
                 return False
 
-            self._send_message_to_child_peers(msg)
+            self._send_message_to_child_peers(msg, msg_content)
 
         elif msg_class is DistribEmbeddedMessage:
             if not self._verify_parent_connection(conn, msg_class):
@@ -2232,7 +2222,7 @@ class NetworkThread(Thread):
             msg = self._unpack_embedded_message(msg)
 
             if msg is not None:
-                self._send_message_to_child_peers(msg)
+                self._send_message_to_child_peers(msg, msg.distrib_message)
 
         elif msg_class is DistribBranchLevel:
             if msg.level < 0:
@@ -2332,15 +2322,15 @@ class NetworkThread(Thread):
             del in_buffer[:idx]
             conn.has_post_init_activity = True
 
-    def _process_distrib_output(self, msg):
+    def _process_distrib_output(self, conn, msg, msg_content=None):
 
         # Pack distributed messages
-        msg_content = self._pack_network_message(msg)
+        if msg_content is None:
+            msg_content = self._pack_network_message(msg)
 
         if msg_content is None:
             return
 
-        conn = self._conns[msg.sock]
         out_buffer = conn.out_buffer
 
         out_buffer += msg.pack_uint32(len(msg_content) + 1)
@@ -2578,8 +2568,15 @@ class NetworkThread(Thread):
                              (msg.__class__, msg))
                 continue
 
-            if process_func is not None:
+            if process_func is None:
+                continue
+
+            if sock is None:
                 process_func(msg)
+                continue
+
+            conn = self._conns[sock]
+            process_func(conn, msg)
 
     def _process_queue_messages(self):
 
