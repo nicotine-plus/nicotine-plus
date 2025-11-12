@@ -585,18 +585,26 @@ class SharesPage:
         _("Buddies"): PermissionLevel.BUDDY,
         _("Trusted buddies"): PermissionLevel.TRUSTED
     }
+    FILTER_LEVELS = (
+        _("File-level"),
+        _("Folder-level")
+    )
 
     def __init__(self, application):
 
         (
             self.container,
             self.file_manager_button,
+            self.filter_list_container,
+            self.filter_list_page,
             self.rescan_daily_toggle,
             self.rescan_hour_container,
             self.rescan_on_startup_toggle,
             self.reveal_buddy_shares_toggle,
             self.reveal_trusted_shares_toggle,
-            self.shares_list_container
+            self.shares_list_container,
+            self.shares_list_page,
+            self.stack
         ) = self.widgets = ui.load(scope=self, path="settings/shares.ui")
 
         self.application = application
@@ -605,6 +613,7 @@ class SharesPage:
         self.shared_folders = []
         self.buddy_shared_folders = []
         self.trusted_shared_folders = []
+        self.share_filters = []
 
         items = []
         for hour in range(24):
@@ -655,6 +664,45 @@ class SharesPage:
             ("#" + _("Remove"), self.on_remove_shared_folder)
         )
 
+        self.filter_syntax_description = _("Syntax: Case-insensitive. Virtual paths containing separators \\ are "
+                                           "supported. Wildcard * matches are supported.")
+        self.filter_list_view = TreeView(
+            application.window, parent=self.filter_list_container, multi_select=True,
+            activate_row_callback=self.on_edit_filter,
+            delete_accelerator_callback=self.on_remove_filter,
+            columns={
+                "filter": {
+                    "column_type": "text",
+                    "title": _("Filter"),
+                    "width": 150,
+                    "expand_column": True,
+                    "default_sort_type": "ascending"
+                },
+                "type": {
+                    "column_type": "text",
+                    "title": _("Type"),
+                    "width": 0
+                }
+            }
+        )
+
+        self.filter_popup_menu = PopupMenu(application, self.filter_list_view.widget)
+        self.filter_popup_menu.add_items(
+            ("#" + _("_Edit…"), self.on_edit_filter),
+            ("", None),
+            ("#" + _("Remove"), self.on_remove_filter)
+        )
+
+        self.popup_menus = (
+            self.shares_popup_menu, self.filter_popup_menu
+        )
+
+        for widget, name, title in (
+            (self.shares_list_page, "shared_folders", _("Shared Folders")),
+            (self.filter_list_page, "filters", _("Filters")),
+        ):
+            self.stack.add_titled(widget, name, title)
+
         self.options = {
             "transfers": {
                 "rescanonstartup": self.rescan_on_startup_toggle,
@@ -667,20 +715,28 @@ class SharesPage:
 
     def destroy(self):
 
-        self.shares_popup_menu.destroy()
+        for menu in self.popup_menus:
+            menu.destroy()
+
         self.shares_list_view.destroy()
+        self.filter_list_view.destroy()
+
         self.__dict__.clear()
 
     def set_settings(self):
 
         self.shares_list_view.clear()
+        self.filter_list_view.clear()
+
         self.shares_list_view.freeze()
+        self.filter_list_view.freeze()
 
         self.application.preferences.set_widgets_data(self.options)
 
         self.shared_folders = config.sections["transfers"]["shared"][:]
         self.buddy_shared_folders = config.sections["transfers"]["buddyshared"][:]
         self.trusted_shared_folders = config.sections["transfers"]["trustedshared"][:]
+        self.share_filters = config.sections["transfers"]["share_filters"][:]
 
         for virtual_name, folder_path, *_unused in self.shared_folders:
             self.shares_list_view.add_row(
@@ -694,7 +750,12 @@ class SharesPage:
             self.shares_list_view.add_row(
                 [virtual_name, folder_path, _("Trusted")], select_row=False)
 
+        for sfilter in self.share_filters:
+            filter_type = _("Folder-level") if sfilter.endswith("\\") else _("File-level")
+            self.filter_list_view.add_row([sfilter, filter_type], select_row=False)
+
         self.shares_list_view.unfreeze()
+        self.filter_list_view.unfreeze()
 
     def get_settings(self):
 
@@ -703,6 +764,7 @@ class SharesPage:
                 "shared": self.shared_folders[:],
                 "buddyshared": self.buddy_shared_folders[:],
                 "trustedshared": self.trusted_shared_folders[:],
+                "share_filters": self.share_filters[:],
                 "rescanonstartup": self.rescan_on_startup_toggle.get_active(),
                 "rescan_shares_daily": self.rescan_daily_toggle.get_active(),
                 "rescan_shares_hour": self.rescan_hour_combobox.get_selected_id(),
@@ -815,6 +877,104 @@ class SharesPage:
 
     def on_select_row(self, _list_view, iterator):
         self.file_manager_button.set_sensitive(iterator is not None)
+
+    def process_filter(self, sfilter, filter_type):
+
+        sfilter = sfilter.replace("/", "\\").rstrip("\\")
+
+        if filter_type == _("Folder-level"):
+            suffix = "\\*"
+            if sfilter.endswith(suffix):
+                sfilter = sfilter[:-len(suffix)]
+            sfilter += "\\"
+
+        return sfilter
+
+    def on_add_filter_response(self, dialog, _response_id, _data):
+
+        sfilter = dialog.get_entry_value()
+        filter_type = dialog.get_second_entry_value()
+        sfilter = self.process_filter(sfilter, filter_type)
+        iterator = self.filter_list_view.iterators.get(sfilter)
+
+        if iterator is not None:
+            return
+
+        self.share_filters.append(sfilter)
+        self.filter_list_view.add_row([sfilter, filter_type])
+
+    def on_add_filter(self, *_args):
+
+        EntryDialog(
+            parent=self.application.preferences,
+            title=_("Add Share Filter"),
+            message=self.filter_syntax_description + "\n\n" + _("Enter a new share filter:"),
+            second_droplist=self.FILTER_LEVELS,
+            use_second_entry=True,
+            second_entry_editable=False,
+            action_button_label=_("_Add"),
+            callback=self.on_add_filter_response,
+            droplist=self.filter_list_view.iterators
+        ).present()
+
+    def on_edit_filter_response(self, dialog, _response_id, iterator):
+
+        new_sfilter = dialog.get_entry_value()
+        new_filter_type = dialog.get_second_entry_value()
+        new_sfilter = self.process_filter(new_sfilter, new_filter_type)
+
+        sfilter = self.filter_list_view.get_row_value(iterator, "filter")
+        orig_iterator = self.filter_list_view.iterators[sfilter]
+
+        self.share_filters.remove(sfilter)
+        self.filter_list_view.remove_row(orig_iterator)
+
+        self.share_filters.append(new_sfilter)
+        self.filter_list_view.add_row([new_sfilter, new_filter_type])
+
+    def on_edit_filter(self, *_args):
+
+        for iterator in self.filter_list_view.get_selected_rows():
+            sfilter = self.filter_list_view.get_row_value(iterator, "filter")
+            default_item = self.filter_list_view.get_row_value(iterator, "type")
+
+            EntryDialog(
+                parent=self.application.preferences,
+                title=_("Edit Share Filter"),
+                message=self.filter_syntax_description + "\n\n" + _("Modify the following share filter:"),
+                second_default=default_item,
+                second_droplist=self.FILTER_LEVELS,
+                use_second_entry=True,
+                second_entry_editable=False,
+                action_button_label=_("_Edit"),
+                callback=self.on_edit_filter_response,
+                callback_data=iterator,
+                default=sfilter
+            ).present()
+            return
+
+    def on_remove_filter(self, *_args):
+
+        for iterator in reversed(list(self.filter_list_view.get_selected_rows())):
+            sfilter = self.filter_list_view.get_row_value(iterator, "filter")
+            orig_iterator = self.filter_list_view.iterators[sfilter]
+
+            self.share_filters.remove(sfilter)
+            self.filter_list_view.remove_row(orig_iterator)
+
+    def on_default_filters(self, *_args):
+
+        self.share_filters.clear()
+        self.filter_list_view.clear()
+        self.filter_list_view.freeze()
+
+        self.share_filters = config.defaults["transfers"]["share_filters"][:]
+
+        for sfilter in config.defaults["transfers"]["share_filters"]:
+            filter_type = _("Folder-level") if sfilter.endswith("\\") else _("File-level")
+            self.filter_list_view.add_row([sfilter, filter_type], select_row=False)
+
+        self.filter_list_view.unfreeze()
 
 
 class UploadsPage:
@@ -3344,7 +3504,8 @@ class Preferences(Dialog):
         for section, key in (
             ("transfers", "shared"),
             ("transfers", "buddyshared"),
-            ("transfers", "trustedshared")
+            ("transfers", "trustedshared"),
+            ("transfers", "share_filters")
         ):
             rescan_required = self.has_option_changed(options, section, key)
 

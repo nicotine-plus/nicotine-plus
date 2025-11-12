@@ -184,6 +184,15 @@ class Config:
                 "shared": [],
                 "buddyshared": [],
                 "trustedshared": [],
+                "share_filters": [
+                    ".*",
+                    ".*\\",
+                    "@eaDir\\",
+                    "#recycle\\",
+                    "#snapshot\\",
+                    "desktop.ini",
+                    "Thumbs.db"
+                ],
                 "uploadbandwidth": 50,
                 "use_upload_speed_limit": "unlimited",
                 "uploadlimit": 1000,
