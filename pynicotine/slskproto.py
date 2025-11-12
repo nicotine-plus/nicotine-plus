@@ -990,8 +990,13 @@ class NetworkThread(Thread):
         self._num_sockets -= 1
 
         conn.sock = None
-        conn.in_buffer.clear()
-        conn.out_buffer.clear()
+
+        try:
+            conn.in_buffer.clear()
+            conn.out_buffer.clear()
+
+        except BufferError as error:
+            log.add_conn("Failed to clear connection buffers: %s", error)
 
         if conn.__class__ is not PeerConnection:
             return
@@ -1321,12 +1326,12 @@ class NetworkThread(Thread):
         """Only permit sending login message when not authenticated."""
         return self._server_address is not None or msg.__class__ is Login
 
-    def _process_server_message(self, msg_type, msg_size, in_buffer, start_offset, end_offset):
+    def _process_server_message(self, msg_type, msg_size, msg_content):
 
         msg_class = SERVER_MESSAGE_CLASSES[msg_type]
         msg = self._unpack_network_message(
             msg_class,
-            memoryview(in_buffer)[start_offset:end_offset],
+            msg_content,
             msg_size,
             conn_type="server"
         )
@@ -1509,7 +1514,7 @@ class NetworkThread(Thread):
             # Unpack server messages
             if msg_type in SERVER_MESSAGE_CLASSES:
                 if not self._process_server_message(
-                    msg_type, msg_size, in_buffer, idx + msg_content_offset, idx + msg_size_total
+                    msg_type, msg_size, memoryview(in_buffer)[idx + msg_content_offset:idx + msg_size_total]
                 ):
                     self._manual_server_disconnect = True
                     self._close_connection(conn)
@@ -1621,12 +1626,12 @@ class NetworkThread(Thread):
 
     # Peer Init #
 
-    def _process_peer_init_message(self, conn, msg_type, msg_size, in_buffer, start_offset, end_offset):
+    def _process_peer_init_message(self, conn, msg_type, msg_size, msg_content):
 
         msg_class = PEER_INIT_MESSAGE_CLASSES[msg_type]
         msg = self._unpack_network_message(
             msg_class,
-            memoryview(in_buffer)[start_offset:end_offset],
+            msg_content,
             msg_size,
             conn_type="peer init",
             sock=conn.sock
@@ -1721,7 +1726,7 @@ class NetworkThread(Thread):
 
             if msg_type in PEER_INIT_MESSAGE_CLASSES:
                 init = self._process_peer_init_message(
-                    conn, msg_type, msg_size, in_buffer, idx + msg_content_offset, idx + msg_size_total)
+                    conn, msg_type, msg_size, memoryview(in_buffer)[idx + msg_content_offset:idx + msg_size_total])
             else:
                 msg_content = in_buffer[idx + msg_content_offset:idx + min(50, msg_size_total)]
                 log.add_debug("Peer init message type %s size %s contents %s unknown",
@@ -2046,19 +2051,14 @@ class NetworkThread(Thread):
 
     def _write_download_file(self, file_download, data, data_len):
 
-        try:
-            if not data:
-                return
+        if not data:
+            return
 
-            file_download.speed += data_len
-            self._total_download_bandwidth += data_len
+        file_download.speed += data_len
+        self._total_download_bandwidth += data_len
 
-            file_download.file.write(data)
-            file_download.leftbytes -= data_len
-
-        finally:
-            # Release memoryview in case of critical error
-            data = None
+        file_download.file.write(data)
+        file_download.leftbytes -= data_len
 
     def _process_download(self, conn, data, data_len):
 
@@ -2311,10 +2311,9 @@ class NetworkThread(Thread):
                          "accepting new connections", num_child_peers)
             self._send_message_to_server(AcceptChildren(False))
 
-    def _process_distrib_message(self, conn, msg_type, msg_size, in_buffer, start_offset, end_offset):
+    def _process_distrib_message(self, conn, msg_type, msg_size, msg_content):
 
         msg_class = DISTRIBUTED_MESSAGE_CLASSES[msg_type]
-        msg_content = memoryview(in_buffer)[start_offset:end_offset]
         msg = self._unpack_network_message(
             msg_class,
             msg_content,
@@ -2426,7 +2425,7 @@ class NetworkThread(Thread):
 
             if msg_type in DISTRIBUTED_MESSAGE_CLASSES:
                 if not self._process_distrib_message(
-                    conn, msg_type, msg_size, in_buffer, idx + msg_content_offset, idx + msg_size_total
+                    conn, msg_type, msg_size, memoryview(in_buffer)[idx + msg_content_offset:idx + msg_size_total]
                 ):
                     self._close_connection(conn)
                     return
