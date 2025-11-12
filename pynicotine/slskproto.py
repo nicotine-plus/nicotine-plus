@@ -2215,7 +2215,7 @@ class NetworkThread(Thread):
             username=conn.init.target_user
         )
 
-        if mssg is None:
+        if msg is None:
             # Ignore unknown message and keep connection open
             return True
 
