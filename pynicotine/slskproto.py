@@ -322,8 +322,9 @@ class NetworkThread(Thread):
     INDIRECT_REQUEST_TIMEOUT = 20
     CONNECTION_MAX_IDLE = 60
     CONNECTION_MAX_IDLE_GHOST = 10
-    CONNECTION_BACKLOG_LENGTH = 65535      # OS limit can be lower
-    MAX_INCOMING_MESSAGE_SIZE = 469762048  # 448 MiB, to leave headroom for large shares
+    CONNECTION_BACKLOG_LENGTH = 65535            # OS limit can be lower
+    MAX_INCOMING_MESSAGE_SIZE_LARGE = 469762048  # 448 MiB, to leave headroom for large shares
+    MAX_INCOMING_MESSAGE_SIZE_SMALL = 16384      # 16 KiB
     ALLOWED_PEER_CONN_TYPES = {
         ConnectionType.PEER,
         ConnectionType.FILE,
@@ -1368,9 +1369,9 @@ class NetworkThread(Thread):
         while buffer_len >= msg_content_offset:
             msg_size, msg_type = DOUBLE_UINT32_UNPACK(in_buffer, idx)
 
-            if msg_size > self.MAX_INCOMING_MESSAGE_SIZE:
+            if msg_size > self.MAX_INCOMING_MESSAGE_SIZE_LARGE:
                 log.add_conn("Received message larger than maximum size %s from server. "
-                             "Closing connection.", self.MAX_INCOMING_MESSAGE_SIZE)
+                             "Closing connection.", self.MAX_INCOMING_MESSAGE_SIZE_LARGE)
                 self._manual_server_disconnect = True
                 self._close_connection(conn)
                 return
@@ -1580,9 +1581,9 @@ class NetworkThread(Thread):
         while buffer_len >= msg_content_offset and init is None:
             msg_size, = UINT32_UNPACK(in_buffer, idx)
 
-            if msg_size > self.MAX_INCOMING_MESSAGE_SIZE:
+            if msg_size > self.MAX_INCOMING_MESSAGE_SIZE_SMALL:
                 log.add_conn("Received message larger than maximum size %s from peer %s. "
-                             "Closing connection.", (self.MAX_INCOMING_MESSAGE_SIZE, conn.addr))
+                             "Closing connection.", (self.MAX_INCOMING_MESSAGE_SIZE_SMALL, conn.addr))
                 break
 
             msg_size_total = msg_size + 4
@@ -1729,9 +1730,9 @@ class NetworkThread(Thread):
         while buffer_len >= msg_content_offset:
             msg_size, msg_type = DOUBLE_UINT32_UNPACK(in_buffer, idx)
 
-            if msg_size > self.MAX_INCOMING_MESSAGE_SIZE:
+            if msg_size > self.MAX_INCOMING_MESSAGE_SIZE_LARGE:
                 log.add_conn("Received message larger than maximum size %s from user %s. "
-                             "Closing connection.", (self.MAX_INCOMING_MESSAGE_SIZE, conn.init.target_user))
+                             "Closing connection.", (self.MAX_INCOMING_MESSAGE_SIZE_LARGE, conn.init.target_user))
                 self._close_connection(conn)
                 return
 
@@ -2297,9 +2298,9 @@ class NetworkThread(Thread):
         while buffer_len >= msg_content_offset:
             msg_size, = UINT32_UNPACK(in_buffer, idx)
 
-            if msg_size > self.MAX_INCOMING_MESSAGE_SIZE:
+            if msg_size > self.MAX_INCOMING_MESSAGE_SIZE_SMALL:
                 log.add_conn("Received message larger than maximum size %s from user %s. "
-                             "Closing connection.", (self.MAX_INCOMING_MESSAGE_SIZE, conn.init.target_user))
+                             "Closing connection.", (self.MAX_INCOMING_MESSAGE_SIZE_SMALL, conn.init.target_user))
                 self._close_connection(conn)
                 break
 
