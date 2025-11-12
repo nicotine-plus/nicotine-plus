@@ -1214,7 +1214,7 @@ class NetworkThread(Thread):
                 # 17 stands for 157 ns 13c, 19 for 157 ns 13e
                 # SoulseekQt seems to go higher than this
                 # We use a custom minor version for Nicotine+
-                2
+                3
             )
         )
 
