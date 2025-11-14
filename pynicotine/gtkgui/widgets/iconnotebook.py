@@ -693,8 +693,12 @@ class IconNotebook:
             self.switch_page_delay_timer = GLib.timeout_add(250, self.on_remove_tab_changed, new_page)
 
     def on_remove_tab_changed(self, new_page):
+
         self.switch_page_delay_timer = None
-        self.remove_tab_changed(new_page)
+
+        # Check if tab was removed before timer expired
+        if self.page_num(new_page) != -1:
+            self.remove_tab_changed(new_page)
 
     def on_reorder_page(self, _notebook, page, page_num):
         if self.reorder_page_callback is not None:
