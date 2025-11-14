@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14-dev',
+        python: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14',
                  'pypy-3.10', 'pypy-3.11']
     steps:
       - name: Checkout code
