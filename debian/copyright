@@ -8,7 +8,7 @@ Copyright: 2001-2003 PySoulSeek Contributors
            2001-2003 Alexander Kanavin
            2003-2004 Nicotine Contributors
            2003-2004 Hyriand <hyriand@thegraveyard.org>
-           2004-2024 Nicotine+ Contributors
+           2004-2025 Nicotine+ Contributors
            2006-2009 daelstorm <daelstorm@gmail.com>
            2007-2008 gallows <g4ll0ws@gmail.com>
            2008-2012 quinox <quinox@users.sf.net>
@@ -24,11 +24,11 @@ Copyright: 2001-2003 PySoulSeek Contributors
 License: GPL-3+
 
 Files: data/org.nicotine_plus.Nicotine.appdata.xml*
-Copyright: 2020-2024 Nicotine+ Contributors
+Copyright: 2020-2025 Nicotine+ Contributors
 License: CC0-1.0
 
 Files: po/*.po
-Copyright: 2003-2024 Nicotine+ Translators
+Copyright: 2003-2025 Nicotine+ Translators
 License: GPL-3+
 Comment: see AUTHORS.md for more information.
 
