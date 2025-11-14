@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-20 21:17+0300\n"
-"PO-Revision-Date: 2025-10-02 21:01+0000\n"
+"PO-Revision-Date: 2025-11-14 08:51+0000\n"
 "Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
@@ -14,9 +14,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= "
-"19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14-dev\n"
+"Plural-Forms: nplurals=3; plural="
+"(n % 10 == 0 || n % 100 >= 11 && n % 100 <= 19) ? 0 : "
+"((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
+"X-Generator: Weblate 5.15-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -785,17 +786,17 @@ msgid "Show Room Users"
 msgstr "Rādīt istabas lietotājus"
 
 #: pynicotine/gtkgui/chatrooms.py:1259
-#, fuzzy, python-format
+#, python-format
 msgid "R_oom Wall [%d]"
-msgstr "_Istabas siena"
+msgstr "_Istabas siena [%d]"
 
 #: pynicotine/gtkgui/chatrooms.py:1260
 #, python-format
 msgid "%(num)s Unread Message"
 msgid_plural "%(num)s Unread Messages"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%(num)s nelasītas ziņas"
+msgstr[1] "%(num)s nelasīta ziņa"
+msgstr[2] "%(num)s nelasītas ziņas"
 
 #: pynicotine/gtkgui/chatrooms.py:1264 pynicotine/gtkgui/ui/chatrooms.ui:209
 msgid "R_oom Wall"
@@ -840,9 +841,8 @@ msgid "Latest Message"
 msgstr "Jaunākā ziņa"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:76
-#, fuzzy
 msgid "_Open Chat"
-msgstr "_Atvērt sarakstu"
+msgstr "_Atvērt tērzēšanu"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:78
 #: pynicotine/gtkgui/privatechat.py:373
@@ -883,23 +883,21 @@ msgstr "Atla_sīt"
 
 #: pynicotine/gtkgui/dialogs/download.py:125
 #: pynicotine/gtkgui/dialogs/download.py:499
-#, fuzzy
 msgid "_Deselect"
-msgstr "Atla_sīt"
+msgstr "A_tcelt atlasi"
 
 #: pynicotine/gtkgui/dialogs/download.py:127
 #: pynicotine/gtkgui/dialogs/download.py:500
-#, fuzzy
 msgid "_Rename…"
-msgstr "Pārsaukt…"
+msgstr "Pā_rsaukt…"
 
 #: pynicotine/gtkgui/dialogs/download.py:293
-#, fuzzy, python-format
+#, python-format
 msgid "Download %(num_files)s file  /  %(total_size)s"
 msgid_plural "Download %(num_files)s files  /  %(total_size)s"
-msgstr[0] "Lejupielādēt %(num_files)s failu(s)  /  %(total_size)s"
-msgstr[1] "Lejupielādēt %(num_files)s failu(s)  /  %(total_size)s"
-msgstr[2] "Lejupielādēt %(num_files)s failu(s)  /  %(total_size)s"
+msgstr[0] "Lejupielādēt %(num_files)s failus  /  %(total_size)s"
+msgstr[1] "Lejupielādēt %(num_files)s failu  /  %(total_size)s"
+msgstr[2] "Lejupielādēt %(num_files)s failus  /  %(total_size)s"
 
 #: pynicotine/gtkgui/dialogs/download.py:382
 msgid "Failed to request folder contents."
@@ -957,9 +955,8 @@ msgstr "Mape"
 #: pynicotine/gtkgui/dialogs/preferences.py:1454
 #: pynicotine/gtkgui/dialogs/preferences.py:2578
 #: pynicotine/gtkgui/dialogs/wishlist.py:70
-#, fuzzy
 msgid "_Edit…"
-msgstr "Rediģēt…"
+msgstr "R_ediģēt…"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:128
 msgid "_Previous"
@@ -1601,14 +1598,13 @@ msgstr "Spraudnis"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2963
 #: pynicotine/gtkgui/dialogs/preferences.py:3017
-#, fuzzy
 msgid "_Enable"
-msgstr "Iespējots"
+msgstr "I_espējot"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2964
 #: pynicotine/gtkgui/dialogs/preferences.py:3018
 msgid "_Disable"
-msgstr ""
+msgstr "Atspē_jot"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2966
 #: pynicotine/gtkgui/dialogs/preferences.py:3021
@@ -1719,9 +1715,8 @@ msgid "Users"
 msgstr "Lietotāji"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:75
-#, fuzzy
 msgid "_Join Room"
-msgstr "Ienākt istabā"
+msgstr "_Ienākt istabā"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:78
 #: pynicotine/gtkgui/dialogs/roomlist.py:259
@@ -1773,19 +1768,16 @@ msgstr "Iziet"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:44
 #: pynicotine/gtkgui/dialogs/shortcuts.py:99
-#, fuzzy
 msgid "View"
-msgstr "Ska_ts"
+msgstr "Skatīt"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:45
-#, fuzzy
 msgid "Next Widget"
-msgstr "Nākamais fails"
+msgstr "Nākamais logrīks"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:46
-#, fuzzy
 msgid "Previous Widget"
-msgstr "Iepriekšējais fails"
+msgstr "Iepriekšējais logrīks"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:47
 #: pynicotine/gtkgui/ui/mainwindow.ui:31
@@ -1793,9 +1785,8 @@ msgid "Main Menu"
 msgstr "Galvenā izvēlne"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:48
-#, fuzzy
 msgid "Context Menu"
-msgstr "Atvērt kontekstizvēlni"
+msgstr "Kontekstizvēlne"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:49
 msgid "Change Main Tab"
@@ -1803,11 +1794,11 @@ msgstr "Mainīt galveno cilni"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:50
 msgid "Focus Top Bar"
-msgstr ""
+msgstr "Fokusēt augšējo joslu"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:51
 msgid "Focus Next View"
-msgstr ""
+msgstr "Fokusēt nākamo skatu"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:52
 #: pynicotine/gtkgui/ui/mainwindow.ui:1892
@@ -1820,19 +1811,16 @@ msgid "Secondary Tabs"
 msgstr "Sekundārās Cilnes"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:55
-#, fuzzy
 msgid "Previous Tab"
-msgstr "_Iepriekšējais"
+msgstr "Iepriekšējā cilne"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:56
-#, fuzzy
 msgid "Next Tab"
-msgstr "_Nākamais"
+msgstr "Nākamā cilne"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:57
-#, fuzzy
 msgid "Reopen Tab"
-msgstr "_Atkārtoti atvērt aizvērto cilni"
+msgstr "Atkārtoti atvērt cilni"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:58
 #: pynicotine/gtkgui/widgets/iconnotebook.py:107
@@ -1846,9 +1834,8 @@ msgid "Lists"
 msgstr "Saraksti"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:61
-#, fuzzy
 msgid "Copy Cell"
-msgstr "Kopēt visu"
+msgstr "Kopēt šūnu"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:62
 #: pynicotine/gtkgui/dialogs/shortcuts.py:71
@@ -1864,9 +1851,8 @@ msgid "Find"
 msgstr "Atrast"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:64
-#, fuzzy
 msgid "Remove Row"
-msgstr "Noņemt"
+msgstr "Noņemt rindu"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:66
 #: pynicotine/gtkgui/dialogs/shortcuts.py:103
@@ -1887,20 +1873,17 @@ msgstr "Ievietot emocijzīmes"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:73
 #: pynicotine/gtkgui/dialogs/shortcuts.py:82
-#, fuzzy
 msgid "Next Match"
-msgstr "Atrast nākamo atbilstību"
+msgstr "Nākamā atbilstība"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:74
 #: pynicotine/gtkgui/dialogs/shortcuts.py:83
-#, fuzzy
 msgid "Previous Match"
-msgstr "Atrast iepriekšējo atbilstību"
+msgstr "Iepriekšējā atbilstība"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:77
-#, fuzzy
 msgid "Transfer To"
-msgstr "Pārsūtījumi fonts:"
+msgstr "Pārsūtīt uz"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:79
 msgid "Save List to Disk"
@@ -1930,17 +1913,14 @@ msgid "File Transfers"
 msgstr "Failu pārsūtījumi"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:92
-#, fuzzy
 msgid "Resume Transfer"
-msgstr "Atsākt / Atkārtot pārsūtīšanu"
+msgstr "Atsākt pārsūtīšanu"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:93
-#, fuzzy
 msgid "Abort Transfer"
-msgstr "Pauzēt / Pārtraukt pārsūtīšanu"
+msgstr "Pārtraukt pārsūtīšanu"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:100
-#, fuzzy
 msgid "Main Tabs"
 msgstr "Galvenās cilnes"
 
@@ -2031,9 +2011,9 @@ msgid "Everything…"
 msgstr "Viss…"
 
 #: pynicotine/gtkgui/downloads.py:121
-#, fuzzy, python-format
+#, python-format
 msgid "Downloading: %(speed)s ( %(active_users)s )"
-msgstr "Lejupielāde (ātrums / aktīvie lietotāji)"
+msgstr "Lejupielādē: %(speed)s ( %(active_users)s )"
 
 #: pynicotine/gtkgui/downloads.py:131
 msgid "Clear Queued Downloads"
@@ -2052,15 +2032,15 @@ msgid "Do you really want to clear all downloads?"
 msgstr "Vai tiešām vēlaties notīrīt visas lejupielādes?"
 
 #: pynicotine/gtkgui/downloads.py:163
-#, fuzzy, python-format
+#, python-format
 msgid "Download %(num)s File?"
 msgid_plural "Download %(num)s Files?"
-msgstr[0] "Vai lejupielādēt %(num)i failus?"
-msgstr[1] "Vai lejupielādēt %(num)i failus?"
-msgstr[2] "Vai lejupielādēt %(num)i failus?"
+msgstr[0] "Vai lejupielādēt %(num)s failus?"
+msgstr[1] "Vai lejupielādēt %(num)s failu?"
+msgstr[2] "Vai lejupielādēt %(num)s failus?"
 
 #: pynicotine/gtkgui/downloads.py:168
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Do you really want to download %(num)s file from %(user)s's folder "
 "%(folder)s?"
@@ -2068,11 +2048,11 @@ msgid_plural ""
 "Do you really want to download %(num)s files from %(user)s's folder "
 "%(folder)s?"
 msgstr[0] ""
-"Vai tiešām vēlaties lejupielādēt %(num)i failus no %(user)s mapes %(folder)s?"
+"Vai tiešām vēlaties lejupielādēt %(num)s failus no %(user)s mapes %(folder)s?"
 msgstr[1] ""
-"Vai tiešām vēlaties lejupielādēt %(num)i failus no %(user)s mapes %(folder)s?"
+"Vai tiešām vēlaties lejupielādēt %(num)s failu no %(user)s mapes %(folder)s?"
 msgstr[2] ""
-"Vai tiešām vēlaties lejupielādēt %(num)i failus no %(user)s mapes %(folder)s?"
+"Vai tiešām vēlaties lejupielādēt %(num)s failus no %(user)s mapes %(folder)s?"
 
 #: pynicotine/gtkgui/downloads.py:174
 msgid "_Download Folder"
@@ -2399,12 +2379,12 @@ msgid "_Result Filters"
 msgstr "_Rezultātu filtri"
 
 #: pynicotine/gtkgui/search.py:1283
-#, fuzzy, python-format
+#, python-format
 msgid "%(num)s Active Filter"
 msgid_plural "%(num)s Active Filters"
-msgstr[0] "Notīrīt Aktīvos Filtrus"
-msgstr[1] "Notīrīt Aktīvos Filtrus"
-msgstr[2] "Notīrīt Aktīvos Filtrus"
+msgstr[0] "%(num)s aktīvie filtri"
+msgstr[1] "%(num)s aktīvais filtrs"
+msgstr[2] "%(num)s aktīvie filtri"
 
 #: pynicotine/gtkgui/search.py:1336
 msgid "Add Wi_sh"
@@ -2428,34 +2408,28 @@ msgid "Results"
 msgstr "Rezultāti"
 
 #: pynicotine/gtkgui/search.py:1529
-#, fuzzy
 msgid "Download _File"
-msgstr "Lejupielādēt failus"
+msgstr "Lejupielādēt _failu"
 
 #: pynicotine/gtkgui/search.py:1529
-#, fuzzy
 msgid "Download _Files"
-msgstr "Lejupielādēt failus"
+msgstr "Lejupielādēt _failus"
 
 #: pynicotine/gtkgui/search.py:1533 pynicotine/gtkgui/userbrowse.py:1140
-#, fuzzy
 msgid "Download File _To…"
-msgstr "Lejupielādēt failu(s) _uz…"
+msgstr "Lejupielādē_t failu uz…"
 
 #: pynicotine/gtkgui/search.py:1533 pynicotine/gtkgui/userbrowse.py:1140
-#, fuzzy
 msgid "Download Files _To…"
-msgstr "Lejupielādēt failu(s) _uz…"
+msgstr "Lejupielādē_t failus uz…"
 
 #: pynicotine/gtkgui/search.py:1545
-#, fuzzy
 msgid "_Download Folder…"
-msgstr "Lejupielā_dēt mapi(es)…"
+msgstr "Lejupielā_dēt mapi…"
 
 #: pynicotine/gtkgui/search.py:1545
-#, fuzzy
 msgid "_Download Folders…"
-msgstr "Lejupielā_dēt mapi(es)…"
+msgstr "Lejupielā_dēt mapes…"
 
 #: pynicotine/gtkgui/search.py:1626 pynicotine/gtkgui/userbrowse.py:1203
 msgid "Select Destination Folder for Files"
@@ -2562,19 +2536,17 @@ msgid "_Open File"
 msgstr "_Atvērt failu"
 
 #: pynicotine/gtkgui/transfers.py:1080
-#, fuzzy
 msgid "_Open Files"
-msgstr "_Atvērt failu"
+msgstr "_Atvērt failus"
 
 #: pynicotine/gtkgui/transfers.py:1089
 #, python-format
 msgid "%(username)s (%(status)s)"
-msgstr ""
+msgstr "%(username)s (%(status)s)"
 
 #: pynicotine/gtkgui/transfers.py:1089
-#, fuzzy
 msgid "Buddy"
-msgstr "Pievienot _draugu"
+msgstr "Draugs"
 
 #: pynicotine/gtkgui/uploads.py:35
 msgid "_Abort"
@@ -2597,9 +2569,9 @@ msgid "User Logged Off"
 msgstr "Lietotājs izrakstījies"
 
 #: pynicotine/gtkgui/uploads.py:130
-#, fuzzy, python-format
+#, python-format
 msgid "Uploading: %(speed)s ( %(active_users)s )"
-msgstr "Augšupielāde (ātrums / aktīvie lietotāji)"
+msgstr "Augšupielādē: %(speed)s ( %(active_users)s )"
 
 #: pynicotine/gtkgui/uploads.py:147
 msgid "Quitting…"
@@ -2679,45 +2651,40 @@ msgid "Upload Folder & Subfolders…"
 msgstr "Augšupielādēt mapi un apakšmapes…"
 
 #: pynicotine/gtkgui/userbrowse.py:925
-#, fuzzy
 msgid "Upload Folders & Subfolders…"
-msgstr "Augšupielādēt mapi un apakšmapes…"
+msgstr "Augšupielādēt mapes un apakšmapes…"
 
 #: pynicotine/gtkgui/userbrowse.py:931
 msgid "_Download Folder & Subfolders"
 msgstr "_Lejupielādēt mapi un apakšmapes"
 
 #: pynicotine/gtkgui/userbrowse.py:931
-#, fuzzy
 msgid "_Download Folders & Subfolders"
-msgstr "_Lejupielādēt mapi un apakšmapes"
+msgstr "_Lejupielādēt mapes un apakšmapes"
 
 #: pynicotine/gtkgui/userbrowse.py:935
 msgid "Download Folder & Subfolders _To…"
 msgstr "Lejupielādēt mapi un apakšmapes _uz…"
 
 #: pynicotine/gtkgui/userbrowse.py:935
-#, fuzzy
 msgid "Download Folders & Subfolders _To…"
-msgstr "Lejupielādēt mapi un apakšmapes _uz…"
+msgstr "Lejupielādē_t mapes un apakšmapes uz…"
 
 #: pynicotine/gtkgui/userbrowse.py:1014
 msgid "Upload Folder (with Subfolders) To User"
 msgstr "Augšupielādēt mapi (ar apakšmapēm) lietotājam"
 
 #: pynicotine/gtkgui/userbrowse.py:1015
-#, fuzzy
 msgid "Upload Folders (with Subfolders) To User"
-msgstr "Augšupielādēt mapi (ar apakšmapēm) lietotājam"
+msgstr "Augšupielādēt mapes (ar apakšmapēm) lietotājam"
 
 #: pynicotine/gtkgui/userbrowse.py:1017
 msgid "Upload Folder To User"
 msgstr "Augšupielādēt mapi lietotājam"
 
 #: pynicotine/gtkgui/userbrowse.py:1017
-#, fuzzy
 msgid "Upload Folders To User"
-msgstr "Augšupielādēt mapi lietotājam"
+msgstr "Augšupielādēt mapes lietotājam"
 
 #: pynicotine/gtkgui/userbrowse.py:1022 pynicotine/gtkgui/userbrowse.py:1229
 msgid "Enter the name of the user you want to upload to:"
@@ -2728,29 +2695,24 @@ msgid "_Upload"
 msgstr "_Augšupielāde"
 
 #: pynicotine/gtkgui/userbrowse.py:1130
-#, fuzzy
 msgid "Up_load File…"
-msgstr "Augšupie_lādēt failu(s)…"
+msgstr "Augšupie_lādēt failu…"
 
 #: pynicotine/gtkgui/userbrowse.py:1130
-#, fuzzy
 msgid "Up_load Files…"
-msgstr "Augšupie_lādēt failu(s)…"
+msgstr "Augšupie_lādēt failus…"
 
 #: pynicotine/gtkgui/userbrowse.py:1136
-#, fuzzy
 msgid "_Download File"
-msgstr "Lejupielādēt failus"
+msgstr "Lejupielā_dēt failu"
 
 #: pynicotine/gtkgui/userbrowse.py:1136
-#, fuzzy
 msgid "_Download Files"
-msgstr "Lejupielādēt failus"
+msgstr "Lejupielā_dēt failus"
 
 #: pynicotine/gtkgui/userbrowse.py:1228
-#, fuzzy
 msgid "Upload File To User"
-msgstr "Augšupielādējiet failu(s) lietotājam"
+msgstr "Augšupielādēt failu lietotājam"
 
 #: pynicotine/gtkgui/userinfo.py:367
 msgid "_Copy Picture"
@@ -2761,9 +2723,8 @@ msgid "_Save Picture"
 msgstr "_Saglabāt attēlu"
 
 #: pynicotine/gtkgui/userinfo.py:370
-#, fuzzy
 msgid "_Hide Picture"
-msgstr "_Saglabāt attēlu"
+msgstr "Slē_pt attēlu"
 
 #: pynicotine/gtkgui/userinfo.py:463
 #, python-format
@@ -2771,14 +2732,12 @@ msgid "Failed to load picture for user %(user)s: %(error)s"
 msgstr "Neizdevās ielādēt attēlu lietotājam %(user)s: %(error)s"
 
 #: pynicotine/gtkgui/userinfo.py:487
-#, fuzzy
 msgid "Hide Pi_cture"
-msgstr "_Saglabāt attēlu"
+msgstr "Slēpt attē_lu"
 
 #: pynicotine/gtkgui/userinfo.py:499 pynicotine/gtkgui/ui/userinfo.ui:704
-#, fuzzy
 msgid "Show Pi_cture"
-msgstr "_Kopēt attēlu"
+msgstr "Rādīt attē_lu"
 
 #: pynicotine/gtkgui/userinfo.py:585
 msgid "Remove _Buddy"
@@ -2888,12 +2847,12 @@ msgid "Do you really want to close all tabs?"
 msgstr "Vai tiešām vēlaties aizvērt visas cilnes?"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:460
-#, fuzzy, python-format
+#, python-format
 msgid "%s Unread Tab"
 msgid_plural "%s Unread Tabs"
-msgstr[0] "%i nelasīta(s) cilne(s)"
-msgstr[1] "%i nelasīta(s) cilne(s)"
-msgstr[2] "%i nelasīta(s) cilne(s)"
+msgstr[0] "%s nelasītas cilnes"
+msgstr[1] "%s nelasīta cilne"
+msgstr[2] "%s nelasītas cilnes"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:463
 msgid "All Tabs"
@@ -2905,12 +2864,12 @@ msgid "Re_open Closed Tab"
 msgstr "_Atkārtoti atvērt aizvērto cilni"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:410
-#, fuzzy, python-format
+#, python-format
 msgid "%(num)s File Selected"
 msgid_plural "%(num)s Files Selected"
-msgstr[0] "Atlasīts(i) %s fails(i)"
-msgstr[1] "Atlasīts(i) %s fails(i)"
-msgstr[2] "Atlasīts(i) %s fails(i)"
+msgstr[0] "Atlasīti %(num)s faili"
+msgstr[1] "Atlasīts %(num)s fails"
+msgstr[2] "Atlasīti %(num)s faili"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:446
 #: pynicotine/gtkgui/ui/userinfo.ui:538
@@ -4232,7 +4191,7 @@ msgstr "Aizvērt privāto tērzēšanu"
 
 #: pynicotine/plugins/core_commands/__init__.py:119
 msgid "Send client-to-client protocol query"
-msgstr ""
+msgstr "Nosūtīt klientu-klientu protokola pieprasījumu"
 
 #: pynicotine/plugins/core_commands/__init__.py:128
 msgid "Send private message to user"
@@ -4307,20 +4266,20 @@ msgid "Search a user's shared files"
 msgstr "Meklēt lietotāja koplietojamos failos"
 
 #: pynicotine/plugins/core_commands/__init__.py:283
-#, fuzzy, python-format
+#, python-format
 msgid "Listing %(num)s available command:"
 msgid_plural "Listing %(num)s available commands:"
-msgstr[0] "Uzskaita %(num)i pieejamās komandas:"
-msgstr[1] "Uzskaita %(num)i pieejamās komandas:"
-msgstr[2] "Uzskaita %(num)i pieejamās komandas:"
+msgstr[0] "%(num)s pieejamo komandu saraksts:"
+msgstr[1] "%(num)s pieejamās komandas saraksts:"
+msgstr[2] "%(num)s pieejamo komandu saraksts:"
 
 #: pynicotine/plugins/core_commands/__init__.py:289
-#, fuzzy, python-format
+#, python-format
 msgid "Listing %(num)s available command matching \"%(query)s\":"
 msgid_plural "Listing %(num)s available commands matching \"%(query)s\":"
-msgstr[0] "Uzskaita %(num)i pieejamās komandas, kas atbilst \"%(query)s\":"
-msgstr[1] "Uzskaita %(num)i pieejamās komandas, kas atbilst \"%(query)s\":"
-msgstr[2] "Uzskaita %(num)i pieejamās komandas, kas atbilst \"%(query)s\":"
+msgstr[0] "%(num)s pieejamās komandas, kas atbilst \"%(query)s\":"
+msgstr[1] "%(num)s pieejamā komanda, kas atbilst \"%(query)s\":"
+msgstr[2] "%(num)s pieejamās komandas, kas atbilst \"%(query)s\":"
 
 #: pynicotine/plugins/core_commands/__init__.py:305
 #, python-format
@@ -4509,9 +4468,9 @@ msgid "Searching for wishlist item \"%s\""
 msgstr "Meklē vēlmju saraksta vienumu \"%s\""
 
 #: pynicotine/search.py:412
-#, fuzzy, python-format
+#, python-format
 msgid "Wishlist wait period set to %(duration)s"
-msgstr "Vēlmju saraksta gaidīšanas periods ir iestatīts uz %s sekundēm"
+msgstr "Vēlmju saraksta gaidīšanas periods ir iestatīts uz %(duration)s"
 
 #: pynicotine/search.py:428
 #, python-format
@@ -4519,17 +4478,19 @@ msgid "Server provided %(num_phrases)s excluded search phrase: %(phrases)s"
 msgid_plural ""
 "Server provided %(num_phrases)s excluded search phrases: %(phrases)s"
 msgstr[0] ""
-msgstr[1] ""
+"Serveris sniedza %(num_phrases)s izslēgtas meklēšanas frāzes: %(phrases)s"
+msgstr[1] "Serveris sniedza %(num_phrases)s izslēgtu meklēšanas frāzi: %(phrases)s"
 msgstr[2] ""
+"Serveris sniedza %(num_phrases)s izslēgtas meklēšanas frāzes: %(phrases)s"
 
 #: pynicotine/search.py:747
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)s result"
 msgid_plural ""
 "User %(user)s is searching for \"%(query)s\", found %(num)s results"
-msgstr[0] "Lietotājs %(user)s meklē \"%(query)s\", atrada %(num)i rezultātus"
-msgstr[1] "Lietotājs %(user)s meklē \"%(query)s\", atrada %(num)i rezultātus"
-msgstr[2] "Lietotājs %(user)s meklē \"%(query)s\", atrada %(num)i rezultātus"
+msgstr[0] "Lietotājs %(user)s meklē \"%(query)s\", atrada %(num)s rezultātus"
+msgstr[1] "Lietotājs %(user)s meklē \"%(query)s\", atrada %(num)s rezultātu"
+msgstr[2] "Lietotājs %(user)s meklē \"%(query)s\", atrada %(num)s rezultātus"
 
 #: pynicotine/shares.py:297
 msgid "Rebuilding shares…"
@@ -4540,11 +4501,11 @@ msgid "Rescanning shares…"
 msgstr "Pārskenē koplietojamos failus…"
 
 #: pynicotine/shares.py:321
-#, fuzzy, python-format
+#, python-format
 msgid "Rescan complete: %(num)s folder found"
 msgid_plural "Rescan complete: %(num)s folders found"
 msgstr[0] "Pārskenēšana pabeigta: atrastas %(num)s mapes"
-msgstr[1] "Pārskenēšana pabeigta: atrastas %(num)s mapes"
+msgstr[1] "Pārskenēšana pabeigta: atrasta %(num)s mape"
 msgstr[2] "Pārskenēšana pabeigta: atrastas %(num)s mapes"
 
 #: pynicotine/shares.py:334
@@ -4616,9 +4577,9 @@ msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Nevar izveidot savienojumu ar serveri %(host)s:%(port)s: %(error)s"
 
 #: pynicotine/slskproto.py:1091
-#, fuzzy, python-format
+#, python-format
 msgid "Reconnecting to server in %(duration)s"
-msgstr "Atkārtota savienojuma izveide ar serveri pēc %s sekundēm"
+msgstr "Atkārtota savienojuma izveide ar serveri pēc %(duration)s"
 
 #: pynicotine/slskproto.py:1167
 #, python-format
@@ -4767,9 +4728,9 @@ msgstr ""
 "lejupielādes tiks rindotas pirms nepriviliģēto lietotāju lejupielādēm."
 
 #: pynicotine/users.py:426
-#, fuzzy, python-format
+#, python-format
 msgid "%(duration)s of Soulseek privileges left"
-msgstr "Iegūt Soulseek privilēģijas…"
+msgstr "Atlikušais Soulseek privilēģiju laiks: %(duration)s"
 
 #: pynicotine/users.py:438
 msgid "Your password has been changed"
@@ -4783,33 +4744,33 @@ msgstr "Parole nomainīta"
 #, python-format
 msgid "%(num)s second"
 msgid_plural "%(num)s seconds"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%(num)s sekundes"
+msgstr[1] "%(num)s sekunde"
+msgstr[2] "%(num)s sekundes"
 
 #: pynicotine/utils.py:203
 #, python-format
 msgid "%(num)s minute"
 msgid_plural "%(num)s minutes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%(num)s minūtes"
+msgstr[1] "%(num)s minūte"
+msgstr[2] "%(num)s minūtes"
 
 #: pynicotine/utils.py:208
 #, python-format
 msgid "%(num)s hour"
 msgid_plural "%(num)s hours"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%(num)s stundas"
+msgstr[1] "%(num)s stunda"
+msgstr[2] "%(num)s stundas"
 
 #: pynicotine/utils.py:212
 #, python-format
 msgid "%(num)s day"
 msgid_plural "%(num)s days"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%(num)s dienas"
+msgstr[1] "%(num)s diena"
+msgstr[2] "%(num)s dienas"
 
 #: pynicotine/utils.py:584
 #, python-format
@@ -4935,7 +4896,6 @@ msgstr "Pārsaukt…"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:230
 #: pynicotine/gtkgui/ui/dialogs/download.ui:246
-#, fuzzy
 msgid "Deselect All"
 msgstr "Atcelt visu atlasi"
 
@@ -6180,9 +6140,8 @@ msgstr "Uzticamo Draugu koplietojumi"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:238
 #: pynicotine/gtkgui/ui/settings/shares.ui:254
-#, fuzzy
 msgid "File Manager"
-msgstr "Atvērt failu pārvaldniekā"
+msgstr "Failu pārvaldnieks"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:70
 msgid "Automatically remove finished and cancelled uploads from list"
