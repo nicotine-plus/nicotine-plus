@@ -8,6 +8,7 @@
 import gc
 import mmap
 import os
+import re
 import stat
 import sys
 import time
@@ -243,12 +244,11 @@ class Scanner:
                  "rescan", "rebuild", "reveal_buddy_shares", "reveal_trusted_shares",
                  "files", "streams", "mtimes", "word_index", "processed_share_names",
                  "processed_share_paths", "current_file_index", "current_folder_count",
-                 "lowercase_paths")
-
-    HIDDEN_FOLDER_NAMES = {"@eaDir", "#recycle", "#snapshot"}
+                 "lowercase_paths", "share_filters", "file_filter_regex", "folder_filter_regex")
 
     def __init__(self, writer, share_groups, share_db_paths, init=False, rescan=True,
-                 rebuild=False, reveal_buddy_shares=False, reveal_trusted_shares=False):
+                 rebuild=False, reveal_buddy_shares=False, reveal_trusted_shares=False,
+                 share_filters=None):
 
         self.writer = writer
         self.share_groups = share_groups
@@ -259,6 +259,7 @@ class Scanner:
         self.rebuild = rebuild
         self.reveal_buddy_shares = reveal_buddy_shares
         self.reveal_trusted_shares = reveal_trusted_shares
+        self.share_filters = share_filters
         self.files = {}
         self.streams = {}
         self.mtimes = {}
@@ -268,6 +269,8 @@ class Scanner:
         self.processed_share_paths = set()
         self.current_file_index = 0
         self.current_folder_count = 0
+        self.file_filter_regex = None
+        self.folder_filter_regex = None
 
     def run(self):
 
@@ -296,6 +299,7 @@ class Scanner:
                 self.writer.send(
                     ScannerLogMessage(_("Rebuilding shares…") if self.rebuild else _("Rescanning shares…"))
                 )
+                self.load_filters()
 
                 # Clear previous word index to prevent inconsistent state if the scanner fails
                 self.set_shares(word_index={})
@@ -344,6 +348,29 @@ class Scanner:
         finally:
             self.writer.close()
             Shares.close_shares(self.share_dbs)
+
+    def load_filters(self):
+
+        if not self.share_filters:
+            return
+
+        file_filters = []
+        folder_filters = []
+
+        for sfilter in sorted(self.share_filters):
+            escaped_filter = re.escape(sfilter).replace("\\*", ".*")
+
+            if escaped_filter.endswith(("\\", "\\.*")):
+                folder_filters.append(escaped_filter)
+                continue
+
+            file_filters.append(escaped_filter)
+
+        if file_filters:
+            self.file_filter_regex = re.compile("(\\\\(" + "|".join(file_filters) + ")$)", flags=re.IGNORECASE)
+
+        if folder_filters:
+            self.folder_filter_regex = re.compile("(\\\\(" + "|".join(folder_filters) + ")$)", flags=re.IGNORECASE)
 
     def create_compressed_shares_message(self, permission_level):
         """Create a message that will later contain a compressed list of our
@@ -492,17 +519,7 @@ class Scanner:
 
     @classmethod
     def is_hidden(cls, folder, filename=None, entry=None):
-        """Stop sharing any dot/hidden folders/files."""
-
-        if filename is None:
-            last_folder = os.path.basename(folder)
-
-            if last_folder.startswith(".") or last_folder in cls.HIDDEN_FOLDER_NAMES:
-                return True
-
-        # If we're asked to check a file, we exclude it if it starts with a dot
-        if filename is not None and filename.startswith("."):
-            return True
+        """Stop sharing any hidden folders/files."""
 
         # Check if file is marked as hidden on Windows
         if sys.platform == "win32":
@@ -535,9 +552,13 @@ class Scanner:
                 # Sharing a folder twice, no go
                 continue
 
+            if self.folder_filter_regex and self.folder_filter_regex.search(f"\\{virtual_folder_path}\\") is not None:
+                continue
+
             self.writer.send(self.current_folder_count)
 
             file_list = []
+            has_filtered_files = False
             virtual_folder_path_lower = virtual_folder_path.lower()
             virtual_folder_words = virtual_folder_path_lower.translate(TRANSLATE_PUNCTUATION).split()
 
@@ -571,9 +592,15 @@ class Scanner:
                             if self.is_hidden(folder_path, basename, entry):
                                 continue
 
+                            virtual_file_path = f"{virtual_folder_path}\\{basename_escaped}"
+
+                            if (self.file_filter_regex
+                                    and self.file_filter_regex.search("\\" + virtual_file_path) is not None):
+                                has_filtered_files = True
+                                continue
+
                             file_stat = entry.stat()
                             self.mtimes[path] = file_mtime = file_stat.st_mtime
-                            virtual_file_path = f"{virtual_folder_path}\\{basename_escaped}"
 
                             if not self.rebuild and file_mtime == old_mtimes.get(path) and path in old_files:
                                 full_path_file_data = old_files[path]
@@ -614,7 +641,9 @@ class Scanner:
                     )
                 )
 
-            self.streams[virtual_folder_path] = self.get_folder_stream(file_list)
+            if not has_filtered_files or file_list:
+                self.streams[virtual_folder_path] = self.get_folder_stream(file_list)
+
             self.current_folder_count += 1
 
     def get_audio_tag(self, file_path, size):
@@ -1165,7 +1194,8 @@ class Shares:
             rescan,
             rebuild,
             reveal_buddy_shares=config.sections["transfers"]["reveal_buddy_shares"],
-            reveal_trusted_shares=config.sections["transfers"]["reveal_trusted_shares"]
+            reveal_trusted_shares=config.sections["transfers"]["reveal_trusted_shares"],
+            share_filters=config.sections["transfers"]["share_filters"]
         )
         scanner = context.Process(target=scanner_obj.run, daemon=True)
         return scanner, reader
