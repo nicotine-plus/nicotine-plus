@@ -45,8 +45,8 @@ def check_arguments():
         help=_("use non-default configuration file")
     )
     parser.add_argument(
-        "-u", "--user-data", metavar=_("dir"),
-        help=_("alternative directory for user data and plugins")
+        "-u", "--user-data", metavar=_("folder"),
+        help=_("alternative folder for user data and plugins")
     )
     parser.add_argument(
         "-s", "--hidden", action="store_true",

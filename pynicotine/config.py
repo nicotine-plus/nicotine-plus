@@ -114,7 +114,7 @@ class Config:
         except OSError as error:
             from pynicotine.logfacility import log
 
-            log.add(_("Can't create directory '%(path)s', reported error: %(error)s"),
+            log.add(_("Cannot create folder %(path)s: %(error)s"),
                     {"path": folder_path, "error": error})
             return False
 
@@ -133,7 +133,7 @@ class Config:
         except OSError as error:
             from pynicotine.logfacility import log
 
-            log.add(_("Can't create directory '%(path)s', reported error: %(error)s"),
+            log.add(_("Cannot create folder %(path)s: %(error)s"),
                     {"path": self.data_folder_path, "error": error})
 
     def load_config(self, isolated_mode=False):

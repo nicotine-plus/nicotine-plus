@@ -166,8 +166,8 @@ class UserBrowse:
                 os.makedirs(shares_folder_encoded)
 
         except Exception as error:
-            log.add(_("Can't create directory '%(folder)s', reported error: %(error)s"),
-                    {"folder": shares_folder, "error": error})
+            log.add(_("Cannot create folder %(path)s: %(error)s"),
+                    {"path": shares_folder, "error": error})
             return None
 
         return shares_folder
@@ -276,7 +276,7 @@ class UserBrowse:
                     {"user": username, "dir": folder_path})
 
         except Exception as error:
-            log.add(_("Can't save shares, '%(user)s', reported error: %(error)s"), {"user": username, "error": error})
+            log.add(_("Cannot save shares for user %(user)s: %(error)s"), {"user": username, "error": error})
 
     def download_file(self, username, folder_path, file_data, download_folder_path=None):
 
