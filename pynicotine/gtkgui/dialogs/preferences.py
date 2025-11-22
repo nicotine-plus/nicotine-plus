@@ -585,10 +585,10 @@ class SharesPage:
         _("Buddies"): PermissionLevel.BUDDY,
         _("Trusted buddies"): PermissionLevel.TRUSTED
     }
-    FILTER_LEVELS = (
-        _("File-level"),
-        _("Folder-level")
-    )
+    FILTER_LEVELS = {
+        _("Applies to files"): _("Files"),
+        _("Applies to folders"): _("Folders")
+    }
 
     def __init__(self, application):
 
@@ -678,9 +678,9 @@ class SharesPage:
                     "expand_column": True,
                     "default_sort_type": "ascending"
                 },
-                "type": {
+                "applies_to": {
                     "column_type": "text",
-                    "title": _("Type"),
+                    "title": _("Applies To"),
                     "width": 0
                 }
             }
@@ -751,8 +751,8 @@ class SharesPage:
                 [virtual_name, folder_path, _("Trusted")], select_row=False)
 
         for sfilter in self.share_filters:
-            filter_type = _("Folder-level") if sfilter.endswith("\\") else _("File-level")
-            self.filter_list_view.add_row([sfilter, filter_type], select_row=False)
+            applies_to = _("Folders") if sfilter.endswith("\\") else _("Files")
+            self.filter_list_view.add_row([sfilter, applies_to], select_row=False)
 
         self.shares_list_view.unfreeze()
         self.filter_list_view.unfreeze()
@@ -878,11 +878,11 @@ class SharesPage:
     def on_select_row(self, _list_view, iterator):
         self.file_manager_button.set_sensitive(iterator is not None)
 
-    def process_filter(self, sfilter, filter_type):
+    def process_filter(self, sfilter, applies_to):
 
         sfilter = sfilter.replace("/", "\\").rstrip("\\")
 
-        if filter_type == _("Folder-level"):
+        if applies_to == _("Folders"):
             suffix = "\\*"
             if sfilter.endswith(suffix):
                 sfilter = sfilter[:-len(suffix)]
@@ -893,15 +893,15 @@ class SharesPage:
     def on_add_filter_response(self, dialog, _response_id, _data):
 
         sfilter = dialog.get_entry_value()
-        filter_type = dialog.get_second_entry_value()
-        sfilter = self.process_filter(sfilter, filter_type)
+        applies_to = self.FILTER_LEVELS[dialog.get_second_entry_value()]
+        sfilter = self.process_filter(sfilter, applies_to)
         iterator = self.filter_list_view.iterators.get(sfilter)
 
         if iterator is not None:
             return
 
         self.share_filters.append(sfilter)
-        self.filter_list_view.add_row([sfilter, filter_type])
+        self.filter_list_view.add_row([sfilter, applies_to])
 
     def on_add_filter(self, *_args):
 
@@ -920,8 +920,8 @@ class SharesPage:
     def on_edit_filter_response(self, dialog, _response_id, iterator):
 
         new_sfilter = dialog.get_entry_value()
-        new_filter_type = dialog.get_second_entry_value()
-        new_sfilter = self.process_filter(new_sfilter, new_filter_type)
+        new_applies_to = self.FILTER_LEVELS[dialog.get_second_entry_value()]
+        new_sfilter = self.process_filter(new_sfilter, new_applies_to)
 
         sfilter = self.filter_list_view.get_row_value(iterator, "filter")
         orig_iterator = self.filter_list_view.iterators[sfilter]
@@ -930,19 +930,19 @@ class SharesPage:
         self.filter_list_view.remove_row(orig_iterator)
 
         self.share_filters.append(new_sfilter)
-        self.filter_list_view.add_row([new_sfilter, new_filter_type])
+        self.filter_list_view.add_row([new_sfilter, new_applies_to])
 
     def on_edit_filter(self, *_args):
 
         for iterator in self.filter_list_view.get_selected_rows():
             sfilter = self.filter_list_view.get_row_value(iterator, "filter")
-            default_item = self.filter_list_view.get_row_value(iterator, "type")
+            applies_to = self.filter_list_view.get_row_value(iterator, "applies_to")
 
             EntryDialog(
                 parent=self.application.preferences,
                 title=_("Edit Share Filter"),
                 message=self.filter_syntax_description + "\n\n" + _("Modify the following share filter:"),
-                second_default=default_item,
+                second_default={v: k for k, v in self.FILTER_LEVELS.items()}[applies_to],
                 second_droplist=self.FILTER_LEVELS,
                 use_second_entry=True,
                 second_entry_editable=False,
@@ -971,8 +971,8 @@ class SharesPage:
         self.share_filters = config.defaults["transfers"]["share_filters"][:]
 
         for sfilter in config.defaults["transfers"]["share_filters"]:
-            filter_type = _("Folder-level") if sfilter.endswith("\\") else _("File-level")
-            self.filter_list_view.add_row([sfilter, filter_type], select_row=False)
+            applies_to = _("Folders") if sfilter.endswith("\\") else _("Files")
+            self.filter_list_view.add_row([sfilter, applies_to], select_row=False)
 
         self.filter_list_view.unfreeze()
 
