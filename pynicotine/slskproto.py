@@ -2219,10 +2219,12 @@ class NetworkThread(Thread):
             if not self._verify_parent_connection(conn, msg_class):
                 return False
 
-            msg = self._unpack_embedded_message(msg)
+            unpacked_msg = self._unpack_embedded_message(msg)
 
-            if msg is not None:
-                self._send_message_to_child_peers(msg, msg.distrib_message)
+            if unpacked_msg is not None:
+                self._send_message_to_child_peers(unpacked_msg, msg.distrib_message)
+
+            msg = unpacked_msg
 
         elif msg_class is DistribBranchLevel:
             if msg.level < 0:
