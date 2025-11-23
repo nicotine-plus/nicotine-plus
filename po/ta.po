@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-20 21:17+0300\n"
+"POT-Creation-Date: 2025-11-23 16:01+0200\n"
 "PO-Revision-Date: 2025-02-25 02:41+0000\n"
 "Last-Translator: தமிழ்நேரம் <anishprabu.t@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -62,7 +62,7 @@ msgstr "கோப்புகளைத் தேடுங்கள்"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:34
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:50
-#: pynicotine/gtkgui/dialogs/preferences.py:3146
+#: pynicotine/gtkgui/dialogs/preferences.py:3326
 #: pynicotine/gtkgui/mainwindow.py:754 pynicotine/gtkgui/mainwindow.py:1106
 #: pynicotine/gtkgui/widgets/trayicon.py:73
 #: pynicotine/gtkgui/ui/mainwindow.ui:468
@@ -114,11 +114,13 @@ msgid "use non-default configuration file"
 msgstr "தாக்கல் அல்லாத உள்ளமைவு கோப்பைப் பயன்படுத்தவும்"
 
 #: pynicotine/__init__.py:48
-msgid "dir"
-msgstr "அடைவு"
+#, fuzzy
+msgid "folder"
+msgstr "கோப்புறை"
 
 #: pynicotine/__init__.py:49
-msgid "alternative directory for user data and plugins"
+#, fuzzy
+msgid "alternative folder for user data and plugins"
 msgstr "பயனர் தரவு மற்றும் செருகுநிரல்களுக்கான மாற்று அடைவு"
 
 #: pynicotine/__init__.py:53
@@ -199,16 +201,17 @@ msgid "Chat message from user '%(user)s' in room '%(room)s': %(message)s"
 msgstr "பயனரிடமிருந்து அரட்டை செய்தி '%(user)s' அறையில் '%(room)s':%(message)s"
 
 #: pynicotine/config.py:117 pynicotine/config.py:136
-#, python-format
-msgid "Can't create directory '%(path)s', reported error: %(error)s"
-msgstr "கோப்பகத்தை உருவாக்க முடியாது ' %(path)s', அறிக்கையிடப்பட்ட பிழை: %(error)s"
+#: pynicotine/userbrowse.py:169
+#, fuzzy, python-format
+msgid "Cannot create folder %(path)s: %(error)s"
+msgstr "பதிவு கோப்பு %(path)s: %(error)s அணுக முடியாது"
 
-#: pynicotine/config.py:813
+#: pynicotine/config.py:823
 #, python-format
 msgid "Error backing up config: %s"
 msgstr "பிழை காப்புப்பிரதியை ஆதரிக்கிறது: %s"
 
-#: pynicotine/config.py:816
+#: pynicotine/config.py:826
 #, python-format
 msgid "Config backed up to: %s"
 msgstr "கட்டமைப்பு பின்வாங்கியது: %s"
@@ -449,7 +452,7 @@ msgid "_Run in Background"
 msgstr "பின்னணியில் _ ரன்"
 
 #: pynicotine/gtkgui/application.py:546
-#: pynicotine/gtkgui/dialogs/preferences.py:1809
+#: pynicotine/gtkgui/dialogs/preferences.py:1989
 #: pynicotine/plugins/core_commands/__init__.py:53
 msgid "Quit Nicotine+"
 msgstr "நிகோடின்+ ஐ விட்டு வெளியேறவும்"
@@ -544,8 +547,8 @@ msgstr "நாடு"
 
 #: pynicotine/gtkgui/buddies.py:68 pynicotine/gtkgui/chatrooms.py:580
 #: pynicotine/gtkgui/dialogs/chathistory.py:57
-#: pynicotine/gtkgui/dialogs/preferences.py:1025
-#: pynicotine/gtkgui/dialogs/preferences.py:1215
+#: pynicotine/gtkgui/dialogs/preferences.py:1205
+#: pynicotine/gtkgui/dialogs/preferences.py:1395
 #: pynicotine/gtkgui/interests.py:127 pynicotine/gtkgui/search.py:500
 #: pynicotine/gtkgui/transfers.py:133
 msgid "User"
@@ -558,14 +561,17 @@ msgid "Speed"
 msgstr "வேகம்"
 
 #: pynicotine/gtkgui/buddies.py:81 pynicotine/gtkgui/chatrooms.py:599
+#: pynicotine/gtkgui/dialogs/preferences.py:589
+#: pynicotine/gtkgui/dialogs/preferences.py:754
+#: pynicotine/gtkgui/dialogs/preferences.py:974
 #: pynicotine/gtkgui/interests.py:141 pynicotine/gtkgui/ui/mainwindow.ui:345
 #: pynicotine/gtkgui/ui/mainwindow.ui:586
 msgid "Files"
 msgstr "கோப்புகள்"
 
-#: pynicotine/gtkgui/buddies.py:87 pynicotine/gtkgui/dialogs/preferences.py:676
-#: pynicotine/gtkgui/dialogs/preferences.py:732
-#: pynicotine/gtkgui/dialogs/preferences.py:768
+#: pynicotine/gtkgui/buddies.py:87 pynicotine/gtkgui/dialogs/preferences.py:751
+#: pynicotine/gtkgui/dialogs/preferences.py:814
+#: pynicotine/gtkgui/dialogs/preferences.py:850
 msgid "Trusted"
 msgstr "நம்பகமான"
 
@@ -593,40 +599,43 @@ msgstr "பயனரைச் சேர்க்கவும் _ குறி�
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:105
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:220
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:229
-#: pynicotine/gtkgui/dialogs/preferences.py:282
-#: pynicotine/gtkgui/dialogs/preferences.py:335
-#: pynicotine/gtkgui/dialogs/preferences.py:637
-#: pynicotine/gtkgui/dialogs/preferences.py:838
-#: pynicotine/gtkgui/dialogs/preferences.py:1008
-#: pynicotine/gtkgui/dialogs/preferences.py:1034
-#: pynicotine/gtkgui/dialogs/preferences.py:1198
-#: pynicotine/gtkgui/dialogs/preferences.py:1224
-#: pynicotine/gtkgui/dialogs/preferences.py:1428
-#: pynicotine/gtkgui/dialogs/preferences.py:1456
-#: pynicotine/gtkgui/dialogs/preferences.py:2580
+#: pynicotine/gtkgui/dialogs/preferences.py:284
+#: pynicotine/gtkgui/dialogs/preferences.py:337
+#: pynicotine/gtkgui/dialogs/preferences.py:664
+#: pynicotine/gtkgui/dialogs/preferences.py:693
+#: pynicotine/gtkgui/dialogs/preferences.py:1018
+#: pynicotine/gtkgui/dialogs/preferences.py:1188
+#: pynicotine/gtkgui/dialogs/preferences.py:1214
+#: pynicotine/gtkgui/dialogs/preferences.py:1378
+#: pynicotine/gtkgui/dialogs/preferences.py:1404
+#: pynicotine/gtkgui/dialogs/preferences.py:1608
+#: pynicotine/gtkgui/dialogs/preferences.py:1636
+#: pynicotine/gtkgui/dialogs/preferences.py:2760
 #: pynicotine/gtkgui/dialogs/wishlist.py:72 pynicotine/gtkgui/interests.py:187
 #: pynicotine/gtkgui/interests.py:196 pynicotine/gtkgui/transfers.py:274
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:517
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:533
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:97
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:113
-#: pynicotine/gtkgui/ui/downloads.ui:121
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:98
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:114
+#: pynicotine/gtkgui/ui/downloads.ui:107 pynicotine/gtkgui/ui/downloads.ui:123
 #: pynicotine/gtkgui/ui/settings/ban.ui:199
 #: pynicotine/gtkgui/ui/settings/ban.ui:215
-#: pynicotine/gtkgui/ui/settings/ban.ui:321
-#: pynicotine/gtkgui/ui/settings/ban.ui:337
+#: pynicotine/gtkgui/ui/settings/ban.ui:320
+#: pynicotine/gtkgui/ui/settings/ban.ui:336
 #: pynicotine/gtkgui/ui/settings/chats.ui:146
 #: pynicotine/gtkgui/ui/settings/chats.ui:162
-#: pynicotine/gtkgui/ui/settings/chats.ui:302
-#: pynicotine/gtkgui/ui/settings/chats.ui:318
+#: pynicotine/gtkgui/ui/settings/chats.ui:301
+#: pynicotine/gtkgui/ui/settings/chats.ui:317
 #: pynicotine/gtkgui/ui/settings/downloads.ui:515
 #: pynicotine/gtkgui/ui/settings/downloads.ui:531
 #: pynicotine/gtkgui/ui/settings/ignore.ui:133
 #: pynicotine/gtkgui/ui/settings/ignore.ui:149
-#: pynicotine/gtkgui/ui/settings/ignore.ui:254
-#: pynicotine/gtkgui/ui/settings/ignore.ui:270
-#: pynicotine/gtkgui/ui/settings/shares.ui:201
-#: pynicotine/gtkgui/ui/settings/shares.ui:217
+#: pynicotine/gtkgui/ui/settings/ignore.ui:253
+#: pynicotine/gtkgui/ui/settings/ignore.ui:269
+#: pynicotine/gtkgui/ui/settings/shares.ui:99
+#: pynicotine/gtkgui/ui/settings/shares.ui:115
+#: pynicotine/gtkgui/ui/settings/shares.ui:270
+#: pynicotine/gtkgui/ui/settings/shares.ui:286
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:143
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:159
 msgid "Remove"
@@ -646,15 +655,16 @@ msgid "Add a note about user %s:"
 msgstr "பயனர் %s பற்றிய குறிப்பைச் சேர்க்கவும்:"
 
 #: pynicotine/gtkgui/buddies.py:516
-#: pynicotine/gtkgui/dialogs/pluginsettings.py:392
-#: pynicotine/gtkgui/dialogs/preferences.py:468
-#: pynicotine/gtkgui/dialogs/preferences.py:1099
-#: pynicotine/gtkgui/dialogs/preferences.py:1140
-#: pynicotine/gtkgui/dialogs/preferences.py:1308
-#: pynicotine/gtkgui/dialogs/preferences.py:1349
-#: pynicotine/gtkgui/dialogs/preferences.py:1586
-#: pynicotine/gtkgui/dialogs/preferences.py:1649
-#: pynicotine/gtkgui/dialogs/preferences.py:2647
+#: pynicotine/gtkgui/dialogs/pluginsettings.py:395
+#: pynicotine/gtkgui/dialogs/preferences.py:470
+#: pynicotine/gtkgui/dialogs/preferences.py:915
+#: pynicotine/gtkgui/dialogs/preferences.py:1279
+#: pynicotine/gtkgui/dialogs/preferences.py:1320
+#: pynicotine/gtkgui/dialogs/preferences.py:1488
+#: pynicotine/gtkgui/dialogs/preferences.py:1529
+#: pynicotine/gtkgui/dialogs/preferences.py:1766
+#: pynicotine/gtkgui/dialogs/preferences.py:1829
+#: pynicotine/gtkgui/dialogs/preferences.py:2827
 msgid "_Add"
 msgstr "_ADD"
 
@@ -706,6 +716,7 @@ msgstr "செயல்பாட்டு பார்வை"
 
 #: pynicotine/gtkgui/chatrooms.py:639 pynicotine/gtkgui/chatrooms.py:659
 #: pynicotine/gtkgui/chatrooms.py:664 pynicotine/gtkgui/dialogs/roomlist.py:76
+#: pynicotine/gtkgui/dialogs/roomlist.py:257
 msgid "_Leave Room"
 msgstr "_ லீவ் அறை"
 
@@ -741,7 +752,7 @@ msgstr "அறை %(user)s மூலம் %(room)s குறிப்பிட�
 msgid "Message by %(user)s in Room %(room)s"
 msgstr "%(room)s அறையில் பயனர் %(user)s ஆல் செய்தி"
 
-#: pynicotine/gtkgui/chatrooms.py:932 pynicotine/gtkgui/chatrooms.py:1178
+#: pynicotine/gtkgui/chatrooms.py:932 pynicotine/gtkgui/chatrooms.py:1182
 #, python-format
 msgid "%s joined the room"
 msgstr "%s அறையில் சேர்ந்தார்"
@@ -751,52 +762,52 @@ msgstr "%s அறையில் சேர்ந்தார்"
 msgid "%s left the room"
 msgstr "%s அறையை விட்டு வெளியேறின"
 
-#: pynicotine/gtkgui/chatrooms.py:1122
+#: pynicotine/gtkgui/chatrooms.py:1126
 #, python-format
 msgid "%s has gone away"
 msgstr "%s போய்விட்டன"
 
-#: pynicotine/gtkgui/chatrooms.py:1125
+#: pynicotine/gtkgui/chatrooms.py:1129
 #, python-format
 msgid "%s has returned"
 msgstr "%s திரும்பிவிட்டன"
 
-#: pynicotine/gtkgui/chatrooms.py:1232
-#: pynicotine/gtkgui/dialogs/chathistory.py:262
+#: pynicotine/gtkgui/chatrooms.py:1236
+#: pynicotine/gtkgui/dialogs/chathistory.py:265
 #: pynicotine/gtkgui/privatechat.py:470
 msgid "Delete Logged Messages?"
 msgstr "உள்நுழைந்த செய்திகளை நீக்கவா?"
 
-#: pynicotine/gtkgui/chatrooms.py:1233
+#: pynicotine/gtkgui/chatrooms.py:1237
 msgid ""
 "Do you really want to permanently delete all logged messages for this room?"
 msgstr "இந்த அறைக்கு உள்நுழைந்த அனைத்து செய்திகளையும் நிரந்தரமாக நீக்க விரும்புகிறீர்களா?"
 
-#: pynicotine/gtkgui/chatrooms.py:1245
+#: pynicotine/gtkgui/chatrooms.py:1249
 msgid "Hide Room Users"
 msgstr ""
 
-#: pynicotine/gtkgui/chatrooms.py:1245 pynicotine/gtkgui/ui/chatrooms.ui:106
+#: pynicotine/gtkgui/chatrooms.py:1249 pynicotine/gtkgui/ui/chatrooms.ui:106
 msgid "Show Room Users"
 msgstr ""
 
-#: pynicotine/gtkgui/chatrooms.py:1259
+#: pynicotine/gtkgui/chatrooms.py:1267
 #, fuzzy, python-format
 msgid "R_oom Wall [%d]"
 msgstr "அறை சுவர்"
 
-#: pynicotine/gtkgui/chatrooms.py:1260
+#: pynicotine/gtkgui/chatrooms.py:1268
 #, python-format
 msgid "%(num)s Unread Message"
 msgid_plural "%(num)s Unread Messages"
 msgstr[0] ""
 msgstr[1] ""
 
-#: pynicotine/gtkgui/chatrooms.py:1264 pynicotine/gtkgui/ui/chatrooms.ui:209
+#: pynicotine/gtkgui/chatrooms.py:1272 pynicotine/gtkgui/ui/chatrooms.ui:209
 msgid "R_oom Wall"
 msgstr "அறை சுவர்"
 
-#: pynicotine/gtkgui/chatrooms.py:1265 pynicotine/gtkgui/ui/chatrooms.ui:194
+#: pynicotine/gtkgui/chatrooms.py:1273 pynicotine/gtkgui/ui/chatrooms.ui:194
 msgid "Room Wall"
 msgstr "அறை சுவர்"
 
@@ -845,88 +856,89 @@ msgstr "_OPEN பட்டியல்"
 msgid "Delete Chat Log…"
 msgstr "அரட்டை பதிவை நீக்கு…"
 
-#: pynicotine/gtkgui/dialogs/chathistory.py:263
+#: pynicotine/gtkgui/dialogs/chathistory.py:266
 #: pynicotine/gtkgui/privatechat.py:471
 msgid ""
 "Do you really want to permanently delete all logged messages for this user?"
 msgstr ""
 "இந்த பயனருக்கான அனைத்து உள்நுழைந்த செய்திகளையும் நிரந்தரமாக நீக்க விரும்புகிறீர்களா?"
 
-#: pynicotine/gtkgui/dialogs/download.py:56
+#: pynicotine/gtkgui/dialogs/download.py:55
 #, fuzzy
 msgid "Download Files"
 msgstr "வடிப்பான்களைப் பதிவிறக்கவும்"
 
-#: pynicotine/gtkgui/dialogs/download.py:89
+#: pynicotine/gtkgui/dialogs/download.py:88
 #, fuzzy
 msgid "Folder / File"
 msgstr "கோப்புறை"
 
-#: pynicotine/gtkgui/dialogs/download.py:96 pynicotine/gtkgui/search.py:557
-#: pynicotine/gtkgui/transfers.py:182 pynicotine/gtkgui/userbrowse.py:332
+#: pynicotine/gtkgui/dialogs/download.py:95 pynicotine/gtkgui/search.py:557
+#: pynicotine/gtkgui/transfers.py:182 pynicotine/gtkgui/userbrowse.py:333
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:96
 msgid "Size"
 msgstr "அளவு"
 
-#: pynicotine/gtkgui/dialogs/download.py:102
+#: pynicotine/gtkgui/dialogs/download.py:101
 #, fuzzy
 msgid "Selected"
 msgstr "_ தேர்ந்தெடுக்கவும்"
 
-#: pynicotine/gtkgui/dialogs/download.py:124
-#: pynicotine/gtkgui/dialogs/download.py:498
+#: pynicotine/gtkgui/dialogs/download.py:123
+#: pynicotine/gtkgui/dialogs/download.py:493
 #: pynicotine/gtkgui/widgets/filechooser.py:163
 msgid "_Select"
 msgstr "_ தேர்ந்தெடுக்கவும்"
 
-#: pynicotine/gtkgui/dialogs/download.py:125
-#: pynicotine/gtkgui/dialogs/download.py:499
+#: pynicotine/gtkgui/dialogs/download.py:124
+#: pynicotine/gtkgui/dialogs/download.py:494
 #, fuzzy
 msgid "_Deselect"
 msgstr "_ தேர்ந்தெடுக்கவும்"
 
-#: pynicotine/gtkgui/dialogs/download.py:127
-#: pynicotine/gtkgui/dialogs/download.py:500
+#: pynicotine/gtkgui/dialogs/download.py:126
+#: pynicotine/gtkgui/dialogs/download.py:495
+#: pynicotine/gtkgui/ui/dialogs/download.ui:155
 #, fuzzy
 msgid "_Rename…"
 msgstr "பயனர்பெயர்…"
 
-#: pynicotine/gtkgui/dialogs/download.py:293
+#: pynicotine/gtkgui/dialogs/download.py:290
 #, fuzzy, python-format
 msgid "Download %(num_files)s file  /  %(total_size)s"
 msgid_plural "Download %(num_files)s files  /  %(total_size)s"
 msgstr[0] "%(num)i கோப்புகளைப் பதிவிறக்கவா?"
 msgstr[1] "%(num)i கோப்புகளைப் பதிவிறக்கவா?"
 
-#: pynicotine/gtkgui/dialogs/download.py:382
+#: pynicotine/gtkgui/dialogs/download.py:377
 msgid "Failed to request folder contents."
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/download.py:532
+#: pynicotine/gtkgui/dialogs/download.py:527
 #, fuzzy
 msgid "Rename Folder"
 msgstr "கோப்புறைகளைப் பகிரவும்"
 
-#: pynicotine/gtkgui/dialogs/download.py:533
+#: pynicotine/gtkgui/dialogs/download.py:528
 #, fuzzy, python-format
 msgid "Enter new folder name for '%s':"
 msgstr "'%(dir)s' க்கு புதிய மெய்நிகர் பெயரை உள்ளிடவும்:"
 
-#: pynicotine/gtkgui/dialogs/download.py:535
+#: pynicotine/gtkgui/dialogs/download.py:530
 #, fuzzy
 msgid "_Rename"
 msgstr "கோப்புப்பெயர்"
 
-#: pynicotine/gtkgui/dialogs/download.py:613 pynicotine/gtkgui/search.py:1755
-#: pynicotine/gtkgui/transfers.py:1028 pynicotine/gtkgui/userbrowse.py:1474
+#: pynicotine/gtkgui/dialogs/download.py:608 pynicotine/gtkgui/search.py:1755
+#: pynicotine/gtkgui/transfers.py:1028 pynicotine/gtkgui/userbrowse.py:1468
 #, fuzzy
 msgid "Collapse All"
 msgstr "அனைத்தையும் விரிவாக்கு / சரிவு"
 
-#: pynicotine/gtkgui/dialogs/download.py:617
+#: pynicotine/gtkgui/dialogs/download.py:612
 #: pynicotine/gtkgui/dialogs/shortcuts.py:84 pynicotine/gtkgui/search.py:1759
-#: pynicotine/gtkgui/transfers.py:1032 pynicotine/gtkgui/userbrowse.py:1478
-#: pynicotine/gtkgui/ui/dialogs/download.ui:290
+#: pynicotine/gtkgui/transfers.py:1032 pynicotine/gtkgui/userbrowse.py:1472
+#: pynicotine/gtkgui/ui/dialogs/download.ui:269
 #: pynicotine/gtkgui/ui/mainwindow.ui:379
 #: pynicotine/gtkgui/ui/mainwindow.ui:620 pynicotine/gtkgui/ui/search.ui:222
 #: pynicotine/gtkgui/ui/userbrowse.ui:112
@@ -939,12 +951,12 @@ msgid "Setup Assistant"
 msgstr "அமைவு உதவியாளர்"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:87
-#: pynicotine/gtkgui/dialogs/preferences.py:613
+#: pynicotine/gtkgui/dialogs/preferences.py:640
 msgid "Virtual Folder"
 msgstr "மெய்நிகர் கோப்புறை"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:94
-#: pynicotine/gtkgui/dialogs/preferences.py:620 pynicotine/gtkgui/search.py:534
+#: pynicotine/gtkgui/dialogs/preferences.py:647 pynicotine/gtkgui/search.py:534
 #: pynicotine/gtkgui/uploads.py:33 pynicotine/gtkgui/userbrowse.py:256
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:128
 msgid "Folder"
@@ -952,12 +964,22 @@ msgstr "கோப்புறை"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:103
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:218
-#: pynicotine/gtkgui/dialogs/preferences.py:333
-#: pynicotine/gtkgui/dialogs/preferences.py:634
-#: pynicotine/gtkgui/dialogs/preferences.py:1426
-#: pynicotine/gtkgui/dialogs/preferences.py:1454
-#: pynicotine/gtkgui/dialogs/preferences.py:2578
+#: pynicotine/gtkgui/dialogs/pluginsettings.py:228
+#: pynicotine/gtkgui/dialogs/preferences.py:335
+#: pynicotine/gtkgui/dialogs/preferences.py:661
+#: pynicotine/gtkgui/dialogs/preferences.py:691
+#: pynicotine/gtkgui/dialogs/preferences.py:1606
+#: pynicotine/gtkgui/dialogs/preferences.py:1634
+#: pynicotine/gtkgui/dialogs/preferences.py:2758
 #: pynicotine/gtkgui/dialogs/wishlist.py:70
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:502
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:83
+#: pynicotine/gtkgui/ui/settings/chats.ui:131
+#: pynicotine/gtkgui/ui/settings/chats.ui:270
+#: pynicotine/gtkgui/ui/settings/downloads.ui:500
+#: pynicotine/gtkgui/ui/settings/shares.ui:84
+#: pynicotine/gtkgui/ui/settings/shares.ui:255
+#: pynicotine/gtkgui/ui/settings/urlhandlers.ui:128
 #, fuzzy
 msgid "_Edit…"
 msgstr "திருத்து…"
@@ -976,28 +998,29 @@ msgid "_Next"
 msgstr "அடுத்தது (_N)"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:175
-#: pynicotine/gtkgui/dialogs/preferences.py:723
+#: pynicotine/gtkgui/dialogs/preferences.py:805
 msgid "Add a Shared Folder"
 msgstr "பகிரப்பட்ட கோப்புறையைச் சேர்க்கவும்"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:208
-#: pynicotine/gtkgui/dialogs/preferences.py:765
+#: pynicotine/gtkgui/dialogs/preferences.py:847
 msgid "Edit Shared Folder"
 msgstr "பகிரப்பட்ட கோப்புறையைத் திருத்து"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:209
-#: pynicotine/gtkgui/dialogs/preferences.py:766
+#: pynicotine/gtkgui/dialogs/preferences.py:848
 #, python-format
 msgid "Enter new virtual name for '%(dir)s':"
 msgstr "'%(dir)s' க்கு புதிய மெய்நிகர் பெயரை உள்ளிடவும்:"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:211
-#: pynicotine/gtkgui/dialogs/pluginsettings.py:422
-#: pynicotine/gtkgui/dialogs/preferences.py:498
-#: pynicotine/gtkgui/dialogs/preferences.py:772
-#: pynicotine/gtkgui/dialogs/preferences.py:1616
-#: pynicotine/gtkgui/dialogs/preferences.py:1681
-#: pynicotine/gtkgui/dialogs/preferences.py:2676
+#: pynicotine/gtkgui/dialogs/pluginsettings.py:425
+#: pynicotine/gtkgui/dialogs/preferences.py:500
+#: pynicotine/gtkgui/dialogs/preferences.py:854
+#: pynicotine/gtkgui/dialogs/preferences.py:949
+#: pynicotine/gtkgui/dialogs/preferences.py:1796
+#: pynicotine/gtkgui/dialogs/preferences.py:1861
+#: pynicotine/gtkgui/dialogs/preferences.py:2856
 #: pynicotine/gtkgui/dialogs/wishlist.py:131
 msgid "_Edit"
 msgstr "தொகு (_E)"
@@ -1029,90 +1052,75 @@ msgid "File Properties  -  %(num)s of %(total)s  /  %(size)s"
 msgstr "கோப்புப் பண்புகள் (%(num)i வது %(total)i இல்  /  %(size)s)"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:31
-#: pynicotine/gtkgui/ui/dialogs/preferences.ui:21
 msgid "_Apply"
 msgstr "_Aplay"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:227
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:455
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:471
-#: pynicotine/gtkgui/ui/settings/ban.ui:168
 #: pynicotine/gtkgui/ui/settings/ban.ui:184
-#: pynicotine/gtkgui/ui/settings/ban.ui:290
-#: pynicotine/gtkgui/ui/settings/ban.ui:306
-#: pynicotine/gtkgui/ui/settings/chats.ui:84
+#: pynicotine/gtkgui/ui/settings/ban.ui:305
 #: pynicotine/gtkgui/ui/settings/chats.ui:100
-#: pynicotine/gtkgui/ui/settings/chats.ui:240
-#: pynicotine/gtkgui/ui/settings/chats.ui:256
+#: pynicotine/gtkgui/ui/settings/chats.ui:255
 #: pynicotine/gtkgui/ui/settings/downloads.ui:469
-#: pynicotine/gtkgui/ui/settings/ignore.ui:102
 #: pynicotine/gtkgui/ui/settings/ignore.ui:118
-#: pynicotine/gtkgui/ui/settings/ignore.ui:223
-#: pynicotine/gtkgui/ui/settings/ignore.ui:239
-#: pynicotine/gtkgui/ui/settings/shares.ui:139
-#: pynicotine/gtkgui/ui/settings/shares.ui:155
-#: pynicotine/gtkgui/ui/settings/urlhandlers.ui:81
+#: pynicotine/gtkgui/ui/settings/ignore.ui:238
+#: pynicotine/gtkgui/ui/settings/shares.ui:53
+#: pynicotine/gtkgui/ui/settings/shares.ui:224
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:97
-#: pynicotine/gtkgui/ui/userinfo.ui:411
-msgid "Add…"
+#, fuzzy
+msgid "_Add…"
 msgstr "சேர்க்கவும்…"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:228
 #: pynicotine/gtkgui/search.py:622
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:486
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:502
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:67
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:83
 #: pynicotine/gtkgui/ui/settings/chats.ui:115
-#: pynicotine/gtkgui/ui/settings/chats.ui:131
-#: pynicotine/gtkgui/ui/settings/chats.ui:271
-#: pynicotine/gtkgui/ui/settings/chats.ui:287
+#: pynicotine/gtkgui/ui/settings/chats.ui:286
 #: pynicotine/gtkgui/ui/settings/downloads.ui:484
-#: pynicotine/gtkgui/ui/settings/downloads.ui:500
-#: pynicotine/gtkgui/ui/settings/shares.ui:170
-#: pynicotine/gtkgui/ui/settings/shares.ui:186
+#: pynicotine/gtkgui/ui/settings/shares.ui:68
+#: pynicotine/gtkgui/ui/settings/shares.ui:239
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:112
-#: pynicotine/gtkgui/ui/settings/urlhandlers.ui:128
 msgid "Edit…"
 msgstr "திருத்து…"
 
-#: pynicotine/gtkgui/dialogs/pluginsettings.py:371
+#: pynicotine/gtkgui/dialogs/pluginsettings.py:374
 #, python-format
 msgid "%s Settings"
 msgstr "%s அமைப்புகள்"
 
-#: pynicotine/gtkgui/dialogs/pluginsettings.py:390
+#: pynicotine/gtkgui/dialogs/pluginsettings.py:393
 msgid "Add Item"
 msgstr "உருப்படியைச் சேர்க்கவும்"
 
-#: pynicotine/gtkgui/dialogs/pluginsettings.py:420
+#: pynicotine/gtkgui/dialogs/pluginsettings.py:423
 msgid "Edit Item"
 msgstr "உருப்படியைத் திருத்தவும்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:118
+#: pynicotine/gtkgui/dialogs/preferences.py:120
 #: pynicotine/gtkgui/userinfo.py:651 pynicotine/gtkgui/userinfo.py:669
 #: pynicotine/gtkgui/userinfo.py:809 pynicotine/gtkgui/widgets/treeview.py:686
-#: pynicotine/users.py:293 pynicotine/gtkgui/ui/settings/network.ui:185
+#: pynicotine/users.py:293 pynicotine/gtkgui/ui/settings/network.ui:186
 #: pynicotine/gtkgui/ui/userinfo.ui:186 pynicotine/gtkgui/ui/userinfo.ui:216
 #: pynicotine/gtkgui/ui/userinfo.ui:246 pynicotine/gtkgui/ui/userinfo.ui:276
 #: pynicotine/gtkgui/ui/userinfo.ui:303 pynicotine/gtkgui/ui/userinfo.ui:333
 msgid "Unknown"
 msgstr "தெரியவில்லை"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:121
+#: pynicotine/gtkgui/dialogs/preferences.py:123
 #, python-format
 msgid "<b>%(ip)s</b>, port %(port)s"
 msgstr "<b> %(ip)s </b>, துறைமுகம் %(port)s"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:190
+#: pynicotine/gtkgui/dialogs/preferences.py:192
 msgid "Password Change Rejected"
 msgstr "கடவுச்சொல் மாற்றம் நிராகரிக்கப்பட்டது"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:209
+#: pynicotine/gtkgui/dialogs/preferences.py:211
 msgid "Enter a new password for your Soulseek account:"
 msgstr "உங்கள் ஆன்மாதேடு கணக்கிற்கு புதிய கடவுச்சொல்லை உள்ளிடவும்:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:211
+#: pynicotine/gtkgui/dialogs/preferences.py:213
 msgid ""
 "You are currently logged out of the Soulseek network. If you want to change "
 "the password of an existing Soulseek account, you need to be logged into "
@@ -1121,78 +1129,77 @@ msgstr ""
 "நீங்கள் தற்போது ஆன்மாதேடு பிணைப்பிலிருந்து வெளியேறிவிட்டீர்கள். ஏற்கனவே உள்ள ஆன்மாதேடு "
 "கணக்கின் கடவுச்சொல்லை மாற்ற விரும்பினால், நீங்கள் அந்தக் கணக்கில் உள்நுழைய வேண்டும்."
 
-#: pynicotine/gtkgui/dialogs/preferences.py:214
+#: pynicotine/gtkgui/dialogs/preferences.py:216
 msgid "Enter password to use when logging in:"
 msgstr "உள்நுழையும்போது பயன்படுத்த கடவுச்சொல்லை உள்ளிடவும்:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:218
+#: pynicotine/gtkgui/dialogs/preferences.py:220
 #: pynicotine/gtkgui/ui/settings/network.ui:85
-#: pynicotine/gtkgui/ui/settings/network.ui:101
 msgid "Change Password"
 msgstr "கடவுச்சொல்லை மாற்றவும்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:221
+#: pynicotine/gtkgui/dialogs/preferences.py:223
 msgid "_Change"
 msgstr "_சேஞ்ச்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:265
+#: pynicotine/gtkgui/dialogs/preferences.py:267
 msgid "No one"
 msgstr "யாரும் இல்லை"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:266
-#: pynicotine/gtkgui/dialogs/preferences.py:583
-#: pynicotine/gtkgui/dialogs/preferences.py:672
+#: pynicotine/gtkgui/dialogs/preferences.py:268
+#: pynicotine/gtkgui/dialogs/preferences.py:585
+#: pynicotine/gtkgui/dialogs/preferences.py:747
 #: pynicotine/gtkgui/mainwindow.py:759 pynicotine/gtkgui/search.py:266
 #: pynicotine/gtkgui/ui/buddies.ui:22 pynicotine/gtkgui/ui/mainwindow.ui:1384
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:709
 msgid "Buddies"
 msgstr "நண்பர்கள்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:267
-#: pynicotine/gtkgui/dialogs/preferences.py:584
-#: pynicotine/gtkgui/dialogs/preferences.py:732
-#: pynicotine/gtkgui/dialogs/preferences.py:768
+#: pynicotine/gtkgui/dialogs/preferences.py:269
+#: pynicotine/gtkgui/dialogs/preferences.py:586
+#: pynicotine/gtkgui/dialogs/preferences.py:814
+#: pynicotine/gtkgui/dialogs/preferences.py:850
 msgid "Trusted buddies"
 msgstr "நம்பகமான நண்பர்கள்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:272
-#: pynicotine/gtkgui/dialogs/preferences.py:828
+#: pynicotine/gtkgui/dialogs/preferences.py:274
+#: pynicotine/gtkgui/dialogs/preferences.py:1008
 msgid "Nothing"
 msgstr "எதுவும்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:276
-#: pynicotine/gtkgui/dialogs/preferences.py:832
+#: pynicotine/gtkgui/dialogs/preferences.py:278
+#: pynicotine/gtkgui/dialogs/preferences.py:1012
 msgid "Open File"
 msgstr "கோப்பை திற"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:277
-#: pynicotine/gtkgui/dialogs/preferences.py:833
+#: pynicotine/gtkgui/dialogs/preferences.py:279
+#: pynicotine/gtkgui/dialogs/preferences.py:1013
 #: pynicotine/gtkgui/widgets/filechooser.py:279
 msgid "Open in File Manager"
 msgstr "கோப்பு மேலாளரில் திற"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:280
-#: pynicotine/gtkgui/dialogs/preferences.py:836
+#: pynicotine/gtkgui/dialogs/preferences.py:282
+#: pynicotine/gtkgui/dialogs/preferences.py:1016
 #: pynicotine/gtkgui/mainwindow.py:1108
 msgid "Search"
 msgstr "தேடல்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:281
-#: pynicotine/gtkgui/ui/downloads.ui:91
+#: pynicotine/gtkgui/dialogs/preferences.py:283
+#: pynicotine/gtkgui/ui/downloads.ui:76
 msgid "Pause"
 msgstr "இடைநிறுத்தம்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:283
-#: pynicotine/gtkgui/ui/downloads.ui:61
+#: pynicotine/gtkgui/dialogs/preferences.py:285
+#: pynicotine/gtkgui/ui/downloads.ui:45
 msgid "Resume"
 msgstr "மீண்டும் தொடங்குங்கள்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:284
-#: pynicotine/gtkgui/dialogs/preferences.py:840
+#: pynicotine/gtkgui/dialogs/preferences.py:286
+#: pynicotine/gtkgui/dialogs/preferences.py:1020
 msgid "Browse Folder"
 msgstr "கோப்புறை உலாவுக"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:307
+#: pynicotine/gtkgui/dialogs/preferences.py:309
 msgid ""
 "<b>Syntax</b>: Case-insensitive. If enabled, Python regular expressions can "
 "be used, otherwise only wildcard * matches are supported."
@@ -1200,164 +1207,226 @@ msgstr ""
 "<b> தொடரியல் </b>: வழக்கு-உணர்திறன். இயக்கப்பட்டால், பைதான் வழக்கமான வெளிப்பாடுகளைப் "
 "பயன்படுத்தலாம், இல்லையெனில் காடு அட்டை * போட்டிகள் மட்டுமே ஆதரிக்கப்படுகின்றன."
 
-#: pynicotine/gtkgui/dialogs/preferences.py:317
+#: pynicotine/gtkgui/dialogs/preferences.py:319
+#: pynicotine/gtkgui/dialogs/preferences.py:676
 msgid "Filter"
 msgstr "வடிப்பி"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:324
+#: pynicotine/gtkgui/dialogs/preferences.py:326
 msgid "Regex"
 msgstr "வழக்கவெளி"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:466
+#: pynicotine/gtkgui/dialogs/preferences.py:468
 msgid "Add Download Filter"
 msgstr "பதிவிறக்க வடிகட்டியைச் சேர்க்கவும்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:467
+#: pynicotine/gtkgui/dialogs/preferences.py:469
 msgid "Enter a new download filter:"
 msgstr "புதிய பதிவிறக்க வடிப்பானை உள்ளிடவும்:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:471
-#: pynicotine/gtkgui/dialogs/preferences.py:503
+#: pynicotine/gtkgui/dialogs/preferences.py:473
+#: pynicotine/gtkgui/dialogs/preferences.py:505
 msgid "Enable regular expressions"
 msgstr "வழக்கமான வெளிப்பாடுகளை இயக்கவும்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:496
+#: pynicotine/gtkgui/dialogs/preferences.py:498
 msgid "Edit Download Filter"
 msgstr "பதிவிறக்க வடிகட்டியைத் திருத்து"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:497
+#: pynicotine/gtkgui/dialogs/preferences.py:499
 msgid "Modify the following download filter:"
 msgstr "பின்வரும் பதிவிறக்க வடிப்பானை மாற்றவும்:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:569
+#: pynicotine/gtkgui/dialogs/preferences.py:571
 #, python-format
 msgid "%(num)d Failed! %(error)s "
 msgstr "%(num)d தோல்வியுற்றது! %(error)s "
 
-#: pynicotine/gtkgui/dialogs/preferences.py:576
+#: pynicotine/gtkgui/dialogs/preferences.py:578
 msgid "Filters Successful"
 msgstr "வடிப்பான்கள் வெற்றிகரமாக"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:582
-#: pynicotine/gtkgui/dialogs/preferences.py:668
-#: pynicotine/gtkgui/dialogs/preferences.py:705
+#: pynicotine/gtkgui/dialogs/preferences.py:584
+#: pynicotine/gtkgui/dialogs/preferences.py:743
+#: pynicotine/gtkgui/dialogs/preferences.py:787
 msgid "Public"
 msgstr "பொது"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:626
+#: pynicotine/gtkgui/dialogs/preferences.py:589
+msgid "Applies to files"
+msgstr ""
+
+#: pynicotine/gtkgui/dialogs/preferences.py:590
+#, fuzzy
+msgid "Applies to folders"
+msgstr "கோப்புகளை கோப்புறையில் பதிவிறக்கவும்"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:590
+#: pynicotine/gtkgui/dialogs/preferences.py:754
+#: pynicotine/gtkgui/dialogs/preferences.py:885
+#: pynicotine/gtkgui/dialogs/preferences.py:974
+#: pynicotine/gtkgui/ui/settings/downloads.ui:253
+#: pynicotine/gtkgui/ui/userbrowse.ui:50
+msgid "Folders"
+msgstr "கோப்புறைகள்"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:653
 msgid "Accessible To"
 msgstr "அணுகக்கூடியது"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:635
-#: pynicotine/gtkgui/transfers.py:267 pynicotine/gtkgui/userbrowse.py:287
+#: pynicotine/gtkgui/dialogs/preferences.py:662
+#: pynicotine/gtkgui/transfers.py:267 pynicotine/gtkgui/userbrowse.py:288
 #: pynicotine/gtkgui/userbrowse.py:370
 msgid "Open in File _Manager"
 msgstr "கோப்பு மேலாளரில் திற"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:837
-#: pynicotine/gtkgui/ui/uploads.ui:61
+#: pynicotine/gtkgui/dialogs/preferences.py:667
+#, fuzzy
+msgid ""
+"Syntax: Case-insensitive. Virtual paths containing separators \\ are "
+"supported. Wildcard * matches are supported."
+msgstr ""
+"<b> தொடரியல் </b>: வழக்கு-உணர்திறன். இயக்கப்பட்டால், பைதான் வழக்கமான வெளிப்பாடுகளைப் "
+"பயன்படுத்தலாம், இல்லையெனில் காடு அட்டை * போட்டிகள் மட்டுமே ஆதரிக்கப்படுகின்றன."
+
+#: pynicotine/gtkgui/dialogs/preferences.py:683
+msgid "Applies To"
+msgstr ""
+
+#: pynicotine/gtkgui/dialogs/preferences.py:701
+#: pynicotine/gtkgui/ui/userinfo.ui:205
+msgid "Shared Folders"
+msgstr "பகிரப்பட்ட கோப்புறைகள்"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:702
+#, fuzzy
+msgid "Filters"
+msgstr "வடிப்பி"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:910
+#, fuzzy
+msgid "Add Share Filter"
+msgstr "பகிரப்பட்ட கோப்புறையைச் சேர்க்கவும்"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:911
+#, fuzzy
+msgid "Enter a new share filter:"
+msgstr "புதிய பதிவிறக்க வடிப்பானை உள்ளிடவும்:"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:943
+#, fuzzy
+msgid "Edit Share Filter"
+msgstr "பகிரப்பட்ட கோப்புறையைத் திருத்து"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:944
+#, fuzzy
+msgid "Modify the following share filter:"
+msgstr "பின்வரும் பதிவிறக்க வடிப்பானை மாற்றவும்:"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:1017
+#: pynicotine/gtkgui/ui/uploads.ui:45
 msgid "Abort"
 msgstr "கருக்கலைப்பு"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:839
+#: pynicotine/gtkgui/dialogs/preferences.py:1019
 #: pynicotine/gtkgui/ui/dialogs/download.ui:55
 #: pynicotine/gtkgui/ui/search.ui:10 pynicotine/gtkgui/ui/userbrowse.ui:10
 #: pynicotine/gtkgui/ui/userinfo.ui:10
 msgid "Retry"
 msgstr "மீண்டும் முயற்சிக்கவும்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:850
+#: pynicotine/gtkgui/dialogs/preferences.py:1030
 msgid "Round Robin"
 msgstr "ரவுண்ட் ராபின்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:851
+#: pynicotine/gtkgui/dialogs/preferences.py:1031
 msgid "First In, First Out"
 msgstr "முதலில், முதலில்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1000
-#: pynicotine/gtkgui/dialogs/preferences.py:1190
+#: pynicotine/gtkgui/dialogs/preferences.py:1180
+#: pynicotine/gtkgui/dialogs/preferences.py:1370
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:252
 msgid "Username"
 msgstr "பயனர்பெயர்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1018
-#: pynicotine/gtkgui/dialogs/preferences.py:1208
+#: pynicotine/gtkgui/dialogs/preferences.py:1198
+#: pynicotine/gtkgui/dialogs/preferences.py:1388
 msgid "IP Address"
 msgstr "ஐபி முகவரி"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1097
+#: pynicotine/gtkgui/dialogs/preferences.py:1277
 #: pynicotine/gtkgui/userinfo.py:593 pynicotine/gtkgui/widgets/popupmenu.py:454
 #: pynicotine/gtkgui/widgets/popupmenu.py:490
 msgid "Ignore User"
 msgstr "பயனரை புறக்கணிக்கவும்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1098
+#: pynicotine/gtkgui/dialogs/preferences.py:1278
 msgid "Enter the name of the user you want to ignore:"
 msgstr "நீங்கள் புறக்கணிக்க விரும்பும் பயனரின் பெயரை உள்ளிடவும்:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1138
+#: pynicotine/gtkgui/dialogs/preferences.py:1318
 #: pynicotine/gtkgui/widgets/popupmenu.py:457
 #: pynicotine/gtkgui/widgets/popupmenu.py:492
 msgid "Ignore IP Address"
 msgstr "ஐபி முகவரியை புறக்கணிக்கவும்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1139
+#: pynicotine/gtkgui/dialogs/preferences.py:1319
 msgid "Enter an IP address you want to ignore:"
 msgstr "நீங்கள் புறக்கணிக்க விரும்பும் ஐபி முகவரியை உள்ளிடவும்:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1139
-#: pynicotine/gtkgui/dialogs/preferences.py:1348
+#: pynicotine/gtkgui/dialogs/preferences.py:1319
+#: pynicotine/gtkgui/dialogs/preferences.py:1528
 msgid "* is a wildcard"
 msgstr "* ஒரு வைல்டு அட்டை"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1306
+#: pynicotine/gtkgui/dialogs/preferences.py:1486
 #: pynicotine/gtkgui/userinfo.py:589 pynicotine/gtkgui/widgets/popupmenu.py:453
 #: pynicotine/gtkgui/widgets/popupmenu.py:489
 msgid "Ban User"
 msgstr "பயனரை தடை செய்யுங்கள்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1307
+#: pynicotine/gtkgui/dialogs/preferences.py:1487
 msgid "Enter the name of the user you want to ban:"
 msgstr "நீங்கள் தடை செய்ய விரும்பும் பயனரின் பெயரை உள்ளிடவும்:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1347
+#: pynicotine/gtkgui/dialogs/preferences.py:1527
 #: pynicotine/gtkgui/widgets/popupmenu.py:456
 #: pynicotine/gtkgui/widgets/popupmenu.py:491
 msgid "Ban IP Address"
 msgstr "ஐபி முகவரியை தடை செய்யுங்கள்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1348
+#: pynicotine/gtkgui/dialogs/preferences.py:1528
 msgid "Enter an IP address you want to ban:"
 msgstr "நீங்கள் தடை செய்ய விரும்பும் ஐபி முகவரியை உள்ளிடவும்:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1404
-#: pynicotine/gtkgui/dialogs/preferences.py:2267
+#: pynicotine/gtkgui/dialogs/preferences.py:1584
+#: pynicotine/gtkgui/dialogs/preferences.py:2447
 msgid "Format codes"
 msgstr "வடிவமைப்பு குறியீடுகள்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1418
-#: pynicotine/gtkgui/dialogs/preferences.py:1439
+#: pynicotine/gtkgui/dialogs/preferences.py:1598
+#: pynicotine/gtkgui/dialogs/preferences.py:1619
 msgid "Pattern"
 msgstr "முறை"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1446
+#: pynicotine/gtkgui/dialogs/preferences.py:1626
 msgid "Replacement"
 msgstr "மாற்று"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1464
+#: pynicotine/gtkgui/dialogs/preferences.py:1644
 msgid "Auto-Replace"
 msgstr "தானாக மாற்றுதல்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1465
+#: pynicotine/gtkgui/dialogs/preferences.py:1645
 msgid "Censor"
 msgstr "தணிக்கை"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1583
+#: pynicotine/gtkgui/dialogs/preferences.py:1763
 msgid "Censor Pattern"
 msgstr "தணிக்கை முறை"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1584
-#: pynicotine/gtkgui/dialogs/preferences.py:1614
+#: pynicotine/gtkgui/dialogs/preferences.py:1764
+#: pynicotine/gtkgui/dialogs/preferences.py:1794
 msgid ""
 "Enter a pattern you want to censor. Add spaces around the pattern if you "
 "don't want to match strings inside words (may fail at the beginning and end "
@@ -1366,282 +1435,282 @@ msgstr ""
 "நீங்கள் தணிக்கை செய்ய விரும்பும் ஒரு வடிவத்தை உள்ளிடவும். சொற்களுக்குள் சரங்களை பொருத்த "
 "விரும்பவில்லை என்றால் (வரிகளின் தொடக்கத்திலும் முடிவிலும் தோல்வியடையக்கூடும்)."
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1613
+#: pynicotine/gtkgui/dialogs/preferences.py:1793
 msgid "Edit Censored Pattern"
 msgstr "தணிக்கை செய்யப்பட்ட வடிவத்தைத் திருத்து"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1647
+#: pynicotine/gtkgui/dialogs/preferences.py:1827
 msgid "Add Replacement"
 msgstr "மாற்றீட்டைச் சேர்க்கவும்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1648
-#: pynicotine/gtkgui/dialogs/preferences.py:1680
+#: pynicotine/gtkgui/dialogs/preferences.py:1828
+#: pynicotine/gtkgui/dialogs/preferences.py:1860
 msgid "Enter a text pattern and what to replace it with:"
 msgstr "ஒரு உரை வடிவத்தை உள்ளிடவும், அதை எதை மாற்றுவது:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1679
+#: pynicotine/gtkgui/dialogs/preferences.py:1859
 msgid "Edit Replacement"
 msgstr "மாற்றீட்டைத் திருத்து"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1796
+#: pynicotine/gtkgui/dialogs/preferences.py:1976
 msgid "System default"
 msgstr "கணினி இயல்புநிலை"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1810
+#: pynicotine/gtkgui/dialogs/preferences.py:1990
 msgid "Show confirmation dialog"
 msgstr "உறுதிப்படுத்தல் உரையாடலைக் காட்டு"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1811
+#: pynicotine/gtkgui/dialogs/preferences.py:1991
 msgid "Run in the background"
 msgstr "பின்னணியில் இயக்கவும்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1819
+#: pynicotine/gtkgui/dialogs/preferences.py:1999
 msgid "bold"
 msgstr "தடிமான"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1820
+#: pynicotine/gtkgui/dialogs/preferences.py:2000
 msgid "italic"
 msgstr "சாய்வு"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1821
+#: pynicotine/gtkgui/dialogs/preferences.py:2001
 msgid "underline"
 msgstr "அடிக்கோடிட்டு"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1822
+#: pynicotine/gtkgui/dialogs/preferences.py:2002
 msgid "normal"
 msgstr "சாதாரண"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1830
+#: pynicotine/gtkgui/dialogs/preferences.py:2010
 msgid "Separate Buddies tab"
 msgstr "தனி நண்பர்கள் தாவல்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1831
+#: pynicotine/gtkgui/dialogs/preferences.py:2011
 msgid "Sidebar in Chat Rooms tab"
 msgstr "அரட்டை அறைகள் தாவலில் பக்கப்பட்டி"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1832
+#: pynicotine/gtkgui/dialogs/preferences.py:2012
 msgid "Always visible sidebar"
 msgstr "எப்போதும் தெரியும் பக்கப்பட்டி"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1837
+#: pynicotine/gtkgui/dialogs/preferences.py:2017
 msgid "Top"
 msgstr "மேலே"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1838
+#: pynicotine/gtkgui/dialogs/preferences.py:2018
 msgid "Bottom"
 msgstr "கீழே"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1839
+#: pynicotine/gtkgui/dialogs/preferences.py:2019
 msgid "Left"
 msgstr "இடது"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1840
+#: pynicotine/gtkgui/dialogs/preferences.py:2020
 msgid "Right"
 msgstr "வலது"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1973
+#: pynicotine/gtkgui/dialogs/preferences.py:2153
 #: pynicotine/gtkgui/mainwindow.py:990
-#: pynicotine/gtkgui/widgets/iconnotebook.py:613
+#: pynicotine/gtkgui/widgets/iconnotebook.py:614
 #: pynicotine/gtkgui/widgets/theme.py:246
 msgid "Online"
 msgstr "ஆன்லைனில்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1974
+#: pynicotine/gtkgui/dialogs/preferences.py:2154
 #: pynicotine/gtkgui/dialogs/shortcuts.py:37
 #: pynicotine/gtkgui/mainwindow.py:987
-#: pynicotine/gtkgui/widgets/iconnotebook.py:610
+#: pynicotine/gtkgui/widgets/iconnotebook.py:611
 #: pynicotine/gtkgui/widgets/theme.py:247
 #: pynicotine/gtkgui/widgets/trayicon.py:84
 msgid "Away"
 msgstr "தொலைவில்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1975
+#: pynicotine/gtkgui/dialogs/preferences.py:2155
 #: pynicotine/gtkgui/mainwindow.py:994
-#: pynicotine/gtkgui/widgets/iconnotebook.py:616
+#: pynicotine/gtkgui/widgets/iconnotebook.py:617
 #: pynicotine/gtkgui/widgets/theme.py:248
 #: pynicotine/gtkgui/ui/mainwindow.ui:1874
 msgid "Offline"
 msgstr "இணையமில்லாமல்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1977
+#: pynicotine/gtkgui/dialogs/preferences.py:2157
 msgid "Tab Changed"
 msgstr "தாவல் மாற்றப்பட்டது"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1978
+#: pynicotine/gtkgui/dialogs/preferences.py:2158
 msgid "Tab Highlight"
 msgstr "தாவல் சிறப்பம்சமாக"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1979
+#: pynicotine/gtkgui/dialogs/preferences.py:2159
 msgid "Window"
 msgstr "சாளரம்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1983
+#: pynicotine/gtkgui/dialogs/preferences.py:2163
 msgid "Online (Tray)"
 msgstr "நிகழ்நிலை (தட்டு)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1984
+#: pynicotine/gtkgui/dialogs/preferences.py:2164
 msgid "Away (Tray)"
 msgstr "தொலைவில் (தட்டு)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1985
+#: pynicotine/gtkgui/dialogs/preferences.py:2165
 msgid "Offline (Tray)"
 msgstr "இணைப்பில்லாத (தட்டு)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1986
+#: pynicotine/gtkgui/dialogs/preferences.py:2166
 msgid "Message (Tray)"
 msgstr "செய்தி (தட்டு)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2562
+#: pynicotine/gtkgui/dialogs/preferences.py:2742
 msgid "Protocol"
 msgstr "நெறிமுறை"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2570
+#: pynicotine/gtkgui/dialogs/preferences.py:2750
 msgid "Command"
 msgstr "கட்டளை"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2645
+#: pynicotine/gtkgui/dialogs/preferences.py:2825
 msgid "Add URL Handler"
 msgstr "முகவரி கையாளுபவர் சேர்க்கவும்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2646
+#: pynicotine/gtkgui/dialogs/preferences.py:2826
 msgid "Enter the protocol and the command for the URL handler:"
 msgstr "முகவரி கையாளுபவருக்கான நெறிமுறை மற்றும் கட்டளையை உள்ளிடவும்:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2674
+#: pynicotine/gtkgui/dialogs/preferences.py:2854
 msgid "Edit Command"
 msgstr "கட்டளையைத் திருத்து"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2675
+#: pynicotine/gtkgui/dialogs/preferences.py:2855
 #, python-format
 msgid "Enter a new command for protocol %s:"
 msgstr "நெறிமுறை %s க்கு புதிய கட்டளையை உள்ளிடவும்:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2837
+#: pynicotine/gtkgui/dialogs/preferences.py:3017
 msgid "Username;APIKEY"
 msgstr "பயனர்பெயர்; அப்பிகி"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2841
-#: pynicotine/gtkgui/dialogs/preferences.py:2849
+#: pynicotine/gtkgui/dialogs/preferences.py:3021
+#: pynicotine/gtkgui/dialogs/preferences.py:3029
 #: pynicotine/headless/application.py:91
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:237
 #: pynicotine/gtkgui/ui/settings/network.ui:59
 msgid "Username: "
 msgstr "பயனர்பெயர்: "
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2845
+#: pynicotine/gtkgui/dialogs/preferences.py:3025
 msgid ""
 "Music player (e.g. amarok, audacious, exaile); leave empty to autodetect:"
 msgstr ""
 "மியூசிக் பிளேயர் (எ.கா. அமரோக், துணிச்சலான, எக்செயல்); ஆட்டோடெடெக்டுக்கு காலியாக "
 "விடவும்:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2853
+#: pynicotine/gtkgui/dialogs/preferences.py:3033
 msgid "Command:"
 msgstr "கட்டளை:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2861
-#: pynicotine/gtkgui/dialogs/preferences.py:2864
+#: pynicotine/gtkgui/dialogs/preferences.py:3041
+#: pynicotine/gtkgui/dialogs/preferences.py:3044
 msgid "Title"
 msgstr "தலைப்பு"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2863
+#: pynicotine/gtkgui/dialogs/preferences.py:3043
 #, python-format
 msgid "Now Playing (typically \"%(artist)s - %(title)s\")"
 msgstr "இப்போது விளையாடுகிறது (பொதுவாக \" %(artist)s - %(title)s\")"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2864
-#: pynicotine/gtkgui/dialogs/preferences.py:2872
+#: pynicotine/gtkgui/dialogs/preferences.py:3044
+#: pynicotine/gtkgui/dialogs/preferences.py:3052
 msgid "Artist"
 msgstr "கலைஞர்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2866
-#: pynicotine/gtkgui/search.py:571 pynicotine/gtkgui/userbrowse.py:344
+#: pynicotine/gtkgui/dialogs/preferences.py:3046
+#: pynicotine/gtkgui/search.py:571 pynicotine/gtkgui/userbrowse.py:345
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:186
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:327
 msgid "Duration"
 msgstr "காலம்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2868
+#: pynicotine/gtkgui/dialogs/preferences.py:3048
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:278
 msgid "Bitrate"
 msgstr "பிட்ரேட்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2870
+#: pynicotine/gtkgui/dialogs/preferences.py:3050
 msgid "Comment"
 msgstr "கருத்து"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2874
+#: pynicotine/gtkgui/dialogs/preferences.py:3054
 msgid "Album"
 msgstr "ஆல்பம்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2876
+#: pynicotine/gtkgui/dialogs/preferences.py:3056
 msgid "Track Number"
 msgstr "ட்ராக் எண்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2878
+#: pynicotine/gtkgui/dialogs/preferences.py:3058
 msgid "Year"
 msgstr "ஆண்டு"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2880
+#: pynicotine/gtkgui/dialogs/preferences.py:3060
 msgid "Filename (URI)"
 msgstr "கோப்பு பெயர் (யுஆர்ஐ)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2882
+#: pynicotine/gtkgui/dialogs/preferences.py:3062
 msgid "Program"
 msgstr "திட்டம்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2945
+#: pynicotine/gtkgui/dialogs/preferences.py:3125
 msgid "Enabled"
 msgstr "இயக்கப்பட்டது"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2952
+#: pynicotine/gtkgui/dialogs/preferences.py:3132
 msgid "Plugin"
 msgstr "சொருகு"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2963
-#: pynicotine/gtkgui/dialogs/preferences.py:3017
+#: pynicotine/gtkgui/dialogs/preferences.py:3143
+#: pynicotine/gtkgui/dialogs/preferences.py:3197
 #, fuzzy
 msgid "_Enable"
 msgstr "இயக்கப்பட்டது"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2964
-#: pynicotine/gtkgui/dialogs/preferences.py:3018
+#: pynicotine/gtkgui/dialogs/preferences.py:3144
+#: pynicotine/gtkgui/dialogs/preferences.py:3198
 msgid "_Disable"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2966
-#: pynicotine/gtkgui/dialogs/preferences.py:3021
+#: pynicotine/gtkgui/dialogs/preferences.py:3146
+#: pynicotine/gtkgui/dialogs/preferences.py:3201
 #: pynicotine/gtkgui/ui/settings/plugin.ui:152
 msgid "_Settings"
 msgstr "_SETTINGS"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3026
+#: pynicotine/gtkgui/dialogs/preferences.py:3206
 msgid "No Plugin Selected"
 msgstr "சொருகி எதுவும் தேர்ந்தெடுக்கப்படவில்லை"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3129
+#: pynicotine/gtkgui/dialogs/preferences.py:3309
 #: pynicotine/gtkgui/dialogs/shortcuts.py:40
 #: pynicotine/gtkgui/widgets/trayicon.py:90
 msgid "Preferences"
 msgstr "விருப்பத்தேர்வுகள்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3143
+#: pynicotine/gtkgui/dialogs/preferences.py:3323
 #: pynicotine/gtkgui/ui/settings/network.ui:32
 msgid "Network"
 msgstr "பிணையம்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3144
+#: pynicotine/gtkgui/dialogs/preferences.py:3324
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:36
 msgid "User Interface"
 msgstr "பயனர் இடைமுகம்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3145
+#: pynicotine/gtkgui/dialogs/preferences.py:3325
 #: pynicotine/plugins/core_commands/__init__.py:15
-#: pynicotine/gtkgui/ui/settings/shares.ui:16
+#: pynicotine/gtkgui/ui/settings/shares.ui:354
 msgid "Shares"
 msgstr "பங்குகள்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3147
+#: pynicotine/gtkgui/dialogs/preferences.py:3327
 #: pynicotine/gtkgui/mainwindow.py:755 pynicotine/gtkgui/mainwindow.py:1107
 #: pynicotine/gtkgui/widgets/trayicon.py:74
 #: pynicotine/gtkgui/ui/mainwindow.ui:709
@@ -1650,53 +1719,53 @@ msgstr "பங்குகள்"
 msgid "Uploads"
 msgstr "பதிவேற்றுகிறது"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3148
+#: pynicotine/gtkgui/dialogs/preferences.py:3328
 #: pynicotine/gtkgui/widgets/trayicon.py:80
 #: pynicotine/gtkgui/ui/settings/search.ui:38
 msgid "Searches"
 msgstr "தேடல்கள்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3149
+#: pynicotine/gtkgui/dialogs/preferences.py:3329
 msgid "User Profile"
 msgstr "பயனர் சுயவிவரம்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3150
-#: pynicotine/gtkgui/ui/settings/chats.ui:350
+#: pynicotine/gtkgui/dialogs/preferences.py:3330
+#: pynicotine/gtkgui/ui/settings/chats.ui:348
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1050
 msgid "Chats"
 msgstr "அரட்டைகள்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3151
+#: pynicotine/gtkgui/dialogs/preferences.py:3331
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:20
 msgid "Now Playing"
 msgstr "இப்போது விளையாடுகிறது"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3152
+#: pynicotine/gtkgui/dialogs/preferences.py:3332
 #: pynicotine/gtkgui/ui/settings/log.ui:81
 msgid "Logging"
 msgstr "பதிவு"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3153
+#: pynicotine/gtkgui/dialogs/preferences.py:3333
 #: pynicotine/gtkgui/ui/settings/ban.ui:21
 msgid "Banned Users"
 msgstr "தடைசெய்யப்பட்ட பயனர்கள்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3154
+#: pynicotine/gtkgui/dialogs/preferences.py:3334
 #: pynicotine/gtkgui/ui/settings/ignore.ui:21
 msgid "Ignored Users"
 msgstr "புறக்கணிக்கப்பட்ட பயனர்கள்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3155
+#: pynicotine/gtkgui/dialogs/preferences.py:3335
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:16
 msgid "URL Handlers"
 msgstr "முகவரி கையாளுபவர்கள்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3156
+#: pynicotine/gtkgui/dialogs/preferences.py:3336
 #: pynicotine/gtkgui/ui/settings/plugin.ui:33
 msgid "Plugins"
 msgstr "செருகுநிரல்கள்"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3554
+#: pynicotine/gtkgui/dialogs/preferences.py:3742
 msgid "Pick a File Name for Config Backup"
 msgstr "கட்டமைப்பு காப்புப்பிரதிக்கு கோப்பு பெயரைத் தேர்ந்தெடுக்கவும்"
 
@@ -1719,6 +1788,7 @@ msgid "Users"
 msgstr "பயனர்கள்"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:75
+#: pynicotine/gtkgui/dialogs/roomlist.py:256
 #, fuzzy
 msgid "_Join Room"
 msgstr "அறையில் சேரவும்"
@@ -1732,14 +1802,6 @@ msgstr "தனியார் அறையை மறுக்கவும்"
 #: pynicotine/gtkgui/dialogs/roomlist.py:260
 msgid "Cancel Room Membership"
 msgstr "அறை உறுப்பினரை ரத்துசெய்"
-
-#: pynicotine/gtkgui/dialogs/roomlist.py:256
-msgid "Join Room"
-msgstr "அறையில் சேரவும்"
-
-#: pynicotine/gtkgui/dialogs/roomlist.py:257
-msgid "Leave Room"
-msgstr "அறை விடுங்கள்"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:28
 #: pynicotine/gtkgui/dialogs/shortcuts.py:39
@@ -1852,8 +1914,7 @@ msgstr "அனைத்தையும் நகலெடுக்கவும�
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:62
 #: pynicotine/gtkgui/dialogs/shortcuts.py:71
-#: pynicotine/gtkgui/ui/dialogs/download.ui:200
-#: pynicotine/gtkgui/ui/dialogs/download.ui:216
+#: pynicotine/gtkgui/ui/dialogs/download.ui:176
 msgid "Select All"
 msgstr "அனைத்தையும் தெரிவுசெய்"
 
@@ -2273,7 +2334,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/privatechat.py:355 pynicotine/gtkgui/search.py:628
 #: pynicotine/gtkgui/userbrowse.py:273 pynicotine/gtkgui/userinfo.py:344
-#: pynicotine/gtkgui/widgets/iconnotebook.py:730
+#: pynicotine/gtkgui/widgets/iconnotebook.py:743
 msgid "Close All Tabs…"
 msgstr "எல்லா தாவல்களையும் மூடு…"
 
@@ -2287,8 +2348,8 @@ msgid "View Chat Log"
 msgstr "அரட்டை பதிவைக் காண்க"
 
 #: pynicotine/gtkgui/privatechat.py:377 pynicotine/gtkgui/search.py:617
-#: pynicotine/gtkgui/transfers.py:281 pynicotine/gtkgui/userbrowse.py:295
-#: pynicotine/gtkgui/userbrowse.py:307 pynicotine/gtkgui/userbrowse.py:378
+#: pynicotine/gtkgui/transfers.py:281 pynicotine/gtkgui/userbrowse.py:296
+#: pynicotine/gtkgui/userbrowse.py:308 pynicotine/gtkgui/userbrowse.py:378
 #: pynicotine/gtkgui/userbrowse.py:390
 msgid "User Actions"
 msgstr "பயனர் செயல்கள்"
@@ -2324,7 +2385,7 @@ msgid "Private"
 msgstr "தனிப்பட்ட அரட்டை"
 
 #: pynicotine/gtkgui/search.py:542 pynicotine/gtkgui/transfers.py:149
-#: pynicotine/gtkgui/userbrowse.py:318
+#: pynicotine/gtkgui/userbrowse.py:319
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:143
 msgid "File Type"
 msgstr "கோப்பு வகை"
@@ -2333,7 +2394,7 @@ msgstr "கோப்பு வகை"
 msgid "Filename"
 msgstr "கோப்புப்பெயர்"
 
-#: pynicotine/gtkgui/search.py:564 pynicotine/gtkgui/userbrowse.py:338
+#: pynicotine/gtkgui/search.py:564 pynicotine/gtkgui/userbrowse.py:339
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:220
 msgid "Quality"
 msgstr "தகுதி"
@@ -2354,7 +2415,7 @@ msgid "Copy Folder URL"
 msgstr "கோப்புறை U_RL ஐ நகலெடுக்கவும்"
 
 #: pynicotine/gtkgui/search.py:611 pynicotine/gtkgui/transfers.py:270
-#: pynicotine/gtkgui/userbrowse.py:290 pynicotine/gtkgui/userbrowse.py:302
+#: pynicotine/gtkgui/userbrowse.py:291 pynicotine/gtkgui/userbrowse.py:303
 #: pynicotine/gtkgui/userbrowse.py:373 pynicotine/gtkgui/userbrowse.py:385
 msgid "F_ile Properties"
 msgstr "F_ile பண்புகள்"
@@ -2440,12 +2501,12 @@ msgstr "வடிப்பான்களைப் பதிவிறக்க�
 msgid "Download _Files"
 msgstr "வடிப்பான்களைப் பதிவிறக்கவும்"
 
-#: pynicotine/gtkgui/search.py:1533 pynicotine/gtkgui/userbrowse.py:1140
+#: pynicotine/gtkgui/search.py:1533 pynicotine/gtkgui/userbrowse.py:1134
 #, fuzzy
 msgid "Download File _To…"
 msgstr "கோப்பு (களை) பதிவிறக்கவும் _to…"
 
-#: pynicotine/gtkgui/search.py:1533 pynicotine/gtkgui/userbrowse.py:1140
+#: pynicotine/gtkgui/search.py:1533 pynicotine/gtkgui/userbrowse.py:1134
 #, fuzzy
 msgid "Download Files _To…"
 msgstr "கோப்பு (களை) பதிவிறக்கவும் _to…"
@@ -2460,7 +2521,7 @@ msgstr "கோப்புறையைப் பதிவிறக்குங�
 msgid "_Download Folders…"
 msgstr "கோப்புறையைப் பதிவிறக்குங்கள் (என்பது)…"
 
-#: pynicotine/gtkgui/search.py:1626 pynicotine/gtkgui/userbrowse.py:1203
+#: pynicotine/gtkgui/search.py:1626 pynicotine/gtkgui/userbrowse.py:1197
 msgid "Select Destination Folder for Files"
 msgstr "கோப்புகளுக்கான இலக்கு கோப்புறையைத் தேர்ந்தெடுக்கவும்"
 
@@ -2633,22 +2694,18 @@ msgstr "எல்லா பதிவேற்றங்களையும் அ�
 msgid "_Save Shares List to Disk"
 msgstr "_SAVE பங்குகள் பட்டியலுக்கு பட்டியல்"
 
-#: pynicotine/gtkgui/userbrowse.py:292 pynicotine/gtkgui/userbrowse.py:304
+#: pynicotine/gtkgui/userbrowse.py:293 pynicotine/gtkgui/userbrowse.py:305
 msgid "Copy _Folder Path"
 msgstr "கோப்புறை பாதையை நகலெடுக்கவும்"
 
-#: pynicotine/gtkgui/userbrowse.py:293 pynicotine/gtkgui/userbrowse.py:305
+#: pynicotine/gtkgui/userbrowse.py:294 pynicotine/gtkgui/userbrowse.py:306
 #, fuzzy
 msgid "Copy Folder _URL"
 msgstr "கோப்புறை U_RL ஐ நகலெடுக்கவும்"
 
-#: pynicotine/gtkgui/userbrowse.py:324
+#: pynicotine/gtkgui/userbrowse.py:325
 msgid "File Name"
 msgstr "கோப்பு பெயர்"
-
-#: pynicotine/gtkgui/userbrowse.py:364
-msgid "Upload Folder…"
-msgstr "கோப்புறை பதிவேற்றவும்…"
 
 #: pynicotine/gtkgui/userbrowse.py:375 pynicotine/gtkgui/userbrowse.py:387
 msgid "Copy _File Path"
@@ -2687,79 +2744,92 @@ msgstr ""
 "உள்ளது, பயனர் ஆஃப்லைனில் இருக்கிறார், அல்லது தற்காலிக இணைப்பு சிக்கல் உள்ளது."
 
 #: pynicotine/gtkgui/userbrowse.py:925
-msgid "Upload Folder & Subfolders…"
-msgstr "கோப்புறை மற்றும் துணை கோப்புறைகளை பதிவேற்றவும்…"
+#, fuzzy
+msgid "Upload _Folder…"
+msgstr "கோப்புறை பதிவேற்றவும்…"
 
 #: pynicotine/gtkgui/userbrowse.py:925
 #, fuzzy
-msgid "Upload Folders & Subfolders…"
+msgid "Upload _Folders…"
+msgstr "கோப்புறை பதிவேற்றவும்…"
+
+#: pynicotine/gtkgui/userbrowse.py:929
+#, fuzzy
+msgid "Upload Folder & _Subfolders…"
 msgstr "கோப்புறை மற்றும் துணை கோப்புறைகளை பதிவேற்றவும்…"
 
-#: pynicotine/gtkgui/userbrowse.py:931
-msgid "_Download Folder & Subfolders"
-msgstr "_ கோப்புறை மற்றும் துணை கோப்புறைகள்"
-
-#: pynicotine/gtkgui/userbrowse.py:931
+#: pynicotine/gtkgui/userbrowse.py:929
 #, fuzzy
-msgid "_Download Folders & Subfolders"
-msgstr "_ கோப்புறை மற்றும் துணை கோப்புறைகள்"
-
-#: pynicotine/gtkgui/userbrowse.py:935
-msgid "Download Folder & Subfolders _To…"
-msgstr "கோப்புறை மற்றும் துணை கோப்புறைகளைப் பதிவிறக்குக _to…"
+msgid "Upload Folders & _Subfolders…"
+msgstr "கோப்புறை மற்றும் துணை கோப்புறைகளை பதிவேற்றவும்…"
 
 #: pynicotine/gtkgui/userbrowse.py:935
 #, fuzzy
-msgid "Download Folders & Subfolders _To…"
+msgid "Download _Folder"
+msgstr "கோப்புறை பதிவிறக்கவும்"
+
+#: pynicotine/gtkgui/userbrowse.py:935
+#, fuzzy
+msgid "Download _Folders"
+msgstr "பதிவிறக்கம் _ ஃபோல்டர் (கள்)"
+
+#: pynicotine/gtkgui/userbrowse.py:939
+#, fuzzy
+msgid "Download Folder & _Subfolders…"
 msgstr "கோப்புறை மற்றும் துணை கோப்புறைகளைப் பதிவிறக்குக _to…"
 
-#: pynicotine/gtkgui/userbrowse.py:1014
+#: pynicotine/gtkgui/userbrowse.py:939
+#, fuzzy
+msgid "Download Folders & _Subfolders…"
+msgstr "கோப்புறை மற்றும் துணை கோப்புறைகளைப் பதிவிறக்குக _to…"
+
+#: pynicotine/gtkgui/userbrowse.py:1008
 msgid "Upload Folder (with Subfolders) To User"
 msgstr "கோப்புறையை (துணை கோப்புறைகளுடன்) பயனருக்கு பதிவேற்றவும்"
 
-#: pynicotine/gtkgui/userbrowse.py:1015
+#: pynicotine/gtkgui/userbrowse.py:1009
 #, fuzzy
 msgid "Upload Folders (with Subfolders) To User"
 msgstr "கோப்புறையை (துணை கோப்புறைகளுடன்) பயனருக்கு பதிவேற்றவும்"
 
-#: pynicotine/gtkgui/userbrowse.py:1017
+#: pynicotine/gtkgui/userbrowse.py:1011
 msgid "Upload Folder To User"
 msgstr "கோப்புறையை பயனருக்கு பதிவேற்றவும்"
 
-#: pynicotine/gtkgui/userbrowse.py:1017
+#: pynicotine/gtkgui/userbrowse.py:1011
 #, fuzzy
 msgid "Upload Folders To User"
 msgstr "கோப்புறையை பயனருக்கு பதிவேற்றவும்"
 
-#: pynicotine/gtkgui/userbrowse.py:1022 pynicotine/gtkgui/userbrowse.py:1229
+#: pynicotine/gtkgui/userbrowse.py:1016 pynicotine/gtkgui/userbrowse.py:1223
 msgid "Enter the name of the user you want to upload to:"
 msgstr "நீங்கள் பதிவேற்ற விரும்பும் பயனரின் பெயரை உள்ளிடவும்:"
 
-#: pynicotine/gtkgui/userbrowse.py:1023 pynicotine/gtkgui/userbrowse.py:1230
+#: pynicotine/gtkgui/userbrowse.py:1017 pynicotine/gtkgui/userbrowse.py:1224
 msgid "_Upload"
 msgstr "_Upload"
 
-#: pynicotine/gtkgui/userbrowse.py:1130
+#: pynicotine/gtkgui/userbrowse.py:1124
 #, fuzzy
 msgid "Up_load File…"
 msgstr "கோப்புகளைப் பதிவேற்ற)…"
 
-#: pynicotine/gtkgui/userbrowse.py:1130
+#: pynicotine/gtkgui/userbrowse.py:1124
 #, fuzzy
 msgid "Up_load Files…"
 msgstr "கோப்புகளைப் பதிவேற்ற)…"
 
-#: pynicotine/gtkgui/userbrowse.py:1136
+#: pynicotine/gtkgui/userbrowse.py:1130
 #, fuzzy
 msgid "_Download File"
 msgstr "வடிப்பான்களைப் பதிவிறக்கவும்"
 
-#: pynicotine/gtkgui/userbrowse.py:1136
+#: pynicotine/gtkgui/userbrowse.py:1130
 #, fuzzy
 msgid "_Download Files"
 msgstr "வடிப்பான்களைப் பதிவிறக்கவும்"
 
-#: pynicotine/gtkgui/userbrowse.py:1228
+#: pynicotine/gtkgui/userbrowse.py:1222
 #, fuzzy
 msgid "Upload File To User"
 msgstr "கோப்பு (களை) பயனருக்கு பதிவேற்றவும்"
@@ -2892,27 +2962,27 @@ msgstr "சேமிக்கவும்…"
 msgid "(None)"
 msgstr "(எதுவுமில்லை)"
 
-#: pynicotine/gtkgui/widgets/iconnotebook.py:447
+#: pynicotine/gtkgui/widgets/iconnotebook.py:448
 msgid "Close All Tabs?"
 msgstr "எல்லா தாவல்களையும் மூடவா?"
 
-#: pynicotine/gtkgui/widgets/iconnotebook.py:448
+#: pynicotine/gtkgui/widgets/iconnotebook.py:449
 msgid "Do you really want to close all tabs?"
 msgstr "எல்லா தாவல்களையும் மூட விரும்புகிறீர்களா?"
 
-#: pynicotine/gtkgui/widgets/iconnotebook.py:460
+#: pynicotine/gtkgui/widgets/iconnotebook.py:461
 #, fuzzy, python-format
 msgid "%s Unread Tab"
 msgid_plural "%s Unread Tabs"
 msgstr[0] "%i படிக்காத தாவல்(கள்)"
 msgstr[1] "%i படிக்காத தாவல்(கள்)"
 
-#: pynicotine/gtkgui/widgets/iconnotebook.py:463
+#: pynicotine/gtkgui/widgets/iconnotebook.py:464
 msgid "All Tabs"
 msgstr "அனைத்து தாவல்களும்"
 
-#: pynicotine/gtkgui/widgets/iconnotebook.py:729
-#: pynicotine/gtkgui/widgets/iconnotebook.py:734
+#: pynicotine/gtkgui/widgets/iconnotebook.py:742
+#: pynicotine/gtkgui/widgets/iconnotebook.py:747
 msgid "Re_open Closed Tab"
 msgstr "மூடிய தாவலை மீண்டும் திறக்கவும்"
 
@@ -4543,22 +4613,22 @@ msgstr[0] ""
 msgstr[1] ""
 "பயனர் %(user)s \"%(query)s\" ஐத் தேடுகின்றார், %(num)i முடிவுகள் காணப்படுகின்றது"
 
-#: pynicotine/shares.py:297
+#: pynicotine/shares.py:300
 msgid "Rebuilding shares…"
 msgstr "பங்குகளை மீண்டும் உருவாக்குதல்…"
 
-#: pynicotine/shares.py:297
+#: pynicotine/shares.py:300
 msgid "Rescanning shares…"
 msgstr "பங்குகளை மீட்டெடுப்பது…"
 
-#: pynicotine/shares.py:321
+#: pynicotine/shares.py:325
 #, fuzzy, python-format
 msgid "Rescan complete: %(num)s folder found"
 msgid_plural "Rescan complete: %(num)s folders found"
 msgstr[0] "ரெசான் முழுமையானது: %(num)sோப்புறைகள் காணப்பட்டன"
 msgstr[1] "ரெசான் முழுமையானது: %(num)sோப்புறைகள் காணப்பட்டன"
 
-#: pynicotine/shares.py:334
+#: pynicotine/shares.py:338
 #, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
@@ -4569,43 +4639,43 @@ msgstr ""
 "ஐ நீக்கி மீண்டும் முயற்சிக்கவும். அது உதவவில்லை என்றால், தயவுசெய்து இந்த அடுக்கு சுவடு "
 "மூலம் பிழை அறிக்கையை தாக்கல் செய்யுங்கள்: %(trace)s"
 
-#: pynicotine/shares.py:604
+#: pynicotine/shares.py:631
 #, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "கோப்பு %(path)s: %(error)s ச்கேன் செய்யும் போது பிழை"
 
-#: pynicotine/shares.py:612
+#: pynicotine/shares.py:639
 #, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "கோப்புறையை ச்கேன் செய்யும் போது பிழை %(path)s: %(error)s"
 
-#: pynicotine/shares.py:651
+#: pynicotine/shares.py:680
 #, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr "கோப்பு %(path)s: %(error)s மெட்டாடேட்டாவை ச்கேன் செய்யும் போது பிழை"
 
-#: pynicotine/shares.py:1095
+#: pynicotine/shares.py:1124
 #, python-format
 msgid "Rescan aborted due to unavailable shares: %s"
 msgstr "கிடைக்காத பங்குகள் காரணமாக ரெச்கான் கைவிடப்பட்டது: %s"
 
-#: pynicotine/shares.py:1265
+#: pynicotine/shares.py:1299
 #, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "பயனர் %(user)s உங்கள் பகிரப்பட்ட கோப்புகளின் பட்டியலை உலாவுகின்றன"
 
-#: pynicotine/slskmessages.py:3102
+#: pynicotine/slskmessages.py:3104
 #, python-format
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr ""
 "பங்குகள் தரவுத்தளத்தைப் படிக்க முடியவில்லை. உங்கள் பங்குகளை மீட்டெடுக்கவும். பிழை: %s"
 
-#: pynicotine/slskproto.py:492
+#: pynicotine/slskproto.py:488
 #, python-format
 msgid "Specified network interface '%s' is not available"
 msgstr "குறிப்பிட்ட பிணைய இடைமுகம் '%s' கிடைக்கவில்லை"
 
-#: pynicotine/slskproto.py:503
+#: pynicotine/slskproto.py:499
 #, python-format
 msgid ""
 "Cannot listen on port %(port)s. Ensure no other application uses it, or "
@@ -4614,37 +4684,37 @@ msgstr ""
 "துறைமுகம் %(port)s கேட்க முடியாது. வேறு எந்த பயன்பாடும் இதைப் பயன்படுத்துவதில்லை "
 "என்பதை உறுதிப்படுத்தவும் அல்லது வேறு துறைமுகத்தைத் தேர்வு செய்யவும். பிழை: %(error)s"
 
-#: pynicotine/slskproto.py:515
+#: pynicotine/slskproto.py:511
 #, python-format
 msgid "Listening on port: %i"
 msgstr "போர்ட்டில் கேட்பது: %i"
 
-#: pynicotine/slskproto.py:797
+#: pynicotine/slskproto.py:793
 #, python-format
 msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "சேவையகத்துடன் இணைக்க முடியாது %(host)s: %(port)s: %(error)s"
 
-#: pynicotine/slskproto.py:1091
+#: pynicotine/slskproto.py:1077
 #, fuzzy, python-format
 msgid "Reconnecting to server in %(duration)s"
 msgstr "%s வினாடிகளில் சேவையகத்துடன் மீண்டும் இணைக்கவும்"
 
-#: pynicotine/slskproto.py:1167
+#: pynicotine/slskproto.py:1153
 #, python-format
 msgid "Connecting to %(host)s:%(port)s"
 msgstr "%(host)s: %(port)s"
 
-#: pynicotine/slskproto.py:1205
+#: pynicotine/slskproto.py:1191
 #, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in…"
 msgstr "சேவையகத்துடன் இணைக்கப்பட்டுள்ளது %(host)s: %(port)s, உள்நுழைவு…"
 
-#: pynicotine/slskproto.py:1497
+#: pynicotine/slskproto.py:1485
 #, python-format
 msgid "Disconnected from server %(host)s:%(port)s"
 msgstr "சேவையக %(host)s: %(port)s ஆகியவற்றிலிருந்து துண்டிக்கப்பட்டது"
 
-#: pynicotine/slskproto.py:1503
+#: pynicotine/slskproto.py:1491
 msgid "Someone logged in to your Soulseek account elsewhere"
 msgstr "யாரோ ஒருவர் உங்கள் ஆன்மாதேடு கணக்கில் வேறு இடங்களில் உள்நுழைந்தார்"
 
@@ -4693,11 +4763,6 @@ msgstr "பதிவேற்ற I/O பிழை: %s"
 msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr "பதிவேற்றம் தொடங்கியது: பயனர் %(user)s, ஐபி முகவரி %(ip)s, கோப்பு %(file)s"
 
-#: pynicotine/userbrowse.py:169
-#, python-format
-msgid "Can't create directory '%(folder)s', reported error: %(error)s"
-msgstr "கோப்பகத்தை உருவாக்க முடியாது ' %(folder)s', அறிக்கையிடப்பட்ட பிழை: %(error)s"
-
 #: pynicotine/userbrowse.py:229
 #, python-format
 msgid "Loading Shares from disk failed: %(error)s"
@@ -4710,9 +4775,9 @@ msgstr ""
 "பயனர் ' %(user)s' முதல் %(dir)s க்கான பகிரப்பட்ட கோப்புகளின் சேமிக்கப்பட்ட பட்டியல்"
 
 #: pynicotine/userbrowse.py:279
-#, python-format
-msgid "Can't save shares, '%(user)s', reported error: %(error)s"
-msgstr "பங்குகளைச் சேமிக்க முடியாது, ' %(user)s', அறிக்கையிடப்பட்ட பிழை: %(error)s"
+#, fuzzy, python-format
+msgid "Cannot save shares for user %(user)s: %(error)s"
+msgstr "பயனர் %(user)s: %(error)s படத்தை ஏற்றுவதில் தோல்வி"
 
 #: pynicotine/userbrowse.py:355
 #, python-format
@@ -4818,37 +4883,37 @@ msgid_plural "%(num)s days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: pynicotine/utils.py:584
+#: pynicotine/utils.py:585
 #, python-format
 msgid "Cannot open file path %(path)s: %(error)s"
 msgstr "கோப்பு பாதை %(path)s: %(error)s திறக்க முடியாது"
 
-#: pynicotine/utils.py:630
+#: pynicotine/utils.py:631
 #, python-format
 msgid "Cannot open URL %(url)s: %(error)s"
 msgstr "முகவரி %(url)s திறக்க முடியாது: %(error)s"
 
-#: pynicotine/utils.py:655
+#: pynicotine/utils.py:656
 #, python-format
 msgid "Something went wrong while reading file %(filename)s: %(error)s"
 msgstr "%(filename)s கோப்பை படிக்கும்போது ஏதோ தவறு ஏற்பட்டது: %(error)s"
 
-#: pynicotine/utils.py:660
+#: pynicotine/utils.py:661
 #, python-format
 msgid "Attempting to load backup of file %s"
 msgstr "கோப்பு %s இன் காப்புப்பிரதியை ஏற்ற முயற்சிக்கிறது"
 
-#: pynicotine/utils.py:682
+#: pynicotine/utils.py:683
 #, python-format
 msgid "Unable to back up file %(path)s: %(error)s"
 msgstr "கோப்பு %(path)s: %(error)s காப்புப்பிரதி எடுக்க முடியவில்லை"
 
-#: pynicotine/utils.py:703
+#: pynicotine/utils.py:704
 #, python-format
 msgid "Unable to save file %(path)s: %(error)s"
 msgstr "கோப்பு %(path)s: %(error)s சேமிக்க முடியவில்லை"
 
-#: pynicotine/utils.py:714
+#: pynicotine/utils.py:715
 #, python-format
 msgid "Unable to restore previous file %(path)s: %(error)s"
 msgstr "முந்தைய கோப்பை மீட்டெடுக்க முடியவில்லை %(path)s: %(error)s"
@@ -4902,8 +4967,8 @@ msgid "Download (Paused)"
 msgstr "பதிவிறக்கங்கள்: %(speed)s"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:40
-#: pynicotine/gtkgui/ui/settings/chats.ui:750
-#: pynicotine/gtkgui/ui/settings/chats.ui:777
+#: pynicotine/gtkgui/ui/settings/chats.ui:747
+#: pynicotine/gtkgui/ui/settings/chats.ui:774
 #: pynicotine/gtkgui/ui/settings/downloads.ui:20
 #: pynicotine/gtkgui/ui/settings/downloads.ui:35
 #: pynicotine/gtkgui/ui/settings/downloads.ui:50
@@ -4912,7 +4977,7 @@ msgstr "பதிவிறக்கங்கள்: %(speed)s"
 #: pynicotine/gtkgui/ui/settings/log.ui:40
 #: pynicotine/gtkgui/ui/settings/log.ui:55
 #: pynicotine/gtkgui/ui/settings/log.ui:206
-#: pynicotine/gtkgui/ui/settings/network.ui:357
+#: pynicotine/gtkgui/ui/settings/network.ui:359
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:487
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:527
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:567
@@ -4936,27 +5001,34 @@ msgstr "இயல்புநிலை"
 msgid "Download location:"
 msgstr "பதிவிறக்க / பதிவேற்றவும்"
 
-#: pynicotine/gtkgui/ui/dialogs/download.ui:93
-#, fuzzy
-msgid "Store downloads in subfolders"
-msgstr "பயனர்பெயர் துணை கோப்புறைகளில் நிறைவு செய்யப்பட்ட பதிவிறக்கங்களை சேமிக்கவும்"
-
-#: pynicotine/gtkgui/ui/dialogs/download.ui:164
-#: pynicotine/gtkgui/ui/dialogs/download.ui:180
+#: pynicotine/gtkgui/ui/dialogs/download.ui:139
 #, fuzzy
 msgid "Rename…"
 msgstr "பயனர்பெயர்…"
 
-#: pynicotine/gtkgui/ui/dialogs/download.ui:230
-#: pynicotine/gtkgui/ui/dialogs/download.ui:246
+#: pynicotine/gtkgui/ui/dialogs/download.ui:192
+#, fuzzy
+msgid "Select _All"
+msgstr "அனைத்தையும் தெரிவுசெய்"
+
+#: pynicotine/gtkgui/ui/dialogs/download.ui:207
 #, fuzzy
 msgid "Deselect All"
 msgstr "அனைத்தையும் தெரிவுசெய்"
 
-#: pynicotine/gtkgui/ui/dialogs/download.ui:260
-#: pynicotine/gtkgui/ui/dialogs/download.ui:276
+#: pynicotine/gtkgui/ui/dialogs/download.ui:223
+#, fuzzy
+msgid "Deselect _All"
+msgstr "அனைத்தையும் தெரிவுசெய்"
+
+#: pynicotine/gtkgui/ui/dialogs/download.ui:238
 #, fuzzy
 msgid "Select Initial"
+msgstr "ஒரு கோப்பைத் தேர்ந்தெடுக்கவும்"
+
+#: pynicotine/gtkgui/ui/dialogs/download.ui:254
+#, fuzzy
+msgid "Select _Initial"
 msgstr "ஒரு கோப்பைத் தேர்ந்தெடுக்கவும்"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:102
@@ -5001,7 +5073,7 @@ msgid "Share Folders"
 msgstr "கோப்புறைகளைப் பகிரவும்"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:420
-#: pynicotine/gtkgui/ui/settings/shares.ui:28
+#: pynicotine/gtkgui/ui/settings/shares.ui:366
 msgid ""
 "Soulseek users will be able to download from your shares. Contribute to the "
 "Soulseek network by sharing your own files and by resharing what you "
@@ -5011,16 +5083,30 @@ msgstr ""
 "கோப்புகளைப் பகிர்வதன் மூலமும், பிற பயனர்களிடமிருந்து நீங்கள் பதிவிறக்கம் செய்ததை "
 "மறுசீரமைப்பதன் மூலமும் ஆன்மாதேடு நெட்வொர்க்கிற்கு பங்களிக்கவும்."
 
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:585
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:455
+#: pynicotine/gtkgui/ui/settings/ban.ui:168
+#: pynicotine/gtkgui/ui/settings/ban.ui:289
+#: pynicotine/gtkgui/ui/settings/chats.ui:84
+#: pynicotine/gtkgui/ui/settings/chats.ui:239
+#: pynicotine/gtkgui/ui/settings/downloads.ui:453
+#: pynicotine/gtkgui/ui/settings/ignore.ui:102
+#: pynicotine/gtkgui/ui/settings/ignore.ui:222
+#: pynicotine/gtkgui/ui/settings/shares.ui:37
+#: pynicotine/gtkgui/ui/settings/urlhandlers.ui:81
+#: pynicotine/gtkgui/ui/userinfo.ui:411
+msgid "Add…"
+msgstr "சேர்க்கவும்…"
+
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:584
 msgid "You are ready to use Nicotine+!"
 msgstr "நிகோடின்+ஐப் பயன்படுத்த நீங்கள் தயாராக உள்ளீர்கள்!"
 
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:603
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:602
 msgid ""
 "Soulseek is an unencrypted protocol not intended for secure communication."
 msgstr "ஆன்மாதேடு என்பது பாதுகாப்பான தகவல்தொடர்புக்காக அல்ல மறைகுறியாக்கப்பட்ட நெறிமுறை."
 
-#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:613
+#: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:612
 msgid ""
 "Donating to Soulseek grants you privileges for a certain time period. If you "
 "have privileges, your downloads will be queued ahead of non-privileged users."
@@ -5046,8 +5132,14 @@ msgid "Last Speed"
 msgstr "கடைசி விரைவு"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:15
-msgid "_Export…"
+#, fuzzy
+msgid "E_xport…"
 msgstr "_ எக்ச்போர்ட்…"
+
+#: pynicotine/gtkgui/ui/dialogs/preferences.ui:21
+#, fuzzy
+msgid "A_pply"
+msgstr "_Aplay"
 
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:27
 msgid "Search rooms…"
@@ -5071,7 +5163,6 @@ msgid "_Show feed of public chat room messages"
 msgstr "பொது அரட்டை அறை செய்திகளின் ஊட்டத்தைக் காட்டு"
 
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:165
-#: pynicotine/gtkgui/ui/settings/chats.ui:368
 msgid "_Accept private room invitations"
 msgstr "_ தனியார் அறை அழைப்பிதழ்களை ஏற்றுக்கொள்ளுங்கள்"
 
@@ -5119,24 +5210,34 @@ msgstr ""
 "அசாதாரண கோப்புகளைக் கண்டுபிடிப்பதற்காக, விருப்பப்பட்டியல் உருப்படிகள் தானாகவே "
 "தேடப்படுகின்றன."
 
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:132
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:148
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:133
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:149
 msgid "Clear All…"
 msgstr "அனைத்தையும் அழிக்கவும்…"
 
-#: pynicotine/gtkgui/ui/downloads.ui:143
+#: pynicotine/gtkgui/ui/downloads.ui:61
+#, fuzzy
+msgid "Re_sume"
+msgstr "மீண்டும் தொடங்குங்கள்"
+
+#: pynicotine/gtkgui/ui/downloads.ui:92
+#, fuzzy
+msgid "_Pause"
+msgstr "இடைநிறுத்தம்"
+
+#: pynicotine/gtkgui/ui/downloads.ui:145
 msgid "Clear All Finished/Filtered Downloads"
 msgstr "முடிக்கப்பட்ட/வடிகட்டப்பட்ட எல்லா பதிவிறக்கங்களையும் அழிக்கவும்"
 
-#: pynicotine/gtkgui/ui/downloads.ui:159 pynicotine/gtkgui/ui/uploads.ui:159
+#: pynicotine/gtkgui/ui/downloads.ui:161 pynicotine/gtkgui/ui/uploads.ui:162
 msgid "Clear Finished"
 msgstr "தெளிவாக முடிந்தது"
 
-#: pynicotine/gtkgui/ui/downloads.ui:174
+#: pynicotine/gtkgui/ui/downloads.ui:176
 msgid "Clear Specific Downloads"
 msgstr "குறிப்பிட்ட பதிவிறக்கங்களை அழிக்கவும்"
 
-#: pynicotine/gtkgui/ui/downloads.ui:183 pynicotine/gtkgui/ui/uploads.ui:183
+#: pynicotine/gtkgui/ui/downloads.ui:185 pynicotine/gtkgui/ui/uploads.ui:186
 msgid "Clear _All…"
 msgstr "தெளிவான _all…"
 
@@ -5290,7 +5391,7 @@ msgid ""
 "Enter the name of a user to start a text conversation with them in private"
 msgstr "அவர்களுடன் உரை உரையாடலைத் தொடங்க பயனரின் பெயரை உள்ளிடவும்"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1306
+#: pynicotine/gtkgui/ui/mainwindow.ui:1306 pynicotine/gtkgui/ui/uploads.ui:131
 msgid "_Message All"
 msgstr "_மெசேச் அனைத்தையும்"
 
@@ -5328,7 +5429,7 @@ msgid "Configure User Profile"
 msgstr "பயனர் சுயவிவரத்தை உள்ளமைக்கவும்"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1758
-#: pynicotine/gtkgui/ui/settings/network.ui:303
+#: pynicotine/gtkgui/ui/settings/network.ui:305
 msgid "Connections"
 msgstr "இணைப்புகள்"
 
@@ -5758,8 +5859,8 @@ msgstr "தனிப்பயன் சியோ பிளாக் செய்
 msgid "Use custom ban message:"
 msgstr "தனிப்பயன் தடை செய்தியைப் பயன்படுத்தவும்:"
 
-#: pynicotine/gtkgui/ui/settings/ban.ui:250
-#: pynicotine/gtkgui/ui/settings/ignore.ui:184
+#: pynicotine/gtkgui/ui/settings/ban.ui:249
+#: pynicotine/gtkgui/ui/settings/ignore.ui:183
 msgid "IP Addresses"
 msgstr "ஐபி முகவரிகள்"
 
@@ -5767,75 +5868,80 @@ msgstr "ஐபி முகவரிகள்"
 msgid "Enable automatic replacement of words"
 msgstr "சொற்களை தானாக மாற்றுவதை இயக்கவும்"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:195
+#: pynicotine/gtkgui/ui/settings/chats.ui:194
 msgid "Enable censoring of text patterns"
 msgstr "உரை வடிவங்களை தணிக்கை செய்ய உதவுகிறது"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:393
+#: pynicotine/gtkgui/ui/settings/chats.ui:366
+#, fuzzy
+msgid "Accept private room invitations"
+msgstr "_ தனியார் அறை அழைப்பிதழ்களை ஏற்றுக்கொள்ளுங்கள்"
+
+#: pynicotine/gtkgui/ui/settings/chats.ui:390
 msgid "Restore previously open private chats on startup"
 msgstr "தொடக்கத்தில் முன்னர் தனிப்பட்ட அரட்டைகளை மீட்டெடுங்கள்"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:417
+#: pynicotine/gtkgui/ui/settings/chats.ui:414
 msgid "Enable spell checker"
 msgstr "எழுத்துப்பிழை சரிபார்ப்பை இயக்கவும்"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:441
+#: pynicotine/gtkgui/ui/settings/chats.ui:438
 msgid "Enable CTCP-like private message responses (client version)"
 msgstr "CTCP போன்ற தனியார் செய்தி பதில்களை இயக்கவும் (கிளையன்ட் பதிப்பு)"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:465
+#: pynicotine/gtkgui/ui/settings/chats.ui:462
 msgid "Number of recent private chat messages to show:"
 msgstr "காண்பிக்க அண்மைக் கால தனிப்பட்ட அரட்டை செய்திகளின் எண்ணிக்கை:"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:490
+#: pynicotine/gtkgui/ui/settings/chats.ui:487
 msgid "Number of recent chat room messages to show:"
 msgstr "காண்பிக்க அண்மைக் கால அரட்டை அறை செய்திகளின் எண்ணிக்கை:"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:519
+#: pynicotine/gtkgui/ui/settings/chats.ui:516
 msgid "Chat Completion"
 msgstr "அரட்டை நிறைவு"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:537
+#: pynicotine/gtkgui/ui/settings/chats.ui:534
 msgid "Enable tab-key completion"
 msgstr "தாவல்-விசை நிறைவு ஆகியவற்றை இயக்கவும்"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:565
+#: pynicotine/gtkgui/ui/settings/chats.ui:562
 msgid "Enable completion drop-down list"
 msgstr "நிறைவு கீழ்தோன்றும் பட்டியலை இயக்கவும்"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:594
+#: pynicotine/gtkgui/ui/settings/chats.ui:591
 msgid "Minimum characters required to display drop-down:"
 msgstr "கீழ்தோன்றலைக் காண்பிக்க குறைந்தபட்ச எழுத்துக்கள்:"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:633
+#: pynicotine/gtkgui/ui/settings/chats.ui:630
 msgid "Allowed chat completions:"
 msgstr "அரட்டை நிறைவுகள் அனுமதிக்கப்பட்டவை:"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:660
+#: pynicotine/gtkgui/ui/settings/chats.ui:657
 msgid "Buddy names"
 msgstr "நண்பர்களின் பெயர்கள்"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:672
+#: pynicotine/gtkgui/ui/settings/chats.ui:669
 msgid "Chat room usernames"
 msgstr "அரட்டை அறை பயனர்பெயர்கள்"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:684
+#: pynicotine/gtkgui/ui/settings/chats.ui:681
 msgid "Room names"
 msgstr "அறை பெயர்கள்"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:696
+#: pynicotine/gtkgui/ui/settings/chats.ui:693
 msgid "Commands"
 msgstr "கட்டளைகள்"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:722
+#: pynicotine/gtkgui/ui/settings/chats.ui:719
 msgid "Timestamps"
 msgstr "நேர முத்திரைகள்"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:739
+#: pynicotine/gtkgui/ui/settings/chats.ui:736
 msgid "Private chat format:"
 msgstr "தனிப்பட்ட அரட்டை வடிவம்:"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:766
+#: pynicotine/gtkgui/ui/settings/chats.ui:763
 msgid "Chat room format:"
 msgstr "அரட்டை அறை வடிவம்:"
 
@@ -5855,11 +5961,6 @@ msgstr "பதிவிறக்கங்களுக்கு இரட்ட�
 #: pynicotine/gtkgui/ui/settings/downloads.ui:157
 msgid "Allow users to send you any files:"
 msgstr "எந்த கோப்புகளையும் உங்களுக்கு அனுப்ப பயனர்களை அனுமதிக்கவும்:"
-
-#: pynicotine/gtkgui/ui/settings/downloads.ui:253
-#: pynicotine/gtkgui/ui/userbrowse.ui:50
-msgid "Folders"
-msgstr "கோப்புறைகள்"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:270
 msgid "Finished downloads:"
@@ -5893,20 +5994,19 @@ msgstr "வடிப்பான்களைப் பதிவிறக்க�
 msgid "Enable download filters"
 msgstr "பதிவிறக்க வடிப்பான்களை இயக்கவும்"
 
-#: pynicotine/gtkgui/ui/settings/downloads.ui:453
-msgid "Add"
-msgstr "கூட்டு"
-
-#: pynicotine/gtkgui/ui/settings/downloads.ui:551
-#: pynicotine/gtkgui/ui/settings/downloads.ui:567
+#: pynicotine/gtkgui/ui/settings/downloads.ui:550
+#: pynicotine/gtkgui/ui/settings/downloads.ui:566
+#: pynicotine/gtkgui/ui/settings/shares.ui:306
+#: pynicotine/gtkgui/ui/settings/shares.ui:322
 msgid "Load Defaults"
 msgstr "இயல்புநிலைகளை ஏற்றவும்"
 
-#: pynicotine/gtkgui/ui/settings/downloads.ui:610
-msgid "Verify Filters"
+#: pynicotine/gtkgui/ui/settings/downloads.ui:609
+#, fuzzy
+msgid "_Verify Filters"
 msgstr "வடிப்பான்களை சரிபார்க்கவும்"
 
-#: pynicotine/gtkgui/ui/settings/downloads.ui:622
+#: pynicotine/gtkgui/ui/settings/downloads.ui:621
 msgid "Unverified"
 msgstr "சரிபார்க்கப்படாதது"
 
@@ -5966,52 +6066,60 @@ msgstr ""
 "ஏற்கனவே உள்ள ஆன்மாதேடு கணக்கில் உள்நுழைக அல்லது புதிய ஒன்றை உருவாக்கவும். பயனர்பெயர்கள் "
 "வழக்கு உணர்திறன் மற்றும் தனித்துவமானவை."
 
-#: pynicotine/gtkgui/ui/settings/network.ui:121
+#: pynicotine/gtkgui/ui/settings/network.ui:101
+#, fuzzy
+msgid "Change Pass_word"
+msgstr "கடவுச்சொல்லை மாற்றவும்"
+
+#: pynicotine/gtkgui/ui/settings/network.ui:122
 #, fuzzy
 msgid "Listening port (TCP):"
 msgstr "கேட்கும் துறை:"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:147
+#: pynicotine/gtkgui/ui/settings/network.ui:148
 msgid "Automatically forward listening port (UPnP/NAT-PMP)"
 msgstr "தானாக முன்னோக்கி கேட்கும் துறைமுகம் (UPNP/NAT-PMP)"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:170
+#: pynicotine/gtkgui/ui/settings/network.ui:171
 msgid "Public IP address:"
 msgstr "பொது ஐபி முகவரி:"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:195
-#: pynicotine/gtkgui/ui/settings/network.ui:210
+#: pynicotine/gtkgui/ui/settings/network.ui:196
 msgid "Port Check"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/network.ui:233
+#: pynicotine/gtkgui/ui/settings/network.ui:211
+msgid "_Port Check"
+msgstr ""
+
+#: pynicotine/gtkgui/ui/settings/network.ui:235
 msgid "Away Status"
 msgstr "நிலை"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:250
+#: pynicotine/gtkgui/ui/settings/network.ui:252
 msgid "Minutes of inactivity before going away (0 to disable):"
 msgstr "விலகிச் செல்வதற்கு முன் செயலற்ற நிமிடங்கள் (முடக்க 0):"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:275
+#: pynicotine/gtkgui/ui/settings/network.ui:277
 msgid "Auto-reply message when away:"
 msgstr "தொலைவில் இருக்கும்போது தானாக செய்யப்படும் செய்தி:"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:321
+#: pynicotine/gtkgui/ui/settings/network.ui:323
 #, fuzzy
 msgid "Connect to server on startup"
 msgstr "தொடக்கத்தில் சேவையகத்துடன் தானாக இணைக்கவும்"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:345
+#: pynicotine/gtkgui/ui/settings/network.ui:347
 msgid "Soulseek server:"
 msgstr "ஆன்மாதேடு சேவையகம்:"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:370
+#: pynicotine/gtkgui/ui/settings/network.ui:372
 msgid ""
 "Makes sure a VPN is used by binding connections to a specific network "
 "interface. Usually left empty to use all the interfaces available."
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/network.ui:374
+#: pynicotine/gtkgui/ui/settings/network.ui:376
 msgid "Network interface:"
 msgstr "பிணைய இடைமுகம்:"
 
@@ -6036,7 +6144,8 @@ msgid "Now Playing message format:"
 msgstr "இப்போது செய்தி வடிவமைப்பை இயக்குகிறது:"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:167
-msgid "Test Configuration"
+#, fuzzy
+msgid "_Test Configuration"
 msgstr "சோதனை உள்ளமைவு"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:52
@@ -6153,36 +6262,44 @@ msgstr "தேடல் வரலாற்றை அழிக்கவும்"
 msgid "Clear Filter History"
 msgstr "வடிகட்டி வரலாற்றை அழிக்கவும்"
 
-#: pynicotine/gtkgui/ui/settings/shares.ui:43
+#: pynicotine/gtkgui/ui/settings/shares.ui:141
+#, fuzzy
+msgid "File Manager"
+msgstr "கோப்பு மேலாளரில் திற"
+
+#: pynicotine/gtkgui/ui/settings/shares.ui:157
+#, fuzzy
+msgid "File _Manager"
+msgstr "கோப்பு மேலாளரில் திற"
+
+#: pynicotine/gtkgui/ui/settings/shares.ui:208
+msgid "Add"
+msgstr "கூட்டு"
+
+#: pynicotine/gtkgui/ui/settings/shares.ui:381
 #, fuzzy
 msgid "Rescan shares:"
 msgstr "ரெச்கான் பங்குகள்"
 
-#: pynicotine/gtkgui/ui/settings/shares.ui:57
+#: pynicotine/gtkgui/ui/settings/shares.ui:395
 msgid "On startup"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/shares.ui:64
-msgid "At midnight"
+#: pynicotine/gtkgui/ui/settings/shares.ui:402
+msgid "Daily:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/shares.ui:80
+#: pynicotine/gtkgui/ui/settings/shares.ui:428
 msgid "Visible to everyone:"
 msgstr "அனைவருக்கும் தெரியும்:"
 
-#: pynicotine/gtkgui/ui/settings/shares.ui:94
+#: pynicotine/gtkgui/ui/settings/shares.ui:442
 msgid "Buddy shares"
 msgstr "நண்பர்களின் பங்குகள்"
 
-#: pynicotine/gtkgui/ui/settings/shares.ui:101
+#: pynicotine/gtkgui/ui/settings/shares.ui:449
 msgid "Trusted shares"
 msgstr "நம்பகமான பங்குகள்"
-
-#: pynicotine/gtkgui/ui/settings/shares.ui:238
-#: pynicotine/gtkgui/ui/settings/shares.ui:254
-#, fuzzy
-msgid "File Manager"
-msgstr "கோப்பு மேலாளரில் திற"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:70
 #, fuzzy
@@ -6506,19 +6623,30 @@ msgstr "சின்னங்கள்"
 msgid "Icon theme folder:"
 msgstr "படவுரு கருப்பொருள் கோப்புறை:"
 
-#: pynicotine/gtkgui/ui/uploads.ui:91
-msgid "Abort User(s)"
+#: pynicotine/gtkgui/ui/uploads.ui:61
+#, fuzzy
+msgid "Abor_t"
+msgstr "கருக்கலைப்பு"
+
+#: pynicotine/gtkgui/ui/uploads.ui:76
+#, fuzzy
+msgid "Abort Users"
 msgstr "பயனர் (களை) கைவிடவும்"
 
-#: pynicotine/gtkgui/ui/uploads.ui:114 pynicotine/gtkgui/ui/uploads.ui:129
+#: pynicotine/gtkgui/ui/uploads.ui:92
+#, fuzzy
+msgid "Abort _Users"
+msgstr "பயனர் (களை) கைவிடவும்"
+
+#: pynicotine/gtkgui/ui/uploads.ui:116
 msgid "Message All"
 msgstr "அனைத்து செய்தி"
 
-#: pynicotine/gtkgui/ui/uploads.ui:143
+#: pynicotine/gtkgui/ui/uploads.ui:146
 msgid "Clear All Finished/Cancelled Uploads"
 msgstr "முடிக்கப்பட்ட/ரத்து செய்யப்பட்ட பதிவேற்றங்களை அழிக்கவும்"
 
-#: pynicotine/gtkgui/ui/uploads.ui:174
+#: pynicotine/gtkgui/ui/uploads.ui:177
 msgid "Clear Specific Uploads"
 msgstr "குறிப்பிட்ட பதிவேற்றங்களை அழிக்கவும்"
 
@@ -6537,10 +6665,6 @@ msgstr "சுயவிவரத்தைத் திருத்து"
 #: pynicotine/gtkgui/ui/userinfo.ui:175
 msgid "Shared Files"
 msgstr "பகிரப்பட்ட கோப்புகள்"
-
-#: pynicotine/gtkgui/ui/userinfo.ui:205
-msgid "Shared Folders"
-msgstr "பகிரப்பட்ட கோப்புறைகள்"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:235
 msgid "Upload Speed"
@@ -6566,6 +6690,41 @@ msgstr "_Refresh சுயவிவரம்"
 #: pynicotine/plugins/core_commands/PLUGININFO:6
 msgid "Nicotine+ Commands"
 msgstr "நிகோடின்+ கட்டளைகள்"
+
+#~ msgid "dir"
+#~ msgstr "அடைவு"
+
+#, python-format
+#~ msgid "Can't create directory '%(path)s', reported error: %(error)s"
+#~ msgstr ""
+#~ "கோப்பகத்தை உருவாக்க முடியாது ' %(path)s', அறிக்கையிடப்பட்ட பிழை: %(error)s"
+
+#~ msgid "Join Room"
+#~ msgstr "அறையில் சேரவும்"
+
+#~ msgid "Leave Room"
+#~ msgstr "அறை விடுங்கள்"
+
+#~ msgid "_Download Folder & Subfolders"
+#~ msgstr "_ கோப்புறை மற்றும் துணை கோப்புறைகள்"
+
+#, fuzzy
+#~ msgid "_Download Folders & Subfolders"
+#~ msgstr "_ கோப்புறை மற்றும் துணை கோப்புறைகள்"
+
+#, python-format
+#~ msgid "Can't create directory '%(folder)s', reported error: %(error)s"
+#~ msgstr ""
+#~ "கோப்பகத்தை உருவாக்க முடியாது ' %(folder)s', அறிக்கையிடப்பட்ட பிழை: %(error)s"
+
+#, python-format
+#~ msgid "Can't save shares, '%(user)s', reported error: %(error)s"
+#~ msgstr ""
+#~ "பங்குகளைச் சேமிக்க முடியாது, ' %(user)s', அறிக்கையிடப்பட்ட பிழை: %(error)s"
+
+#, fuzzy
+#~ msgid "Store downloads in subfolders"
+#~ msgstr "பயனர்பெயர் துணை கோப்புறைகளில் நிறைவு செய்யப்பட்ட பதிவிறக்கங்களை சேமிக்கவும்"
 
 #, python-format
 #~ msgid "Downloads: %(speed)s"
@@ -6631,9 +6790,6 @@ msgstr "நிகோடின்+ கட்டளைகள்"
 
 #~ msgid "Copy _URL"
 #~ msgstr "நகலெடு _url"
-
-#~ msgid "Download _Folder(s)"
-#~ msgstr "பதிவிறக்கம் _ ஃபோல்டர் (கள்)"
 
 #~ msgid "Select Destination Folder for File(s)"
 #~ msgstr "கோப்பு (கள்) க்கான இலக்கு கோப்புறையைத் தேர்ந்தெடுக்கவும்"
