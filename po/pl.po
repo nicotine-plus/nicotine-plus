@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-23 16:01+0200\n"
-"PO-Revision-Date: 2025-10-21 19:02+0000\n"
+"PO-Revision-Date: 2025-11-24 14:51+0000\n"
 "Last-Translator: Matthaiks <kitynska@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
@@ -14,9 +14,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14-dev\n"
+"Plural-Forms: nplurals=3; plural="
+"(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.15-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -114,14 +114,12 @@ msgid "use non-default configuration file"
 msgstr "użyj niestandardowego pliku konfiguracyjnego"
 
 #: pynicotine/__init__.py:48
-#, fuzzy
 msgid "folder"
-msgstr "Folder"
+msgstr "folder"
 
 #: pynicotine/__init__.py:49
-#, fuzzy
 msgid "alternative folder for user data and plugins"
-msgstr "alternatywny katalog dla danych użytkownika i wtyczek"
+msgstr "alternatywny folder do danych użytkownika i wtyczek"
 
 #: pynicotine/__init__.py:53
 msgid "start the program without showing window"
@@ -204,9 +202,9 @@ msgstr ""
 
 #: pynicotine/config.py:117 pynicotine/config.py:136
 #: pynicotine/userbrowse.py:169
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot create folder %(path)s: %(error)s"
-msgstr "Nie można uzyskać dostępu do pliku dziennika %(path)s: %(error)s"
+msgstr "Nie można utworzyć folderu %(path)s: %(error)s"
 
 #: pynicotine/config.py:823
 #, python-format
@@ -1065,9 +1063,8 @@ msgstr "_Zastosuj"
 #: pynicotine/gtkgui/ui/settings/shares.ui:53
 #: pynicotine/gtkgui/ui/settings/shares.ui:224
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:97
-#, fuzzy
 msgid "_Add…"
-msgstr "Dodaj…"
+msgstr "_Dodaj…"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:228
 #: pynicotine/gtkgui/search.py:622
@@ -1253,12 +1250,11 @@ msgstr "Publiczny"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:589
 msgid "Applies to files"
-msgstr ""
+msgstr "Stosuje do plików"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:590
-#, fuzzy
 msgid "Applies to folders"
-msgstr "Pobierz pliki do folderu"
+msgstr "Stosuje do folderów"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:590
 #: pynicotine/gtkgui/dialogs/preferences.py:754
@@ -1280,18 +1276,17 @@ msgid "Open in File _Manager"
 msgstr "Otwórz w _menedżerze plików"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:667
-#, fuzzy
 msgid ""
 "Syntax: Case-insensitive. Virtual paths containing separators \\ are "
 "supported. Wildcard * matches are supported."
 msgstr ""
-"<b>Składnia</b>: wielkość liter nie ma znaczenia. Jeśli włączone, można "
-"używać wyrażeń regularnych języka Python, w przeciwnym razie obsługiwane są "
-"tylko dopasowania wieloznaczne *."
+"Składnia: bez uwzględniania wielkości liter. Obsługiwane są ścieżki "
+"wirtualne zawierające separatory \\. Obsługiwane są dopasowania wieloznaczne "
+"*."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:683
 msgid "Applies To"
-msgstr ""
+msgstr "Stosuje do"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:701
 #: pynicotine/gtkgui/ui/userinfo.ui:205
@@ -1299,29 +1294,24 @@ msgid "Shared Folders"
 msgstr "Udostępnione foldery"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:702
-#, fuzzy
 msgid "Filters"
-msgstr "Filtr"
+msgstr "Filtry"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:910
-#, fuzzy
 msgid "Add Share Filter"
-msgstr "Udostępnij folder"
+msgstr "Dodaj filtr udostępniania"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:911
-#, fuzzy
 msgid "Enter a new share filter:"
-msgstr "Wprowadź nowy filtr pobierania:"
+msgstr "Wprowadź nowy filtr udostępniania:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:943
-#, fuzzy
 msgid "Edit Share Filter"
-msgstr "Edytuj udostępnione foldery"
+msgstr "Edytuj filtr udostępniania"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:944
-#, fuzzy
 msgid "Modify the following share filter:"
-msgstr "Modyfikuj ten filtr pobierania:"
+msgstr "Zmodyfikuj następujący filtr udostępniania:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1017
 #: pynicotine/gtkgui/ui/uploads.ui:45
@@ -2710,44 +2700,36 @@ msgstr ""
 "zamkniętego portu nasłuchującego lub chwilowych problemów z łącznością."
 
 #: pynicotine/gtkgui/userbrowse.py:925
-#, fuzzy
 msgid "Upload _Folder…"
-msgstr "Wyślij folder…"
+msgstr "Wyślij _folder…"
 
 #: pynicotine/gtkgui/userbrowse.py:925
-#, fuzzy
 msgid "Upload _Folders…"
-msgstr "Wyślij folder…"
+msgstr "Wyślij _foldery…"
 
 #: pynicotine/gtkgui/userbrowse.py:929
-#, fuzzy
 msgid "Upload Folder & _Subfolders…"
-msgstr "Wyślij folder i podfoldery…"
+msgstr "Wyślij folder i _podfoldery…"
 
 #: pynicotine/gtkgui/userbrowse.py:929
-#, fuzzy
 msgid "Upload Folders & _Subfolders…"
-msgstr "Wyślij foldery i podfoldery…"
+msgstr "Wyślij foldery i _podfoldery…"
 
 #: pynicotine/gtkgui/userbrowse.py:935
-#, fuzzy
 msgid "Download _Folder"
-msgstr "Folder _pobierania"
+msgstr "Pobierz _folder"
 
 #: pynicotine/gtkgui/userbrowse.py:935
-#, fuzzy
 msgid "Download _Folders"
-msgstr "Pobierz _folder(y)"
+msgstr "Pobierz _foldery"
 
 #: pynicotine/gtkgui/userbrowse.py:939
-#, fuzzy
 msgid "Download Folder & _Subfolders…"
-msgstr "Pobierz folder i podfo_ldery do…"
+msgstr "Pobierz folder i _podfoldery…"
 
 #: pynicotine/gtkgui/userbrowse.py:939
-#, fuzzy
 msgid "Download Folders & _Subfolders…"
-msgstr "Pobierz foldery i podfo_ldery do…"
+msgstr "Pobierz foldery i _podfoldery…"
 
 #: pynicotine/gtkgui/userbrowse.py:1008
 msgid "Upload Folder (with Subfolders) To User"
@@ -4744,9 +4726,9 @@ msgid "Saved list of shared files for user '%(user)s' to %(dir)s"
 msgstr "Zapisano listę zasobów plików dla użytkownika '%(user)s' do %(dir)s"
 
 #: pynicotine/userbrowse.py:279
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot save shares for user %(user)s: %(error)s"
-msgstr "Nie udało się załadować obrazu dla użytkownika %(user)s: %(error)s"
+msgstr "Nie można zapisać zasobów dla użytkownika %(user)s: %(error)s"
 
 #: pynicotine/userbrowse.py:355
 #, python-format
@@ -4974,27 +4956,24 @@ msgid "Rename…"
 msgstr "Zmień nazwę…"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:192
-#, fuzzy
 msgid "Select _All"
-msgstr "Wybierz wszystko"
+msgstr "_Wybierz wszystko"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:207
 msgid "Deselect All"
 msgstr "Anuluj wybór wszystkiego"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:223
-#, fuzzy
 msgid "Deselect _All"
-msgstr "Anuluj wybór wszystkiego"
+msgstr "Anuluj _wybór wszystkiego"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:238
 msgid "Select Initial"
 msgstr "Wybierz początkowy"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:254
-#, fuzzy
 msgid "Select _Initial"
-msgstr "Wybierz początkowy"
+msgstr "Wybierz po_czątkowy"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:102
 msgid "Welcome to Nicotine+"
@@ -5101,14 +5080,12 @@ msgid "Last Speed"
 msgstr "Ostatnia prędkość"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:15
-#, fuzzy
 msgid "E_xport…"
 msgstr "_Eksport…"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:21
-#, fuzzy
 msgid "A_pply"
-msgstr "_Zastosuj"
+msgstr "Za_stosuj"
 
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:27
 msgid "Search rooms…"
@@ -5184,14 +5161,12 @@ msgid "Clear All…"
 msgstr "Wyczyść wszystko…"
 
 #: pynicotine/gtkgui/ui/downloads.ui:61
-#, fuzzy
 msgid "Re_sume"
-msgstr "Wznów"
+msgstr "Wz_nów"
 
 #: pynicotine/gtkgui/ui/downloads.ui:92
-#, fuzzy
 msgid "_Pause"
-msgstr "Pauza"
+msgstr "_Pauza"
 
 #: pynicotine/gtkgui/ui/downloads.ui:145
 msgid "Clear All Finished/Filtered Downloads"
@@ -5849,9 +5824,8 @@ msgid "Enable censoring of text patterns"
 msgstr "Włącz cenzurę dla następujących fraz"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:366
-#, fuzzy
 msgid "Accept private room invitations"
-msgstr "_Akceptuj zaproszenia do prywatnych pokoi"
+msgstr "Akceptuj zaproszenia do prywatnych pokoi"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:390
 msgid "Restore previously open private chats on startup"
@@ -5980,9 +5954,8 @@ msgid "Load Defaults"
 msgstr "Załaduj domyślne"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:609
-#, fuzzy
 msgid "_Verify Filters"
-msgstr "Sprawdź filtry"
+msgstr "Spraw_dź filtry"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:621
 msgid "Unverified"
@@ -6045,9 +6018,8 @@ msgstr ""
 "użytkowników rozróżniana jest wielkość liter i są one unikatowe."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:101
-#, fuzzy
 msgid "Change Pass_word"
-msgstr "Zmień hasło"
+msgstr "Zmień _hasło"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:122
 msgid "Listening port (TCP):"
@@ -6066,9 +6038,8 @@ msgid "Port Check"
 msgstr "Sprawdzenie portu"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:211
-#, fuzzy
 msgid "_Port Check"
-msgstr "Sprawdzenie portu"
+msgstr "Sprawdzenie por_tu"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:235
 msgid "Away Status"
@@ -6124,9 +6095,8 @@ msgid "Now Playing message format:"
 msgstr "Format wiadomości „Teraz odtwarzanie”:"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:167
-#, fuzzy
 msgid "_Test Configuration"
-msgstr "Przetestuj konfigurację"
+msgstr "Przetestuj _konfigurację"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:52
 msgid "Enable plugins"
@@ -6248,9 +6218,8 @@ msgid "File Manager"
 msgstr "Menedżer plików"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:157
-#, fuzzy
 msgid "File _Manager"
-msgstr "Menedżer plików"
+msgstr "_Menedżer plików"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:208
 msgid "Add"
@@ -6266,7 +6235,7 @@ msgstr "Podczas uruchamiania"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:402
 msgid "Daily:"
-msgstr ""
+msgstr "Codziennie:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:428
 msgid "Visible to everyone:"
@@ -6607,14 +6576,12 @@ msgid "Abor_t"
 msgstr "Przerwi_j"
 
 #: pynicotine/gtkgui/ui/uploads.ui:76
-#, fuzzy
 msgid "Abort Users"
-msgstr "Przerwij użytkownikowi/om"
+msgstr "Przerwij użytkownikom"
 
 #: pynicotine/gtkgui/ui/uploads.ui:92
-#, fuzzy
 msgid "Abort _Users"
-msgstr "Przerwij użytkownikowi/om"
+msgstr "Przerwij _użytkownikom"
 
 #: pynicotine/gtkgui/ui/uploads.ui:116
 msgid "Message All"
