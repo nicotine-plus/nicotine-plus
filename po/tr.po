@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-23 16:01+0200\n"
-"PO-Revision-Date: 2025-10-25 13:03+0000\n"
+"PO-Revision-Date: 2025-11-24 14:51+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.1-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -115,12 +115,10 @@ msgid "use non-default configuration file"
 msgstr "öntanımlı olmayan yapılandırma dosyası kullan"
 
 #: pynicotine/__init__.py:48
-#, fuzzy
 msgid "folder"
-msgstr "Klasör"
+msgstr "klasör"
 
 #: pynicotine/__init__.py:49
-#, fuzzy
 msgid "alternative folder for user data and plugins"
 msgstr "kullanıcı verileri ve eklentiler için diğer dizin"
 
@@ -204,9 +202,9 @@ msgstr ""
 
 #: pynicotine/config.py:117 pynicotine/config.py:136
 #: pynicotine/userbrowse.py:169
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot create folder %(path)s: %(error)s"
-msgstr "%(path)s günlük dosyasına erişilemiyor: %(error)s"
+msgstr "%(path)s klasörü oluşturulamıyor: %(error)s"
 
 #: pynicotine/config.py:823
 #, python-format
@@ -1060,9 +1058,8 @@ msgstr "_Uygula"
 #: pynicotine/gtkgui/ui/settings/shares.ui:53
 #: pynicotine/gtkgui/ui/settings/shares.ui:224
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:97
-#, fuzzy
 msgid "_Add…"
-msgstr "Ekle…"
+msgstr "_Ekle…"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:228
 #: pynicotine/gtkgui/search.py:622
@@ -1249,12 +1246,11 @@ msgstr "Herkese Açık"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:589
 msgid "Applies to files"
-msgstr ""
+msgstr "Dosyalara uygulanır"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:590
-#, fuzzy
 msgid "Applies to folders"
-msgstr "Dosyaları Klasöre İndir"
+msgstr "Klasörlere uygulanır"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:590
 #: pynicotine/gtkgui/dialogs/preferences.py:754
@@ -1276,18 +1272,16 @@ msgid "Open in File _Manager"
 msgstr "Dosya _Yöneticisinde Aç"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:667
-#, fuzzy
 msgid ""
 "Syntax: Case-insensitive. Virtual paths containing separators \\ are "
 "supported. Wildcard * matches are supported."
 msgstr ""
-"<b>Söz dizimi</b>: Büyük/küçük harfe duyarlı değildir. Etkinleştirilirse "
-"Python düzenli ifadeleri kullanılabilir, aksi takdirde yalnızca joker "
-"karakter * eşleşmeleri desteklenir."
+"Söz dizimi: Büyük/küçük harfe duyarlı değildir. \\ ayırıcıları içeren sanal "
+"yollar desteklenir. Joker karakter * eşleşmeleri desteklenir."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:683
 msgid "Applies To"
-msgstr ""
+msgstr "Uygulanır"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:701
 #: pynicotine/gtkgui/ui/userinfo.ui:205
@@ -1295,29 +1289,24 @@ msgid "Shared Folders"
 msgstr "Paylaşılan Klasörler"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:702
-#, fuzzy
 msgid "Filters"
-msgstr "Filtre"
+msgstr "Filtreler"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:910
-#, fuzzy
 msgid "Add Share Filter"
-msgstr "Paylaşılan Klasör Ekle"
+msgstr "Paylaşım Filtresi Ekle"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:911
-#, fuzzy
 msgid "Enter a new share filter:"
-msgstr "Yeni bir indirme filtresi girin:"
+msgstr "Yeni bir paylaşım filtresi girin:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:943
-#, fuzzy
 msgid "Edit Share Filter"
-msgstr "Paylaşılan Klasörü Düzenle"
+msgstr "Paylaşım Filtresini Düzenle"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:944
-#, fuzzy
 msgid "Modify the following share filter:"
-msgstr "Aşağıdaki indirme filtresini değiştirin:"
+msgstr "Aşağıdaki paylaşım filtresini değiştirin:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1017
 #: pynicotine/gtkgui/ui/uploads.ui:45
@@ -2702,44 +2691,36 @@ msgstr ""
 "kullanıcıdan bilgi istenemiyor."
 
 #: pynicotine/gtkgui/userbrowse.py:925
-#, fuzzy
 msgid "Upload _Folder…"
-msgstr "Klasörü Yükle…"
+msgstr "_Klasörü Yükle…"
 
 #: pynicotine/gtkgui/userbrowse.py:925
-#, fuzzy
 msgid "Upload _Folders…"
-msgstr "Klasörü Yükle…"
+msgstr "_Klasörleri Yükle…"
 
 #: pynicotine/gtkgui/userbrowse.py:929
-#, fuzzy
 msgid "Upload Folder & _Subfolders…"
-msgstr "Klasörü ve Alt Klasörleri Yükle…"
+msgstr "Klasörü ve _Alt Klasörleri Yükle…"
 
 #: pynicotine/gtkgui/userbrowse.py:929
-#, fuzzy
 msgid "Upload Folders & _Subfolders…"
-msgstr "Klasörleri ve Alt Klasörleri Yükle…"
+msgstr "Klasörleri ve _Alt Klasörleri Yükle…"
 
 #: pynicotine/gtkgui/userbrowse.py:935
-#, fuzzy
 msgid "Download _Folder"
 msgstr "_Klasörü İndir"
 
 #: pynicotine/gtkgui/userbrowse.py:935
-#, fuzzy
 msgid "Download _Folders"
-msgstr "_Klasör(ler)i İndir"
+msgstr "_Klasörleri İndir"
 
 #: pynicotine/gtkgui/userbrowse.py:939
-#, fuzzy
 msgid "Download Folder & _Subfolders…"
-msgstr "Klasörü ve Al_t Klasörleri Şuraya İndir…"
+msgstr "Klasörü ve _Alt Klasörleri İndir…"
 
 #: pynicotine/gtkgui/userbrowse.py:939
-#, fuzzy
 msgid "Download Folders & _Subfolders…"
-msgstr "Klasörleri ve Al_t Klasörleri Şuraya İndir…"
+msgstr "Klasörleri ve _Alt Klasörleri İndir…"
 
 #: pynicotine/gtkgui/userbrowse.py:1008
 msgid "Upload Folder (with Subfolders) To User"
@@ -4727,9 +4708,9 @@ msgstr ""
 "kaydedildi"
 
 #: pynicotine/userbrowse.py:279
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot save shares for user %(user)s: %(error)s"
-msgstr "%(user)s kullanıcısı için resim yüklenemedi: %(error)s"
+msgstr "%(user)s kullanıcısı için paylaşımlar kaydedilemiyor: %(error)s"
 
 #: pynicotine/userbrowse.py:355
 #, python-format
@@ -4957,27 +4938,24 @@ msgid "Rename…"
 msgstr "Yeniden Adlandır…"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:192
-#, fuzzy
 msgid "Select _All"
-msgstr "Tümünü Seç"
+msgstr "_Tümünü Seç"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:207
 msgid "Deselect All"
 msgstr "Tümünün Seçimini Kaldır"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:223
-#, fuzzy
 msgid "Deselect _All"
-msgstr "Tümünün Seçimini Kaldır"
+msgstr "_Tümünün Seçimini Kaldır"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:238
 msgid "Select Initial"
 msgstr "Başlangıç Seç"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:254
-#, fuzzy
 msgid "Select _Initial"
-msgstr "Başlangıç Seç"
+msgstr "_Başlangıç Seç"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:102
 msgid "Welcome to Nicotine+"
@@ -5081,12 +5059,10 @@ msgid "Last Speed"
 msgstr "Son Hız"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:15
-#, fuzzy
 msgid "E_xport…"
 msgstr "_Dışa Aktar…"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:21
-#, fuzzy
 msgid "A_pply"
 msgstr "_Uygula"
 
@@ -5164,14 +5140,12 @@ msgid "Clear All…"
 msgstr "Tümünü Temizle…"
 
 #: pynicotine/gtkgui/ui/downloads.ui:61
-#, fuzzy
 msgid "Re_sume"
-msgstr "Devam Et"
+msgstr "Devam _Et"
 
 #: pynicotine/gtkgui/ui/downloads.ui:92
-#, fuzzy
 msgid "_Pause"
-msgstr "Duraklat"
+msgstr "_Duraklat"
 
 #: pynicotine/gtkgui/ui/downloads.ui:145
 msgid "Clear All Finished/Filtered Downloads"
@@ -5832,9 +5806,8 @@ msgid "Enable censoring of text patterns"
 msgstr "Metin kalıplarının sansürlenmesini etkinleştir"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:366
-#, fuzzy
 msgid "Accept private room invitations"
-msgstr "Özel oda davetlerini _kabul et"
+msgstr "Özel oda davetlerini kabul et"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:390
 msgid "Restore previously open private chats on startup"
@@ -5964,9 +5937,8 @@ msgid "Load Defaults"
 msgstr "Öntanımlıları Yükle"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:609
-#, fuzzy
 msgid "_Verify Filters"
-msgstr "Filtreleri Doğrula"
+msgstr "Filtreleri _Doğrula"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:621
 msgid "Unverified"
@@ -6029,9 +6001,8 @@ msgstr ""
 "Kullanıcı adları büyük/küçük harfe duyarlıdır ve benzersizdir."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:101
-#, fuzzy
 msgid "Change Pass_word"
-msgstr "Parola Değiştir"
+msgstr "_Parola Değiştir"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:122
 msgid "Listening port (TCP):"
@@ -6050,9 +6021,8 @@ msgid "Port Check"
 msgstr "Bağlantı Noktası Denetimi"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:211
-#, fuzzy
 msgid "_Port Check"
-msgstr "Bağlantı Noktası Denetimi"
+msgstr "_Bağlantı Noktası Denetimi"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:235
 msgid "Away Status"
@@ -6109,9 +6079,8 @@ msgid "Now Playing message format:"
 msgstr "Şimdi Oynatılıyor mesaj biçimi:"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:167
-#, fuzzy
 msgid "_Test Configuration"
-msgstr "Yapılandırmayı Test Et"
+msgstr "Yapılandırmayı _Test Et"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:52
 msgid "Enable plugins"
@@ -6234,9 +6203,8 @@ msgid "File Manager"
 msgstr "Dosya Yöneticisi"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:157
-#, fuzzy
 msgid "File _Manager"
-msgstr "Dosya Yöneticisi"
+msgstr "Dosya _Yöneticisi"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:208
 msgid "Add"
@@ -6252,7 +6220,7 @@ msgstr "Başlangıçta"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:402
 msgid "Daily:"
-msgstr ""
+msgstr "Günlük:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:428
 msgid "Visible to everyone:"
@@ -6587,19 +6555,16 @@ msgid "Icon theme folder:"
 msgstr "Simge teması klasörü:"
 
 #: pynicotine/gtkgui/ui/uploads.ui:61
-#, fuzzy
 msgid "Abor_t"
-msgstr "İptal"
+msgstr "İp_tal"
 
 #: pynicotine/gtkgui/ui/uploads.ui:76
-#, fuzzy
 msgid "Abort Users"
-msgstr "Kullanıcı(lar)ı İptal Et"
+msgstr "Kullanıcıları İptal Et"
 
 #: pynicotine/gtkgui/ui/uploads.ui:92
-#, fuzzy
 msgid "Abort _Users"
-msgstr "Kullanıcı(lar)ı İptal Et"
+msgstr "K_ullanıcıları İptal Et"
 
 #: pynicotine/gtkgui/ui/uploads.ui:116
 msgid "Message All"
