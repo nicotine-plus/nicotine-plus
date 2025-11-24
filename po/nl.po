@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-23 16:01+0200\n"
-"PO-Revision-Date: 2025-10-31 02:34+0000\n"
+"PO-Revision-Date: 2025-11-24 14:51+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.1-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -114,14 +114,12 @@ msgid "use non-default configuration file"
 msgstr "gebruik niet-standaard configuratiebestand"
 
 #: pynicotine/__init__.py:48
-#, fuzzy
 msgid "folder"
-msgstr "Map"
+msgstr "map"
 
 #: pynicotine/__init__.py:49
-#, fuzzy
 msgid "alternative folder for user data and plugins"
-msgstr "alternatieve map voor gebruikersgegevens en plugins"
+msgstr "alternatieve map voor gebruikersgegevens en plug-ins"
 
 #: pynicotine/__init__.py:53
 msgid "start the program without showing window"
@@ -202,9 +200,9 @@ msgstr "Chatbericht van gebruiker '%(user)s' in kamer '%(room)s': %(message)s"
 
 #: pynicotine/config.py:117 pynicotine/config.py:136
 #: pynicotine/userbrowse.py:169
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot create folder %(path)s: %(error)s"
-msgstr "Kan logbestand %(path)s niet openen: %(error)s"
+msgstr "Kan map %(path)s niet maken: %(error)s"
 
 #: pynicotine/config.py:823
 #, python-format
@@ -792,9 +790,9 @@ msgid "Show Room Users"
 msgstr "Toon kamerlijst"
 
 #: pynicotine/gtkgui/chatrooms.py:1267
-#, fuzzy, python-format
+#, python-format
 msgid "R_oom Wall [%d]"
-msgstr "_Kamermuur"
+msgstr "_Kamermuur [%d]"
 
 #: pynicotine/gtkgui/chatrooms.py:1268
 #, python-format
@@ -895,9 +893,8 @@ msgstr "_Selecteren"
 #: pynicotine/gtkgui/dialogs/download.py:126
 #: pynicotine/gtkgui/dialogs/download.py:495
 #: pynicotine/gtkgui/ui/dialogs/download.ui:155
-#, fuzzy
 msgid "_Rename…"
-msgstr "Hernoemen…"
+msgstr "_Hernoemen…"
 
 #: pynicotine/gtkgui/dialogs/download.py:290
 #, fuzzy, python-format
@@ -972,9 +969,8 @@ msgstr "Map"
 #: pynicotine/gtkgui/ui/settings/shares.ui:84
 #: pynicotine/gtkgui/ui/settings/shares.ui:255
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:128
-#, fuzzy
 msgid "_Edit…"
-msgstr "Bewerken…"
+msgstr "_Bewerken…"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:128
 msgid "_Previous"
@@ -1253,7 +1249,7 @@ msgstr ""
 #: pynicotine/gtkgui/dialogs/preferences.py:590
 #, fuzzy
 msgid "Applies to folders"
-msgstr "Bestanden downloaden naar map"
+msgstr "Betreft mappen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:590
 #: pynicotine/gtkgui/dialogs/preferences.py:754
@@ -1665,9 +1661,8 @@ msgstr "Plugin"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3143
 #: pynicotine/gtkgui/dialogs/preferences.py:3197
-#, fuzzy
 msgid "_Enable"
-msgstr "Ingeschakeld"
+msgstr "_Ingeschakeld"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3144
 #: pynicotine/gtkgui/dialogs/preferences.py:3198
@@ -1784,9 +1779,8 @@ msgstr "Gebruikers"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:75
 #: pynicotine/gtkgui/dialogs/roomlist.py:256
-#, fuzzy
 msgid "_Join Room"
-msgstr "Kamer binnengaan"
+msgstr "_Kamer binnengaan"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:78
 #: pynicotine/gtkgui/dialogs/roomlist.py:259
@@ -1830,9 +1824,8 @@ msgstr "Afsluiten"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:44
 #: pynicotine/gtkgui/dialogs/shortcuts.py:99
-#, fuzzy
 msgid "View"
-msgstr "_Weergave"
+msgstr "Weergave"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:45
 #, fuzzy
@@ -1850,9 +1843,8 @@ msgid "Main Menu"
 msgstr "Hoofdmenu"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:48
-#, fuzzy
 msgid "Context Menu"
-msgstr "Contextmenu openen"
+msgstr "Contextmenu"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:49
 msgid "Change Main Tab"
@@ -1879,17 +1871,15 @@ msgstr "Secundaire Tabbladen"
 #: pynicotine/gtkgui/dialogs/shortcuts.py:55
 #, fuzzy
 msgid "Previous Tab"
-msgstr "_Vorige"
+msgstr "_Vorig tabblad"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:56
-#, fuzzy
 msgid "Next Tab"
-msgstr "_Volgende"
+msgstr "_Volgende tabblad"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:57
-#, fuzzy
 msgid "Reopen Tab"
-msgstr "_Gesloten tab opnieuw openen"
+msgstr "Tab heropenen"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:58
 #: pynicotine/gtkgui/widgets/iconnotebook.py:107
@@ -1903,9 +1893,8 @@ msgid "Lists"
 msgstr "Lijsten"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:61
-#, fuzzy
 msgid "Copy Cell"
-msgstr "Alles kopiëren"
+msgstr "Cel kopiëren"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:62
 #: pynicotine/gtkgui/dialogs/shortcuts.py:71
@@ -1920,9 +1909,8 @@ msgid "Find"
 msgstr "Vinden"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:64
-#, fuzzy
 msgid "Remove Row"
-msgstr "Verwijderen"
+msgstr "Rij verwijderen"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:66
 #: pynicotine/gtkgui/dialogs/shortcuts.py:103
@@ -1943,20 +1931,17 @@ msgstr "Emoji invoegen"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:73
 #: pynicotine/gtkgui/dialogs/shortcuts.py:82
-#, fuzzy
 msgid "Next Match"
-msgstr "Volgende overeenkomst vinden"
+msgstr "Volgende overeenkomst"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:74
 #: pynicotine/gtkgui/dialogs/shortcuts.py:83
-#, fuzzy
 msgid "Previous Match"
-msgstr "Vorige overeenkomst vinden"
+msgstr "Vorige overeenkomst"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:77
-#, fuzzy
 msgid "Transfer To"
-msgstr "Overdrachten"
+msgstr "Overdragen naar"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:79
 msgid "Save List to Disk"
@@ -1986,19 +1971,16 @@ msgid "File Transfers"
 msgstr "Bestandsoverdrachten"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:92
-#, fuzzy
 msgid "Resume Transfer"
-msgstr "Overdracht hervatten / opnieuw proberen"
+msgstr "Overdracht hervatten"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:93
-#, fuzzy
 msgid "Abort Transfer"
-msgstr "Overdracht pauzeren / afbreken"
+msgstr "Overdracht afbreken"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:100
-#, fuzzy
 msgid "Main Tabs"
-msgstr "Hoofd-tabs"
+msgstr "Hoofd tabs"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:60
 msgid "Transfer Statistics"
@@ -2087,9 +2069,9 @@ msgid "Everything…"
 msgstr "Alles…"
 
 #: pynicotine/gtkgui/downloads.py:121
-#, fuzzy, python-format
+#, python-format
 msgid "Downloading: %(speed)s ( %(active_users)s )"
-msgstr "Downloaden (Snelheid / Actieve gebruikers)"
+msgstr "Downloaden: %(speed)s ( %(active_users)s )"
 
 #: pynicotine/gtkgui/downloads.py:131
 msgid "Clear Queued Downloads"
