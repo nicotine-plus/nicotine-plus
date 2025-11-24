@@ -428,6 +428,20 @@ class TreeView:
         self._columns_changed_handler = self.widget.connect("columns-changed", self._update_column_properties)
         self.widget.emit("columns-changed")
 
+    def _get_sorted_visible_columns(self):
+
+        sorted_columns = sorted(
+            self.widget.get_columns(),
+            key=lambda column: list(self._columns.keys()).index(column.id)
+        )
+
+        for column_index, column_data in reversed(list(enumerate(self._columns.values()))):
+            if column_index >= len(sorted_columns):
+                continue
+
+            column = sorted_columns[column_index]
+            yield column, column_data
+
     def save_columns(self):
         """Save a treeview's column widths and visibilities for the next
         session."""
@@ -783,19 +797,28 @@ class TreeView:
         self.model.set_sort_column_id(self._sort_column, self._sort_type)
         self.save_columns()
 
-    def on_reset_columns(self, *_args):
+    def on_reset_sizing(self, *_args):
 
-        sorted_columns = sorted(
-            self.widget.get_columns(),
-            key=lambda column: list(self._columns.keys()).index(column.id)
-        )
-
-        for column_index, column_data in reversed(list(enumerate(self._columns.values()))):
-            if column_index >= len(sorted_columns):
+        for column, column_data in self._get_sorted_visible_columns():
+            if not column.get_visible():
                 continue
 
-            column = sorted_columns[column_index]
             width = column_data.get("width")
+            should_expand_column = column_data.get("expand_column")
+
+            if not width:
+                width = -1
+
+            column.set_fixed_width(width)
+
+            if should_expand_column:
+                column.set_expand(True)
+
+    def on_reset_columns(self, *_args):
+
+        for column, column_data in self._get_sorted_visible_columns():
+            width = column_data.get("width")
+            should_expand_column = column_data.get("expand_column")
 
             if width is not None:
                 column.set_resizable(column.type != "icon")
@@ -804,8 +827,11 @@ class TreeView:
                 width = -1
 
             column.set_fixed_width(width)
-            column.set_visible(True)
 
+            if should_expand_column:
+                column.set_expand(True)
+
+            column.set_visible(True)
             self.widget.move_column_after(column, None)
 
         self.on_reset_sort_column()
@@ -844,6 +870,7 @@ class TreeView:
         menu.add_items(
             ("", None),
             (">" + _("_Sort Order"), sort_menu),
+            ("#" + _("Reset Sizing"), self.on_reset_sizing),
             ("#" + _("Reset Columns"), self.on_reset_columns)
         )
         menu.update_model()
