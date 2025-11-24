@@ -138,7 +138,8 @@ class Downloads(Transfers):
             self._retry_connection_downloads_timer_id,
             self._retry_io_downloads_timer_id
         ):
-            events.cancel_scheduled(timer_id)
+            if timer_id:
+                events.cancel_scheduled(timer_id)
 
         for user_requested_folders in self._requested_folders.values():
             for requested_folder in user_requested_folders.values():
