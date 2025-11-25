@@ -93,7 +93,7 @@ def _set_system_language(language=None):
             language = next(iter(languages)).replace("-", "_")
 
     if default_locale:
-        os.environ["LC_ALL"] = default_locale
+        os.environ["LC_ALL"] = default_locale + ".UTF-8"
 
     if language:
         os.environ["LANGUAGE"] = language
