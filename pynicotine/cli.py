@@ -103,17 +103,21 @@ class CLIInputProcessor(Thread):
 
 
 class CLI:
-    __slots__ = ("_input_processor", "_log_message_queue", "_tty_attributes")
+    __slots__ = ("_input_processor", "_log_message_queue", "_has_tty", "_tty_attributes")
 
     def __init__(self):
 
         self._input_processor = CLIInputProcessor()
         self._log_message_queue = deque(maxlen=1000)
+        self._has_tty = sys.stdin.isatty()
         self._tty_attributes = None
 
         events.connect("quit", self._quit)
 
     def enable_prompt(self):
+
+        if not self._has_tty:
+            return
 
         try:
             import termios  # pylint: disable=import-error
@@ -134,6 +138,9 @@ class CLI:
             events.connect(event_name, callback)
 
     def prompt(self, message, callback, is_silent=False):
+
+        if not self._has_tty:
+            return
 
         self._input_processor.prompt_message = message
         self._input_processor.prompt_callback = callback
