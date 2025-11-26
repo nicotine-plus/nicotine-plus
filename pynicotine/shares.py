@@ -1084,7 +1084,7 @@ class Shares:
         if use_thread:
             Thread(
                 target=self._process_scanner, args=(scanner_queue, events.emit_main_thread),
-                name="ProcessShareScanner", daemon=True
+                name="ProcessShareScanner"
             ).start()
             return None
 
