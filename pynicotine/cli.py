@@ -24,7 +24,6 @@ from getpass import getpass
 from threading import Thread
 
 from pynicotine.events import events
-from pynicotine.logfacility import log
 
 
 class CLIInputProcessor(Thread):
@@ -47,8 +46,8 @@ class CLIInputProcessor(Thread):
             try:
                 self._handle_prompt()
 
-            except Exception as error:
-                log.add_debug("CLI input prompt is no longer available: %s", error)
+            except Exception:
+                # CLI input prompt is no longer available
                 return
 
     def _handle_prompt_callback(self, user_input, callback):
