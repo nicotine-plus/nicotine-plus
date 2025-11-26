@@ -293,7 +293,7 @@ class UpdateChecker:
         if self._thread and self._thread.is_alive():
             return
 
-        self._thread = threading.Thread(target=self._check, name="UpdateChecker", daemon=True)
+        self._thread = threading.Thread(target=self._check, name="UpdateChecker")
         self._thread.start()
 
     def _check(self):

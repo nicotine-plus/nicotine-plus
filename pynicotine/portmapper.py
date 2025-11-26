@@ -703,7 +703,7 @@ class PortMapper:
         if blocking:
             self._add_port_mapping()
         else:
-            Thread(target=self._add_port_mapping, name="AddPortmapping", daemon=True).start()
+            Thread(target=self._add_port_mapping, name="AddPortmapping").start()
 
         # Renew port mapping entry regularly
         self._start_renewal_timer()
@@ -716,4 +716,4 @@ class PortMapper:
             self._remove_port_mapping()
             return
 
-        Thread(target=self._remove_port_mapping, name="RemovePortmapping", daemon=True).start()
+        Thread(target=self._remove_port_mapping, name="RemovePortmapping").start()

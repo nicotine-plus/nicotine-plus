@@ -219,7 +219,7 @@ class Events:
     __slots__ = ("_callbacks", "_thread_events", "_pending_scheduler_events", "_scheduler_events",
                  "_scheduler_event_id", "_is_active")
 
-    SCHEDULER_MAX_IDLE = 1
+    SCHEDULER_MAX_IDLE = 0.2
 
     def __init__(self):
 
@@ -243,7 +243,7 @@ class Events:
         ):
             self.connect(event_name, callback)
 
-        Thread(target=self._run_scheduler, name="SchedulerThread", daemon=True).start()
+        Thread(target=self._run_scheduler, name="SchedulerThread").start()
 
     def connect(self, event_name, function):
 

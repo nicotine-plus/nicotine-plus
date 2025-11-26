@@ -15,10 +15,7 @@ class PortChecker:
         self._thread = None
 
     def check_status(self, port):
-
-        threading.Thread(
-            target=self._check_status, args=(port,), name="PortChecker", daemon=True
-        ).start()
+        threading.Thread(target=self._check_status, args=(port,), name="PortChecker").start()
 
     def _check_status(self, port):
 

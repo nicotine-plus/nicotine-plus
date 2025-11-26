@@ -121,9 +121,7 @@ class UserBrowse:
                 current_permission_level = permission_level
 
             msg = core.shares.compressed_shares.get(current_permission_level)
-            Thread(
-                target=self._parse_local_shares, args=(username, msg), name="LocalShareParser", daemon=True
-            ).start()
+            Thread(target=self._parse_local_shares, args=(username, msg), name="LocalShareParser").start()
 
         self._show_user(username, path=path, new_request=new_request, switch_page=switch_page)
         core.users.watch_user(username, context="userbrowse")
