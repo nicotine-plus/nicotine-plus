@@ -564,7 +564,8 @@ class Search:
                     "title": _("Quality"),
                     "width": 160,
                     "sort_column": "bitrate_data",
-                    "sensitive_column": "public_data"
+                    "sensitive_column": "public_data",
+                    "tooltip_callback": self.on_quality_tooltip
                 },
                 "length": {
                     "column_type": "number",
@@ -1498,6 +1499,20 @@ class Search:
             return None
 
         return file_data.path
+
+    def on_quality_tooltip(self, treeview, iterator):
+
+        file_data = treeview.get_row_value(iterator, "file_data")
+
+        if not file_data or not file_data.attributes:
+            return None
+
+        # Always include bitrate in tooltip
+        size = treeview.get_row_value(iterator, "size_data")
+        h_quality, _bitrate, _h_length, _length = FileListMessage.parse_audio_quality_length(
+            size, file_data.attributes, always_show_bitrate=True)
+
+        return h_quality
 
     def on_row_activated(self, treeview, iterator, _column):
 

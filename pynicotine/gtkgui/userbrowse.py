@@ -338,7 +338,8 @@ class UserBrowse:
                     "column_type": "number",
                     "title": _("Quality"),
                     "width": 160,
-                    "sort_column": "bitrate_data"
+                    "sort_column": "bitrate_data",
+                    "tooltip_callback": self.on_quality_tooltip
                 },
                 "length": {
                     "column_type": "number",
@@ -1110,6 +1111,20 @@ class UserBrowse:
         return True
 
     # Callbacks (file_list_view) #
+
+    def on_quality_tooltip(self, treeview, iterator):
+
+        file_attributes = treeview.get_row_value(iterator, "file_attributes_data")
+
+        if not file_attributes:
+            return None
+
+        # Always include bitrate in tooltip
+        size = treeview.get_row_value(iterator, "size_data")
+        h_quality, _bitrate, _h_length, _length = FileListMessage.parse_audio_quality_length(
+            size, file_attributes, always_show_bitrate=True)
+
+        return h_quality
 
     def on_file_popup_menu(self, menu, _widget):
 
