@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-23 16:01+0200\n"
-"PO-Revision-Date: 2025-10-25 13:03+0000\n"
+"PO-Revision-Date: 2025-11-27 05:01+0000\n"
 "Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.14.1-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -115,14 +115,12 @@ msgid "use non-default configuration file"
 msgstr "usar arquivo de configuração não padrão"
 
 #: pynicotine/__init__.py:48
-#, fuzzy
 msgid "folder"
-msgstr "Pasta"
+msgstr "pasta"
 
 #: pynicotine/__init__.py:49
-#, fuzzy
 msgid "alternative folder for user data and plugins"
-msgstr "diretório alternativo para dados do usuário e plugins"
+msgstr "pasta alternativa para dados do usuário e plugins"
 
 #: pynicotine/__init__.py:53
 msgid "start the program without showing window"
@@ -204,9 +202,9 @@ msgstr ""
 
 #: pynicotine/config.py:117 pynicotine/config.py:136
 #: pynicotine/userbrowse.py:169
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot create folder %(path)s: %(error)s"
-msgstr "Não é possível acessar o arquivo de log %(path)s: %(error)s"
+msgstr "Não foi possível criar a pasta %(path)s: %(error)s"
 
 #: pynicotine/config.py:823
 #, python-format
@@ -1062,9 +1060,8 @@ msgstr "_Aplicar"
 #: pynicotine/gtkgui/ui/settings/shares.ui:53
 #: pynicotine/gtkgui/ui/settings/shares.ui:224
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:97
-#, fuzzy
 msgid "_Add…"
-msgstr "Adicionar…"
+msgstr "_Adicionar…"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:228
 #: pynicotine/gtkgui/search.py:622
@@ -1250,12 +1247,11 @@ msgstr "Público"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:589
 msgid "Applies to files"
-msgstr ""
+msgstr "Aplica-se aos arquivos"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:590
-#, fuzzy
 msgid "Applies to folders"
-msgstr "Baixar Arquivos para Pasta"
+msgstr "Aplica-se a pastas"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:590
 #: pynicotine/gtkgui/dialogs/preferences.py:754
@@ -1277,18 +1273,17 @@ msgid "Open in File _Manager"
 msgstr "Abrir no Gerenciador_de Arquivos"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:667
-#, fuzzy
 msgid ""
 "Syntax: Case-insensitive. Virtual paths containing separators \\ are "
 "supported. Wildcard * matches are supported."
 msgstr ""
-"<b>Sintaxe</b>: Não diferencia maiúsculas de minúsculas. Se ativado, as "
-"expressões regulares do Python podem ser usadas, caso contrário, apenas "
-"correspondências curinga * são suportadas."
+"Sintaxe: Insensível a maiúsculas, minúsculas. São suportados caminhos "
+"virtuais contendo separadores \\. São suportados coringa * como "
+"correspondência."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:683
 msgid "Applies To"
-msgstr ""
+msgstr "Aplica-se a"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:701
 #: pynicotine/gtkgui/ui/userinfo.ui:205
@@ -1296,29 +1291,24 @@ msgid "Shared Folders"
 msgstr "Pastas Compartilhadas"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:702
-#, fuzzy
 msgid "Filters"
-msgstr "Filtro"
+msgstr "Filtros"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:910
-#, fuzzy
 msgid "Add Share Filter"
-msgstr "Adicionar uma Pasta Compartilhada"
+msgstr "Adicionar Filtro de Compartilhamento"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:911
-#, fuzzy
 msgid "Enter a new share filter:"
-msgstr "Insira um novo filtro de download:"
+msgstr "Insira um novo filtro de compartilhamento:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:943
-#, fuzzy
 msgid "Edit Share Filter"
-msgstr "Editar Pasta Compartilhada"
+msgstr "Editar Filtro de Compartilhamento"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:944
-#, fuzzy
 msgid "Modify the following share filter:"
-msgstr "Modifique o seguinte filtro de download:"
+msgstr "Modificar o seguinte filtro de compartilhamento:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1017
 #: pynicotine/gtkgui/ui/uploads.ui:45
@@ -2705,44 +2695,36 @@ msgstr ""
 "porta de escuta fechada ou problema de conectividade temporária."
 
 #: pynicotine/gtkgui/userbrowse.py:925
-#, fuzzy
 msgid "Upload _Folder…"
-msgstr "Pasta para Upload…"
+msgstr "Enviar _Pasta…"
 
 #: pynicotine/gtkgui/userbrowse.py:925
-#, fuzzy
 msgid "Upload _Folders…"
-msgstr "Pasta para Upload…"
+msgstr "Enviar _Pastas…"
 
 #: pynicotine/gtkgui/userbrowse.py:929
-#, fuzzy
 msgid "Upload Folder & _Subfolders…"
-msgstr "Pasta(s) e Subpasta(s) para Upload…"
+msgstr "Enviar Pasta & _Subpastas…"
 
 #: pynicotine/gtkgui/userbrowse.py:929
-#, fuzzy
 msgid "Upload Folders & _Subfolders…"
-msgstr "Envio de Pastas & Subpastas…"
+msgstr "Enviar Pastas & _Subpastas…"
 
 #: pynicotine/gtkgui/userbrowse.py:935
-#, fuzzy
 msgid "Download _Folder"
-msgstr "_Pasta de Download"
+msgstr "Baixar _Pasta"
 
 #: pynicotine/gtkgui/userbrowse.py:935
-#, fuzzy
 msgid "Download _Folders"
-msgstr "Baixar_Pasta(s)"
+msgstr "Baixar _Pastas"
 
 #: pynicotine/gtkgui/userbrowse.py:939
-#, fuzzy
 msgid "Download Folder & _Subfolders…"
-msgstr "Baixar Pastas & Subpastas _Para…"
+msgstr "Baixar Pasta & _Subpastas…"
 
 #: pynicotine/gtkgui/userbrowse.py:939
-#, fuzzy
 msgid "Download Folders & _Subfolders…"
-msgstr "Transferir Pastas & Subpastas _Para…"
+msgstr "Baixar Pastas & _Subpastas…"
 
 #: pynicotine/gtkgui/userbrowse.py:1008
 msgid "Upload Folder (with Subfolders) To User"
@@ -4738,9 +4720,10 @@ msgstr ""
 "Lista salva de arquivos compartilhados para o usuário '%(user)s' em %(dir)s"
 
 #: pynicotine/userbrowse.py:279
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot save shares for user %(user)s: %(error)s"
-msgstr "Falha ao carregar a imagem do usuário %(user)s: %(error)s"
+msgstr ""
+"Não foi possível salvar compartilhamentos para o usuário %(user)s: %(error)s"
 
 #: pynicotine/userbrowse.py:355
 #, python-format
@@ -4966,27 +4949,24 @@ msgid "Rename…"
 msgstr "Renomear…"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:192
-#, fuzzy
 msgid "Select _All"
-msgstr "Selecione Todos"
+msgstr "Selecione _Tudo"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:207
 msgid "Deselect All"
 msgstr "Desmarcar Tudo"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:223
-#, fuzzy
 msgid "Deselect _All"
-msgstr "Desmarcar Tudo"
+msgstr "Desmarcar _Tudo"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:238
 msgid "Select Initial"
 msgstr "Selecionar Inicial"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:254
-#, fuzzy
 msgid "Select _Initial"
-msgstr "Selecionar Inicial"
+msgstr "Selecionar _Início"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:102
 msgid "Welcome to Nicotine+"
@@ -5093,14 +5073,12 @@ msgid "Last Speed"
 msgstr "Última Velocidade"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:15
-#, fuzzy
 msgid "E_xport…"
-msgstr "_Exportar…"
+msgstr "E_xportar…"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:21
-#, fuzzy
 msgid "A_pply"
-msgstr "_Aplicar"
+msgstr "A_plicar"
 
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:27
 msgid "Search rooms…"
@@ -5176,14 +5154,12 @@ msgid "Clear All…"
 msgstr "Limpar Tudo…"
 
 #: pynicotine/gtkgui/ui/downloads.ui:61
-#, fuzzy
 msgid "Re_sume"
-msgstr "Resumir"
+msgstr "Re_sumir"
 
 #: pynicotine/gtkgui/ui/downloads.ui:92
-#, fuzzy
 msgid "_Pause"
-msgstr "Pausar"
+msgstr "_Pausar"
 
 #: pynicotine/gtkgui/ui/downloads.ui:145
 msgid "Clear All Finished/Filtered Downloads"
@@ -5848,9 +5824,8 @@ msgid "Enable censoring of text patterns"
 msgstr "Ativar censura de padrões de texto"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:366
-#, fuzzy
 msgid "Accept private room invitations"
-msgstr "_Aceitar convites para salas privadas"
+msgstr "Aceitar convites para salas privadas"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:390
 msgid "Restore previously open private chats on startup"
@@ -5981,9 +5956,8 @@ msgid "Load Defaults"
 msgstr "Carregar padrões"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:609
-#, fuzzy
 msgid "_Verify Filters"
-msgstr "Verificar Filtros"
+msgstr "_Verificar Filtros"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:621
 msgid "Unverified"
@@ -6046,9 +6020,8 @@ msgstr ""
 "usuário diferenciam maiúsculas de minúsculas e são exclusivos."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:101
-#, fuzzy
 msgid "Change Pass_word"
-msgstr "Mudar Senha"
+msgstr "Mudar Se_nha"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:122
 msgid "Listening port (TCP):"
@@ -6067,9 +6040,8 @@ msgid "Port Check"
 msgstr "Checar Porta"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:211
-#, fuzzy
 msgid "_Port Check"
-msgstr "Checar Porta"
+msgstr "Checar _Porta"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:235
 msgid "Away Status"
@@ -6125,9 +6097,8 @@ msgid "Now Playing message format:"
 msgstr "Formato de mensagem em Reproduzindo Agora:"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:167
-#, fuzzy
 msgid "_Test Configuration"
-msgstr "Configuração de teste"
+msgstr "_Testar Configuração"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:52
 msgid "Enable plugins"
@@ -6252,9 +6223,8 @@ msgid "File Manager"
 msgstr "Gerenciador de Arquivos"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:157
-#, fuzzy
 msgid "File _Manager"
-msgstr "Gerenciador de Arquivos"
+msgstr "Gerenciador de _Arquivos"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:208
 msgid "Add"
@@ -6270,7 +6240,7 @@ msgstr "Ao Iniciar"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:402
 msgid "Daily:"
-msgstr ""
+msgstr "Diariamente:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:428
 msgid "Visible to everyone:"
@@ -6611,14 +6581,12 @@ msgid "Abor_t"
 msgstr "Abor_tar"
 
 #: pynicotine/gtkgui/ui/uploads.ui:76
-#, fuzzy
 msgid "Abort Users"
-msgstr "Abortar Usuário(s)"
+msgstr "Abortar Usuários"
 
 #: pynicotine/gtkgui/ui/uploads.ui:92
-#, fuzzy
 msgid "Abort _Users"
-msgstr "Abortar Usuário(s)"
+msgstr "Abortar _Usuários"
 
 #: pynicotine/gtkgui/ui/uploads.ui:116
 msgid "Message All"
