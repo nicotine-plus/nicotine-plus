@@ -290,7 +290,7 @@ class UpdateChecker:
 
     def check(self):
 
-        if self._thread and self._thread.is_alive():
+        if self._thread is not None and self._thread.is_alive():
             return
 
         self._thread = threading.Thread(target=self._check, name="UpdateChecker")
