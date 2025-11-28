@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-23 16:01+0200\n"
-"PO-Revision-Date: 2025-11-03 21:03+0000\n"
+"PO-Revision-Date: 2025-11-28 23:00+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.1-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -113,14 +113,12 @@ msgid "use non-default configuration file"
 msgstr "használjon nem alapértelmezett konfigurációs fájlt"
 
 #: pynicotine/__init__.py:48
-#, fuzzy
 msgid "folder"
-msgstr "Mappa"
+msgstr "mappa"
 
 #: pynicotine/__init__.py:49
-#, fuzzy
 msgid "alternative folder for user data and plugins"
-msgstr "választható könyvtár a felhasználói adatokhoz és a bővítményekhez"
+msgstr "választható mappa a felhasználói adatokhoz és a bővítményekhez"
 
 #: pynicotine/__init__.py:53
 msgid "start the program without showing window"
@@ -202,9 +200,9 @@ msgstr ""
 
 #: pynicotine/config.py:117 pynicotine/config.py:136
 #: pynicotine/userbrowse.py:169
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot create folder %(path)s: %(error)s"
-msgstr "Nem fér hozzá a naplófájlhoz %(path)s: %(error)s"
+msgstr "Nem hozható létre mappa itt: %(path)s, %(error)s"
 
 #: pynicotine/config.py:823
 #, python-format
@@ -338,7 +336,9 @@ msgstr "A(z) %s nem található, kérem telepítse."
 
 #: pynicotine/gtkgui/__init__.py:140
 msgid "No graphical environment available, using headless (no GUI) mode"
-msgstr "Nem áll rendelkezésre grafikus környezet, fej nélküli mód (nincs GUI)"
+msgstr ""
+"Nem áll rendelkezésre grafikus környezet, fej nélküli mód (nincs GUI) lesz "
+"használva"
 
 #: pynicotine/gtkgui/application.py:306
 #: pynicotine/gtkgui/widgets/trayicon.py:85
@@ -1055,9 +1055,8 @@ msgstr "_Alkalmaz"
 #: pynicotine/gtkgui/ui/settings/shares.ui:53
 #: pynicotine/gtkgui/ui/settings/shares.ui:224
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:97
-#, fuzzy
 msgid "_Add…"
-msgstr "Hozzáadás…"
+msgstr "Hozzá_adás…"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:228
 #: pynicotine/gtkgui/search.py:622
@@ -1244,12 +1243,11 @@ msgstr "Nyilvános"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:589
 msgid "Applies to files"
-msgstr ""
+msgstr "Alkalmazás a fájlokra"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:590
-#, fuzzy
 msgid "Applies to folders"
-msgstr "Fájlok letöltése mappába"
+msgstr "Alkalmazás a mappákra"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:590
 #: pynicotine/gtkgui/dialogs/preferences.py:754
