@@ -217,7 +217,7 @@ class ThreadEvent:
 
 class Events:
     __slots__ = ("_callbacks", "_thread_events", "_pending_scheduler_events", "_scheduler_events",
-                 "_scheduler_event_id", "_is_active")
+                 "_scheduler_event_id", "_scheduler_thread", "_is_active")
 
     SCHEDULER_MAX_IDLE = 0.2
 
@@ -228,6 +228,7 @@ class Events:
         self._pending_scheduler_events = SimpleQueue()
         self._scheduler_events = {}
         self._scheduler_event_id = 0
+        self._scheduler_thread = None
         self._is_active = False
 
     def enable(self):
@@ -239,11 +240,10 @@ class Events:
 
         for event_name, callback in (
             ("quit", self._quit),
+            ("start", self._start),
             ("thread-callback", self._thread_callback)
         ):
             self.connect(event_name, callback)
-
-        Thread(target=self._run_scheduler, name="SchedulerThread").start()
 
     def connect(self, event_name, function):
 
@@ -270,7 +270,7 @@ class Events:
                 from pynicotine import core
                 module_name = function.__module__.split(".", 1)[0]
 
-                if module_name not in core.pluginhandler.enabled_plugins:
+                if core.pluginhandler is None or module_name not in core.pluginhandler.enabled_plugins:
                     core.quit()
                     raise error
 
@@ -371,6 +371,14 @@ class Events:
                 continue
 
             self._scheduler_events.pop(event.event_id, None)
+
+    def _start(self):
+
+        if self._scheduler_thread is not None and self._scheduler_thread.is_alive():
+            return
+
+        self._scheduler_thread = Thread(target=self._run_scheduler, name="SchedulerThread")
+        self._scheduler_thread.start()
 
     def _thread_callback(self, callback, *args, **kwargs):
         callback(*args, **kwargs)

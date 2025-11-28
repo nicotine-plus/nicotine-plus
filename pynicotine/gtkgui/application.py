@@ -969,10 +969,6 @@ class Application:
         from pynicotine.gtkgui.widgets.theme import load_icons
         from pynicotine.gtkgui.widgets.trayicon import TrayIcon
 
-        # Process thread events 10 times per second.
-        # High priority to ensure there are no delays.
-        GLib.timeout_add(100, self.on_process_thread_events, priority=GLib.PRIORITY_HIGH_IDLE)
-
         load_icons()
 
         self._set_up_actions()
@@ -985,6 +981,10 @@ class Application:
         self.room_list = RoomList(self)
 
         core.start()
+
+        # Process thread events 10 times per second.
+        # High priority to ensure there are no delays.
+        GLib.timeout_add(100, self.on_process_thread_events, priority=GLib.PRIORITY_HIGH_IDLE)
 
         gtk_version = f"{Gtk.get_major_version()}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
         log.add(_("Loaded %(program)s %(version)s"), {"program": "GTK", "version": gtk_version})
