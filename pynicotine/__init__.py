@@ -93,6 +93,7 @@ def check_arguments():
 
     core.cli_interface_address = args.bindip
     core.cli_listen_port = args.port
+    core.cli_rescanning = args.rescan
 
     return args.headless, args.hidden, args.ci_mode, args.isolated, args.rescan, multi_instance
 
@@ -171,6 +172,7 @@ def rename_process(new_name, debug_info=False):
 def rescan_shares():
 
     exit_code = 0
+    core.start()
 
     if not core.shares.rescan_shares(use_thread=False):
         log.add("--------------------------------------------------")
@@ -196,7 +198,7 @@ def run():
         return 1
 
     core.init_components(
-        enabled_components={"cli", "shares"} if rescan else None,
+        enabled_components={"signal_handler", "cli", "shares"} if rescan else None,
         isolated_mode=isolated_mode
     )
 

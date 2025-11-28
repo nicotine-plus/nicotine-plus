@@ -778,6 +778,10 @@ class Shares:
 
     def _start(self):
 
+        if core.cli_rescanning:
+            # CLI rescan is performed elsewhere
+            return
+
         rescan_startup = (config.sections["transfers"]["rescanonstartup"]
                           and not config.need_config())
 
