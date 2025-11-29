@@ -3,7 +3,7 @@
 
 import os
 
-from locale import strxfrm
+from operator import itemgetter
 
 from gi.repository import GLib
 from gi.repository import GObject
@@ -328,7 +328,7 @@ class Download(Dialog):
 
             files.append((username, file_path, destination_folder_path, size, file_attributes))
 
-        files.sort(key=lambda x: strxfrm(x[1]))
+        files.sort(key=itemgetter(1))
 
         for username, file_path, destination_folder_path, size, file_attributes in files:
             core.downloads.enqueue_download(
