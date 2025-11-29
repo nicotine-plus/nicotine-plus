@@ -454,7 +454,7 @@ class FileListMessage(SlskMessage):
             # Only unpack the first 4 bytes to work around this issue.
 
             pos, size = cls.unpack_uint32(message, pos)
-            pos, _garbage = cls.unpack_uint32(message, pos)
+            pos += 4
 
         else:
             # Everything looks fine, parse size as usual
@@ -3469,7 +3469,7 @@ class FolderContentsResponse(PeerMessage):
             for _ in range(nfiles):
                 pos, code = self.unpack_uint8(message, pos)
                 pos, name = self.unpack_string(message, pos)
-                pos, size = self.unpack_uint64(message, pos)
+                pos, size = FileListMessage.parse_file_size(message, pos)
                 pos, ext_len = self.unpack_uint32(message, pos)  # Obsolete, ignore
                 pos, attrs = FileListMessage.unpack_file_attributes(message, pos + ext_len)
 
