@@ -23,6 +23,7 @@ from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import CloseConnection
 from pynicotine.slskmessages import FileAttribute
+from pynicotine.slskmessages import FileAttributes
 from pynicotine.slskmessages import UploadDenied
 from pynicotine.utils import encode_path
 from pynicotine.utils import load_file
@@ -86,7 +87,7 @@ class Transfer:
         self.is_lowercase_path = False
 
         if file_attributes is None:
-            self.file_attributes = {}
+            self.file_attributes = FileAttributes()
 
 
 class Transfers:
@@ -204,28 +205,37 @@ class Transfers:
         if not loaded_file_attributes:
             return None
 
-        if isinstance(loaded_file_attributes, dict):
+        is_new_format = isinstance(loaded_file_attributes, dict)
+
+        if not is_new_format:
+            try:
+                # Check if a dictionary is represented in string format
+                loaded_file_attributes = literal_eval(loaded_file_attributes)
+                is_new_format = isinstance(loaded_file_attributes, dict)
+
+            except (AttributeError, ValueError):
+                pass
+
+        if is_new_format:
             # Found dictionary with file attributes (Nicotine+ >=3.3.0).
-            # JSON stores file attribute types as strings, convert them back to integers.
-            return {int(k): v for k, v in loaded_file_attributes.items()}
-
-        try:
-            # Check if a dictionary is represented in string format
-            return {int(k): v for k, v in literal_eval(loaded_file_attributes).items()}
-
-        except (AttributeError, ValueError):
-            pass
+            return FileAttributes(
+                loaded_file_attributes.get(str(FileAttribute.BITRATE)),
+                loaded_file_attributes.get(str(FileAttribute.LENGTH)),
+                loaded_file_attributes.get(str(FileAttribute.VBR)),
+                loaded_file_attributes.get(str(FileAttribute.SAMPLE_RATE)),
+                loaded_file_attributes.get(str(FileAttribute.BIT_DEPTH))
+            )
 
         # Legacy bitrate/duration strings (Nicotine+ <3.3.0)
-        file_attributes = {}
+        file_attributes = FileAttributes()
         bitrate = str(loaded_file_attributes)
         is_vbr = (" (vbr)" in bitrate)
 
         try:
-            file_attributes[FileAttribute.BITRATE] = int(bitrate.replace(" (vbr)", ""))
+            file_attributes.bitrate = int(bitrate.replace(" (vbr)", ""))
 
             if is_vbr:
-                file_attributes[FileAttribute.VBR] = int(is_vbr)
+                file_attributes.vbr = int(is_vbr)
 
         except ValueError:
             # No valid bitrate value found
@@ -245,7 +255,7 @@ class Transfers:
         for part in loaded_length.split(":"):
             seconds = seconds * 60 + int(part, 10)
 
-        file_attributes[FileAttribute.DURATION] = seconds
+        file_attributes.length = seconds
 
         return file_attributes
 
@@ -590,7 +600,9 @@ class Transfers:
     def _save_transfers_callback(self, file_handle):
 
         # Dump every transfer to the file individually to avoid large memory usage
-        json_encoder = json.JSONEncoder(check_circular=False, ensure_ascii=False)
+        json_encoder = json.JSONEncoder(
+            check_circular=False, ensure_ascii=False, default=lambda attributes: attributes.as_dict()
+        )
         is_first_item = True
 
         file_handle.write("[")

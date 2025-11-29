@@ -1281,12 +1281,11 @@ class UserBrowse:
                 ):
                     for file_data in files:
                         _code, basename, file_size, _ext, file_attributes, *_unused = file_data
-                        _bitrate, length, *_unused = FileListMessage.parse_file_attributes(file_attributes)
                         file_path = "\\".join([folder_path, basename])
                         selected_size += file_size
 
-                        if length:
-                            selected_length += length
+                        if file_attributes.length:
+                            selected_length += file_attributes.length
 
                         data.append({
                             "user": self.user,

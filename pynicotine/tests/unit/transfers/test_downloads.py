@@ -8,7 +8,6 @@ from unittest import TestCase
 
 from pynicotine.config import config
 from pynicotine.core import core
-from pynicotine.slskmessages import FileAttribute
 from pynicotine.transfers import TransferStatus
 from pynicotine.userbrowse import BrowsedUser
 
@@ -59,7 +58,11 @@ class DownloadsTest(TestCase):
         self.assertEqual(transfer.status, TransferStatus.USER_LOGGED_OFF)
         self.assertEqual(transfer.size, 0)
         self.assertIsNone(transfer.current_byte_offset)
-        self.assertFalse(transfer.file_attributes)
+        self.assertIsNone(transfer.file_attributes.bitrate)
+        self.assertIsNone(transfer.file_attributes.length)
+        self.assertIsNone(transfer.file_attributes.vbr)
+        self.assertIsNone(transfer.file_attributes.sample_rate)
+        self.assertIsNone(transfer.file_attributes.bit_depth)
 
         transfer = transfers[0]
 
@@ -68,32 +71,47 @@ class DownloadsTest(TestCase):
         self.assertEqual(transfer.status, TransferStatus.PAUSED)
         self.assertEqual(transfer.size, 10093741)
         self.assertEqual(transfer.current_byte_offset, 5000)
-        self.assertEqual(transfer.file_attributes, {
-            FileAttribute.BITRATE: 320,
-            FileAttribute.DURATION: 252
-        })
+        self.assertEqual(transfer.file_attributes.bitrate, 320)
+        self.assertEqual(transfer.file_attributes.length, 252)
+        self.assertIsNone(transfer.file_attributes.vbr)
+        self.assertIsNone(transfer.file_attributes.sample_rate)
+        self.assertIsNone(transfer.file_attributes.bit_depth)
 
         # File attribute dictionary represented as string (downgrade from >=3.3.0 to earlier and upgrade again)
-        self.assertEqual(transfers[15].file_attributes, {
-            FileAttribute.BITRATE: 256,
-            FileAttribute.DURATION: 476
-        })
+        transfer = transfers[15]
+
+        self.assertEqual(transfer.file_attributes.bitrate, 256)
+        self.assertEqual(transfer.file_attributes.length, 476)
+        self.assertIsNone(transfer.file_attributes.vbr)
+        self.assertIsNone(transfer.file_attributes.sample_rate)
+        self.assertIsNone(transfer.file_attributes.bit_depth)
 
         # Legacy bitrate/duration strings (Nicotine+ <3.3.0)
-        self.assertEqual(transfers[14].file_attributes, {
-            FileAttribute.BITRATE: 128,
-            FileAttribute.DURATION: 290
-        })
+        transfer = transfers[14]
+
+        self.assertEqual(transfer.file_attributes.bitrate, 128)
+        self.assertEqual(transfer.file_attributes.length, 290)
+        self.assertIsNone(transfer.file_attributes.vbr)
+        self.assertIsNone(transfer.file_attributes.sample_rate)
+        self.assertIsNone(transfer.file_attributes.bit_depth)
 
         # Legacy bitrate/duration strings (vbr) (Nicotine+ <3.3.0)
-        self.assertEqual(transfers[13].file_attributes, {
-            FileAttribute.BITRATE: 238,
-            FileAttribute.VBR: 1,
-            FileAttribute.DURATION: 173
-        })
+        transfer = transfers[13]
+
+        self.assertEqual(transfer.file_attributes.bitrate, 238)
+        self.assertEqual(transfer.file_attributes.length, 173)
+        self.assertEqual(transfer.file_attributes.vbr, 1)
+        self.assertIsNone(transfer.file_attributes.sample_rate)
+        self.assertIsNone(transfer.file_attributes.bit_depth)
 
         # Empty legacy bitrate/duration strings (Nicotine+ <3.3.0)
-        self.assertFalse(transfers[12].file_attributes)
+        transfer = transfers[12]
+
+        self.assertIsNone(transfer.file_attributes.bitrate)
+        self.assertIsNone(transfer.file_attributes.length)
+        self.assertIsNone(transfer.file_attributes.vbr)
+        self.assertIsNone(transfer.file_attributes.sample_rate)
+        self.assertIsNone(transfer.file_attributes.bit_depth)
 
     def test_save_downloads(self):
         """Verify that the order of the download list at the end of the session

@@ -12,6 +12,8 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import CloseConnection
+from pynicotine.slskmessages import FileAttribute
+from pynicotine.slskmessages import FileAttributes
 from pynicotine.slskmessages import SharedFileListRequest
 from pynicotine.slskmessages import SharedFileListResponse
 from pynicotine.slskmessages import UploadQueueNotification
@@ -202,7 +204,12 @@ class UserBrowse:
                 with open(file_path_encoded, encoding="utf-8") as file_handle:
                     shares_list = json.load(file_handle)
 
-            ext = ""
+            bitrate_key = str(FileAttribute.BITRATE)
+            length_key = str(FileAttribute.LENGTH)
+            vbr_key = str(FileAttribute.VBR)
+            sample_rate_key = str(FileAttribute.SAMPLE_RATE)
+            bit_depth_key = str(FileAttribute.BIT_DEPTH)
+            ext = None
 
             for _folder_path, files in shares_list:
                 # Sanitization
@@ -213,15 +220,48 @@ class UserBrowse:
                     if not isinstance(file_info[2], int):
                         raise TypeError("Invalid file size")
 
-                    attrs = file_info[4]
+                    attributes = file_info[4]
 
-                    if isinstance(attrs, dict):
-                        # JSON stores file attribute types as strings, convert them back to integers
-                        attrs = {int(k): v for k, v in attrs.items()}
+                    if isinstance(attributes, dict):
+                        bitrate = attributes.get(bitrate_key)
+                        length = attributes.get(length_key)
+                        vbr = attributes.get(vbr_key)
+                        sample_rate = attributes.get(sample_rate_key)
+                        bit_depth = attributes.get(bit_depth_key)
                     else:
-                        attrs = list(attrs)
+                        # Legacy attribute list format used for shares lists saved in Nicotine+ 3.2.2 and earlier
+                        bitrate = length = vbr = sample_rate = bit_depth = None
+
+                        if len(attributes) == 3:
+                            attribute1, attribute2, attribute3 = attributes
+
+                            if attribute3 in {0, 1}:
+                                bitrate = attribute1
+                                length = attribute2
+                                vbr = attribute3
+
+                            elif attribute3 > 1:
+                                length = attribute1
+                                sample_rate = attribute2
+                                bit_depth = attribute3
+
+                        elif len(attributes) == 2:
+                            attribute1, attribute2 = attributes
+
+                            if attribute2 in {0, 1}:
+                                bitrate = attribute1
+                                vbr = attribute2
+
+                            elif attribute1 >= 8000 and attribute2 <= 64:
+                                sample_rate = attribute1
+                                bit_depth = attribute2
+
+                            else:
+                                bitrate = attribute1
+                                length = attribute2
 
                     file_info[3] = ext
+                    file_info[4] = FileAttributes(bitrate, length, vbr, sample_rate, bit_depth)
 
         except Exception as error:
             log.add(_("Loading Shares from disk failed: %(error)s"), {"error": error})
@@ -254,7 +294,9 @@ class UserBrowse:
 
             with open(encode_path(file_path), "w", encoding="utf-8") as file_handle:
                 # Dump every folder to the file individually to avoid large memory usage
-                json_encoder = json.JSONEncoder(check_circular=False, ensure_ascii=False)
+                json_encoder = json.JSONEncoder(
+                    check_circular=False, ensure_ascii=False, default=lambda attributes: attributes.as_dict()
+                )
                 is_first_item = True
 
                 file_handle.write("[")

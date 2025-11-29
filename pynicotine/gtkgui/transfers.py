@@ -30,7 +30,6 @@ from pynicotine.gtkgui.widgets.theme import get_file_type_icon_name
 from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.treeview import create_grouping_menu
-from pynicotine.slskmessages import FileListMessage
 from pynicotine.slskmessages import TransferRejectReason
 from pynicotine.transfers import Transfer
 from pynicotine.transfers import TransferStatus
@@ -1206,11 +1205,10 @@ class Transfers:
             file_path = transfer.virtual_path
             file_size = transfer.size
             file_attributes = transfer.file_attributes
-            _bitrate, length, *_unused = FileListMessage.parse_file_attributes(file_attributes)
             selected_size += file_size
 
-            if length:
-                selected_length += length
+            if file_attributes.length:
+                selected_length += file_attributes.length
 
             folder_path, _separator, basename = file_path.rpartition("\\")
 

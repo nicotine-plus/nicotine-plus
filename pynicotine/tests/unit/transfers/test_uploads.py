@@ -8,7 +8,6 @@ from unittest import TestCase
 
 from pynicotine.config import config
 from pynicotine.core import core
-from pynicotine.slskmessages import FileAttribute
 from pynicotine.transfers import TransferStatus
 
 CURRENT_FOLDER_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -57,7 +56,11 @@ class UploadsTest(TestCase):
         self.assertEqual(transfer.status, TransferStatus.FINISHED)
         self.assertEqual(transfer.size, 11733776)
         self.assertEqual(transfer.current_byte_offset, 11733776)
-        self.assertFalse(transfer.file_attributes)
+        self.assertIsNone(transfer.file_attributes.bitrate)
+        self.assertIsNone(transfer.file_attributes.length)
+        self.assertIsNone(transfer.file_attributes.vbr)
+        self.assertIsNone(transfer.file_attributes.sample_rate)
+        self.assertIsNone(transfer.file_attributes.bit_depth)
 
         transfer = transfers[0]
 
@@ -66,10 +69,11 @@ class UploadsTest(TestCase):
         self.assertEqual(transfer.status, TransferStatus.FINISHED)
         self.assertEqual(transfer.size, 27231044)
         self.assertEqual(transfer.current_byte_offset, 27231044)
-        self.assertEqual(transfer.file_attributes, {
-            FileAttribute.BITRATE: 792,
-            FileAttribute.DURATION: 268
-        })
+        self.assertEqual(transfer.file_attributes.bitrate, 792)
+        self.assertEqual(transfer.file_attributes.length, 268)
+        self.assertIsNone(transfer.file_attributes.vbr)
+        self.assertIsNone(transfer.file_attributes.sample_rate)
+        self.assertIsNone(transfer.file_attributes.bit_depth)
 
     def test_save_uploads(self):
         """Verify that the order of the upload list at the end of the session

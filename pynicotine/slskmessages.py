@@ -120,7 +120,7 @@ class TransferRejectReason:
 
 class FileAttribute:
     BITRATE = 0
-    DURATION = 1
+    LENGTH = 1
     VBR = 2
     ENCODER = 3
     SAMPLE_RATE = 4
@@ -352,16 +352,39 @@ class SlskMessage:
         return f"<{self.msg_type} - {self.__class__.__name__}> {attrs}"
 
 
+class FileAttributes:
+    __slots__ = ("bitrate", "length", "vbr", "sample_rate", "bit_depth")
+
+    def __init__(self, bitrate=None, length=None, vbr=None, sample_rate=None, bit_depth=None):
+        self.bitrate = bitrate
+        self.length = length
+        self.vbr = vbr
+        self.sample_rate = sample_rate
+        self.bit_depth = bit_depth
+
+    def as_dict(self):
+        attributes = {}
+
+        if self.bitrate is not None:
+            attributes[FileAttribute.BITRATE] = self.bitrate
+
+        if self.length is not None:
+            attributes[FileAttribute.LENGTH] = self.length
+
+        if self.vbr is not None:
+            attributes[FileAttribute.VBR] = self.vbr
+
+        if self.sample_rate is not None:
+            attributes[FileAttribute.SAMPLE_RATE] = self.sample_rate
+
+        if self.bit_depth is not None:
+            attributes[FileAttribute.BIT_DEPTH] = self.bit_depth
+
+        return attributes
+
+
 class FileListMessage(SlskMessage):
     __slots__ = ()
-
-    VALID_FILE_ATTRIBUTES = {
-        FileAttribute.BITRATE,
-        FileAttribute.DURATION,
-        FileAttribute.VBR,
-        FileAttribute.SAMPLE_RATE,
-        FileAttribute.BIT_DEPTH
-    }
 
     @classmethod
     def pack_file_info(cls, fileinfo):
@@ -442,8 +465,7 @@ class FileListMessage(SlskMessage):
     @classmethod
     def unpack_file_attributes(cls, message, pos):
 
-        attrs = {}
-        valid_file_attributes = cls.VALID_FILE_ATTRIBUTES
+        attrs = FileAttributes()
 
         pos, numattr = cls.unpack_uint32(message, pos)
 
@@ -451,62 +473,31 @@ class FileListMessage(SlskMessage):
             pos, attrnum = cls.unpack_uint32(message, pos)
             pos, attr = cls.unpack_uint32(message, pos)
 
-            if attrnum in valid_file_attributes:
-                attrs[attrnum] = attr
+            if attrnum == FileAttribute.BITRATE:
+                attrs.bitrate = attr
+
+            elif attrnum == FileAttribute.LENGTH:
+                attrs.length = attr
+
+            elif attrnum == FileAttribute.VBR:
+                attrs.vbr = attr
+
+            elif attrnum == FileAttribute.SAMPLE_RATE:
+                attrs.sample_rate = attr
+
+            elif attrnum == FileAttribute.BIT_DEPTH:
+                attrs.bit_depth = attr
 
         return pos, attrs
-
-    @staticmethod
-    def parse_file_attributes(attributes):
-
-        if attributes is None:
-            attributes = {}
-
-        try:
-            bitrate = attributes.get(FileAttribute.BITRATE)
-            length = attributes.get(FileAttribute.DURATION)
-            vbr = attributes.get(FileAttribute.VBR)
-            sample_rate = attributes.get(FileAttribute.SAMPLE_RATE)
-            bit_depth = attributes.get(FileAttribute.BIT_DEPTH)
-
-        except AttributeError:
-            # Legacy attribute list format used for shares lists saved in Nicotine+ 3.2.2 and earlier
-            bitrate = length = vbr = sample_rate = bit_depth = None
-
-            if len(attributes) == 3:
-                attribute1, attribute2, attribute3 = attributes
-
-                if attribute3 in {0, 1}:
-                    bitrate = attribute1
-                    length = attribute2
-                    vbr = attribute3
-
-                elif attribute3 > 1:
-                    length = attribute1
-                    sample_rate = attribute2
-                    bit_depth = attribute3
-
-            elif len(attributes) == 2:
-                attribute1, attribute2 = attributes
-
-                if attribute2 in {0, 1}:
-                    bitrate = attribute1
-                    vbr = attribute2
-
-                elif attribute1 >= 8000 and attribute2 <= 64:
-                    sample_rate = attribute1
-                    bit_depth = attribute2
-
-                else:
-                    bitrate = attribute1
-                    length = attribute2
-
-        return bitrate, length, vbr, sample_rate, bit_depth
 
     @classmethod
     def parse_audio_quality_length(cls, filesize, attributes, always_show_bitrate=False):
 
-        bitrate, length, vbr, sample_rate, bit_depth = cls.parse_file_attributes(attributes)
+        bitrate = attributes.bitrate
+        length = attributes.length
+        vbr = attributes.vbr
+        sample_rate = attributes.sample_rate
+        bit_depth = attributes.bit_depth
 
         if bitrate is None:
             if sample_rate and bit_depth:
