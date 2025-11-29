@@ -109,7 +109,7 @@ class CLI:
 
         self._input_processor = CLIInputProcessor()
         self._log_message_queue = deque(maxlen=1000)
-        self._has_tty = sys.stdin.isatty()
+        self._has_tty = sys.stdin is not None and sys.stdin.isatty()
         self._tty_attributes = None
 
         events.connect("quit", self._quit)
