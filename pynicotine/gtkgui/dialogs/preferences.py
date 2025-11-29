@@ -1261,22 +1261,31 @@ class IgnoredUsersPage:
 
     def on_add_ignored_user_response(self, dialog, _response_id, _data):
 
-        user = dialog.get_entry_value().strip()
+        users = dialog.get_entry_value().split("\n")
+        is_first_item = True
 
-        if user and user not in self.ignored_users:
+        for user in users:
+            user = user.strip()
+
+            if not user or user in self.ignored_users:
+                continue
+
             self.ignored_users.append(user)
-            self.ignored_users_list_view.add_row([str(user)])
+            self.ignored_users_list_view.add_row([str(user)], select_row=is_first_item)
 
             self.added_users.add(user)
             self.removed_users.discard(user)
+
+            is_first_item = False
 
     def on_add_ignored_user(self, *_args):
 
         EntryDialog(
             parent=self.application.preferences,
-            title=_("Ignore User"),
-            message=_("Enter the name of the user you want to ignore:"),
+            title=_("Ignore Users"),
+            message=_("Enter a list of usernames you want to ignore:"),
             action_button_label=_("_Add"),
+            multiline=True,
             callback=self.on_add_ignored_user_response
         ).present()
 
@@ -1296,28 +1305,37 @@ class IgnoredUsersPage:
 
     def on_add_ignored_ip_response(self, dialog, _response_id, _data):
 
-        ip_address = dialog.get_entry_value().strip()
+        ip_addresses = dialog.get_entry_value().split("\n")
+        is_first_item = True
 
-        if not core.network_filter.is_ip_address(ip_address):
-            return
+        for ip_address in ip_addresses:
+            ip_address = ip_address.strip()
 
-        if ip_address not in self.ignored_ips:
+            if not core.network_filter.is_ip_address(ip_address):
+                continue
+
+            if ip_address in self.ignored_ips:
+                continue
+
             user = core.network_filter.get_online_username(ip_address) or ""
             user_ip_pair = (user, ip_address)
 
             self.ignored_ips[ip_address] = user
-            self.ignored_ips_list_view.add_row([ip_address, user])
+            self.ignored_ips_list_view.add_row([ip_address, user], select_row=is_first_item)
 
             self.added_ips.add(user_ip_pair)
             self.removed_ips.discard(user_ip_pair)
+
+            is_first_item = False
 
     def on_add_ignored_ip(self, *_args):
 
         EntryDialog(
             parent=self.application.preferences,
-            title=_("Ignore IP Address"),
-            message=_("Enter an IP address you want to ignore:") + " " + _("* is a wildcard"),
+            title=_("Ignore IP Addresses"),
+            message=_("Enter a list of IP addresses you want to ignore:") + " " + _("* is a wildcard"),
             action_button_label=_("_Add"),
+            multiline=True,
             callback=self.on_add_ignored_ip_response
         ).present()
 
@@ -1470,22 +1488,31 @@ class BannedUsersPage:
 
     def on_add_banned_user_response(self, dialog, _response_id, _data):
 
-        user = dialog.get_entry_value().strip()
+        users = dialog.get_entry_value().split("\n")
+        is_first_item = True
 
-        if user and user not in self.banned_users:
+        for user in users:
+            user = user.strip()
+
+            if not user or user in self.banned_users:
+                continue
+
             self.banned_users.append(user)
-            self.banned_users_list_view.add_row([user])
+            self.banned_users_list_view.add_row([user], select_row=is_first_item)
 
             self.added_users.add(user)
             self.removed_users.discard(user)
+
+            is_first_item = False
 
     def on_add_banned_user(self, *_args):
 
         EntryDialog(
             parent=self.application.preferences,
-            title=_("Ban User"),
-            message=_("Enter the name of the user you want to ban:"),
+            title=_("Ban Users"),
+            message=_("Enter a list of usernames you want to ban:"),
             action_button_label=_("_Add"),
+            multiline=True,
             callback=self.on_add_banned_user_response
         ).present()
 
@@ -1505,28 +1532,37 @@ class BannedUsersPage:
 
     def on_add_banned_ip_response(self, dialog, _response_id, _data):
 
-        ip_address = dialog.get_entry_value().strip()
+        ip_addresses = dialog.get_entry_value().split("\n")
+        is_first_item = True
 
-        if not core.network_filter.is_ip_address(ip_address):
-            return
+        for ip_address in ip_addresses:
+            ip_address = ip_address.strip()
 
-        if ip_address not in self.banned_ips:
+            if not core.network_filter.is_ip_address(ip_address):
+                continue
+
+            if ip_address in self.banned_ips:
+                continue
+
             user = core.network_filter.get_online_username(ip_address) or ""
             user_ip_pair = (user, ip_address)
 
             self.banned_ips[ip_address] = user
-            self.banned_ips_list_view.add_row([ip_address, user])
+            self.banned_ips_list_view.add_row([ip_address, user], select_row=is_first_item)
 
             self.added_ips.add(user_ip_pair)
             self.removed_ips.discard(user_ip_pair)
+
+            is_first_item = False
 
     def on_add_banned_ip(self, *_args):
 
         EntryDialog(
             parent=self.application.preferences,
-            title=_("Ban IP Address"),
-            message=_("Enter an IP address you want to ban:") + " " + _("* is a wildcard"),
+            title=_("Ban IP Addresses"),
+            message=_("Enter a list of IP addresses you want to ban:") + " " + _("* is a wildcard"),
             action_button_label=_("_Add"),
+            multiline=True,
             callback=self.on_add_banned_ip_response
         ).present()
 
@@ -1750,20 +1786,27 @@ class ChatsPage:
 
     def on_add_censored_response(self, dialog, _response_id, _data):
 
-        pattern = dialog.get_entry_value()
+        patterns = dialog.get_entry_value().split("\n")
+        is_first_item = True
 
-        if pattern and pattern not in self.censored_patterns:
+        for pattern in patterns:
+            if not pattern or pattern in self.censored_patterns:
+                continue
+
             self.censored_patterns.append(pattern)
-            self.censor_list_view.add_row([pattern])
+            self.censor_list_view.add_row([pattern], select_row=is_first_item)
+
+            is_first_item = False
 
     def on_add_censored(self, *_args):
 
         EntryDialog(
             parent=self.application.preferences,
-            title=_("Censor Pattern"),
-            message=_("Enter a pattern you want to censor. Add spaces around the pattern if you don't "
+            title=_("Censor Patterns"),
+            message=_("Enter a list of patterns you want to censor. Add spaces around the pattern if you don't "
                       "want to match strings inside words (may fail at the beginning and end of lines)."),
             action_button_label=_("_Add"),
+            multiline=True,
             callback=self.on_add_censored_response
         ).present()
 

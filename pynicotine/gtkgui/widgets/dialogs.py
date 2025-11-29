@@ -507,7 +507,7 @@ class EntryDialog(OptionDialog):
 
     def __init__(self, *args, default="", use_second_entry=False, second_entry_editable=True,
                  second_default="", action_button_label=_("_OK"), droplist=None, second_droplist=None,
-                 visibility=True, show_emoji_icon=False, **kwargs):
+                 visibility=True, multiline=False, show_emoji_icon=False, **kwargs):
 
         super().__init__(*args, buttons=[
             ("cancel", _("_Cancel")),
@@ -520,13 +520,13 @@ class EntryDialog(OptionDialog):
 
         self.entry_combobox = self.default_focus_widget = self._add_entry_combobox(
             default, activates_default=not use_second_entry, visibility=visibility,
-            show_emoji_icon=show_emoji_icon, droplist=droplist
+            multiline=multiline, show_emoji_icon=show_emoji_icon, droplist=droplist
         )
 
         if use_second_entry:
             self.second_entry_combobox = self._add_entry_combobox(
                 second_default, has_entry=second_entry_editable, activates_default=False, visibility=visibility,
-                show_emoji_icon=show_emoji_icon, droplist=second_droplist
+                show_emoji_icon=show_emoji_icon, multiline=multiline, droplist=second_droplist
             )
 
     def _add_combobox(self, items, has_entry=True, visibility=True, activates_default=True):
@@ -545,33 +545,47 @@ class EntryDialog(OptionDialog):
         self.container.set_visible(True)
         return combobox
 
-    def _add_entry(self, visibility=True, show_emoji_icon=False, activates_default=True):
+    def _add_entry(self, visibility=True, multiline=False, show_emoji_icon=False, activates_default=True):
 
         if GTK_API_VERSION >= 4 and not visibility:
-            entry = Gtk.PasswordEntry(
+            entry = child = mnemonic_widget = Gtk.PasswordEntry(
                 activates_default=activates_default, show_peek_icon=True,
                 width_chars=50, visible=True
             )
             text_widget = next(iter(entry))
             text_widget.set_truncate_multiline(True)
+
+        elif multiline:
+            box = Gtk.Box(visible=True)
+            child = Gtk.Frame(child=box, visible=True)
+            scrolled_window = Gtk.ScrolledWindow(hexpand=True, height_request=100, width_request=450, visible=True)
+
+            if GTK_API_VERSION >= 4:
+                box.append(scrolled_window)  # pylint: disable=no-member
+            else:
+                box.add(scrolled_window)     # pylint: disable=no-member
+
+            entry = TextView(scrolled_window)
+            mnemonic_widget = entry.widget
+
         else:
-            entry = Gtk.Entry(
+            entry = child = mnemonic_widget = Gtk.Entry(
                 activates_default=activates_default, visibility=visibility, show_emoji_icon=show_emoji_icon,
                 truncate_multiline=(not visibility), width_chars=50, visible=True)
 
         if GTK_API_VERSION >= 4:
-            self.entry_container.append(entry)  # pylint: disable=no-member
+            self.entry_container.append(child)  # pylint: disable=no-member
         else:
-            self.entry_container.add(entry)     # pylint: disable=no-member
+            self.entry_container.add(child)     # pylint: disable=no-member
 
         if self.entry_combobox is None:
-            self.message_label.set_mnemonic_widget(entry)
+            self.message_label.set_mnemonic_widget(mnemonic_widget)
 
         self.container.set_visible(True)
         return entry
 
     def _add_entry_combobox(self, default, activates_default=True, has_entry=True, visibility=True,
-                            show_emoji_icon=False, droplist=None):
+                            multiline=False, show_emoji_icon=False, droplist=None):
 
         if self.entry_container is None:
             self.entry_container = Gtk.Box(hexpand=True, orientation=Gtk.Orientation.VERTICAL, spacing=12, visible=True)
@@ -587,9 +601,11 @@ class EntryDialog(OptionDialog):
                 droplist, has_entry=has_entry, activates_default=activates_default, visibility=visibility)
         else:
             entry_combobox = self._add_entry(
-                activates_default=activates_default, visibility=visibility, show_emoji_icon=show_emoji_icon)
+                activates_default=activates_default, visibility=visibility, multiline=multiline,
+                show_emoji_icon=show_emoji_icon)
 
         entry_combobox.set_text(default)
+
         return entry_combobox
 
     def get_entry_value(self):
@@ -597,7 +613,7 @@ class EntryDialog(OptionDialog):
 
     def get_second_entry_value(self):
 
-        if self.second_entry_combobox is not None:
-            return self.second_entry_combobox.get_text()
+        if self.second_entry_combobox is None:
+            return None
 
-        return None
+        return self.second_entry_combobox.get_text()
