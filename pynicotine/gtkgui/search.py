@@ -25,6 +25,7 @@ import operator
 import os
 import re
 
+from collections import deque
 from itertools import islice
 
 from gi.repository import GLib
@@ -800,9 +801,15 @@ class Search:
 
         update_ui = False
         search = core.search.searches[self.token]
-        row_id = 0
+        dummy_row_id = 0
 
-        for _code, file_path, size, _ext, file_attributes, *_unused in result_list:
+        # For performance reasons, we prepend rows to our treeview. Since we reverse the result
+        # lists before inserting the rows, we need to decrement the new row ids to preserve the
+        # correct sort order. We don't know how many folder parent rows will be added yet (if
+        # any), so set the end row id to the maximum possible number of new rows.
+        end_row_id = self.row_id = self.row_id + (len(result_list) * 2) + 1
+
+        for _code, file_path, size, _ext, file_attributes, *_unused in reversed(result_list):
             if self.num_results_found >= self.max_limit:
                 self.max_limited = True
                 break
@@ -860,13 +867,14 @@ class Search:
                     length,
                     has_free_slots,
                     SearchResultFile(file_path, file_attributes),
-                    row_id
+                    dummy_row_id
                 ]
             )
 
             if is_result_visible:
                 update_ui = True
 
+        self.row_id = end_row_id
         return update_ui
 
     def file_search_response(self, msg):
@@ -988,8 +996,8 @@ class Search:
                 if expand_allowed:
                     expand_user = self.grouping_mode == "folder_grouping" or self.expand_button.get_active()
 
-                self.row_id += 1
-                self.users[user] = (iterator, [])
+                self.row_id -= 1
+                self.users[user] = (iterator, deque())
 
             user_iterator, user_child_iterators = self.users[user]
 
@@ -1023,8 +1031,8 @@ class Search:
                     )
                     user_child_iterators.append(iterator)
                     expand_folder = expand_allowed and self.expand_button.get_active()
-                    self.row_id += 1
-                    self.folders[user_folder_path] = (iterator, [])
+                    self.row_id -= 1
+                    self.folders[user_folder_path] = (iterator, deque())
 
                 row = row[:]
                 row[4] = ""  # Folder not visible for file row if "group by folder" is enabled
@@ -1037,18 +1045,18 @@ class Search:
 
         else:
             if user not in self.users:
-                self.users[user] = (None, [])
+                self.users[user] = (None, deque())
 
             user_iterator, user_child_iterators = self.users[user]
 
         row[17] = self.row_id
         iterator = self.tree_view.add_row(row, select_row=False, parent_iterator=parent_iterator)
-        self.row_id += 1
+        self.row_id -= 1
 
         if user_folder_child_iterators is not None:
-            user_folder_child_iterators.append(iterator)
+            user_folder_child_iterators.appendleft(iterator)
         else:
-            user_child_iterators.append(iterator)
+            user_child_iterators.appendleft(iterator)
 
         if expand_user:
             self.tree_view.expand_row(user_iterator)
