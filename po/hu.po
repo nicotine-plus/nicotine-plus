@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-23 16:01+0200\n"
-"PO-Revision-Date: 2025-11-28 23:00+0000\n"
+"PO-Revision-Date: 2025-11-29 13:44+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -1269,18 +1269,17 @@ msgid "Open in File _Manager"
 msgstr "Megnyitás fájl_kezelőben"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:667
-#, fuzzy
 msgid ""
 "Syntax: Case-insensitive. Virtual paths containing separators \\ are "
 "supported. Wildcard * matches are supported."
 msgstr ""
-"<b>Szintaxis</b>: nem különbözteti meg a kis- és nagybetűket. Ha "
-"engedélyezve van, a Python reguláris kifejezései használhatók, máskülönben "
-"csak a helyettesítő karakter (*) támogatott."
+"Szintaxis: Nem különbözteti meg a kis- és nagybetűket. Az elválasztókat (\\) "
+"tartalmazó virtuális útvonalak támogatottak. A helyettesítő karakterek (*) "
+"támogatottak."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:683
 msgid "Applies To"
-msgstr ""
+msgstr "Alkalmazás"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:701
 #: pynicotine/gtkgui/ui/userinfo.ui:205
@@ -1288,29 +1287,24 @@ msgid "Shared Folders"
 msgstr "Megosztott mappák"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:702
-#, fuzzy
 msgid "Filters"
-msgstr "Szűrő"
+msgstr "Szűrők"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:910
-#, fuzzy
 msgid "Add Share Filter"
-msgstr "Egy megosztott mappa hozzáadása"
+msgstr "Megosztásszűrő hozzáadása"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:911
-#, fuzzy
 msgid "Enter a new share filter:"
-msgstr "Adjon meg egy új letöltésszűrőt:"
+msgstr "Adjon meg egy új megosztásszűrőt:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:943
-#, fuzzy
 msgid "Edit Share Filter"
-msgstr "Megosztott mappa szerkesztése"
+msgstr "Megosztásszűrő szerkesztése"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:944
-#, fuzzy
 msgid "Modify the following share filter:"
-msgstr "Módosítsa a következő letöltésszűrőt:"
+msgstr "Módosítsa a következő megosztásszűrőt:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1017
 #: pynicotine/gtkgui/ui/uploads.ui:45
@@ -2695,44 +2689,36 @@ msgstr ""
 "figyelőportja, vagy átmeneti kapcsolati probléma áll fenn."
 
 #: pynicotine/gtkgui/userbrowse.py:925
-#, fuzzy
 msgid "Upload _Folder…"
-msgstr "Mappa feltöltése…"
+msgstr "_Mappa feltöltése…"
 
 #: pynicotine/gtkgui/userbrowse.py:925
-#, fuzzy
 msgid "Upload _Folders…"
-msgstr "Mappa feltöltése…"
+msgstr "_Mappák feltöltése…"
 
 #: pynicotine/gtkgui/userbrowse.py:929
-#, fuzzy
 msgid "Upload Folder & _Subfolders…"
-msgstr "Mappa (és az almappáinak) feltöltése…"
+msgstr "Mappa és _almappáinak feltöltése…"
 
 #: pynicotine/gtkgui/userbrowse.py:929
-#, fuzzy
 msgid "Upload Folders & _Subfolders…"
-msgstr "Mappák (és az almappáiknak) feltöltése…"
+msgstr "Mappák és _almappáiknak feltöltése…"
 
 #: pynicotine/gtkgui/userbrowse.py:935
-#, fuzzy
 msgid "Download _Folder"
-msgstr "Mappa _letöltése"
+msgstr "_Mappa letöltése"
 
 #: pynicotine/gtkgui/userbrowse.py:935
-#, fuzzy
 msgid "Download _Folders"
-msgstr "Mappá_k letöltése"
+msgstr "_Mappák letöltése"
 
 #: pynicotine/gtkgui/userbrowse.py:939
-#, fuzzy
 msgid "Download Folder & _Subfolders…"
-msgstr "Mappa (és az almappáinak) letöltése _ide…"
+msgstr "Mappa és _almappáinak letöltése…"
 
 #: pynicotine/gtkgui/userbrowse.py:939
-#, fuzzy
 msgid "Download Folders & _Subfolders…"
-msgstr "Mappák (és az almappáiknak) letöltése _ide…"
+msgstr "Mappák és _almappáiknak letöltése…"
 
 #: pynicotine/gtkgui/userbrowse.py:1008
 msgid "Upload Folder (with Subfolders) To User"
@@ -4732,9 +4718,9 @@ msgstr ""
 "%(dir)s"
 
 #: pynicotine/userbrowse.py:279
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot save shares for user %(user)s: %(error)s"
-msgstr "A(z) %(user)s felhasználó(k) képét nem sikerült betölteni: %(error)s"
+msgstr "A(z) %(user)s felhasználó megosztásait nem lehet menteni: %(error)s"
 
 #: pynicotine/userbrowse.py:355
 #, python-format
@@ -4963,27 +4949,24 @@ msgid "Rename…"
 msgstr "Átnevezés…"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:192
-#, fuzzy
 msgid "Select _All"
-msgstr "Az összes kiválasztása"
+msgstr "Az _összes kiválasztása"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:207
 msgid "Deselect All"
 msgstr "A kiválasztások megszüntetése"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:223
-#, fuzzy
 msgid "Deselect _All"
-msgstr "A kiválasztások megszüntetése"
+msgstr "A _kiválasztások megszüntetése"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:238
 msgid "Select Initial"
 msgstr "Kezdet kiválasztása"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:254
-#, fuzzy
 msgid "Select _Initial"
-msgstr "Kezdet kiválasztása"
+msgstr "Kezdet k_iválasztása"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:102
 msgid "Welcome to Nicotine+"
@@ -5090,12 +5073,10 @@ msgid "Last Speed"
 msgstr "Utolsó sebesség"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:15
-#, fuzzy
 msgid "E_xport…"
 msgstr "E_xportálás…"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:21
-#, fuzzy
 msgid "A_pply"
 msgstr "_Alkalmaz"
 
@@ -5173,14 +5154,12 @@ msgid "Clear All…"
 msgstr "Mindent kitöröl…"
 
 #: pynicotine/gtkgui/ui/downloads.ui:61
-#, fuzzy
 msgid "Re_sume"
-msgstr "Folytat"
+msgstr "_Folytat"
 
 #: pynicotine/gtkgui/ui/downloads.ui:92
-#, fuzzy
 msgid "_Pause"
-msgstr "Szünet"
+msgstr "S_zünet"
 
 #: pynicotine/gtkgui/ui/downloads.ui:145
 msgid "Clear All Finished/Filtered Downloads"
@@ -5848,9 +5827,8 @@ msgid "Enable censoring of text patterns"
 msgstr "Engedélyezi a szövegminták cenzúrázását"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:366
-#, fuzzy
 msgid "Accept private room invitations"
-msgstr "Privát szobai meghívások el_fogadása"
+msgstr "Privát szobai meghívások elfogadása"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:390
 msgid "Restore previously open private chats on startup"
@@ -5979,9 +5957,8 @@ msgid "Load Defaults"
 msgstr "Alapértelmezések betöltése"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:609
-#, fuzzy
 msgid "_Verify Filters"
-msgstr "Szűrők ellenőrzése"
+msgstr "Szűrők _ellenőrzése"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:621
 msgid "Unverified"
@@ -6044,9 +6021,8 @@ msgstr ""
 "felhasználónevek kis- és nagybetű érzékenyek és egyediek."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:101
-#, fuzzy
 msgid "Change Pass_word"
-msgstr "Jelszó megváltoztatása"
+msgstr "Jelszó meg_változtatása"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:122
 msgid "Listening port (TCP):"
@@ -6062,12 +6038,11 @@ msgstr "Nyilvános IP-cím:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:196
 msgid "Port Check"
-msgstr "Port ellenőrzés"
+msgstr "Portellenőrzés"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:211
-#, fuzzy
 msgid "_Port Check"
-msgstr "Port ellenőrzés"
+msgstr "_Portellenőrzés"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:235
 msgid "Away Status"
@@ -6123,9 +6098,8 @@ msgid "Now Playing message format:"
 msgstr "A most játszott üzenet formátuma:"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:167
-#, fuzzy
 msgid "_Test Configuration"
-msgstr "Beállítások tesztelése"
+msgstr "Beállítások _tesztelése"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:52
 msgid "Enable plugins"
@@ -6249,9 +6223,8 @@ msgid "File Manager"
 msgstr "Fájlkezelő"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:157
-#, fuzzy
 msgid "File _Manager"
-msgstr "Fájlkezelő"
+msgstr "Fájl_kezelő"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:208
 msgid "Add"
@@ -6267,7 +6240,7 @@ msgstr "Indításkor"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:402
 msgid "Daily:"
-msgstr ""
+msgstr "Napi:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:428
 msgid "Visible to everyone:"
@@ -6613,14 +6586,12 @@ msgid "Abor_t"
 msgstr "Megszakí_t"
 
 #: pynicotine/gtkgui/ui/uploads.ui:76
-#, fuzzy
 msgid "Abort Users"
-msgstr "Felhasználó(k) leállítása"
+msgstr "Felhasználók leállítása"
 
 #: pynicotine/gtkgui/ui/uploads.ui:92
-#, fuzzy
 msgid "Abort _Users"
-msgstr "Felhasználó(k) leállítása"
+msgstr "_Felhasználók leállítása"
 
 #: pynicotine/gtkgui/ui/uploads.ui:116
 msgid "Message All"
