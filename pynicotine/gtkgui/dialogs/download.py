@@ -203,6 +203,7 @@ class Download(Dialog):
 
             folder_name = folder_name.replace("\\", os.sep)
             self.folder_names[folder_path] = folder_name
+            expand_parent = False
 
             if parent_iterator_data is None:
                 if partial_files:
@@ -240,6 +241,8 @@ class Download(Dialog):
                     ],
                     select_row=False
                 )
+                expand_parent = True
+
                 self.parent_iterators[username + folder_path] = (parent_iterator, [])
                 self.initial_selected_iterators.add(parent_iterator)
 
@@ -270,8 +273,10 @@ class Download(Dialog):
                 self.total_selected_size += size
                 self.num_selected_files[username][folder_path] += 1
 
+            if expand_parent:
+                self.tree_view.expand_row(parent_iterator)
+
         self.update_title()
-        self.tree_view.expand_all_rows()
 
         if partial_files:
             self.set_in_progress()
