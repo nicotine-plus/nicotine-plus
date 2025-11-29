@@ -3,6 +3,7 @@
 
 import os
 
+from collections import deque
 from operator import itemgetter
 
 from gi.repository import GLib
@@ -180,9 +181,9 @@ class Download(Dialog):
         self.select_all = select_all
         has_unselected_files = False
 
-        for username, file_path, size, file_attributes, selected, root_folder_path in sorted(
+        for username, file_path, size, file_attributes, selected, root_folder_path in reversed(sorted(
             data, key=lambda x: len(x[0])
-        ):
+        )):
             if username + file_path in self.tree_view.iterators:
                 continue
 
@@ -243,7 +244,7 @@ class Download(Dialog):
                 )
                 expand_parent = True
 
-                self.parent_iterators[username + folder_path] = (parent_iterator, [])
+                self.parent_iterators[username + folder_path] = (parent_iterator, deque())
                 self.initial_selected_iterators.add(parent_iterator)
 
             parent_iterator, child_iterators = self.parent_iterators[username + folder_path]
@@ -261,7 +262,7 @@ class Download(Dialog):
                 ],
                 select_row=False, parent_iterator=parent_iterator
             )
-            child_iterators.append(iterator)
+            child_iterators.appendleft(iterator)
             self.num_files[username][folder_path] += 1
 
             if selected:
@@ -418,7 +419,7 @@ class Download(Dialog):
             parent_iterator, child_iterators = self.parent_iterators[username + folder_path]
             unselected_parent = False
 
-            for _code, file_name, size, _ext, file_attributes, *_unused in files:
+            for _code, file_name, size, _ext, file_attributes, *_unused in reversed(files):
                 file_path = "\\".join([folder_path, file_name])
 
                 if username + file_path in self.tree_view.iterators:
@@ -438,7 +439,7 @@ class Download(Dialog):
                     ],
                     select_row=False, parent_iterator=parent_iterator
                 )
-                child_iterators.append(iterator)
+                child_iterators.appendleft(iterator)
                 self.num_files[username][folder_path] += 1
                 has_added_file = True
 

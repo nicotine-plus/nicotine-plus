@@ -777,7 +777,7 @@ class UserBrowse:
         # Temporarily disable sorting for increased performance
         self.file_list_view.freeze()
 
-        for _code, basename, size, _ext, file_attributes, *_unused in files:
+        for _code, basename, size, _ext, file_attributes, *_unused in reversed(files):
             h_size = human_size(size, config.sections["ui"]["file_size_unit"])
             h_quality, bitrate, h_length, length = FileListMessage.parse_audio_quality_length(size, file_attributes)
 
