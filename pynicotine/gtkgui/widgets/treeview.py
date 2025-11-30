@@ -30,9 +30,9 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 class TreeView:
 
     def __init__(self, window, parent, columns, has_tree=False, multi_select=False,
-                 persistent_sort=False, name=None, secondary_name=None, activate_row_callback=None,
-                 focus_in_callback=None, select_row_callback=None, delete_accelerator_callback=None,
-                 search_entry=None):
+                 persistent_sort=False, persistent_widths=True, name=None, secondary_name=None,
+                 activate_row_callback=None, focus_in_callback=None, select_row_callback=None,
+                 delete_accelerator_callback=None, search_entry=None):
 
         self.window = window
         self.widget = Gtk.TreeView(fixed_height_mode=True, has_tooltip=True, visible=True)
@@ -56,6 +56,7 @@ class TreeView:
         self._sort_column = None
         self._sort_type = None
         self._persistent_sort = persistent_sort
+        self._persistent_widths = persistent_widths
         self._columns_changed_handler = None
         self._last_redraw_time = 0
         self._selection = self.widget.get_selection()
@@ -295,7 +296,7 @@ class TreeView:
                 column_sort_type = column_properties.get("sort")
 
                 # Restore saved column width
-                if column_type != "icon":
+                if self._persistent_widths and column_type != "icon":
                     width = column_properties.get("width", width)
 
                 if column_sort_type and self._persistent_sort:

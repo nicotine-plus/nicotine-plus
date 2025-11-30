@@ -560,7 +560,7 @@ class ChatRoom:
 
         self.users_list_view = TreeView(
             self.window, parent=self.users_list_container, name="chat_room", secondary_name=room,
-            persistent_sort=True, activate_row_callback=self.on_row_activated,
+            persistent_sort=True, persistent_widths=False, activate_row_callback=self.on_row_activated,
             columns={
                 # Visible columns
                 "status": {
