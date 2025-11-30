@@ -594,9 +594,12 @@ class Interests:
 
     def on_files_tooltip(self, treeview, iterator):
 
+        num_files = treeview.get_row_value(iterator, "files_data")
+        num_folders = treeview.get_row_value(iterator, "folders_data")
+
         return (
-            _("Files: %(num_files)s") % {"num_files": treeview.get_row_value(iterator, "files_data")} + "\n"
-            + _("Folders: %(num_folders)s") % {"num_folders": treeview.get_row_value(iterator, "folders_data")}
+            _("Files: %(num_files)s") % {"num_files": humanize(num_files)} + "\n"
+            + _("Folders: %(num_folders)s") % {"num_folders": humanize(num_folders)}
         )
 
     def on_popup_ru_menu(self, menu, *_args):
