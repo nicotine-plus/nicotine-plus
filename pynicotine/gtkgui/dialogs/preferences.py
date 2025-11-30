@@ -757,6 +757,8 @@ class SharesPage:
         self.shares_list_view.unfreeze()
         self.filter_list_view.unfreeze()
 
+        self.file_manager_button.set_visible(not self.application.isolated_mode)
+
     def get_settings(self):
 
         return {

@@ -434,6 +434,7 @@ class About(Dialog):
                 else:
                     container.add(label)     # pylint: disable=no-member
 
+        self.website_label.set_visible(not application.isolated_mode)
         events.connect("check-latest-version", self.on_check_latest_version)
 
     def on_activate_link(self, _label, url):
