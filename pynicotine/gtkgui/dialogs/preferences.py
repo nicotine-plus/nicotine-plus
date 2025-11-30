@@ -34,9 +34,11 @@ from pynicotine.gtkgui.widgets.combobox import ComboBox
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
+from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
+from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import SpellChecker
 from pynicotine.gtkgui.widgets.textview import TextView
@@ -3137,9 +3139,9 @@ class PluginsPage:
     def __init__(self, application):
 
         (
-            self.add_plugins_button,
             self.container,
             self.enable_plugins_toggle,
+            self.info_bar_container,
             self.plugin_authors_label,
             self.plugin_description_view_container,
             self.plugin_list_container,
@@ -3158,6 +3160,7 @@ class PluginsPage:
             }
         }
 
+        self.info_bar = InfoBar(parent=self.info_bar_container)
         self.plugin_description_view = TextView(self.plugin_description_view_container, editable=False,
                                                 pixels_below_lines=2)
         self.plugin_list_view = TreeView(
@@ -3187,15 +3190,16 @@ class PluginsPage:
         self.plugin_popup_menu.add_items(
             ("=" + _("_Enable"), self.on_toggle_selected_plugin),
             ("=" + _("_Disable"), self.on_toggle_selected_plugin),
+            ("#" + _("_Settings"), self.on_show_plugin_settings),
             ("", None),
-            ("#" + _("_Settings"), self.on_show_plugin_settings)
+            ("=" + _("Open in File _Manager"), self.on_open_file_manager),
+            ("=" + _("_Uninstall…"), self.on_uninstall_plugin)
         )
-
-        self.add_plugins_button.set_visible(not self.application.isolated_mode)
 
     def destroy(self):
 
         self.plugin_popup_menu.destroy()
+        self.info_bar.destroy()
         self.plugin_description_view.destroy()
         self.plugin_list_view.destroy()
 
@@ -3236,6 +3240,8 @@ class PluginsPage:
 
     def on_plugin_popup_menu(self, menu, _widget):
 
+        is_internal_plugin = core.pluginhandler.is_internal_plugin(self.selected_plugin)
+
         for iterator in self.plugin_list_view.get_selected_rows():
             enabled = self.plugin_list_view.get_row_value(iterator, "enabled")
 
@@ -3244,6 +3250,10 @@ class PluginsPage:
             break
 
         menu.actions[_("_Settings")].set_enabled(self.plugin_settings_button.get_sensitive())
+        menu.actions[_("Open in File _Manager")].set_enabled(
+            not self.application.isolated_mode and not is_internal_plugin
+        )
+        menu.actions[_("_Uninstall…")].set_enabled(not is_internal_plugin)
 
     def on_select_plugin(self, list_view, iterator):
 
@@ -3266,6 +3276,13 @@ class PluginsPage:
         self.plugin_description_view.clear()
         self.plugin_description_view.add_line(plugin_description)
         self.plugin_description_view.place_cursor_at_line(0)
+
+        if iterator is not None and not core.pluginhandler.is_internal_plugin(self.selected_plugin):
+            self.info_bar.show_warning_message(
+                _("This is not a built-in plugin. Use at your own risk.")
+            )
+        else:
+            self.info_bar.set_visible(False)
 
         self.check_plugin_settings_button(self.selected_plugin)
 
@@ -3302,8 +3319,60 @@ class PluginsPage:
         config.sections["plugins"]["enabled"] = plugins_enabled
         self.plugin_settings_button.set_sensitive(False)
 
-    def on_add_plugins(self, *_args):
-        open_folder_path(core.pluginhandler.user_plugin_folder, create_folder=True)
+    def on_install_plugin_selected(self, selected_file_paths, _data):
+
+        plugin_name = None
+
+        for file_path in selected_file_paths:
+            plugin_name = core.pluginhandler.install_plugin(file_path)
+            break
+
+        self.set_settings()
+
+        iterator = self.plugin_list_view.iterators.get(plugin_name)
+
+        if iterator is not None:
+            self.plugin_list_view.select_row(iterator)
+
+    def on_install_plugin(self, *_args):
+
+        from pynicotine.gtkgui.widgets.filechooser import FileChooser
+
+        FileChooser(
+            parent=self.application.preferences,
+            title=_("Select a Zip File"),
+            callback=self.on_install_plugin_selected
+        ).present()
+
+    def on_uninstall_plugin_response(self, _dialog, _response_id, selected_plugin):
+        core.pluginhandler.uninstall_plugin(selected_plugin)
+        self.set_settings()
+
+    def on_uninstall_plugin(self, *_args):
+
+        try:
+            info = core.pluginhandler.get_plugin_info(self.selected_plugin)
+            human_plugin_name = info.get("Name", self.selected_plugin)
+        except OSError:
+            human_plugin_name = self.selected_plugin
+
+        OptionDialog(
+            parent=self,
+            title=_("Uninstall Plugin?"),
+            message=_("Do you really want to uninstall plugin %s? "
+                      "This will remove any files the plugin has stored.") % human_plugin_name,
+            destructive_response_id="ok",
+            callback=self.on_uninstall_plugin_response,
+            callback_data=self.selected_plugin
+        ).present()
+
+    def on_open_file_manager(self, *_args):
+
+        if self.selected_plugin is None:
+            return
+
+        folder_path = core.pluginhandler.get_plugin_path(self.selected_plugin)
+        open_folder_path(folder_path, create_folder=True)
 
     def on_show_plugin_settings(self, *_args):
 

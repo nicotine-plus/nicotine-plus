@@ -26,7 +26,7 @@ class InfoBar:
         )
         self.label = Gtk.Label(
             height_request=24, hexpand=True, margin_top=6, margin_bottom=6, margin_start=12, margin_end=6,
-            wrap=True, visible=True, xalign=0
+            max_width_chars=0, wrap=True, visible=True, xalign=0
         )
         self.button_container = Gtk.Box(margin_top=6, margin_bottom=6, margin_end=6, visible=True)
         self.message_type = None
@@ -75,3 +75,6 @@ class InfoBar:
 
     def show_info_message(self, message):
         self._show_message(message, message_type="info")
+
+    def show_warning_message(self, message):
+        self._show_message(message, message_type="warning")
