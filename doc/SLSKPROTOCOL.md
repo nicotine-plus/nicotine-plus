@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on November 11, 2025](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on November 30, 2025](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -271,6 +271,7 @@ server, but it handles the protocol well enough (and can be modified).
 | `56`   | [Get Global Recommendations](#server-code-56)                  |
 | `57`   | [Get User Interests](#server-code-57)                          |
 | `58`   | [Admin Command](#server-code-58) `OBSOLETE`                    |
+| `59`   | [Place In Line Request](#server-code-59) `OBSOLETE`            |
 | `60`   | [Place In Line Response](#server-code-60) `OBSOLETE`           |
 | `62`   | [Room Added](#server-code-62) `OBSOLETE`                       |
 | `63`   | [Room Removed](#server-code-63) `OBSOLETE`                     |
@@ -515,7 +516,7 @@ The server tells us if a user has gone away or has returned.
 
 ### IgnoreUser
 
-**OBSOLETE, no longer used**
+**OBSOLETE, no longer functional**
 
 We send this to the server to tell a user we have ignored them.
 
@@ -533,7 +534,7 @@ The server tells us a user has ignored us.
 
 ### UnignoreUser
 
-**OBSOLETE, no longer used**
+**OBSOLETE, no longer functional**
 
 We send this to the server to tell a user we are no longer ignoring them.
 
@@ -611,9 +612,9 @@ Requirements include:
         3.  **uint32** *unknown*
         4.  **uint32** *files*
         5.  **uint32** *dirs*
-    8.  **uint32** *number of slotsfree*
-    9.  Iterate for *number of slotsfree*
-        1.  **uint32** *slotsfree*
+    8.  **uint32** *number of slotsfull*
+    9.  Iterate for *number of slotsfull*
+        1.  **uint32** *slotsfull*
     10. **uint32** *number of user countries*
     11. Iterate for *number of user countries*
         1.  **string** *countrycode*  
@@ -658,7 +659,7 @@ The server tells us someone has just joined a room we're in.
     6.  **uint32** *unknown*
     7.  **uint32** *files*
     8.  **uint32** *dirs*
-    9.  **uint32** *slotsfree*
+    9.  **uint32** *slotsfull*
     10. **string** *countrycode*  
         Uppercase country code
 
@@ -748,7 +749,7 @@ don't send it, the server will keep sending the chat phrase to us.
 
 ### FileSearchRoom
 
-**OBSOLETE, use [RoomSearch](#server-code-120) server message**
+**OBSOLETE, superseded by [RoomSearch](#server-code-120) server message**
 
 We send this to the server when we search for something in a room.
 
@@ -847,7 +848,7 @@ Nicotine+ uses TCP keepalive instead of sending this message.
 
 ### SendDownloadSpeed
 
-**OBSOLETE, use [SendUploadSpeed](#server-code-121) server message**
+**OBSOLETE, superseded by [SendUploadSpeed](#server-code-121) server message**
 
 We used to send this after a finished download to let the server update the
 speed statistics for a user.
@@ -903,7 +904,7 @@ message to the server, but [WatchUser](#server-code-5) should be used instead.
 
 ### QueuedDownloads
 
-**OBSOLETE, no longer sent by the server**
+**OBSOLETE, no longer used**
 
 The server sends this to indicate if someone has download slots available or
 not.
@@ -911,11 +912,10 @@ not.
 ### Data Order
 
   - Send
-    -   *No Message*
+    1.  **uint32** *slotsfull*
   - Receive
     1.  **string** *username*
-    2.  **bool** *slotsfree*  
-        Can immediately download
+    2.  **uint32** *slotsfull*
 
 
 ## Server Code 41
@@ -1034,7 +1034,7 @@ The server sends us a list of personal recommendations and a number for each.
 
 ### MyRecommendations
 
-**OBSOLETE, no longer used**
+**OBSOLETE, no longer functional**
 
 We send this to the server to ask for our own list of added
 likes/recommendations (called "My recommendations" in older versions
@@ -1101,7 +1101,7 @@ with a list of interests.
 
 ### AdminCommand
 
-**OBSOLETE, no longer used**
+**OBSOLETE, no longer functional**
 
 We send this to the server to run an admin command (e.g. to ban or silence a
 user) if we have admin status on the server.
@@ -1117,11 +1117,27 @@ user) if we have admin status on the server.
     -   *No Message*
 
 
+## Server Code 59
+
+### PlaceInLineRequest
+
+**OBSOLETE, superseded by [PlaceInQueueRequest](#peer-code-51) peer message**
+
+### Data Order
+
+  - Send
+    1.  **string** *username*
+    2.  **uint32** *token*
+  - Receive
+    1.  **string** *username*
+    2.  **uint32** *token*
+
+
 ## Server Code 60
 
 ### PlaceInLineResponse
 
-**OBSOLETE, use [PlaceInQueueResponse](#peer-code-44) peer message**
+**OBSOLETE, superseded by [PlaceInQueueResponse](#peer-code-44) peer message**
 
 The server sends this to indicate change in place in queue while we're waiting
 for files from another peer.
@@ -1130,11 +1146,11 @@ for files from another peer.
 
   - Send
     1.  **string** *username*
-    2.  **uint32** *req*
+    2.  **uint32** *token*
     3.  **uint32** *place*
   - Receive
     1.  **string** *username*
-    2.  **uint32** *req*
+    2.  **uint32** *token*
     3.  **uint32** *place*
 
 
@@ -1274,9 +1290,9 @@ We send this to get a global list of all users online.
         3.  **uint32** *unknown*
         4.  **uint32** *files*
         5.  **uint32** *dirs*
-    7.  **uint32** *number of slotsfree*
-    8.  Iterate for *number of slotsfree*
-        1.  **uint32** *slotsfree*
+    7.  **uint32** *number of slotsfull*
+    8.  Iterate for *number of slotsfull*
+        1.  **uint32** *slotsfull*
     9. **uint32** *number of usercountries*
     10. Iterate for *number of usercountries*
         1.  **string** *countrycode*  

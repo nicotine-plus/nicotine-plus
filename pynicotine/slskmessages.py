@@ -839,7 +839,7 @@ class IgnoreUser(ServerMessage):
 
     The server tells us a user has ignored us.
 
-    OBSOLETE, no longer used
+    OBSOLETE, no longer functional
     """
 
     __slots__ = ("user",)
@@ -861,7 +861,7 @@ class UnignoreUser(ServerMessage):
 
     The server tells us a user is no longer ignoring us.
 
-    OBSOLETE, no longer used
+    OBSOLETE, no longer functional
     """
 
     __slots__ = ("user",)
@@ -1116,7 +1116,7 @@ class FileSearchRoom(ServerMessage):
 
     We send this to the server when we search for something in a room.
 
-    OBSOLETE, use RoomSearch server message
+    OBSOLETE, superseded by RoomSearch server message
     """
 
     __slots__ = ("token", "roomid", "searchterm")
@@ -1242,7 +1242,7 @@ class SendDownloadSpeed(ServerMessage):
     We used to send this after a finished download to let the server
     update the speed statistics for a user.
 
-    OBSOLETE, use SendUploadSpeed server message
+    OBSOLETE, superseded by SendUploadSpeed server message
     """
 
     __slots__ = ("user", "speed")
@@ -1317,14 +1317,17 @@ class QueuedDownloads(ServerMessage):
     The server sends this to indicate if someone has download slots
     available or not.
 
-    OBSOLETE, no longer sent by the server
+    OBSOLETE, no longer used
     """
 
     __slots__ = ("user", "slotsfull")
 
-    def __init__(self):
+    def __init__(self, slotsfull=None):
+        self.slotsfull = slotsfull
         self.user = None
-        self.slotsfull = None
+
+    def make_network_message(self):
+        return self.pack_uint32(self.slotsfull)
 
     def parse_network_message(self, message):
         pos, self.user = self.unpack_string(message)
@@ -1474,7 +1477,7 @@ class MyRecommendations(ServerMessage):
     official Soulseek client would send a AddThingILike message for each
     missing item.
 
-    OBSOLETE, no longer used
+    OBSOLETE, no longer functional
     """
 
     __slots__ = ("my_recommendations",)
@@ -1553,7 +1556,7 @@ class AdminCommand(ServerMessage):
     We send this to the server to run an admin command (e.g. to ban or
     silence a user) if we have admin status on the server.
 
-    OBSOLETE, no longer used
+    OBSOLETE, no longer functional
     """
 
     __slots__ = ("command", "command_args")
@@ -1573,13 +1576,37 @@ class AdminCommand(ServerMessage):
         return msg
 
 
+class PlaceInLineRequest(ServerMessage):
+    """Server code 59.
+
+    OBSOLETE, superseded by PlaceInQueueRequest peer message
+    """
+
+    __slots__ = ("user", "token")
+
+    def __init__(self, user=None, token=None):
+        self.token = token
+        self.user = user
+
+    def make_network_message(self):
+        msg = bytearray()
+        msg += self.pack_string(self.user)
+        msg += self.pack_uint32(self.token)
+
+        return msg
+
+    def parse_network_message(self, message):
+        pos, self.user = self.unpack_string(message)
+        pos, self.token = self.unpack_uint32(message, pos)
+
+
 class PlaceInLineResponse(ServerMessage):
     """Server code 60.
 
     The server sends this to indicate change in place in queue while
     we're waiting for files from another peer.
 
-    OBSOLETE, use PlaceInQueueResponse peer message
+    OBSOLETE, superseded by PlaceInQueueResponse peer message
     """
 
     __slots__ = ("token", "user", "place")
@@ -3183,7 +3210,7 @@ class FileSearchRequest(PeerMessage):
     We send this to the peer when we search for a file. Alternatively,
     the peer sends this to tell us it is searching for a file.
 
-    OBSOLETE, use UserSearch server message
+    OBSOLETE, superseded by UserSearch server message
     """
 
     __slots__ = ("token", "text", "searchterm")
@@ -4075,6 +4102,7 @@ SERVER_MESSAGE_CODES = {
     GlobalRecommendations: 56,
     UserInterests: 57,
     AdminCommand: 58,             # Obsolete
+    PlaceInLineRequest: 59,       # Obsolete
     PlaceInLineResponse: 60,      # Obsolete
     RoomAdded: 62,                # Obsolete
     RoomRemoved: 63,              # Obsolete
