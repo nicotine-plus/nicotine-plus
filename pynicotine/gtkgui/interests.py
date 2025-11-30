@@ -140,12 +140,14 @@ class Interests:
                     "column_type": "number",
                     "title": _("Files"),
                     "sort_column": "files_data",
-                    "expand_column": True
+                    "expand_column": True,
+                    "tooltip_callback": self.on_files_tooltip
                 },
 
                 # Hidden data columns
                 "speed_data": {"data_type": GObject.TYPE_UINT},
                 "files_data": {"data_type": GObject.TYPE_UINT},
+                "folders_data": {"data_type": GObject.TYPE_UINT},
                 "rating_data": {
                     "data_type": GObject.TYPE_UINT,
                     "default_sort_type": "descending"
@@ -484,9 +486,11 @@ class Interests:
             if stats is not None:
                 speed = stats.upload_speed or 0
                 files = stats.files or 0
+                folders = stats.folders or 0
             else:
                 speed = 0
                 files = 0
+                folders = 0
 
             h_speed = human_speed(speed) if speed > 0 else ""
             h_files = humanize(files)
@@ -499,6 +503,7 @@ class Interests:
                 h_files,
                 speed,
                 files,
+                folders,
                 rating
             ], select_row=False)
 
@@ -544,6 +549,7 @@ class Interests:
 
         speed = msg.avgspeed or 0
         num_files = msg.files or 0
+        num_folders = msg.dirs or 0
         column_ids = []
         column_values = []
 
@@ -558,6 +564,10 @@ class Interests:
 
             column_ids.extend(("files", "files_data"))
             column_values.extend((h_num_files, num_files))
+
+        if num_folders != self.similar_users_list_view.get_row_value(iterator, "folders_data"):
+            column_ids.append("folders_data")
+            column_values.append(num_folders)
 
         if column_ids:
             self.similar_users_list_view.set_row_values(iterator, column_ids, column_values)
@@ -581,6 +591,13 @@ class Interests:
 
     def on_r_row_activated(self, *_args):
         self.show_item_recommendations(self.recommendations_list_view, column_id="item")
+
+    def on_files_tooltip(self, treeview, iterator):
+
+        return (
+            _("Files: %(num_files)s") % {"num_files": treeview.get_row_value(iterator, "files_data")} + "\n"
+            + _("Folders: %(num_folders)s") % {"num_folders": treeview.get_row_value(iterator, "folders_data")}
+        )
 
     def on_popup_ru_menu(self, menu, *_args):
 

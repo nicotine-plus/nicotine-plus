@@ -599,12 +599,14 @@ class ChatRoom:
                     "title": _("Files"),
                     "sort_column": "files_data",
                     "expand_column": True,
-                    "sensitive_column": "is_unignored_data"
+                    "sensitive_column": "is_unignored_data",
+                    "tooltip_callback": self.on_files_tooltip
                 },
 
                 # Hidden data columns
                 "speed_data": {"data_type": GObject.TYPE_UINT},
                 "files_data": {"data_type": GObject.TYPE_UINT},
+                "folders_data": {"data_type": GObject.TYPE_UINT},
                 "username_weight_data": {"data_type": Pango.Weight},
                 "username_underline_data": {"data_type": Pango.Underline},
                 "is_unignored_data": {"data_type": GObject.TYPE_BOOLEAN}
@@ -714,6 +716,7 @@ class ChatRoom:
         flag_icon_name = get_flag_icon_name(userdata.country)
         speed = userdata.avgspeed or 0
         files = userdata.files or 0
+        folders = userdata.dirs or 0
         h_speed = human_speed(speed) if speed > 0 else ""
         h_files = humanize(files)
         weight = Pango.Weight.NORMAL
@@ -738,6 +741,7 @@ class ChatRoom:
             h_files,
             speed,
             files,
+            folders,
             weight,
             underline,
             is_unignored
@@ -1086,6 +1090,7 @@ class ChatRoom:
 
         speed = msg.avgspeed or 0
         num_files = msg.files or 0
+        num_folders = msg.dirs or 0
         column_ids = []
         column_values = []
 
@@ -1100,6 +1105,10 @@ class ChatRoom:
 
             column_ids.extend(("files", "files_data"))
             column_values.extend((h_num_files, num_files))
+
+        if num_folders != self.users_list_view.get_row_value(iterator, "folders_data"):
+            column_ids.append("files_data")
+            column_values.append(num_files)
 
         if column_ids:
             self.users_list_view.set_row_values(iterator, column_ids, column_values)
@@ -1200,6 +1209,13 @@ class ChatRoom:
             widget.grab_focus()
 
         return True
+
+    def on_files_tooltip(self, treeview, iterator):
+
+        return (
+            _("Files: %(num_files)s") % {"num_files": treeview.get_row_value(iterator, "files_data")} + "\n"
+            + _("Folders: %(num_folders)s") % {"num_folders": treeview.get_row_value(iterator, "folders_data")}
+        )
 
     def on_find_activity_log(self, *_args):
         self.activity_search_bar.set_visible(True)
