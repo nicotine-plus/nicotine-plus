@@ -5,14 +5,6 @@
 -->
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkEntry" id="wish_entry">
-    <property name="hexpand">True</property>
-    <property name="placeholder-text" translatable="yes">Add Wish…</property>
-    <property name="primary-icon-name">list-add-symbolic</property>
-    <property name="visible">True</property>
-    <signal name="activate" handler="on_add_wish"/>
-    <signal name="icon-press" handler="on_add_wish"/>
-  </object>
   <object class="GtkBox" id="container">
     <property name="margin-bottom">12</property>
     <property name="margin-end">12</property>
@@ -30,11 +22,6 @@
         <property name="visible">True</property>
         <property name="wrap">True</property>
         <property name="xalign">0</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox" id="wish_entry_container">
-        <property name="visible">True</property>
       </object>
     </child>
     <child>
@@ -62,6 +49,37 @@
                 <property name="margin-top">6</property>
                 <property name="spacing">6</property>
                 <property name="visible">True</property>
+                <child>
+                  <object class="GtkButton" id="_add_button">
+                    <property name="tooltip-text" translatable="yes">Add…</property>
+                    <property name="visible">True</property>
+                    <signal name="clicked" handler="on_add_wish"/>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="spacing">6</property>
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">list-add-symbolic</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="ellipsize">end</property>
+                            <property name="label" translatable="yes">_Add…</property>
+                            <property name="mnemonic-widget">_add_button</property>
+                            <property name="use-underline">True</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <style>
+                      <class name="flat"/>
+                    </style>
+                  </object>
+                </child>
                 <child>
                   <object class="GtkButton" id="_edit_button">
                     <property name="tooltip-text" translatable="yes">Edit…</property>
