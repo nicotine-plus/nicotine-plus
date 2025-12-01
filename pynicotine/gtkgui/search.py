@@ -873,7 +873,7 @@ class Search:
             if is_result_visible:
                 update_ui = True
 
-        self.row_id = end_row_id
+        self.row_id = end_row_id + 1
         return update_ui
 
     def file_search_response(self, msg):
@@ -1310,11 +1310,19 @@ class Search:
 
     def update_model(self):
 
+        # For performance reasons, we prepend rows to our treeview. Since we reverse the result
+        # lists before inserting the rows, we need to decrement the new row ids to preserve the
+        # correct sort order. We don't know how many user/folder parent rows will be added yet (if
+        # any), so set the end row id to the maximum possible number of new rows.
+        end_row_id = self.row_id = self.row_id + len(self.all_data) * 3
+
         self.tree_view.freeze()
 
         for row in self.all_data:
             if self.check_filter(row):
                 self.add_row_to_model(row)
+
+        self.row_id = end_row_id + 1
 
         # Update number of results
         self.update_result_counter()
