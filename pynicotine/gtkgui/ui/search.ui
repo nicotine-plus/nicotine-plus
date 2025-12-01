@@ -184,33 +184,58 @@
               </object>
             </child>
             <child>
-              <object class="GtkToggleButton" id="filters_button">
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <signal name="toggled" handler="on_toggle_filters"/>
                 <child>
-                  <object class="GtkBox">
-                    <property name="spacing">6</property>
+                  <object class="GtkToggleButton" id="filters_button">
                     <property name="visible">True</property>
+                    <signal name="toggled" handler="on_toggle_filters"/>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="spacing">6</property>
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">edit-find-replace-symbolic</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="filters_label">
+                            <property name="ellipsize">end</property>
+                            <property name="label" translatable="yes">_Result Filters</property>
+                            <property name="mnemonic-widget">filters_button</property>
+                            <property name="use-underline">True</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <style>
+                      <class name="flat"/>
+                      <class name="tabular"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="store_filters_button">
+                    <property name="tooltip-text" translatable="yes">Store Wishlist Filters</property>
+                    <property name="visible">True</property>
+                    <signal name="clicked" handler="on_store_filters"/>
                     <child>
                       <object class="GtkImage">
-                        <property name="icon-name">edit-find-replace-symbolic</property>
+                        <property name="icon-name">media-floppy-symbolic</property>
                         <property name="visible">True</property>
                       </object>
                     </child>
-                    <child>
-                      <object class="GtkLabel" id="filters_label">
-                        <property name="ellipsize">end</property>
-                        <property name="label" translatable="yes">_Result Filters</property>
-                        <property name="mnemonic-widget">filters_button</property>
-                        <property name="use-underline">True</property>
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
+                    <style>
+                      <class name="flat"/>
+                      <class name="image-button"/>
+                    </style>
                   </object>
                 </child>
                 <style>
-                  <class name="flat"/>
-                  <class name="tabular"/>
+                  <class name="linked"/>
                 </style>
               </object>
             </child>

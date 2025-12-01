@@ -1,6 +1,11 @@
 # SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import time
+
+from gi.repository import GObject
+
+from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.widgets import ui
@@ -13,6 +18,8 @@ from pynicotine.gtkgui.widgets.treeview import TreeView
 
 
 class WishList(Dialog):
+
+    FILTERED_ICON_NAME = "edit-find-replace-symbolic"
 
     def __init__(self, application):
 
@@ -39,28 +46,55 @@ class WishList(Dialog):
             delete_accelerator_callback=self.on_remove_wish,
             search_entry=self.search_entry,
             columns={
+                "enabled": {
+                    "column_type": "toggle",
+                    "title": _("Enabled"),
+                    "width": 0,
+                    "toggle_callback": self.on_toggle_wish,
+                    "hide_header": True
+                },
                 "wish": {
                     "column_type": "text",
-                    "title": _("Wish"),
+                    "title": _("Search Term"),
+                    "width": 200,
+                    "expand_column": True,
+                    "iterator_key": True,
                     "default_sort_type": "ascending"
-                }
+                },
+                "filtered": {
+                    "column_type": "icon",
+                    "title": _("Filtered"),
+                    "width": 25,
+                    "hide_header": True
+                },
+                "added": {
+                    "column_type": "text",
+                    "title": _("Added"),
+                    "width": 0,
+                    "sort_column": "added_data",
+                    "tabular": True
+                },
+
+                # Hidden data columns
+                "added_data": {"data_type": GObject.TYPE_UINT64}
             }
         )
         self.default_text = ""
 
         self.list_view.freeze()
 
-        for search_item in core.search.searches.values():
-            if search_item.mode == "wishlist":
-                self.add_wish(search_item.term, select=False)
+        for search_item in core.search.wishlist.values():
+            self.add_wish(search_item.term, select=False)
 
         self.list_view.unfreeze()
 
         self.popup_menu = PopupMenu(application, self.list_view.widget)
         self.popup_menu.add_items(
-            ("#" + _("_Search for Item"), self.on_search_wish),
             ("#" + _("_Edit…"), self.on_edit_wish),
+            ("#" + _("_Update _Filters…"), self.on_update_filters),
+            ("#" + _("_Search for Item"), self.on_search_wish),
             ("", None),
+            ("#" + _("Reset Seen Results"), self.on_reset_seen_results),
             ("#" + _("Remove"), self.on_remove_wish)
         )
 
@@ -69,7 +103,9 @@ class WishList(Dialog):
 
         for event_name, callback in (
             ("add-wish", self.add_wish),
-            ("remove-wish", self.remove_wish)
+            ("clear-wish-filters", self.clear_wish_filters),
+            ("remove-wish", self.remove_wish),
+            ("update-wish-filters", self.update_wish_filters)
         ):
             events.connect(event_name, callback)
 
@@ -81,7 +117,16 @@ class WishList(Dialog):
         super().destroy()
 
     def add_wish(self, wish, select=True):
-        self.list_view.add_row([wish], select_row=select)
+
+        search = core.search.wishlist[wish]
+
+        self.list_view.add_row([
+            search.auto_search,
+            wish,
+            self.FILTERED_ICON_NAME if search.enable_filters else "",
+            time.strftime("%x", time.localtime(search.time_added)),
+            search.time_added
+        ], select_row=select)
 
     def remove_wish(self, wish):
 
@@ -90,6 +135,20 @@ class WishList(Dialog):
         if iterator is not None:
             self.list_view.remove_row(iterator)
 
+    def update_wish_filters(self, wish):
+
+        iterator = self.list_view.iterators.get(wish)
+
+        if iterator is not None:
+            self.list_view.set_row_value(iterator, "filtered", self.FILTERED_ICON_NAME)
+
+    def clear_wish_filters(self, wish):
+
+        iterator = self.list_view.iterators.get(wish)
+
+        if iterator is not None:
+            self.list_view.set_row_value(iterator, "filtered", "")
+
     def select_wish(self, wish):
 
         iterator = self.list_view.iterators.get(wish)
@@ -97,9 +156,21 @@ class WishList(Dialog):
         if iterator is not None:
             self.list_view.select_row(iterator)
 
+    def on_toggle_wish(self, list_view, iterator):
+
+        enabled = not list_view.get_row_value(iterator, "enabled")
+        wish = list_view.get_row_value(iterator, "wish")
+        search = core.search.wishlist.get(wish)
+
+        list_view.set_row_value(iterator, "enabled", enabled)
+
+        if search is not None:
+            search.auto_search = enabled
+
     def on_add_wish_response(self, dialog, _response_id, _data):
 
         wishes = dialog.get_entry_value().split("\n")
+        auto_search = dialog.get_option_value()
         is_first_item = True
 
         for wish in wishes:
@@ -108,7 +179,7 @@ class WishList(Dialog):
             if not wish:
                 continue
 
-            core.search.add_wish(wish)
+            core.search.add_wish(wish, auto_search=auto_search)
 
             if not is_first_item:
                 continue
@@ -124,6 +195,8 @@ class WishList(Dialog):
             message=_("Enter a list of search terms to add to the wishlist:"),
             default=self.default_text,
             action_button_label=_("_Add"),
+            option_value=True,
+            option_label=_("Enable automatic search"),
             multiline=True,
             callback=self.on_add_wish_response
         ).present()
@@ -131,36 +204,96 @@ class WishList(Dialog):
     def on_edit_wish_response(self, dialog, _response_id, old_wish):
 
         wish = dialog.get_entry_value().strip()
+        enable_filters = (dialog.get_second_entry_value() == _("Custom filters"))
+        auto_search = dialog.get_option_value()
 
         if not wish:
             return
 
-        core.search.remove_wish(old_wish)
-        core.search.add_wish(wish)
+        old_filters = None
+
+        if wish != old_wish:
+            old_search = core.search.wishlist[old_wish]
+            old_filters = old_search.filters
+
+            core.search.remove_wish(old_wish)
+            core.search.add_wish(wish)
+
+        iterator = self.list_view.iterators[wish]
+        search = core.search.wishlist[wish]
+
+        search.auto_search = auto_search
+        search.enable_filters = enable_filters
+
+        if old_filters:
+            search.filters = old_filters
+
+        self.list_view.set_row_value(iterator, "enabled", auto_search)
+        self.list_view.set_row_value(iterator, "filtered", self.FILTERED_ICON_NAME if enable_filters else "")
+
         self.select_wish(wish)
 
     def on_edit_wish(self, *_args):
 
         for iterator in self.list_view.get_selected_rows():
+            old_enabled = self.list_view.get_row_value(iterator, "enabled")
             old_wish = self.list_view.get_row_value(iterator, "wish")
+            filtered = bool(self.list_view.get_row_value(iterator, "filtered"))
 
             EntryDialog(
                 parent=self,
                 title=_("Edit Wish"),
-                message=_("Enter new value for wish '%s':") % old_wish,
+                message=_("Modify the search term '%s':") % old_wish,
                 default=old_wish,
+                second_default=_("Custom filters") if filtered else _("No filters"),
+                second_droplist=[_("No filters"), _("Custom filters")],
+                use_second_entry=True,
+                second_entry_editable=False,
                 action_button_label=_("_Edit"),
+                option_value=old_enabled,
+                option_label=_("Enable automatic search"),
                 callback=self.on_edit_wish_response,
                 callback_data=old_wish
             ).present()
+            return
+
+    def on_update_filters(self, *_args):
+
+        for iterator in self.list_view.get_selected_rows():
+            wish = self.list_view.get_row_value(iterator, "wish")
+            search = core.search.wishlist.get(wish)
+            old_enable_filters = False
+            olf_filters_visible = config.sections["searches"]["filters_visible"]
+
+            if search is not None:
+                old_enable_filters = search.enable_filters
+                search.enable_filters = True
+
+            config.sections["searches"]["filters_visible"] = True
+            core.search.do_search(wish, mode="wishlist")
+
+            if search is not None:
+                search.enable_filters = old_enable_filters
+
+            config.sections["searches"]["filters_visible"] = olf_filters_visible
+            self.close()
             return
 
     def on_search_wish(self, *_args):
 
         for iterator in self.list_view.get_selected_rows():
             wish = self.list_view.get_row_value(iterator, "wish")
-            core.search.do_search(wish, mode="global")
+            core.search.do_search(wish, mode="wishlist")
             return
+
+    def on_reset_seen_results(self, *_args):
+
+        for iterator in self.list_view.get_selected_rows():
+            wish = self.list_view.get_row_value(iterator, "wish")
+            search = core.search.wishlist.get(wish)
+
+            if search is not None:
+                search.ignored_users.clear()
 
     def on_remove_wish(self, *_args):
 

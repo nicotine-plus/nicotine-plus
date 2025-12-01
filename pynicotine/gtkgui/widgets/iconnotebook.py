@@ -254,13 +254,15 @@ class IconNotebook:
     - Dropdown menu for unread tabs
     """
 
-    def __init__(self, window, parent, parent_page=None, switch_page_callback=None, reorder_page_callback=None):
+    def __init__(self, window, parent, parent_page=None, switch_page_callback=None, reorder_page_callback=None,
+                 read_changed_page_callback=None):
 
         self.window = window
         self.parent = parent
         self.parent_page = parent_page
         self.switch_page_callback = switch_page_callback
         self.reorder_page_callback = reorder_page_callback
+        self.read_changed_page_callback = read_changed_page_callback
         self.switch_page_handler = None
         self.reorder_page_handler = None
         self.switch_page_delay_timer = None
@@ -594,6 +596,9 @@ class IconNotebook:
 
         important_page_removed = self.unread_pages.pop(page)
         self.update_pages_menu_button()
+
+        if self.read_changed_page_callback is not None:
+            self.read_changed_page_callback(self, page)
 
         if self.parent_page is None:
             return

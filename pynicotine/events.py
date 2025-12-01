@@ -119,6 +119,7 @@ EVENT_NAMES = {
     # Search
     "add-search",
     "add-wish",
+    "clear-wish-filters",
     "excluded-search-phrases",
     "file-search-request-distributed",
     "file-search-request-server",
@@ -127,6 +128,7 @@ EVENT_NAMES = {
     "remove-wish",
     "set-wishlist-interval",
     "show-search",
+    "update-wish-filters",
 
     # Statistics
     "update-stat",

@@ -6,6 +6,10 @@
 # SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import json
+import os
+import time
+
 from itertools import islice
 from operator import itemgetter
 from shlex import shlex
@@ -24,16 +28,19 @@ from pynicotine.slskmessages import SEARCH_TOKENS_ALLOWED
 from pynicotine.slskmessages import UserSearch
 from pynicotine.slskmessages import WishlistSearch
 from pynicotine.utils import TRANSLATE_PUNCTUATION
+from pynicotine.utils import encode_path
 from pynicotine.utils import human_duration_approx
 from pynicotine.utils import humanize
+from pynicotine.utils import load_file
+from pynicotine.utils import write_file_and_backup
 
 
 class SearchRequest:
     __slots__ = ("token", "term", "term_sanitized", "term_transmitted", "included_words", "excluded_words",
-                 "mode", "room", "users", "is_ignored")
+                 "mode", "room", "users")
 
     def __init__(self, token=None, term=None, term_sanitized=None, term_transmitted=None, included_words=None,
-                 excluded_words=None, mode="global", room=None, users=None, is_ignored=False):
+                 excluded_words=None, mode="global", room=None, users=None):
 
         self.token = token
         self.term = term
@@ -44,12 +51,48 @@ class SearchRequest:
         self.mode = mode
         self.room = room
         self.users = users
-        self.is_ignored = is_ignored
+
+
+class WishSearchRequest(SearchRequest):
+    __slots__ = ("auto_search", "enable_filters", "time_added", "is_ignored", "filters", "ignored_users")
+
+    def __init__(self, *args, auto_search=True, enable_filters=False, time_added=None, filters=None,
+                 ignored_users=None, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        self.auto_search = auto_search
+        self.enable_filters = enable_filters
+        self.time_added = time_added
+        self.filters = filters
+        self.ignored_users = ignored_users
+        self.mode = "wishlist"
+        self.is_ignored = True
+
+        if time_added is None:
+            self.time_added = int(time.time())
+
+        if filters is None:
+            self.filters = []
+
+        if ignored_users is None:
+            self.ignored_users = set()
+
+    def as_dict(self):
+
+        return {
+            "term": self.term,
+            "auto_search": self.auto_search,
+            "enable_filters": self.enable_filters,
+            "time_added": self.time_added,
+            "filters": self.filters,
+            "ignored_users": list(sorted(self.ignored_users))
+        }
 
 
 class Search:
-    __slots__ = ("searches", "excluded_phrases", "token", "wishlist_interval", "_own_tokens",
-                 "_wishlist_timer_id")
+    __slots__ = ("searches", "excluded_phrases", "token", "wishlist", "wishlist_file_path", "wishlist_interval",
+                 "_own_tokens", "_allow_saving_wishlist", "_wishlist_timer_id")
 
     SEARCH_HISTORY_LIMIT = 200
     RESULT_FILTER_HISTORY_LIMIT = 50
@@ -65,8 +108,11 @@ class Search:
         self.searches = {}
         self.excluded_phrases = []
         self.token = initial_token()
+        self.wishlist = {}
+        self.wishlist_file_path = os.path.join(config.data_folder_path, "wishlist.json")
         self.wishlist_interval = 0
         self._own_tokens = set()
+        self._allow_saving_wishlist = False
         self._wishlist_timer_id = None
 
         for event_name, callback in (
@@ -84,13 +130,17 @@ class Search:
 
     def _start(self):
 
-        # Create wishlist searches
-        for search_term in config.sections["server"]["autosearch"]:
-            self.token = increment_token(self.token)
-            self._add_search(self.token, search_term, mode="wishlist", is_ignored=True)
+        self._load_wishlist()
+        self._allow_saving_wishlist = True
+
+        # Save wishlist every 3 minutes
+        events.schedule(delay=180, callback=self._save_wishlist, repeat=True)
 
     def _quit(self):
+
+        self._save_wishlist()
         self.remove_all_searches()
+        self._allow_saving_wishlist = False
 
     def _server_login(self, msg):
 
@@ -108,6 +158,48 @@ class Search:
 
         events.cancel_scheduled(self._wishlist_timer_id)
         self.wishlist_interval = 0
+
+    # Load Wishlist #
+
+    @staticmethod
+    def _load_wishlist_file(wishlist_file):
+
+        wishlist_file = encode_path(wishlist_file)
+
+        if not os.path.isfile(wishlist_file):
+            return []
+
+        with open(wishlist_file, encoding="utf-8") as handle:
+            return json.load(handle)
+
+    def _load_wishlist(self):
+
+        items = load_file(self.wishlist_file_path, self._load_wishlist_file)
+        current_time = time.time()
+
+        for item in items:
+            term = item.get("term")
+
+            if not term:
+                continue
+
+            auto_search = item.get("auto_search", True)
+            enable_filters = item.get("enable_filters", False)
+            time_added = int(item.get("time_added", current_time))
+            filters = list(item.get("filters", []))
+            ignored_users = set(item.get("ignored_users", []))
+            self.token = increment_token(self.token)
+
+            self._add_wish_search(
+                self.token, term, auto_search=auto_search, enable_filters=enable_filters,
+                time_added=time_added, filters=filters, ignored_users=ignored_users)
+
+        for term in reversed(config.sections["server"]["autosearch"]):
+            if not isinstance(term, str) or term in self.wishlist:
+                continue
+
+            self.token = increment_token(self.token)
+            self._add_wish_search(self.token, term)
 
     # Outgoing Search Requests #
 
@@ -174,7 +266,7 @@ class Search:
         if search is None:
             return
 
-        if search.mode == "wishlist" and search.term in config.sections["server"]["autosearch"]:
+        if isinstance(search, WishSearchRequest) and search.term in self.wishlist:
             search.is_ignored = True
         else:
             del self.searches[token]
@@ -188,52 +280,89 @@ class Search:
     def show_search(self, token):
         events.emit("show-search", token)
 
-    def add_wish(self, wish):
+    def add_wish(self, wish, auto_search=True):
 
         if not wish:
             return
 
-        if wish not in config.sections["server"]["autosearch"]:
-            config.sections["server"]["autosearch"].append(wish)
-            config.write_configuration()
-
-        if not any(search.term == wish and search.mode == "wishlist" for search in self.searches.values()):
+        if wish not in self.wishlist:
             # Get a new search token
             self.token = increment_token(self.token)
-            self._add_search(self.token, wish, mode="wishlist", is_ignored=True)
+            self._add_wish_search(self.token, wish, auto_search=auto_search)
 
         events.emit("add-wish", wish)
 
-    def remove_wish(self, wish):
+    def update_wish_filters(self, wish, filter_in="", filter_out="", size="", bitrate="", has_free_slot=False,
+                            country="", file_type="", length="", is_public=False):
 
-        if wish not in config.sections["server"]["autosearch"]:
+        search = self.wishlist.get(wish)
+
+        if search is None:
             return
 
-        config.sections["server"]["autosearch"].remove(wish)
-        config.write_configuration()
+        search.filters.clear()
 
-        for token, search in self.searches.items():
-            if search.term != wish or search.mode != "wishlist":
-                continue
+        search.filters.append(filter_in)
+        search.filters.append(filter_out)
+        search.filters.append(size)
+        search.filters.append(bitrate)
+        search.filters.append(has_free_slot)
+        search.filters.append(country)
+        search.filters.append(file_type)
+        search.filters.append(length)
+        search.filters.append(is_public)
 
-            if search.is_ignored:
-                del self.searches[token]
+        search.enable_filters = True
 
-            break
+        events.emit("update-wish-filters", wish)
+
+    def clear_wish_filters(self, wish):
+
+        search = self.wishlist.get(wish)
+
+        if search is None:
+            return
+
+        search.filters.clear()
+        search.enable_filters = False
+
+        events.emit("clear-wish-filters", wish)
+
+    def remove_wish(self, wish):
+
+        if wish not in self.wishlist:
+            return
+
+        search = self.wishlist.pop(wish)
+
+        if search.is_ignored:
+            del self.searches[search.token]
 
         events.emit("remove-wish", wish)
 
     def is_wish(self, wish):
-        return wish in config.sections["server"]["autosearch"]
+        return wish in self.wishlist
 
-    def _add_search(self, token, search_term, mode, room=None, users=None, is_ignored=False):
+    def _add_search(self, token, search_term, mode, room=None, users=None):
 
         term_sanitized, term_transmitted, included_words, excluded_words = self._sanitize_search_term(search_term)
 
         self.searches[token] = search = SearchRequest(
             token=token, term=search_term, term_sanitized=term_sanitized, term_transmitted=term_transmitted,
-            included_words=included_words, excluded_words=excluded_words, mode=mode, room=room, users=users,
-            is_ignored=is_ignored
+            included_words=included_words, excluded_words=excluded_words, mode=mode, room=room, users=users
+        )
+
+        return search
+
+    def _add_wish_search(self, token, search_term, auto_search=True, enable_filters=False, time_added=None,
+                         filters=None, ignored_users=None):
+
+        term_sanitized, term_transmitted, included_words, excluded_words = self._sanitize_search_term(search_term)
+
+        self.wishlist[search_term] = self.searches[token] = search = WishSearchRequest(
+            token=token, term=search_term, term_sanitized=term_sanitized, term_transmitted=term_transmitted,
+            included_words=included_words, excluded_words=excluded_words, auto_search=auto_search,
+            enable_filters=enable_filters, time_added=time_added, filters=filters, ignored_users=ignored_users
         )
 
         return search
@@ -387,20 +516,52 @@ class Search:
 
     def _do_next_wishlist_search(self):
 
-        searches = config.sections["server"]["autosearch"]
-
-        if not searches:
-            return
+        search = None
+        nth_search = 0
 
         # Search for a maximum of 1 item at each search interval
-        term = searches.pop()
-        searches.insert(0, term)
+        while nth_search < len(self.wishlist):
+            term = next(iter(self.wishlist))
+            search = self.wishlist.pop(term)
+            self.wishlist[term] = search
+            nth_search += 1
 
-        for search in self.searches.values():
-            if search.term == term and search.mode == "wishlist":
-                search.is_ignored = False
-                self._do_wishlist_search(search)
+            if search.auto_search:
                 break
+
+        if search is not None:
+            search.is_ignored = False
+            self._do_wishlist_search(search)
+
+    def _save_wishlist_callback(self, file_handle):
+
+        # Dump every transfer to the file individually to avoid large memory usage
+        json_encoder = json.JSONEncoder(check_circular=False, ensure_ascii=False)
+        is_first_item = True
+
+        file_handle.write("[")
+
+        for search in self.wishlist.values():
+            if is_first_item:
+                is_first_item = False
+            else:
+                file_handle.write(",\n")
+
+            file_handle.write(json_encoder.encode(search.as_dict()))
+
+        file_handle.write("]")
+
+        config.sections["server"]["autosearch"] = list(self.wishlist)
+        config.sections["server"]["autosearch"].reverse()
+        config.write_configuration()
+
+    def _save_wishlist(self):
+
+        if not self._allow_saving_wishlist:
+            return
+
+        config.create_data_folder()
+        write_file_and_backup(self.wishlist_file_path, self._save_wishlist_callback)
 
     def _set_wishlist_interval(self, msg):
         """Server code 104."""
@@ -442,12 +603,16 @@ class Search:
             return
 
         search = self.searches.get(msg.token)
+        username = msg.username
 
-        if search is None or search.is_ignored:
+        if search is None:
             msg.token = None
             return
 
-        username = msg.username
+        if isinstance(search, WishSearchRequest) and (search.is_ignored or username in search.ignored_users):
+            msg.token = None
+            return
+
         ip_address, _port = msg.addr
 
         if core.network_filter.is_user_ignored(username):
