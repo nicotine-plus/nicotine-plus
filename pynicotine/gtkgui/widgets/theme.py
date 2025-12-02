@@ -96,12 +96,30 @@ else:
     def read_color_scheme():
         return None
 
+if LIBADWAITA_API_VERSION:
+    from gi.repository import Adw  # pylint: disable=no-name-in-module,ungrouped-imports
+
+    if sys.platform == "win32":
+        def on_dark_mode_win32(style_manager, *_args):
+
+            from ctypes import windll
+
+            default = 0
+            force_dark = 2
+
+            windll.uxtheme.SetPreferredAppMode = windll.uxtheme[135]
+            windll.uxtheme.FlushMenuThemes = windll.uxtheme[136]
+
+            # Make tray icon and window titlebar menus follow dark mode
+            windll.uxtheme.SetPreferredAppMode(force_dark if style_manager.get_dark() else default)
+            windll.uxtheme.FlushMenuThemes()
+
+        Adw.StyleManager.get_default().connect("notify::dark", on_dark_mode_win32)
+
 
 def set_dark_mode(enabled):
 
     if LIBADWAITA_API_VERSION:
-        from gi.repository import Adw  # pylint: disable=no-name-in-module
-
         color_scheme = Adw.ColorScheme.FORCE_DARK if enabled else Adw.ColorScheme.DEFAULT
         Adw.StyleManager.get_default().set_color_scheme(color_scheme)
         return
