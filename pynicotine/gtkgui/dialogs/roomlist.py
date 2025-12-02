@@ -37,7 +37,8 @@ class RoomList(Dialog):
             content_box=self.container,
             title=_("All Rooms"),
             width=500,
-            height=625
+            height=625,
+            resizable=False
         )
         application.add_window(self.widget)
 

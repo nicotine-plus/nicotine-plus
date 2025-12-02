@@ -61,6 +61,7 @@ class FastConfigure(Dialog):
             title=_("Setup Assistant"),
             width=720,
             height=450,
+            resizable=False,
             show_title=False
         )
         application.add_window(self.widget)

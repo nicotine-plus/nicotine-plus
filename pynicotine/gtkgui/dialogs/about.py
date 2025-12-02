@@ -396,6 +396,7 @@ class About(Dialog):
             title=_("About"),
             width=425,
             height=540,
+            resizable=False,
             show_title=False
         )
 

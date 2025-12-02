@@ -27,7 +27,8 @@ class Shortcuts(Dialog):
             content_box=self.scrollable,
             title=_("Keyboard Shortcuts"),
             width=800,
-            height=600
+            height=600,
+            resizable=False
         )
 
         shortcut_groups = {
