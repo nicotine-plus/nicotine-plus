@@ -127,16 +127,11 @@ def run(hidden, ci_mode, isolated_mode, multi_instance):
         os.environ["GTK_DATA_PREFIX"] = executable_folder
         os.environ["GTK_PATH"] = executable_folder
         os.environ["XDG_DATA_DIRS"] = os.path.join(executable_folder, "share")
-        os.environ["FONTCONFIG_FILE"] = os.path.join(executable_folder, "share", "fonts", "fonts.conf")
-        os.environ["FONTCONFIG_PATH"] = os.path.join(executable_folder, "share", "fonts")
         os.environ["GDK_PIXBUF_MODULE_FILE"] = os.path.join(executable_folder, "lib", "pixbuf-loaders.cache")
         os.environ["GI_TYPELIB_PATH"] = os.path.join(executable_folder, "lib", "typelibs")
         os.environ["GSETTINGS_SCHEMA_DIR"] = os.path.join(executable_folder, "lib", "schemas")
 
     if sys.platform == "win32":
-        # 'win32' PangoCairo backend on Windows is too slow, use 'fontconfig' instead
-        os.environ["PANGOCAIRO_BACKEND"] = "fontconfig"
-
         # Use Cairo software rendering due to flickering issues in the GPU renderer (#2859).
         # Reevaluate when the new GPU renderers are stable:
         # https://blog.gtk.org/2024/01/28/new-renderers-for-gtk/
