@@ -177,8 +177,6 @@ class Download(Dialog):
             self.application.previous_download_folder or core.downloads.get_default_download_folder()
         )
 
-        has_unselected_files = False
-
         for username, file_path, size, file_attributes, selected, root_folder_path in reversed(sorted(
             data, key=lambda x: len(x[0])
         )):
@@ -220,22 +218,16 @@ class Download(Dialog):
                 self.num_files[username][folder_path] = 0
                 self.num_selected_files[username][folder_path] = 0
 
-                if not selected:
-                    has_unselected_files = True
-                    inconsistent = True
-                else:
-                    inconsistent = False
-
                 parent_iterator = self.tree_view.add_row(
                     [
                         folder_name,
                         "",
-                        True,
+                        False,
                         username,
                         folder_path,
                         0,
                         {},
-                        inconsistent,
+                        False,
                         username + folder_path
                     ],
                     select_row=False
@@ -243,7 +235,6 @@ class Download(Dialog):
                 expand_parent = True
 
                 self.parent_iterators[username + folder_path] = (parent_iterator, deque())
-                self.initial_selected_iterators.add(parent_iterator)
 
             parent_iterator, child_iterators = self.parent_iterators[username + folder_path]
             iterator = self.tree_view.add_row(
@@ -265,8 +256,10 @@ class Download(Dialog):
 
             if selected:
                 self.initial_selected_iterators.add(iterator)
-            else:
-                self.initial_selected_iterators.discard(parent_iterator)
+
+                if parent_iterator not in self.initial_selected_iterators:
+                    self.tree_view.set_row_value(parent_iterator, "selected", True)
+                    self.initial_selected_iterators.add(parent_iterator)
 
             self.total_selected_size += size
             self.num_selected_files[username][folder_path] += 1
@@ -278,16 +271,11 @@ class Download(Dialog):
 
         if partial_files:
             self.set_in_progress()
-
-        self.tree_view.unfreeze()
-
-        if has_unselected_files:
-            return
+        else:
+            self.select_initial_button.set_visible(False)
 
         self.unselect_all_button.set_visible(True)
-
-        if not partial_files:
-            self.select_initial_button.set_visible(False)
+        self.tree_view.unfreeze()
 
     def update_title(self):
 

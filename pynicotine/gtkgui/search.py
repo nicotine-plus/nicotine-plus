@@ -1666,22 +1666,17 @@ class Search:
 
         data = []
         user_folder_paths = set()
-        selected_iterators = self.selected_results.values()
-        selected = True
 
-        for iterator in selected_iterators:
-            user = self.tree_view.get_row_value(iterator, "user")
+        for iterator in self.selected_results.values():
+            username = self.tree_view.get_row_value(iterator, "user")
             file_data = self.tree_view.get_row_value(iterator, "file_data")
-            file_path = file_data.path
-            size = self.tree_view.get_row_value(iterator, "size_data")
-            user_folder_paths.add((user, file_path.rpartition("\\")[0]))
-
-            data.append((user, file_path, size, file_data.attributes, selected, None))
-
-        selected = False
-
-        for username, folder_path in user_folder_paths:
+            folder_path = file_data.path.rpartition("\\")[0]
             user_folder_path = username + folder_path
+
+            if user_folder_path in user_folder_paths:
+                continue
+
+            user_folder_paths.add(user_folder_path)
 
             if user_folder_path in self.folders:
                 _user_folder_iter, child_iterators = self.folders[user_folder_path]
@@ -1689,15 +1684,17 @@ class Search:
                 _user_iter, child_iterators = self.users[username]
 
             for i_iterator in child_iterators:
-                file_data = self.tree_view.get_row_value(i_iterator, "file_data")
-                file_path = file_data.path
-                i_folder_path = file_path.rpartition("\\")[0]
+                i_file_data = self.tree_view.get_row_value(i_iterator, "file_data")
+                i_file_path = i_file_data.path
+                i_folder_path = i_file_path.rpartition("\\")[0]
 
                 if i_folder_path != folder_path:
                     continue
 
-                size = self.tree_view.get_row_value(i_iterator, "size_data")
-                data.append((username, file_path, size, file_data.attributes, selected, None))
+                i_size = self.tree_view.get_row_value(i_iterator, "size_data")
+                i_selected = self.tree_view.get_row_value(i_iterator, "id_data") in self.selected_results
+
+                data.append((username, i_file_path, i_size, i_file_data.attributes, i_selected, None))
 
         if self.searches.download_dialog is None:
             self.searches.download_dialog = Download(self.window.application)
