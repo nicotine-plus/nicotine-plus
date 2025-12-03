@@ -6,8 +6,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
+import shutil
 import sys
 import time
+import zipfile
 
 from ast import literal_eval
 from collections import defaultdict
@@ -354,9 +356,13 @@ class ResponseThrottle:
             "last_time": time.monotonic(), "last_request": self.request, "last_nick": self.nick}
 
 
+class InstallException(Exception):
+    pass
+
+
 class PluginHandler:
     __slots__ = ("plugin_folders", "enabled_plugins", "command_source", "commands",
-                 "user_plugin_folder", "_load_now_playing_sender")
+                 "internal_plugin_folder", "user_plugin_folder", "_load_now_playing_sender")
 
     def __init__(self, isolated_mode=False):
 
@@ -376,7 +382,8 @@ class PluginHandler:
 
         # Load system-wide plugins
         prefix = os.path.dirname(os.path.realpath(__file__))
-        self.plugin_folders.append(os.path.join(prefix, "plugins"))
+        self.internal_plugin_folder = os.path.join(prefix, "plugins")
+        self.plugin_folders.append(self.internal_plugin_folder)
 
         # Load home folder plugins
         self.user_plugin_folder = os.path.join(config.data_folder_path, "plugins")
@@ -430,6 +437,122 @@ class PluginHandler:
         if plugin.commands or plugin.__privatecommands__:
             core.privatechat.update_completions()
 
+    def install_plugin(self, file_path):
+
+        plugin_name = None
+        max_uncompressed_size = 1024 * 1024 * 1024  # 1 GB
+        total_size = 0
+
+        try:
+            with zipfile.ZipFile(file_path, "r") as zip_file:
+                plugin_folder_path = None
+
+                for info in zip_file.infolist():
+                    total_size += info.file_size
+
+                    if total_size > max_uncompressed_size:
+                        raise InstallException("Uncompressed size too large")
+
+                    if plugin_name is not None or os.path.basename(info.filename) != "PLUGININFO":
+                        continue
+
+                    plugin_folder_path = os.path.dirname(info.filename)
+                    plugin_name = os.path.basename(plugin_folder_path)
+
+                    if not plugin_name:
+                        plugin_name = os.path.basename(os.path.splitext(file_path)[0])
+
+                if not plugin_name:
+                    raise InstallException("No plugin found in zip file")
+
+                if self.is_internal_plugin(plugin_name):
+                    raise InstallException(f"Plugin name {plugin_name} conflicts with built-in plugin")
+
+                for info in zip_file.infolist():
+                    if plugin_folder_path:
+                        if not info.filename.startswith(plugin_folder_path + "/"):
+                            continue
+
+                        info.filename = info.filename[len(plugin_folder_path + "/"):]
+
+                    info.filename = "/".join((plugin_name, info.filename))
+                    zip_file.extract(info, self.user_plugin_folder)
+
+                try:
+                    info = core.pluginhandler.get_plugin_info(plugin_name)
+                    plugin_human_name = info.get("Name", plugin_name)
+
+                except OSError:
+                    plugin_human_name = plugin_name
+
+                log.add(_("Installed plugin %s"), plugin_human_name)
+
+        except Exception as error:
+            log.add(_("Failed to install plugin %(name)s: %(error)s"), {
+                "name": os.path.basename(file_path),
+                "error": error
+            })
+
+        if plugin_name in self.enabled_plugins:
+            self.reload_plugin(plugin_name)
+
+        return plugin_name
+
+    def uninstall_plugin(self, plugin_name):
+
+        if self.is_internal_plugin(plugin_name):
+            return False
+
+        self.disable_plugin(plugin_name)
+
+        try:
+            info = core.pluginhandler.get_plugin_info(plugin_name)
+            plugin_human_name = info.get("Name", plugin_name)
+
+        except OSError:
+            plugin_human_name = plugin_name
+
+        plugin_path = self.get_plugin_path(plugin_name)
+
+        try:
+            if plugin_path is not None:
+                shutil.rmtree(encode_path(plugin_path))
+
+        except Exception as error:
+            log.add(_("Failed to uninstall plugin %(name)s: %(error)s"), {
+                "name": plugin_human_name,
+                "error": error
+            })
+            return False
+
+        log.add(_("Uninstalled plugin %s"), plugin_human_name)
+        return True
+
+    def list_installed_plugins(self):
+
+        plugin_list = []
+
+        for folder_path in self.plugin_folders:
+            try:
+                for entry in os.scandir(encode_path(folder_path)):
+                    file_path = entry.name.decode("utf-8", "replace")
+
+                    if file_path == "core_commands":
+                        continue
+
+                    if file_path == "now_playing_sender" and not self._load_now_playing_sender:
+                        # MPRIS is not available on Windows and macOS
+                        continue
+
+                    if entry.is_dir() and file_path not in plugin_list:
+                        plugin_list.append(file_path)
+
+            except OSError:
+                # Folder error, skip
+                continue
+
+        return plugin_list
+
     def get_plugin_path(self, plugin_name):
 
         for folder_path in self.plugin_folders:
@@ -439,6 +562,15 @@ class PluginHandler:
                 return file_path
 
         return None
+
+    def is_internal_plugin(self, plugin_name):
+
+        plugin_path = self.get_plugin_path(plugin_name)
+
+        if plugin_path is None:
+            return False
+
+        return plugin_path.startswith(self.internal_plugin_folder)
 
     def _import_plugin_instance(self, plugin_name):
 
@@ -566,31 +698,6 @@ class PluginHandler:
             return False
 
         return True
-
-    def list_installed_plugins(self):
-
-        plugin_list = []
-
-        for folder_path in self.plugin_folders:
-            try:
-                for entry in os.scandir(encode_path(folder_path)):
-                    file_path = entry.name.decode("utf-8", "replace")
-
-                    if file_path == "core_commands":
-                        continue
-
-                    if file_path == "now_playing_sender" and not self._load_now_playing_sender:
-                        # MPRIS is not available on Windows and macOS
-                        continue
-
-                    if entry.is_dir() and file_path not in plugin_list:
-                        plugin_list.append(file_path)
-
-            except OSError:
-                # Folder error, skip
-                continue
-
-        return plugin_list
 
     def disable_plugin(self, plugin_name, is_permanent=True):
 

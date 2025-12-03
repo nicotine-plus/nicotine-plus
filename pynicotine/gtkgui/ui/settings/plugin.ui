@@ -95,10 +95,10 @@
                             <property name="spacing">6</property>
                             <property name="visible">True</property>
                             <child>
-                              <object class="GtkButton" id="add_plugins_button">
-                                <property name="tooltip-text" translatable="yes">Add Plugins</property>
+                              <object class="GtkButton" id="_install_plugin_button">
+                                <property name="tooltip-text" translatable="yes">Install…</property>
                                 <property name="visible">True</property>
-                                <signal name="clicked" handler="on_add_plugins"/>
+                                <signal name="clicked" handler="on_install_plugin"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="spacing">6</property>
@@ -112,8 +112,8 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="ellipsize">end</property>
-                                        <property name="label" translatable="yes">_Add Plugins</property>
-                                        <property name="mnemonic-widget">add_plugins_button</property>
+                                        <property name="label" translatable="yes">_Install…</property>
+                                        <property name="mnemonic-widget">_install_plugin_button</property>
                                         <property name="use-underline">True</property>
                                         <property name="visible">True</property>
                                       </object>
@@ -273,7 +273,13 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkBox">
+                        <property name="orientation">vertical</property>
                         <property name="visible">True</property>
+                        <child>
+                          <object class="GtkBox" id="info_bar_container">
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
                         <child>
                           <object class="GtkScrolledWindow" id="plugin_description_view_container">
                             <property name="hexpand">True</property>
