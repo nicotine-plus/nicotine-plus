@@ -1151,33 +1151,6 @@ class UserBrowse:
 
         self.user_popup_menu.toggle_user_items()
 
-    def _on_download_files(self, *_args):
-
-        folder_path = self.active_folder_path
-        browsed_user = core.userbrowse.users[self.user]
-
-        data = []
-        files = browsed_user.public_folders.get(folder_path)
-
-        if not files:
-            files = browsed_user.private_folders.get(folder_path)
-
-            if not files:
-                return
-
-        for file_data in files:
-            _code, basename, size, _ext, file_attributes, *_unused = file_data
-            file_path = "\\".join([folder_path, basename])
-            selected = basename in self.selected_files
-
-            data.append((self.user, file_path, size, file_attributes, selected))
-
-        if self.userbrowses.download_dialog is None:
-            self.userbrowses.download_dialog = Download(self.window.application)
-
-        self.userbrowses.download_dialog.update_files(data, partial_files=False)
-        self.userbrowses.download_dialog.present()
-
     def on_download_files(self, *_args, download_folder_path=None):
 
         folder_path = self.active_folder_path

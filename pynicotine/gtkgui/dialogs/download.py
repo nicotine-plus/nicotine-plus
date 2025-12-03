@@ -71,7 +71,6 @@ class Download(Dialog):
         self.num_files = {}
         self.num_selected_files = {}
         self.indeterminate_progress = False
-        self.select_all = False
         self.total_selected_size = 0
 
         self.download_folder_button = FileChooserButton(
@@ -168,7 +167,7 @@ class Download(Dialog):
 
         self.set_finished()
 
-    def update_files(self, data, partial_files=True, select_all=False):
+    def update_files(self, data, partial_files=True):
 
         self.tree_view.freeze()
 
@@ -178,7 +177,6 @@ class Download(Dialog):
             self.application.previous_download_folder or core.downloads.get_default_download_folder()
         )
 
-        self.select_all = select_all
         has_unselected_files = False
 
         for username, file_path, size, file_attributes, selected, root_folder_path in reversed(sorted(
@@ -232,7 +230,7 @@ class Download(Dialog):
                     [
                         folder_name,
                         "",
-                        select_all or selected,
+                        True,
                         username,
                         folder_path,
                         0,
@@ -252,7 +250,7 @@ class Download(Dialog):
                 [
                     file_name,
                     human_size(size),
-                    select_all or selected,
+                    True,
                     username,
                     folder_path,
                     size,
@@ -270,9 +268,8 @@ class Download(Dialog):
             else:
                 self.initial_selected_iterators.discard(parent_iterator)
 
-            if select_all or selected:
-                self.total_selected_size += size
-                self.num_selected_files[username][folder_path] += 1
+            self.total_selected_size += size
+            self.num_selected_files[username][folder_path] += 1
 
             if expand_parent:
                 self.tree_view.expand_row(parent_iterator)
@@ -406,7 +403,7 @@ class Download(Dialog):
         self.tree_view.freeze()
 
         username = msg.username
-        selected = self.select_all
+        selected = True
         has_added_file = False
 
         for folder_path, files in msg.list.items():

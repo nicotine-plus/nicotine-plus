@@ -1702,7 +1702,7 @@ class Search:
         if self.searches.download_dialog is None:
             self.searches.download_dialog = Download(self.window.application)
 
-        self.searches.download_dialog.update_files(data, select_all=True)
+        self.searches.download_dialog.update_files(data)
         self.searches.download_dialog.present()
 
     def on_copy_file_path(self, *_args):
