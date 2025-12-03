@@ -257,6 +257,9 @@ FILE_TYPE_ICON_LABELS = {
     "x-office-document-symbolic": _("Document"),
     "emblem-documents-symbolic": _("Text")
 }
+INCOMPLETE_FOLDER_ICON_LABELS = {
+    "dialog-warning-symbolic": _("Incomplete Folder Contents")
+}
 PRIVATE_ICON_LABELS = {
     "changes-prevent-symbolic": _("Private")
 }

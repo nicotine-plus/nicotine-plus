@@ -746,7 +746,7 @@ class Downloads(Transfers):
             requested_folder.request_timer_id = None
 
         requested_folder.request_timer_id = events.schedule(
-            delay=15, callback=self._requested_folder_timeout, callback_args=(requested_folder,)
+            delay=5, callback=self._requested_folder_timeout, callback_args=(requested_folder,)
         )
 
         log.add_transfer("Requesting contents of folder %s from user %s", (folder_path, username))
@@ -910,6 +910,12 @@ class Downloads(Transfers):
         for msg in msgs:
             if msg.__class__ in failed_msg_types:
                 self._cant_connect_queue_file(username, msg.file, is_offline, is_timeout)
+
+            if msg.__class__ == FolderContentsRequest:
+                requested_folder = self._requested_folders.get(username, {}).get(msg.dir)
+
+                if requested_folder is not None:
+                    self._requested_folder_timeout(requested_folder)
 
     def _peer_connection_closed(self, username, conn_type, msgs=None):
         self._peer_connection_error(username, conn_type, msgs, is_timeout=False)

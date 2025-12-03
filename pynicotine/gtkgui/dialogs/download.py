@@ -68,6 +68,7 @@ class Download(Dialog):
         self.initial_selected_iterators = set()
         self.folder_names = {}
         self.pending_folders = {}
+        self.failed_usernames = set()
         self.num_files = {}
         self.num_selected_files = {}
         self.indeterminate_progress = False
@@ -93,6 +94,12 @@ class Download(Dialog):
                     "width": 150,
                     "expand_column": True,
                     "default_sort_type": "ascending"
+                },
+                "incomplete": {
+                    "column_type": "icon",
+                    "title": _("Incomplete"),
+                    "width": 25,
+                    "hide_header": True
                 },
                 "size": {
                     "column_type": "number",
@@ -160,6 +167,7 @@ class Download(Dialog):
         self.parent_iterators.clear()
         self.initial_selected_iterators.clear()
         self.pending_folders.clear()
+        self.failed_usernames.clear()
         self.num_files.clear()
         self.num_selected_files.clear()
         self.tree_view.clear()
@@ -232,6 +240,7 @@ class Download(Dialog):
                     [
                         folder_name,
                         "",
+                        "",
                         select_all or selected,
                         username,
                         folder_path,
@@ -251,6 +260,7 @@ class Download(Dialog):
             iterator = self.tree_view.add_row(
                 [
                     file_name,
+                    "",
                     human_size(size),
                     select_all or selected,
                     username,
@@ -364,6 +374,9 @@ class Download(Dialog):
 
     def set_in_progress(self):
 
+        if self.indeterminate_progress:
+            return
+
         self.indeterminate_progress = True
 
         self.progress_bar.get_parent().set_reveal_child(True)
@@ -382,14 +395,18 @@ class Download(Dialog):
 
         self.info_bar.set_visible(False)
 
-    def set_failed(self):
+    def set_failed(self, username, folder_path):
 
-        if not self.indeterminate_progress:
-            return
+        self.failed_usernames.add(username)
 
-        self.set_finished()
+        parent_iterator, _child_iterators = self.parent_iterators[username + folder_path]
+        self.tree_view.set_row_value(parent_iterator, "incomplete", "dialog-warning-symbolic")
+
+        if len(self.pending_folders) == len(self.failed_usernames):
+            self.set_finished()
+
         self.info_bar.show_error_message(
-            _("Failed to request folder contents.")
+            _("Unable to request folder contents from users: %s") % ", ".join(sorted(self.failed_usernames))
         )
         self.info_bar.set_visible(True)
 
@@ -428,6 +445,7 @@ class Download(Dialog):
                 iterator = self.tree_view.add_row(
                     [
                         file_name,
+                        "",
                         human_size(size),
                         selected,
                         username,
@@ -455,9 +473,11 @@ class Download(Dialog):
                     unselected_parent = True
 
             if not files:
-                self.set_failed()
+                self.set_failed(username, folder_path)
 
             self.pending_folders[username].remove(folder_path)
+            self.failed_usernames.discard(username)
+            self.tree_view.set_row_value(parent_iterator, "incomplete", "")
 
             if not self.pending_folders[username]:
                 del self.pending_folders[username]
@@ -472,7 +492,7 @@ class Download(Dialog):
             self.set_finished()
 
         elif not msg.list:
-            self.set_failed()
+            self.set_failed(username, msg.dir)
 
         self.tree_view.unfreeze()
 
@@ -484,11 +504,17 @@ class Download(Dialog):
         if folder_path not in self.pending_folders[username]:
             return
 
-        self.set_failed()
+        self.failed_usernames.add(username)
+        self.set_failed(username, folder_path)
 
     def server_disconnect(self, *_args):
-        if self.indeterminate_progress:
-            self.set_failed()
+
+        if not self.indeterminate_progress:
+            return
+
+        for username, folders in self.pending_folders.items():
+            for folder_path in folders:
+                self.set_failed(username, folder_path)
 
     def on_popup_menu(self, menu, _widget):
 
@@ -515,8 +541,13 @@ class Download(Dialog):
         self.set_in_progress()
 
         for username, folders in self.pending_folders.items():
+            if username not in self.failed_usernames:
+                continue
+
             for folder_path in folders:
                 core.downloads.request_folder(username, folder_path)
+
+        self.failed_usernames.clear()
 
     def on_rename_response(self, dialog, _response_id, iterator):
 
