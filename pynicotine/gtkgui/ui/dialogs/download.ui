@@ -91,11 +91,6 @@
             <property name="orientation">vertical</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkBox" id="info_bar_container">
-                <property name="visible">True</property>
-              </object>
-            </child>
-            <child>
               <object class="GtkOverlay">
                 <property name="visible">True</property>
                 <child>
@@ -124,6 +119,11 @@
                     </child>
                   </object>
                 </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox" id="info_bar_container">
+                <property name="visible">True</property>
               </object>
             </child>
             <child>
