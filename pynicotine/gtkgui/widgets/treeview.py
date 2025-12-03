@@ -23,6 +23,7 @@ from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import FILE_TYPE_ICON_LABELS
 from pynicotine.gtkgui.widgets.theme import PRIVATE_ICON_LABELS
+from pynicotine.gtkgui.widgets.theme import SHARED_FOLDER_ICON_LABELS
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_LABELS
 from pynicotine.gtkgui.widgets.theme import add_css_class
 
@@ -709,6 +710,9 @@ class TreeView:
 
         if column.id == "file_type":
             return FILE_TYPE_ICON_LABELS[icon_name]
+
+        if column.id == "readable":
+            return SHARED_FOLDER_ICON_LABELS.get(icon_name, "")
 
         return icon_name
 

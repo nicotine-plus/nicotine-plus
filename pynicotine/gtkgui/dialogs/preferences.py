@@ -640,14 +640,20 @@ class SharesPage:
                 "virtual_name": {
                     "column_type": "text",
                     "title": _("Virtual Folder"),
-                    "width": 65,
+                    "width": 55,
                     "expand_column": True,
                     "default_sort_type": "ascending"
+                },
+                "readable": {
+                    "column_type": "icon",
+                    "title": _("Readable"),
+                    "width": 20,
+                    "hide_header": True
                 },
                 "folder": {
                     "column_type": "text",
                     "title": _("Folder"),
-                    "width": 150,
+                    "width": 180,
                     "expand_column": True
                 },
                 "accessible_to": {
@@ -740,17 +746,23 @@ class SharesPage:
         self.trusted_shared_folders = config.sections["transfers"]["trustedshared"][:]
         self.share_filters = config.sections["transfers"]["share_filters"][:]
 
+        unreadable_icon = "dialog-warning-symbolic"
+        unreadable_shares = core.shares.check_shares_available()
+
         for virtual_name, folder_path, *_unused in self.shared_folders:
+            icon = unreadable_icon if (virtual_name, folder_path) in unreadable_shares else ""
             self.shares_list_view.add_row(
-                [virtual_name, folder_path, _("Public")], select_row=False)
+                [virtual_name, icon, folder_path, _("Public")], select_row=False)
 
         for virtual_name, folder_path, *_unused in self.buddy_shared_folders:
+            icon = unreadable_icon if (virtual_name, folder_path) in unreadable_shares else ""
             self.shares_list_view.add_row(
-                [virtual_name, folder_path, _("Buddies")], select_row=False)
+                [virtual_name, icon, folder_path, _("Buddies")], select_row=False)
 
         for virtual_name, folder_path, *_unused in self.trusted_shared_folders:
+            icon = unreadable_icon if (virtual_name, folder_path) in unreadable_shares else ""
             self.shares_list_view.add_row(
-                [virtual_name, folder_path, _("Trusted")], select_row=False)
+                [virtual_name, icon, folder_path, _("Trusted")], select_row=False)
 
         for sfilter in self.share_filters:
             applies_to = _("Folders") if sfilter.endswith("\\") else _("Files")
@@ -788,7 +800,9 @@ class SharesPage:
                 continue
 
             self.last_parent_folder = os.path.dirname(folder_path)
-            self.shares_list_view.add_row([virtual_name, folder_path, _("Public")])
+
+            empty_icon_name = ""
+            self.shares_list_view.add_row([virtual_name, folder_path, empty_icon_name, _("Public")])
 
     def on_add_shared_folder(self, *_args):
 
@@ -824,6 +838,7 @@ class SharesPage:
             return
 
         folder_path = self.shares_list_view.get_row_value(iterator, "folder")
+        readable = self.shares_list_view.get_row_value(iterator, "readable")
         permission_level = self.PERMISSION_LEVELS.get(new_accessible_to)
         orig_iterator = self.shares_list_view.iterators[virtual_name]
 
@@ -837,7 +852,7 @@ class SharesPage:
             validate_path=False
         )
 
-        self.shares_list_view.add_row([new_virtual_name, folder_path, new_accessible_to_short])
+        self.shares_list_view.add_row([new_virtual_name, folder_path, readable, new_accessible_to_short])
 
     def on_edit_shared_folder(self, *_args):
 
