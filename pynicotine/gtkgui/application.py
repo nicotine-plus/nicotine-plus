@@ -824,11 +824,6 @@ class Application:
 
         self.window.present()
 
-        # Workaround for broken window size when restoring maximized window from tray icon
-        if sys.platform == "win32" and self.window.is_maximized():
-            self.window.unmaximize()
-            self.window.maximize()
-
     def on_away_accelerator(self, action, *_args):
         """Ctrl+H: Away/Online toggle."""
 
