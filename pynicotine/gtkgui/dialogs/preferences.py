@@ -3352,6 +3352,9 @@ class PluginsPage:
 
     def on_uninstall_plugin(self, *_args):
 
+        if core.pluginhandler.is_internal_plugin(self.selected_plugin):
+            return
+
         try:
             info = core.pluginhandler.get_plugin_info(self.selected_plugin)
             human_plugin_name = info.get("Name", self.selected_plugin)
