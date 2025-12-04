@@ -3165,7 +3165,9 @@ class PluginsPage:
                                                 pixels_below_lines=2)
         self.plugin_list_view = TreeView(
             application.window, parent=self.plugin_list_container,
-            activate_row_callback=self.on_row_activated, select_row_callback=self.on_select_plugin,
+            activate_row_callback=self.on_row_activated,
+            delete_accelerator_callback=self.on_uninstall_plugin,
+            select_row_callback=self.on_select_plugin,
             columns={
                 # Visible columns
                 "enabled": {
