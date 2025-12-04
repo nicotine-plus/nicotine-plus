@@ -114,9 +114,6 @@ def run(hidden, ci_mode, isolated_mode, multi_instance):
         os.environ["GSETTINGS_SCHEMA_DIR"] = os.path.join(executable_folder, "lib", "schemas")
 
     if sys.platform == "win32":
-        # Disable client-side decorations when header bar is disabled
-        os.environ["GTK_CSD"] = "0"
-
         # Use Cairo software rendering due to flickering issues in the GPU renderer (#2859).
         # Reevaluate when the new GPU renderers are stable:
         # https://blog.gtk.org/2024/01/28/new-renderers-for-gtk/
