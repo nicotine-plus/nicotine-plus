@@ -52,6 +52,7 @@ class ChatHistory(Popover):
         super().__init__(
             window=window,
             content_box=self.container,
+            show_callback=self.on_show,
             width=1000,
             height=700
         )
@@ -109,17 +110,11 @@ class ChatHistory(Popover):
         super().destroy()
 
     def server_login(self, msg):
-
-        if not msg.success:
-            return
-
-        for iterator in self.list_view.iterators.values():
-            username = self.list_view.get_row_value(iterator, "user")
-            core.users.watch_user(username, context="chathistory")
+        if msg.success:
+            self.update_user_statuses()
 
     def server_disconnect(self, *_args):
-        for iterator in self.list_view.iterators.values():
-            self.list_view.set_row_value(iterator, "status", USER_STATUS_ICON_NAMES[UserStatus.OFFLINE])
+        self.update_user_statuses()
 
     @staticmethod
     def load_user(file_path):
@@ -216,7 +211,6 @@ class ChatHistory(Popover):
     def update_user(self, username, message, timestamp=None):
 
         self.remove_user(username)
-        core.users.watch_user(username, context="chathistory")
 
         if not timestamp:
             timestamp_format = config.sections["logging"]["log_timestamp"]
@@ -232,6 +226,19 @@ class ChatHistory(Popover):
             message,
             int(timestamp)
         ], select_row=False)
+
+    def update_user_statuses(self):
+
+        # Retrieves statuses for watched users in other contexts. We don't explicitly watch chat history
+        # users for status updates due to the amount of server traffic a large history would generate.
+
+        for iterator in self.list_view.iterators.values():
+            username = self.list_view.get_row_value(iterator, "user")
+            old_status = self.list_view.get_row_value(iterator, "status")
+            status = USER_STATUS_ICON_NAMES[core.users.statuses.get(username, UserStatus.OFFLINE)]
+
+            if status != old_status:
+                self.list_view.set_row_value(iterator, "status", status)
 
     def user_status(self, msg):
 
@@ -259,3 +266,6 @@ class ChatHistory(Popover):
 
         self.search_entry.grab_focus()
         return True
+
+    def on_show(self, *_args):
+        self.update_user_statuses()
