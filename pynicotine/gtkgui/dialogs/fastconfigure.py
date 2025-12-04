@@ -8,6 +8,7 @@ from gi.repository import Gtk
 import pynicotine
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
@@ -107,6 +108,8 @@ class FastConfigure(Dialog):
         )
 
         self.reset_completeness()
+
+        events.connect("shares-ready", self._shares_ready)
 
     def destroy(self):
 
@@ -287,7 +290,9 @@ class FastConfigure(Dialog):
 
     def on_close(self, *_args):
         self.invalid_password = False
-        self.rescan_required = False
+
+    def _shares_ready(self, successful):
+        self.rescan_required = (not successful)
 
     def on_show(self, *_args):
 
