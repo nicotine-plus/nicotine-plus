@@ -98,11 +98,12 @@ class ChatHistory(Dialog):
         super().destroy()
 
     def server_login(self, msg):
-        if msg.success:
+        if msg.success and self.is_visible():
             self.update_user_statuses()
 
     def server_disconnect(self, *_args):
-        self.update_user_statuses()
+        if self.is_visible():
+            self.update_user_statuses()
 
     @staticmethod
     def load_user(file_path):
@@ -209,42 +210,46 @@ class ChatHistory(Dialog):
             h_timestamp = time.strftime(timestamp_format)
             message = f"{h_timestamp} [{username}] {message}"
 
-        status = core.users.statuses.get(username, UserStatus.OFFLINE)
-
-        self.list_view.add_row([
-            USER_STATUS_ICON_NAMES[status],
+        iterator = self.list_view.add_row([
+            "",
             username,
             message,
             int(timestamp)
         ], select_row=False)
 
+        if self.is_visible():
+            self.set_user_status_icon(username, iterator)
+
         if not self.list_container.get_visible():
             self.list_container.set_visible(True)
 
-    def update_user_statuses(self):
+    def set_user_status_icon(self, username, iterator):
 
-        # Retrieves statuses for watched users in other contexts. We don't explicitly watch chat history
-        # users for status updates due to the amount of server traffic a large history would generate.
+        # We don't watch all historic users for status updates due to
+        # the amount of server traffic a large history would generate
+        if username in core.privatechat.users:
+            status_icon_name = USER_STATUS_ICON_NAMES[core.users.statuses.get(username, UserStatus.OFFLINE)]
+        else:
+            status_icon_name = ""  # Blank icon to indicate chat tab closed
+
+        if status_icon_name != self.list_view.get_row_value(iterator, "status"):
+            self.list_view.set_row_value(iterator, "status", status_icon_name)
+
+    def update_user_statuses(self):
 
         for iterator in self.list_view.iterators.values():
             username = self.list_view.get_row_value(iterator, "user")
-            old_status = self.list_view.get_row_value(iterator, "status")
-            status = USER_STATUS_ICON_NAMES[core.users.statuses.get(username, UserStatus.OFFLINE)]
-
-            if status != old_status:
-                self.list_view.set_row_value(iterator, "status", status)
+            self.set_user_status_icon(username, iterator)
 
     def user_status(self, msg):
 
-        iterator = self.list_view.iterators.get(msg.user)
+        username = msg.user
+        iterator = self.list_view.iterators.get(username)
 
         if iterator is None:
             return
 
-        status_icon_name = USER_STATUS_ICON_NAMES.get(msg.status)
-
-        if status_icon_name and status_icon_name != self.list_view.get_row_value(iterator, "status"):
-            self.list_view.set_row_value(iterator, "status", status_icon_name)
+        self.set_user_status_icon(username, iterator)
 
     def on_show_user(self, *_args):
 
