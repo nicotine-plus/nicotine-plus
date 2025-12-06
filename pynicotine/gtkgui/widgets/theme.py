@@ -260,6 +260,9 @@ FILE_TYPE_ICON_LABELS = {
 PRIVATE_ICON_LABELS = {
     "changes-prevent-symbolic": _("Private")
 }
+READABLE_ICON_LABELS = {
+    "dialog-warning-symbolic": _("Unreadable")
+}
 USER_STATUS_ICON_LABELS = {
     "nplus-status-available": _("Online"),
     "nplus-status-away": _("Away"),
