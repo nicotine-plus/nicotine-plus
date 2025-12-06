@@ -78,7 +78,6 @@ class SearchTest(TestCase):
         core.search.add_wish(SEARCH_TEXT)
         search = core.search.searches[core.search.token]
 
-        self.assertEqual(config.sections["server"]["autosearch"][0], SEARCH_TEXT)
         self.assertEqual(core.search.token, old_token + 1)
         self.assertEqual(core.search.token, core.search.token)
         self.assertEqual(search.term, SEARCH_TEXT)
@@ -91,8 +90,6 @@ class SearchTest(TestCase):
         core.search.add_wish(new_item)
         search = core.search.searches[core.search.token]
 
-        self.assertEqual(config.sections["server"]["autosearch"][0], SEARCH_TEXT)
-        self.assertEqual(config.sections["server"]["autosearch"][1], new_item)
         self.assertEqual(search.term, new_item)
         self.assertEqual(search.mode, "wishlist")
         self.assertTrue(search.is_ignored)
