@@ -1,0 +1,7 @@
+# SPDX-FileCopyrightText: 2025 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+Version = "2025-12-02r00"
+Authors = ["Nicotine+"]
+Name = "Auto-Buddy Room Members"
+Description = "Automatically adds members in watched private rooms as buddies."
