@@ -108,6 +108,9 @@ class Popover:
         scrollable.set_max_content_width(popover_width)
         scrollable.set_max_content_height(popover_height)
 
+    def is_visible(self):
+        return self.widget.get_visible()
+
     def set_menu_button(self, menu_button):
 
         if self.menu_button:
