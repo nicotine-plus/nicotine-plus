@@ -28,7 +28,7 @@ from pynicotine.utils import humanize
 
 class Download(Dialog):
 
-    def __init__(self, application):
+    def __init__(self, application, download_callback=None):
 
         (
             self.cancel_button,
@@ -63,6 +63,7 @@ class Download(Dialog):
         application.add_window(self.widget)
 
         self.application = application
+        self.download_callback = download_callback
         self.file_properties = None
         self.parent_iterators = {}
         self.initial_selected_iterators = set()
@@ -346,6 +347,9 @@ class Download(Dialog):
                 username, file_path, folder_path=destination_folder_path, size=size,
                 file_attributes=file_attributes, paused=paused
             )
+
+        if self.download_callback is not None:
+            self.download_callback(files)
 
         self.application.previous_download_folder = self.download_folder_button.get_path(dynamic=False)
         self.close()
