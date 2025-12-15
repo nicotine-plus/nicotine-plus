@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-23 16:01+0200\n"
-"PO-Revision-Date: 2025-11-24 14:51+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2025-12-15 07:01+0000\n"
+"Last-Translator: Jan Wesselink <wesselaar@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
 "Language: nl\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
-msgstr "Soulseek client"
+msgstr "Soulseek Client"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6 pynicotine/__init__.py:34
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:116

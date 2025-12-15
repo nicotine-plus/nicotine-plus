@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-23 16:01+0200\n"
-"PO-Revision-Date: 2025-04-06 01:03+0000\n"
-"Last-Translator: Kylie McClain <kylie@somas.is>\n"
+"PO-Revision-Date: 2025-12-15 07:01+0000\n"
+"Last-Translator: Hannah Nosurname <jmejanbarjuniper@gmail.com>\n"
 "Language-Team: Toki Pona <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tok/>\n"
 "Language: tok\n"
@@ -15,35 +15,35 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.11-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
-msgstr "ilo pi nasin Soulseek"
+msgstr "selo pi linluwi Solesiku"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6 pynicotine/__init__.py:34
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:116
 msgid "Graphical client for the Soulseek peer-to-peer network"
-msgstr ""
+msgstr "selo ante tawa linluwi Solesiku"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:11
 msgid "Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-peer;GTK;"
-msgstr ""
+msgstr "Solesiku;Nikotin;pana;toki;P2P;jan-tawa-jan;GTK;"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:12
 msgid "Browse the Soulseek network"
-msgstr ""
+msgstr "o lukin e linluwi Solesiku"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:14
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
-msgstr ""
+msgstr "Nicotine+ li selo lukin tawa linluwi Solesiku."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:18
 msgid ""
 "Nicotine+ aims to be a lightweight, pleasant, free and open source (FOSS) "
 "alternative to the official Soulseek client, while also providing a "
 "comprehensive set of features."
-msgstr ""
+msgstr "Nicotine+ li wile e pona e ante tawa selo Solesiku e ken mute."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:30
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:46
@@ -54,7 +54,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:823
 #: pynicotine/gtkgui/ui/userbrowse.ui:153
 msgid "Search Files"
-msgstr ""
+msgstr "o alasa sona ale"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:34
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:50
@@ -65,7 +65,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/downloads.ui:76
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:649
 msgid "Downloads"
-msgstr ""
+msgstr "sona tan ante"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:38
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:54
@@ -75,7 +75,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:673
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:845
 msgid "Browse Shares"
-msgstr ""
+msgstr "o lukin e sona pona"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:42
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:58
@@ -85,236 +85,244 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:697
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:889
 msgid "Private Chat"
-msgstr ""
+msgstr "toki len"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:80
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:82
 msgid "Nicotine+ Team"
-msgstr ""
+msgstr "jan pali pi ilo Nicotine+"
 
 #: pynicotine/__init__.py:35
 #, python-format
 msgid "Website: %s"
-msgstr ""
+msgstr "sitelen linluwi e %s"
 
 #: pynicotine/__init__.py:41
 msgid "show this help message and exit"
-msgstr ""
+msgstr "o lukin e toki sona ni. o weka"
 
 #: pynicotine/__init__.py:44
 msgid "file"
-msgstr ""
+msgstr "sona"
 
 #: pynicotine/__init__.py:45
 msgid "use non-default configuration file"
-msgstr ""
+msgstr "o lawa ni kepeken sona ante"
 
 #: pynicotine/__init__.py:48
 msgid "folder"
-msgstr ""
+msgstr "kulupu sona"
 
 #: pynicotine/__init__.py:49
 msgid "alternative folder for user data and plugins"
-msgstr ""
+msgstr "kulupu sona pi ni: sona sina en ante ilo tan Nicotine+"
 
 #: pynicotine/__init__.py:53
 msgid "start the program without showing window"
-msgstr ""
+msgstr "open la ni li len"
 
 #: pynicotine/__init__.py:56
 msgid "ip"
-msgstr ""
+msgstr "nanpa linluwi"
 
 #: pynicotine/__init__.py:57
 msgid "bind sockets to the given IP (useful for VPN)"
-msgstr ""
+msgstr "nasin linluwi li wan tawa nanpa linluwi. linluwi VPN la ni li pona"
 
 #: pynicotine/__init__.py:60
 msgid "port"
-msgstr ""
+msgstr "kipisi pi nanpa linluwi"
 
 #: pynicotine/__init__.py:61
 msgid "listen on the given port"
-msgstr ""
+msgstr "ilo ni li toki kepeken kipisi ni pi nanpa linluwi"
 
 #: pynicotine/__init__.py:65
 msgid "rescan shared files"
-msgstr ""
+msgstr "o alasa sona sina"
 
 #: pynicotine/__init__.py:69
 msgid "start the program in headless mode (no GUI)"
-msgstr ""
+msgstr "open la lipu taso"
 
 #: pynicotine/__init__.py:73
 msgid "display version and exit"
-msgstr ""
+msgstr "o lukin e nanpa tenpo ni. o weka"
 
 #: pynicotine/__init__.py:106
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "You are using an unsupported version of Python (%(old_version)s).\n"
 "You should install Python %(min_version)s or newer."
 msgstr ""
+"nanpa tenpo pi ilo sina Pitan li sin ala. ilo Pitan li nanpa %(old_version)"
+"s.\n"
+"wile pi ilo ni la ilo Pitan li nanpa %(min_version)s anu suli tawa nanpa %"
+"(min_version)s."
 
 #: pynicotine/__init__.py:177
 msgid ""
 "Failed to scan shares. Please close other Nicotine+ instances and try again."
 msgstr ""
+"ilo ni li ken ala alasa sona pona sina. o moli e ilo ante Nicotine+ o sin."
 
 #: pynicotine/buddies.py:292 pynicotine/plugins/core_commands/__init__.py:331
 #, python-format
 msgid "%(user)s is away"
-msgstr ""
+msgstr "jan %(user)s li lon weka"
 
 #: pynicotine/buddies.py:295 pynicotine/plugins/core_commands/__init__.py:329
 #, python-format
 msgid "%(user)s is online"
-msgstr ""
+msgstr "jan %(user)s li lon"
 
 #: pynicotine/buddies.py:298 pynicotine/plugins/core_commands/__init__.py:323
 #, python-format
 msgid "%(user)s is offline"
-msgstr ""
+msgstr "jan %(user)s li lon ala"
 
 #: pynicotine/buddies.py:301
 msgid "Buddy Status"
-msgstr ""
+msgstr "lon pi jan pona"
 
 #: pynicotine/chatrooms.py:368
 #, python-format
 msgid "You have been added to a private room: %(room)s"
-msgstr ""
+msgstr "tokisina ken toki lon tomo toki sin ni %(room)s"
 
 #: pynicotine/chatrooms.py:463
 #, python-format
 msgid "Chat message from user '%(user)s' in room '%(room)s': %(message)s"
-msgstr ""
+msgstr "ni li toki lon tomo toki %(room)s tan jan %(user)s: %(message)s"
 
 #: pynicotine/config.py:117 pynicotine/config.py:136
 #: pynicotine/userbrowse.py:169
 #, python-format
 msgid "Cannot create folder %(path)s: %(error)s"
-msgstr ""
+msgstr "ilo ni li ken ala pali e kulupu sona lon %(path)s tan %(error)s"
 
 #: pynicotine/config.py:823
 #, python-format
 msgid "Error backing up config: %s"
-msgstr ""
+msgstr "ilo ni li ken ala awen e lawa ni tan %s"
 
 #: pynicotine/config.py:826
 #, python-format
 msgid "Config backed up to: %s"
-msgstr ""
+msgstr "ilo ni li awen e lawa ni tan %s"
 
 #: pynicotine/core.py:192
 #, python-format
 msgid "Starting %(program)s %(version)s"
-msgstr ""
+msgstr "ilo ni li open e %(program)s pi nanpa tenpo %(version)s"
 
 #: pynicotine/core.py:196 pynicotine/gtkgui/application.py:990
 #, python-format
 msgid "Loaded %(program)s %(version)s"
-msgstr ""
+msgstr "ilo ni li lukin e sona pi %(program)s pi nanpa tenpo %(version)s"
 
 #: pynicotine/core.py:218
 #, python-format
 msgid "Quitting %(program)s %(version)s, %(status)s…"
-msgstr ""
+msgstr "ilo ni li pini e %(program)s pi nanpa tenpo %(version)s. %(status)s…"
 
 #: pynicotine/core.py:221
 msgid "terminating"
-msgstr ""
+msgstr "ni li pini"
 
 #: pynicotine/core.py:221
 msgid "application closing"
-msgstr ""
+msgstr "ni li pini"
 
 #: pynicotine/core.py:234
 #, python-format
 msgid "Quit %(program)s %(version)s!"
-msgstr ""
+msgstr "ilo ni li pini e %(program)s pi nanpa tenpo %(version)s a!"
 
 #: pynicotine/core.py:242
 msgid "You need to specify a username and password before connecting…"
 msgstr ""
+"o toki pi nimi sina tawa ni. o toki pi nimi len sina tawa ni. sina toki ala "
+"la sina ken ala lon kulupu…"
 
 #: pynicotine/downloads.py:223
 #, python-format
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
-msgstr ""
+msgstr "pini pi lanpan sona li pakala a! o pali e pini. pini li pakala tan %s"
 
 #: pynicotine/downloads.py:238
 #, python-format
 msgid "Error: %(num)d Download filters failed! %(error)s "
-msgstr ""
+msgstr "pini pi lanpan sona pi mute %(num)d li pakala a! %(error)s "
 
 #: pynicotine/downloads.py:350
 #, python-format
 msgid "%(file)s downloaded from %(user)s"
-msgstr ""
+msgstr "sina lanpan e sona %(file)s tan jan %(user)s"
 
 #: pynicotine/downloads.py:354
 msgid "File Downloaded"
-msgstr ""
+msgstr "sina li lanpan e sona"
 
 #: pynicotine/downloads.py:362
 #, python-format
 msgid "Executed: %s"
-msgstr ""
+msgstr "ilo ni li ken ilo %s"
 
 #: pynicotine/downloads.py:365 pynicotine/downloads.py:406
 #: pynicotine/nowplaying.py:339
 #, python-format
 msgid "Executing '%(command)s' failed: %(error)s"
-msgstr ""
+msgstr "ilo %(command)s li ken la pakala li lon tan %(error)s"
 
 #: pynicotine/downloads.py:391
 #, python-format
 msgid "%(folder)s downloaded from %(user)s"
-msgstr ""
+msgstr "sina lanpan e kulupu sona %(folder)s tan %(user)s"
 
 #: pynicotine/downloads.py:395
 msgid "Folder Downloaded"
-msgstr ""
+msgstr "sina li lanpan e kulupu sona"
 
 #: pynicotine/downloads.py:403
 #, python-format
 msgid "Executed on folder: %s"
-msgstr ""
+msgstr "ilo ni li ken lon kulupu sona e ilo %s"
 
 #: pynicotine/downloads.py:427
 #, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
 msgstr ""
+"ilo ni li ken ala tawa tan ni e sona %(tempfile)s tawa %(file)s: %(error)s"
 
 #: pynicotine/downloads.py:435 pynicotine/downloads.py:1151
 msgid "Download Folder Error"
-msgstr ""
+msgstr "lanpan pi kulupu sona li pakala"
 
 #: pynicotine/downloads.py:473
 #, python-format
 msgid "Download finished: user %(user)s, file %(file)s"
-msgstr ""
+msgstr "lanpan pi sona %(file)s tan jan %(user)s li pini pona"
 
 #: pynicotine/downloads.py:483
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
-msgstr ""
+msgstr "lanpan pi sona %(file)s tan jan %(user)s li pini ike"
 
 #: pynicotine/downloads.py:1091
 #, python-format
 msgid "Download I/O error: %s"
-msgstr ""
+msgstr "lanpan sona li pakala tan %s"
 
 #: pynicotine/downloads.py:1132
 #, python-format
 msgid "Can't get an exclusive lock on file - I/O error: %s"
-msgstr ""
+msgstr "ilo ni li ken ala kepeken sona %s tan ni: ilo ante li kepeken sona ni"
 
 #: pynicotine/downloads.py:1145
 #, python-format
 msgid "Cannot save file in %(folder_path)s: %(error)s"
-msgstr ""
+msgstr "ilo ni li ken ala pini tawa %(folder_path)s tan ni e sona: %(error)s"
 
 #: pynicotine/downloads.py:1164
 #, python-format
@@ -855,7 +863,7 @@ msgstr ""
 #: pynicotine/gtkgui/transfers.py:182 pynicotine/gtkgui/userbrowse.py:333
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:96
 msgid "Size"
-msgstr ""
+msgstr "mute sewi"
 
 #: pynicotine/gtkgui/dialogs/download.py:101
 msgid "Selected"
@@ -1364,7 +1372,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1626
 msgid "Replacement"
-msgstr ""
+msgstr "ante"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1644
 msgid "Auto-Replace"
@@ -1582,7 +1590,7 @@ msgstr ""
 #: pynicotine/gtkgui/dialogs/preferences.py:3048
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:278
 msgid "Bitrate"
-msgstr ""
+msgstr "mute tawa"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3050
 msgid "Comment"
@@ -1656,7 +1664,7 @@ msgstr ""
 #: pynicotine/plugins/core_commands/__init__.py:15
 #: pynicotine/gtkgui/ui/settings/shares.ui:354
 msgid "Shares"
-msgstr ""
+msgstr "sona pona"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3327
 #: pynicotine/gtkgui/mainwindow.py:755 pynicotine/gtkgui/mainwindow.py:1107
@@ -1723,7 +1731,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:51
 msgid "Room"
-msgstr ""
+msgstr "tomo toki"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:59
 #: pynicotine/plugins/core_commands/__init__.py:16
@@ -2139,7 +2147,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:722
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:911
 msgid "Chat Rooms"
-msgstr ""
+msgstr "tomo toki"
 
 #: pynicotine/gtkgui/mainwindow.py:761 pynicotine/gtkgui/ui/mainwindow.ui:1611
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:734
