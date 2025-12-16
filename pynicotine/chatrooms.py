@@ -208,6 +208,9 @@ class ChatRooms:
             for word, replacement in config.sections["words"]["autoreplaced"].items():
                 message = message.replace(str(word), str(replacement))
 
+        # Server rejects messages containing newlines, filter them
+        message = message.replace("\r", "").replace("\n", " ")
+
         core.send_message_to_server(SayChatroom(room, message))
         core.pluginhandler.outgoing_public_chat_notification(room, message)
 
