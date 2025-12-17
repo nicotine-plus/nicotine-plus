@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-23 16:01+0200\n"
-"PO-Revision-Date: 2025-12-16 22:00+0000\n"
+"PO-Revision-Date: 2025-12-17 17:59+0000\n"
 "Last-Translator: Hannah Nosurname <jmejanbarjuniper@gmail.com>\n"
 "Language-Team: Toki Pona <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tok/>\n"
@@ -322,7 +322,8 @@ msgstr "ilo ni li ken ala kepeken sona %s tan ni: ilo ante li kepeken sona ni"
 #: pynicotine/downloads.py:1145
 #, python-format
 msgid "Cannot save file in %(folder_path)s: %(error)s"
-msgstr "ilo ni li ken ala pini tawa %(folder_path)s tan ni e sona: %(error)s"
+msgstr ""
+"ilo ni li ken ala pali tawa %(folder_path)s tan ni e sona sin: %(error)s"
 
 #: pynicotine/downloads.py:1164
 #, python-format
@@ -407,7 +408,7 @@ msgstr "sona pi ilo Nikotin+"
 
 #: pynicotine/gtkgui/application.py:394
 msgid "_File"
-msgstr ""
+msgstr "_sona"
 
 #: pynicotine/gtkgui/application.py:395
 msgid "_Shares"
@@ -681,20 +682,20 @@ msgstr "o len e tomo toki"
 
 #: pynicotine/gtkgui/chatrooms.py:535
 msgid "Search activity log…"
-msgstr ""
+msgstr "o alasa e sitelen pi nanpa pi toki jan…"
 
 #: pynicotine/gtkgui/chatrooms.py:542 pynicotine/gtkgui/privatechat.py:333
 msgid "Search chat log…"
-msgstr ""
+msgstr "o alasa lon toki ale…"
 
 #: pynicotine/gtkgui/chatrooms.py:626
 msgid "Sear_ch User's Files"
-msgstr ""
+msgstr "o _alasa e sona pi jan ni"
 
 #: pynicotine/gtkgui/chatrooms.py:632 pynicotine/gtkgui/chatrooms.py:644
 #: pynicotine/gtkgui/privatechat.py:361
 msgid "Find…"
-msgstr ""
+msgstr "o alasa lili…"
 
 #: pynicotine/gtkgui/chatrooms.py:634 pynicotine/gtkgui/chatrooms.py:646
 #: pynicotine/gtkgui/chatrooms.py:832 pynicotine/gtkgui/chatrooms.py:835
