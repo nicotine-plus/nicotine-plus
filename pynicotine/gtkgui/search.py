@@ -50,11 +50,12 @@ from pynicotine.utils import human_speed
 
 
 class SearchResultFile:
-    __slots__ = ("path", "attributes")
+    __slots__ = ("path", "attributes", "is_downloading")
 
-    def __init__(self, path, attributes=None):
+    def __init__(self, path, attributes=None, is_downloading=False):
         self.path = path
         self.attributes = attributes
+        self.is_downloading = is_downloading
 
 
 class Searches(IconNotebook):
@@ -553,6 +554,13 @@ class Search:
                     "sensitive_column": "public_data",
                     "tooltip_callback": self.on_file_path_tooltip
                 },
+                "downloading": {
+                    "column_type": "icon",
+                    "title": _("Downloading"),
+                    "width": 25,
+                    "hide_header": True,
+                    "sensitive_column": "public_data"
+                },
                 "size": {
                     "column_type": "number",
                     "title": _("Size"),
@@ -845,6 +853,7 @@ class Search:
             h_size = human_size(size, config.sections["ui"]["file_size_unit"])
             h_quality, bitrate, h_length, length = FileListMessage.parse_audio_quality_length(size, file_attributes)
             private_icon_name = "changes-prevent-symbolic" if is_private else ""
+            downloading_icon_name = ""
 
             is_result_visible = self.append(
                 [
@@ -856,6 +865,7 @@ class Search:
                     folder_path,
                     get_file_type_icon_name(name),
                     name,
+                    downloading_icon_name,
                     h_size,
                     h_quality,
                     h_length,
@@ -950,7 +960,7 @@ class Search:
     def add_row_to_model(self, row):
 
         (user, flag, h_speed, h_queue, private_icon_name, h_folder_path, _unused, _unused, _unused, _unused,
-            _unused, speed, queue, _unused, _unused, _unused, is_public, file_data, _unused) = row
+            _unused, _unused, speed, queue, _unused, _unused, _unused, is_public, file_data, _unused) = row
 
         expand_allowed = self.initialized
         expand_user = False
@@ -972,6 +982,7 @@ class Search:
                         flag,
                         h_speed,
                         h_queue,
+                        empty_str,
                         empty_str,
                         empty_str,
                         empty_str,
@@ -1018,6 +1029,7 @@ class Search:
                             empty_str,
                             empty_str,
                             empty_str,
+                            empty_str,
                             speed,
                             queue,
                             empty_int,
@@ -1048,7 +1060,7 @@ class Search:
 
             user_iterator, user_child_iterators = self.users[user]
 
-        row[18] = self.row_id
+        row[19] = self.row_id
         iterator = self.tree_view.add_row(row, select_row=False, parent_iterator=parent_iterator)
         self.row_id -= 1
 
@@ -1251,31 +1263,31 @@ class Search:
             if not filter_value:
                 continue
 
-            if filter_id == "filtertype" and not self.check_file_type(filter_value, row[17].path.lower()):
+            if filter_id == "filtertype" and not self.check_file_type(filter_value, row[18].path.lower()):
                 return False
 
             if filter_id == "filtercc" and not self.check_country(filter_value, row[1][-2:].upper()):
                 return False
 
-            if filter_id == "filterin" and not filter_value.search(row[17].path) and not filter_value.fullmatch(row[0]):
+            if filter_id == "filterin" and not filter_value.search(row[18].path) and not filter_value.fullmatch(row[0]):
                 return False
 
-            if filter_id == "filterout" and (filter_value.search(row[17].path) or filter_value.fullmatch(row[0])):
+            if filter_id == "filterout" and (filter_value.search(row[18].path) or filter_value.fullmatch(row[0])):
                 return False
 
-            if filter_id == "filterslot" and row[12] > 0:
+            if filter_id == "filterslot" and row[13] > 0:
                 return False
 
-            if filter_id == "filtersize" and not self.check_digit(filter_value, row[13], file_size=True):
+            if filter_id == "filtersize" and not self.check_digit(filter_value, row[14], file_size=True):
                 return False
 
-            if filter_id == "filterbr" and not self.check_digit(filter_value, row[14]):
+            if filter_id == "filterbr" and not self.check_digit(filter_value, row[15]):
                 return False
 
-            if filter_id == "filterlength" and not self.check_digit(filter_value, row[15]):
+            if filter_id == "filterlength" and not self.check_digit(filter_value, row[16]):
                 return False
 
-            if filter_id == "filterpublic" and not row[16]:
+            if filter_id == "filterpublic" and not row[17]:
                 return False
 
         return True
@@ -1320,6 +1332,7 @@ class Search:
 
         for row in self.all_data:
             if self.check_filter(row):
+                row[8] = "folder-download-symbolic" if row[18].is_downloading else ""
                 self.add_row_to_model(row)
 
         self.row_id = end_row_id + 1
@@ -1546,8 +1559,6 @@ class Search:
         else:
             self.on_download_files()
 
-        treeview.unselect_all_rows()
-
     def on_popup_menu(self, menu, _widget):
 
         self.select_results()
@@ -1646,6 +1657,9 @@ class Search:
                 user, file_path, folder_path=download_folder_path, size=size,
                 file_attributes=file_data.attributes)
 
+            file_data.is_downloading = True
+            self.tree_view.set_row_value(iterator, "downloading", "folder-download-symbolic")
+
     def on_download_files_to_selected(self, selected_folder_paths, _data):
         self.window.application.previous_file_download_folder = next(iter(selected_folder_paths), None)
         self.on_download_files(download_folder_path=self.window.application.previous_file_download_folder)
@@ -1661,6 +1675,28 @@ class Search:
                 or core.downloads.get_default_download_folder()
             )
         ).present()
+
+    def on_download_folders_result(self, files):
+
+        user_file_paths = set()
+
+        for username, file_path, *_unused in files:
+            user_file_paths.add(username + file_path)
+
+        for iterator in self.tree_view.iterators.values():
+            username = self.tree_view.get_row_value(iterator, "user")
+            file_data = self.tree_view.get_row_value(iterator, "file_data")
+
+            if file_data is None:
+                continue
+
+            user_file_path = username + file_data.path
+
+            if user_file_path not in user_file_paths:
+                continue
+
+            file_data.is_downloading = True
+            self.tree_view.set_row_value(iterator, "downloading", "folder-download-symbolic")
 
     def on_download_folders(self, *_args):
 
@@ -1697,7 +1733,7 @@ class Search:
                 data.append((username, i_file_path, i_size, i_file_data.attributes, i_selected, None))
 
         if self.searches.download_dialog is None:
-            self.searches.download_dialog = Download(self.window.application)
+            self.searches.download_dialog = Download(self.window.application, self.on_download_folders_result)
 
         self.searches.download_dialog.update_files(data)
         self.searches.download_dialog.present()
