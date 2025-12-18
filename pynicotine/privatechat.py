@@ -129,6 +129,9 @@ class PrivateChat:
             for word, replacement in config.sections["words"]["autoreplaced"].items():
                 message = message.replace(str(word), str(replacement))
 
+        # Server rejects messages containing newlines, filter them
+        message = message.replace("\r", "").replace("\n", " ")
+
         core.send_message_to_server(MessageUser(username, message))
         core.pluginhandler.outgoing_private_chat_notification(username, message)
 
