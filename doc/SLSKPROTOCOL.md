@@ -614,7 +614,8 @@ Requirements include:
         5.  **uint32** *dirs*
     8.  **uint32** *number of slotsfull*
     9.  Iterate for *number of slotsfull*
-        1.  **uint32** *slotsfull*
+        1.  **uint32** *slotsfull*  
+            Boolean value `1` or `0`, see [UploadSlotsFull](#server-code-40)
     10. **uint32** *number of user countries*
     11. Iterate for *number of user countries*
         1.  **string** *countrycode*  
@@ -659,7 +660,8 @@ The server tells us someone has just joined a room we're in.
     6.  **uint32** *unknown*
     7.  **uint32** *files*
     8.  **uint32** *dirs*
-    9.  **uint32** *slotsfull*
+    9.  **uint32** *slotsfull*  
+        Boolean value `1` or `0`, see [UploadSlotsFull](#server-code-40)
     10. **string** *countrycode*  
         Uppercase country code
 
@@ -912,20 +914,26 @@ message to the server, but [WatchUser](#server-code-5) should be used instead.
 
 ## Server Code 40
 
-### QueuedDownloads
+### UploadSlotsFull
 
 **OBSOLETE, no longer used**
 
-The server sends this to indicate if someone has download slots available or
-not.
+We send this to the server to indicate whether our upload slots are fully
+occupied or not. The server broadcasts the message to joined rooms.
+
+The official Soulseek client used to send this message on login, as well as
+when upload slots filled up or became available. Users with full slots were
+grayed out in room user lists.
 
 ### Data Order
 
   - Send
-    1.  **uint32** *slotsfull*
+    1.  **uint32** *slotsfull*  
+        Boolean value `1` or `0`
   - Receive
     1.  **string** *username*
-    2.  **uint32** *slotsfull*
+    2.  **uint32** *slotsfull*  
+        Boolean value `1` or `0`
 
 
 ## Server Code 41
@@ -1302,7 +1310,8 @@ We send this to get a global list of all users online.
         5.  **uint32** *dirs*
     7.  **uint32** *number of slotsfull*
     8.  Iterate for *number of slotsfull*
-        1.  **uint32** *slotsfull*
+        1.  **uint32** *slotsfull*  
+            Boolean value `1` or `0`, see [UploadSlotsFull](#server-code-40)
     9. **uint32** *number of usercountries*
     10. Iterate for *number of usercountries*
         1.  **string** *countrycode*  

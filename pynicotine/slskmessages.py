@@ -1321,11 +1321,15 @@ class GetUserStats(ServerMessage):
         pos, self.dirs = self.unpack_uint32(message, pos)
 
 
-class QueuedDownloads(ServerMessage):
+class UploadSlotsFull(ServerMessage):
     """Server code 40.
 
-    The server sends this to indicate if someone has download slots
-    available or not.
+    We send this to the server to indicate whether our upload slots are fully
+    occupied or not. The server broadcasts the message to joined rooms.
+
+    The official Soulseek client used to send this message on login, as well as
+    when upload slots filled up or became available. Users with full slots were
+    grayed out in room user lists.
 
     OBSOLETE, no longer used
     """
@@ -4103,7 +4107,7 @@ SERVER_MESSAGE_CODES = {
     SendDownloadSpeed: 34,        # Obsolete
     SharedFoldersFiles: 35,
     GetUserStats: 36,
-    QueuedDownloads: 40,          # Obsolete
+    UploadSlotsFull: 40,          # Obsolete
     Relogged: 41,
     UserSearch: 42,
     SimilarRecommendations: 50,   # Obsolete
