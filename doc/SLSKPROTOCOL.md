@@ -260,7 +260,7 @@ server, but it handles the protocol well enough (and can be modified).
 | `34`   | [Send Download Speed](#server-code-34) `OBSOLETE`              |
 | `35`   | [Shared Folders & Files](#server-code-35)                      |
 | `36`   | [Get User Stats](#server-code-36)                              |
-| `40`   | [Queued Downloads](#server-code-40) `OBSOLETE`                 |
+| `40`   | [Upload Slots Full](#server-code-40) `OBSOLETE`                |
 | `41`   | [Kicked from Server](#server-code-41)                          |
 | `42`   | [User Search](#server-code-42)                                 |
 | `50`   | [Similar Recommendations](#server-code-50) `OBSOLETE`          |
