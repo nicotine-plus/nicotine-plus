@@ -1215,6 +1215,16 @@ class ServerPing(ServerMessage):
 class SendConnectToken(ServerMessage):
     """Server code 33.
 
+    This message used to be sent together with the PeerInit message when
+    connecting to a user, with the same non-zero token included in both. The
+    recipient could then cross-check the username and token, in order to reject
+    spoofed connection attempts.
+
+    While the server still recognizes and forwards this message today, no
+    clients use it anymore. The lack of adoption by clients in the past has
+    effectively rendered the message unusable, since its reintroduction in a
+    client would isolate the client from the rest of the network.
+
     OBSOLETE, no longer used
     """
 
@@ -3015,8 +3025,10 @@ class PierceFireWall(PeerInitMessage):
 class PeerInit(PeerInitMessage):
     """Peer init code 1.
 
-    This message is sent to initiate a direct connection to another
-    peer. The token is apparently always 0 and ignored.
+    This message is sent to initiate a direct connection to another peer. The
+    token is always zero and ignored today, but used to be non-zero and
+    included in a concurrent SendConnectToken server message for connection
+    verification.
     """
 
     __slots__ = ("sock", "init_user", "target_user", "conn_type", "indirect_token", "created_time", "outgoing_msgs")

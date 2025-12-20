@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on November 30, 2025](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on December 20, 2025](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -833,6 +833,16 @@ Nicotine+ uses TCP keepalive instead of sending this message.
 ### SendConnectToken
 
 **OBSOLETE, no longer used**
+
+This message used to be sent together with the [PeerInit](#peer-init-code-1)
+message when connecting to a user, with the same non-zero token included in
+both. The recipient could then cross-check the username and token, in order to
+reject spoofed connection attempts.
+
+While the server still recognizes and forwards this message today, no clients
+use it anymore. The lack of adoption by clients in the past has effectively
+rendered the message unusable, since its reintroduction in a client would
+isolate the client from the rest of the network.
 
 ### Data Order
 
@@ -2399,7 +2409,9 @@ See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 ### PeerInit
 
 This message is sent to initiate a direct connection to another peer. The token
-is apparently always 0 and ignored.
+is always zero and ignored today, but used to be non-zero and included in a
+concurrent [SendConnectToken](#server-code-33) server message for connection
+verification.
 
 See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 
