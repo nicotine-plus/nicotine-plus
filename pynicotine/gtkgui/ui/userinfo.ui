@@ -262,7 +262,7 @@
                               <object class="GtkLabel">
                                 <property name="ellipsize">end</property>
                                 <property name="hexpand">True</property>
-                                <property name="label" translatable="yes">Free Upload Slots</property>
+                                <property name="label" translatable="yes">Upload Slot Available</property>
                                 <property name="mnemonic-widget">free_upload_slots_label</property>
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>

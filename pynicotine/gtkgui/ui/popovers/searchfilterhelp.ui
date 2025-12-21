@@ -421,7 +421,7 @@
         </child>
         <child>
           <object class="GtkLabel">
-            <property name="label" translatable="yes">Free Slot</property>
+            <property name="label" translatable="yes">Upload Slot Available</property>
             <property name="selectable">True</property>
             <property name="visible">True</property>
             <property name="xalign">0</property>
@@ -432,7 +432,7 @@
         </child>
         <child>
           <object class="GtkLabel">
-            <property name="label" translatable="yes">Show only those results from users which have at least one upload slot free, i.e. files that are available immediately.</property>
+            <property name="label" translatable="yes">Only show results from users who have at least one upload slot available, i.e. files that are available immediately.</property>
             <property name="margin-start">12</property>
             <property name="selectable">True</property>
             <property name="visible">True</property>
@@ -453,7 +453,7 @@
         </child>
         <child>
           <object class="GtkLabel">
-            <property name="label" translatable="yes">Only show files that are shared publicly, and hide privately shared files which cannot be downloaded until the uploader gives explicit permission.</property>
+            <property name="label" translatable="yes">Only show files that are shared publicly. Hides privately shared files that cannot be downloaded until the uploader gives explicit permission.</property>
             <property name="margin-start">12</property>
             <property name="selectable">True</property>
             <property name="visible">True</property>

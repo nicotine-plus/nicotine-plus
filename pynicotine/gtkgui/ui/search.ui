@@ -365,7 +365,7 @@
                                 <property name="visible">True</property>
                                 <child>
                                   <object class="GtkToggleButton" id="filter_free_slot_button">
-                                    <property name="tooltip-text" translatable="yes">Free Slot</property>
+                                    <property name="tooltip-text" translatable="yes">Upload Slot Available</property>
                                     <property name="visible">True</property>
                                     <signal name="toggled" handler="on_refilter"/>
                                     <child>
