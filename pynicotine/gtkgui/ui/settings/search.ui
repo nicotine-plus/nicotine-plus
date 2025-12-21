@@ -413,7 +413,7 @@
                           <object class="GtkLabel">
                             <property name="height-request">24</property>
                             <property name="hexpand">True</property>
-                            <property name="label" translatable="yes">Free Slot</property>
+                            <property name="label" translatable="yes">Upload Slot Available</property>
                             <property name="mnemonic-widget">filter_free_slot_toggle</property>
                             <property name="visible">True</property>
                             <property name="wrap">True</property>
