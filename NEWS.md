@@ -12,6 +12,21 @@ The current stable version of Nicotine+ is available at [DOWNLOADS.md](doc/DOWNL
 You can run the latest unstable build of Nicotine+ to test recent changes and bug fixes, see [TESTING.md](doc/TESTING.md).
 
 
+## Version 3.3.11 (Unreleased)
+
+### Corrections
+
+ * Important: Backport crash fixes from dev1 (TODO)
+
+### Issues closed on GitHub
+
+ * Nicotine spontaneously crashes ([#3325](https://github.com/nicotine-plus/nicotine-plus/issues/3325))
+ * Crash on browse your own shares after landing ([#3346](https://github.com/nicotine-plus/nicotine-plus/issues/3346))
+ * Private message something something ([#3351](https://github.com/nicotine-plus/nicotine-plus/issues/3351))
+ * Upload and download list may be showing incomplete contents ([#3377](https://github.com/nicotine-plus/nicotine-plus/issues/3377))
+ * crash when stopping uwsm session ([#3443](https://github.com/nicotine-plus/nicotine-plus/issues/3443))
+
+
 ## Version 3.3.10 (March 10, 2025)
 
 ### Corrections
