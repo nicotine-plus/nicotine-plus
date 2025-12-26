@@ -1623,8 +1623,11 @@ class Search:
             file_size = self.tree_view.get_row_value(iterator, "size_data")
             selected_size += file_size
             selected_length += self.tree_view.get_row_value(iterator, "length_data")
-            country_code = self.tree_view.get_row_value(iterator, "country")[-2:].upper()
+            country_code = self.tree_view.get_row_value(iterator, "country")
             folder_path, _separator, basename = file_path.rpartition("\\")
+
+            if country_code:
+                country_code = country_code[-2:].upper()
 
             data.append({
                 "user": self.tree_view.get_row_value(iterator, "user"),
