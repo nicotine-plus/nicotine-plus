@@ -886,15 +886,16 @@ class ChatRoom:
 
         self.user_list_button.set_active(config.sections["chatrooms"]["user_list_visible"])
 
-    def _show_notification(self, room, user, text, is_mentioned):
+    def _show_notification(self, room, user, text, mention_type, mention_keyword):
 
-        self.chatrooms.request_tab_changed(self.container, is_important=is_mentioned, is_quiet=self.is_global)
+        self.chatrooms.request_tab_changed(
+            self.container, is_important=mention_type is not None, is_quiet=self.is_global)
 
         if self.is_global and room in core.chatrooms.joined_rooms:
             # Don't show notifications about the Public feed that's duplicated in an open tab
             return
 
-        if is_mentioned:
+        if mention_type == "self":
             log.add(_("%(user)s mentioned you in room %(room)s") % {"user": user, "room": room})
 
             if config.sections["notifications"]["notification_popup_chatroom_mention"]:
@@ -904,12 +905,46 @@ class ChatRoom:
                     high_priority=True
                 )
 
+        elif mention_type == "keyword":
+            log.add(_("Keyword %(keyword)s mentioned by %(user)s in room %(room)s") % {
+                "keyword": mention_keyword,
+                "user": user,
+                "room": room
+            })
+
+            if config.sections["notifications"]["notification_popup_chatroom_mention"]:
+                core.notifications.show_chatroom_notification(
+                    room, text,
+                    title=_("Keyword %(keyword)s Mentioned by %(user)s in Room %(room)s") % {
+                        "keyword": mention_keyword,
+                        "user": user,
+                        "room": room
+                    },
+                    high_priority=True
+                )
+
+        elif mention_type == "username":
+            log.add(_("Message by watched user %(user)s in room %(room)s") % {
+                "user": mention_keyword,
+                "room": room
+            })
+
+            if config.sections["notifications"]["notification_popup_chatroom_mention"]:
+                core.notifications.show_chatroom_notification(
+                    room, text,
+                    title=_("Message by Watched User %(user)s in Room %(room)s") % {
+                        "user": mention_keyword,
+                        "room": room
+                    },
+                    high_priority=True
+                )
+
         if (self.chatrooms.get_current_page() == self.container
                 and self.window.current_page_id == self.window.chatrooms_page.id and self.window.is_active()):
             # Don't show notifications if the chat is open and the window is in use
             return
 
-        if is_mentioned:
+        if mention_type is not None:
             # We were mentioned, update tray icon and show urgency hint
             self.chatrooms.highlight_room(room, user)
             return
@@ -927,10 +962,14 @@ class ChatRoom:
         username = msg.user
         message = msg.message
         message_type = msg.message_type
+        mention_type = msg.mention_type
+        mention_keyword = msg.mention_keyword
 
         if message_type != "local":
-            self._show_notification(
-                roomname, username, message, is_mentioned=(message_type == "hilite"))
+            self._show_notification(roomname, username, message, mention_type, mention_keyword)
+
+        if mention_type is not None:
+            message_type = "hilite"
 
         self.chat_view.add_line(
             message, message_type=message_type, roomname=roomname if self.is_global else None, username=username,

@@ -1606,9 +1606,10 @@ class ChatsPage:
     def __init__(self, application):
 
         (
+            self.auto_replace_page,
             self.auto_replace_words_toggle,
             self.censor_list_container,
-            self.censor_list_page,
+            self.censor_page,
             self.censor_text_patterns_toggle,
             self.complete_buddy_names_toggle,
             self.complete_commands_toggle,
@@ -1620,16 +1621,18 @@ class ChatsPage:
             self.enable_spell_checker_toggle,
             self.enable_tab_completion_toggle,
             self.format_codes_label,
+            self.keyword_list_container,
+            self.mentions_page,
             self.min_chars_dropdown_spinner,
             self.recent_private_messages_spinner,
             self.recent_room_messages_spinner,
             self.reopen_private_chats_toggle,
             self.replacement_list_container,
-            self.replacement_list_page,
             self.room_invitations_toggle,
             self.stack,
             self.timestamp_private_chat_entry,
             self.timestamp_room_entry,
+            self.watch_keywords_toggle
         ) = self.widgets = ui.load(scope=self, path="settings/chats.ui")
 
         self.application = application
@@ -1640,6 +1643,27 @@ class ChatsPage:
         self.format_codes_label.set_markup(
             f"<a href='{format_codes_url}' title='{format_codes_url}'>{format_codes_label}</a>")
         self.format_codes_label.connect("activate-link", self.on_activate_link)
+
+        self.keywords = []
+        self.keyword_list_view = TreeView(
+            application.window, parent=self.keyword_list_container, multi_select=True,
+            activate_row_callback=self.on_edit_keyword,
+            delete_accelerator_callback=self.on_remove_keyword,
+            columns={
+                "keyword": {
+                    "column_type": "text",
+                    "title": _("Keyword"),
+                    "default_sort_type": "ascending"
+                }
+            }
+        )
+
+        self.censor_popup_menu = PopupMenu(application, self.keyword_list_view.widget)
+        self.censor_popup_menu.add_items(
+            ("#" + _("_Edit…"), self.on_edit_keyword),
+            ("", None),
+            ("#" + _("Remove"), self.on_remove_keyword)
+        )
 
         self.censored_patterns = []
         self.censor_list_view = TreeView(
@@ -1695,8 +1719,9 @@ class ChatsPage:
         )
 
         for widget, name, title in (
-            (self.replacement_list_page, "auto_replace", _("Auto-Replace")),
-            (self.censor_list_page, "censor", _("Censor"))
+            (self.mentions_page, "mentions", _("Mentions")),
+            (self.auto_replace_page, "auto_replace", _("Auto-Replace")),
+            (self.censor_page, "censor", _("Censor"))
         ):
             self.stack.add_titled(widget, name, title)
 
@@ -1722,6 +1747,8 @@ class ChatsPage:
                 "buddies": self.complete_buddy_names_toggle,
                 "roomusers": self.complete_room_usernames_toggle,
                 "commands": self.complete_commands_toggle,
+                "keywords": self.keyword_list_view,
+                "watch_keywords": self.watch_keywords_toggle,
                 "censored": self.censor_list_view,
                 "censorwords": self.censor_text_patterns_toggle,
                 "autoreplaced": self.replacement_list_view,
@@ -1737,6 +1764,7 @@ class ChatsPage:
         for menu in self.popup_menus:
             menu.destroy()
 
+        self.keyword_list_view.destroy()
         self.censor_list_view.destroy()
         self.replacement_list_view.destroy()
 
@@ -1744,8 +1772,10 @@ class ChatsPage:
 
     def set_settings(self):
 
+        self.keyword_list_view.clear()
         self.censor_list_view.clear()
         self.replacement_list_view.clear()
+        self.keywords.clear()
         self.censored_patterns.clear()
         self.replacements.clear()
 
@@ -1755,6 +1785,7 @@ class ChatsPage:
         self.enable_ctcp_toggle.set_active(not config.sections["server"]["ctcpmsgs"])
         self.format_codes_label.set_visible(not self.application.isolated_mode)
 
+        self.keywords = config.sections["words"]["keywords"][:]
         self.censored_patterns = config.sections["words"]["censored"][:]
         self.replacements = config.sections["words"]["autoreplaced"].copy()
 
@@ -1782,6 +1813,8 @@ class ChatsPage:
                 "buddies": self.complete_buddy_names_toggle.get_active(),
                 "roomusers": self.complete_room_usernames_toggle.get_active(),
                 "commands": self.complete_commands_toggle.get_active(),
+                "keywords": self.keywords[:],
+                "watch_keywords": self.watch_keywords_toggle.get_active(),
                 "censored": self.censored_patterns[:],
                 "censorwords": self.censor_text_patterns_toggle.get_active(),
                 "autoreplaced": self.replacements.copy(),
@@ -1801,6 +1834,74 @@ class ChatsPage:
 
     def on_default_timestamp_private_chat(self, *_args):
         self.timestamp_private_chat_entry.set_text(config.defaults["logging"]["private_timestamp"])
+
+    def on_add_keyword_response(self, dialog, _response_id, _data):
+
+        keywords = dialog.get_entry_value().split("\n")
+        is_first_item = True
+
+        for keyword in keywords:
+            if not keyword or keyword in self.keywords:
+                continue
+
+            self.keywords.append(keyword)
+            self.keyword_list_view.add_row([keyword], select_row=is_first_item)
+
+            is_first_item = False
+
+    def on_add_keyword(self, *_args):
+
+        EntryDialog(
+            parent=self.application.preferences,
+            title=_("Add Keyword"),
+            message=_("Enter a list of keywords or usernames you want to watch for. Chat messages "
+                      "containing the keywords will be highlighted."),
+            action_button_label=_("_Add"),
+            multiline=True,
+            callback=self.on_add_keyword_response
+        ).present()
+
+    def on_edit_keyword_response(self, dialog, _response_id, iterator):
+
+        keyword = dialog.get_entry_value()
+
+        if not keyword:
+            return
+
+        old_keyword = self.keyword_list_view.get_row_value(iterator, "keyword")
+        orig_iterator = self.keyword_list_view.iterators[old_keyword]
+
+        self.keyword_list_view.remove_row(orig_iterator)
+        self.keywords.remove(old_keyword)
+
+        self.keyword_list_view.add_row([keyword])
+        self.keywords.append(keyword)
+
+    def on_edit_keyword(self, *_args):
+
+        for iterator in self.keyword_list_view.get_selected_rows():
+            keyword = self.keyword_list_view.get_row_value(iterator, "keyword")
+
+            EntryDialog(
+                parent=self.application.preferences,
+                title=_("Edit Keyword"),
+                message=_("Enter a keyword or username you want to watch for. Chat messages "
+                          "containing the keyword will be highlighted."),
+                action_button_label=_("_Edit"),
+                callback=self.on_edit_keyword_response,
+                callback_data=iterator,
+                default=keyword
+            ).present()
+            return
+
+    def on_remove_keyword(self, *_args):
+
+        for iterator in reversed(list(self.keyword_list_view.get_selected_rows())):
+            keyword = self.keyword_list_view.get_row_value(iterator, "keyword")
+            orig_iterator = self.keyword_list_view.iterators[keyword]
+
+            self.keyword_list_view.remove_row(orig_iterator)
+            self.keywords.remove(keyword)
 
     def on_add_censored_response(self, dialog, _response_id, _data):
 
@@ -2004,6 +2105,7 @@ class UserInterfacePage:
             self.notification_chatroom_toggle,
             self.notification_download_file_toggle,
             self.notification_download_folder_toggle,
+            self.notification_private_mention_toggle,
             self.notification_private_message_toggle,
             self.notification_queued_upload_toggle,
             self.notification_sounds_toggle,
@@ -2257,6 +2359,7 @@ class UserInterfacePage:
                 "notification_popup_folder": self.notification_download_folder_toggle,
                 "notification_popup_queued_upload": self.notification_queued_upload_toggle,
                 "notification_popup_private_message": self.notification_private_message_toggle,
+                "notification_popup_private_mention": self.notification_private_mention_toggle,
                 "notification_popup_chatroom": self.notification_chatroom_toggle,
                 "notification_popup_chatroom_mention": self.notification_chatroom_mention_toggle,
                 "notification_popup_wish": self.notification_wish_toggle
@@ -2341,6 +2444,7 @@ class UserInterfacePage:
                 "notification_popup_folder": self.notification_download_folder_toggle.get_active(),
                 "notification_popup_queued_upload": self.notification_queued_upload_toggle.get_active(),
                 "notification_popup_private_message": self.notification_private_message_toggle.get_active(),
+                "notification_popup_private_mention": self.notification_private_mention_toggle.get_active(),
                 "notification_popup_chatroom": self.notification_chatroom_toggle.get_active(),
                 "notification_popup_chatroom_mention": self.notification_chatroom_mention_toggle.get_active(),
                 "notification_popup_wish": self.notification_wish_toggle.get_active()
