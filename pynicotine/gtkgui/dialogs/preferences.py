@@ -802,7 +802,7 @@ class SharesPage:
             self.last_parent_folder = os.path.dirname(folder_path)
 
             empty_icon_name = ""
-            self.shares_list_view.add_row([virtual_name, folder_path, empty_icon_name, _("Public")])
+            self.shares_list_view.add_row([virtual_name, empty_icon_name, folder_path, _("Public")])
 
     def on_add_shared_folder(self, *_args):
 
@@ -852,7 +852,7 @@ class SharesPage:
             validate_path=False
         )
 
-        self.shares_list_view.add_row([new_virtual_name, folder_path, readable, new_accessible_to_short])
+        self.shares_list_view.add_row([new_virtual_name, readable, folder_path, new_accessible_to_short])
 
     def on_edit_shared_folder(self, *_args):
 
