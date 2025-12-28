@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-26 19:40+0200\n"
-"PO-Revision-Date: 2025-11-24 14:51+0000\n"
+"PO-Revision-Date: 2025-12-27 19:00+0000\n"
 "Last-Translator: Matthaiks <kitynska@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.15-dev\n"
+"X-Generator: Weblate 5.15.1\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -437,7 +437,7 @@ msgstr "Wciąż wysyłasz pliki. Czy na pewno chcesz wyjść?"
 
 #: pynicotine/gtkgui/application.py:533
 msgid "Wait for uploads to finish"
-msgstr "Poczekaj na zakończenie przesyłania"
+msgstr "Poczekaj na zakończenie wysyłania"
 
 #: pynicotine/gtkgui/application.py:535
 msgid "Do you really want to exit?"
@@ -645,15 +645,15 @@ msgstr "Usuń"
 
 #: pynicotine/gtkgui/buddies.py:269 pynicotine/gtkgui/chatrooms.py:1209
 #: pynicotine/gtkgui/interests.py:601
-#, fuzzy, python-format
+#, python-format
 msgid "Files: %(num_files)s"
-msgstr "Pliki: %s"
+msgstr "Pliki: %(num_files)s"
 
 #: pynicotine/gtkgui/buddies.py:270 pynicotine/gtkgui/chatrooms.py:1210
 #: pynicotine/gtkgui/interests.py:602
 #, python-format
 msgid "Folders: %(num_folders)s"
-msgstr ""
+msgstr "Foldery: %(num_folders)s"
 
 #: pynicotine/gtkgui/buddies.py:368
 msgid "Never seen"
@@ -690,7 +690,7 @@ msgstr "Utworzyć nowy pokój?"
 #: pynicotine/gtkgui/chatrooms.py:219
 #, python-format
 msgid "Do you really want to create a new room \"%s\"?"
-msgstr "Jesteś pewien, że chcesz utworzyć nowy pokój \"%s\"?"
+msgstr "Czy na pewno chcesz utworzyć nowy pokój „%s”?"
 
 #: pynicotine/gtkgui/chatrooms.py:220
 msgid "Make room private"
@@ -788,9 +788,9 @@ msgid "%s has returned"
 msgstr "%s powrócił"
 
 #: pynicotine/gtkgui/chatrooms.py:1211
-#, fuzzy, python-format
+#, python-format
 msgid "Speed: %(speed)s"
-msgstr "Wysyłane: %(speed)s"
+msgstr "Prędkość: %(speed)s"
 
 #: pynicotine/gtkgui/chatrooms.py:1246
 #: pynicotine/gtkgui/dialogs/chathistory.py:274
@@ -894,9 +894,8 @@ msgid "Folder / File"
 msgstr "Folder / Plik"
 
 #: pynicotine/gtkgui/dialogs/download.py:100
-#, fuzzy
 msgid "Incomplete"
-msgstr "Niekompletne pobierania:"
+msgstr "Niekompletny"
 
 #: pynicotine/gtkgui/dialogs/download.py:107 pynicotine/gtkgui/search.py:566
 #: pynicotine/gtkgui/transfers.py:181 pynicotine/gtkgui/userbrowse.py:333
@@ -941,22 +940,22 @@ msgstr[1] "Pobierz %(num_files)s pliki  /  %(total_size)s"
 msgstr[2] "Pobierz %(num_files)s plików /  %(total_size)s"
 
 #: pynicotine/gtkgui/dialogs/download.py:400
-#, fuzzy, python-format
+#, python-format
 msgid "Unable to request folder contents from user %(user)s"
-msgstr "Nie udało się zażądać zawartości folderu."
+msgstr "Nie udało się zażądać zawartości folderu od użytkownika %(user)s"
 
 #: pynicotine/gtkgui/dialogs/download.py:403
-#, fuzzy, python-format
+#, python-format
 msgid "Unable to request folder contents from %(num)s user"
 msgid_plural "Unable to request folder contents from %(num)s users"
-msgstr[0] "Nie udało się zażądać zawartości folderu."
-msgstr[1] "Nie udało się zażądać zawartości folderu."
-msgstr[2] "Nie udało się zażądać zawartości folderu."
+msgstr[0] "Nie udało się zażądać zawartości folderu od %(num)s użytkownika"
+msgstr[1] "Nie udało się zażądać zawartości folderu od %(num)s użytkowników"
+msgstr[2] "Nie udało się zażądać zawartości folderu od %(num)s użytkowników"
 
 #: pynicotine/gtkgui/dialogs/download.py:519
 #, python-format
 msgid "Incomplete Folder Contents (%(user)s)"
-msgstr ""
+msgstr "Niekompletna zawartość folderu (%(user)s)"
 
 #: pynicotine/gtkgui/dialogs/download.py:576
 msgid "Rename Folder"
@@ -1310,9 +1309,8 @@ msgid "Folders"
 msgstr "Foldery"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:649
-#, fuzzy
 msgid "Readable"
-msgstr "Czytaj"
+msgstr "Czytelny"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:661
 msgid "Accessible To"
@@ -1396,24 +1394,20 @@ msgid "IP Address"
 msgstr "Adres IP"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1304
-#, fuzzy
 msgid "Ignore Users"
-msgstr "Ignorowani użytkownicy"
+msgstr "Ignoruj użytkowników"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1305
-#, fuzzy
 msgid "Enter a list of usernames you want to ignore:"
-msgstr "Wprowadź nazwę użytkownika, którego chcesz ignorować:"
+msgstr "Wprowadź listę nazw użytkowników do ignorowania:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1354
-#, fuzzy
 msgid "Ignore IP Addresses"
-msgstr "Ignorowane adresy IP"
+msgstr "Ignoruj adresy IP"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1355
-#, fuzzy
 msgid "Enter a list of IP addresses you want to ignore:"
-msgstr "Wprowadź adres IP, który chcesz ignorować:"
+msgstr "Wprowadź listę adresów IP do ignorowania:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1355
 #: pynicotine/gtkgui/dialogs/preferences.py:1582
@@ -1421,24 +1415,20 @@ msgid "* is a wildcard"
 msgstr "* to symbol wieloznaczny"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1531
-#, fuzzy
 msgid "Ban Users"
-msgstr "Zablokuj użytkownika"
+msgstr "Zablokuj użytkowników"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1532
-#, fuzzy
 msgid "Enter a list of usernames you want to ban:"
-msgstr "Wprowadź nazwę użytkownika, którego chcesz zablokować:"
+msgstr "Wprowadź listę nazw użytkowników do zablokowania:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1581
-#, fuzzy
 msgid "Ban IP Addresses"
-msgstr "Zablokuj adres IP"
+msgstr "Zablokuj adresy IP"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1582
-#, fuzzy
 msgid "Enter a list of IP addresses you want to ban:"
-msgstr "Wpisz adres IP, który chcesz zablokować:"
+msgstr "Wprowadź listę adresów IP do zablokowania:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1639
 #: pynicotine/gtkgui/dialogs/preferences.py:2509
@@ -1463,20 +1453,18 @@ msgid "Censor"
 msgstr "Cenzura"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1824
-#, fuzzy
 msgid "Censor Patterns"
-msgstr "Wzór cenzurowania"
+msgstr "Wzory cenzurowania"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1825
-#, fuzzy
 msgid ""
 "Enter a list of patterns you want to censor. Add spaces around the pattern "
 "if you don't want to match strings inside words (may fail at the beginning "
 "and end of lines)."
 msgstr ""
-"Wprowadź wzór, który chcesz ocenzurować. Dodaj spacje wokół słów, jeśli nie "
-"chcesz uwzględniać poszczególnych ciągów znaków wewnątrz wyrazów (może "
-"skutkować błędami w przypadku końca linii)."
+"Wprowadź listę wzorów do cenzurowania. Dodaj spacje wokół wzoru, jeśli nie "
+"chcesz, aby dopasowywane były ciągi znaków wewnątrz słów (może to nie "
+"zadziałać na początku i na końcu wiersza)."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1855
 msgid "Edit Censored Pattern"
@@ -1739,7 +1727,7 @@ msgstr "U_stawienia"
 #: pynicotine/gtkgui/dialogs/preferences.py:3213
 #: pynicotine/gtkgui/dialogs/preferences.py:3273
 msgid "_Uninstall…"
-msgstr ""
+msgstr "_Odinstaluj…"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3278
 msgid "No Plugin Selected"
@@ -1747,16 +1735,15 @@ msgstr "Nie wybrano wtyczki"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3299
 msgid "This is not a built-in plugin. Use at your own risk."
-msgstr ""
+msgstr "To nie jest wbudowana wtyczka. Używaj na własne ryzyko."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3360
-#, fuzzy
 msgid "Select a Zip File"
-msgstr "Wybierz plik"
+msgstr "Wybierz plik Zip"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3381
 msgid "Uninstall Plugin?"
-msgstr ""
+msgstr "Odinstalować wtyczkę?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3382
 #, python-format
@@ -1764,6 +1751,8 @@ msgid ""
 "Do you really want to uninstall plugin %s? This will remove any files the "
 "plugin has stored."
 msgstr ""
+"Czy na pewno chcesz odinstalować wtyczkę %s? Spowoduje to usunięcie "
+"wszystkich plików zapisanych przez wtyczkę."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3443
 #: pynicotine/gtkgui/dialogs/shortcuts.py:41
@@ -2080,7 +2069,7 @@ msgstr "Zresetować statystyki transferów?"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:110
 msgid "Do you really want to reset transfer statistics?"
-msgstr "Czy jesteś pewien, że chcesz zresetować statystyki transferów?"
+msgstr "Czy na pewno chcesz zresetować statystyki transferów?"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:41 pynicotine/gtkgui/search.py:349
 msgid "Wish"
@@ -2093,13 +2082,12 @@ msgid "_Search for Item"
 msgstr "_Szukaj tego obiektu"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:100
-#, fuzzy
 msgid "Add Wishes"
-msgstr "Dodaj ży_czenie"
+msgstr "Dodaj życzenia"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:101
 msgid "Enter a list of search terms to add to the wishlist:"
-msgstr ""
+msgstr "Wprowadź listę wyszukiwanych haseł, aby dodać je do listy życzeń:"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:126
 msgid "Edit Wish"
@@ -2116,7 +2104,7 @@ msgstr "Wyczyścić listę życzeń?"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:159
 msgid "Do you really want to clear your wishlist?"
-msgstr "Jesteś pewien, że chcesz wyczyścić listę życzeń?"
+msgstr "Czy na pewno chcesz wyczyścić listę życzeń?"
 
 #: pynicotine/gtkgui/downloads.py:32
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:157
@@ -2179,7 +2167,7 @@ msgstr "Wyczyść wszystkie pobrane"
 
 #: pynicotine/gtkgui/downloads.py:145
 msgid "Do you really want to clear all downloads?"
-msgstr "Jesteś pewien, że chcesz wyczyścić wszystkie pobrane?"
+msgstr "Czy na pewno chcesz wyczyścić wszystkie pobrane?"
 
 #: pynicotine/gtkgui/downloads.py:163
 #, python-format
@@ -2467,7 +2455,6 @@ msgid "Filename"
 msgstr "Nazwa pliku"
 
 #: pynicotine/gtkgui/search.py:559 pynicotine/gtkgui/widgets/theme.py:252
-#, fuzzy
 msgid "Downloading"
 msgstr "Pobieranie"
 
@@ -2735,7 +2722,7 @@ msgstr "Wyczyść kolejkę wysyłania"
 
 #: pynicotine/gtkgui/uploads.py:157
 msgid "Do you really want to clear all queued uploads?"
-msgstr "Jesteś pewien, że chcesz wyczyścić kolejkę wysyłania?"
+msgstr "Czy na pewno chcesz wyczyścić kolejkę wysyłania?"
 
 #: pynicotine/gtkgui/uploads.py:169
 msgid "Clear All Uploads"
@@ -2743,7 +2730,7 @@ msgstr "Wyczyść wszystkie wysłane"
 
 #: pynicotine/gtkgui/uploads.py:170
 msgid "Do you really want to clear all uploads?"
-msgstr "Jesteś pewien, że chcesz wyczyścić wszystkie wysłane?"
+msgstr "Czy na pewno chcesz wyczyścić wszystkie wysłane?"
 
 #: pynicotine/gtkgui/userbrowse.py:272
 msgid "_Save Shares List to Disk"
@@ -3011,7 +2998,7 @@ msgstr "Zamknąć wszystkie karty?"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:449
 msgid "Do you really want to close all tabs?"
-msgstr "Jesteś pewien, że chcesz zamknąć wszystkie karty?"
+msgstr "Czy na pewno chcesz zamknąć wszystkie karty?"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:461
 #, python-format
@@ -3136,9 +3123,8 @@ msgid "Text"
 msgstr "Tekst"
 
 #: pynicotine/gtkgui/widgets/theme.py:265
-#, fuzzy
 msgid "Unreadable Folder"
-msgstr "Nie można udostępnić folderu"
+msgstr "Nieczytelny folder"
 
 #: pynicotine/gtkgui/widgets/theme.py:372
 #, python-format
@@ -3176,7 +3162,7 @@ msgstr "_Kolejność sortowania"
 
 #: pynicotine/gtkgui/widgets/treeview.py:878
 msgid "Reset Sizing"
-msgstr ""
+msgstr "Resetuj rozmiar"
 
 #: pynicotine/gtkgui/widgets/treeview.py:879
 msgid "Reset Columns"
@@ -4550,24 +4536,24 @@ msgid "Loading plugin system"
 msgstr "Ładowanie obsługi wtyczek"
 
 #: pynicotine/pluginsystem.py:504
-#, fuzzy, python-format
+#, python-format
 msgid "Installed plugin %s"
-msgstr "Nieaktywna wtyczka %s"
+msgstr "Zainstalowano wtyczkę %s"
 
 #: pynicotine/pluginsystem.py:507
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to install plugin %(name)s: %(error)s"
-msgstr "Problem z załadowaniem pliku ui %(file)s: %(error)s"
+msgstr "Nie udało się zainstalować wtyczki %(name)s: %(error)s"
 
 #: pynicotine/pluginsystem.py:538
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to uninstall plugin %(name)s: %(error)s"
-msgstr "Problem z załadowaniem pliku ui %(file)s: %(error)s"
+msgstr "Nie udało się odinstalować wtyczki %(name)s: %(error)s"
 
 #: pynicotine/pluginsystem.py:544
-#, fuzzy, python-format
+#, python-format
 msgid "Uninstalled plugin %s"
-msgstr "Nieaktywna wtyczka %s"
+msgstr "Odinstalowano wtyczkę %s"
 
 #: pynicotine/pluginsystem.py:649
 #, python-format
@@ -5803,18 +5789,16 @@ msgstr "Można określić wiele krajów za pomocą przecinków lub spacji."
 #: pynicotine/gtkgui/ui/search.ui:368
 #: pynicotine/gtkgui/ui/settings/search.ui:416
 #: pynicotine/gtkgui/ui/userinfo.ui:265
-#, fuzzy
 msgid "Upload Slot Available"
-msgstr "Zasoby niedostępne"
+msgstr "Dostępny slot wysyłania"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:435
-#, fuzzy
 msgid ""
 "Only show results from users who have at least one upload slot available, "
 "i.e. files that are available immediately."
 msgstr ""
-"Pokaż tylko te wyniki od użytkowników, którzy mają przynajmniej jeden wolny "
-"slot. Ten filtr jest stosowany natychmiast."
+"Wyświetlaj tylko wyniki pochodzące od użytkowników, którzy mają przynajmniej "
+"jeden wolny slot wysyłania, tzn. pliki, które są dostępne natychmiast."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:445
 #: pynicotine/gtkgui/ui/search.ui:384
@@ -5823,14 +5807,13 @@ msgid "Public Files"
 msgstr "Pliki publiczne"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:456
-#, fuzzy
 msgid ""
 "Only show files that are shared publicly. Hides privately shared files that "
 "cannot be downloaded until the uploader gives explicit permission."
 msgstr ""
-"Pokaż tylko te pliki, które są udostępniane publicznie, i ukryj pliki "
-"udostępniane prywatnie, których nie można pobrać bez wyraźnego pozwolenia ze "
-"strony osoby przesyłającej."
+"Pokaż tylko pliki udostępniane publicznie. Ukrywa pliki udostępniane "
+"prywatnie, których nie można pobrać bez wyraźnego pozwolenia ze strony osoby "
+"wysyłającej."
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:34
 #: pynicotine/gtkgui/ui/settings/uploads.ui:111
@@ -6249,11 +6232,11 @@ msgstr "Włącz wtyczki"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:99
 msgid "Install…"
-msgstr ""
+msgstr "Zainstaluj…"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:115
 msgid "_Install…"
-msgstr ""
+msgstr "_Zainstaluj…"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:136
 msgid "Settings"
@@ -6278,8 +6261,8 @@ msgid ""
 "explicit permission. Ask them kindly."
 msgstr ""
 "Prywatnie udostępnione pliki, które zostały uwidocznione dla wszystkich, "
-"będą oznaczone przedrostkiem „[PRIVATE]” i nie będzie można ich pobrać, "
-"dopóki osoba przesyłająca nie wyrazi na to wyraźnej zgody. Należy ją o to "
+"będą oznaczone przedrostkiem „[PRIVATE]” i nie będzie można ich pobrać, "
+"dopóki osoba wysyłająca nie wyrazi na to wyraźnej zgody. Należy ją o to "
 "uprzejmie poprosić."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:81
@@ -6396,7 +6379,7 @@ msgstr "Zasoby zaufanych"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:70
 msgid "Automatically remove finished and cancelled uploads from list"
-msgstr "Automatyczne usuwanie zakończonych i anulowanych przesłań z listy"
+msgstr "Automatyczne usuwanie zakończonych i anulowanych wysyłanych z listy"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:93
 msgid "Double-click action for uploads:"
@@ -6425,9 +6408,9 @@ msgid ""
 "in queue.\n"
 "First In, First Out: Files will be uploaded in the order they were queued."
 msgstr ""
-"Algorytm karuzelowy: Pliki będą przesyłane w sposób cykliczny do "
-"użytkowników oczekujących w kolejce.\n"
-"Pierwsze weszło, pierwsze wyszło: Pliki zostaną przesłane w kolejności, w "
+"Algorytm karuzelowy: Pliki będą wysyłane w sposób cykliczny do użytkowników "
+"oczekujących w kolejce.\n"
+"Pierwsze weszło, pierwsze wyszło: Pliki zostaną wysłane w kolejności, w "
 "jakiej zostały umieszczone w kolejce."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:241
