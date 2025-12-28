@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-26 19:40+0200\n"
-"PO-Revision-Date: 2025-11-25 17:51+0000\n"
+"PO-Revision-Date: 2025-12-28 23:10+0000\n"
 "Last-Translator: slrslr <adm@prnet.info>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Weblate 5.15-dev\n"
+"X-Generator: Weblate 5.15.1\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -639,13 +639,13 @@ msgstr "Odebrat"
 #: pynicotine/gtkgui/interests.py:601
 #, python-format
 msgid "Files: %(num_files)s"
-msgstr ""
+msgstr "Soubory: %(num_files)s"
 
 #: pynicotine/gtkgui/buddies.py:270 pynicotine/gtkgui/chatrooms.py:1210
 #: pynicotine/gtkgui/interests.py:602
 #, python-format
 msgid "Folders: %(num_folders)s"
-msgstr ""
+msgstr "Složky: %(num_folders)s"
 
 #: pynicotine/gtkgui/buddies.py:368
 msgid "Never seen"
@@ -780,9 +780,9 @@ msgid "%s has returned"
 msgstr "%s se vrátil(a)"
 
 #: pynicotine/gtkgui/chatrooms.py:1211
-#, fuzzy, python-format
+#, python-format
 msgid "Speed: %(speed)s"
-msgstr "Nahrávání: %(speed)s"
+msgstr "Rychlost: %(speed)s"
 
 #: pynicotine/gtkgui/chatrooms.py:1246
 #: pynicotine/gtkgui/dialogs/chathistory.py:274
@@ -885,9 +885,8 @@ msgid "Folder / File"
 msgstr "Složka / soubor"
 
 #: pynicotine/gtkgui/dialogs/download.py:100
-#, fuzzy
 msgid "Incomplete"
-msgstr "Nedokončená stahování:"
+msgstr "Neúplné"
 
 #: pynicotine/gtkgui/dialogs/download.py:107 pynicotine/gtkgui/search.py:566
 #: pynicotine/gtkgui/transfers.py:181 pynicotine/gtkgui/userbrowse.py:333
@@ -932,22 +931,22 @@ msgstr[1] "Stáhnout %(num_files)s soubory  /  %(total_size)s"
 msgstr[2] "Stáhnout %(num_files)s souborů  /  %(total_size)s"
 
 #: pynicotine/gtkgui/dialogs/download.py:400
-#, fuzzy, python-format
+#, python-format
 msgid "Unable to request folder contents from user %(user)s"
-msgstr "Žádost o obsah složky selhala."
+msgstr "Nelze požádat uživatele %(user)s o obsah složky"
 
 #: pynicotine/gtkgui/dialogs/download.py:403
-#, fuzzy, python-format
+#, python-format
 msgid "Unable to request folder contents from %(num)s user"
 msgid_plural "Unable to request folder contents from %(num)s users"
-msgstr[0] "Žádost o obsah složky selhala."
-msgstr[1] "Žádost o obsah složky selhala."
-msgstr[2] "Žádost o obsah složky selhala."
+msgstr[0] "Nelze požádat o obsah složky od %(num)s uživatele"
+msgstr[1] "Nelze požádat o obsah složky od %(num)s uživatelů"
+msgstr[2] "Nelze požádat o obsah složky od %(num)s uživatelů"
 
 #: pynicotine/gtkgui/dialogs/download.py:519
 #, python-format
 msgid "Incomplete Folder Contents (%(user)s)"
-msgstr ""
+msgstr "Neúplný obsah složky (%(user)s)"
 
 #: pynicotine/gtkgui/dialogs/download.py:576
 msgid "Rename Folder"
@@ -1302,7 +1301,7 @@ msgstr "Složky"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:649
 msgid "Readable"
-msgstr ""
+msgstr "Čitelné"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:661
 msgid "Accessible To"
@@ -1385,24 +1384,20 @@ msgid "IP Address"
 msgstr "IP adresa"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1304
-#, fuzzy
 msgid "Ignore Users"
-msgstr "Ignorovaní uživatelé"
+msgstr "Ignorovat několik uživatelů"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1305
-#, fuzzy
 msgid "Enter a list of usernames you want to ignore:"
-msgstr "Zadejte jméno uživatele, kterého chcete ignorovat:"
+msgstr "Zadejte seznam uživatelských jmen, která chcete ignorovat:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1354
-#, fuzzy
 msgid "Ignore IP Addresses"
-msgstr "Ignorovat IP adresu"
+msgstr "Ignorovat IP adresy"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1355
-#, fuzzy
 msgid "Enter a list of IP addresses you want to ignore:"
-msgstr "Zadejte IP adresu, kterou chcete ignorovat:"
+msgstr "Zadejte seznam IP adres, které chcete ignorovat:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1355
 #: pynicotine/gtkgui/dialogs/preferences.py:1582
@@ -1410,24 +1405,20 @@ msgid "* is a wildcard"
 msgstr "* je zástupný znak"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1531
-#, fuzzy
 msgid "Ban Users"
-msgstr "Zakázat uživatele"
+msgstr "Zakázat několik uživatelů"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1532
-#, fuzzy
 msgid "Enter a list of usernames you want to ban:"
-msgstr "Zadejte jméno uživatele, kterého chcete zakázat:"
+msgstr "Zadejte seznam uživatelských jmen, které chcete zakázat:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1581
-#, fuzzy
 msgid "Ban IP Addresses"
-msgstr "Zakázat IP adresu"
+msgstr "Zakázat IP adresy"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1582
-#, fuzzy
 msgid "Enter a list of IP addresses you want to ban:"
-msgstr "Zadejte IP adresu, kterou chcete zakázat:"
+msgstr "Zadejte seznam IP adres, které chcete zakázat:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1639
 #: pynicotine/gtkgui/dialogs/preferences.py:2509
@@ -1452,20 +1443,18 @@ msgid "Censor"
 msgstr "Cenzurovat"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1824
-#, fuzzy
 msgid "Censor Patterns"
-msgstr "Vzor cenzury"
+msgstr "Vzory cenzury"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1825
-#, fuzzy
 msgid ""
 "Enter a list of patterns you want to censor. Add spaces around the pattern "
 "if you don't want to match strings inside words (may fail at the beginning "
 "and end of lines)."
 msgstr ""
-"Zadejte vzor, který chcete cenzurovat. Pokud nechcete aby odpovídal částem "
-"slov ale celým slovům, přidejte kolem vzoru mezery (může selhat na začátku a "
-"na konci řádků)."
+"Zadejte seznam vzorů, který chcete cenzurovat. Pokud chcete zabránit shodě "
+"částí slov, zadejte mezeru před a za frázi, ale i tak to může selhat a "
+"shodovat se pokud je shoda na začátku nebo na konci řádku)."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1855
 msgid "Edit Censored Pattern"
@@ -1728,7 +1717,7 @@ msgstr "_Nastavení"
 #: pynicotine/gtkgui/dialogs/preferences.py:3213
 #: pynicotine/gtkgui/dialogs/preferences.py:3273
 msgid "_Uninstall…"
-msgstr ""
+msgstr "_Odinstalovat…"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3278
 msgid "No Plugin Selected"
@@ -1736,16 +1725,15 @@ msgstr "Nebyl vybrán žádný plugin"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3299
 msgid "This is not a built-in plugin. Use at your own risk."
-msgstr ""
+msgstr "Toto není vestavěný plugin. Použijte na vlastní nebezpečí."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3360
-#, fuzzy
 msgid "Select a Zip File"
-msgstr "Vybrat soubor"
+msgstr "Vybrat Zip soubor"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3381
 msgid "Uninstall Plugin?"
-msgstr ""
+msgstr "Odinstalovat plugin?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3382
 #, python-format
@@ -1753,6 +1741,8 @@ msgid ""
 "Do you really want to uninstall plugin %s? This will remove any files the "
 "plugin has stored."
 msgstr ""
+"Opravdu chcete odinstalovat plugin %s? To odstraní všechny soubory, které "
+"plugin uložil."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3443
 #: pynicotine/gtkgui/dialogs/shortcuts.py:41
@@ -2082,13 +2072,13 @@ msgid "_Search for Item"
 msgstr "_Hledat položku"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:100
-#, fuzzy
 msgid "Add Wishes"
-msgstr "Přidat přá_ní"
+msgstr "Přidat přání"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:101
 msgid "Enter a list of search terms to add to the wishlist:"
 msgstr ""
+"Zadejte seznam vyhledávacích výrazů, které chcete přidat do Seznamu přání:"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:126
 msgid "Edit Wish"
@@ -2456,9 +2446,8 @@ msgid "Filename"
 msgstr "Jméno souboru"
 
 #: pynicotine/gtkgui/search.py:559 pynicotine/gtkgui/widgets/theme.py:252
-#, fuzzy
 msgid "Downloading"
-msgstr "Stahování"
+msgstr "Stahuje se"
 
 #: pynicotine/gtkgui/search.py:573 pynicotine/gtkgui/userbrowse.py:339
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:220
@@ -3124,9 +3113,8 @@ msgid "Text"
 msgstr "Text"
 
 #: pynicotine/gtkgui/widgets/theme.py:265
-#, fuzzy
 msgid "Unreadable Folder"
-msgstr "Přejmenovat složku"
+msgstr "Nečitelná složka"
 
 #: pynicotine/gtkgui/widgets/theme.py:372
 #, python-format
@@ -3164,7 +3152,7 @@ msgstr "_Pořadí řazení"
 
 #: pynicotine/gtkgui/widgets/treeview.py:878
 msgid "Reset Sizing"
-msgstr ""
+msgstr "Resetovat velikost"
 
 #: pynicotine/gtkgui/widgets/treeview.py:879
 msgid "Reset Columns"
@@ -4533,24 +4521,24 @@ msgid "Loading plugin system"
 msgstr "Načítání systému pluginů"
 
 #: pynicotine/pluginsystem.py:504
-#, fuzzy, python-format
+#, python-format
 msgid "Installed plugin %s"
-msgstr "Ukončen plugin %s"
+msgstr "Nainstalován plugin %s"
 
 #: pynicotine/pluginsystem.py:507
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to install plugin %(name)s: %(error)s"
-msgstr "Nelze uložit soubor %(path)s: %(error)s"
+msgstr "Selhala instalace pluginu %(name)s: %(error)s"
 
 #: pynicotine/pluginsystem.py:538
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to uninstall plugin %(name)s: %(error)s"
-msgstr "Nelze uložit soubor %(path)s: %(error)s"
+msgstr "Selhala odinstalace pluginu %(name)s: %(error)s"
 
 #: pynicotine/pluginsystem.py:544
-#, fuzzy, python-format
+#, python-format
 msgid "Uninstalled plugin %s"
-msgstr "Ukončen plugin %s"
+msgstr "Odinstalován plugin %s"
 
 #: pynicotine/pluginsystem.py:649
 #, python-format
@@ -5783,12 +5771,10 @@ msgstr "Více zemí lze zadat a oddělit čárkami nebo mezerami."
 #: pynicotine/gtkgui/ui/search.ui:368
 #: pynicotine/gtkgui/ui/settings/search.ui:416
 #: pynicotine/gtkgui/ui/userinfo.ui:265
-#, fuzzy
 msgid "Upload Slot Available"
-msgstr "Sdílení nejsou dostupná"
+msgstr "Nahrávací slot dostupný"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:435
-#, fuzzy
 msgid ""
 "Only show results from users who have at least one upload slot available, "
 "i.e. files that are available immediately."
@@ -5803,7 +5789,6 @@ msgid "Public Files"
 msgstr "Veřejné soubory"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:456
-#, fuzzy
 msgid ""
 "Only show files that are shared publicly. Hides privately shared files that "
 "cannot be downloaded until the uploader gives explicit permission."
@@ -6225,11 +6210,11 @@ msgstr "Povolit pluginy"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:99
 msgid "Install…"
-msgstr ""
+msgstr "Instalace…"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:115
 msgid "_Install…"
-msgstr ""
+msgstr "_Instalovat…"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:136
 msgid "Settings"
