@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-26 19:40+0200\n"
-"PO-Revision-Date: 2025-12-28 11:47+0000\n"
-"Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
+"PO-Revision-Date: 2025-12-28 23:10+0000\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -4534,12 +4534,12 @@ msgstr "Plugin instalado %s"
 #: pynicotine/pluginsystem.py:507
 #, python-format
 msgid "Failed to install plugin %(name)s: %(error)s"
-msgstr "Falha ao instalar o plugin %(name)s :  %(error)s"
+msgstr "Falha ao instalar o plugin %(name)s : %(error)s"
 
 #: pynicotine/pluginsystem.py:538
 #, python-format
 msgid "Failed to uninstall plugin %(name)s: %(error)s"
-msgstr "Falha ao desinstalar o plugin %(name)s :  %(error)s"
+msgstr "Falha ao desinstalar o plugin %(name)s : %(error)s"
 
 #: pynicotine/pluginsystem.py:544
 #, python-format
