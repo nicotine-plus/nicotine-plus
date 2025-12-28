@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-26 19:40+0200\n"
-"PO-Revision-Date: 2025-11-24 14:51+0000\n"
+"PO-Revision-Date: 2025-12-28 11:47+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15-dev\n"
+"X-Generator: Weblate 5.15.1\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -644,13 +644,13 @@ msgstr "Kaldır"
 #: pynicotine/gtkgui/interests.py:601
 #, python-format
 msgid "Files: %(num_files)s"
-msgstr ""
+msgstr "Dosyalar: %(num_files)s"
 
 #: pynicotine/gtkgui/buddies.py:270 pynicotine/gtkgui/chatrooms.py:1210
 #: pynicotine/gtkgui/interests.py:602
 #, python-format
 msgid "Folders: %(num_folders)s"
-msgstr ""
+msgstr "Klasörler: %(num_folders)s"
 
 #: pynicotine/gtkgui/buddies.py:368
 msgid "Never seen"
@@ -785,9 +785,9 @@ msgid "%s has returned"
 msgstr "%s geri döndü"
 
 #: pynicotine/gtkgui/chatrooms.py:1211
-#, fuzzy, python-format
+#, python-format
 msgid "Speed: %(speed)s"
-msgstr "Yüklenenler: %(speed)s"
+msgstr "Hız: %(speed)s"
 
 #: pynicotine/gtkgui/chatrooms.py:1246
 #: pynicotine/gtkgui/dialogs/chathistory.py:274
@@ -890,9 +890,8 @@ msgid "Folder / File"
 msgstr "Klasör / Dosya"
 
 #: pynicotine/gtkgui/dialogs/download.py:100
-#, fuzzy
 msgid "Incomplete"
-msgstr "Tamamlanmayan indirmeler:"
+msgstr "Tamamlanmadı"
 
 #: pynicotine/gtkgui/dialogs/download.py:107 pynicotine/gtkgui/search.py:566
 #: pynicotine/gtkgui/transfers.py:181 pynicotine/gtkgui/userbrowse.py:333
@@ -936,21 +935,21 @@ msgstr[0] "%(num_files)s dosyayı  /  %(total_size)s indir"
 msgstr[1] "%(num_files)s dosyayı  /  %(total_size)s indir"
 
 #: pynicotine/gtkgui/dialogs/download.py:400
-#, fuzzy, python-format
+#, python-format
 msgid "Unable to request folder contents from user %(user)s"
-msgstr "Klasör içeriği istenemedi."
+msgstr "%(user)s kullanıcısından klasör içeriği istenemiyor"
 
 #: pynicotine/gtkgui/dialogs/download.py:403
-#, fuzzy, python-format
+#, python-format
 msgid "Unable to request folder contents from %(num)s user"
 msgid_plural "Unable to request folder contents from %(num)s users"
-msgstr[0] "Klasör içeriği istenemedi."
-msgstr[1] "Klasör içeriği istenemedi."
+msgstr[0] "%(num)s kullanıcıdan klasör içeriği istenemiyor"
+msgstr[1] "%(num)s kullanıcıdan klasör içeriği istenemiyor"
 
 #: pynicotine/gtkgui/dialogs/download.py:519
 #, python-format
 msgid "Incomplete Folder Contents (%(user)s)"
-msgstr ""
+msgstr "Tamamlanmayan Klasör İçeriği (%(user)s)"
 
 #: pynicotine/gtkgui/dialogs/download.py:576
 msgid "Rename Folder"
@@ -1306,7 +1305,7 @@ msgstr "Klasörler"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:649
 msgid "Readable"
-msgstr ""
+msgstr "Okunabilir"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:661
 msgid "Accessible To"
@@ -1389,24 +1388,20 @@ msgid "IP Address"
 msgstr "IP Adresi"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1304
-#, fuzzy
 msgid "Ignore Users"
-msgstr "Yok Sayılan Kullanıcılar"
+msgstr "Kullanıcıları Yok Say"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1305
-#, fuzzy
 msgid "Enter a list of usernames you want to ignore:"
-msgstr "Yok saymak istediğiniz kullanıcının adını girin:"
+msgstr "Yok saymak istediğiniz kullanıcı adlarının listesini girin:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1354
-#, fuzzy
 msgid "Ignore IP Addresses"
-msgstr "Yok Sayılan IP Adresleri"
+msgstr "IP Adreslerini Yok Say"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1355
-#, fuzzy
 msgid "Enter a list of IP addresses you want to ignore:"
-msgstr "Yok saymak istediğiniz bir IP adresi girin:"
+msgstr "Yok saymak istediğiniz IP adreslerinin listesini girin:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1355
 #: pynicotine/gtkgui/dialogs/preferences.py:1582
@@ -1414,24 +1409,20 @@ msgid "* is a wildcard"
 msgstr "* bir joker karakterdir"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1531
-#, fuzzy
 msgid "Ban Users"
-msgstr "Kullanıcıyı Yasakla"
+msgstr "Kullanıcıları Yasakla"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1532
-#, fuzzy
 msgid "Enter a list of usernames you want to ban:"
-msgstr "Yasaklamak istediğiniz kullanıcının adını girin:"
+msgstr "Yasaklamak istediğiniz kullanıcı adlarının listesini girin:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1581
-#, fuzzy
 msgid "Ban IP Addresses"
-msgstr "IP Adresini Yasakla"
+msgstr "IP Adresinlerini Yasakla"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1582
-#, fuzzy
 msgid "Enter a list of IP addresses you want to ban:"
-msgstr "Engellemek istediğiniz bir IP adresi girin:"
+msgstr "Yasaklamak istediğiniz IP adreslerinin listesini girin:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1639
 #: pynicotine/gtkgui/dialogs/preferences.py:2509
@@ -1456,20 +1447,18 @@ msgid "Censor"
 msgstr "Sansürle"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1824
-#, fuzzy
 msgid "Censor Patterns"
-msgstr "Sansür Kalıbı"
+msgstr "Kalıpları Sansürle"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1825
-#, fuzzy
 msgid ""
 "Enter a list of patterns you want to censor. Add spaces around the pattern "
 "if you don't want to match strings inside words (may fail at the beginning "
 "and end of lines)."
 msgstr ""
-"Sansürlemek istediğiniz bir kalıp girin. Sözcüklerin içindeki dizgeleri "
-"eşleştirmek istemiyorsanız, kalıbın etrafına boşluk ekleyin (satırların "
-"başında ve sonunda başarısız olabilir)."
+"Sansürlemek istediğiniz kalıpların listesini girin. Sözcüklerin içindeki "
+"dizgeleri eşleştirmek istemiyorsanız, kalıbın etrafına boşluk ekleyin "
+"(satırların başında ve sonunda başarısız olabilir)."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1855
 msgid "Edit Censored Pattern"
@@ -1732,7 +1721,7 @@ msgstr "_Ayarlar"
 #: pynicotine/gtkgui/dialogs/preferences.py:3213
 #: pynicotine/gtkgui/dialogs/preferences.py:3273
 msgid "_Uninstall…"
-msgstr ""
+msgstr "_Kaldır…"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3278
 msgid "No Plugin Selected"
@@ -1741,15 +1730,15 @@ msgstr "Eklenti Seçilmedi"
 #: pynicotine/gtkgui/dialogs/preferences.py:3299
 msgid "This is not a built-in plugin. Use at your own risk."
 msgstr ""
+"Bu, yerleşik bir eklenti değildir. Kullanmanız durumunda risk size aittir."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3360
-#, fuzzy
 msgid "Select a Zip File"
-msgstr "Dosya Seç"
+msgstr "Zip Dosyası Seç"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3381
 msgid "Uninstall Plugin?"
-msgstr ""
+msgstr "Eklenti Kaldırılsın Mı?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3382
 #, python-format
@@ -1757,6 +1746,8 @@ msgid ""
 "Do you really want to uninstall plugin %s? This will remove any files the "
 "plugin has stored."
 msgstr ""
+"%s eklentisini gerçekten kaldırmak istiyor musunuz? Bu işlem, eklentinin "
+"depoladığı tüm dosyaları silecektir."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3443
 #: pynicotine/gtkgui/dialogs/shortcuts.py:41
@@ -2086,13 +2077,12 @@ msgid "_Search for Item"
 msgstr "Ögeyi _Ara"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:100
-#, fuzzy
 msgid "Add Wishes"
-msgstr "_Dilek Ekle"
+msgstr "Dilek Ekle"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:101
 msgid "Enter a list of search terms to add to the wishlist:"
-msgstr ""
+msgstr "Dilek listesine eklemek için arama terimlerinin listesini girin:"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:126
 msgid "Edit Wish"
@@ -2457,9 +2447,8 @@ msgid "Filename"
 msgstr "Dosya Adı"
 
 #: pynicotine/gtkgui/search.py:559 pynicotine/gtkgui/widgets/theme.py:252
-#, fuzzy
 msgid "Downloading"
-msgstr "İndirilenler"
+msgstr "İndiriliyor"
 
 #: pynicotine/gtkgui/search.py:573 pynicotine/gtkgui/userbrowse.py:339
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:220
@@ -3123,9 +3112,8 @@ msgid "Text"
 msgstr "Metin"
 
 #: pynicotine/gtkgui/widgets/theme.py:265
-#, fuzzy
 msgid "Unreadable Folder"
-msgstr "Klasör Paylaşılamıyor"
+msgstr "Klasör Okunamıyor"
 
 #: pynicotine/gtkgui/widgets/theme.py:372
 #, python-format
@@ -3163,7 +3151,7 @@ msgstr "_Sıralama Ölçütü"
 
 #: pynicotine/gtkgui/widgets/treeview.py:878
 msgid "Reset Sizing"
-msgstr ""
+msgstr "Boyutlandırmayı Sıfırla"
 
 #: pynicotine/gtkgui/widgets/treeview.py:879
 msgid "Reset Columns"
@@ -4534,24 +4522,24 @@ msgid "Loading plugin system"
 msgstr "Eklenti sistemi yükleniyor"
 
 #: pynicotine/pluginsystem.py:504
-#, fuzzy, python-format
+#, python-format
 msgid "Installed plugin %s"
-msgstr "%s eklentisi devre dışı bırakıldı"
+msgstr "%s eklentisi kuruldu"
 
 #: pynicotine/pluginsystem.py:507
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to install plugin %(name)s: %(error)s"
-msgstr "%(file)s kullanıcı arayüzü dosyası yüklenemedi: %(error)s"
+msgstr "%(name)s eklentisi kurulamadı: %(error)s"
 
 #: pynicotine/pluginsystem.py:538
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to uninstall plugin %(name)s: %(error)s"
-msgstr "%(file)s kullanıcı arayüzü dosyası yüklenemedi: %(error)s"
+msgstr "%(name)s eklentisi kaldırılamadı: %(error)s"
 
 #: pynicotine/pluginsystem.py:544
-#, fuzzy, python-format
+#, python-format
 msgid "Uninstalled plugin %s"
-msgstr "%s eklentisi devre dışı bırakıldı"
+msgstr "%s eklentisi kaldırıldı"
 
 #: pynicotine/pluginsystem.py:649
 #, python-format
@@ -5783,18 +5771,16 @@ msgstr "Birden fazla ülke virgül veya boşluk kullanılarak belirtilebilir."
 #: pynicotine/gtkgui/ui/search.ui:368
 #: pynicotine/gtkgui/ui/settings/search.ui:416
 #: pynicotine/gtkgui/ui/userinfo.ui:265
-#, fuzzy
 msgid "Upload Slot Available"
-msgstr "Paylaşımlar Kullanılabilir Değil"
+msgstr "Yükleme Yuvası Kullanılabilir"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:435
-#, fuzzy
 msgid ""
 "Only show results from users who have at least one upload slot available, "
 "i.e. files that are available immediately."
 msgstr ""
-"Yalnızca en az bir yükleme yuvası boş olan kullanıcılardan gelen sonuçları, "
-"yani hemen kullanılabilir olan dosyaları göster."
+"Yalnızca en az bir yükleme yuvası kulanılabilir olan kullanıcılardan gelen "
+"sonuçları, yani hemen kullanılabilir olan dosyaları göster."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:445
 #: pynicotine/gtkgui/ui/search.ui:384
@@ -5803,14 +5789,13 @@ msgid "Public Files"
 msgstr "Herkese Açık Dosyalar"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:456
-#, fuzzy
 msgid ""
 "Only show files that are shared publicly. Hides privately shared files that "
 "cannot be downloaded until the uploader gives explicit permission."
 msgstr ""
-"Yalnızca herkese açık olarak paylaşılan dosyaları göster ve yükleyen kişi "
+"Yalnızca herkese açık olarak paylaşılan dosyaları göster. Yükleyen kişi "
 "açıkça izin verene kadar indirilemeyen özel olarak paylaşılan dosyaları "
-"gizle."
+"gizler."
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:34
 #: pynicotine/gtkgui/ui/settings/uploads.ui:111
@@ -6231,11 +6216,11 @@ msgstr "Eklentileri etkinleştir"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:99
 msgid "Install…"
-msgstr ""
+msgstr "Kur…"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:115
 msgid "_Install…"
-msgstr ""
+msgstr "_Kur…"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:136
 msgid "Settings"
