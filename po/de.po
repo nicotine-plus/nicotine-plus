@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-26 19:40+0200\n"
-"PO-Revision-Date: 2025-12-28 23:10+0000\n"
+"PO-Revision-Date: 2025-12-30 00:00+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -920,7 +920,7 @@ msgstr "A_bwählen"
 #: pynicotine/gtkgui/dialogs/download.py:539
 #: pynicotine/gtkgui/ui/dialogs/download.ui:155
 msgid "_Rename…"
-msgstr "_Umbenennen"
+msgstr "_Umbenennen …"
 
 #: pynicotine/gtkgui/dialogs/download.py:139 pynicotine/gtkgui/search.py:621
 #: pynicotine/gtkgui/transfers.py:269 pynicotine/gtkgui/userbrowse.py:291
@@ -939,7 +939,7 @@ msgstr[1] "Dateien %(num_files)s herunterladen  /  %(total_size)s"
 #: pynicotine/gtkgui/dialogs/download.py:400
 #, python-format
 msgid "Unable to request folder contents from user %(user)s"
-msgstr "Ordnerinhalte von Benutzer %(user)s können nicht angefordert werden."
+msgstr "Ordnerinhalte von Benutzer %(user)s können nicht angefordert werden"
 
 #: pynicotine/gtkgui/dialogs/download.py:403
 #, python-format
@@ -1080,9 +1080,10 @@ msgid "File Properties"
 msgstr "Dateieigenschaften"
 
 #: pynicotine/gtkgui/dialogs/fileproperties.py:61
-#, fuzzy, python-format
+#, python-format
 msgid "File Properties  -  %(num)s of %(total)s  /  %(size)s  /  %(length)s"
-msgstr "Dateieigenschaften (%(num)i von %(total)i / %(size)s / %(length)s)"
+msgstr ""
+"Dateieigenschaften  -  %(num)s von %(total)s  /  %(size)s  /  %(length)s"
 
 #: pynicotine/gtkgui/dialogs/fileproperties.py:67
 #, fuzzy, python-format
