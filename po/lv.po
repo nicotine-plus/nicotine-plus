@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-26 19:40+0200\n"
-"PO-Revision-Date: 2025-11-14 08:51+0000\n"
+"PO-Revision-Date: 2025-12-30 00:00+0000\n"
 "Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= "
 "19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
-"X-Generator: Weblate 5.15-dev\n"
+"X-Generator: Weblate 5.15.1\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -115,14 +115,12 @@ msgid "use non-default configuration file"
 msgstr "izmantot ne noklusējuma konfigurācijas failu"
 
 #: pynicotine/__init__.py:48
-#, fuzzy
 msgid "folder"
-msgstr "Mape"
+msgstr "mape"
 
 #: pynicotine/__init__.py:49
-#, fuzzy
 msgid "alternative folder for user data and plugins"
-msgstr "alternatīva direktorija lietotāja datiem un spraudņiem"
+msgstr "alternatīva mape lietotāja datiem un spraudņiem"
 
 #: pynicotine/__init__.py:53
 msgid "start the program without showing window"
@@ -203,9 +201,9 @@ msgstr "Tērzēšanas ziņa no lietotāja '%(user)s' istabā '%(room)s': %(messa
 
 #: pynicotine/config.py:117 pynicotine/config.py:136
 #: pynicotine/userbrowse.py:169
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot create folder %(path)s: %(error)s"
-msgstr "Nevar piekļūt žurnāla failam %(path)s: %(error)s"
+msgstr "Nevar izveidot mapi %(path)s: %(error)s"
 
 #: pynicotine/config.py:823
 #, python-format
@@ -646,13 +644,13 @@ msgstr "Noņemt"
 #: pynicotine/gtkgui/interests.py:601
 #, python-format
 msgid "Files: %(num_files)s"
-msgstr ""
+msgstr "Faili: %(num_files)s"
 
 #: pynicotine/gtkgui/buddies.py:270 pynicotine/gtkgui/chatrooms.py:1210
 #: pynicotine/gtkgui/interests.py:602
 #, python-format
 msgid "Folders: %(num_folders)s"
-msgstr ""
+msgstr "Mapes: %(num_folders)s"
 
 #: pynicotine/gtkgui/buddies.py:368
 msgid "Never seen"
@@ -787,9 +785,9 @@ msgid "%s has returned"
 msgstr "%s ir atgriezies"
 
 #: pynicotine/gtkgui/chatrooms.py:1211
-#, fuzzy, python-format
+#, python-format
 msgid "Speed: %(speed)s"
-msgstr "Augšupielādes: %(speed)s"
+msgstr "Ātrums: %(speed)s"
 
 #: pynicotine/gtkgui/chatrooms.py:1246
 #: pynicotine/gtkgui/dialogs/chathistory.py:274
@@ -893,9 +891,8 @@ msgid "Folder / File"
 msgstr "Mape / Fails"
 
 #: pynicotine/gtkgui/dialogs/download.py:100
-#, fuzzy
 msgid "Incomplete"
-msgstr "Nepilnīgas lejupielādes:"
+msgstr "Nepabeigts"
 
 #: pynicotine/gtkgui/dialogs/download.py:107 pynicotine/gtkgui/search.py:566
 #: pynicotine/gtkgui/transfers.py:181 pynicotine/gtkgui/userbrowse.py:333
@@ -940,22 +937,22 @@ msgstr[1] "Lejupielādēt %(num_files)s failu  /  %(total_size)s"
 msgstr[2] "Lejupielādēt %(num_files)s failus  /  %(total_size)s"
 
 #: pynicotine/gtkgui/dialogs/download.py:400
-#, fuzzy, python-format
+#, python-format
 msgid "Unable to request folder contents from user %(user)s"
-msgstr "Neizdevās pieprasīt mapes saturu."
+msgstr "Neizdevās pieprasīt mapes saturu no lietotāja %(user)s"
 
 #: pynicotine/gtkgui/dialogs/download.py:403
-#, fuzzy, python-format
+#, python-format
 msgid "Unable to request folder contents from %(num)s user"
 msgid_plural "Unable to request folder contents from %(num)s users"
-msgstr[0] "Neizdevās pieprasīt mapes saturu."
-msgstr[1] "Neizdevās pieprasīt mapes saturu."
-msgstr[2] "Neizdevās pieprasīt mapes saturu."
+msgstr[0] "Neizdevās pieprasīt mapes saturu no %(num)s lietotājiem"
+msgstr[1] "Neizdevās pieprasīt mapes saturu no %(num)s lietotāja"
+msgstr[2] "Neizdevās pieprasīt mapes saturu no %(num)s lietotājiem"
 
 #: pynicotine/gtkgui/dialogs/download.py:519
 #, python-format
 msgid "Incomplete Folder Contents (%(user)s)"
-msgstr ""
+msgstr "Nepabeigts mapes saturs (%(user)s)"
 
 #: pynicotine/gtkgui/dialogs/download.py:576
 msgid "Rename Folder"
@@ -1106,9 +1103,8 @@ msgstr "_Pielietot"
 #: pynicotine/gtkgui/ui/settings/shares.ui:53
 #: pynicotine/gtkgui/ui/settings/shares.ui:224
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:97
-#, fuzzy
 msgid "_Add…"
-msgstr "Pievienot…"
+msgstr "_Pievienot…"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:228
 #: pynicotine/gtkgui/search.py:632
@@ -1294,12 +1290,11 @@ msgstr "Publisks"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:591
 msgid "Applies to files"
-msgstr ""
+msgstr "Attiecas uz failiem"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:592
-#, fuzzy
 msgid "Applies to folders"
-msgstr "Failu lejupielāde mapē"
+msgstr "Attiecas uz mapēm"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:592
 #: pynicotine/gtkgui/dialogs/preferences.py:768
@@ -1312,7 +1307,7 @@ msgstr "Mapes"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:649
 msgid "Readable"
-msgstr ""
+msgstr "Lasāms"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:661
 msgid "Accessible To"
@@ -1327,18 +1322,16 @@ msgid "Open in File _Manager"
 msgstr "Atvērt failu _pārvaldniekā"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:675
-#, fuzzy
 msgid ""
 "Syntax: Case-insensitive. Virtual paths containing separators \\ are "
 "supported. Wildcard * matches are supported."
 msgstr ""
-"<b>Sintakse</b>: Nav reģistrjutīga. Ja iespējots, var izmantot Python "
-"regulārās izteiksmes, pretējā gadījumā tiek atbalstītas tikai aizstājējzīmju "
-"* sakritības."
+"Sintakse: Nav reģistrjutīga. Tiek atbalstīti virtuālie ceļi, kas satur "
+"atdalītājus \\. Tiek atbalstītas aizstājējzīmju * atbilstības."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:691
 msgid "Applies To"
-msgstr ""
+msgstr "Attiecas uz"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:709
 #: pynicotine/gtkgui/ui/userinfo.ui:205
@@ -1346,29 +1339,24 @@ msgid "Shared Folders"
 msgstr "Koplietotās mapes"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:710
-#, fuzzy
 msgid "Filters"
-msgstr "Filtrs"
+msgstr "Filtri"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:929
-#, fuzzy
 msgid "Add Share Filter"
-msgstr "Pievienojiet mapi koplietošanai"
+msgstr "Pievienot koplietojuma filtru"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:930
-#, fuzzy
 msgid "Enter a new share filter:"
-msgstr "Ievadiet jaunu lejupielādes filtru:"
+msgstr "Ievadiet jaunu koplietojuma filtru:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:962
-#, fuzzy
 msgid "Edit Share Filter"
-msgstr "Rediģēt koplietoto mapi"
+msgstr "Rediģēt koplietojuma filtru"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:963
-#, fuzzy
 msgid "Modify the following share filter:"
-msgstr "Mainiet šo lejupielādes filtru:"
+msgstr "Pārveidojiet šo koplietojuma filtru:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1036
 #: pynicotine/gtkgui/ui/uploads.ui:45
@@ -1402,24 +1390,20 @@ msgid "IP Address"
 msgstr "IP adrese"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1304
-#, fuzzy
 msgid "Ignore Users"
-msgstr "Ignorētie lietotāji"
+msgstr "Ignorēt lietotājus"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1305
-#, fuzzy
 msgid "Enter a list of usernames you want to ignore:"
-msgstr "Ievadiet tā lietotāja vārdu, kuru vēlaties ignorēt:"
+msgstr "Ievadiet lietotāju vārdus, kurus vēlaties ignorēt:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1354
-#, fuzzy
 msgid "Ignore IP Addresses"
-msgstr "Ignorēt IP adresi"
+msgstr "Ignorēt IP adreses"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1355
-#, fuzzy
 msgid "Enter a list of IP addresses you want to ignore:"
-msgstr "Ievadiet IP adresi, kuru vēlaties ignorēt:"
+msgstr "Ievadiet IP adreses, kuras vēlaties ignorēt:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1355
 #: pynicotine/gtkgui/dialogs/preferences.py:1582
@@ -1427,24 +1411,20 @@ msgid "* is a wildcard"
 msgstr "* ir aizstājējzīme"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1531
-#, fuzzy
 msgid "Ban Users"
-msgstr "Aizliegt lietotāju"
+msgstr "Aizliegt lietotājus"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1532
-#, fuzzy
 msgid "Enter a list of usernames you want to ban:"
-msgstr "Ievadiet tā lietotāja vārdu, kuru vēlaties aizliegt:"
+msgstr "Ievadiet lietotāju vārdus, kurus vēlaties aizliegt:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1581
-#, fuzzy
 msgid "Ban IP Addresses"
-msgstr "Aizliegt IP adresi"
+msgstr "Aizliegt IP adreses"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1582
-#, fuzzy
 msgid "Enter a list of IP addresses you want to ban:"
-msgstr "Ievadiet IP adresi, kuru vēlaties bloķēt:"
+msgstr "Ievadiet IP adreses, kuras vēlaties aizliegt:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1639
 #: pynicotine/gtkgui/dialogs/preferences.py:2509
@@ -1469,18 +1449,16 @@ msgid "Censor"
 msgstr "Cenzēt"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1824
-#, fuzzy
 msgid "Censor Patterns"
-msgstr "Cenzūras šablons"
+msgstr "Cenzūras šabloni"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1825
-#, fuzzy
 msgid ""
 "Enter a list of patterns you want to censor. Add spaces around the pattern "
 "if you don't want to match strings inside words (may fail at the beginning "
 "and end of lines)."
 msgstr ""
-"Ievadiet šablonu, pēc kura vēlaties cenzēt. Pievienojiet atstarpi šablona "
+"Ievadiet šablonus, pēc kuriem vēlaties cenzēt. Pievienojiet atstarpi šablona "
 "sākumā un beigās, ja nevēlaties šablonam sakrist ar virknēm iekš vārdiem "
 "(var nenostrādāt rindu sākumā un beigās)."
 
@@ -1745,7 +1723,7 @@ msgstr "_Iestatījumi"
 #: pynicotine/gtkgui/dialogs/preferences.py:3213
 #: pynicotine/gtkgui/dialogs/preferences.py:3273
 msgid "_Uninstall…"
-msgstr ""
+msgstr "_Atinstalēt…"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3278
 msgid "No Plugin Selected"
@@ -1753,16 +1731,15 @@ msgstr "Nav atlasīts neviens spraudnis"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3299
 msgid "This is not a built-in plugin. Use at your own risk."
-msgstr ""
+msgstr "Šis nav iebūvēts spraudnis. Lietojiet to uz savu risku."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3360
-#, fuzzy
 msgid "Select a Zip File"
-msgstr "Atlasiet failu"
+msgstr "Atlasiet zip failu"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3381
 msgid "Uninstall Plugin?"
-msgstr ""
+msgstr "Vai atinstalēt spraudni?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3382
 #, python-format
@@ -1770,6 +1747,8 @@ msgid ""
 "Do you really want to uninstall plugin %s? This will remove any files the "
 "plugin has stored."
 msgstr ""
+"Vai tiešām vēlaties atinstalēt spraudni %s? Tiks izdzēsti visi faili, kurus "
+"spraudnis ir saglabājis."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3443
 #: pynicotine/gtkgui/dialogs/shortcuts.py:41
@@ -2099,13 +2078,12 @@ msgid "_Search for Item"
 msgstr "_Meklēt vienumu"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:100
-#, fuzzy
 msgid "Add Wishes"
-msgstr "Pievienot vēl_mi"
+msgstr "Pievienot vēlmes"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:101
 msgid "Enter a list of search terms to add to the wishlist:"
-msgstr ""
+msgstr "Ievadiet meklēšanas vienumus, ko pievienot vēlmju sarakstam:"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:126
 msgid "Edit Wish"
@@ -2470,9 +2448,8 @@ msgid "Filename"
 msgstr "Faila nosaukums"
 
 #: pynicotine/gtkgui/search.py:559 pynicotine/gtkgui/widgets/theme.py:252
-#, fuzzy
 msgid "Downloading"
-msgstr "Lejupielādes"
+msgstr "Lejupielādē"
 
 #: pynicotine/gtkgui/search.py:573 pynicotine/gtkgui/userbrowse.py:339
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:220
@@ -2798,44 +2775,36 @@ msgstr ""
 "klausīšanās portu vai pagaidu savienojamības problēmu."
 
 #: pynicotine/gtkgui/userbrowse.py:926
-#, fuzzy
 msgid "Upload _Folder…"
-msgstr "Augšupielādēt mapi…"
+msgstr "Augšupielādēt _mapi…"
 
 #: pynicotine/gtkgui/userbrowse.py:926
-#, fuzzy
 msgid "Upload _Folders…"
-msgstr "Augšupielādēt mapi…"
+msgstr "Augšupielādēt _mapes…"
 
 #: pynicotine/gtkgui/userbrowse.py:930
-#, fuzzy
 msgid "Upload Folder & _Subfolders…"
-msgstr "Augšupielādēt mapi un apakšmapes…"
+msgstr "Augšupielādēt mapi un apakšmape_s…"
 
 #: pynicotine/gtkgui/userbrowse.py:930
-#, fuzzy
 msgid "Upload Folders & _Subfolders…"
-msgstr "Augšupielādēt mapes un apakšmapes…"
+msgstr "Augšupielādēt mapes un apakšmape_s…"
 
 #: pynicotine/gtkgui/userbrowse.py:936
-#, fuzzy
 msgid "Download _Folder"
-msgstr "_Lejupielādēt mapi"
+msgstr "Lejupielādēt _mapi"
 
 #: pynicotine/gtkgui/userbrowse.py:936
-#, fuzzy
 msgid "Download _Folders"
-msgstr "Lejupielādēt _mapi(es)"
+msgstr "Lejupielādēt _mapes"
 
 #: pynicotine/gtkgui/userbrowse.py:940
-#, fuzzy
 msgid "Download Folder & _Subfolders…"
-msgstr "Lejupielādēt mapi un apakšmapes _uz…"
+msgstr "Lejupielādēt mapi un apakšmape_s…"
 
 #: pynicotine/gtkgui/userbrowse.py:940
-#, fuzzy
 msgid "Download Folders & _Subfolders…"
-msgstr "Lejupielādē_t mapes un apakšmapes uz…"
+msgstr "Lejupielādēt mapes un apakšmape_s…"
 
 #: pynicotine/gtkgui/userbrowse.py:1009
 msgid "Upload Folder (with Subfolders) To User"
@@ -3146,9 +3115,8 @@ msgid "Text"
 msgstr "Teksts"
 
 #: pynicotine/gtkgui/widgets/theme.py:265
-#, fuzzy
 msgid "Unreadable Folder"
-msgstr "Pārsaukt mapi"
+msgstr "Nelasāma mape"
 
 #: pynicotine/gtkgui/widgets/theme.py:372
 #, python-format
@@ -3186,7 +3154,7 @@ msgstr "Kārtošanas _secība"
 
 #: pynicotine/gtkgui/widgets/treeview.py:878
 msgid "Reset Sizing"
-msgstr ""
+msgstr "Atiestatīt izmērus"
 
 #: pynicotine/gtkgui/widgets/treeview.py:879
 msgid "Reset Columns"
@@ -4555,24 +4523,24 @@ msgid "Loading plugin system"
 msgstr "Ielādē spraudņu sistēmu"
 
 #: pynicotine/pluginsystem.py:504
-#, fuzzy, python-format
+#, python-format
 msgid "Installed plugin %s"
-msgstr "Izlādēts spraudnis %s"
+msgstr "Instalēts spraudnis %s"
 
 #: pynicotine/pluginsystem.py:507
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to install plugin %(name)s: %(error)s"
-msgstr "Neizdevās ielādēt lietotāja interfeisa failu %(file)s: %(error)s"
+msgstr "Neizdevās instalēt spraudni %(name)s: %(error)s"
 
 #: pynicotine/pluginsystem.py:538
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to uninstall plugin %(name)s: %(error)s"
-msgstr "Neizdevās ielādēt lietotāja interfeisa failu %(file)s: %(error)s"
+msgstr "Neizdevās atinstalēt spraudi %(name)s: %(error)s"
 
 #: pynicotine/pluginsystem.py:544
-#, fuzzy, python-format
+#, python-format
 msgid "Uninstalled plugin %s"
-msgstr "Izlādēts spraudnis %s"
+msgstr "Atinstalēts spraudnis %s"
 
 #: pynicotine/pluginsystem.py:649
 #, python-format
@@ -4872,9 +4840,9 @@ msgid "Saved list of shared files for user '%(user)s' to %(dir)s"
 msgstr "Saglabāts lietotāja '%(user)s' koplietoto failu saraksts: %(dir)s"
 
 #: pynicotine/userbrowse.py:319
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot save shares for user %(user)s: %(error)s"
-msgstr "Neizdevās ielādēt attēlu lietotājam %(user)s: %(error)s"
+msgstr "Nevar saglabāt lietotāja %(user)s koplietojumus: %(error)s"
 
 #: pynicotine/userbrowse.py:395
 #, python-format
@@ -5102,27 +5070,24 @@ msgid "Rename…"
 msgstr "Pārsaukt…"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:192
-#, fuzzy
 msgid "Select _All"
-msgstr "Atlasīt visu"
+msgstr "_Atlasīt visu"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:207
 msgid "Deselect All"
 msgstr "Atcelt visu atlasi"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:223
-#, fuzzy
 msgid "Deselect _All"
-msgstr "Atcelt visu atlasi"
+msgstr "_Atcelt visu atlasi"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:238
 msgid "Select Initial"
 msgstr "Atlasīt sākotnējo"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:254
-#, fuzzy
 msgid "Select _Initial"
-msgstr "Atlasīt sākotnējo"
+msgstr "Atlasīt _sākotnējo"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:102
 msgid "Welcome to Nicotine+"
@@ -5227,12 +5192,10 @@ msgid "Last Speed"
 msgstr "Pēdējais ātrums"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:15
-#, fuzzy
 msgid "E_xport…"
-msgstr "_Eksportēt…"
+msgstr "E_ksportēt…"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:21
-#, fuzzy
 msgid "A_pply"
 msgstr "_Pielietot"
 
@@ -5306,14 +5269,12 @@ msgid "Clear All…"
 msgstr "Notīrīt visu…"
 
 #: pynicotine/gtkgui/ui/downloads.ui:61
-#, fuzzy
 msgid "Re_sume"
-msgstr "Atsākt"
+msgstr "At_sākt"
 
 #: pynicotine/gtkgui/ui/downloads.ui:92
-#, fuzzy
 msgid "_Pause"
-msgstr "Pauzēt"
+msgstr "_Pauzēt"
 
 #: pynicotine/gtkgui/ui/downloads.ui:145
 msgid "Clear All Finished/Filtered Downloads"
@@ -5812,12 +5773,10 @@ msgstr "Vairākas valstis var norādīt ar komatiem vai atstarpēm."
 #: pynicotine/gtkgui/ui/search.ui:368
 #: pynicotine/gtkgui/ui/settings/search.ui:416
 #: pynicotine/gtkgui/ui/userinfo.ui:265
-#, fuzzy
 msgid "Upload Slot Available"
-msgstr "Koplietojumi nav pieejami"
+msgstr "Augšupielādes slots ir pieejams"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:435
-#, fuzzy
 msgid ""
 "Only show results from users who have at least one upload slot available, "
 "i.e. files that are available immediately."
@@ -5832,7 +5791,6 @@ msgid "Public Files"
 msgstr "Publiskie faili"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:456
-#, fuzzy
 msgid ""
 "Only show files that are shared publicly. Hides privately shared files that "
 "cannot be downloaded until the uploader gives explicit permission."
@@ -5977,9 +5935,8 @@ msgid "Enable censoring of text patterns"
 msgstr "Iespējot teksta modeļu cenzēšanu"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:366
-#, fuzzy
 msgid "Accept private room invitations"
-msgstr "_Pieņemt privāto istabu ielūgumus"
+msgstr "Pieņemt privāto istabu ielūgumus"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:390
 msgid "Restore previously open private chats on startup"
@@ -6108,9 +6065,8 @@ msgid "Load Defaults"
 msgstr "Ielādēt noklusējumus"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:609
-#, fuzzy
 msgid "_Verify Filters"
-msgstr "Pārbaudīt filtrus"
+msgstr "_Pārbaudīt filtrus"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:621
 msgid "Unverified"
@@ -6173,9 +6129,8 @@ msgstr ""
 "Lietotājvārdi ir reģistrjutīgi un unikāli."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:101
-#, fuzzy
 msgid "Change Pass_word"
-msgstr "Mainīt paroli"
+msgstr "Mainīt pa_roli"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:122
 msgid "Listening port (TCP):"
@@ -6194,9 +6149,8 @@ msgid "Port Check"
 msgstr "Porta pārbaude"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:211
-#, fuzzy
 msgid "_Port Check"
-msgstr "Porta pārbaude"
+msgstr "_Porta pārbaude"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:235
 msgid "Away Status"
@@ -6252,9 +6206,8 @@ msgid "Now Playing message format:"
 msgstr "'Tagad atskaņo' ziņas formāts:"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:167
-#, fuzzy
 msgid "_Test Configuration"
-msgstr "Testēt konfigurāciju"
+msgstr "_Testēt konfigurāciju"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:52
 msgid "Enable plugins"
@@ -6262,11 +6215,11 @@ msgstr "Iespējot spraudņus"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:99
 msgid "Install…"
-msgstr ""
+msgstr "Instalēt…"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:115
 msgid "_Install…"
-msgstr ""
+msgstr "_Instalēt…"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:136
 msgid "Settings"
@@ -6378,9 +6331,8 @@ msgid "File Manager"
 msgstr "Failu pārvaldnieks"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:157
-#, fuzzy
 msgid "File _Manager"
-msgstr "Failu pārvaldnieks"
+msgstr "Failu pār_valdnieks"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:208
 msgid "Add"
@@ -6396,7 +6348,7 @@ msgstr "Lietotnes startēšanas laikā"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:402
 msgid "Daily:"
-msgstr ""
+msgstr "Ikdien:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:428
 msgid "Visible to everyone:"
@@ -6734,19 +6686,16 @@ msgid "Icon theme folder:"
 msgstr "Ikonu motīvu mape:"
 
 #: pynicotine/gtkgui/ui/uploads.ui:61
-#, fuzzy
 msgid "Abor_t"
-msgstr "Pārtraukt"
+msgstr "Pārtrauk_t"
 
 #: pynicotine/gtkgui/ui/uploads.ui:76
-#, fuzzy
 msgid "Abort Users"
-msgstr "Pārtraukt lietotāju(s)"
+msgstr "Pārtraukt lietotājus"
 
 #: pynicotine/gtkgui/ui/uploads.ui:92
-#, fuzzy
 msgid "Abort _Users"
-msgstr "Pārtraukt lietotāju(s)"
+msgstr "Pārtraukt lietotāj_us"
 
 #: pynicotine/gtkgui/ui/uploads.ui:116
 msgid "Message All"
