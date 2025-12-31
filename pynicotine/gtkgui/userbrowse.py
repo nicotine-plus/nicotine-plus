@@ -976,6 +976,10 @@ class UserBrowse:
 
     def on_upload_folder_response(self, dialog, _response_id, recurse):
 
+        if not self.__dict__:
+            # Tab was closed
+            return
+
         user = dialog.get_entry_value()
 
         if not user:
@@ -1175,6 +1179,11 @@ class UserBrowse:
                 self.user, folder_path, file_data, download_folder_path=download_folder_path)
 
     def on_download_files_to_selected(self, selected_folder_paths, _data):
+
+        if not self.__dict__:
+            # Tab was closed
+            return
+
         self.window.application.previous_file_download_folder = next(iter(selected_folder_paths), None)
         self.on_download_files(download_folder_path=self.window.application.previous_file_download_folder)
 
@@ -1191,6 +1200,10 @@ class UserBrowse:
         ).present()
 
     def on_upload_files_response(self, dialog, _response_id, _data):
+
+        if not self.__dict__:
+            # Tab was closed
+            return
 
         user = dialog.get_entry_value()
         folder_path = self.active_folder_path
