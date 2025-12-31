@@ -1587,6 +1587,11 @@ class Search:
                 file_attributes=file_data.attributes)
 
     def on_download_files_to_selected(self, selected_folder_paths, _data):
+
+        if not self.__dict__:
+            # Tab was closed
+            return
+
         self.on_download_files(download_folder_path=next(iter(selected_folder_paths), None))
 
     def on_download_files_to(self, *_args):
@@ -1630,6 +1635,11 @@ class Search:
             requested_folders.add(user_folder_key)
 
     def on_download_folders_to_selected(self, selected_folder_paths, _data):
+
+        if not self.__dict__:
+            # Tab was closed
+            return
+
         self.on_download_folders(download_folder_path=next(iter(selected_folder_paths), None))
 
     def on_download_folders_to(self, *_args):

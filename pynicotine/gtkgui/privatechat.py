@@ -465,6 +465,10 @@ class PrivateChat:
 
     def on_delete_chat_log_response(self, *_args):
 
+        if not self.__dict__:
+            # Tab was closed
+            return
+
         log.delete_log(log.private_chat_folder_path, self.user)
         self.chats.history.remove_user(self.user)
         self.chat_view.clear()

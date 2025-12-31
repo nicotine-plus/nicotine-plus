@@ -1185,6 +1185,10 @@ class ChatRoom:
 
     def on_delete_room_log_response(self, *_args):
 
+        if not self.__dict__:
+            # Tab was closed
+            return
+
         log.delete_log(log.room_folder_path, self.room)
         self.activity_view.clear()
         self.chat_view.clear()

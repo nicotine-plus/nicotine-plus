@@ -762,6 +762,10 @@ class UserInfo:
 
     def on_give_privileges_response(self, dialog, _response_id, _data):
 
+        if not self.__dict__:
+            # Tab was closed
+            return
+
         days = dialog.get_entry_value()
 
         if not days:
@@ -807,6 +811,10 @@ class UserInfo:
         clipboard.copy_image(self.picture_data)
 
     def on_save_picture_response(self, selected, *_args):
+
+        if not self.__dict__:
+            # Tab was closed
+            return
 
         file_path = next(iter(selected), None)
 
