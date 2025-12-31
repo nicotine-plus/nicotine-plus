@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-26 19:40+0200\n"
-"PO-Revision-Date: 2025-12-17 17:59+0000\n"
+"PO-Revision-Date: 2025-12-30 23:54+0000\n"
 "Last-Translator: Hannah Nosurname <jmejanbarjuniper@gmail.com>\n"
 "Language-Team: Toki Pona <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tok/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.15.1-dev\n"
+"X-Generator: Weblate 5.15.1\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -337,7 +337,7 @@ msgstr "ilo ni li alasa ala e ilo %s. o pali e %s."
 
 #: pynicotine/gtkgui/__init__.py:132
 msgid "No graphical environment available, using headless (no GUI) mode"
-msgstr ""
+msgstr "selo li weka. ilo ni li kepeken ala selo"
 
 #: pynicotine/gtkgui/application.py:306
 #: pynicotine/gtkgui/widgets/trayicon.py:85
@@ -509,7 +509,7 @@ msgstr "o toki len tawa jan pona lon ale:"
 
 #: pynicotine/gtkgui/application.py:798
 msgid "Select a Saved Shares List File"
-msgstr ""
+msgstr "o toki tawa ni e sona pi kulupu pi sona kulupu"
 
 #: pynicotine/gtkgui/application.py:884
 msgid "Critical Error"
@@ -520,8 +520,8 @@ msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
 "the following message and include it in a bug report:"
 msgstr ""
-"ilo Nikotin+ li wile pini tan pakala suli. o lukin e toki ni pi pakala suli. "
-"o toki e toki lili tawa jan pali pi ilo Nicotine+:"
+"ilo Nikotin+ li wile pini tan pakala suli. o jasima e toki ni. o toki e "
+"jasima tawa jan pali pi ilo Nicotin+:"
 
 #: pynicotine/gtkgui/application.py:889
 msgid "_Quit Nicotine+"
@@ -529,7 +529,7 @@ msgstr "_o pini e Nikotin+"
 
 #: pynicotine/gtkgui/application.py:890
 msgid "_Copy & Report Bug"
-msgstr "_o toki e pakala"
+msgstr "_o toki e pakala tawa jan Nikotin+"
 
 #: pynicotine/gtkgui/buddies.py:56 pynicotine/gtkgui/chatrooms.py:568
 #: pynicotine/gtkgui/dialogs/chathistory.py:52
@@ -643,13 +643,13 @@ msgstr "o weka"
 #: pynicotine/gtkgui/interests.py:601
 #, python-format
 msgid "Files: %(num_files)s"
-msgstr ""
+msgstr "mute sona li nanpa %(num_files)s"
 
 #: pynicotine/gtkgui/buddies.py:270 pynicotine/gtkgui/chatrooms.py:1210
 #: pynicotine/gtkgui/interests.py:602
 #, python-format
 msgid "Folders: %(num_folders)s"
-msgstr ""
+msgstr "mute pi kulupu sona li nanpa %(num_folders)s"
 
 #: pynicotine/gtkgui/buddies.py:368
 msgid "Never seen"
@@ -694,7 +694,7 @@ msgstr "o len e tomo toki"
 
 #: pynicotine/gtkgui/chatrooms.py:535
 msgid "Search activity log…"
-msgstr "o alasa e sitelen pi nanpa pi toki jan…"
+msgstr "o alasa e sitelen pi mute pi toki jan…"
 
 #: pynicotine/gtkgui/chatrooms.py:542 pynicotine/gtkgui/privatechat.py:333
 msgid "Search chat log…"
@@ -714,27 +714,27 @@ msgstr "o alasa lili…"
 #: pynicotine/gtkgui/dialogs/shortcuts.py:69
 #: pynicotine/gtkgui/privatechat.py:363 pynicotine/gtkgui/privatechat.py:434
 msgid "Copy"
-msgstr ""
+msgstr "o lanpan e jasima ni"
 
 #: pynicotine/gtkgui/chatrooms.py:630 pynicotine/gtkgui/chatrooms.py:643
 #: pynicotine/gtkgui/privatechat.py:365
 msgid "Copy All"
-msgstr ""
+msgstr "o lanpan e jasima ale"
 
 #: pynicotine/gtkgui/chatrooms.py:632
 msgid "Clear Activity View"
-msgstr ""
+msgstr "o weka e sitelen pi mute pi toki jan"
 
 #: pynicotine/gtkgui/chatrooms.py:634 pynicotine/gtkgui/chatrooms.py:654
 #: pynicotine/gtkgui/chatrooms.py:659 pynicotine/gtkgui/dialogs/roomlist.py:77
 #: pynicotine/gtkgui/dialogs/roomlist.py:258
 msgid "_Leave Room"
-msgstr ""
+msgstr "o weka lon tomo toki ni"
 
 #: pynicotine/gtkgui/chatrooms.py:642 pynicotine/gtkgui/chatrooms.py:831
 #: pynicotine/gtkgui/privatechat.py:364 pynicotine/gtkgui/privatechat.py:435
 msgid "Copy Link"
-msgstr ""
+msgstr "o jasima e sitelen linluwi"
 
 #: pynicotine/gtkgui/chatrooms.py:648
 msgid "View Room Log"
@@ -751,7 +751,7 @@ msgstr ""
 #: pynicotine/gtkgui/chatrooms.py:853
 #, python-format
 msgid "%(user)s mentioned you in room %(room)s"
-msgstr ""
+msgstr "jan %(user)s li toki lon tomo %(room)s e sina"
 
 #: pynicotine/gtkgui/chatrooms.py:858 pynicotine/gtkgui/mainwindow.py:413
 #, python-format
@@ -761,43 +761,43 @@ msgstr ""
 #: pynicotine/gtkgui/chatrooms.py:876
 #, python-format
 msgid "Message by %(user)s in Room %(room)s"
-msgstr ""
+msgstr "toki tan jan %(user)s lon tomo %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:927 pynicotine/gtkgui/chatrooms.py:1180
 #, python-format
 msgid "%s joined the room"
-msgstr ""
+msgstr "jan %s li lon tomo toki ni"
 
 #: pynicotine/gtkgui/chatrooms.py:951
 #, python-format
 msgid "%s left the room"
-msgstr ""
+msgstr "jan %s li lon ala tomo toki ni"
 
 #: pynicotine/gtkgui/chatrooms.py:1124
 #, python-format
 msgid "%s has gone away"
-msgstr ""
+msgstr "jan %s li lon weka"
 
 #: pynicotine/gtkgui/chatrooms.py:1127
 #, python-format
 msgid "%s has returned"
-msgstr ""
+msgstr "jan %s li lon weka ala"
 
 #: pynicotine/gtkgui/chatrooms.py:1211
 #, python-format
 msgid "Speed: %(speed)s"
-msgstr ""
+msgstr "mute pi tawa sona li nanpa %(speed)s"
 
 #: pynicotine/gtkgui/chatrooms.py:1246
 #: pynicotine/gtkgui/dialogs/chathistory.py:274
 #: pynicotine/gtkgui/privatechat.py:470
 msgid "Delete Logged Messages?"
-msgstr ""
+msgstr "o weka ala weka e toki?"
 
 #: pynicotine/gtkgui/chatrooms.py:1247
 msgid ""
 "Do you really want to permanently delete all logged messages for this room?"
-msgstr ""
+msgstr "sina li wile ala wile e ni: tenpo ale la toki ale lon tomo ni li weka?"
 
 #: pynicotine/gtkgui/chatrooms.py:1259
 msgid "Hide Room Users"
