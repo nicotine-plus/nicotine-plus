@@ -1745,9 +1745,9 @@ class Search:
                 data.append((username, i_file_path, i_size, i_file_data.attributes, i_selected, None))
 
         if self.searches.download_dialog is None:
-            self.searches.download_dialog = Download(self.window.application, self.on_download_folders_result)
+            self.searches.download_dialog = Download(self.window.application)
 
-        self.searches.download_dialog.update_files(data)
+        self.searches.download_dialog.update_files(data, download_callback=self.on_download_folders_result)
         self.searches.download_dialog.present()
 
     def on_copy_file_path(self, *_args):
