@@ -1208,7 +1208,7 @@ class ChatRoom:
         return (
             _("Files: %(num_files)s") % {"num_files": humanize(num_files)} + "\n"
             + _("Folders: %(num_folders)s") % {"num_folders": humanize(num_folders)} + "\n"
-            + _("Speed: %(speed)s") % {"speed": human_speed(speed)}
+            + _("Speed: %(speed)s") % {"speed": human_speed(speed) if speed > 0 else _("Unknown")}
         )
 
     def on_find_activity_log(self, *_args):
