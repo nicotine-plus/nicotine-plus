@@ -865,8 +865,8 @@ class Downloads(Transfers):
 
         username = msg.user
 
-        if username not in core.users.watched:
-            # Skip redundant status updates from users in joined rooms
+        if not any(username in users for users in (self.active_users, self.queued_users, self.failed_users)):
+            # Ignore irrelevant user status updates
             return
 
         if msg.status == UserStatus.OFFLINE:

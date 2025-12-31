@@ -376,6 +376,7 @@ class Transfers:
                 return
 
         core.users.unwatch_user(username, context=self._name)
+        self._online_users.discard(username)
 
     # Limits #
 
