@@ -303,6 +303,7 @@ class ChatRooms:
         if operators:
             for operator in operators:
                 private_room.operators.add(operator)
+                core.pluginhandler.private_room_operator_added_notification(room, operator)
 
     def _join_room(self, msg):
         """Server code 14."""
@@ -400,6 +401,7 @@ class ChatRooms:
 
         if private_room is not None:
             private_room.operators.add(msg.user)
+            core.pluginhandler.private_room_operator_added_notification(msg.room, msg.user)
 
     def _private_room_remove_operator(self, msg):
         """Server code 144."""
@@ -408,6 +410,7 @@ class ChatRooms:
 
         if private_room is not None:
             private_room.operators.discard(msg.user)
+            core.pluginhandler.private_room_operator_removed_notification(msg.room, msg.user)
 
     def _private_room_operator_added(self, msg):
         """Server code 145."""
@@ -416,6 +419,7 @@ class ChatRooms:
 
         if private_room is not None:
             private_room.operators.add(core.users.login_username)
+            core.pluginhandler.private_room_operatorship_added_notification(msg.room)
 
     def _private_room_operator_removed(self, msg):
         """Server code 146."""
@@ -424,6 +428,7 @@ class ChatRooms:
 
         if private_room is not None:
             private_room.operators.discard(core.users.login_username)
+            core.pluginhandler.private_room_operatorship_removed_notification(msg.room)
 
     def _private_room_operators(self, msg):
         """Server code 148."""

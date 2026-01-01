@@ -177,6 +177,22 @@ class BasePlugin:
         # Override method in plugin
         pass
 
+    def private_room_operatorship_added_notification(self, room):
+        # Override method in plugin
+        pass
+
+    def private_room_operatorship_removed_notification(self, room):
+        # Override method in plugin
+        pass
+
+    def private_room_operator_added_notification(self, room, user):
+        # Override method in plugin
+        pass
+
+    def private_room_operator_removed_notification(self, room, user):
+        # Override method in plugin
+        pass
+
     def user_stats_notification(self, user, stats):
         # Override method in plugin
         pass
@@ -1183,6 +1199,18 @@ class PluginHandler:
 
     def private_room_member_removed_notification(self, room, user):
         self._trigger_event("private_room_member_removed_notification", (room, user,))
+
+    def private_room_operatorship_added_notification(self, room):
+        self._trigger_event("private_room_operatorship_added_notification", (room,))
+
+    def private_room_operatorship_removed_notification(self, room):
+        self._trigger_event("private_room_operatorship_removed_notification", (room,))
+
+    def private_room_operator_added_notification(self, room, user):
+        self._trigger_event("private_room_operator_added_notification", (room, user,))
+
+    def private_room_operator_removed_notification(self, room, user):
+        self._trigger_event("private_room_operator_removed_notification", (room, user,))
 
     def user_stats_notification(self, user, stats):
         self._trigger_event("user_stats_notification", (user, stats))
