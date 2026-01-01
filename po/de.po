@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-26 19:40+0200\n"
-"PO-Revision-Date: 2026-01-01 09:52+0000\n"
-"Last-Translator: Merlin Erdogmus <missgeburtensalato@web.de>\n"
+"PO-Revision-Date: 2026-01-01 13:32+0000\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -2817,18 +2817,16 @@ msgid "Upload Folder (with Subfolders) To User"
 msgstr "Ordner (mit Unterordnern) zum Benutzer hochladen"
 
 #: pynicotine/gtkgui/userbrowse.py:1010
-#, fuzzy
 msgid "Upload Folders (with Subfolders) To User"
-msgstr "Ordner (mit Unterordnern) zum Benutzer hochladen"
+msgstr "Ordner (mit Unterordnern) an Benutzer hochladen"
 
 #: pynicotine/gtkgui/userbrowse.py:1012
 msgid "Upload Folder To User"
 msgstr "Ordner zum Benutzer hochladen"
 
 #: pynicotine/gtkgui/userbrowse.py:1012
-#, fuzzy
 msgid "Upload Folders To User"
-msgstr "Ordner zum Benutzer hochladen"
+msgstr "Ordner für Benutzer hochladen"
 
 #: pynicotine/gtkgui/userbrowse.py:1017 pynicotine/gtkgui/userbrowse.py:1211
 msgid "Enter the name of the user you want to upload to:"
@@ -2843,39 +2841,32 @@ msgid "Up_load File…"
 msgstr "Datei(en) hoch_laden…"
 
 #: pynicotine/gtkgui/userbrowse.py:1139
-#, fuzzy
 msgid "Up_load Files…"
-msgstr "_Datei(en) hochladen …"
+msgstr "Dateien hochladen…"
 
 #: pynicotine/gtkgui/userbrowse.py:1145
-#, fuzzy
 msgid "_Download File"
-msgstr "Datei herunterladen"
+msgstr "Datei _herunterladen"
 
 #: pynicotine/gtkgui/userbrowse.py:1145
-#, fuzzy
 msgid "_Download Files"
-msgstr "Datei herunterladen"
+msgstr "Datei _herunterladen"
 
 #: pynicotine/gtkgui/userbrowse.py:1210
-#, fuzzy
 msgid "Upload File To User"
-msgstr "Datei(en) an Benutzer hochladen"
+msgstr "Datei für Benutzer hochladen"
 
 #: pynicotine/gtkgui/userinfo.py:367
-#, fuzzy
 msgid "_Copy Picture"
-msgstr "Bild kopieren"
+msgstr "Bild _kopieren"
 
 #: pynicotine/gtkgui/userinfo.py:368
-#, fuzzy
 msgid "_Save Picture"
-msgstr "Bild speichern"
+msgstr "Bild _speichern"
 
 #: pynicotine/gtkgui/userinfo.py:370
-#, fuzzy
 msgid "_Hide Picture"
-msgstr "Bild speichern"
+msgstr "Bild _ausblenden"
 
 #: pynicotine/gtkgui/userinfo.py:463
 #, python-format
@@ -2883,14 +2874,12 @@ msgid "Failed to load picture for user %(user)s: %(error)s"
 msgstr "Fehler beim Laden des Bildes für Benutzer %(user)s: %(error)s"
 
 #: pynicotine/gtkgui/userinfo.py:487
-#, fuzzy
 msgid "Hide Pi_cture"
-msgstr "Benutzerbild"
+msgstr "Bild verstecken"
 
 #: pynicotine/gtkgui/userinfo.py:499 pynicotine/gtkgui/ui/userinfo.ui:704
-#, fuzzy
 msgid "Show Pi_cture"
-msgstr "Bild kopieren"
+msgstr "Zeig B_ild"
 
 #: pynicotine/gtkgui/userinfo.py:585
 msgid "Remove _Buddy"
@@ -2927,19 +2916,18 @@ msgid "No"
 msgstr "Nein"
 
 #: pynicotine/gtkgui/userinfo.py:783
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "User %(user)s has Soulseek privileges. Their downloads are queued ahead of "
 "those of non-privileged users."
 msgstr ""
-"Du hast keine Soulseek Privilegien. Nur mit aktiven Privilegien, werden "
-"deine Downloads vor denen von nicht-privilegierten Nutzern in die "
-"Warteschlange eingereiht."
+"Der Nutzer %(user)s hat Soulseek-Privilegen. Die Downloads des Nutzers "
+"werden vor den Downloads von Nutzern ohne Privilegien in der Warteschlange "
+"vorgezogen."
 
 #: pynicotine/gtkgui/userinfo.py:786 pynicotine/gtkgui/ui/userinfo.ui:75
-#, fuzzy
 msgid "Privileged User"
-msgstr "Privilegiert"
+msgstr "Privilegierter Nutzer"
 
 #: pynicotine/gtkgui/userinfo.py:799
 msgid "Please enter number of days."
@@ -3012,11 +3000,11 @@ msgid "Do you really want to close all tabs?"
 msgstr "Willst du wirklich alle Tabs schließen?"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:461
-#, fuzzy, python-format
+#, python-format
 msgid "%s Unread Tab"
 msgid_plural "%s Unread Tabs"
-msgstr[0] "%i Ungelesene Tab(s)"
-msgstr[1] "%i Ungelesene Tab(s)"
+msgstr[0] "%s ungelesene Tab"
+msgstr[1] "%s ungelesene Tabs"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:464
 msgid "All Tabs"
@@ -3028,11 +3016,11 @@ msgid "Re_open Closed Tab"
 msgstr "Geschlossenen Tab _wieder öffnen"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:410
-#, fuzzy, python-format
+#, python-format
 msgid "%(num)s File Selected"
 msgid_plural "%(num)s Files Selected"
-msgstr[0] "%s Ausgewählte Datei(en)"
-msgstr[1] "%s Ausgewählte Datei(en)"
+msgstr[0] "%(num)s ausgewählte Datei"
+msgstr[1] "%(num)s ausgewählte Dateien"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:446
 #: pynicotine/gtkgui/ui/userinfo.ui:538
@@ -3132,9 +3120,8 @@ msgid "Text"
 msgstr "Text"
 
 #: pynicotine/gtkgui/widgets/theme.py:265
-#, fuzzy
 msgid "Unreadable Folder"
-msgstr "Freigabe des Ordners nicht möglich"
+msgstr "Nicht lesbarer Ordner"
 
 #: pynicotine/gtkgui/widgets/theme.py:372
 #, python-format
@@ -4276,16 +4263,14 @@ msgstr ""
 "Last.fm: Konnte den letzten Track von Audioscrobbler nicht abrufen: %(error)s"
 
 #: pynicotine/nowplaying.py:181
-#, fuzzy, python-format
+#, python-format
 msgid "Libre.fm: Could not connect to Libre.fm: %(error)s"
-msgstr ""
-"Last.fm: Konnte keine Verbindung zu Audioscrobbler herstellen: %(error)s"
+msgstr "Libre.fm: Konnte keine Verbindung zu Libre.fm herstellen: %(error)s"
 
 #: pynicotine/nowplaying.py:189
-#, fuzzy, python-format
+#, python-format
 msgid "Libre.fm: Could not get recent track: %(error)s"
-msgstr ""
-"Last.fm: Konnte den letzten Track von Audioscrobbler nicht abrufen: %(error)s"
+msgstr "Libre.fm: Konnte den zuletzt gespielten Titel nicht abrufen: %(error)s"
 
 #: pynicotine/nowplaying.py:223
 msgid "MPRIS: Could not find a suitable MPRIS player"
@@ -4462,20 +4447,19 @@ msgid "Search a user's shared files"
 msgstr "Suche in den freigegebenen Dateien eines Benutzers"
 
 #: pynicotine/plugins/core_commands/__init__.py:283
-#, fuzzy, python-format
+#, python-format
 msgid "Listing %(num)s available command:"
 msgid_plural "Listing %(num)s available commands:"
-msgstr[0] "Auflistung %(num)i verfügbarer Befehle:"
-msgstr[1] "Auflistung %(num)i verfügbarer Befehle:"
+msgstr[0] "Auflistung %(num)s des verfügbaren Befehls:"
+msgstr[1] "Auflistung %(num)s der verfügbaren Befehle:"
 
 #: pynicotine/plugins/core_commands/__init__.py:289
-#, fuzzy, python-format
+#, python-format
 msgid "Listing %(num)s available command matching \"%(query)s\":"
 msgid_plural "Listing %(num)s available commands matching \"%(query)s\":"
-msgstr[0] ""
-"Auflistung %(num)i verfügbarer Befehle, die mit \"%(query)s\" übereinstimmen:"
+msgstr[0] "Auflistung des verfügbaren Befehls, der '%(query)s' entspricht:"
 msgstr[1] ""
-"Auflistung %(num)i verfügbarer Befehle, die mit \"%(query)s\" übereinstimmen:"
+"Auflistung der %(num)s verfügbaren Befehle, die '%(query)s' entsprechen:"
 
 #: pynicotine/plugins/core_commands/__init__.py:305
 #, python-format
@@ -4555,26 +4539,24 @@ msgid "Loading plugin system"
 msgstr "Lade Plugin-System"
 
 #: pynicotine/pluginsystem.py:504
-#, fuzzy, python-format
+#, python-format
 msgid "Installed plugin %s"
-msgstr "Ungeladenes Plugin %s"
+msgstr "Plugin %s installiert."
 
 #: pynicotine/pluginsystem.py:507
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to install plugin %(name)s: %(error)s"
-msgstr ""
-"Die Benutzeroberflachdatei konnte nicht geladen werden %(file)s: %(error)s"
+msgstr "Fehler beim Installieren des Plugins %(name)s: %(error)s"
 
 #: pynicotine/pluginsystem.py:538
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to uninstall plugin %(name)s: %(error)s"
-msgstr ""
-"Die Benutzeroberflachdatei konnte nicht geladen werden %(file)s: %(error)s"
+msgstr "Fehler beim Deinstallieren des Plugins %(name)s: %(error)s"
 
 #: pynicotine/pluginsystem.py:544
-#, fuzzy, python-format
+#, python-format
 msgid "Uninstalled plugin %s"
-msgstr "Ungeladenes Plugin %s"
+msgstr "Plugin %s deinstalliert"
 
 #: pynicotine/pluginsystem.py:649
 #, python-format
@@ -4688,9 +4670,9 @@ msgid "Searching for wishlist item \"%s\""
 msgstr "Suche nach Wunschlisteneintrag \"%s\""
 
 #: pynicotine/search.py:412
-#, fuzzy, python-format
+#, python-format
 msgid "Wishlist wait period set to %(duration)s"
-msgstr "Wartezeit für die Wunschliste wurde auf %s Sekunden eingestellt"
+msgstr "Wartezeit für die Wunschliste auf %(duration)s gesetzt"
 
 #: pynicotine/search.py:428
 #, python-format
@@ -4705,14 +4687,12 @@ msgstr[1] ""
 "(phrases)s"
 
 #: pynicotine/search.py:747
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)s result"
 msgid_plural ""
 "User %(user)s is searching for \"%(query)s\", found %(num)s results"
-msgstr[0] ""
-"Benutzer %(user)s sucht nach \"%(query)s\", %(num)i Ergebnisse gefunden"
-msgstr[1] ""
-"Benutzer %(user)s sucht nach \"%(query)s\", %(num)i Ergebnisse gefunden"
+msgstr[0] "Benutzer %(user)s sucht nach \"%(query)s\", %(num)s Ergebnis gefunden"
+msgstr[1] "Benutzer %(user)s sucht nach \"%(query)s\", %(num)s Ergebnisse gefunden"
 
 #: pynicotine/shares.py:300
 msgid "Rebuilding shares…"
@@ -4723,11 +4703,11 @@ msgid "Rescanning shares…"
 msgstr "Freigaben werden erneut gescannt …"
 
 #: pynicotine/shares.py:325
-#, fuzzy, python-format
+#, python-format
 msgid "Rescan complete: %(num)s folder found"
 msgid_plural "Rescan complete: %(num)s folders found"
-msgstr[0] "Erneuter Scan abgeschlossen: %(num)s Ordner gefunden"
-msgstr[1] "Erneuter Scan abgeschlossen: %(num)s Ordner gefunden"
+msgstr[0] "Neu scannen abgeschlossen: %(num)s Ordner gefunden"
+msgstr[1] "Neu scannen abgeschlossen: %(num)s Ordner gefunden"
 
 #: pynicotine/shares.py:338
 #, python-format
@@ -4802,9 +4782,9 @@ msgstr ""
 "Kann keine Verbindung zum Server %(host)s:%(port)s: %(error)s herstellen"
 
 #: pynicotine/slskproto.py:1077
-#, fuzzy, python-format
+#, python-format
 msgid "Reconnecting to server in %(duration)s"
-msgstr "Wiederverbindung zum Server in %s Sekunden"
+msgstr "Verbindung zum Server wird in %(duration)s wiederhergestellt."
 
 #: pynicotine/slskproto.py:1153
 #, python-format
@@ -4837,19 +4817,19 @@ msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr "Upload abgebrochen, Benutzer %(user)s Datei %(file)s"
 
 #: pynicotine/uploads.py:648
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s is downloading file %(file)s (%(size)s) from folder %(folder)s"
 msgstr ""
-"Willst du wirklich %(num)i Dateien aus %(user)s Ordner %(folder)s "
-"herunterladen?"
+"%(user)s lädt gerade die Datei %(file)s (%(size)s) aus dem Ordner %(folder)s "
+"herunter."
 
 #: pynicotine/uploads.py:655
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "%(user)s is downloading %(files)s files (%(size)s) from folder %(folder)s"
 msgstr ""
-"Willst du wirklich %(num)i Dateien aus %(user)s Ordner %(folder)s "
-"herunterladen?"
+"%(user)s lädt %(files)s Dateien (%(size)s) aus dem Ordner %(folder)s "
+"herunter."
 
 #: pynicotine/uploads.py:662
 #, python-format
@@ -4887,9 +4867,9 @@ msgstr ""
 "%(dir)s"
 
 #: pynicotine/userbrowse.py:319
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot save shares for user %(user)s: %(error)s"
-msgstr "Fehler beim Laden des Bildes für Benutzer %(user)s: %(error)s"
+msgstr "Kann Shares für den Nutzer %(user)s nicht speichern: %(error)s"
 
 #: pynicotine/userbrowse.py:395
 #, python-format
@@ -4901,9 +4881,8 @@ msgstr ""
 "(shared_size)s über %(num_folders)s Ordner hinweg."
 
 #: pynicotine/userbrowse.py:401
-#, fuzzy
 msgid "User Statistics"
-msgstr "Transferstatistik"
+msgstr "Nutzerstatistiken"
 
 #: pynicotine/userinfo.py:145
 #, python-format
@@ -4941,9 +4920,8 @@ msgid "IP address of user %(user)s: %(ip)s, port %(port)i%(country)s"
 msgstr "IP-Adresse des Benutzers %(user)s: %(ip)s, Port %(port)i%(country)s"
 
 #: pynicotine/users.py:303
-#, fuzzy
 msgid "User IP Address"
-msgstr "IP-Adresse"
+msgstr "IP-Adresse des Nutzers"
 
 #: pynicotine/users.py:406
 msgid "Soulseek Announcement"
@@ -4959,9 +4937,9 @@ msgstr ""
 "Warteschlange eingereiht."
 
 #: pynicotine/users.py:426
-#, fuzzy, python-format
+#, python-format
 msgid "%(duration)s of Soulseek privileges left"
-msgstr "Soulseek-Privilegien erhalten…"
+msgstr "%(duration)s Soulseek-Privilegen übrig"
 
 #: pynicotine/users.py:438
 msgid "Your password has been changed"
@@ -4979,11 +4957,11 @@ msgstr[0] "%(num)s Sekunde"
 msgstr[1] "%(num)s Sekunden"
 
 #: pynicotine/utils.py:203
-#, fuzzy, python-format
+#, python-format
 msgid "%(num)s minute"
 msgid_plural "%(num)s minutes"
-msgstr[0] "%(number)2s Dateien "
-msgstr[1] "%(number)2s Dateien "
+msgstr[0] "%(num)s Minute"
+msgstr[1] "%(num)s Minuten"
 
 #: pynicotine/utils.py:208
 #, python-format
@@ -5061,28 +5039,24 @@ msgid "License"
 msgstr "Lizenz"
 
 #: pynicotine/gtkgui/ui/dialogs/chathistory.ui:24
-#, fuzzy
 msgid "Search users…"
-msgstr "Suchbegriff …"
+msgstr "Benutzer suchen…"
 
 #: pynicotine/gtkgui/ui/dialogs/chathistory.ui:71
-#, fuzzy
 msgid "No Chat History"
-msgstr "Chat-Verlauf"
+msgstr "Kein Chatverlauf"
 
 #: pynicotine/gtkgui/ui/dialogs/chathistory.ui:82
 msgid "Previous private chats with others will appear here"
 msgstr "Frühere private Chats mit anderen erscheinen hier"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:15
-#, fuzzy
 msgid "_Download"
-msgstr "Herunterladen"
+msgstr "_Herunterladen"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:24
-#, fuzzy
 msgid "Download (Paused)"
-msgstr "Herunterladen: %(speed)s"
+msgstr "Herunterladen (pausiert)"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:40
 #: pynicotine/gtkgui/ui/settings/chats.ui:747
@@ -5115,34 +5089,28 @@ msgid "Default"
 msgstr "Standard"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:76
-#, fuzzy
 msgid "Download location:"
-msgstr "Herunterladen / Hochladen in"
+msgstr "Standort des Downloads:"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:139
-#, fuzzy
 msgid "Rename…"
-msgstr "Umbenennen"
+msgstr "Umbenennen…"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:192
-#, fuzzy
 msgid "Select _All"
-msgstr "Alle auswählen"
+msgstr "_Alle auswählen"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:207
-#, fuzzy
 msgid "Deselect All"
-msgstr "Alle auswählen"
+msgstr "Alle abwählen"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:223
-#, fuzzy
 msgid "Deselect _All"
-msgstr "Alle auswählen"
+msgstr "_Alle abwählen"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:238
-#, fuzzy
 msgid "Select Initial"
-msgstr "Wähle eine Datei"
+msgstr "Erste auswählen"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:254
 #, fuzzy
