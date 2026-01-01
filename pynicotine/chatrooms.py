@@ -260,7 +260,6 @@ class ChatRooms:
             return
 
         core.send_message_to_server(PrivateRoomDisown(room))
-        del self.private_rooms[room]
 
     def request_private_room_cancel_membership(self, room):
 
@@ -268,7 +267,6 @@ class ChatRooms:
             return
 
         core.send_message_to_server(PrivateRoomCancelMembership(room))
-        del self.private_rooms[room]
 
     def request_private_room_toggle(self, enabled):
         core.send_message_to_server(PrivateRoomToggle(enabled))
@@ -314,6 +312,8 @@ class ChatRooms:
         if operators:
             for operator in operators:
                 private_room.operators.add(operator)
+
+        self.server_rooms.add(room)
 
     def _join_room(self, msg):
         """Server code 14."""
@@ -387,8 +387,13 @@ class ChatRooms:
     def _private_room_removed(self, msg):
         """Server code 140."""
 
-        if msg.room in self.private_rooms:
-            del self.private_rooms[msg.room]
+        room = msg.room
+
+        if room not in self.private_rooms:
+            return
+
+        self.server_rooms.discard(room)
+        del self.private_rooms[room]
 
     def _private_room_toggle(self, msg):
         """Server code 141."""
