@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-26 19:40+0200\n"
-"PO-Revision-Date: 2026-01-01 08:52+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2026-01-01 09:52+0000\n"
+"Last-Translator: Merlin Erdogmus <missgeburtensalato@web.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -2747,11 +2747,11 @@ msgstr "Dateiname"
 
 #: pynicotine/gtkgui/userbrowse.py:376 pynicotine/gtkgui/userbrowse.py:388
 msgid "Copy _File Path"
-msgstr "_Dateipfad kopieren"
+msgstr "Kopiere _Dateipfad"
 
 #: pynicotine/gtkgui/userbrowse.py:377 pynicotine/gtkgui/userbrowse.py:389
 msgid "Copy File _URL"
-msgstr "Datei_URL kopieren"
+msgstr "Kopiere Datei_URL"
 
 #: pynicotine/gtkgui/userbrowse.py:502
 #, python-format
@@ -2763,8 +2763,8 @@ msgid ""
 "User's list of shared files is empty. Either the user is not sharing "
 "anything, or they are sharing files privately."
 msgstr ""
-"Die Liste der vom Benutzer freigegebenen Dateien ist leer. Entweder hat der "
-"Benutzer nichts freigegeben oder er teilt die Dateien ausschließlich privat."
+"Die Liste der vom Benutzer freigegebenen Dateien ist leer. Entweder wurden "
+"keine Dateien freigegeben oder die Dateien sind nur privat sichtbar."
 
 #: pynicotine/gtkgui/userbrowse.py:605 pynicotine/gtkgui/userinfo.py:509
 msgid "Cannot request information from the user, since they are offline."
@@ -2776,21 +2776,21 @@ msgid ""
 "Cannot request information from the user, possibly due to a closed listening "
 "port or temporary connectivity issue."
 msgstr ""
-"Informationen vom Benutzer können nicht angefordert werden. Möglicherweise "
-"sind die zuhörenden Ports geschlossen, oder liegt es ein "
-"Konnektivitätsproblem vor."
+"Informationen vom Benutzer können derzeit nicht abgerufen werden. "
+"Möglicherweise ist ein Empfangsport geschlossen oder es besteht ein "
+"temporäres Verbindungsproblem."
 
 #: pynicotine/gtkgui/userbrowse.py:926
 msgid "Upload _Folder…"
-msgstr "Ordner hochladen …"
+msgstr "_Ordner hochladen…"
 
 #: pynicotine/gtkgui/userbrowse.py:926
 msgid "Upload _Folders…"
-msgstr "_Ordner hochladen …"
+msgstr "_Ordner hochladen…"
 
 #: pynicotine/gtkgui/userbrowse.py:930
 msgid "Upload Folder & _Subfolders…"
-msgstr "Ordner & _Unterordner hochladen …"
+msgstr "Ordner & _Unterordner hochladen…"
 
 #: pynicotine/gtkgui/userbrowse.py:930
 msgid "Upload Folders & _Subfolders…"
@@ -2839,9 +2839,8 @@ msgid "_Upload"
 msgstr "_Hochladen"
 
 #: pynicotine/gtkgui/userbrowse.py:1139
-#, fuzzy
 msgid "Up_load File…"
-msgstr "_Datei(en) hochladen …"
+msgstr "Datei(en) hoch_laden…"
 
 #: pynicotine/gtkgui/userbrowse.py:1139
 #, fuzzy
