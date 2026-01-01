@@ -100,6 +100,7 @@ class RoomList(Dialog):
         for event_name, callback in (
             ("join-room", self.join_room),
             ("private-room-added", self.private_room_added),
+            ("private-room-removed", self.private_room_removed),
             ("remove-room", self.remove_room),
             ("room-list", self.room_list),
             ("server-disconnect", self.clear),
@@ -185,6 +186,13 @@ class RoomList(Dialog):
 
     def private_room_added(self, msg):
         self.add_room(msg.room, is_private=True)
+
+    def private_room_removed(self, msg):
+
+        iterator = self.list_view.iterators.get(msg.room)
+
+        if iterator is not None:
+            self.list_view.remove_row(iterator)
 
     def join_room(self, msg):
 
