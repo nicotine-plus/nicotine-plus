@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-26 19:40+0200\n"
-"PO-Revision-Date: 2025-12-30 23:54+0000\n"
+"PO-Revision-Date: 2026-01-01 08:52+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -2516,7 +2516,7 @@ msgid "_Result Filters"
 msgstr "_Ergebnisfilter"
 
 #: pynicotine/gtkgui/search.py:1304
-#, fuzzy, python-format
+#, python-format
 msgid "%(num)s Active Filter"
 msgid_plural "%(num)s Active Filters"
 msgstr[0] "%(num)s Aktiver Filter"
@@ -2672,7 +2672,6 @@ msgid "_Open File"
 msgstr "Datei _öffnen"
 
 #: pynicotine/gtkgui/transfers.py:1079
-#, fuzzy
 msgid "_Open Files"
 msgstr "Datei _öffnen"
 
@@ -2682,9 +2681,8 @@ msgid "%(username)s (%(status)s)"
 msgstr "%(username)s (%(status)s)"
 
 #: pynicotine/gtkgui/transfers.py:1088
-#, fuzzy
 msgid "Buddy"
-msgstr "_Freund hinzufügen"
+msgstr "_Freund"
 
 #: pynicotine/gtkgui/uploads.py:35
 msgid "_Abort"
@@ -2707,14 +2705,13 @@ msgid "User Logged Off"
 msgstr "Benutzer abgemeldet"
 
 #: pynicotine/gtkgui/uploads.py:130
-#, fuzzy, python-format
+#, python-format
 msgid "Uploading: %(speed)s ( %(active_users)s )"
-msgstr "Hochladen (Geschwindigkeit / Aktive Nutzer)"
+msgstr "Hochladen: %(speed)s ( %(active_users)s )"
 
 #: pynicotine/gtkgui/uploads.py:147
-#, fuzzy
 msgid "Quitting…"
-msgstr "Beenden…"
+msgstr "Beenden …"
 
 #: pynicotine/gtkgui/uploads.py:156
 msgid "Clear Queued Uploads"
@@ -2741,9 +2738,8 @@ msgid "Copy _Folder Path"
 msgstr "_Ordnerpfad kopieren"
 
 #: pynicotine/gtkgui/userbrowse.py:294 pynicotine/gtkgui/userbrowse.py:306
-#, fuzzy
 msgid "Copy Folder _URL"
-msgstr "URL des Ordners kopieren"
+msgstr "Ordner-URL kopieren"
 
 #: pynicotine/gtkgui/userbrowse.py:325
 msgid "File Name"
@@ -2754,9 +2750,8 @@ msgid "Copy _File Path"
 msgstr "_Dateipfad kopieren"
 
 #: pynicotine/gtkgui/userbrowse.py:377 pynicotine/gtkgui/userbrowse.py:389
-#, fuzzy
 msgid "Copy File _URL"
-msgstr "URL des Ordners kopieren"
+msgstr "Datei_URL kopieren"
 
 #: pynicotine/gtkgui/userbrowse.py:502
 #, python-format
@@ -2772,60 +2767,50 @@ msgstr ""
 "Benutzer nichts freigegeben oder er teilt die Dateien ausschließlich privat."
 
 #: pynicotine/gtkgui/userbrowse.py:605 pynicotine/gtkgui/userinfo.py:509
-#, fuzzy
 msgid "Cannot request information from the user, since they are offline."
 msgstr ""
-"Kann die IP des Benutzers %s nicht abrufen, da dieser Benutzer offline ist"
+"Kann die IP des Benutzers nicht abrufen, da dieser Benutzer offline ist."
 
 #: pynicotine/gtkgui/userbrowse.py:607 pynicotine/gtkgui/userinfo.py:511
-#, fuzzy
 msgid ""
 "Cannot request information from the user, possibly due to a closed listening "
 "port or temporary connectivity issue."
 msgstr ""
-"Informationen vom Benutzer können nicht angefordert werden. Entweder sind "
-"auf beiden Seiten die zuhörenden Ports geschlossen, der Benutzer ist offline "
-"oder es liegt ein vorübergehendes Konnektivitätsproblem vor."
+"Informationen vom Benutzer können nicht angefordert werden. Möglicherweise "
+"sind die zuhörenden Ports geschlossen, oder liegt es ein "
+"Konnektivitätsproblem vor."
 
 #: pynicotine/gtkgui/userbrowse.py:926
-#, fuzzy
 msgid "Upload _Folder…"
 msgstr "Ordner hochladen …"
 
 #: pynicotine/gtkgui/userbrowse.py:926
-#, fuzzy
 msgid "Upload _Folders…"
-msgstr "Ordner hochladen …"
+msgstr "_Ordner hochladen …"
 
 #: pynicotine/gtkgui/userbrowse.py:930
-#, fuzzy
 msgid "Upload Folder & _Subfolders…"
-msgstr "Ordner & Unterordner hochladen …"
+msgstr "Ordner & _Unterordner hochladen …"
 
 #: pynicotine/gtkgui/userbrowse.py:930
-#, fuzzy
 msgid "Upload Folders & _Subfolders…"
-msgstr "Ordner & Unterordner hochladen …"
+msgstr "Ordner & _Unterordner hochladen …"
 
 #: pynicotine/gtkgui/userbrowse.py:936
-#, fuzzy
 msgid "Download _Folder"
-msgstr "_Download-Ordner"
+msgstr "Download _Ordner"
 
 #: pynicotine/gtkgui/userbrowse.py:936
-#, fuzzy
 msgid "Download _Folders"
 msgstr "_Ordner herunterladen"
 
 #: pynicotine/gtkgui/userbrowse.py:940
-#, fuzzy
 msgid "Download Folder & _Subfolders…"
-msgstr "Ordner & Unterordner herunterladen _in …"
+msgstr "Ordner & _Unterordner herunterladen …"
 
 #: pynicotine/gtkgui/userbrowse.py:940
-#, fuzzy
 msgid "Download Folders & _Subfolders…"
-msgstr "Ordner & Unterordner herunterladen _in …"
+msgstr "Ordner & _Unterordner herunterladen …"
 
 #: pynicotine/gtkgui/userbrowse.py:1009
 msgid "Upload Folder (with Subfolders) To User"
