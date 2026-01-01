@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on December 20, 2025](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on January 1, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -315,21 +315,21 @@ server, but it handles the protocol well enough (and can be modified).
 | `127`  | [Branch Root](#server-code-127)                                |
 | `129`  | [Child Depth](#server-code-129) `DEPRECATED`                   |
 | `130`  | [Reset Distributed](#server-code-130)                          |
-| `133`  | [Private Room Users](#server-code-133)                         |
-| `134`  | [Private Room Add User](#server-code-134)                      |
-| `135`  | [Private Room Remove User](#server-code-135)                   |
-| `136`  | [Private Room Cancel Membership](#server-code-136)             |
-| `137`  | [Private Room Disown](#server-code-137)                        |
-| `138`  | [Private Room Unknown](#server-code-138) `OBSOLETE`            |
-| `139`  | [Private Room Added](#server-code-139)                         |
-| `140`  | [Private Room Removed](#server-code-140)                       |
-| `141`  | [Private Room Toggle](#server-code-141)                        |
+| `133`  | [Room Members](#server-code-133)                               |
+| `134`  | [Add Room Member](#server-code-134)                            |
+| `135`  | [Remove Room Member](#server-code-135)                         |
+| `136`  | [Cancel Room Membership](#server-code-136)                     |
+| `137`  | [Cancel Room Ownership](#server-code-137)                      |
+| `138`  | [Room Something](#server-code-138) `OBSOLETE`                  |
+| `139`  | [Room Membership Granted](#server-code-139)                    |
+| `140`  | [Room Membership Revoked](#server-code-140)                    |
+| `141`  | [Enable Room Invitations](#server-code-141)                    |
 | `142`  | [New Password](#server-code-142)                               |
-| `143`  | [Private Room Add Operator](#server-code-143)                  |
-| `144`  | [Private Room Remove Operator](#server-code-144)               |
-| `145`  | [Private Room Operator Added](#server-code-145)                |
-| `146`  | [Private Room Operator Removed](#server-code-146)              |
-| `148`  | [Private Room Operators](#server-code-148)                     |
+| `143`  | [Add Room Operator](#server-code-143)                          |
+| `144`  | [Remove Room Operator](#server-code-144)                       |
+| `145`  | [Room Operatorship Granted](#server-code-145)                  |
+| `146`  | [Room Operatorship Revoked](#server-code-146)                  |
+| `148`  | [Room Operators](#server-code-148)                             |
 | `149`  | [Message Users](#server-code-149)                              |
 | `150`  | [Join Global Room](#server-code-150)                           |
 | `151`  | [Leave Global Room](#server-code-151)                          |
@@ -1926,7 +1926,7 @@ The server asks us to reset our distributed parent and children.
 
 ## Server Code 133
 
-### PrivateRoomUsers
+### RoomMembers
 
 The server sends us a list of members (excluding the owner) in a private
 room we are in.
@@ -1937,14 +1937,14 @@ room we are in.
     1.  *No Message*
   - Receive
     1.  **string** *room*
-    2.  **uint32** *number of users*
-    3.  Iterate for *number of users*
-        1.  **string** *users*
+    2.  **uint32** *number of members*
+    3.  Iterate for *number of members*
+        1.  **string** *members*
 
 
 ## Server Code 134
 
-### PrivateRoomAddUser
+### AddRoomMember
 
 We send this to the server to add a member to a private room, if we are
 the owner or an operator.
@@ -1963,7 +1963,7 @@ The server tells us a member has been added to a private room we are in.
 
 ## Server Code 135
 
-### PrivateRoomRemoveUser
+### RemoveRoomMember
 
 We send this to the server to remove a member from a private room, if we
 are the owner or an operator. Owners can remove operators and regular
@@ -1983,7 +1983,7 @@ The server tells us a member has been removed from a private room we are in.
 
 ## Server Code 136
 
-### PrivateRoomCancelMembership
+### CancelRoomMembership
 
 We send this to the server to cancel our own membership of a private room.
 
@@ -1997,7 +1997,7 @@ We send this to the server to cancel our own membership of a private room.
 
 ## Server Code 137
 
-### PrivateRoomDisown
+### CancelRoomOwnership
 
 We send this to the server to stop owning a private room.
 
@@ -2011,7 +2011,7 @@ We send this to the server to stop owning a private room.
 
 ## Server Code 138
 
-### PrivateRoomSomething
+### RoomSomething
 
 **OBSOLETE, no longer used**
 
@@ -2027,7 +2027,7 @@ Unknown purpose
 
 ## Server Code 139
 
-### PrivateRoomAdded
+### RoomMembershipGranted
 
 The server tells us we were added to a private room.
 
@@ -2041,7 +2041,7 @@ The server tells us we were added to a private room.
 
 ## Server Code 140
 
-### PrivateRoomRemoved
+### RoomMembershipRevoked
 
 The server tells us we were removed from a private room.
 
@@ -2055,7 +2055,7 @@ The server tells us we were removed from a private room.
 
 ## Server Code 141
 
-### PrivateRoomToggle
+### EnableRoomInvitations
 
 We send this when we want to enable or disable invitations to private rooms.
 
@@ -2084,7 +2084,7 @@ password changes.
 
 ## Server Code 143
 
-### PrivateRoomAddOperator
+### AddRoomOperator
 
 We send this to the server to add private room operator abilities to
 a member.
@@ -2104,7 +2104,7 @@ room we are in.
 
 ## Server Code 144
 
-### PrivateRoomRemoveOperator
+### RemoveRoomOperator
 
 We send this to the server to remove private room operator abilities
 from a member.
@@ -2124,7 +2124,7 @@ private room we are in.
 
 ## Server Code 145
 
-### PrivateRoomOperatorAdded
+### RoomOperatorshipGranted
 
 The server tells us we were given operator abilities in a private room
 we are in.
@@ -2139,7 +2139,7 @@ we are in.
 
 ## Server Code 146
 
-### PrivateRoomOperatorRemoved
+### RoomOperatorshipRevoked
 
 The server tells us our operator abilities were removed in a private room
 we are in.
@@ -2154,7 +2154,7 @@ we are in.
 
 ## Server Code 148
 
-### PrivateRoomOperators
+### RoomOperators
 
 The server sends us a list of operators in a private room we are in.
 

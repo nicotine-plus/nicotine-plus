@@ -82,6 +82,8 @@ class ChatRooms(IconNotebook):
             window.chatrooms_paned.child_set_property(window.chatrooms_container, "resize", True)
 
         for event_name, callback in (
+            ("add-room-member", self.add_room_member),
+            ("add-room-operator", self.add_room_operator),
             ("clear-room-messages", self.clear_room_messages),
             ("echo-room-message", self.echo_room_message),
             ("global-room-message", self.global_room_message),
@@ -90,24 +92,22 @@ class ChatRooms(IconNotebook):
             ("join-room", self.join_room),
             ("leave-room", self.leave_room),
             ("peer-address", self.peer_address),
-            ("private-room-add-operator", self.private_room_add_operator),
-            ("private-room-add-user", self.private_room_add_user),
-            ("private-room-added", self.private_room_added),
-            ("private-room-operator-added", self.private_room_operator_added),
-            ("private-room-operator-removed", self.private_room_operator_removed),
-            ("private-room-remove-operator", self.private_room_remove_operator),
-            ("private-room-remove-user", self.private_room_remove_user),
-            ("private-room-removed", self.private_room_removed),
             ("quit", self.quit),
             ("remove-room", self.remove_room),
+            ("remove-room-member", self.remove_room_member),
+            ("remove-room-operator", self.remove_room_operator),
+            ("room-membership-granted", self.room_membership_granted),
+            ("room-membership-revoked", self.room_membership_revoked),
+            ("room-operatorship-granted", self.room_operatorship_granted),
+            ("room-operatorship-revoked", self.room_operatorship_revoked),
+            ("room-ticker-added", self.room_ticker_added),
+            ("room-ticker-removed", self.room_ticker_removed),
             ("room-completions", self.update_completions),
             ("room-list", self.room_list),
             ("say-chat-room", self.say_chat_room),
             ("server-disconnect", self.server_disconnect),
             ("show-room", self.show_room),
             ("start", self.start),
-            ("ticker-add", self.ticker_add),
-            ("ticker-remove", self.ticker_remove),
             ("unignore-user", self.unignore_user),
             ("unignore-user-ip", self.unignore_user),
             ("user-country", self.user_country),
@@ -383,7 +383,7 @@ class ChatRooms(IconNotebook):
         self.join_room_combobox.freeze()
         self.join_room_combobox.clear()
 
-        for room, _user_count in chain(msg.rooms, msg.ownedprivaterooms, msg.otherprivaterooms):
+        for room, _user_count in chain(msg.rooms, msg.rooms_owner, msg.rooms_member):
             self.join_room_combobox.append(room)
 
         self.join_room_combobox.unfreeze()
@@ -409,67 +409,67 @@ class ChatRooms(IconNotebook):
         if page is not None:
             page.global_room_message(msg)
 
-    def private_room_added(self, msg):
+    def room_membership_granted(self, msg):
         self.join_room_combobox.append(msg.room)
 
-    def private_room_operator_added(self, msg):
+    def room_operatorship_granted(self, msg):
 
         page = self.pages.get(msg.room)
 
         if page is not None:
-            page.private_room_operator_added()
+            page.room_operatorship_granted()
 
-    def private_room_add_operator(self, msg):
-
-        page = self.pages.get(msg.room)
-
-        if page is not None:
-            page.private_room_add_operator(msg)
-
-    def private_room_add_user(self, msg):
+    def add_room_operator(self, msg):
 
         page = self.pages.get(msg.room)
 
         if page is not None:
-            page.private_room_add_user(msg)
+            page.add_room_operator(msg)
 
-    def private_room_removed(self, msg):
+    def add_room_member(self, msg):
+
+        page = self.pages.get(msg.room)
+
+        if page is not None:
+            page.add_room_member(msg)
+
+    def room_membership_revoked(self, msg):
         self.join_room_combobox.remove_id(msg.room)
 
-    def private_room_operator_removed(self, msg):
+    def room_operatorship_revoked(self, msg):
 
         page = self.pages.get(msg.room)
 
         if page is not None:
-            page.private_room_operator_removed()
+            page.room_operatorship_revoked()
 
-    def private_room_remove_operator(self, msg):
-
-        page = self.pages.get(msg.room)
-
-        if page is not None:
-            page.private_room_remove_operator(msg)
-
-    def private_room_remove_user(self, msg):
+    def remove_room_member(self, msg):
 
         page = self.pages.get(msg.room)
 
         if page is not None:
-            page.private_room_remove_user(msg)
+            page.remove_room_member(msg)
 
-    def ticker_add(self, msg):
-
-        page = self.pages.get(msg.room)
-
-        if page is not None:
-            page.ticker_add(msg)
-
-    def ticker_remove(self, msg):
+    def remove_room_operator(self, msg):
 
         page = self.pages.get(msg.room)
 
         if page is not None:
-            page.ticker_remove(msg)
+            page.remove_room_operator(msg)
+
+    def room_ticker_added(self, msg):
+
+        page = self.pages.get(msg.room)
+
+        if page is not None:
+            page.room_ticker_added(msg)
+
+    def room_ticker_removed(self, msg):
+
+        page = self.pages.get(msg.room)
+
+        if page is not None:
+            page.room_ticker_removed(msg)
 
     def update_completions(self, completions):
 
@@ -1007,23 +1007,10 @@ class ChatRoom:
         self.chat_view.update_user_tag(username)
         self.update_user_count()
 
-    def private_room_operator_added(self):
+    def room_operatorship_granted(self):
         self.add_room_member_button.set_visible(True)
 
-    def private_room_add_operator(self, msg):
-
-        iterator = self.users_list_view.iterators.get(msg.user)
-
-        if iterator is None:
-            return
-
-        self.users_list_view.set_row_values(
-            iterator,
-            column_ids=["username_weight_data", "username_underline_data"],
-            values=[Pango.Weight.BOLD, Pango.Underline.NONE]
-        )
-
-    def private_room_add_user(self, msg):
+    def add_room_member(self, msg):
 
         username = msg.user
         iterator = self.users_list_view.iterators.get(username)
@@ -1036,10 +1023,7 @@ class ChatRoom:
         self.chat_view.update_user_tag(username)
         self.update_user_count()
 
-    def private_room_operator_removed(self):
-        self.add_room_member_button.set_visible(False)
-
-    def private_room_remove_operator(self, msg):
+    def add_room_operator(self, msg):
 
         iterator = self.users_list_view.iterators.get(msg.user)
 
@@ -1049,10 +1033,13 @@ class ChatRoom:
         self.users_list_view.set_row_values(
             iterator,
             column_ids=["username_weight_data", "username_underline_data"],
-            values=[Pango.Weight.NORMAL, Pango.Underline.NONE]
+            values=[Pango.Weight.BOLD, Pango.Underline.NONE]
         )
 
-    def private_room_remove_user(self, msg):
+    def room_operatorship_revoked(self):
+        self.add_room_member_button.set_visible(False)
+
+    def remove_room_member(self, msg):
 
         username = msg.user
         iterator = self.users_list_view.iterators.get(username)
@@ -1065,7 +1052,20 @@ class ChatRoom:
         self.chat_view.update_user_tag(username)
         self.update_user_count()
 
-    def ticker_add(self, msg):
+    def remove_room_operator(self, msg):
+
+        iterator = self.users_list_view.iterators.get(msg.user)
+
+        if iterator is None:
+            return
+
+        self.users_list_view.set_row_values(
+            iterator,
+            column_ids=["username_weight_data", "username_underline_data"],
+            values=[Pango.Weight.NORMAL, Pango.Underline.NONE]
+        )
+
+    def room_ticker_added(self, msg):
 
         if msg.user == core.users.login_username:
             return
@@ -1073,7 +1073,7 @@ class ChatRoom:
         self.unread_room_wall_users.add(msg.user)
         self.update_room_wall_label()
 
-    def ticker_remove(self, msg):
+    def room_ticker_removed(self, msg):
         self.unread_room_wall_users.discard(msg.user)
         self.update_room_wall_label()
 
@@ -1300,7 +1300,7 @@ class ChatRoom:
         if user == private_room.owner or user in private_room.members:
             return
 
-        core.chatrooms.add_user_to_private_room(self.room, user)
+        core.chatrooms.request_add_room_member(self.room, user)
 
     def on_add_room_member(self, *_args):
 

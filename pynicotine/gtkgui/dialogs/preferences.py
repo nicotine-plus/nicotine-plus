@@ -1622,12 +1622,12 @@ class ChatsPage:
             self.enable_tab_completion_toggle,
             self.format_codes_label,
             self.min_chars_dropdown_spinner,
-            self.private_room_toggle,
             self.recent_private_messages_spinner,
             self.recent_room_messages_spinner,
             self.reopen_private_chats_toggle,
             self.replacement_list_container,
             self.replacement_list_page,
+            self.room_invitations_toggle,
             self.stack,
             self.timestamp_private_chat_entry,
             self.timestamp_room_entry,
@@ -1704,7 +1704,7 @@ class ChatsPage:
         self.options = {
             "server": {
                 "ctcpmsgs": None,  # Special case in set_settings
-                "private_chatrooms": self.private_room_toggle
+                "private_chatrooms": self.room_invitations_toggle
             },
             "logging": {
                 "readroomlines": self.recent_room_messages_spinner,
@@ -1764,7 +1764,7 @@ class ChatsPage:
         return {
             "server": {
                 "ctcpmsgs": not self.enable_ctcp_toggle.get_active(),
-                "private_chatrooms": self.private_room_toggle.get_active()
+                "private_chatrooms": self.room_invitations_toggle.get_active()
             },
             "logging": {
                 "readroomlines": self.recent_room_messages_spinner.get_value_as_int(),
@@ -3775,7 +3775,7 @@ class Preferences(Dialog):
 
         if private_room_required:
             active = config.sections["server"]["private_chatrooms"]
-            self.application.room_list.toggle_accept_private_room(active)
+            self.application.room_list.toggle_room_invitations(active)
 
         if completion_required:
             core.chatrooms.update_completions()

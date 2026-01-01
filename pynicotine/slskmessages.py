@@ -957,7 +957,6 @@ class JoinRoom(ServerMessage):
 
             for _ in range(numops):
                 pos, operator = self.unpack_string(message, pos)
-
                 self.operators.append(operator)
 
 
@@ -1688,22 +1687,22 @@ class RoomList(ServerMessage):
     containing the missing rooms.
     """
 
-    __slots__ = ("rooms", "ownedprivaterooms", "otherprivaterooms", "operatedprivaterooms")
+    __slots__ = ("rooms", "rooms_owner", "rooms_member", "rooms_operator")
 
     def __init__(self):
         self.rooms = []
-        self.ownedprivaterooms = []
-        self.otherprivaterooms = []
-        self.operatedprivaterooms = []
+        self.rooms_owner = []
+        self.rooms_member = []
+        self.rooms_operator = []
 
     def make_network_message(self):
         return b""
 
     def parse_network_message(self, message):
         pos, self.rooms = self.parse_rooms(message)
-        pos, self.ownedprivaterooms = self.parse_rooms(message, pos)
-        pos, self.otherprivaterooms = self.parse_rooms(message, pos)
-        pos, self.operatedprivaterooms = self.parse_rooms(message, pos, has_count=False)
+        pos, self.rooms_owner = self.parse_rooms(message, pos)
+        pos, self.rooms_member = self.parse_rooms(message, pos)
+        pos, self.rooms_operator = self.parse_rooms(message, pos, has_count=False)
 
     def parse_rooms(self, message, pos=0, has_count=True):
         pos, numrooms = self.unpack_uint32(message, pos)
@@ -2194,7 +2193,7 @@ class ItemSimilarUsers(ServerMessage):
             self.users.append(user)
 
 
-class RoomTickerState(ServerMessage):
+class RoomTickers(ServerMessage):
     """Server code 113.
 
     The server returns a list of tickers in a chat room.
@@ -2221,7 +2220,7 @@ class RoomTickerState(ServerMessage):
             self.msgs.append((user, msg))
 
 
-class RoomTickerAdd(ServerMessage):
+class RoomTickerAdded(ServerMessage):
     """Server code 114.
 
     The server sends us a new ticker that was added to a chat room.
@@ -2243,7 +2242,7 @@ class RoomTickerAdd(ServerMessage):
         pos, self.msg = self.unpack_string(message, pos)
 
 
-class RoomTickerRemove(ServerMessage):
+class RoomTickerRemoved(ServerMessage):
     """Server code 115.
 
     The server informs us that a ticker was removed from a chat room.
@@ -2263,7 +2262,7 @@ class RoomTickerRemove(ServerMessage):
         pos, self.user = self.unpack_string(message, pos)
 
 
-class RoomTickerSet(ServerMessage):
+class SetRoomTicker(ServerMessage):
     """Server code 116.
 
     We send this to the server when we change our own ticker in a chat
@@ -2517,31 +2516,29 @@ class ResetDistributed(ServerMessage):
         pass
 
 
-class PrivateRoomUsers(ServerMessage):
+class RoomMembers(ServerMessage):
     """Server code 133.
 
     The server sends us a list of members (excluding the owner) in a private
     room we are in.
     """
 
-    __slots__ = ("room", "numusers", "users")
+    __slots__ = ("room", "members")
 
     def __init__(self):
         self.room = None
-        self.numusers = None
-        self.users = []
+        self.members = []
 
     def parse_network_message(self, message):
         pos, self.room = self.unpack_string(message)
-        pos, self.numusers = self.unpack_uint32(message, pos)
+        pos, num_members = self.unpack_uint32(message, pos)
 
-        for _ in range(self.numusers):
+        for _ in range(num_members):
             pos, user = self.unpack_string(message, pos)
+            self.members.append(user)
 
-            self.users.append(user)
 
-
-class PrivateRoomAddUser(ServerMessage):
+class AddRoomMember(ServerMessage):
     """Server code 134.
 
     We send this to the server to add a member to a private room, if we are
@@ -2568,7 +2565,7 @@ class PrivateRoomAddUser(ServerMessage):
         pos, self.user = self.unpack_string(message, pos)
 
 
-class PrivateRoomRemoveUser(ServerMessage):
+class RemoveRoomMember(ServerMessage):
     """Server code 135.
 
     We send this to the server to remove a member from a private room, if we
@@ -2596,7 +2593,7 @@ class PrivateRoomRemoveUser(ServerMessage):
         pos, self.user = self.unpack_string(message, pos)
 
 
-class PrivateRoomCancelMembership(ServerMessage):
+class CancelRoomMembership(ServerMessage):
     """Server code 136.
 
     We send this to the server to cancel our own membership of a private room.
@@ -2611,7 +2608,7 @@ class PrivateRoomCancelMembership(ServerMessage):
         return self.pack_string(self.room)
 
 
-class PrivateRoomDisown(ServerMessage):
+class CancelRoomOwnership(ServerMessage):
     """Server code 137.
 
     We send this to the server to stop owning a private room.
@@ -2626,7 +2623,7 @@ class PrivateRoomDisown(ServerMessage):
         return self.pack_string(self.room)
 
 
-class PrivateRoomSomething(ServerMessage):
+class RoomSomething(ServerMessage):
     """Server code 138.
 
     OBSOLETE, no longer used
@@ -2644,7 +2641,7 @@ class PrivateRoomSomething(ServerMessage):
         _pos, self.room = self.unpack_string(message)
 
 
-class PrivateRoomAdded(ServerMessage):
+class RoomMembershipGranted(ServerMessage):
     """Server code 139.
 
     The server tells us we were added to a private room.
@@ -2659,7 +2656,7 @@ class PrivateRoomAdded(ServerMessage):
         _pos, self.room = self.unpack_string(message)
 
 
-class PrivateRoomRemoved(ServerMessage):
+class RoomMembershipRevoked(ServerMessage):
     """Server code 140.
 
     The server tells us we were removed from a private room.
@@ -2674,7 +2671,7 @@ class PrivateRoomRemoved(ServerMessage):
         _pos, self.room = self.unpack_string(message)
 
 
-class PrivateRoomToggle(ServerMessage):
+class EnableRoomInvitations(ServerMessage):
     """Server code 141.
 
     We send this when we want to enable or disable invitations to
@@ -2713,7 +2710,7 @@ class ChangePassword(ServerMessage):
         _pos, self.password = self.unpack_string(message)
 
 
-class PrivateRoomAddOperator(ServerMessage):
+class AddRoomOperator(ServerMessage):
     """Server code 143.
 
     We send this to the server to add private room operator abilities to
@@ -2741,7 +2738,7 @@ class PrivateRoomAddOperator(ServerMessage):
         pos, self.user = self.unpack_string(message, pos)
 
 
-class PrivateRoomRemoveOperator(ServerMessage):
+class RemoveRoomOperator(ServerMessage):
     """Server code 144.
 
     We send this to the server to remove private room operator abilities
@@ -2769,7 +2766,7 @@ class PrivateRoomRemoveOperator(ServerMessage):
         pos, self.user = self.unpack_string(message, pos)
 
 
-class PrivateRoomOperatorAdded(ServerMessage):
+class RoomOperatorshipGranted(ServerMessage):
     """Server code 145.
 
     The server tells us we were given operator abilities in a private room
@@ -2785,7 +2782,7 @@ class PrivateRoomOperatorAdded(ServerMessage):
         _pos, self.room = self.unpack_string(message)
 
 
-class PrivateRoomOperatorRemoved(ServerMessage):
+class RoomOperatorshipRevoked(ServerMessage):
     """Server code 146.
 
     The server tells us our operator abilities were removed in a private room
@@ -2804,26 +2801,24 @@ class PrivateRoomOperatorRemoved(ServerMessage):
         _pos, self.room = self.unpack_string(message)
 
 
-class PrivateRoomOperators(ServerMessage):
+class RoomOperators(ServerMessage):
     """Server code 148.
 
     The server sends us a list of operators in a private room we are in.
     """
 
-    __slots__ = ("room", "number", "operators")
+    __slots__ = ("room", "operators")
 
     def __init__(self):
         self.room = None
-        self.number = None
         self.operators = []
 
     def parse_network_message(self, message):
         pos, self.room = self.unpack_string(message)
-        pos, self.number = self.unpack_uint32(message, pos)
+        pos, num_operators = self.unpack_uint32(message, pos)
 
-        for _ in range(self.number):
+        for _ in range(num_operators):
             pos, user = self.unpack_string(message, pos)
-
             self.operators.append(user)
 
 
@@ -4018,11 +4013,14 @@ class DistribEmbeddedMessage(DistribMessage):
 
 
 NETWORK_MESSAGE_EVENTS = {
+    AddRoomMember: "add-room-member",
+    AddRoomOperator: "add-room-operator",
     AdminMessage: "admin-message",
     ChangePassword: "change-password",
     CheckPrivileges: "check-privileges",
     ConnectToPeer: "connect-to-peer",
     DistribSearch: "file-search-request-distributed",
+    EnableRoomInvitations: "enable-room-invitations",
     ExcludedSearchPhrases: "excluded-search-phrases",
     FileSearch: "file-search-request-server",
     FileSearchResponse: "file-search-response",
@@ -4042,24 +4040,21 @@ NETWORK_MESSAGE_EVENTS = {
     MessageUser: "message-user",
     PlaceInQueueRequest: "place-in-queue-request",
     PlaceInQueueResponse: "place-in-queue-response",
-    PrivateRoomAddOperator: "private-room-add-operator",
-    PrivateRoomAddUser: "private-room-add-user",
-    PrivateRoomAdded: "private-room-added",
-    PrivateRoomOperatorAdded: "private-room-operator-added",
-    PrivateRoomOperatorRemoved: "private-room-operator-removed",
-    PrivateRoomOperators: "private-room-operators",
-    PrivateRoomRemoveOperator: "private-room-remove-operator",
-    PrivateRoomRemoveUser: "private-room-remove-user",
-    PrivateRoomRemoved: "private-room-removed",
-    PrivateRoomToggle: "private-room-toggle",
-    PrivateRoomUsers: "private-room-users",
     PrivilegedUsers: "privileged-users",
     QueueUpload: "queue-upload",
     Recommendations: "recommendations",
+    RemoveRoomMember: "remove-room-member",
+    RemoveRoomOperator: "remove-room-operator",
     RoomList: "room-list",
-    RoomTickerAdd: "ticker-add",
-    RoomTickerRemove: "ticker-remove",
-    RoomTickerState: "ticker-state",
+    RoomMembers: "room-members",
+    RoomMembershipGranted: "room-membership-granted",
+    RoomMembershipRevoked: "room-membership-revoked",
+    RoomOperators: "room-operators",
+    RoomOperatorshipGranted: "room-operatorship-granted",
+    RoomOperatorshipRevoked: "room-operatorship-revoked",
+    RoomTickerAdded: "room-ticker-added",
+    RoomTickerRemoved: "room-ticker-removed",
+    RoomTickers: "room-tickers",
     SayChatroom: "say-chat-room",
     SharedFileListRequest: "shared-file-list-request",
     SharedFileListResponse: "shared-file-list-response",
@@ -4146,10 +4141,10 @@ SERVER_MESSAGE_CODES = {
     SimilarUsers: 110,
     ItemRecommendations: 111,
     ItemSimilarUsers: 112,
-    RoomTickerState: 113,
-    RoomTickerAdd: 114,
-    RoomTickerRemove: 115,
-    RoomTickerSet: 116,
+    RoomTickers: 113,
+    RoomTickerAdded: 114,
+    RoomTickerRemoved: 115,
+    SetRoomTicker: 116,
     AddThingIHate: 117,
     RemoveThingIHate: 118,
     RoomSearch: 120,
@@ -4162,21 +4157,21 @@ SERVER_MESSAGE_CODES = {
     BranchRoot: 127,
     ChildDepth: 129,              # Deprecated
     ResetDistributed: 130,
-    PrivateRoomUsers: 133,
-    PrivateRoomAddUser: 134,
-    PrivateRoomRemoveUser: 135,
-    PrivateRoomCancelMembership: 136,
-    PrivateRoomDisown: 137,
-    PrivateRoomSomething: 138,    # Obsolete
-    PrivateRoomAdded: 139,
-    PrivateRoomRemoved: 140,
-    PrivateRoomToggle: 141,
+    RoomMembers: 133,
+    AddRoomMember: 134,
+    RemoveRoomMember: 135,
+    CancelRoomMembership: 136,
+    CancelRoomOwnership: 137,
+    RoomSomething: 138,    # Obsolete
+    RoomMembershipGranted: 139,
+    RoomMembershipRevoked: 140,
+    EnableRoomInvitations: 141,
     ChangePassword: 142,
-    PrivateRoomAddOperator: 143,
-    PrivateRoomRemoveOperator: 144,
-    PrivateRoomOperatorAdded: 145,
-    PrivateRoomOperatorRemoved: 146,
-    PrivateRoomOperators: 148,
+    AddRoomOperator: 143,
+    RemoveRoomOperator: 144,
+    RoomOperatorshipGranted: 145,
+    RoomOperatorshipRevoked: 146,
+    RoomOperators: 148,
     MessageUsers: 149,
     JoinGlobalRoom: 150,
     LeaveGlobalRoom: 151,

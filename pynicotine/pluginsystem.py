@@ -161,11 +161,11 @@ class BasePlugin:
         # Override method in plugin
         pass
 
-    def private_room_added_notification(self, room):
+    def private_room_membership_granted_notification(self, room):
         # Override method in plugin
         pass
 
-    def private_room_removed_notification(self, room):
+    def private_room_membership_revoked_notification(self, room):
         # Override method in plugin
         pass
 
@@ -177,11 +177,11 @@ class BasePlugin:
         # Override method in plugin
         pass
 
-    def private_room_operatorship_added_notification(self, room):
+    def private_room_operatorship_granted_notification(self, room):
         # Override method in plugin
         pass
 
-    def private_room_operatorship_removed_notification(self, room):
+    def private_room_operatorship_revoked_notification(self, room):
         # Override method in plugin
         pass
 
@@ -1188,11 +1188,11 @@ class PluginHandler:
     def user_leave_chatroom_notification(self, room, user):
         self._trigger_event("user_leave_chatroom_notification", (room, user,))
 
-    def private_room_added_notification(self, room):
-        self._trigger_event("private_room_added_notification", (room,))
+    def private_room_membership_granted_notification(self, room):
+        self._trigger_event("private_room_membership_granted_notification", (room,))
 
-    def private_room_removed_notification(self, room):
-        self._trigger_event("private_room_removed_notification", (room,))
+    def private_room_membership_revoked_notification(self, room):
+        self._trigger_event("private_room_membership_revoked_notification", (room,))
 
     def private_room_member_added_notification(self, room, user):
         self._trigger_event("private_room_member_added_notification", (room, user,))
@@ -1200,11 +1200,11 @@ class PluginHandler:
     def private_room_member_removed_notification(self, room, user):
         self._trigger_event("private_room_member_removed_notification", (room, user,))
 
-    def private_room_operatorship_added_notification(self, room):
-        self._trigger_event("private_room_operatorship_added_notification", (room,))
+    def private_room_operatorship_granted_notification(self, room):
+        self._trigger_event("private_room_operatorship_granted_notification", (room,))
 
-    def private_room_operatorship_removed_notification(self, room):
-        self._trigger_event("private_room_operatorship_removed_notification", (room,))
+    def private_room_operatorship_revoked_notification(self, room):
+        self._trigger_event("private_room_operatorship_revoked_notification", (room,))
 
     def private_room_operator_added_notification(self, room, user):
         self._trigger_event("private_room_operator_added_notification", (room, user,))
