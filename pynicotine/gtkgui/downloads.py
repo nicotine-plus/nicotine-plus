@@ -28,8 +28,6 @@ class Downloads(Transfers):
 
     def __init__(self, window):
 
-        self.path_separator = os.sep
-        self.path_label = _("Path")
         self.retry_label = _("_Resume")
         self.abort_label = _("P_ause")
 
@@ -91,9 +89,6 @@ class Downloads(Transfers):
     def destroy(self):
         self.download_speeds.destroy()
         super().destroy()
-
-    def get_transfer_folder_path(self, transfer):
-        return transfer.folder_path
 
     def retry_selected_transfers(self):
         core.downloads.retry_downloads(self.selected_transfers)

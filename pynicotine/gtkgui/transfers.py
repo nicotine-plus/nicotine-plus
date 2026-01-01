@@ -87,7 +87,7 @@ class Transfers:
     PENDING_ITERATORS = {PENDING_ITERATOR_REBUILD, PENDING_ITERATOR_ADD}
     UNKNOWN_STATUS_PRIORITY = 1000
 
-    path_separator = path_label = retry_label = abort_label = None
+    retry_label = abort_label = None
     transfer_page = user_counter = file_counter = expand_button = expand_icon = grouping_button = status_label = None
 
     def __init__(self, window, transfer_type):
@@ -137,7 +137,7 @@ class Transfers:
                 },
                 "path": {
                     "column_type": "text",
-                    "title": self.path_label,
+                    "title": _("Folder"),
                     "width": 200,
                     "expand_column": True,
                     "tooltip_callback": self.on_file_path_tooltip,
@@ -727,9 +727,9 @@ class Transfers:
         username_underline_data = Pango.Underline.SINGLE if user in core.buddies.users else Pango.Underline.NONE
 
         if use_reverse_file_path:
-            parts = folder_path.split(self.path_separator)
+            parts = folder_path.split("\\")
             parts.reverse()
-            folder_path = self.path_separator.join(parts)
+            folder_path = "\\".join(parts)
 
         if not self.tree_view.iterators:
             # Hide tab description
@@ -897,9 +897,15 @@ class Transfers:
         for transfer in self.transfer_list:
             transfer.iterator = self.PENDING_ITERATOR_REBUILD
 
-    def get_transfer_folder_path(self, _transfer):
-        # Implemented in subclasses
-        raise NotImplementedError
+    def get_transfer_folder_path(self, transfer):
+
+        virtual_path = transfer.virtual_path
+
+        if virtual_path:
+            folder_path, _separator, _basename = virtual_path.rpartition("\\")
+            return folder_path
+
+        return transfer.folder_path
 
     def retry_selected_transfers(self):
         # Implemented in subclasses
