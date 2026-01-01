@@ -91,8 +91,10 @@ class ChatRooms(IconNotebook):
             ("peer-address", self.peer_address),
             ("private-room-add-operator", self.private_room_add_operator),
             ("private-room-add-user", self.private_room_add_user),
+            ("private-room-added", self.private_room_added),
             ("private-room-remove-operator", self.private_room_remove_operator),
             ("private-room-remove-user", self.private_room_remove_user),
+            ("private-room-removed", self.private_room_removed),
             ("quit", self.quit),
             ("remove-room", self.remove_room),
             ("room-completions", self.update_completions),
@@ -420,6 +422,9 @@ class ChatRooms(IconNotebook):
 
         if page is not None:
             page.private_room_add_user(msg)
+
+    def private_room_removed(self, msg):
+        self.join_room_combobox.remove_id(msg.room)
 
     def private_room_remove_operator(self, msg):
 
