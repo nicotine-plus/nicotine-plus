@@ -90,7 +90,7 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="justify">center</property>
-                                <property name="label" translatable="yes">No Rooms</property>
+                                <property name="label" translatable="yes">No Chat Rooms</property>
                                 <property name="visible">True</property>
                                 <property name="wrap">True</property>
                                 <style>
@@ -101,7 +101,7 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="justify">center</property>
-                                <property name="label" translatable="yes">All available rooms will appear here</property>
+                                <property name="label" translatable="yes">Chat rooms will appear here when available</property>
                                 <property name="max-width-chars">55</property>
                                 <property name="visible">True</property>
                                 <property name="wrap">True</property>

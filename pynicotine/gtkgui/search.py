@@ -702,7 +702,7 @@ class Search:
 
     def show_error_message(self):
         if core.users.statuses.get(core.users.login_username, UserStatus.OFFLINE) == UserStatus.OFFLINE:
-            self.info_bar.show_error_message(_("Cannot receive search results while offline."))
+            self.info_bar.show_error_message(_("Cannot search for files shared by other users, since you are offline."))
 
     def clear(self):
         self.clear_model(stored_results=True)
