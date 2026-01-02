@@ -121,10 +121,10 @@ class Plugin(BasePlugin):
     def user_leave_chatroom_notification(self, room, user):
         self._trigger_log(f"room={room}, user={user}")
 
-    def private_room_added_notification(self, room):
+    def private_room_membership_granted_notification(self, room):
         self._trigger_log(f"room={room}")
 
-    def private_room_removed_notification(self, room):
+    def private_room_membership_revoked_notification(self, room):
         self._trigger_log(f"room={room}")
 
     def private_room_member_added_notification(self, room, user):
@@ -133,10 +133,10 @@ class Plugin(BasePlugin):
     def private_room_member_removed_notification(self, room, user):
         self._trigger_log(f"room={room}, user={user}")
 
-    def private_room_operatorship_added_notification(self, room):
+    def private_room_operatorship_granted_notification(self, room):
         self._trigger_log(f"room={room}")
 
-    def private_room_operatorship_removed_notification(self, room):
+    def private_room_operatorship_revoked_notification(self, room):
         self._trigger_log(f"room={room}")
 
     def private_room_operator_added_notification(self, room, user):

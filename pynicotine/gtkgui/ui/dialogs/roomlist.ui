@@ -163,7 +163,7 @@
                 <property name="height-request">24</property>
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">_Accept private room invitations</property>
-                <property name="mnemonic-widget">private_room_toggle</property>
+                <property name="mnemonic-widget">room_invitations_toggle</property>
                 <property name="use-underline">True</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
@@ -172,7 +172,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkSwitch" id="private_room_toggle">
+              <object class="GtkSwitch" id="room_invitations_toggle">
                 <property name="valign">center</property>
                 <property name="visible">True</property>
               </object>
