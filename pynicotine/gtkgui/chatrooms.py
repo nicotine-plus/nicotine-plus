@@ -93,6 +93,8 @@ class ChatRooms(IconNotebook):
             ("private-room-add-operator", self.private_room_add_operator),
             ("private-room-add-user", self.private_room_add_user),
             ("private-room-added", self.private_room_added),
+            ("private-room-operator-added", self.private_room_operator_added),
+            ("private-room-operator-removed", self.private_room_operator_removed),
             ("private-room-remove-operator", self.private_room_remove_operator),
             ("private-room-remove-user", self.private_room_remove_user),
             ("private-room-removed", self.private_room_removed),
@@ -410,6 +412,13 @@ class ChatRooms(IconNotebook):
     def private_room_added(self, msg):
         self.join_room_combobox.append(msg.room)
 
+    def private_room_operator_added(self, msg):
+
+        page = self.pages.get(msg.room)
+
+        if page is not None:
+            page.private_room_operator_added()
+
     def private_room_add_operator(self, msg):
 
         page = self.pages.get(msg.room)
@@ -426,6 +435,13 @@ class ChatRooms(IconNotebook):
 
     def private_room_removed(self, msg):
         self.join_room_combobox.remove_id(msg.room)
+
+    def private_room_operator_removed(self, msg):
+
+        page = self.pages.get(msg.room)
+
+        if page is not None:
+            page.private_room_operator_removed()
 
     def private_room_remove_operator(self, msg):
 
@@ -991,6 +1007,9 @@ class ChatRoom:
         self.chat_view.update_user_tag(username)
         self.update_user_count()
 
+    def private_room_operator_added(self):
+        self.add_room_member_button.set_visible(True)
+
     def private_room_add_operator(self, msg):
 
         iterator = self.users_list_view.iterators.get(msg.user)
@@ -1003,7 +1022,6 @@ class ChatRoom:
             column_ids=["username_weight_data", "username_underline_data"],
             values=[Pango.Weight.BOLD, Pango.Underline.NONE]
         )
-        self.add_room_member_button.set_visible(True)
 
     def private_room_add_user(self, msg):
 
@@ -1018,6 +1036,9 @@ class ChatRoom:
         self.chat_view.update_user_tag(username)
         self.update_user_count()
 
+    def private_room_operator_removed(self):
+        self.add_room_member_button.set_visible(False)
+
     def private_room_remove_operator(self, msg):
 
         iterator = self.users_list_view.iterators.get(msg.user)
@@ -1030,7 +1051,6 @@ class ChatRoom:
             column_ids=["username_weight_data", "username_underline_data"],
             values=[Pango.Weight.NORMAL, Pango.Underline.NONE]
         )
-        self.add_room_member_button.set_visible(False)
 
     def private_room_remove_user(self, msg):
 
