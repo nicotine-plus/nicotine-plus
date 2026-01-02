@@ -500,6 +500,7 @@ class ChatRoom:
             self.room_wall_label,
             self.user_list_button,
             self.users_container,
+            self.users_description_label,
             self.users_label,
             self.users_list_container
         ) = ui.load(scope=self, path="chatrooms.ui")
@@ -1179,6 +1180,8 @@ class ChatRoom:
     def join_room(self, msg):
 
         self.is_private = msg.private
+
+        self.users_description_label.set_label(_("Members") if self.is_private else _("Online"))
         self.populate_room_users(msg.users)
 
         self.activity_view.add_line(

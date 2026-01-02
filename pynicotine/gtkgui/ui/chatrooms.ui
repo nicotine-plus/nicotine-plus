@@ -153,7 +153,7 @@
                     <property name="spacing">6</property>
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="users_description_label">
                         <property name="ellipsize">end</property>
                         <property name="label" bind-source="_users_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
                         <property name="mnemonic-widget">_users_button</property>
@@ -167,7 +167,7 @@
                     <child>
                       <object class="GtkButton" id="_users_button">
                         <property name="action-name">app.configure-ignored-users</property>
-                        <property name="tooltip-text" translatable="yes">Users</property>
+                        <property name="tooltip-text" translatable="yes">Online</property>
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkLabel" id="users_label">
