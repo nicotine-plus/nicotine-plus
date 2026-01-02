@@ -23,6 +23,7 @@ from pynicotine.gtkgui.popovers.roomwall import RoomWall
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.combobox import ComboBox
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
+from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
@@ -487,6 +488,7 @@ class ChatRoom:
             self.activity_container,
             self.activity_search_bar,
             self.activity_view_container,
+            self.add_room_member_button,
             self.chat_container,
             self.chat_entry_container,
             self.chat_entry_row,
@@ -721,13 +723,14 @@ class ChatRoom:
         underline = Pango.Underline.NONE
         is_unignored = not (core.network_filter.is_user_ignored(username)
                             or core.network_filter.is_user_ip_ignored(username))
+        private_room = core.chatrooms.private_rooms.get(self.room)
 
-        if self.room in core.chatrooms.private_rooms:
-            if username == core.chatrooms.private_rooms[self.room].owner:
+        if private_room is not None:
+            if username == private_room.owner:
                 weight = Pango.Weight.BOLD
                 underline = Pango.Underline.SINGLE
 
-            elif username in core.chatrooms.private_rooms[self.room].operators:
+            elif username in private_room.operators:
                 weight = Pango.Weight.BOLD
                 underline = Pango.Underline.NONE
 
@@ -984,6 +987,7 @@ class ChatRoom:
             column_ids=["username_weight_data", "username_underline_data"],
             values=[Pango.Weight.BOLD, Pango.Underline.NONE]
         )
+        self.add_room_member_button.set_visible(True)
 
     def private_room_add_user(self, msg):
 
@@ -1010,6 +1014,7 @@ class ChatRoom:
             column_ids=["username_weight_data", "username_underline_data"],
             values=[Pango.Weight.NORMAL, Pango.Underline.NONE]
         )
+        self.add_room_member_button.set_visible(False)
 
     def private_room_remove_user(self, msg):
 
@@ -1180,8 +1185,15 @@ class ChatRoom:
     def join_room(self, msg):
 
         self.is_private = msg.private
+        login_username = core.users.login_username
+        private_room = core.chatrooms.private_rooms.get(self.room)
 
         self.users_description_label.set_label(_("Members") if self.is_private else _("Online"))
+        self.add_room_member_button.set_visible(
+            private_room is not None
+            and (login_username == private_room.owner or login_username in private_room.operators)
+        )
+
         self.populate_room_users(msg.users)
 
         self.activity_view.add_line(
@@ -1193,6 +1205,7 @@ class ChatRoom:
 
         self.users_list_view.clear()
         self.update_user_count()
+        self.add_room_member_button.set_visible(False)
 
         if self.chatrooms.get_current_page() == self.container:
             self.update_room_user_completions()
@@ -1235,6 +1248,37 @@ class ChatRoom:
 
     def on_leave_room(self, *_args):
         core.chatrooms.remove_room(self.room)
+
+    def on_add_room_member_response(self, dialog, _response_id, _data):
+
+        if not self.__dict__:
+            # Tab was closed
+            return
+
+        user = dialog.get_entry_value()
+        private_room = core.chatrooms.private_rooms.get(self.room)
+
+        if not user or private_room is None:
+            return
+
+        if user == private_room.owner or user in private_room.members:
+            return
+
+        core.chatrooms.add_user_to_private_room(self.room, user)
+
+    def on_add_room_member(self, *_args):
+
+        if self.room not in core.chatrooms.private_rooms:
+            return
+
+        EntryDialog(
+            parent=self.window,
+            title=_("Add Room Member"),
+            message=_("Enter the name of the user you want to add to the private room:"),
+            action_button_label=_("_Add"),
+            callback=self.on_add_room_member_response,
+            droplist=sorted(core.buddies.users)
+        ).present()
 
     def on_log_toggled(self, *_args):
 

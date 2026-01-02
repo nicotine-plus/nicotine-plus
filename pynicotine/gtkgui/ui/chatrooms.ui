@@ -187,6 +187,23 @@
                         </style>
                       </object>
                     </child>
+                    <child>
+                      <object class="GtkButton" id="add_room_member_button">
+                        <property name="tooltip-text" translatable="yes">Add Room Member</property>
+                        <property name="visible">False</property>
+                        <signal name="clicked" handler="on_add_room_member"/>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">list-add-symbolic</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                        <style>
+                          <class name="circular"/>
+                          <class name="image-button"/>
+                        </style>
+                      </object>
+                    </child>
                   </object>
                 </child>
                 <child>
