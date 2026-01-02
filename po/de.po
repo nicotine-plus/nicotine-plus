@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-26 19:40+0200\n"
-"PO-Revision-Date: 2026-01-01 13:32+0000\n"
+"PO-Revision-Date: 2026-01-02 15:59+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -1402,7 +1402,7 @@ msgstr "Gib eine Liste von Benutzernamen ein, die du ignorieren willst:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1354
 msgid "Ignore IP Addresses"
-msgstr "Ignoriere IP-Adressen."
+msgstr "Ignoriere IP-Adressen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1355
 msgid "Enter a list of IP addresses you want to ignore:"
@@ -2806,11 +2806,11 @@ msgstr "_Ordner herunterladen"
 
 #: pynicotine/gtkgui/userbrowse.py:940
 msgid "Download Folder & _Subfolders…"
-msgstr "Ordner & _Unterordner herunterladen …"
+msgstr "Ordner & _Unterordner herunterladen…"
 
 #: pynicotine/gtkgui/userbrowse.py:940
 msgid "Download Folders & _Subfolders…"
-msgstr "Ordner & _Unterordner herunterladen …"
+msgstr "Ordner & _Unterordner herunterladen…"
 
 #: pynicotine/gtkgui/userbrowse.py:1009
 msgid "Upload Folder (with Subfolders) To User"
@@ -4541,7 +4541,7 @@ msgstr "Lade Plugin-System"
 #: pynicotine/pluginsystem.py:504
 #, python-format
 msgid "Installed plugin %s"
-msgstr "Plugin %s installiert."
+msgstr "Plugin %s installiert"
 
 #: pynicotine/pluginsystem.py:507
 #, python-format
@@ -4680,10 +4680,10 @@ msgid "Server provided %(num_phrases)s excluded search phrase: %(phrases)s"
 msgid_plural ""
 "Server provided %(num_phrases)s excluded search phrases: %(phrases)s"
 msgstr[0] ""
-"Server hat %(num_phrases)s ausgeschlossene Suchphrase  bereitgestellt: %"
+"Server hat %(num_phrases)s ausgeschlossene Suchphrase bereitgestellt: %"
 "(phrases)s"
 msgstr[1] ""
-"Server hat %(num_phrases)s ausgeschlossene Suchphrasen  bereitgestellt: %"
+"Server hat %(num_phrases)s ausgeschlossene Suchphrasen bereitgestellt: %"
 "(phrases)s"
 
 #: pynicotine/search.py:747
@@ -4784,7 +4784,7 @@ msgstr ""
 #: pynicotine/slskproto.py:1077
 #, python-format
 msgid "Reconnecting to server in %(duration)s"
-msgstr "Verbindung zum Server wird in %(duration)s wiederhergestellt."
+msgstr "Verbindung zum Server wird in %(duration)s wiederhergestellt"
 
 #: pynicotine/slskproto.py:1153
 #, python-format
@@ -4821,15 +4821,14 @@ msgstr "Upload abgebrochen, Benutzer %(user)s Datei %(file)s"
 msgid "%(user)s is downloading file %(file)s (%(size)s) from folder %(folder)s"
 msgstr ""
 "%(user)s lädt gerade die Datei %(file)s (%(size)s) aus dem Ordner %(folder)s "
-"herunter."
+"herunter"
 
 #: pynicotine/uploads.py:655
 #, python-format
 msgid ""
 "%(user)s is downloading %(files)s files (%(size)s) from folder %(folder)s"
 msgstr ""
-"%(user)s lädt %(files)s Dateien (%(size)s) aus dem Ordner %(folder)s "
-"herunter."
+"%(user)s lädt %(files)s Dateien (%(size)s) aus dem Ordner %(folder)s herunter"
 
 #: pynicotine/uploads.py:662
 #, python-format
@@ -5113,9 +5112,8 @@ msgid "Select Initial"
 msgstr "Erste auswählen"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:254
-#, fuzzy
 msgid "Select _Initial"
-msgstr "Wähle eine Datei"
+msgstr "Auswahl zurücksetzen"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:102
 msgid "Welcome to Nicotine+"
@@ -5224,12 +5222,10 @@ msgid "Last Speed"
 msgstr "Letzte Geschwindigkeit"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:15
-#, fuzzy
 msgid "E_xport…"
-msgstr "_Exportieren …"
+msgstr "_Exportieren…"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:21
-#, fuzzy
 msgid "A_pply"
 msgstr "_Anwenden"
 
@@ -5242,9 +5238,8 @@ msgid "Refresh Rooms"
 msgstr "Räume aktualisieren"
 
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:93
-#, fuzzy
 msgid "No Rooms"
-msgstr "_Räume"
+msgstr "Keine Räume"
 
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:104
 msgid "All available rooms will appear here"
@@ -5304,14 +5299,12 @@ msgid "Clear All…"
 msgstr "Alles löschen …"
 
 #: pynicotine/gtkgui/ui/downloads.ui:61
-#, fuzzy
 msgid "Re_sume"
-msgstr "Fortsetzen"
+msgstr "Fort_setzen"
 
 #: pynicotine/gtkgui/ui/downloads.ui:92
-#, fuzzy
 msgid "_Pause"
-msgstr "Anhalten"
+msgstr "_Pause"
 
 #: pynicotine/gtkgui/ui/downloads.ui:145
 msgid "Clear All Finished/Filtered Downloads"
@@ -5376,13 +5369,12 @@ msgid "Clear"
 msgstr "Entfernen"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:68
-#, fuzzy
 msgid ""
 "Search patterns: with a word = term, without a word = -term, partial word = "
 "*erm, exact phrase = \"search term\""
 msgstr ""
-"Suchmuster: mit einem Wort = Begriff, ohne ein Wort = -Begriff, Teilwort = "
-"*iff"
+"Suchmuster: mit einem Wort = Begriff, ohne Wort = -Begriff, Teilwort = *erm, "
+"exakte Phrase = \"Suchbegriff\""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:103
 msgid "Search Scope"
@@ -5508,9 +5500,8 @@ msgid "Join or create room…"
 msgstr "Tritt einem Raum bei oder erstelle einen …"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1476
-#, fuzzy
 msgid "All _Rooms"
-msgstr "_Räume"
+msgstr "Alle _Räume"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1566
 msgid ""
@@ -5822,12 +5813,10 @@ msgstr "Mehrere Länder können mit Kommas oder Leerzeichen angegeben werden."
 #: pynicotine/gtkgui/ui/search.ui:368
 #: pynicotine/gtkgui/ui/settings/search.ui:416
 #: pynicotine/gtkgui/ui/userinfo.ui:265
-#, fuzzy
 msgid "Upload Slot Available"
-msgstr "Freigaben nicht verfügbar"
+msgstr "Upload Steckplatz verfügbar"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:435
-#, fuzzy
 msgid ""
 "Only show results from users who have at least one upload slot available, "
 "i.e. files that are available immediately."
@@ -5838,19 +5827,17 @@ msgstr ""
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:445
 #: pynicotine/gtkgui/ui/search.ui:384
 #: pynicotine/gtkgui/ui/settings/search.ui:441
-#, fuzzy
 msgid "Public Files"
-msgstr "Öffentlich"
+msgstr "Öffentliche Dateien"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:456
-#, fuzzy
 msgid ""
 "Only show files that are shared publicly. Hides privately shared files that "
 "cannot be downloaded until the uploader gives explicit permission."
 msgstr ""
-"Privat geteilte Dateien, die für alle sichtbar gemacht wurden, werden mit "
-"'[PRIVAT]' gekennzeichnet und können nicht heruntergeladen werden, bis der "
-"Uploader ausdrücklich seine Erlaubnis erteilt hat. Frag ihn bitte freundlich."
+"Zeig nur Dateien an, die öffentlich geteilt werden. Verstecke privat "
+"geteilte Dateien, die nicht heruntergeladen werden können, bis der Uploader "
+"eine ausdrückliche Erlaubnis erteilt."
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:34
 #: pynicotine/gtkgui/ui/settings/uploads.ui:111
@@ -5989,9 +5976,8 @@ msgid "Enable censoring of text patterns"
 msgstr "Aktiviere die Zensur von Textmustern"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:366
-#, fuzzy
 msgid "Accept private room invitations"
-msgstr "_Einladungen zu privaten Raum annehmen"
+msgstr "Privat-Raum-Einladungen akzeptieren"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:390
 msgid "Restore previously open private chats on startup"
@@ -6064,10 +6050,8 @@ msgid "Chat room format:"
 msgstr "Chatraumformat:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:94
-#, fuzzy
 msgid "Automatically remove finished and filtered downloads from list"
-msgstr ""
-"Abgeschlossene/gefilterte Downloads aus der Transferliste automatisch löschen"
+msgstr "Fertige und gefilterte Downloads automatisch aus der Liste entfernen"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:118
 msgid "Store completed downloads in username subfolders"
@@ -6127,9 +6111,8 @@ msgid "Load Defaults"
 msgstr "Standardwerte laden"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:609
-#, fuzzy
 msgid "_Verify Filters"
-msgstr "Überprüfe Filter"
+msgstr "_Filter prüfen"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:621
 msgid "Unverified"
@@ -6193,14 +6176,12 @@ msgstr ""
 "einzigartig sind."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:101
-#, fuzzy
 msgid "Change Pass_word"
-msgstr "Passwort ändern"
+msgstr "Pass_wort ändern"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:122
-#, fuzzy
 msgid "Listening port (TCP):"
-msgstr "Lauschport:"
+msgstr "Lauschport (TCP):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:148
 msgid "Automatically forward listening port (UPnP/NAT-PMP)"
@@ -6233,9 +6214,8 @@ msgid "Auto-reply message when away:"
 msgstr "Automatische Antwortnachricht bei Abwesenheit:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:323
-#, fuzzy
 msgid "Connect to server on startup"
-msgstr "Automatische Verbindung zum Server beim Start"
+msgstr "Beim Start mit dem Server verbinden"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:347
 msgid "Soulseek server:"
@@ -6275,9 +6255,8 @@ msgid "Now Playing message format:"
 msgstr "Jetzt läuft-Nachrichtenformat:"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:167
-#, fuzzy
 msgid "_Test Configuration"
-msgstr "Test-Konfiguration"
+msgstr "Konfiguration _Testen"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:52
 msgid "Enable plugins"
@@ -6395,23 +6374,20 @@ msgid "Clear Filter History"
 msgstr "Filterverlauf löschen"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:141
-#, fuzzy
 msgid "File Manager"
-msgstr "Im Dateimanager öffnen"
+msgstr "Dateimanager"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:157
-#, fuzzy
 msgid "File _Manager"
-msgstr "Im Dateimanager öffnen"
+msgstr "Datei_manager"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:208
 msgid "Add"
 msgstr "Hinzufügen"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:381
-#, fuzzy
 msgid "Rescan shares:"
-msgstr "Freigaben aktualisieren"
+msgstr "Freigaben aktualisieren:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:395
 msgid "On startup"
@@ -6434,11 +6410,8 @@ msgid "Trusted shares"
 msgstr "Vertrauenswürdige Freigaben"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:70
-#, fuzzy
 msgid "Automatically remove finished and cancelled uploads from list"
-msgstr ""
-"Automatisches Löschen von abgeschlossenen/abgebrochenen Uploads aus der "
-"Übertragungsliste"
+msgstr "Fertige und abgebrochene Uploads automatisch aus der Liste entfernen"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:93
 msgid "Double-click action for uploads:"
@@ -6591,7 +6564,6 @@ msgid "Finished folder downloads"
 msgstr "Fertige Ordner-Downloads"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:324
-#, fuzzy
 msgid "Queued uploads"
 msgstr "Uploads in der Warteschlange"
 
@@ -6768,14 +6740,12 @@ msgid "Abor_t"
 msgstr "Abbrechen"
 
 #: pynicotine/gtkgui/ui/uploads.ui:76
-#, fuzzy
 msgid "Abort Users"
-msgstr "Benutzer trennen"
+msgstr "Nutzer abbrechen"
 
 #: pynicotine/gtkgui/ui/uploads.ui:92
-#, fuzzy
 msgid "Abort _Users"
-msgstr "Benutzer trennen"
+msgstr "_Benutzer abbrechen"
 
 #: pynicotine/gtkgui/ui/uploads.ui:116
 msgid "Message All"
@@ -6810,9 +6780,8 @@ msgid "Upload Speed"
 msgstr "Upload-Geschwindigkeit"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:395
-#, fuzzy
 msgid "Add Interests"
-msgstr "Interessen"
+msgstr "Interessen hinzufügen"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:665
 msgid "_Gift Privileges…"
