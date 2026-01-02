@@ -19,7 +19,7 @@
         <property name="visible">True</property>
         <child>
           <object class="GtkBox">
-            <property name="spacing">12</property>
+            <property name="spacing">6</property>
             <property name="visible">True</property>
             <child>
               <object class="GtkSearchEntry" id="search_entry">
@@ -31,7 +31,26 @@
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="refresh_button">
+              <object class="GtkButton" id="create_room_button">
+                <property name="margin-start">6</property>
+                <property name="sensitive">False</property>
+                <property name="tooltip-text" translatable="yes">Create Room</property>
+                <property name="visible">True</property>
+                <signal name="clicked" handler="on_create_room"/>
+                <child>
+                  <object class="GtkImage">
+                    <property name="icon-name">list-add-symbolic</property>
+                    <property name="visible">True</property>
+                  </object>
+                </child>
+                <style>
+                  <class name="circular"/>
+                  <class name="image-button"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton">
                 <property name="tooltip-text" translatable="yes">Refresh Rooms</property>
                 <property name="visible">True</property>
                 <signal name="clicked" handler="on_refresh"/>

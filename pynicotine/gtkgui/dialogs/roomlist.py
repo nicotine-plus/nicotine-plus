@@ -12,6 +12,7 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import Dialog
+from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
@@ -26,9 +27,9 @@ class RoomList(Dialog):
 
         (
             self.container,
+            self.create_room_button,
             self.list_container,
             self.public_feed_toggle,
-            self.refresh_button,
             self.room_invitations_toggle,
             self.search_entry
         ) = ui.load(scope=self, path="dialogs/roomlist.ui")
@@ -105,7 +106,8 @@ class RoomList(Dialog):
             ("room-membership-revoked", self.room_membership_revoked),
             ("remove-room", self.remove_room),
             ("room-list", self.room_list),
-            ("server-disconnect", self.clear),
+            ("server-disconnect", self.server_disconnect),
+            ("server-login", self.server_login),
             ("show-room", self.show_room),
             ("user-joined-room", self.user_joined_room),
             ("user-left-room", self.user_left_room)
@@ -248,6 +250,13 @@ class RoomList(Dialog):
 
         self.list_view.unfreeze()
 
+    def server_login(self, *_args):
+        self.create_room_button.set_sensitive(True)
+
+    def server_disconnect(self, *_args):
+        self.create_room_button.set_sensitive(False)
+        self.clear()
+
     def on_room_tooltip(self, treeview, iterator):
 
         room = treeview.get_row_value(iterator, "room")
@@ -324,6 +333,37 @@ class RoomList(Dialog):
 
     def on_popup_leave(self, *_args):
         core.chatrooms.remove_room(self.popup_room)
+
+    def on_create_room_response(self, dialog, _response_id, _data):
+
+        room = dialog.get_entry_value()
+        private = dialog.get_option_value()
+
+        if private and room not in core.chatrooms.private_rooms and room in core.chatrooms.server_rooms:
+            self.on_create_room(error=_("Room %s is already registered as public.") % room)
+            return
+
+        core.chatrooms.show_room(room, private)
+        self.close()
+
+    def on_create_room(self, *_args, error=None):
+
+        message = ""
+
+        if error:
+            message += error + "\n\n"
+
+        message += _("Enter the name of the the chat room you want to create:")
+
+        EntryDialog(
+            parent=self,
+            title=_("Create New Room"),
+            message=message,
+            action_button_label=_("_Create Room"),
+            option_label=_("Make room private"),
+            option_value=bool(error),
+            callback=self.on_create_room_response
+        ).present()
 
     def on_refresh(self, *_args):
         core.chatrooms.request_room_list()
