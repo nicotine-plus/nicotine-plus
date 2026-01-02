@@ -235,7 +235,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="justify">center</property>
-                        <property name="label" translatable="yes">Enter a search term to search for files shared by other users on the Soulseek network</property>
+                        <property name="label" translatable="yes">Enter a search term to search for files shared by other online users</property>
                         <property name="max-width-chars">55</property>
                         <property name="visible">True</property>
                         <property name="wrap">True</property>
@@ -886,7 +886,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="justify">center</property>
-                        <property name="label" translatable="yes">Enter the name of a user, whose shared files you'd like to browse. You can also save the list to disk, and inspect it later on.</property>
+                        <property name="label" translatable="yes">Enter the name of a user to browse their shared files, and save the list to disk to inspect it later on</property>
                         <property name="max-width-chars">55</property>
                         <property name="visible">True</property>
                         <property name="wrap">True</property>
@@ -1222,7 +1222,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="justify">center</property>
-                        <property name="label" translatable="yes">Enter the name of a user to start a text conversation with them in private</property>
+                        <property name="label" translatable="yes">Enter the name of a user to start a conversation with them in private</property>
                         <property name="max-width-chars">55</property>
                         <property name="visible">True</property>
                         <property name="wrap">True</property>
@@ -1563,7 +1563,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="justify">center</property>
-                            <property name="label" translatable="yes">Join an existing chat room, or create a new room to chat with other users on the Soulseek network</property>
+                            <property name="label" translatable="yes">Join a room to chat with other online users, or create a private room with restricted access</property>
                             <property name="max-width-chars">55</property>
                             <property name="visible">True</property>
                             <property name="wrap">True</property>
