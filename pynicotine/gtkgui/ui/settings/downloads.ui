@@ -427,6 +427,7 @@
             <property name="visible">True</property>
             <child>
               <object class="GtkBox">
+                <property name="sensitive" bind-source="enable_filters_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
                 <property name="orientation">vertical</property>
                 <property name="visible">True</property>
                 <child>
@@ -587,6 +588,7 @@
         <child>
           <object class="GtkBox">
             <property name="margin-top">6</property>
+            <property name="sensitive" bind-source="enable_filters_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
             <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>

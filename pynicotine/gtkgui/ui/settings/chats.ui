@@ -59,6 +59,7 @@
         <child>
           <object class="GtkBox">
             <property name="orientation">vertical</property>
+            <property name="sensitive" bind-source="auto_replace_words_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
             <property name="visible">True</property>
             <child>
               <object class="GtkScrolledWindow" id="replacement_list_container">
@@ -215,6 +216,7 @@
         <child>
           <object class="GtkBox">
             <property name="orientation">vertical</property>
+            <property name="sensitive" bind-source="censor_text_patterns_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
             <property name="visible">True</property>
             <child>
               <object class="GtkScrolledWindow" id="censor_list_container">
