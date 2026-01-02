@@ -234,25 +234,25 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton" id="select_initial_button">
-                        <property name="tooltip-text" translatable="yes">Select Initial</property>
+                      <object class="GtkButton" id="reset_selection_button">
+                        <property name="tooltip-text" translatable="yes">Reset Selection</property>
                         <property name="visible">True</property>
-                        <signal name="clicked" handler="on_select_initial"/>
+                        <signal name="clicked" handler="on_reset_selection"/>
                         <child>
                           <object class="GtkBox">
                             <property name="spacing">6</property>
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkImage">
-                                <property name="icon-name">object-select-symbolic</property>
+                                <property name="icon-name">edit-undo-symbolic</property>
                                 <property name="visible">True</property>
                               </object>
                             </child>
                             <child>
                               <object class="GtkLabel">
                                 <property name="ellipsize">end</property>
-                                <property name="label" translatable="yes">Select _Initial</property>
-                                <property name="mnemonic-widget">select_initial_button</property>
+                                <property name="label" translatable="yes">_Reset Selection</property>
+                                <property name="mnemonic-widget">reset_selection_button</property>
                                 <property name="use-underline">True</property>
                                 <property name="visible">True</property>
                               </object>

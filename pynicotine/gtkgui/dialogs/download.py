@@ -43,8 +43,8 @@ class Download(Dialog):
             self.list_container,
             self.progress_bar,
             self.rename_button,
+            self.reset_selection_button,
             self.retry_button,
-            self.select_initial_button,
             self.unselect_all_button
         ) = ui.load(scope=self, path="dialogs/download.ui")
 
@@ -286,7 +286,7 @@ class Download(Dialog):
         if partial_files:
             self.set_in_progress()
         else:
-            self.select_initial_button.set_visible(False)
+            self.reset_selection_button.set_visible(False)
 
         self.unselect_all_button.set_visible(True)
         self.tree_view.unfreeze()
@@ -682,7 +682,7 @@ class Download(Dialog):
         self.unselect_all_button.set_visible(False)
         self.update_title()
 
-    def on_select_initial(self, *_args):
+    def on_reset_selection(self, *_args):
 
         self.reset_selected_count()
 
