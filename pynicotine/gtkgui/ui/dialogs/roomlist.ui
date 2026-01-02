@@ -34,7 +34,7 @@
               <object class="GtkButton" id="create_room_button">
                 <property name="margin-start">6</property>
                 <property name="sensitive">False</property>
-                <property name="tooltip-text" translatable="yes">Create Room</property>
+                <property name="tooltip-text" translatable="yes">Create New Room</property>
                 <property name="visible">True</property>
                 <signal name="clicked" handler="on_create_room"/>
                 <child>
