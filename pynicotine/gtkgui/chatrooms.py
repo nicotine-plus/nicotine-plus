@@ -1199,6 +1199,14 @@ class ChatRoom:
 
         self.chat_view.update_user_tags()
 
+        leave_message = _("--- disconnected ---")
+
+        if core.users.login_status != UserStatus.OFFLINE:
+            leave_message = _("%s left the room") % core.users.login_username
+
+        self.activity_view.add_line(
+            leave_message, timestamp_format=config.sections["logging"]["rooms_timestamp"])
+
     def on_focus(self, *_args):
 
         if self.window.current_page_id == self.window.chatrooms_page.id:
