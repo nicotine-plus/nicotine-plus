@@ -353,7 +353,7 @@ class RoomList(Dialog):
         if error:
             message += error + "\n\n"
 
-        message += _("Enter the name of the the chat room you want to create:")
+        message += _("Enter the name of the chat room you want to create:")
 
         EntryDialog(
             parent=self,

@@ -18,13 +18,36 @@
         <property name="spacing">12</property>
         <property name="visible">True</property>
         <child>
-          <object class="GtkSearchEntry" id="search_entry">
-            <property name="hexpand">True</property>
-            <property name="max-width-chars">150</property>
-            <property name="placeholder-text" translatable="yes">Search users…</property>
+          <object class="GtkBox">
+            <property name="spacing">12</property>
             <property name="visible">True</property>
-            <property name="width-chars">15</property>
-            <signal name="activate" handler="on_show_user"/>
+            <child>
+              <object class="GtkSearchEntry" id="search_entry">
+                <property name="hexpand">True</property>
+                <property name="max-width-chars">150</property>
+                <property name="placeholder-text" translatable="yes">Search users…</property>
+                <property name="visible">True</property>
+                <property name="width-chars">15</property>
+                <signal name="activate" handler="on_show_user"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton">
+                <property name="tooltip-text" translatable="yes">Message User</property>
+                <property name="visible">True</property>
+                <signal name="clicked" handler="on_message_user"/>
+                <child>
+                  <object class="GtkImage">
+                    <property name="icon-name">list-add-symbolic</property>
+                    <property name="visible">True</property>
+                  </object>
+                </child>
+                <style>
+                  <class name="circular"/>
+                  <class name="image-button"/>
+                </style>
+              </object>
+            </child>
           </object>
         </child>
         <child>

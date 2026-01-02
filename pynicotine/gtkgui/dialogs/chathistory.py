@@ -14,6 +14,7 @@ from pynicotine.events import events
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import Dialog
+from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
@@ -259,6 +260,24 @@ class ChatHistory(Dialog):
             core.privatechat.show_user(username)
             self.close()
             return
+
+    def on_message_user_response(self, dialog, _response_id, _data):
+
+        username = dialog.get_entry_value()
+
+        core.privatechat.show_user(username)
+        self.close()
+
+    def on_message_user(self, *_args):
+
+        EntryDialog(
+            parent=self,
+            title=_("Message User"),
+            message=_("Enter the name of the user you want to message:"),
+            action_button_label=_("_Message User"),
+            callback=self.on_message_user_response,
+            droplist=sorted(core.buddies.users)
+        ).present()
 
     def on_delete_chat_log_response(self, _dialog, _response_id, username):
         log.delete_log(log.private_chat_folder_path, username)
