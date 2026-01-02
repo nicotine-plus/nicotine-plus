@@ -306,7 +306,7 @@ class RoomList(Dialog):
         core.chatrooms.remove_room(global_room_name)
 
     def on_popup_private_room_disown_response(self, _dialog, _response_id, room):
-        core.chatrooms.request_private_room_cancel_membership(room)
+        core.chatrooms.request_private_room_disown(room)
 
     def on_popup_private_room_disown(self, *_args):
 
