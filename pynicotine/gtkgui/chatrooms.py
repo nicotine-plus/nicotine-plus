@@ -592,7 +592,8 @@ class ChatRoom:
                     "default_sort_type": "ascending",
                     "text_underline_column": "username_underline_data",
                     "text_weight_column": "username_weight_data",
-                    "sensitive_column": "is_unignored_data"
+                    "sensitive_column": "is_unignored_data",
+                    "tooltip_callback": self.on_username_tooltip
                 },
                 "files": {
                     "column_type": "number",
@@ -820,6 +821,21 @@ class ChatRoom:
             return self.users_list_view.get_row_value(iterator, "user")
 
         return None
+
+    def on_username_tooltip(self, treeview, iterator):
+
+        username = treeview.get_row_value(iterator, "user")
+        username_underline = treeview.get_row_value(iterator, "username_underline_data")
+
+        if username_underline != Pango.Underline.NONE:
+            return _("%(username)s (%(role)s)") % {"username": username, "role": _("Room Owner")}
+
+        username_weight = treeview.get_row_value(iterator, "username_weight_data")
+
+        if username_weight != Pango.Weight.NORMAL:
+            return _("%(username)s (%(role)s)") % {"username": username, "role": _("Room Operator")}
+
+        return username
 
     def on_row_activated(self, _list_view, _path, _column):
 

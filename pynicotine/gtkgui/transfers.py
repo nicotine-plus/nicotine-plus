@@ -1087,6 +1087,7 @@ class Transfers:
         self.populate_popup_menu_users()
 
     def on_username_tooltip(self, treeview, iterator):
+
         username = treeview.get_row_value(iterator, "user")
         username_underline = treeview.get_row_value(iterator, "username_underline_data")
 

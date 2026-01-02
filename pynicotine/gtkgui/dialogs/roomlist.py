@@ -54,7 +54,8 @@ class RoomList(Dialog):
                     "width": 260,
                     "expand_column": True,
                     "text_underline_column": "room_underline_data",
-                    "text_weight_column": "room_weight_data"
+                    "text_weight_column": "room_weight_data",
+                    "tooltip_callback": self.on_room_tooltip
                 },
                 "users": {
                     "column_type": "number",
@@ -246,6 +247,21 @@ class RoomList(Dialog):
             self.add_room(room, user_count)
 
         self.list_view.unfreeze()
+
+    def on_room_tooltip(self, treeview, iterator):
+
+        room = treeview.get_row_value(iterator, "room")
+        room_underline = treeview.get_row_value(iterator, "room_underline_data")
+
+        if room_underline != Pango.Underline.NONE:
+            return _("%(room)s (%(role)s)") % {"room": room, "role": _("Room Owner")}
+
+        room_weight = treeview.get_row_value(iterator, "room_weight_data")
+
+        if room_weight != Pango.Weight.NORMAL:
+            return _("%(room)s (%(role)s)") % {"room": room, "role": _("Room Member")}
+
+        return room
 
     def on_row_activated(self, *_args):
 
