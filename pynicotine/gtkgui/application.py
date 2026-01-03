@@ -96,7 +96,7 @@ class Application:
         for event_name, callback in (
             ("confirm-quit", self.on_confirm_quit),
             ("invalid-password", self.on_invalid_password),
-            ("invalid-username", self.on_invalid_password),
+            ("invalid-username", self.on_invalid_username),
             ("quit", self._instance.quit),
             ("server-login", self._update_user_status),
             ("server-disconnect", self._update_user_status),
@@ -579,6 +579,9 @@ class Application:
     def on_invalid_password(self, *_args):
         self.on_fast_configure(invalid_password=True)
 
+    def on_invalid_username(self, *_args):
+        self.on_fast_configure(invalid_username=True)
+
     def on_user_status(self, msg):
         if msg.user == core.users.login_username:
             self._update_user_status()
@@ -639,16 +642,18 @@ class Application:
     def on_debug_miscellaneous(self, action, state):
         self.on_set_debug_level(action, state, "miscellaneous")
 
-    def on_fast_configure(self, *_args, invalid_password=False):
+    def on_fast_configure(self, *_args, invalid_password=False, invalid_username=False):
 
         if self.fast_configure is None:
             from pynicotine.gtkgui.dialogs.fastconfigure import FastConfigure
             self.fast_configure = FastConfigure(self)
 
-        if invalid_password and self.fast_configure.is_visible():
+        if (invalid_password or invalid_username) and self.fast_configure.is_visible():
             self.fast_configure.hide()
 
         self.fast_configure.invalid_password = invalid_password
+        self.fast_configure.invalid_username = invalid_username
+
         self.fast_configure.present()
 
     def on_keyboard_shortcuts(self, *_args):
