@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-03 02:46+0200\n"
-"PO-Revision-Date: 2025-12-28 23:10+0000\n"
+"PO-Revision-Date: 2026-01-03 22:43+0000\n"
 "Last-Translator: slrslr <adm@prnet.info>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
@@ -745,18 +745,17 @@ msgid "Clear Message View"
 msgstr "Vyčistit zobrazení zpráv"
 
 #: pynicotine/gtkgui/chatrooms.py:847 pynicotine/gtkgui/chatrooms.py:852
-#, fuzzy, python-format
+#, python-format
 msgid "%(username)s (%(role)s)"
-msgstr "%(username)s (%(status)s)"
+msgstr "%(username)s (%(role)s)"
 
 #: pynicotine/gtkgui/chatrooms.py:847 pynicotine/gtkgui/dialogs/roomlist.py:266
-#, fuzzy
 msgid "Room Owner"
-msgstr "Názvy místností"
+msgstr "Majitel místnosti"
 
 #: pynicotine/gtkgui/chatrooms.py:852
 msgid "Room Operator"
-msgstr ""
+msgstr "Operátor místnosti"
 
 #: pynicotine/gtkgui/chatrooms.py:894
 #, python-format
@@ -795,7 +794,7 @@ msgstr "%s se vrátil(a)"
 
 #: pynicotine/gtkgui/chatrooms.py:1227
 msgid "Members"
-msgstr ""
+msgstr "Členové"
 
 #: pynicotine/gtkgui/chatrooms.py:1227
 #: pynicotine/gtkgui/dialogs/preferences.py:2215
@@ -806,9 +805,8 @@ msgid "Online"
 msgstr "Online"
 
 #: pynicotine/gtkgui/chatrooms.py:1251
-#, fuzzy
 msgid "--- disconnected ---"
-msgstr "Odpojit"
+msgstr "--- odpojeno ---"
 
 #: pynicotine/gtkgui/chatrooms.py:1276
 #, python-format
@@ -827,14 +825,12 @@ msgid "Unknown"
 msgstr "Neznámé"
 
 #: pynicotine/gtkgui/chatrooms.py:1312 pynicotine/gtkgui/ui/chatrooms.ui:192
-#, fuzzy
 msgid "Add Room Member"
-msgstr "Zrušit členství v místnosti"
+msgstr "Přidat člena místnosti"
 
 #: pynicotine/gtkgui/chatrooms.py:1313
-#, fuzzy
 msgid "Enter the name of the user you want to add to the private room:"
-msgstr "Zadejte jméno uživatele ke kterému chcete nahrávat:"
+msgstr "Zadejte jméno uživatele, kterého chcete přidat do soukromé místnosti:"
 
 #: pynicotine/gtkgui/chatrooms.py:1346
 #: pynicotine/gtkgui/dialogs/chathistory.py:296
@@ -922,19 +918,16 @@ msgstr "Smazat protokol chatu…"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:278
 #: pynicotine/gtkgui/ui/dialogs/chathistory.ui:36
-#, fuzzy
 msgid "Message User"
-msgstr "Zpráva všem"
+msgstr "Zpráva uživateli"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:279
-#, fuzzy
 msgid "Enter the name of the user you want to message:"
-msgstr "Zadejte jméno uživatele ke kterému chcete nahrávat:"
+msgstr "Zadejte jméno uživatele, kterému chcete napsat zprávu:"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:280
-#, fuzzy
 msgid "_Message User"
-msgstr "_Zpráva všem"
+msgstr "_Zpráva uživateli"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:297
 #: pynicotine/gtkgui/privatechat.py:475
@@ -1900,9 +1893,8 @@ msgstr "_Připojit k místnosti"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:82
 #: pynicotine/gtkgui/dialogs/roomlist.py:294
-#, fuzzy
 msgid "Delete Private Room…"
-msgstr "Smazat protokol místnosti…"
+msgstr "Smazat soukromou místnost…"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:83
 #: pynicotine/gtkgui/dialogs/roomlist.py:295
@@ -1913,44 +1905,38 @@ msgstr "Zrušit členství v místnosti"
 #: pynicotine/gtkgui/dialogs/roomlist.py:271
 #, python-format
 msgid "%(room)s (%(role)s)"
-msgstr ""
+msgstr "%(room)s (%(role)s)"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:271
-#, fuzzy
 msgid "Room Member"
-msgstr "Zrušit členství v místnosti"
+msgstr "Člen místnosti"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:324
-#, fuzzy
 msgid "Delete Private Room?"
-msgstr "Soukromé místnosti"
+msgstr "Smazat soukromou místnost?"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:325
-#, fuzzy, python-format
+#, python-format
 msgid "Do you really want to permanently delete your private room %s?"
-msgstr ""
-"Opravdu chcete trvale smazat všechny protokolované zprávy pro tuto místnost?"
+msgstr "Opravdu chcete trvale smazat %s vaší soukromé místnosti?"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:346
 #, python-format
 msgid "Room %s is already registered as public."
-msgstr ""
+msgstr "Místnost %s je již zaregistrována jako veřejná."
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:359
-#, fuzzy
 msgid "Enter the name of the chat room you want to create:"
-msgstr "Zadejte jméno uživatele ke kterému chcete nahrávat:"
+msgstr "Zadejte jméno chatovací místnosti, kterou chcete vytvořit:"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:363
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:37
-#, fuzzy
 msgid "Create New Room"
-msgstr "Vytvořit novou místnost?"
+msgstr "Vytvořit novou místnost"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:365
-#, fuzzy
 msgid "_Create Room"
-msgstr "Vytvořit novou místnost?"
+msgstr "_Vytvořit místnost"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:28
 #: pynicotine/gtkgui/dialogs/shortcuts.py:40
@@ -2578,9 +2564,9 @@ msgid "Clear All Results"
 msgstr "Vyčistit všechny výsledky"
 
 #: pynicotine/gtkgui/search.py:705
-#, fuzzy
 msgid "Cannot search for files shared by other users, since you are offline."
-msgstr "Od uživatele nelze získat informace, protože je offline."
+msgstr ""
+"Nelze vyhledat soubory sdílené ostatními uživateli, protože jste offline."
 
 #: pynicotine/gtkgui/search.py:731
 msgid "Clear Filters"
@@ -3012,9 +2998,8 @@ msgid "Privileged User"
 msgstr "Uživatel s privilegii"
 
 #: pynicotine/gtkgui/userinfo.py:803
-#, fuzzy
 msgid "Please enter a valid number of days."
-msgstr "Zadejte prosím počet dnů."
+msgstr "Zadejte prosím platný počet dnů."
 
 #: pynicotine/gtkgui/userinfo.py:822
 #, python-format
@@ -5173,14 +5158,12 @@ msgid "Deselect _All"
 msgstr "Zrušit výběr _všeho"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:238
-#, fuzzy
 msgid "Reset Selection"
-msgstr "Resetovat velikost"
+msgstr "Resetovat výběr"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:254
-#, fuzzy
 msgid "_Reset Selection"
-msgstr "_Resetovat kolonku řazení"
+msgstr "_Resetovat výběr"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:102
 msgid "Welcome to Nicotine+"
@@ -5307,14 +5290,12 @@ msgid "Refresh Rooms"
 msgstr "Obnovit místnosti"
 
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:112
-#, fuzzy
 msgid "No Chat Rooms"
-msgstr "Chatovací místnosti"
+msgstr "Žádné chatovací místnosti"
 
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:123
-#, fuzzy
 msgid "Chat rooms will appear here when available"
-msgstr "Všechny dostupné místnosti se zobrazí zde"
+msgstr "Zde se zobrazí chatovací místnosti, jakmile budou dostupné"
 
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:157
 msgid "_Show feed of public chat room messages"
@@ -5460,11 +5441,10 @@ msgid "Configure Searches"
 msgstr "Nastavení vyhledávání"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:238
-#, fuzzy
 msgid "Enter a search term to search for files shared by other online users"
 msgstr ""
-"Zadejte hledané slovo nebo frázi (výraz) pro vyhledávání souborů sdílených "
-"ostatními uživateli v síti Soulseek"
+"Zadejte hledaný výraz pro vyhledání souborů sdílených ostatními uživateli, "
+"kteří jsou zrovna připojeni"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:394
 #: pynicotine/gtkgui/ui/mainwindow.ui:635 pynicotine/gtkgui/ui/search.ui:237
@@ -5508,13 +5488,12 @@ msgid "Configure Shares"
 msgstr "Nastavení sdílení"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:889
-#, fuzzy
 msgid ""
 "Enter the name of a user to browse their shared files, and save the list to "
 "disk to inspect it later on"
 msgstr ""
-"Zadejte jméno uživatele, jehož sdílené soubory chcete procházet. Seznam "
-"můžete také uložit na disk a později jej prozkoumat."
+"Zadejte jméno uživatele, jehož sdílené soubory chcete procházet. Uložte "
+"seznam na disk pro pozdější prozkoumání"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:968
 msgid "_Personal Profile"
@@ -5542,9 +5521,8 @@ msgid "Configure Chats"
 msgstr "Nastavení chatů"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1225
-#, fuzzy
 msgid "Enter the name of a user to start a conversation with them in private"
-msgstr "Zadejte jméno uživatele a začněte s ním soukromou textovou konverzaci"
+msgstr "Zadejte jméno uživatele se kterým si chcete soukromě psát"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1306 pynicotine/gtkgui/ui/uploads.ui:131
 msgid "_Message All"
@@ -5575,6 +5553,8 @@ msgid ""
 "Join a room to chat with other online users, or create a private room with "
 "restricted access"
 msgstr ""
+"Připojte se k místnosti a chatujte s ostatními online uživateli nebo si "
+"vytvořte soukromou místnost s omezeným přístupem"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1627
 msgid "Configure User Profile"
