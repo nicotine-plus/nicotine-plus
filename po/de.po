@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-03 02:46+0200\n"
-"PO-Revision-Date: 2026-01-03 05:02+0000\n"
-"Last-Translator: Felix Hansen <gore-snagged-happy@duck.com>\n"
+"PO-Revision-Date: 2026-01-03 10:46+0000\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -755,18 +755,17 @@ msgid "Clear Message View"
 msgstr "Nachrichtenansicht leeren"
 
 #: pynicotine/gtkgui/chatrooms.py:847 pynicotine/gtkgui/chatrooms.py:852
-#, fuzzy, python-format
+#, python-format
 msgid "%(username)s (%(role)s)"
-msgstr "%(username)s (%(status)s)"
+msgstr "%(username)s (%(role)s)"
 
 #: pynicotine/gtkgui/chatrooms.py:847 pynicotine/gtkgui/dialogs/roomlist.py:266
-#, fuzzy
 msgid "Room Owner"
-msgstr "Raumnamen"
+msgstr "Raumbesitzer"
 
 #: pynicotine/gtkgui/chatrooms.py:852
 msgid "Room Operator"
-msgstr ""
+msgstr "Raumbetreiber"
 
 #: pynicotine/gtkgui/chatrooms.py:894
 #, python-format
@@ -805,7 +804,7 @@ msgstr "%s ist zurück"
 
 #: pynicotine/gtkgui/chatrooms.py:1227
 msgid "Members"
-msgstr ""
+msgstr "Mitglieder"
 
 #: pynicotine/gtkgui/chatrooms.py:1227
 #: pynicotine/gtkgui/dialogs/preferences.py:2215
@@ -836,14 +835,14 @@ msgid "Unknown"
 msgstr "Unbekannt"
 
 #: pynicotine/gtkgui/chatrooms.py:1312 pynicotine/gtkgui/ui/chatrooms.ui:192
-#, fuzzy
 msgid "Add Room Member"
-msgstr "Raummitgliedschaft kündigen"
+msgstr "Raummitglied hinzufügen"
 
 #: pynicotine/gtkgui/chatrooms.py:1313
-#, fuzzy
 msgid "Enter the name of the user you want to add to the private room:"
-msgstr "Gib den Namen des Benutzers ein, zu dem du hochladen möchtest:"
+msgstr ""
+"Gib den Namen des Benutzers ein, den du dem privaten Raum hinzufügen "
+"möchtest:"
 
 #: pynicotine/gtkgui/chatrooms.py:1346
 #: pynicotine/gtkgui/dialogs/chathistory.py:296
@@ -931,20 +930,16 @@ msgstr "Chatprotokoll löschen …"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:278
 #: pynicotine/gtkgui/ui/dialogs/chathistory.ui:36
-#, fuzzy
 msgid "Message User"
-msgstr "_Nachricht"
+msgstr "Nachricht an den Nutzer"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:279
-#, fuzzy
 msgid "Enter the name of the user you want to message:"
-msgstr ""
-"Gib den Namen des Benutzers ein, dem du eine Nachricht senden möchtest:"
+msgstr "Gib den Namen des Nutzers ein, dem du eine Nachricht schicken willst:"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:280
-#, fuzzy
 msgid "_Message User"
-msgstr "_Nachricht"
+msgstr "Benutzer _schreiben"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:297
 #: pynicotine/gtkgui/privatechat.py:475
@@ -1912,9 +1907,8 @@ msgstr "Raum _beitreten"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:82
 #: pynicotine/gtkgui/dialogs/roomlist.py:294
-#, fuzzy
 msgid "Delete Private Room…"
-msgstr "Raumprotokoll löschen…"
+msgstr "Privaten Raum löschen…"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:83
 #: pynicotine/gtkgui/dialogs/roomlist.py:295
@@ -1925,47 +1919,38 @@ msgstr "Raummitgliedschaft beenden"
 #: pynicotine/gtkgui/dialogs/roomlist.py:271
 #, python-format
 msgid "%(room)s (%(role)s)"
-msgstr ""
+msgstr "%(room)s (%(role)s)"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:271
-#, fuzzy
 msgid "Room Member"
-msgstr "Raummitgliedschaft kündigen"
+msgstr "Raummitglied"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:324
-#, fuzzy
 msgid "Delete Private Room?"
-msgstr "Private Räume"
+msgstr "Privaten Raum löschen?"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:325
-#, fuzzy, python-format
+#, python-format
 msgid "Do you really want to permanently delete your private room %s?"
-msgstr ""
-"Möchtest du wirklich alle protokollierten Nachrichten für diesen Raum "
-"dauerhaft löschen?"
+msgstr "Möchtest du wirklich deinen privaten Raum %s dauerhaft löschen?"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:346
 #, python-format
 msgid "Room %s is already registered as public."
-msgstr ""
+msgstr "Raum %s ist schon öffentlich registriert."
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:359
-#, fuzzy
 msgid "Enter the name of the chat room you want to create:"
-msgstr ""
-"Geben Sie den Namen des Benutzers ein, dessen Informationen Sie sehen "
-"möchten:"
+msgstr "Gib den Namen des Chatraums ein, den du erstellen möchtest:"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:363
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:37
-#, fuzzy
 msgid "Create New Room"
-msgstr "Neuen Raum erstellen?"
+msgstr "Neuen Raum erstellen"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:365
-#, fuzzy
 msgid "_Create Room"
-msgstr "Neuen Raum erstellen?"
+msgstr "Raum _erstellen"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:28
 #: pynicotine/gtkgui/dialogs/shortcuts.py:40
@@ -3028,9 +3013,8 @@ msgid "Privileged User"
 msgstr "Privilegierter Nutzer"
 
 #: pynicotine/gtkgui/userinfo.py:803
-#, fuzzy
 msgid "Please enter a valid number of days."
-msgstr "Bitte gib die Anzahl der Tage ein."
+msgstr "Bitte gib eine gültige Anzahl von Tagen ein."
 
 #: pynicotine/gtkgui/userinfo.py:822
 #, python-format
@@ -5209,14 +5193,12 @@ msgid "Deselect _All"
 msgstr "_Alle abwählen"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:238
-#, fuzzy
 msgid "Reset Selection"
-msgstr "Größe zurücksetzen"
+msgstr "Auswahl zurücksetzen"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:254
-#, fuzzy
 msgid "_Reset Selection"
-msgstr "_Sortierung der Spalte zurücksetzen"
+msgstr "_Auswahl zurücksetzen"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:102
 msgid "Welcome to Nicotine+"
@@ -5345,14 +5327,12 @@ msgid "Refresh Rooms"
 msgstr "Räume aktualisieren"
 
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:112
-#, fuzzy
 msgid "No Chat Rooms"
-msgstr "Chaträume"
+msgstr "Keine Chaträume"
 
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:123
-#, fuzzy
 msgid "Chat rooms will appear here when available"
-msgstr "Alle verfügbaren Räume werden hier angezeigt"
+msgstr "Chaträume erscheinen hier, wenn sie verfügbar sind"
 
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:157
 msgid "_Show feed of public chat room messages"
@@ -5498,11 +5478,10 @@ msgid "Configure Searches"
 msgstr "Sucheinstellungen konfigurieren"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:238
-#, fuzzy
 msgid "Enter a search term to search for files shared by other online users"
 msgstr ""
-"Gib einen Suchbegriff ein, um nach Dateien zu suchen, die von anderen "
-"Nutzern im Soulseek-Netzwerk freigegeben wurden"
+"Gib einen Suchbegriff ein, um nach Dateien zu suchen, die von anderen Online-"
+"Nutzern geteilt werden"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:394
 #: pynicotine/gtkgui/ui/mainwindow.ui:635 pynicotine/gtkgui/ui/search.ui:237
@@ -5547,14 +5526,13 @@ msgid "Configure Shares"
 msgstr "Freigaben konfigurieren"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:889
-#, fuzzy
 msgid ""
 "Enter the name of a user to browse their shared files, and save the list to "
 "disk to inspect it later on"
 msgstr ""
-"Gib den Namen eines Benutzers ein, dessen freigegebene Dateien du "
-"durchstöbern möchtest. Du kannst die Liste auch auf der Festplatte speichern "
-"und später ansehen."
+"Gib den Namen eines Nutzers ein, um dessen freigegebene Dateien zu "
+"durchsuchen, und speichere die Liste auf der Festplatte, damit du sie später "
+"ansehen kannst"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:968
 msgid "_Personal Profile"
@@ -5582,11 +5560,8 @@ msgid "Configure Chats"
 msgstr "Chats konfigurieren"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1225
-#, fuzzy
 msgid "Enter the name of a user to start a conversation with them in private"
-msgstr ""
-"Gib den Namen eines Benutzers ein, um eine private Textunterhaltung mit ihm "
-"zu beginnen"
+msgstr "Gib den Namen eines Nutzers ein, um privat mit dieser Person zu chatten"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1306 pynicotine/gtkgui/ui/uploads.ui:131
 msgid "_Message All"
@@ -5617,6 +5592,8 @@ msgid ""
 "Join a room to chat with other online users, or create a private room with "
 "restricted access"
 msgstr ""
+"Betrete ein Raum, um mit anderen Online-Nutzern zu chatten, oder erstelle "
+"einen privaten Raum mit eingeschränktem Zugang"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1627
 msgid "Configure User Profile"
