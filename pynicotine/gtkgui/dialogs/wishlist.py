@@ -4,6 +4,7 @@
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.widgets import ui
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
@@ -17,7 +18,8 @@ class WishList(Dialog):
 
         (
             self.container,
-            self.list_container
+            self.list_container,
+            self.search_entry
         ) = ui.load(scope=self, path="dialogs/wishlist.ui")
 
         super().__init__(
@@ -35,6 +37,7 @@ class WishList(Dialog):
         self.list_view = TreeView(
             application.window, parent=self.list_container, multi_select=True, activate_row_callback=self.on_edit_wish,
             delete_accelerator_callback=self.on_remove_wish,
+            search_entry=self.search_entry,
             columns={
                 "wish": {
                     "column_type": "text",
@@ -61,6 +64,9 @@ class WishList(Dialog):
             ("#" + _("Remove"), self.on_remove_wish)
         )
 
+        Accelerator("<Primary>f", self.widget, self.on_search_accelerator)
+        Accelerator("Down", self.search_entry, self.on_focus_list_view_accelerator)
+
         for event_name, callback in (
             ("add-wish", self.add_wish),
             ("remove-wish", self.remove_wish)
@@ -73,6 +79,23 @@ class WishList(Dialog):
         self.list_view.destroy()
 
         super().destroy()
+
+    def add_wish(self, wish, select=True):
+        self.list_view.add_row([wish], select_row=select)
+
+    def remove_wish(self, wish):
+
+        iterator = self.list_view.iterators.get(wish)
+
+        if iterator is not None:
+            self.list_view.remove_row(iterator)
+
+    def select_wish(self, wish):
+
+        iterator = self.list_view.iterators.get(wish)
+
+        if iterator is not None:
+            self.list_view.select_row(iterator)
 
     def on_add_wish_response(self, dialog, _response_id, _data):
 
@@ -161,26 +184,32 @@ class WishList(Dialog):
             callback=self.clear_wishlist_response
         ).present()
 
-    def add_wish(self, wish, select=True):
-        self.list_view.add_row([wish], select_row=select)
+    def on_search_entry_changed(self, *_args):
+        self.default_text = self.search_entry.get_text()
 
-    def remove_wish(self, wish):
+    def on_search_list(self, *_args):
 
-        iterator = self.list_view.iterators.get(wish)
+        if self.list_view.get_num_selected_rows() > 0:
+            self.list_view.grab_focus()
+            return
 
-        if iterator is not None:
-            self.list_view.remove_row(iterator)
+        self.on_add_wish()
 
-    def select_wish(self, wish):
+    def on_search_accelerator(self, *_args):
+        """Ctrl+F - Search wish terms."""
 
-        iterator = self.list_view.iterators.get(wish)
+        self.search_entry.grab_focus()
+        return True
 
-        if iterator is not None:
-            self.list_view.select_row(iterator)
+    def on_focus_list_view_accelerator(self, *_args):
+        """Down - Focus list view."""
+
+        self.list_view.grab_focus()
+        return True
 
     def on_show(self, *_args):
 
-        self.list_view.grab_focus()
+        self.search_entry.grab_focus()
 
         page = self.application.window.search.get_current_page()
 
@@ -199,6 +228,8 @@ class WishList(Dialog):
         if iterator is not None:
             # Highlight existing wish row
             self.list_view.select_row(iterator)
-            return
+        else:
+            self.list_view.unselect_all_rows()
 
-        self.list_view.unselect_all_rows()
+        self.search_entry.set_text(self.default_text)
+        self.search_entry.select_region(0, -1)

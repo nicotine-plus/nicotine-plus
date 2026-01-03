@@ -25,6 +25,17 @@
       </object>
     </child>
     <child>
+      <object class="GtkSearchEntry" id="search_entry">
+        <property name="hexpand">True</property>
+        <property name="max-width-chars">150</property>
+        <property name="placeholder-text" translatable="yes">Search wish terms…</property>
+        <property name="visible">True</property>
+        <property name="width-chars">15</property>
+        <signal name="activate" handler="on_search_list"/>
+        <signal name="search-changed" handler="on_search_entry_changed"/>
+      </object>
+    </child>
+    <child>
       <object class="GtkFrame">
         <property name="vexpand">True</property>
         <property name="visible">True</property>
