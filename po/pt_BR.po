@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-03 02:46+0200\n"
-"PO-Revision-Date: 2025-12-28 23:10+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2026-01-03 21:26+0000\n"
+"Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -751,18 +751,17 @@ msgid "Clear Message View"
 msgstr "Limpar Tela de Mensagens"
 
 #: pynicotine/gtkgui/chatrooms.py:847 pynicotine/gtkgui/chatrooms.py:852
-#, fuzzy, python-format
+#, python-format
 msgid "%(username)s (%(role)s)"
-msgstr "%(username)s (%(status)s)"
+msgstr "%(username)s (%(role)s)"
 
 #: pynicotine/gtkgui/chatrooms.py:847 pynicotine/gtkgui/dialogs/roomlist.py:266
-#, fuzzy
 msgid "Room Owner"
-msgstr "Nomes de salas"
+msgstr "Dono da Sala"
 
 #: pynicotine/gtkgui/chatrooms.py:852
 msgid "Room Operator"
-msgstr ""
+msgstr "Operador da Sala"
 
 #: pynicotine/gtkgui/chatrooms.py:894
 #, python-format
@@ -801,7 +800,7 @@ msgstr "%s retornou"
 
 #: pynicotine/gtkgui/chatrooms.py:1227
 msgid "Members"
-msgstr ""
+msgstr "Membros"
 
 #: pynicotine/gtkgui/chatrooms.py:1227
 #: pynicotine/gtkgui/dialogs/preferences.py:2215
@@ -832,14 +831,12 @@ msgid "Unknown"
 msgstr "Desconhecido"
 
 #: pynicotine/gtkgui/chatrooms.py:1312 pynicotine/gtkgui/ui/chatrooms.ui:192
-#, fuzzy
 msgid "Add Room Member"
-msgstr "Cancelar Associação à Sala"
+msgstr "Adicionar Membro da Sala"
 
 #: pynicotine/gtkgui/chatrooms.py:1313
-#, fuzzy
 msgid "Enter the name of the user you want to add to the private room:"
-msgstr "Digite o nome do usuário para o qual você deseja fazer upload:"
+msgstr "Digite o nome do usuário que deseja adicionar à sala privada:"
 
 #: pynicotine/gtkgui/chatrooms.py:1346
 #: pynicotine/gtkgui/dialogs/chathistory.py:296
@@ -927,19 +924,16 @@ msgstr "Excluir o registro de bate-papo…"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:278
 #: pynicotine/gtkgui/ui/dialogs/chathistory.ui:36
-#, fuzzy
 msgid "Message User"
-msgstr "_Mensagem"
+msgstr "Usuário da Mensagem"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:279
-#, fuzzy
 msgid "Enter the name of the user you want to message:"
-msgstr "Digite o nome do usuário para quem você deseja enviar uma mensagem:"
+msgstr "Digite o nome do usuário que você deseja enviar a mensagem:"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:280
-#, fuzzy
 msgid "_Message User"
-msgstr "_Mensagem"
+msgstr "Usuário da _Mensagem"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:297
 #: pynicotine/gtkgui/privatechat.py:475
@@ -1905,9 +1899,8 @@ msgstr "_Entrar na Sala"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:82
 #: pynicotine/gtkgui/dialogs/roomlist.py:294
-#, fuzzy
 msgid "Delete Private Room…"
-msgstr "Excluir o registro da sala…"
+msgstr "Excluir Sala Privada…"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:83
 #: pynicotine/gtkgui/dialogs/roomlist.py:295
@@ -1918,45 +1911,38 @@ msgstr "Cancelar Associação à Sala"
 #: pynicotine/gtkgui/dialogs/roomlist.py:271
 #, python-format
 msgid "%(room)s (%(role)s)"
-msgstr ""
+msgstr "%(room)s (%(role)s)"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:271
-#, fuzzy
 msgid "Room Member"
-msgstr "Cancelar Associação à Sala"
+msgstr "Membro da Sala"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:324
-#, fuzzy
 msgid "Delete Private Room?"
-msgstr "Salas Privadas"
+msgstr "Excluir Sala Privada?"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:325
-#, fuzzy, python-format
+#, python-format
 msgid "Do you really want to permanently delete your private room %s?"
-msgstr ""
-"Você realmente deseja excluir permanentemente todas as mensagens registradas "
-"para esta sala?"
+msgstr "Você realmente deseja excluir permanentemente sua sala privada %s?"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:346
 #, python-format
 msgid "Room %s is already registered as public."
-msgstr ""
+msgstr "A sala %s já está registrada como pública."
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:359
-#, fuzzy
 msgid "Enter the name of the chat room you want to create:"
-msgstr "Digite o nome do usuário cujas informações você deseja ver:"
+msgstr "Digite o nome da sala de bate-papo que você deseja criar:"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:363
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:37
-#, fuzzy
 msgid "Create New Room"
-msgstr "Criar uma Nova Sala?"
+msgstr "Criar Novo Sala"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:365
-#, fuzzy
 msgid "_Create Room"
-msgstr "Criar uma Nova Sala?"
+msgstr "_Criar Sala"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:28
 #: pynicotine/gtkgui/dialogs/shortcuts.py:40
@@ -2580,11 +2566,10 @@ msgid "Clear All Results"
 msgstr "Limpar Todos os Resultados"
 
 #: pynicotine/gtkgui/search.py:705
-#, fuzzy
 msgid "Cannot search for files shared by other users, since you are offline."
 msgstr ""
-"Não é possível solicitar informações do usuário, uma vez que eles estão "
-"offline."
+"Não é possível pesquisar arquivos compartilhados por outros usuários porque "
+"você está offline."
 
 #: pynicotine/gtkgui/search.py:731
 msgid "Clear Filters"
@@ -3017,9 +3002,8 @@ msgid "Privileged User"
 msgstr "Usuário Privilegiado"
 
 #: pynicotine/gtkgui/userinfo.py:803
-#, fuzzy
 msgid "Please enter a valid number of days."
-msgstr "Insira o número de dias."
+msgstr "Por favor, insira um número válido de dias."
 
 #: pynicotine/gtkgui/userinfo.py:822
 #, python-format
@@ -5184,14 +5168,12 @@ msgid "Deselect _All"
 msgstr "Desmarcar _Tudo"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:238
-#, fuzzy
 msgid "Reset Selection"
-msgstr "Redefinir Tamanho"
+msgstr "Redefinir Seleção"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:254
-#, fuzzy
 msgid "_Reset Selection"
-msgstr "_Redefinir Ordem da Coluna"
+msgstr "_Redefinir Seleção"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:102
 msgid "Welcome to Nicotine+"
@@ -5319,14 +5301,12 @@ msgid "Refresh Rooms"
 msgstr "Atualizar salas"
 
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:112
-#, fuzzy
 msgid "No Chat Rooms"
-msgstr "Salas de Bate-papo"
+msgstr "Sem Salas de Bate-Papo"
 
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:123
-#, fuzzy
 msgid "Chat rooms will appear here when available"
-msgstr "Todos as salas disponíveis aparecerão aqui"
+msgstr "As salas de bate-papo aparecerão aqui quando disponíveis"
 
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:157
 msgid "_Show feed of public chat room messages"
@@ -5472,11 +5452,10 @@ msgid "Configure Searches"
 msgstr "Configurar pesquisas"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:238
-#, fuzzy
 msgid "Enter a search term to search for files shared by other online users"
 msgstr ""
-"Digite um termo de pesquisa para pesquisar arquivos compartilhados por "
-"outros usuários na rede Soulseek"
+"Digite um termo de pesquisa para procurar arquivos compartilhados por outros "
+"usuários online"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:394
 #: pynicotine/gtkgui/ui/mainwindow.ui:635 pynicotine/gtkgui/ui/search.ui:237
@@ -5521,14 +5500,12 @@ msgid "Configure Shares"
 msgstr "Configurar compartilhamentos"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:889
-#, fuzzy
 msgid ""
 "Enter the name of a user to browse their shared files, and save the list to "
 "disk to inspect it later on"
 msgstr ""
-"Digite o nome de um usuário cujos arquivos compartilhados você deseja "
-"navegar. Você também pode salvar a lista em disco e inspecioná-la "
-"posteriormente."
+"Digite o nome de um usuário para navegar pelos arquivos compartilhados e "
+"salve a lista em disco para inspecioná-la mais tarde"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:968
 msgid "_Personal Profile"
@@ -5556,11 +5533,9 @@ msgid "Configure Chats"
 msgstr "Configurar bate-papos"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1225
-#, fuzzy
 msgid "Enter the name of a user to start a conversation with them in private"
 msgstr ""
-"Digite o nome de um usuário para iniciar uma conversa de texto com ele em "
-"particular"
+"Digite o nome de um usuário para iniciar uma conversa com ele em particular"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1306 pynicotine/gtkgui/ui/uploads.ui:131
 msgid "_Message All"
@@ -5591,6 +5566,8 @@ msgid ""
 "Join a room to chat with other online users, or create a private room with "
 "restricted access"
 msgstr ""
+"Entre em uma sala para conversar com outros usuários online ou crie uma sala "
+"privada com acesso restrito"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1627
 msgid "Configure User Profile"
