@@ -3381,6 +3381,10 @@ class PluginsPage:
             title=_("Uninstall Plugin?"),
             message=_("Do you really want to uninstall plugin %s? "
                       "This will remove any files the plugin has stored.") % human_plugin_name,
+            buttons=[
+                ("cancel", _("_Cancel")),
+                ("ok", _("Uninstall"))
+            ],
             destructive_response_id="ok",
             callback=self.on_uninstall_plugin_response,
             callback_data=self.selected_plugin

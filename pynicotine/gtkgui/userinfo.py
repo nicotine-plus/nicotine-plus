@@ -826,7 +826,7 @@ class UserInfo:
             parent=self.window,
             title=_("Gift Privileges"),
             message=message,
-            action_button_label=_("_Give Privileges"),
+            action_button_label=_("_Send"),
             callback=self.on_give_privileges_response
         ).present()
 

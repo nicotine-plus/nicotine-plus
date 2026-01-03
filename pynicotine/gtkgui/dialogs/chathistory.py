@@ -278,7 +278,7 @@ class ChatHistory(Dialog):
             parent=self,
             title=_("Message User"),
             message=_("Enter the name of the user you want to message:"),
-            action_button_label=_("_Message User"),
+            action_button_label=_("_Add"),
             callback=self.on_message_user_response,
             droplist=sorted(core.buddies.users)
         ).present()
@@ -296,6 +296,10 @@ class ChatHistory(Dialog):
                 parent=self.parent,
                 title=_("Delete Logged Messages?"),
                 message=_("Do you really want to permanently delete all logged messages for this user?"),
+                buttons=[
+                    ("cancel", _("_Cancel")),
+                    ("ok", _("Delete"))
+                ],
                 destructive_response_id="ok",
                 callback=self.on_delete_chat_log_response,
                 callback_data=username

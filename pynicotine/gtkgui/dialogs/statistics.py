@@ -108,6 +108,10 @@ class Statistics(Dialog):
             parent=self,
             title=_("Reset Transfer Statistics?"),
             message=_("Do you really want to reset transfer statistics?"),
+            buttons=[
+                ("cancel", _("_Cancel")),
+                ("ok", _("Reset All"))
+            ],
             destructive_response_id="ok",
             callback=self.on_reset_statistics_response
         ).present()

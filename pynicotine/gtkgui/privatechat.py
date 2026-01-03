@@ -473,6 +473,10 @@ class PrivateChat:
             parent=self.window,
             title=_("Delete Logged Messages?"),
             message=_("Do you really want to permanently delete all logged messages for this user?"),
+            buttons=[
+                ("cancel", _("_Cancel")),
+                ("ok", _("Delete"))
+            ],
             destructive_response_id="ok",
             callback=self.on_delete_chat_log_response
         ).present()

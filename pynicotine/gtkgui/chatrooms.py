@@ -223,6 +223,10 @@ class ChatRooms(IconNotebook):
                 title=_("Create New Room?"),
                 message=_('Do you really want to create a new room "%s"?') % room,
                 option_label=_("Make room private"),
+                buttons=[
+                    ("cancel", _("_Cancel")),
+                    ("ok", _("Cre_ate"))
+                ],
                 callback=self.on_create_room_response,
                 callback_data=room
             ).present()
@@ -1345,6 +1349,10 @@ class ChatRoom:
             parent=self.window,
             title=_("Delete Logged Messages?"),
             message=_("Do you really want to permanently delete all logged messages for this room?"),
+            buttons=[
+                ("cancel", _("_Cancel")),
+                ("ok", _("Delete"))
+            ],
             destructive_response_id="ok",
             callback=self.on_delete_room_log_response
         ).present()

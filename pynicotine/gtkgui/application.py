@@ -753,7 +753,7 @@ class Application:
             parent=self.window,
             title=_("Message Downloading Users"),
             message=_("Send private message to all users who are downloading from you:"),
-            action_button_label=_("_Send Message"),
+            action_button_label=_("_Send"),
             callback=self.on_message_users_response,
             callback_data="downloading",
             show_emoji_icon=True
@@ -767,7 +767,7 @@ class Application:
             parent=self.window,
             title=_("Message Buddies"),
             message=_("Send private message to all online buddies:"),
-            action_button_label=_("_Send Message"),
+            action_button_label=_("_Send"),
             callback=self.on_message_users_response,
             callback_data="buddies",
             show_emoji_icon=True

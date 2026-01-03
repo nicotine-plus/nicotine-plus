@@ -180,6 +180,10 @@ class WishList(Dialog):
             parent=self,
             title=_("Clear Wishlist?"),
             message=_("Do you really want to clear your wishlist?"),
+            buttons=[
+                ("cancel", _("_Cancel")),
+                ("ok", _("Clear All"))
+            ],
             destructive_response_id="ok",
             callback=self.clear_wishlist_response
         ).present()

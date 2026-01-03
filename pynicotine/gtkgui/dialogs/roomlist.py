@@ -324,6 +324,10 @@ class RoomList(Dialog):
             parent=self,
             title=_("Delete Private Room?"),
             message=_("Do you really want to permanently delete your private room %s?") % self.popup_room,
+            buttons=[
+                ("cancel", _("_Cancel")),
+                ("ok", _("Delete"))
+            ],
             destructive_response_id="ok",
             callback=self.on_popup_delete_private_room_response,
             callback_data=self.popup_room
@@ -376,7 +380,7 @@ class RoomList(Dialog):
             message=message,
             default=room,
             max_length=core.chatrooms.ROOM_NAME_MAX_LENGTH,
-            action_button_label=_("_Create Room"),
+            action_button_label=_("Cre_ate"),
             option_label=_("Make room private"),
             option_value=private,
             callback=self.on_create_room_response

@@ -447,6 +447,10 @@ class IconNotebook:
             parent=self.window,
             title=_("Close All Tabs?"),
             message=_("Do you really want to close all tabs?"),
+            buttons=[
+                ("cancel", _("_Cancel")),
+                ("ok", _("Close All"))
+            ],
             destructive_response_id="ok",
             callback=self._on_remove_all_pages
         ).present()
