@@ -336,8 +336,11 @@ class RoomList(Dialog):
 
     def on_create_room_response(self, dialog, _response_id, _data):
 
-        room = dialog.get_entry_value()
+        room = core.chatrooms.sanitize_room_name(dialog.get_entry_value())
         private = dialog.get_option_value()
+
+        if not room:
+            return
 
         if private and room not in core.chatrooms.private_rooms and room in core.chatrooms.server_rooms:
             self.on_create_room(error=_("Room %s is already registered as public.") % room)

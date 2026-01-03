@@ -265,6 +265,9 @@ class ChatHistory(Dialog):
 
         username = dialog.get_entry_value()
 
+        if not username:
+            return
+
         core.privatechat.show_user(username)
         self.close()
 
