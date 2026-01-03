@@ -601,11 +601,10 @@ class SharesPage:
             self.rescan_daily_toggle,
             self.rescan_hour_container,
             self.rescan_on_startup_toggle,
-            self.reveal_buddy_shares_toggle,
-            self.reveal_trusted_shares_toggle,
             self.shares_list_container,
             self.shares_list_page,
-            self.stack
+            self.stack,
+            self.visible_to_button
         ) = self.widgets = ui.load(scope=self, path="settings/shares.ui")
 
         self.application = application
@@ -615,6 +614,8 @@ class SharesPage:
         self.buddy_shared_folders = []
         self.trusted_shared_folders = []
         self.share_filters = []
+        self.reveal_buddy_shares = False
+        self.reveal_trusted_shares = False
 
         items = []
         for hour in range(24):
@@ -714,9 +715,7 @@ class SharesPage:
             "transfers": {
                 "rescanonstartup": self.rescan_on_startup_toggle,
                 "rescan_shares_daily": self.rescan_daily_toggle,
-                "rescan_shares_hour": self.rescan_hour_combobox,
-                "reveal_buddy_shares": self.reveal_buddy_shares_toggle,
-                "reveal_trusted_shares": self.reveal_trusted_shares_toggle
+                "rescan_shares_hour": self.rescan_hour_combobox
             }
         }
 
@@ -744,6 +743,8 @@ class SharesPage:
         self.buddy_shared_folders = config.sections["transfers"]["buddyshared"][:]
         self.trusted_shared_folders = config.sections["transfers"]["trustedshared"][:]
         self.share_filters = config.sections["transfers"]["share_filters"][:]
+        self.reveal_buddy_shares = config.sections["transfers"]["reveal_buddy_shares"]
+        self.reveal_trusted_shares = config.sections["transfers"]["reveal_trusted_shares"]
 
         unreadable_icon = "dialog-warning-symbolic"
         unreadable_shares = core.shares.check_shares_available()
@@ -783,10 +784,76 @@ class SharesPage:
                 "rescanonstartup": self.rescan_on_startup_toggle.get_active(),
                 "rescan_shares_daily": self.rescan_daily_toggle.get_active(),
                 "rescan_shares_hour": self.rescan_hour_combobox.get_selected_id(),
-                "reveal_buddy_shares": self.reveal_buddy_shares_toggle.get_active(),
-                "reveal_trusted_shares": self.reveal_trusted_shares_toggle.get_active()
+                "reveal_buddy_shares": self.reveal_buddy_shares,
+                "reveal_trusted_shares": self.reveal_trusted_shares
             }
         }
+
+    def on_change_stack_page(self, *_args):
+        child_name = self.stack.get_visible_child_name()
+        self.visible_to_button.set_visible(child_name == "shared_folders")
+
+    def on_visibility_to_response(self, dialog, _response_id, _data):
+
+        visible_to = dialog.get_entry_value().strip()
+
+        if visible_to == _("Only buddies can view shares"):
+            self.reveal_buddy_shares = False
+            self.reveal_trusted_shares = False
+
+        elif visible_to == _("Everyone can view buddy shares"):
+            self.reveal_buddy_shares = True
+            self.reveal_trusted_shares = False
+
+        elif visible_to == _("Everyone can view trusted shares"):
+            self.reveal_buddy_shares = False
+            self.reveal_trusted_shares = True
+
+        elif visible_to == _("Everyone can view buddy & trusted shares"):
+            self.reveal_buddy_shares = True
+            self.reveal_trusted_shares = True
+
+    def on_visibility_to(self, *_args):
+
+        default = ""
+
+        if not self.reveal_buddy_shares and not self.reveal_trusted_shares:
+            default = _("Only buddies can view shares")
+
+        elif self.reveal_buddy_shares and not self.reveal_trusted_shares:
+            default = _("Everyone can view buddy shares")
+
+        elif not self.reveal_buddy_shares and self.reveal_trusted_shares:
+            default = _("Everyone can view trusted shares")
+
+        elif self.reveal_buddy_shares and self.reveal_trusted_shares:
+            default = _("Everyone can view buddy & trusted shares")
+
+        EntryDialog(
+            parent=self.application.preferences,
+            title=_("Buddy Share Visibility"),
+            message="\n\n".join((
+                _("Make buddy/trusted shares visible to everyone, but require users to "
+                  "request access by messaging you. Such files are displayed with an indicator next to "
+                  "them, and users can choose whether or not they want to see the files in their "
+                  "search results."),
+
+                _("This option is not recommended in most cases. It is a last resort when "
+                  "providing unrestricted access is impractical, but you want to indicate that "
+                  "files are available on request. Including a comment about access requests on your user "
+                  "profile is recommended.")
+            )),
+            default=default,
+            droplist=[
+                _("Only buddies can view shares"),
+                _("Everyone can view buddy shares"),
+                _("Everyone can view trusted shares"),
+                _("Everyone can view buddy & trusted shares")
+            ],
+            entry_editable=False,
+            action_button_label=_("_Change"),
+            callback=self.on_visibility_to_response
+        ).present()
 
     def on_add_shared_folder_selected(self, selected, _data):
 

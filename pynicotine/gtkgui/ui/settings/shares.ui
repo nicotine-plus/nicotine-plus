@@ -341,7 +341,7 @@
   </object>
   <object class="GtkBox" id="container">
     <property name="orientation">vertical</property>
-    <property name="spacing">30</property>
+    <property name="spacing">24</property>
     <property name="visible">True</property>
     <child>
       <object class="GtkBox">
@@ -418,43 +418,6 @@
             </child>
           </object>
         </child>
-        <child>
-          <object class="GtkBox">
-            <property name="spacing">12</property>
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Visible to everyone:</property>
-                <property name="mnemonic-widget">reveal_buddy_shares_toggle</property>
-                <property name="visible">True</property>
-                <property name="wrap">True</property>
-                <property name="wrap-mode">word-char</property>
-                <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkBox">
-                <property name="spacing">6</property>
-                <property name="visible">True</property>
-                <child>
-                  <object class="GtkCheckButton" id="reveal_buddy_shares_toggle">
-                    <property name="label" translatable="yes">Buddy shares</property>
-                    <property name="use-underline">True</property>
-                    <property name="visible">True</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkCheckButton" id="reveal_trusted_shares_toggle">
-                    <property name="label" translatable="yes">Trusted shares</property>
-                    <property name="use-underline">True</property>
-                    <property name="visible">True</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
       </object>
     </child>
     <child>
@@ -463,17 +426,53 @@
         <property name="spacing">6</property>
         <property name="visible">True</property>
         <child>
-          <object class="GtkScrolledWindow">
+          <object class="GtkBox">
+            <property name="spacing">6</property>
             <property name="visible">True</property>
-            <property name="vscrollbar-policy">never</property>
             <child>
-              <object class="GtkStackSwitcher">
-                <property name="halign">start</property>
-                <property name="stack">stack</property>
+              <object class="GtkScrolledWindow">
+                <property name="hexpand">True</property>
                 <property name="visible">True</property>
-                <style>
-                  <class name="heading"/>
-                </style>
+                <property name="vscrollbar-policy">never</property>
+                <child>
+                  <object class="GtkStackSwitcher">
+                    <property name="halign">start</property>
+                    <property name="stack">stack</property>
+                    <property name="visible">True</property>
+                    <style>
+                      <class name="heading"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="visible_to_button">
+                <property name="halign">end</property>
+                <property name="tooltip-text" translatable="yes">Visible To</property>
+                <property name="visible">True</property>
+                <signal name="clicked" handler="on_visibility_to"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="spacing">6</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="icon-name">changes-prevent-symbolic</property>
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="ellipsize">end</property>
+                        <property name="label" translatable="yes">_Visible To</property>
+                        <property name="mnemonic-widget">visible_to_button</property>
+                        <property name="use-underline">True</property>
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -481,6 +480,7 @@
         <child>
           <object class="GtkStack" id="stack">
             <property name="visible">True</property>
+            <signal name="notify::visible-child-name" handler="on_change_stack_page"/>
           </object>
         </child>
       </object>

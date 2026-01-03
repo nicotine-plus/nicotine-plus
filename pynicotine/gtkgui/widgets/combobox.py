@@ -439,7 +439,11 @@ class ComboBox:
             self._button.set_sensitive(False)
 
     def grab_focus(self):
-        self.entry.grab_focus()
+
+        if self.entry is not None:
+            self.entry.grab_focus()
+
+        self.widget.grab_focus()
 
     def set_completion_popup_enabled(self, enabled):
 
