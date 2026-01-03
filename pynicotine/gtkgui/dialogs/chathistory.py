@@ -311,6 +311,9 @@ class ChatHistory(Dialog):
     def on_focus_list_view_accelerator(self, *_args):
         """Down - Focus list view."""
 
+        if not self.list_container.get_visible():
+            return False
+
         self.list_view.grab_focus()
         return True
 
