@@ -265,8 +265,7 @@ class About(Dialog):
          "\n •  David Balazs (djbaloo) (2006–2020)"),
 
         ("<b>Indonesian</b>"
-         "\n •  Delly Store (dellystore.07) (2025)"
-         "\n •  Glossary sync (glossary:sync) (2025)"),
+         "\n •  Delly Store (dellystore.07) (2025)"),
 
         ("<b>Italian</b>"
          "\n •  Gabriele (Gabboxl) (2022–2023)"
