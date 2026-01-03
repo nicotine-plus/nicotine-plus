@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-03 02:46+0200\n"
-"PO-Revision-Date: 2026-01-03 02:38+0000\n"
+"PO-Revision-Date: 2026-01-03 05:02+0000\n"
 "Last-Translator: Felix Hansen <gore-snagged-happy@duck.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -1903,7 +1903,7 @@ msgstr "Raum"
 #: pynicotine/gtkgui/ui/settings/ban.ui:129
 #: pynicotine/gtkgui/ui/settings/ignore.ui:64
 msgid "Users"
-msgstr "Nutzer"
+msgstr "Personen"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:79
 #: pynicotine/gtkgui/dialogs/roomlist.py:291
@@ -1919,7 +1919,7 @@ msgstr "Raumprotokoll löschen…"
 #: pynicotine/gtkgui/dialogs/roomlist.py:83
 #: pynicotine/gtkgui/dialogs/roomlist.py:295
 msgid "Cancel Room Membership"
-msgstr "Raummitgliedschaft kündigen"
+msgstr "Raummitgliedschaft beenden"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:266
 #: pynicotine/gtkgui/dialogs/roomlist.py:271
@@ -2021,11 +2021,11 @@ msgstr "Kontextmenü"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:50
 msgid "Change Main Tab"
-msgstr "Haupttab ändern"
+msgstr "Haupt‑Tab ändern"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:51
 msgid "Focus Top Bar"
-msgstr "Fokussiere obere Leiste"
+msgstr "Obere Leiste fokussieren"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:52
 msgid "Focus Next View"
@@ -2034,7 +2034,7 @@ msgstr "Nächste Ansicht fokussieren"
 #: pynicotine/gtkgui/dialogs/shortcuts.py:53
 #: pynicotine/gtkgui/ui/mainwindow.ui:1892
 msgid "Show Log Pane"
-msgstr "Protokollfenster anzeigen"
+msgstr "Protokollbereich anzeigen"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:55
 #: pynicotine/gtkgui/dialogs/shortcuts.py:102
@@ -2047,7 +2047,7 @@ msgstr "Vorheriger Tab"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:57
 msgid "Next Tab"
-msgstr "Nächste Tab"
+msgstr "Nächster Tab"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:58
 msgid "Reopen Tab"
@@ -2087,7 +2087,7 @@ msgstr "Zeile löschen"
 #: pynicotine/gtkgui/dialogs/shortcuts.py:67
 #: pynicotine/gtkgui/dialogs/shortcuts.py:104
 msgid "Editing"
-msgstr "Bearbeitung"
+msgstr "Bearbeiten"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:68
 msgid "Cut"
@@ -2104,12 +2104,12 @@ msgstr "Emoji einfügen"
 #: pynicotine/gtkgui/dialogs/shortcuts.py:74
 #: pynicotine/gtkgui/dialogs/shortcuts.py:83
 msgid "Next Match"
-msgstr "Nächsten Treffer"
+msgstr "Nächster Treffer"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:75
 #: pynicotine/gtkgui/dialogs/shortcuts.py:84
 msgid "Previous Match"
-msgstr "Vorherige Treffer"
+msgstr "Vorheriger Treffer"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:78
 msgid "Transfer To"
@@ -2130,7 +2130,7 @@ msgstr "Dateisuche"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:88
 msgid "Result Filters"
-msgstr "Ergebnisfilter"
+msgstr "Filter Suchergebnisse"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:90
 #: pynicotine/gtkgui/dialogs/wishlist.py:28
@@ -2144,19 +2144,19 @@ msgstr "Dateiübertragungen"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:93
 msgid "Resume Transfer"
-msgstr "Sendung fortsetzen"
+msgstr "Übertragung fortsetzen"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:94
 msgid "Abort Transfer"
-msgstr "Transfer abbrechen"
+msgstr "Übertragung abbrechen"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:101
 msgid "Main Tabs"
-msgstr "Haupttabs"
+msgstr "Haupt‑Tabs"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:60
 msgid "Transfer Statistics"
-msgstr "Transferstatistik"
+msgstr "Übertragungsstatistiken"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:83
 #, python-format
@@ -2188,8 +2188,8 @@ msgstr "Wünsche hinzufügen"
 #: pynicotine/gtkgui/dialogs/wishlist.py:101
 msgid "Enter a list of search terms to add to the wishlist:"
 msgstr ""
-"Gib eine Liste von Suchbegriffen ein, die du zur Wunschliste hinzufügen "
-"möchtest:"
+"Gib eine Liste von Suchbegriffen ein, die zur Wunschliste hinzugefügt werden "
+"sollen:"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:126
 msgid "Edit Wish"
@@ -2198,7 +2198,7 @@ msgstr "Wunsch bearbeiten"
 #: pynicotine/gtkgui/dialogs/wishlist.py:127
 #, python-format
 msgid "Enter new value for wish '%s':"
-msgstr "Neuen Wert für den Wunsch '%s' eingeben:"
+msgstr "Gib einen neuen Wert für den Wunsch „%s“ ein:"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:158
 msgid "Clear Wishlist?"
@@ -2248,7 +2248,7 @@ msgstr "Alles …"
 #: pynicotine/gtkgui/downloads.py:116
 #, python-format
 msgid "Downloading: %(speed)s ( %(active_users)s )"
-msgstr "Herunterladen: %(speed)s ( %(active_users)s )"
+msgstr "Download: %(speed)s ( %(active_users)s )"
 
 #: pynicotine/gtkgui/downloads.py:126
 msgid "Clear Queued Downloads"
@@ -2270,7 +2270,7 @@ msgstr "Willst du wirklich alle Downloads löschen?"
 #, python-format
 msgid "Download %(num)s File?"
 msgid_plural "Download %(num)s Files?"
-msgstr[0] "Datei %(num)s herunterladen?"
+msgstr[0] "%(num)s Datei herunterladen?"
 msgstr[1] "%(num)s Dateien herunterladen?"
 
 #: pynicotine/gtkgui/downloads.py:163
@@ -2282,11 +2282,11 @@ msgid_plural ""
 "Do you really want to download %(num)s files from %(user)s's folder "
 "%(folder)s?"
 msgstr[0] ""
-"Willst du wirklich die Datei aus dem Ordner %(folder)s von %(user)s "
+"Willst du wirklich %(num)s Datei aus dem Ordner %(folder)s von %(user)s "
 "herunterladen?"
 msgstr[1] ""
-"Willst du wirklich die %(num)s Dateien aus dem Ordner %(folder)s von "
-"%(user)s herunterladen?"
+"Willst du wirklich die %(num)s Dateien aus dem Ordner %(folder)s von %(user)"
+"s herunterladen?"
 
 #: pynicotine/gtkgui/downloads.py:169
 msgid "_Download Folder"
@@ -2306,12 +2306,12 @@ msgstr "Bewertung"
 
 #: pynicotine/gtkgui/interests.py:99
 msgid "Item"
-msgstr "Artikel"
+msgstr "Element"
 
 #: pynicotine/gtkgui/interests.py:186 pynicotine/gtkgui/interests.py:195
 #: pynicotine/gtkgui/interests.py:207 pynicotine/gtkgui/userinfo.py:353
 msgid "_Recommendations for Item"
-msgstr "_Empfehlungen für Artikel"
+msgstr "_Empfehlungen für Element"
 
 #: pynicotine/gtkgui/interests.py:204 pynicotine/gtkgui/interests.py:581
 #: pynicotine/gtkgui/userinfo.py:350
@@ -2428,7 +2428,7 @@ msgstr "Protokollansicht löschen"
 
 #: pynicotine/gtkgui/mainwindow.py:1199
 msgid "Preparing Shares"
-msgstr "Freigaben vorbereiten"
+msgstr "Freigaben werden eingerichtet"
 
 #: pynicotine/gtkgui/mainwindow.py:1212
 #, python-format
@@ -2437,7 +2437,7 @@ msgstr "Gescannte Ordner: %s"
 
 #: pynicotine/gtkgui/mainwindow.py:1215
 msgid "Scanning Shares"
-msgstr "Aktualisierung der Freigaben"
+msgstr "Freigaben werden eingelesen"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:53
 msgid "You are offline"
@@ -2445,7 +2445,7 @@ msgstr "Du bist offline"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:54
 msgid "Connect to the server to check port status."
-msgstr "Verbinde dich mit dem Server, um den Portstatus zu prüfen."
+msgstr "Mit dem Server verbinden, um den Portstatus zu prüfen."
 
 #: pynicotine/gtkgui/popovers/portchecker.py:59
 msgid "Checking connection status…"
@@ -2471,7 +2471,7 @@ msgstr "Port %i (TCP) ist offen"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:82
 msgid "Most users can connect to you."
-msgstr "Die meisten Benutzer können mit dir verbinden."
+msgstr "Die meisten Nutzer können eine Verbindung zu dir herstellen."
 
 #: pynicotine/gtkgui/popovers/portchecker.py:87
 #, python-format
@@ -2483,8 +2483,8 @@ msgid ""
 "You can only connect to a few users. Ensure the port is forwarded and your "
 "device's firewall is not blocking it."
 msgstr ""
-"Du kannst dich nur mit wenigen Nutzern verbinden. Stell sicher, dass der "
-"Port weitergeleitet wird und dass deine Firewall am Gerät ihn nicht "
+"Du kannst nur zu wenigen Nutzern eine Verbindung herstellen. Stelle sicher, "
+"dass der Port weitergeleitet wird und die Firewall deines Geräts ihn nicht "
 "blockiert."
 
 #: pynicotine/gtkgui/privatechat.py:355 pynicotine/gtkgui/search.py:638
@@ -2496,7 +2496,7 @@ msgstr "Alle Tabs schließen …"
 #: pynicotine/gtkgui/privatechat.py:356 pynicotine/gtkgui/search.py:639
 #: pynicotine/gtkgui/userbrowse.py:274 pynicotine/gtkgui/userinfo.py:345
 msgid "_Close Tab"
-msgstr "Tab schließen"
+msgstr "_Tab schließen"
 
 #: pynicotine/gtkgui/privatechat.py:370
 msgid "View Chat Log"
@@ -2567,7 +2567,7 @@ msgstr "Datei-URL kopieren"
 
 #: pynicotine/gtkgui/search.py:610 pynicotine/gtkgui/transfers.py:254
 msgid "Copy Folder URL"
-msgstr "URL des Ordners kopieren"
+msgstr "Ordner‑URL kopieren"
 
 #: pynicotine/gtkgui/search.py:623 pynicotine/gtkgui/transfers.py:275
 #: pynicotine/gtkgui/widgets/popupmenu.py:440
@@ -2580,7 +2580,7 @@ msgstr "_Ordner durchsuchen"
 
 #: pynicotine/gtkgui/search.py:633
 msgid "Search _Again"
-msgstr "_Nochmals suchen"
+msgstr "_Erneut suchen"
 
 #: pynicotine/gtkgui/search.py:634
 msgid "Copy Search Term"
@@ -2591,10 +2591,10 @@ msgid "Clear All Results"
 msgstr "Alle Ergebnisse löschen"
 
 #: pynicotine/gtkgui/search.py:705
-#, fuzzy
 msgid "Cannot search for files shared by other users, since you are offline."
 msgstr ""
-"Kann die IP des Benutzers nicht abrufen, da dieser Benutzer offline ist."
+"Dateien, die von anderen Nutzern geteilt wurden, können nicht durchsucht "
+"werden, da du offline bist."
 
 #: pynicotine/gtkgui/search.py:731
 msgid "Clear Filters"
@@ -2617,8 +2617,8 @@ msgstr "_Ergebnisfilter"
 #, python-format
 msgid "%(num)s Active Filter"
 msgid_plural "%(num)s Active Filters"
-msgstr[0] "%(num)s Aktiver Filter"
-msgstr[1] "%(num)s Aktive Filter"
+msgstr[0] "%(num)s aktiver Filter"
+msgstr[1] "%(num)s aktive Filter"
 
 #: pynicotine/gtkgui/search.py:1366
 msgid "Add Wi_sh"
@@ -2651,11 +2651,11 @@ msgstr "Dateien _herunterladen"
 
 #: pynicotine/gtkgui/search.py:1575 pynicotine/gtkgui/userbrowse.py:1153
 msgid "Download File _To…"
-msgstr "Datei herunterladen _zu …"
+msgstr "Datei herunterladen _nach…"
 
 #: pynicotine/gtkgui/search.py:1575 pynicotine/gtkgui/userbrowse.py:1153
 msgid "Download Files _To…"
-msgstr "Dateien herunterladen _zu …"
+msgstr "Dateien herunterladen _nach …"
 
 #: pynicotine/gtkgui/search.py:1587
 msgid "_Download Folder…"
@@ -2663,11 +2663,11 @@ msgstr "_Ordner herunterladen …"
 
 #: pynicotine/gtkgui/search.py:1587
 msgid "_Download Folders…"
-msgstr "O_rdner herunterladen …"
+msgstr "Mehrere Ordner _herunterladen…"
 
 #: pynicotine/gtkgui/search.py:1679 pynicotine/gtkgui/userbrowse.py:1194
 msgid "Select Destination Folder for Files"
-msgstr "Wähle Zielordner für Dateien aus"
+msgstr "Zielordner für Dateien auswählen"
 
 #: pynicotine/gtkgui/transfers.py:46
 msgid "Queued"
@@ -2683,11 +2683,11 @@ msgstr "In Warteschlange (privilegiert)"
 
 #: pynicotine/gtkgui/transfers.py:49
 msgid "Getting status"
-msgstr "Status ermitteln"
+msgstr "Status wird abgerufen"
 
 #: pynicotine/gtkgui/transfers.py:50
 msgid "Transferring"
-msgstr "Übertragen"
+msgstr "Übertragung läuft"
 
 #: pynicotine/gtkgui/transfers.py:51
 msgid "Connection closed"
@@ -2699,7 +2699,7 @@ msgstr "Verbindungszeitüberschreitung"
 
 #: pynicotine/gtkgui/transfers.py:53 pynicotine/gtkgui/transfers.py:677
 msgid "User logged off"
-msgstr "Benutzer abgemeldet"
+msgstr "Benutzer hat sich abgemeldet"
 
 #: pynicotine/gtkgui/transfers.py:55 pynicotine/gtkgui/uploads.py:61
 msgid "Cancelled"
@@ -2723,11 +2723,11 @@ msgstr "Datei nicht freigegeben"
 
 #: pynicotine/gtkgui/transfers.py:62
 msgid "Pending shutdown"
-msgstr "Ausstehendes beenden"
+msgstr "Herunterfahren ausstehend"
 
 #: pynicotine/gtkgui/transfers.py:63
 msgid "File read error"
-msgstr "Fehler beim Lesen der Datei"
+msgstr "Dateilesefehler"
 
 #: pynicotine/gtkgui/transfers.py:169
 msgid "Queue"
@@ -2739,15 +2739,15 @@ msgstr "Prozent"
 
 #: pynicotine/gtkgui/transfers.py:195
 msgid "Time Elapsed"
-msgstr "Zeit vergangen"
+msgstr "Verstrichene Zeit"
 
 #: pynicotine/gtkgui/transfers.py:202
 msgid "Time Left"
-msgstr "Zeit verbleibend"
+msgstr "Verbleibende Zeit"
 
 #: pynicotine/gtkgui/transfers.py:256
 msgid "Search for Folder Name"
-msgstr "Nach Ordnernamen suchen"
+msgstr "Ordnername suchen"
 
 #: pynicotine/gtkgui/transfers.py:257
 msgid "Search for File Name"
@@ -2771,7 +2771,7 @@ msgstr "Datei _öffnen"
 
 #: pynicotine/gtkgui/transfers.py:1085
 msgid "_Open Files"
-msgstr "Datei _öffnen"
+msgstr "Dateien _öffnen"
 
 #: pynicotine/gtkgui/transfers.py:1095
 #, python-format
