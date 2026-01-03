@@ -978,7 +978,7 @@ class UserBrowse:
             # Tab was closed
             return
 
-        user = dialog.get_entry_value()
+        user = dialog.get_entry_value().strip()
 
         if not user:
             return
@@ -1163,7 +1163,7 @@ class UserBrowse:
             # Tab was closed
             return
 
-        user = dialog.get_entry_value()
+        user = dialog.get_entry_value().strip()
         folder_path = self.active_folder_path
 
         if not user or folder_path is None:
