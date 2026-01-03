@@ -337,20 +337,31 @@ class RoomList(Dialog):
 
     def on_create_room_response(self, dialog, _response_id, _data):
 
-        room = core.chatrooms.sanitize_room_name(dialog.get_entry_value())
+        room = dialog.get_entry_value().strip()
         private = dialog.get_option_value()
 
         if not room:
             return
 
+        if core.chatrooms.sanitize_room_name(room) != room:
+            self.on_create_room(
+                room=room, private=private,
+                error=_("Room names can only contain letters (A-Z), numbers, and a single "
+                        "space between characters.")
+            )
+            return
+
         if private and room not in core.chatrooms.private_rooms and room in core.chatrooms.server_rooms:
-            self.on_create_room(error=_("Room %s is already registered as public.") % room)
+            self.on_create_room(
+                room=room, private=private,
+                error=_("Room %s is already registered as public.") % room
+            )
             return
 
         core.chatrooms.show_room(room, private)
         self.close()
 
-    def on_create_room(self, *_args, error=None):
+    def on_create_room(self, *_args, room="", private=False, error=None):
 
         message = ""
 
@@ -363,9 +374,11 @@ class RoomList(Dialog):
             parent=self,
             title=_("Create New Room"),
             message=message,
+            default=room,
+            max_length=core.chatrooms.ROOM_NAME_MAX_LENGTH,
             action_button_label=_("_Create Room"),
             option_label=_("Make room private"),
-            option_value=bool(error),
+            option_value=private,
             callback=self.on_create_room_response
         ).present()
 

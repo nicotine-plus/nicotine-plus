@@ -264,7 +264,7 @@ class ChatHistory(Dialog):
 
     def on_message_user_response(self, dialog, _response_id, _data):
 
-        username = dialog.get_entry_value()
+        username = dialog.get_entry_value().strip()
 
         if not username:
             return

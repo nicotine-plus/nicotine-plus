@@ -504,7 +504,7 @@ class EntryDialog(OptionDialog):
 
     def __init__(self, *args, default="", use_second_entry=False, second_entry_editable=True,
                  second_default="", action_button_label=_("_OK"), droplist=None, second_droplist=None,
-                 visibility=True, multiline=False, show_emoji_icon=False, **kwargs):
+                 visibility=True, max_length=0, multiline=False, show_emoji_icon=False, **kwargs):
 
         super().__init__(*args, buttons=[
             ("cancel", _("_Cancel")),
@@ -516,23 +516,25 @@ class EntryDialog(OptionDialog):
         self.second_entry_combobox = None
 
         self.entry_combobox = self.default_focus_widget = self._add_entry_combobox(
-            default, activates_default=not use_second_entry, visibility=visibility,
+            default, activates_default=not use_second_entry, visibility=visibility, max_length=max_length,
             multiline=multiline, show_emoji_icon=show_emoji_icon, droplist=droplist
         )
 
         if use_second_entry:
             self.second_entry_combobox = self._add_entry_combobox(
                 second_default, has_entry=second_entry_editable, activates_default=False, visibility=visibility,
-                show_emoji_icon=show_emoji_icon, multiline=multiline, droplist=second_droplist
+                max_length=max_length, show_emoji_icon=show_emoji_icon, multiline=multiline,
+                droplist=second_droplist
             )
 
-    def _add_combobox(self, items, has_entry=True, visibility=True, activates_default=True):
+    def _add_combobox(self, items, has_entry=True, max_length=0, visibility=True, activates_default=True):
 
         combobox = ComboBox(container=self.entry_container, has_entry=has_entry, items=items)
 
         if has_entry:
             entry = combobox.entry
             entry.set_activates_default(activates_default)
+            entry.set_max_length(max_length)
             entry.set_width_chars(45)
             entry.set_visibility(visibility)
 
@@ -542,7 +544,8 @@ class EntryDialog(OptionDialog):
         self.container.set_visible(True)
         return combobox
 
-    def _add_entry(self, visibility=True, multiline=False, show_emoji_icon=False, activates_default=True):
+    def _add_entry(self, visibility=True, max_length=0, multiline=False, show_emoji_icon=False,
+                   activates_default=True):
 
         if GTK_API_VERSION >= 4 and not visibility:
             entry = child = mnemonic_widget = Gtk.PasswordEntry(
@@ -568,7 +571,7 @@ class EntryDialog(OptionDialog):
         else:
             entry = child = mnemonic_widget = Gtk.Entry(
                 activates_default=activates_default, visibility=visibility, show_emoji_icon=show_emoji_icon,
-                truncate_multiline=(not visibility), width_chars=50, visible=True)
+                truncate_multiline=(not visibility), max_length=max_length, width_chars=50, visible=True)
 
         if GTK_API_VERSION >= 4:
             self.entry_container.append(child)  # pylint: disable=no-member
@@ -582,7 +585,7 @@ class EntryDialog(OptionDialog):
         return entry
 
     def _add_entry_combobox(self, default, activates_default=True, has_entry=True, visibility=True,
-                            multiline=False, show_emoji_icon=False, droplist=None):
+                            max_length=0, multiline=False, show_emoji_icon=False, droplist=None):
 
         if self.entry_container is None:
             self.entry_container = Gtk.Box(hexpand=True, orientation=Gtk.Orientation.VERTICAL, spacing=12, visible=True)
@@ -595,11 +598,12 @@ class EntryDialog(OptionDialog):
 
         if not has_entry or droplist:
             entry_combobox = self._add_combobox(
-                droplist, has_entry=has_entry, activates_default=activates_default, visibility=visibility)
+                droplist, has_entry=has_entry, max_length=max_length, activates_default=activates_default,
+                visibility=visibility)
         else:
             entry_combobox = self._add_entry(
-                activates_default=activates_default, visibility=visibility, multiline=multiline,
-                show_emoji_icon=show_emoji_icon)
+                activates_default=activates_default, visibility=visibility, max_length=max_length,
+                multiline=multiline, show_emoji_icon=show_emoji_icon)
 
         entry_combobox.set_text(default)
 
