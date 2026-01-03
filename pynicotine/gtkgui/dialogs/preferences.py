@@ -451,7 +451,7 @@ class DownloadsPage:
 
     def on_add_filter_response(self, dialog, _response_id, _data):
 
-        dfilter = dialog.get_entry_value()
+        dfilter = dialog.get_entry_value().strip()
         enable_regex = dialog.get_option_value()
 
         iterator = self.filter_list_view.iterators.get(dfilter)
@@ -478,7 +478,7 @@ class DownloadsPage:
 
     def on_edit_filter_response(self, dialog, _response_id, iterator):
 
-        new_dfilter = dialog.get_entry_value()
+        new_dfilter = dialog.get_entry_value().strip()
         enable_regex = dialog.get_option_value()
 
         dfilter = self.filter_list_view.get_row_value(iterator, "filter")
@@ -911,7 +911,7 @@ class SharesPage:
 
     def on_add_filter_response(self, dialog, _response_id, _data):
 
-        sfilter = dialog.get_entry_value()
+        sfilter = dialog.get_entry_value().strip()
         applies_to = self.FILTER_LEVELS[dialog.get_second_entry_value()]
         sfilter = self.process_filter(sfilter, applies_to)
         iterator = self.filter_list_view.iterators.get(sfilter)
@@ -938,7 +938,7 @@ class SharesPage:
 
     def on_edit_filter_response(self, dialog, _response_id, iterator):
 
-        new_sfilter = dialog.get_entry_value()
+        new_sfilter = dialog.get_entry_value().strip()
         new_applies_to = self.FILTER_LEVELS[dialog.get_second_entry_value()]
         new_sfilter = self.process_filter(new_sfilter, new_applies_to)
 

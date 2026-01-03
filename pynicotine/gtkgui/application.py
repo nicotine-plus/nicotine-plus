@@ -740,7 +740,7 @@ class Application:
 
     def on_message_users_response(self, dialog, _response_id, target):
 
-        message = dialog.get_entry_value()
+        message = dialog.get_entry_value().strip()
 
         if message:
             core.privatechat.send_message_users(target, message)

@@ -512,7 +512,7 @@ class Buddies:
         if iterator is None:
             return
 
-        note = dialog.get_entry_value()
+        note = dialog.get_entry_value().strip()
 
         if note is None:
             return

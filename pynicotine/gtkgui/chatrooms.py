@@ -1291,7 +1291,7 @@ class ChatRoom:
             # Tab was closed
             return
 
-        user = dialog.get_entry_value()
+        user = dialog.get_entry_value().strip()
         private_room = core.chatrooms.private_rooms.get(self.room)
 
         if not user or private_room is None:
