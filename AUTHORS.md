@@ -332,7 +332,7 @@
  - Oğuz Ersen (2021–2025)
 
 ### Ukrainian
- - Oleg Gritsun (2024–2025)
+ - Олег Грицун (oleg.gritsun) (2024–2025)
  - uniss2209 (2022)
 
 
