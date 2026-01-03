@@ -217,9 +217,9 @@ class About(Dialog):
          "\n •  Ingmar K. Steen (Hyriand) (2003–2004)"),
 
         ("<b>English</b>"
-         "\n •  slook (2021–2024)"
-         "\n •  Han Boetes (hboetes) (2021–2025)"
-         "\n •  Mat (mathiascode) (2020–2024)"
+         "\n •  Mat (mathiascode) (2020–2026)"
+         "\n •  slook (2021–2026)"
+         "\n •  Han Boetes (hboetes) (2021–2026)"
          "\n •  Michael Labouebe (gfarmerfr) (2016)"
          "\n •  daelstorm (2004–2009)"
          "\n •  Ingmar K. Steen (Hyriand) (2003–2004)"),
