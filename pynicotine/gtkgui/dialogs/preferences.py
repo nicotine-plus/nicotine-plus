@@ -308,9 +308,8 @@ class DownloadsPage:
             show_open_external_button=not self.application.isolated_mode
         )
 
-        self.filter_syntax_description = _("<b>Syntax</b>: Case-insensitive. If enabled, Python regular expressions "
-                                           "can be used, otherwise only wildcard * matches "
-                                           "are supported.").replace("<b>", "").replace("</b>", "")
+        self.filter_syntax_description = _("Syntax: Case-insensitive. If enabled, Python regular expressions "
+                                           "can be used, otherwise only wildcard * matches are supported.")
         self.filter_list_view = TreeView(
             application.window, parent=self.filter_list_container, multi_select=True,
             activate_row_callback=self.on_edit_filter,
