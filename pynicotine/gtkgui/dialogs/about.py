@@ -325,7 +325,6 @@ class About(Dialog):
          "\n •  tagomago (2021–2025)"
          "\n •  gallegonovato (2023–2024)"
          "\n •  MELERIX (2021–2023)"
-         "\n •  tagomago (2021–2022)"
          "\n •  Strange (2021)"
          "\n •  Silvio Orta (2007)"
          "\n •  Dreslo (2003–2004)"),
