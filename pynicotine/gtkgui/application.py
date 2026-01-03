@@ -648,12 +648,19 @@ class Application:
             from pynicotine.gtkgui.dialogs.fastconfigure import FastConfigure
             self.fast_configure = FastConfigure(self)
 
-        if (invalid_password or invalid_username) and self.fast_configure.is_visible():
+        change_account = invalid_password or invalid_username
+        preferences_visible = self.preferences is not None and self.preferences.is_visible()
+
+        if change_account and self.fast_configure.is_visible():
             self.fast_configure.hide()
+
+        if not change_account and preferences_visible:
+            return
 
         self.fast_configure.invalid_password = invalid_password
         self.fast_configure.invalid_username = invalid_username
 
+        self.fast_configure.set_parent(self.preferences if preferences_visible else self.window)
         self.fast_configure.present()
 
     def on_keyboard_shortcuts(self, *_args):
