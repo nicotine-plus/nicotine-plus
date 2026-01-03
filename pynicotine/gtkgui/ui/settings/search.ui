@@ -72,7 +72,7 @@
         <child>
           <object class="GtkBox">
             <property name="spacing">12</property>
-            <property name="tooltip-text" translatable="yes">Privately shared files that have been made visible to everyone will be prefixed with '[PRIVATE]', and cannot be downloaded until the uploader gives explicit permission. Ask them kindly.</property>
+            <property name="tooltip-text" translatable="yes">Privately shared files that have been made visible to everyone will display a lock icon next to them. These files cannot be downloaded until the uploader gives explicit permission. Ask them kindly.</property>
             <property name="visible">True</property>
             <child>
               <object class="GtkLabel">
