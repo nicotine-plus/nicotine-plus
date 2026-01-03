@@ -23,7 +23,7 @@ class Application:
         for event_name, callback in (
             ("confirm-quit", self.on_confirm_quit),
             ("invalid-password", self.on_invalid_password),
-            ("invalid-username", self.on_invalid_password),
+            ("invalid-username", self.on_invalid_username),
             ("setup", self.on_setup),
             ("shares-unavailable", self.on_shares_unavailable)
         ):
@@ -68,6 +68,14 @@ class Application:
         log.add(_("User %s already exists, and the password you entered is invalid."),
                 config.sections["server"]["login"])
         log.add(_("Type %s to log in with another username or password."), "/connect")
+
+        config.sections["server"]["passw"] = ""
+
+    def on_invalid_username(self, *_args):
+
+        log.add(_("Username %s is invalid, please choose a different one. Usernames can only "
+                  "contain letters (A-Z), numbers and spaces."), config.sections["server"]["login"])
+        log.add(_("Type %s to log in with another username."), "/connect")
 
         config.sections["server"]["passw"] = ""
 
