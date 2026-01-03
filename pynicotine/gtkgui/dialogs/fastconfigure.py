@@ -25,13 +25,14 @@ class FastConfigure(Dialog):
     def __init__(self, application):
 
         self.invalid_password = False
+        self.invalid_username = False
         self.rescan_required = False
         self.finished = False
 
         (
             self.account_page,
             self.download_folder_container,
-            self.invalid_password_label,
+            self.invalid_username_password_label,
             self.listen_port_entry,
             self.main_icon,
             self.next_button,
@@ -128,8 +129,9 @@ class FastConfigure(Dialog):
             or (page == self.account_page and self.username_entry.get_text() and self.password_entry.get_text())
             or (page == self.share_page and self.download_folder_button.get_path())
         )
-        self.finished = (page == self.account_page if self.invalid_password else page == self.summary_page)
-        previous_label = _("_Cancel") if self.invalid_password else _("_Previous")
+        change_account = self.invalid_password or self.invalid_username
+        self.finished = (page == self.account_page if change_account else page == self.summary_page)
+        previous_label = _("_Cancel") if change_account else _("_Previous")
         next_label = _("_Finish") if self.finished else _("_Next")
         show_buttons = (page != self.welcome_page)
 
@@ -257,7 +259,7 @@ class FastConfigure(Dialog):
 
     def on_previous(self, *_args):
 
-        if self.invalid_password:
+        if self.invalid_password or self.invalid_username:
             self.close()
             return
 
@@ -279,7 +281,7 @@ class FastConfigure(Dialog):
         config.sections["server"]["portrange"] = (listen_port, listen_port)
 
         # account_page
-        if self.invalid_password or config.need_config():
+        if self.invalid_password or self.invalid_username or config.need_config():
             config.sections["server"]["login"] = self.username_entry.get_text()
             config.sections["server"]["passw"] = self.password_entry.get_text()
 
@@ -290,6 +292,7 @@ class FastConfigure(Dialog):
 
     def on_close(self, *_args):
         self.invalid_password = False
+        self.invalid_username = False
 
     def _shares_ready(self, successful):
         self.rescan_required = (not successful)
@@ -299,19 +302,25 @@ class FastConfigure(Dialog):
         transition_type = self.stack.get_transition_type()
         self.stack.set_transition_type(Gtk.StackTransitionType.NONE)
 
-        self.account_page.set_visible(self.invalid_password or config.need_config())
-        self.stack.set_visible_child(self.account_page if self.invalid_password else self.welcome_page)
+        change_account = self.invalid_password or self.invalid_username
+        self.account_page.set_visible(change_account or config.need_config())
+        self.stack.set_visible_child(self.account_page if change_account else self.welcome_page)
 
         self.stack.set_transition_type(transition_type)
         self.on_page_change()
 
         # account_page
         if self.invalid_password:
-            self.invalid_password_label.set_label(
-                _("User %s already exists, and the password you entered is invalid. Please choose another username "
-                  "if this is your first time logging in.") % config.sections["server"]["login"])
+            self.invalid_username_password_label.set_label(
+                _("User %s already exists, and the password you entered is invalid. Please choose a different "
+                  "username if this is your first time logging in.") % config.sections["server"]["login"])
 
-        self.invalid_password_label.set_visible(self.invalid_password)
+        elif self.invalid_username:
+            self.invalid_username_password_label.set_label(
+                _("Username %s is invalid, please choose a different one. Usernames can only contain letters "
+                  "(A-Z), numbers and spaces.") % config.sections["server"]["login"])
+
+        self.invalid_username_password_label.set_visible(change_account)
 
         self.username_entry.set_text(config.sections["server"]["login"])
         self.password_entry.set_text(config.sections["server"]["passw"])

@@ -183,7 +183,7 @@
           <object class="GtkBox">
             <property name="orientation">vertical</property>
             <property name="spacing">24</property>
-            <property name="visible" bind-source="invalid_password_label" bind-property="visible" bind-flags="bidirectional|invert-boolean|sync-create"/>
+            <property name="visible" bind-source="invalid_username_password_label" bind-property="visible" bind-flags="bidirectional|invert-boolean|sync-create"/>
             <child>
               <object class="GtkLabel">
                 <property name="label" translatable="yes">To create a new Soulseek account, fill in your desired username and password. If you already have an account, fill in your existing login details.</property>
@@ -207,7 +207,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="invalid_password_label">
+          <object class="GtkLabel" id="invalid_username_password_label">
             <property name="max-width-chars">60</property>
             <property name="selectable">True</property>
             <property name="visible">False</property>
