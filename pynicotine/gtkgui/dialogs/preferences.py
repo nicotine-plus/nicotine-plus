@@ -1821,8 +1821,7 @@ class ChatsPage:
         EntryDialog(
             parent=self.application.preferences,
             title=_("Censor Patterns"),
-            message=_("Enter a list of patterns you want to censor. Add spaces around the pattern if you don't "
-                      "want to match strings inside words (may fail at the beginning and end of lines)."),
+            message=_("Enter a list of patterns you want to censor:"),
             action_button_label=_("_Add"),
             multiline=True,
             callback=self.on_add_censored_response
@@ -1852,8 +1851,7 @@ class ChatsPage:
             EntryDialog(
                 parent=self.application.preferences,
                 title=_("Edit Censored Pattern"),
-                message=_("Enter a pattern you want to censor. Add spaces around the pattern if you don't "
-                          "want to match strings inside words (may fail at the beginning and end of lines)."),
+                message=_("Enter a pattern you want to censor:"),
                 action_button_label=_("_Edit"),
                 callback=self.on_edit_censored_response,
                 callback_data=iterator,

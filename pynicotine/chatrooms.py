@@ -21,6 +21,7 @@ from pynicotine.slskmessages import SayChatroom
 from pynicotine.slskmessages import SetRoomTicker
 from pynicotine.utils import censor_text
 from pynicotine.utils import find_whole_word
+from pynicotine.utils import replace_text
 
 
 class JoinedRoom:
@@ -205,8 +206,7 @@ class ChatRooms:
         room, message = event
 
         if config.sections["words"]["replacewords"]:
-            for word, replacement in config.sections["words"]["autoreplaced"].items():
-                message = message.replace(str(word), str(replacement))
+            message = replace_text(message, config.sections["words"]["autoreplaced"])
 
         # Server rejects messages containing newlines, filter them
         message = message.replace("\r", "").replace("\n", " ")
@@ -516,7 +516,7 @@ class ChatRooms:
             msg.message = message = message.replace("/me ", "", 1)
 
         if config.sections["words"]["censorwords"] and username != core.users.login_username:
-            message = censor_text(message, censored_patterns=config.sections["words"]["censored"])
+            msg.message = message = censor_text(message, censored_patterns=config.sections["words"]["censored"])
 
         if config.sections["logging"]["chatrooms"] or room in config.sections["logging"]["rooms"]:
             if is_action_message:

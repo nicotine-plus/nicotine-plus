@@ -35,7 +35,7 @@
           <object class="GtkLabel">
             <property name="height-request">24</property>
             <property name="hexpand">True</property>
-            <property name="label" translatable="yes">Enable automatic replacement of words</property>
+            <property name="label" translatable="yes">Substitute text patterns when sending messages</property>
             <property name="mnemonic-widget">auto_replace_words_toggle</property>
             <property name="visible">True</property>
             <property name="wrap">True</property>
@@ -192,7 +192,7 @@
           <object class="GtkLabel">
             <property name="height-request">24</property>
             <property name="hexpand">True</property>
-            <property name="label" translatable="yes">Enable censoring of text patterns</property>
+            <property name="label" translatable="yes">Censor text patterns in incoming messages</property>
             <property name="mnemonic-widget">censor_text_patterns_toggle</property>
             <property name="visible">True</property>
             <property name="wrap">True</property>

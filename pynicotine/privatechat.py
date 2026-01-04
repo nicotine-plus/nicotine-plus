@@ -13,6 +13,7 @@ from pynicotine.slskmessages import SayChatroom
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import censor_text
 from pynicotine.utils import find_whole_word
+from pynicotine.utils import replace_text
 
 
 class PrivateChat:
@@ -126,8 +127,7 @@ class PrivateChat:
         username, message = user_text
 
         if config.sections["words"]["replacewords"] and not message.startswith("\x01"):
-            for word, replacement in config.sections["words"]["autoreplaced"].items():
-                message = message.replace(str(word), str(replacement))
+            message = replace_text(message, config.sections["words"]["autoreplaced"])
 
         # Server rejects messages containing newlines, filter them
         message = message.replace("\r", "").replace("\n", " ")
@@ -267,7 +267,7 @@ class PrivateChat:
             msg.message = message = message.replace("/me ", "", 1)
 
         if not is_outgoing_message and config.sections["words"]["censorwords"]:
-            message = censor_text(message, censored_patterns=config.sections["words"]["censored"])
+            msg.message = message = censor_text(message, censored_patterns=config.sections["words"]["censored"])
 
         if config.sections["logging"]["privatechat"] or username in config.sections["logging"]["private_chats"]:
             if is_action_message:

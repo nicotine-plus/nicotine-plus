@@ -354,8 +354,24 @@ def find_whole_word(word, text):
 def censor_text(text, censored_patterns, filler="*"):
 
     for word in censored_patterns:
-        word = str(word)
-        text = text.replace(word, filler * len(word))
+        word = str(word).strip().lower()
+        word_position = find_whole_word(word, text.lower())
+
+        if word_position != -1:
+            word_length = len(word)
+            text = text[:word_position] + (filler * word_length) + text[word_position + word_length:]
+
+    return text
+
+
+def replace_text(text, replacements):
+
+    for word, replacement in replacements.items():
+        word = str(word).strip()
+        word_position = find_whole_word(word, text)
+
+        if word_position != -1:
+            text = text[:word_position] + replacement + text[word_position + len(word):]
 
     return text
 
