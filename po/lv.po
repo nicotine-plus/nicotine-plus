@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-03 02:46+0200\n"
-"PO-Revision-Date: 2025-12-30 00:00+0000\n"
+"PO-Revision-Date: 2026-01-05 16:01+0000\n"
 "Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
@@ -750,18 +750,17 @@ msgid "Clear Message View"
 msgstr "Notīrīt ziņas skatu"
 
 #: pynicotine/gtkgui/chatrooms.py:847 pynicotine/gtkgui/chatrooms.py:852
-#, fuzzy, python-format
+#, python-format
 msgid "%(username)s (%(role)s)"
-msgstr "%(username)s (%(status)s)"
+msgstr "%(username)s (%(role)s)"
 
 #: pynicotine/gtkgui/chatrooms.py:847 pynicotine/gtkgui/dialogs/roomlist.py:266
-#, fuzzy
 msgid "Room Owner"
-msgstr "Istabu nosaukumi"
+msgstr "Istabas īpašnieks"
 
 #: pynicotine/gtkgui/chatrooms.py:852
 msgid "Room Operator"
-msgstr ""
+msgstr "Istabas operators"
 
 #: pynicotine/gtkgui/chatrooms.py:894
 #, python-format
@@ -800,7 +799,7 @@ msgstr "%s ir atgriezies"
 
 #: pynicotine/gtkgui/chatrooms.py:1227
 msgid "Members"
-msgstr ""
+msgstr "Locekļi"
 
 #: pynicotine/gtkgui/chatrooms.py:1227
 #: pynicotine/gtkgui/dialogs/preferences.py:2215
@@ -831,14 +830,13 @@ msgid "Unknown"
 msgstr "Nezināms"
 
 #: pynicotine/gtkgui/chatrooms.py:1312 pynicotine/gtkgui/ui/chatrooms.ui:192
-#, fuzzy
 msgid "Add Room Member"
-msgstr "Anulēt istabas dalību"
+msgstr "Pievienot istabas locekli"
 
 #: pynicotine/gtkgui/chatrooms.py:1313
-#, fuzzy
 msgid "Enter the name of the user you want to add to the private room:"
-msgstr "Ievadiet tā lietotāja vārdu, kuram vēlaties augšupielādēt:"
+msgstr ""
+"Ievadiet tā lietotāja vārdu, kuru vēlaties pievienot privātajai istabai:"
 
 #: pynicotine/gtkgui/chatrooms.py:1346
 #: pynicotine/gtkgui/dialogs/chathistory.py:296
@@ -927,19 +925,16 @@ msgstr "Dzēst tērzēšanas žurnālu…"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:278
 #: pynicotine/gtkgui/ui/dialogs/chathistory.ui:36
-#, fuzzy
 msgid "Message User"
-msgstr "_Ziņa"
+msgstr "Sūtīt ziņu lietotājam"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:279
-#, fuzzy
 msgid "Enter the name of the user you want to message:"
 msgstr "Ievadiet lietotāja vārdu, kuram vēlaties nosūtīt ziņu:"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:280
-#, fuzzy
 msgid "_Message User"
-msgstr "_Ziņa"
+msgstr "Sūtīt ziņu lietotāja_m"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:297
 #: pynicotine/gtkgui/privatechat.py:475
@@ -1905,9 +1900,8 @@ msgstr "_Ienākt istabā"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:82
 #: pynicotine/gtkgui/dialogs/roomlist.py:294
-#, fuzzy
 msgid "Delete Private Room…"
-msgstr "Dzēst istabas žurnālu…"
+msgstr "Dzēst privāto istabu…"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:83
 #: pynicotine/gtkgui/dialogs/roomlist.py:295
@@ -1918,45 +1912,38 @@ msgstr "Anulēt istabas dalību"
 #: pynicotine/gtkgui/dialogs/roomlist.py:271
 #, python-format
 msgid "%(room)s (%(role)s)"
-msgstr ""
+msgstr "%(room)s (%(role)s)"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:271
-#, fuzzy
 msgid "Room Member"
-msgstr "Anulēt istabas dalību"
+msgstr "Istabas loceklis"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:324
-#, fuzzy
 msgid "Delete Private Room?"
-msgstr "Privātās istabas"
+msgstr "Vai dzēst privāto istabu?"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:325
-#, fuzzy, python-format
+#, python-format
 msgid "Do you really want to permanently delete your private room %s?"
-msgstr ""
-"Vai tiešām vēlaties neatgriezeniski dzēst visas žurnālā reģistrētās ziņas "
-"šai istabai?"
+msgstr "Vai tiešām vēlaties neatgriezeniski dzēst savu privāto istabu %s?"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:346
 #, python-format
 msgid "Room %s is already registered as public."
-msgstr ""
+msgstr "Istaba %s jau ir reģistrēta kā publiska."
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:359
-#, fuzzy
 msgid "Enter the name of the chat room you want to create:"
-msgstr "Ievadiet tā lietotāja vārdu, kura informāciju vēlaties redzēt:"
+msgstr "Ievadiet tērzēšanas istabas nosaukumu, kuru vēlaties izveidot:"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:363
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:37
-#, fuzzy
 msgid "Create New Room"
-msgstr "Vai izveidot jaunu istabu?"
+msgstr "Izveidot jaunu istabu"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:365
-#, fuzzy
 msgid "_Create Room"
-msgstr "Vai izveidot jaunu istabu?"
+msgstr "_Izveidot istabu"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:28
 #: pynicotine/gtkgui/dialogs/shortcuts.py:40
@@ -2580,9 +2567,8 @@ msgid "Clear All Results"
 msgstr "Notīrīt visus rezultātus"
 
 #: pynicotine/gtkgui/search.py:705
-#, fuzzy
 msgid "Cannot search for files shared by other users, since you are offline."
-msgstr "Nevar pieprasīt informāciju no lietotāja, jo tas ir bezsaistē."
+msgstr "Nevar veikt meklēšanu citu lietotāju failos, jo esat bezsaistē."
 
 #: pynicotine/gtkgui/search.py:731
 msgid "Clear Filters"
@@ -3014,9 +3000,8 @@ msgid "Privileged User"
 msgstr "Priviliģēts lietotājs"
 
 #: pynicotine/gtkgui/userinfo.py:803
-#, fuzzy
 msgid "Please enter a valid number of days."
-msgstr "Lūdzu, ievadiet dienu skaitu."
+msgstr "Lūdzu, ievadiet derīgu dienu skaitu."
 
 #: pynicotine/gtkgui/userinfo.py:822
 #, python-format
@@ -5174,14 +5159,12 @@ msgid "Deselect _All"
 msgstr "_Atcelt visu atlasi"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:238
-#, fuzzy
 msgid "Reset Selection"
-msgstr "Atiestatīt izmērus"
+msgstr "Atiestatīt atlasi"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:254
-#, fuzzy
 msgid "_Reset Selection"
-msgstr "Atiestatīt kā_rtošanas kolonnu"
+msgstr "_Atiestatīt atlasi"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:102
 msgid "Welcome to Nicotine+"
@@ -5306,14 +5289,12 @@ msgid "Refresh Rooms"
 msgstr "Atsvaidzināt istabas"
 
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:112
-#, fuzzy
 msgid "No Chat Rooms"
-msgstr "Tērzēšanas istabas"
+msgstr "Nav tērzēšanas istabu"
 
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:123
-#, fuzzy
 msgid "Chat rooms will appear here when available"
-msgstr "Šeit tiks parādītas visas pieejamās istabas"
+msgstr "Tērzēšanas istabas parādīsies šeit, kad tās būs pieejamas"
 
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:157
 msgid "_Show feed of public chat room messages"
@@ -5459,11 +5440,10 @@ msgid "Configure Searches"
 msgstr "Konfigurēt meklēšanas"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:238
-#, fuzzy
 msgid "Enter a search term to search for files shared by other online users"
 msgstr ""
 "Ievadiet meklēšanas terminu, lai meklētu failus, kurus koplieto citi "
-"lietotāji Soulseek tīklā"
+"tiešsaistes lietotāji"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:394
 #: pynicotine/gtkgui/ui/mainwindow.ui:635 pynicotine/gtkgui/ui/search.ui:237
@@ -5507,13 +5487,12 @@ msgid "Configure Shares"
 msgstr "Konfigurēt koplietojumus"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:889
-#, fuzzy
 msgid ""
 "Enter the name of a user to browse their shared files, and save the list to "
 "disk to inspect it later on"
 msgstr ""
-"Ievadiet tā lietotāja vārdu, kura koplietotos failus vēlaties pārlūkot. "
-"Varat arī saglabāt sarakstu diskā un pārskatīt to vēlāk."
+"Ievadiet tā lietotāja vārdu, kura koplietotos failus vēlaties pārlūkot un "
+"saglabāt kā sarakstu diskā, lai pārskatītu vēlāk"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:968
 msgid "_Personal Profile"
@@ -5541,9 +5520,8 @@ msgid "Configure Chats"
 msgstr "Konfigurēt tērzēšanas"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1225
-#, fuzzy
 msgid "Enter the name of a user to start a conversation with them in private"
-msgstr "Ievadiet lietotāja vārdu, lai sāktu ar viņu privātu saraksti"
+msgstr "Ievadiet tā lietotāja vārdu, ar kuru vēlaties sākt privātu saraksti"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1306 pynicotine/gtkgui/ui/uploads.ui:131
 msgid "_Message All"
@@ -5574,6 +5552,8 @@ msgid ""
 "Join a room to chat with other online users, or create a private room with "
 "restricted access"
 msgstr ""
+"Pievienojies istabai, lai tērzētu ar citiem tiešsaistes lietotājiem, vai "
+"izveidojiet privātu istabu ar ierobežotu piekļuvi"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1627
 msgid "Configure User Profile"
