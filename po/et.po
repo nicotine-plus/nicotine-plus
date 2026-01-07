@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-03 02:46+0200\n"
-"PO-Revision-Date: 2026-01-05 16:01+0000\n"
-"Last-Translator: rimasx <riks_12@hot.ee>\n"
+"PO-Revision-Date: 2026-01-07 10:01+0000\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/et/>\n"
 "Language: et\n"
@@ -2078,9 +2078,8 @@ msgid "Previous Match"
 msgstr "Eelmine vaste"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:78
-#, fuzzy
 msgid "Transfer To"
-msgstr "Ülekande font:"
+msgstr "Ülekande font"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:80
 msgid "Save List to Disk"
@@ -5459,7 +5458,7 @@ msgid ""
 "disk to inspect it later on"
 msgstr ""
 "Sisesta kasutaja nimi, kelle jagatud faile soovid sirvida. Saad loendi ka "
-"kettale salvestada ja seda hiljem uurida."
+"kettale salvestada ja seda hiljem uurida"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:968
 msgid "_Personal Profile"
