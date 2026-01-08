@@ -51,57 +51,124 @@
         <child>
           <object class="GtkBox">
             <property name="margin-top">6</property>
-            <property name="spacing">12</property>
+            <property name="orientation">vertical</property>
             <property name="visible">True</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Username: </property>
-                <property name="mnemonic-widget">username_entry</property>
-                <property name="visible">True</property>
-                <property name="wrap">True</property>
-                <property name="wrap-mode">word-char</property>
-                <property name="xalign">0</property>
-              </object>
-            </child>
             <child>
               <object class="GtkBox">
                 <property name="spacing">12</property>
-                <property name="valign">center</property>
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkEntry" id="username_entry">
+                  <object class="GtkLabel">
                     <property name="hexpand">True</property>
-                    <property name="input-hints">no-emoji</property>
-                    <property name="max-width-chars">10</property>
-                    <property name="truncate-multiline">True</property>
+                    <property name="label" translatable="yes">Account:</property>
+                    <property name="mnemonic-widget">username_label</property>
                     <property name="visible">True</property>
-                    <property name="width-chars">10</property>
+                    <property name="wrap">True</property>
+                    <property name="wrap-mode">word-char</property>
+                    <property name="xalign">0</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="_change_password_button">
-                    <property name="halign">end</property>
-                    <property name="tooltip-text" translatable="yes">Change Password</property>
+                  <object class="GtkBox">
+                    <property name="spacing">12</property>
+                    <property name="valign">center</property>
                     <property name="visible">True</property>
-                    <signal name="clicked" handler="on_change_password"/>
                     <child>
-                      <object class="GtkBox">
-                        <property name="spacing">6</property>
+                      <object class="GtkLabel" id="username_label">
+                        <property name="label" translatable="yes">No account added</property>
+                        <property name="selectable">True</property>
                         <property name="visible">True</property>
+                        <property name="wrap">True</property>
+                        <property name="wrap-mode">word</property>
+                        <property name="xalign">0</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="_log_in_as_button">
+                        <property name="halign">end</property>
+                        <property name="tooltip-text" translatable="yes">Log In As</property>
+                        <property name="visible">True</property>
+                        <signal name="clicked" handler="on_log_in_as"/>
                         <child>
-                          <object class="GtkImage">
-                            <property name="icon-name">dialog-password-symbolic</property>
+                          <object class="GtkBox">
+                            <property name="spacing">6</property>
                             <property name="visible">True</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="icon-name">avatar-default-symbolic</property>
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="ellipsize">end</property>
+                                <property name="label" translatable="yes">_Log In As</property>
+                                <property name="mnemonic-widget">_log_in_as_button</property>
+                                <property name="use-underline">True</property>
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkRevealer" id ="password_row_revealer">
+                <property name="reveal-child">False</property>
+                <property name="transition-type">slide-down</property>
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="margin-top">12</property>
+                    <property name="spacing">12</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">Account Password:</property>
+                        <property name="mnemonic-widget">_change_password_button</property>
+                        <property name="visible">True</property>
+                        <property name="wrap">True</property>
+                        <property name="wrap-mode">word-char</property>
+                        <property name="xalign">0</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="spacing">12</property>
+                        <property name="valign">center</property>
+                        <property name="visible">True</property>
                         <child>
-                          <object class="GtkLabel">
-                            <property name="ellipsize">end</property>
-                            <property name="label" translatable="yes">Change Pass_word</property>
-                            <property name="mnemonic-widget">_change_password_button</property>
-                            <property name="use-underline">True</property>
+                          <object class="GtkButton" id="_change_password_button">
+                            <property name="halign">end</property>
+                            <property name="tooltip-text" translatable="yes">Change Password</property>
                             <property name="visible">True</property>
+                            <signal name="clicked" handler="on_change_password"/>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="spacing">6</property>
+                                <property name="visible">True</property>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="icon-name">dialog-password-symbolic</property>
+                                    <property name="visible">True</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="ellipsize">end</property>
+                                    <property name="label" translatable="yes">Change Pass_word</property>
+                                    <property name="mnemonic-widget">_change_password_button</property>
+                                    <property name="use-underline">True</property>
+                                    <property name="visible">True</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -114,6 +181,7 @@
         </child>
         <child>
           <object class="GtkBox">
+            <property name="margin-top">6</property>
             <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>

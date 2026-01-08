@@ -249,6 +249,10 @@ class Dialog(Window):
         else:
             header_bar.set_show_close_button(visible)     # pylint: disable=no-member
 
+    def set_parent(self, parent):
+        self.parent = parent
+        self.widget.set_transient_for(self.parent.widget)
+
     def present(self):
 
         if self not in Window.active_dialogs:
@@ -504,7 +508,8 @@ class EntryDialog(OptionDialog):
 
     def __init__(self, *args, default="", use_second_entry=False, second_entry_editable=True,
                  second_default="", action_button_label=_("_OK"), droplist=None, second_droplist=None,
-                 visibility=True, max_length=0, multiline=False, show_emoji_icon=False, **kwargs):
+                 visibility=True, second_visibility=True, max_length=0, second_max_length=0,
+                 multiline=False, show_emoji_icon=False, **kwargs):
 
         super().__init__(*args, buttons=[
             ("cancel", _("_Cancel")),
@@ -522,9 +527,9 @@ class EntryDialog(OptionDialog):
 
         if use_second_entry:
             self.second_entry_combobox = self._add_entry_combobox(
-                second_default, has_entry=second_entry_editable, activates_default=False, visibility=visibility,
-                max_length=max_length, show_emoji_icon=show_emoji_icon, multiline=multiline,
-                droplist=second_droplist
+                second_default, has_entry=second_entry_editable, activates_default=False,
+                visibility=second_visibility, max_length=second_max_length, show_emoji_icon=show_emoji_icon,
+                multiline=multiline, droplist=second_droplist
             )
 
     def _add_combobox(self, items, has_entry=True, max_length=0, visibility=True, activates_default=True):

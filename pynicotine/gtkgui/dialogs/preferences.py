@@ -73,18 +73,17 @@ class NetworkPage:
             self.current_port_label,
             self.listen_port_spinner,
             self.network_interface_label,
+            self.password_row_revealer,
             self.soulseek_server_entry,
             self.upnp_toggle,
-            self.username_entry
+            self.username_label
         ) = self.widgets = ui.load(scope=self, path="settings/network.ui")
 
         self.application = application
 
-        self.username_entry.set_max_length(core.users.USERNAME_MAX_LENGTH)
-
         for event_name, callback in (
-            ("server-disconnect", self.update_port),
-            ("server-login", self.update_port)
+            ("server-disconnect", self.server_disconnect),
+            ("server-login", self.server_login)
         ):
             events.connect(event_name, callback)
 
@@ -103,7 +102,6 @@ class NetworkPage:
         self.options = {
             "server": {
                 "server": None,  # Special case in set_settings
-                "login": self.username_entry,
                 "portrange": None,  # Special case in set_settings
                 "autoaway": self.auto_away_spinner,
                 "autoreply": self.auto_reply_message_entry,
@@ -131,6 +129,19 @@ class NetworkPage:
 
         self.port_checker.port = core.users.public_port
 
+    def server_login(self, *_args):
+        self.password_row_revealer.set_reveal_child(True)
+        self.update_port()
+
+    def server_disconnect(self, *_args):
+
+        for dialog in self.application.preferences.active_dialogs:
+            if isinstance(dialog, MessageDialog) and dialog.callback is self.on_change_password_response:
+                dialog.close()
+
+        self.password_row_revealer.set_reveal_child(False)
+        self.update_port()
+
     def set_settings(self):
 
         # Network interfaces
@@ -150,6 +161,10 @@ class NetworkPage:
         self.update_port()
 
         # Special options
+        username = core.users.login_username or config.sections["server"]["login"]
+        self.username_label.set_markup(f"<b>{username}</b>" if username else _("No account added"))
+        self.password_row_revealer.set_reveal_child(core.users.login_status != UserStatus.OFFLINE)
+
         server_hostname, server_port = config.sections["server"]["server"]
         self.soulseek_server_entry.set_text(f"{server_hostname}:{server_port}")
 
@@ -170,7 +185,6 @@ class NetworkPage:
         return {
             "server": {
                 "server": server_addr,
-                "login": self.username_entry.get_text(),
                 "portrange": (listen_port, listen_port),
                 "autoaway": self.auto_away_spinner.get_value_as_int(),
                 "autoreply": self.auto_reply_message_entry.get_text(),
@@ -184,38 +198,67 @@ class NetworkPage:
         open_uri(url)
         return True
 
-    def on_change_password_response(self, dialog, _response_id, user_status):
+    def on_log_in_as_response(self, dialog, _response_id, _data):
+
+        username = dialog.get_entry_value().strip()
+        password = dialog.get_second_entry_value()
+
+        if username and not password:
+            self.on_log_in_as(
+                username=username,
+                error=_("Please enter a password, or leave the username empty to log out.")
+            )
+            return
+
+        self.username_label.set_markup(f"<b>{username}</b>" if username else _("No account added"))
+        core.users.log_in_as(username, password)
+
+    def on_log_in_as(self, *_args, username=None, error=None):
+
+        message = ""
+
+        if error:
+            message += error + "\n\n"
+
+        message += _("Enter a username and password to log in as. If the user does not exist,"
+                     " a new account will be registered.")
+
+        if not username:
+            username = core.users.login_username or config.sections["server"]["login"]
+
+        EntryDialog(
+            parent=self.application.preferences,
+            title=_("Log In As"),
+            message=message,
+            default=username,
+            use_second_entry=True,
+            second_max_length=core.users.USERNAME_MAX_LENGTH,
+            second_visibility=False,
+            action_button_label=_("_Log In"),
+            callback=self.on_log_in_as_response
+        ).present()
+
+    def on_change_password_response(self, dialog, _response_id, _data):
 
         password = dialog.get_entry_value()
 
-        if user_status != core.users.login_status:
-            MessageDialog(
-                parent=self.application.preferences,
-                title=_("Password Change Rejected"),
-                message=("Since your login status changed, your password has not been changed. Please try again.")
-            ).present()
-            return
-
         if not password:
-            self.on_change_password()
-            return
-
-        if core.users.login_status == UserStatus.OFFLINE:
-            config.sections["server"]["passw"] = password
-            config.write_configuration()
+            self.on_change_password(error=_("Please enter a password."))
             return
 
         core.users.request_change_password(password)
 
-    def on_change_password(self, *_args):
+    def on_change_password(self, *_args, error=None):
 
-        if core.users.login_status != UserStatus.OFFLINE:
-            message = _("Enter a new password for your Soulseek account:")
-        else:
-            message = (_("You are currently logged out of the Soulseek network. If you want to change "
-                         "the password of an existing Soulseek account, you need to be logged into that account.")
-                       + "\n\n"
-                       + _("Enter password to use when logging in:"))
+        if core.users.login_status == UserStatus.OFFLINE:
+            return
+
+        message = ""
+
+        if error is not None:
+            message += error + "\n\n"
+
+        message += _("Enter a new password for your account %s:") % core.users.login_username
 
         EntryDialog(
             parent=self.application.preferences,
@@ -223,8 +266,7 @@ class NetworkPage:
             message=message,
             visibility=False,
             action_button_label=_("_Change"),
-            callback=self.on_change_password_response,
-            callback_data=core.users.login_status
+            callback=self.on_change_password_response
         ).present()
 
     def on_default_server(self, *_args):
@@ -3620,7 +3662,6 @@ class Preferences(Dialog):
                 options[key].update(data)
 
         for section, key in (
-            ("server", "login"),
             ("server", "portrange"),
             ("server", "interface"),
             ("server", "server")
