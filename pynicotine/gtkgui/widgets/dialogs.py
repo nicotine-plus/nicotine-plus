@@ -506,7 +506,7 @@ class OptionDialog(MessageDialog):
 
 class EntryDialog(OptionDialog):
 
-    def __init__(self, *args, default="", use_second_entry=False, second_entry_editable=True,
+    def __init__(self, *args, default="", use_second_entry=False, entry_editable=True, second_entry_editable=True,
                  second_default="", action_button_label=_("_OK"), droplist=None, second_droplist=None,
                  visibility=True, second_visibility=True, max_length=0, second_max_length=0,
                  multiline=False, show_emoji_icon=False, **kwargs):
@@ -521,8 +521,8 @@ class EntryDialog(OptionDialog):
         self.second_entry_combobox = None
 
         self.entry_combobox = self.default_focus_widget = self._add_entry_combobox(
-            default, activates_default=not use_second_entry, visibility=visibility, max_length=max_length,
-            multiline=multiline, show_emoji_icon=show_emoji_icon, droplist=droplist
+            default, has_entry=entry_editable, activates_default=not use_second_entry, visibility=visibility,
+            max_length=max_length, multiline=multiline, show_emoji_icon=show_emoji_icon, droplist=droplist
         )
 
         if use_second_entry:
