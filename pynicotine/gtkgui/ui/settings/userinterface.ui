@@ -356,6 +356,18 @@
                         <property name="can-focus">False</property>
                         <property name="visible">True</property>
                         <child>
+                          <object class="GtkCheckButton" id="notification_private_mention_toggle">
+                            <property name="label" translatable="yes">Private message mentions</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkFlowBoxChild">
+                        <property name="can-focus">False</property>
+                        <property name="visible">True</property>
+                        <child>
                           <object class="GtkCheckButton" id="notification_chatroom_toggle">
                             <property name="label" translatable="yes">Chat room messages</property>
                             <property name="visible">True</property>

@@ -188,10 +188,28 @@ class PrivateChat:
         if is_outgoing_message:
             return "local"
 
-        if core.users.login_username and find_whole_word(core.users.login_username.lower(), text.lower()) > -1:
-            return "hilite"
-
         return "remote"
+
+    def get_mention_type(self, message):
+
+        message_lower = message.lower()
+
+        if core.users.login_username and find_whole_word(core.users.login_username.lower(), message_lower) > -1:
+            return "self", core.users.login_username
+
+        if not config.sections["words"]["watch_keywords"]:
+            return None, None
+
+        for word in config.sections["words"]["keywords"]:
+            word_lower = word.strip().lower()
+
+            if not word_lower:
+                continue
+
+            if find_whole_word(word_lower, message_lower) > -1:
+                return "keyword", word
+
+        return None, None
 
     def _message_user(self, msg, queued_message=False):
         """Server code 22."""
@@ -258,6 +276,9 @@ class PrivateChat:
         msg.message_type = self.get_message_type(message, is_outgoing_message)
         is_action_message = (msg.message_type == "action")
         ctcp_query = ""
+
+        if msg.message_type != "local":
+            msg.mention_type, msg.mention_keyword = self.get_mention_type(message)
 
         if message.startswith("\x01") and message.endswith("\x01"):
             ctcp_query = msg.message[1:-1].strip()

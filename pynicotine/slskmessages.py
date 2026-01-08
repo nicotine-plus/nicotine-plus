@@ -883,13 +883,15 @@ class SayChatroom(ServerMessage):
     did.
     """
 
-    __slots__ = ("room", "message", "user", "message_type")
+    __slots__ = ("room", "message", "user", "message_type", "mention_type", "mention_keyword")
 
     def __init__(self, room=None, message=None, user=None):
         self.room = room
         self.message = message
         self.user = user
         self.message_type = None
+        self.mention_type = None
+        self.mention_keyword = None
 
     def make_network_message(self):
         msg = bytearray()
@@ -1068,7 +1070,8 @@ class MessageUser(ServerMessage):
     Chat phrase sent to someone or received by us in private.
     """
 
-    __slots__ = ("user", "message", "message_id", "timestamp", "is_new_message", "message_type")
+    __slots__ = ("user", "message", "message_id", "timestamp", "is_new_message", "message_type",
+                 "mention_type", "mention_keyword")
 
     def __init__(self, user=None, message=None):
         self.user = user
@@ -1077,6 +1080,8 @@ class MessageUser(ServerMessage):
         self.timestamp = None
         self.is_new_message = True
         self.message_type = None
+        self.mention_type = None
+        self.mention_keyword = None
 
     def make_network_message(self):
         msg = bytearray()

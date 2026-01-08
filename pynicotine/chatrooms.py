@@ -460,18 +460,41 @@ class ChatRooms:
             self.update_completions()
             core.privatechat.update_completions()
 
-    def get_message_type(self, user, text):
+    def get_message_type(self, username, message):
 
-        if text.startswith("/me "):
+        if message.startswith("/me "):
             return "action"
 
-        if user == core.users.login_username:
+        if username == core.users.login_username:
             return "local"
 
-        if core.users.login_username and find_whole_word(core.users.login_username.lower(), text.lower()) > -1:
-            return "hilite"
-
         return "remote"
+
+    def get_mention_type(self, username, message):
+
+        message_lower = message.lower()
+
+        if core.users.login_username and find_whole_word(core.users.login_username.lower(), message_lower) > -1:
+            return "self", core.users.login_username
+
+        if not config.sections["words"]["watch_keywords"]:
+            return None, None
+
+        username_lower = username.lower()
+
+        for word in config.sections["words"]["keywords"]:
+            word_lower = word.strip().lower()
+
+            if not word_lower:
+                continue
+
+            if find_whole_word(word_lower, message_lower) > -1:
+                return "keyword", word
+
+            if word_lower == username_lower:
+                return "username", username
+
+        return None, None
 
     def _say_chat_room(self, msg, is_global=False):
         """Server code 13."""
@@ -511,6 +534,7 @@ class ChatRooms:
         message = msg.message
         msg.message_type = self.get_message_type(username, message)
         is_action_message = (msg.message_type == "action")
+        msg.mention_type, msg.mention_keyword = self.get_mention_type(username, message)
 
         if is_action_message:
             msg.message = message = message.replace("/me ", "", 1)
