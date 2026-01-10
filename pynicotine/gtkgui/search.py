@@ -66,7 +66,8 @@ class Searches(IconNotebook):
             window,
             parent=window.search_content,
             parent_page=window.search_page,
-            switch_page_callback=self.on_switch_search_page
+            switch_page_callback=self.on_switch_search_page,
+            read_changed_page_callback=self.on_read_changed_page
         )
 
         self.page = window.search_page
@@ -119,11 +120,13 @@ class Searches(IconNotebook):
         for event_name, callback in (
             ("add-search", self.add_search),
             ("add-wish", self.update_wish_button),
+            ("clear-wish-filters", self.update_wish_filters),
             ("file-search-response", self.file_search_response),
             ("quit", self.quit),
             ("remove-search", self.remove_search),
             ("remove-wish", self.update_wish_button),
-            ("show-search", self.show_search)
+            ("show-search", self.show_search),
+            ("update-wish-filters", self.update_wish_filters)
         ):
             events.connect(event_name, callback)
 
@@ -171,6 +174,15 @@ class Searches(IconNotebook):
                 continue
 
             self.window.update_title()
+            break
+
+    def on_read_changed_page(self, _notebook, page):
+
+        for tab in self.pages.values():
+            if tab.container != page:
+                continue
+
+            tab.on_read_changed()
             break
 
     def on_search_mode(self, action, state):
@@ -295,13 +307,7 @@ class Searches(IconNotebook):
         page.clear()
 
         if page.show_page:
-            mode = page.mode
-
-            if mode == "wishlist":
-                # For simplicity's sake, turn wishlist tabs into regular ones when restored
-                mode = "global"
-
-            self.remove_page(page.container, page_args=(page.text, mode, page.room, page.searched_users))
+            self.remove_page(page.container, page_args=(page.text, page.mode, page.room, page.searched_users))
 
         del self.pages[token]
         page.destroy()
@@ -356,6 +362,12 @@ class Searches(IconNotebook):
             return
 
         page.file_search_response(msg)
+
+    def update_wish_filters(self, wish):
+
+        for page in self.pages.values():
+            if page.mode == "wishlist" and page.text == wish:
+                page.update_wish_filters()
 
     def update_wish_button(self, wish):
 
@@ -430,6 +442,7 @@ class Search:
             self.results_button,
             self.results_label,
             self.retry_button,
+            self.store_filters_button,
             self.tree_container
         ) = ui.load(scope=self, path="search.ui")
 
@@ -633,8 +646,6 @@ class Search:
             ("#" + _("Search _Again"), self.on_search_again),
             ("#" + _("Copy Search Term"), self.on_copy_search_term),
             ("", None),
-            ("#" + _("Clear All Results"), self.on_clear),
-            ("", None),
             ("#" + _("Close All Tabs…"), self.on_close_all_tabs),
             ("#" + _("_Close Tab"), self.on_close)
         )
@@ -694,6 +705,7 @@ class Search:
                 add_css_class(combobox.dropdown, "dropdown-scrollbar")
 
         self.filters_button.set_active(config.sections["searches"]["filters_visible"])
+        self.store_filters_button.set_visible(core.search.is_wish(self.text))
         self.populate_filter_history()
         self.populate_default_filters()
 
@@ -726,6 +738,7 @@ class Search:
     def update_filter_widgets(self):
 
         self.update_result_filters_label()
+        self.store_filters_button.set_sensitive(True)
 
         if self.filters_undo == self.FILTERS_EMPTY:
             tooltip_text = _("Clear Filters")
@@ -764,10 +777,23 @@ class Search:
 
     def populate_default_filters(self):
 
-        if not config.sections["searches"]["enablefilters"]:
+        sfilter = []
+
+        if self.mode == "wishlist":
+            search = core.search.wishlist.get(self.text)
+
+            if search is not None:
+                if not search.enable_filters:
+                    return
+
+                sfilter = search.filters
+
+        elif config.sections["searches"]["enablefilters"]:
+            sfilter = config.sections["searches"]["defilter"]
+
+        else:
             return
 
-        sfilter = config.sections["searches"]["defilter"]
         num_filters = len(sfilter)
         stored_filters = self.FILTERS_EMPTY.copy()
 
@@ -800,6 +826,10 @@ class Search:
         self.populating_filters = False
 
         self.on_refilter()
+
+    def update_wish_filters(self):
+        self.populate_default_filters()
+        self.store_filters_button.set_sensitive(False)
 
     def add_result_list(self, result_list, user, country_code, inqueue, ulspeed, h_speed,
                         h_queue, is_private=False):
@@ -1361,16 +1391,26 @@ class Search:
             self.add_wish_button.set_visible(False)
             return
 
-        if not core.search.is_wish(self.text):
+        is_wish = core.search.is_wish(self.text)
+
+        if not is_wish:
             icon_name = "list-add-symbolic"
             label = _("Add Wi_sh")
+
+            add_css_class(self.filters_button, "flat")
+            add_css_class(self.store_filters_button, "flat")
         else:
             icon_name = "list-remove-symbolic"
             label = _("Remove Wi_sh")
 
+            remove_css_class(self.filters_button, "flat")
+            remove_css_class(self.store_filters_button, "flat")
+
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
         self.add_wish_icon.set_from_icon_name(icon_name, *icon_args)
         self.add_wish_label.set_label(label)
+
+        self.store_filters_button.set_visible(is_wish)
 
     def on_add_wish(self, *_args):
 
@@ -1378,6 +1418,25 @@ class Search:
             core.search.remove_wish(self.text)
         else:
             core.search.add_wish(self.text)
+
+    def on_store_filters(self, *_args):
+
+        if not core.search.is_wish(self.text):
+            return
+
+        self.on_refilter()
+
+        if self.filters != self.FILTERS_EMPTY:
+            filters = []
+
+            for _filter_value, h_filter_value in self.filters.values():
+                filters.append(h_filter_value)
+
+            core.search.update_wish_filters(self.text, *filters)
+        else:
+            core.search.clear_wish_filters(self.text)
+
+        self.store_filters_button.set_sensitive(False)
 
     def add_popup_menu_user(self, popup, user):
 
@@ -2033,16 +2092,6 @@ class Search:
         if not self.filters_button.get_active():
             self.tree_view.grab_focus()
 
-    def on_clear(self, *_args):
-
-        self.clear_model(stored_results=True)
-
-        # Allow parsing search result messages again
-        core.search.add_allowed_token(self.token)
-
-        # Update number of results widget
-        self.update_result_counter()
-
     def on_focus(self, *_args):
 
         if not self.window.search_entry.get_text():
@@ -2050,6 +2099,18 @@ class Search:
             self.tree_view.grab_focus()
 
         return True
+
+    def on_read_changed(self, *_args):
+
+        search = core.search.wishlist.get(self.text)
+
+        if search is None or search.token != self.token:
+            return
+
+        for row in self.all_data:
+            if self.check_filter(row):
+                username = row[0]
+                search.ignored_users.add(username)
 
     def on_close(self, *_args):
         core.search.remove_search(self.token)

@@ -12,7 +12,11 @@ from pynicotine.core import core
 from pynicotine.shares import PermissionLevel
 from pynicotine.slskmessages import increment_token
 
-DATA_FOLDER_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), "temp_data")
+CURRENT_FOLDER_PATH = os.path.dirname(os.path.realpath(__file__))
+DATA_FOLDER_PATH = os.path.join(CURRENT_FOLDER_PATH, "temp_data")
+WISHLIST_BASENAME = "wishlist.json"
+WISHLIST_FILE_PATH = os.path.join(CURRENT_FOLDER_PATH, WISHLIST_BASENAME)
+SAVED_WISHLIST_FILE_PATH = os.path.join(DATA_FOLDER_PATH, WISHLIST_BASENAME)
 SEARCH_TEXT = '70 - * Gwen "test" "" -mp3 "what\'s up" don\'t -nothanks a:::b;c+d +++---}[ *ello [[ @@ auto -No yes'
 SEARCH_MODE = "global"
 
@@ -26,7 +30,13 @@ class SearchTest(TestCase):
         config.set_data_folder(DATA_FOLDER_PATH)
         config.set_config_file(os.path.join(DATA_FOLDER_PATH, "temp_config"))
 
-        core.init_components(enabled_components={"pluginhandler", "search", "shares"})
+        if not os.path.exists(DATA_FOLDER_PATH):
+            os.makedirs(DATA_FOLDER_PATH)
+
+        shutil.copy(WISHLIST_FILE_PATH, os.path.join(DATA_FOLDER_PATH, WISHLIST_BASENAME))
+
+        core.init_components(enabled_components={"pluginhandler", "search", "shares", "users"})
+        core.start()
 
     def tearDown(self):
         core.quit()
@@ -68,34 +78,106 @@ class SearchTest(TestCase):
         core.search.token = increment_token(core.search.token)
         self.assertEqual(old_token, core.search.token - 1)
 
+    def test_load_wishlist(self):
+        """Test loading a wishlist.json file."""
+
+        wishlist = list(core.search.wishlist.values())
+        self.assertEqual(len(wishlist), 2)
+
+        wish = wishlist[1]
+
+        self.assertEqual(wish.term, f"{SEARCH_TEXT}1")
+        self.assertTrue(wish.auto_search)
+        self.assertTrue(wish.enable_filters)
+        self.assertEqual(wish.time_added, 1768072220)
+        self.assertEqual(
+            wish.filters,
+            ["song title", "remix", "4MB", "320", True, "US", "mp3", "4:00", False]
+        )
+        self.assertEqual(wish.ignored_users, set())
+
+        wish = wishlist[0]
+
+        self.assertEqual(wish.term, SEARCH_TEXT)
+        self.assertTrue(wish.auto_search)
+        self.assertFalse(wish.enable_filters)
+        self.assertEqual(wish.time_added, 1768072220)
+        self.assertEqual(wish.filters, [])
+        self.assertEqual(wish.ignored_users, {"user1", "user2", "user3"})
+
+    def test_save_wishlist(self):
+        """Verify that wishlist terms are written back to the wishlist.json file and config."""
+
+        old_wishlist = core.search._load_wishlist_file(WISHLIST_FILE_PATH)
+        core.search._save_wishlist()
+        saved_wishlist = core.search._load_wishlist_file(SAVED_WISHLIST_FILE_PATH)
+
+        self.assertEqual(old_wishlist, saved_wishlist)
+        self.assertEqual(config.sections["server"]["autosearch"][1], SEARCH_TEXT)
+        self.assertEqual(config.sections["server"]["autosearch"][0], f"{SEARCH_TEXT}1")
+
     def test_wishlist_add(self):
         """Test that items are added to the wishlist properly."""
 
+        core.search.wishlist.clear()
         old_token = core.search.token
 
         # First item
 
         core.search.add_wish(SEARCH_TEXT)
+        core.search._save_wishlist()
         search = core.search.searches[core.search.token]
+        wish = core.search.wishlist[SEARCH_TEXT]
 
+        self.assertEqual(search, wish)
         self.assertEqual(config.sections["server"]["autosearch"][0], SEARCH_TEXT)
         self.assertEqual(core.search.token, old_token + 1)
         self.assertEqual(core.search.token, core.search.token)
         self.assertEqual(search.term, SEARCH_TEXT)
         self.assertEqual(search.mode, "wishlist")
         self.assertTrue(search.is_ignored)
+        self.assertTrue(search.auto_search)
+        self.assertFalse(search.enable_filters)
+        self.assertIsInstance(search.time_added, int)
+        self.assertEqual(search.filters, [])
+        self.assertEqual(search.ignored_users, set())
 
         # Second item
 
         new_item = f"{SEARCH_TEXT}1"
         core.search.add_wish(new_item)
-        search = core.search.searches[core.search.token]
+        core.search.update_wish_filters(
+            new_item,
+            filter_in="song title",
+            filter_out="remix",
+            size="4MB",
+            bitrate="320",
+            has_free_slot=True,
+            country="US",
+            file_type="mp3",
+            length="4:00",
+            is_public=False
+        )
+        core.search._save_wishlist()
 
-        self.assertEqual(config.sections["server"]["autosearch"][0], SEARCH_TEXT)
-        self.assertEqual(config.sections["server"]["autosearch"][1], new_item)
+        search = core.search.searches[core.search.token]
+        wish = core.search.wishlist[new_item]
+
+        self.assertEqual(search, wish)
+        self.assertEqual(config.sections["server"]["autosearch"][1], SEARCH_TEXT)
+        self.assertEqual(config.sections["server"]["autosearch"][0], new_item)
         self.assertEqual(search.term, new_item)
         self.assertEqual(search.mode, "wishlist")
         self.assertTrue(search.is_ignored)
+        self.assertEqual(search.term, new_item)
+        self.assertTrue(search.auto_search)
+        self.assertTrue(search.enable_filters)
+        self.assertIsInstance(search.time_added, int)
+        self.assertEqual(
+            search.filters,
+            ["song title", "remix", "4MB", "320", True, "US", "mp3", "4:00", False]
+        )
+        self.assertEqual(search.ignored_users, set())
 
     def test_create_search_result_list(self):
         """Test creating search result lists from the word index."""
