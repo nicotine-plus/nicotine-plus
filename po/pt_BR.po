@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-08 02:32+0200\n"
-"PO-Revision-Date: 2026-01-03 21:26+0000\n"
+"PO-Revision-Date: 2026-01-08 17:02+0000\n"
 "Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
@@ -507,7 +507,7 @@ msgstr ""
 #: pynicotine/gtkgui/application.py:768 pynicotine/gtkgui/application.py:782
 #: pynicotine/gtkgui/userinfo.py:829
 msgid "_Send"
-msgstr ""
+msgstr "_Enviar"
 
 #: pynicotine/gtkgui/application.py:780
 msgid "Message Buddies"
@@ -709,7 +709,7 @@ msgstr "Tornar sala privada"
 
 #: pynicotine/gtkgui/chatrooms.py:228 pynicotine/gtkgui/dialogs/roomlist.py:383
 msgid "Cre_ate"
-msgstr ""
+msgstr "Cri_ar"
 
 #: pynicotine/gtkgui/chatrooms.py:563
 msgid "Search activity log…"
@@ -791,24 +791,24 @@ msgid "Mentioned by %(user)s in Room %(room)s"
 msgstr "Mencionado por %(user)s na Sala %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:909
-#, fuzzy, python-format
+#, python-format
 msgid "Keyword %(keyword)s mentioned by %(user)s in room %(room)s"
-msgstr "Mencionado por %(user)s na Sala %(room)s"
+msgstr "Palavra-chave %(keyword)s mencionada por %(user)s na sala %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:918
-#, fuzzy, python-format
+#, python-format
 msgid "Keyword %(keyword)s Mentioned by %(user)s in Room %(room)s"
-msgstr "Mencionado por %(user)s na Sala %(room)s"
+msgstr "Palavra-chave %(keyword)s Mencionada por %(user)s na Sala %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:927
-#, fuzzy, python-format
+#, python-format
 msgid "Message by watched user %(user)s in room %(room)s"
-msgstr "Mensagem de %(user)s na Sala %(room)s"
+msgstr "Mensagem do usuário monitorado %(user)s na sala %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:935
-#, fuzzy, python-format
+#, python-format
 msgid "Message by Watched User %(user)s in Room %(room)s"
-msgstr "Mensagem de %(user)s na Sala %(room)s"
+msgstr "Mensagem do Usuário Monitorado %(user)s na Sala %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:956
 #, python-format
@@ -892,9 +892,8 @@ msgstr ""
 #: pynicotine/gtkgui/dialogs/chathistory.py:301
 #: pynicotine/gtkgui/dialogs/roomlist.py:329
 #: pynicotine/gtkgui/privatechat.py:478
-#, fuzzy
 msgid "Delete"
-msgstr "Excluído"
+msgstr "Excluir"
 
 #: pynicotine/gtkgui/chatrooms.py:1406
 msgid "Hide Room Users"
@@ -1164,13 +1163,14 @@ msgid "_Edit"
 msgstr "_Editar"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:315
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "User %s already exists, and the password you entered is invalid. Please "
 "choose a different username if this is your first time logging in."
 msgstr ""
 "O usuário %s já existe e a senha que você digitou é inválida. Por favor, "
-"escolha outro nome de usuário se este for seu primeiro login."
+"escolha um nome de usuário diferente se esta for sua primeira vez acessando "
+"o sistema."
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:320
 #: pynicotine/headless/application.py:76
@@ -1179,6 +1179,8 @@ msgid ""
 "Username %s is invalid, please choose a different one. Usernames can only "
 "contain letters (A-Z), numbers and spaces."
 msgstr ""
+"O nome de usuário %s é inválido. Por favor, escolha outro. Os nomes de "
+"usuário podem conter apenas letras (AZ), números e espaços."
 
 #: pynicotine/gtkgui/dialogs/fileproperties.py:50
 #: pynicotine/gtkgui/dialogs/shortcuts.py:79
@@ -1255,20 +1257,21 @@ msgstr "<b>%(ip)s</b>, porta %(port)s"
 #: pynicotine/gtkgui/dialogs/preferences.py:213
 #: pynicotine/gtkgui/ui/settings/network.ui:78
 msgid "No account added"
-msgstr ""
+msgstr "Nenhuma conta adicionada"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:209
 msgid "Please enter a password, or leave the username empty to log out."
 msgstr ""
+"Por favor, insira uma senha ou deixe o campo de nome de usuário em branco "
+"para sair."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:223
-#, fuzzy
 msgid ""
 "Enter a username and password to log in as. If the user does not exist, a "
 "new account will be registered."
 msgstr ""
-"Digite o nome de uma sala que você deseja ingressar. Se a sala não existir, "
-"ela será criada."
+"Insira um nome de usuário e uma senha para fazer login. Se o usuário não "
+"existir, uma nova conta será criada."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:231
 #: pynicotine/gtkgui/ui/settings/network.ui:89
