@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-08 19:02+0200\n"
-"PO-Revision-Date: 2026-01-03 08:46+0000\n"
+"PO-Revision-Date: 2026-01-10 20:01+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -506,7 +506,7 @@ msgstr "Sizden indirme yapan tüm kullanıcılara özel mesaj gönderin:"
 #: pynicotine/gtkgui/application.py:768 pynicotine/gtkgui/application.py:782
 #: pynicotine/gtkgui/userinfo.py:829
 msgid "_Send"
-msgstr ""
+msgstr "_Gönder"
 
 #: pynicotine/gtkgui/application.py:780
 msgid "Message Buddies"
@@ -708,7 +708,7 @@ msgstr "Odayı özel yap"
 
 #: pynicotine/gtkgui/chatrooms.py:228 pynicotine/gtkgui/dialogs/roomlist.py:383
 msgid "Cre_ate"
-msgstr ""
+msgstr "_Oluştur"
 
 #: pynicotine/gtkgui/chatrooms.py:563
 msgid "Search activity log…"
@@ -790,24 +790,28 @@ msgid "Mentioned by %(user)s in Room %(room)s"
 msgstr "%(room)s odasında %(user)s tarafından bahsedildi"
 
 #: pynicotine/gtkgui/chatrooms.py:909
-#, fuzzy, python-format
+#, python-format
 msgid "Keyword %(keyword)s mentioned by %(user)s in room %(room)s"
-msgstr "%(room)s odasında %(user)s tarafından bahsedildi"
+msgstr ""
+"%(room)s odasında %(user)s tarafından %(keyword)s anahtar sözcüğünden "
+"bahsedildi"
 
 #: pynicotine/gtkgui/chatrooms.py:918
-#, fuzzy, python-format
+#, python-format
 msgid "Keyword %(keyword)s Mentioned by %(user)s in Room %(room)s"
-msgstr "%(room)s odasında %(user)s tarafından bahsedildi"
+msgstr ""
+"%(room)s odasında %(user)s tarafından %(keyword)s anahtar sözcüğünden "
+"bahsedildi"
 
 #: pynicotine/gtkgui/chatrooms.py:927
-#, fuzzy, python-format
+#, python-format
 msgid "Message by watched user %(user)s in room %(room)s"
-msgstr "%(room)s odasında %(user)s tarafından mesaj"
+msgstr "%(room)s odasında %(user)s izlenen kullanıcısı tarafından mesaj"
 
 #: pynicotine/gtkgui/chatrooms.py:935
-#, fuzzy, python-format
+#, python-format
 msgid "Message by Watched User %(user)s in Room %(room)s"
-msgstr "%(room)s odasında %(user)s tarafından mesaj"
+msgstr "%(room)s odasında %(user)s izlenen kullanıcısı tarafından mesaj"
 
 #: pynicotine/gtkgui/chatrooms.py:956
 #, python-format
@@ -891,9 +895,8 @@ msgstr ""
 #: pynicotine/gtkgui/dialogs/chathistory.py:301
 #: pynicotine/gtkgui/dialogs/roomlist.py:329
 #: pynicotine/gtkgui/privatechat.py:478
-#, fuzzy
 msgid "Delete"
-msgstr "Silindi"
+msgstr "Sil"
 
 #: pynicotine/gtkgui/chatrooms.py:1406
 msgid "Hide Room Users"
@@ -1163,7 +1166,7 @@ msgid "_Edit"
 msgstr "_Düzenle"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:315
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "User %s already exists, and the password you entered is invalid. Please "
 "choose a different username if this is your first time logging in."
@@ -1178,6 +1181,8 @@ msgid ""
 "Username %s is invalid, please choose a different one. Usernames can only "
 "contain letters (A-Z), numbers and spaces."
 msgstr ""
+"%s kullanıcı adı geçersiz, lütfen başka bir kullanıcı adı seçin. Kullanıcı "
+"adları yalnızca harfler (A-Z), rakamlar ve boşluklar içerebilir."
 
 #: pynicotine/gtkgui/dialogs/fileproperties.py:50
 #: pynicotine/gtkgui/dialogs/shortcuts.py:79
@@ -1253,38 +1258,39 @@ msgstr "<b>%(ip)s</b>, bağlantı noktası %(port)s"
 #: pynicotine/gtkgui/dialogs/preferences.py:213
 #: pynicotine/gtkgui/ui/settings/network.ui:78
 msgid "No account added"
-msgstr ""
+msgstr "Hesap eklenmedi"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:209
 msgid "Please enter a password, or leave the username empty to log out."
 msgstr ""
+"Lütfen bir parola girin veya oturumu kapatmak için kullanıcı adını boş "
+"bırakın."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:223
-#, fuzzy
 msgid ""
 "Enter a username and password to log in as. If the user does not exist, a "
 "new account will be registered."
-msgstr "Katılmak istediğiniz odanın adını girin. Oda yoksa oluşturulacaktır."
+msgstr ""
+"Oturum açmak için bir kullanıcı adı ve parola girin. Kullanıcı yoksa yeni "
+"bir hesap kaydedilecektir."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:231
 #: pynicotine/gtkgui/ui/settings/network.ui:89
 msgid "Log In As"
-msgstr ""
+msgstr "Şununla Oturum Aç"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:237
-#, fuzzy
 msgid "_Log In"
-msgstr "Gün_lük"
+msgstr "Oturum _Aç"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:246
-#, fuzzy
 msgid "Please enter a password."
-msgstr "Lütfen geçerli bir gün sayısı girin."
+msgstr "Lütfen bir parola girin."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:261
-#, fuzzy, python-format
+#, python-format
 msgid "Enter a new password for your account %s:"
-msgstr "Soulseek hesabınız için yeni bir parola girin:"
+msgstr "%s hesabınız için yeni bir parola girin:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:265
 #: pynicotine/gtkgui/ui/settings/network.ui:148
@@ -1354,14 +1360,13 @@ msgid "Browse Folder"
 msgstr "Klasöre Göz At"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:353
-#, fuzzy
 msgid ""
 "Syntax: Case-insensitive. If enabled, Python regular expressions can be "
 "used, otherwise only wildcard * matches are supported."
 msgstr ""
-"<b>Söz dizimi</b>: Büyük/küçük harfe duyarlı değildir. Etkinleştirilirse "
-"Python düzenli ifadeleri kullanılabilir, aksi takdirde yalnızca joker "
-"karakter * eşleşmeleri desteklenir."
+"Söz dizimi: Büyük/küçük harfe duyarlı değildir. Etkinleştirilirse Python "
+"düzenli ifadeleri kullanılabilir, aksi takdirde yalnızca joker karakter * "
+"eşleşmeleri desteklenir."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:362
 #: pynicotine/gtkgui/dialogs/preferences.py:726
@@ -1466,31 +1471,30 @@ msgstr "Filtreler"
 #: pynicotine/gtkgui/dialogs/preferences.py:863
 #: pynicotine/gtkgui/dialogs/preferences.py:890
 msgid "Only buddies can view shares"
-msgstr ""
+msgstr "Yalnızca arkadaşlar paylaşımları görüntüleyebilir"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:846
 #: pynicotine/gtkgui/dialogs/preferences.py:866
 #: pynicotine/gtkgui/dialogs/preferences.py:891
-#, fuzzy
 msgid "Everyone can view buddy shares"
-msgstr "Arkadaş paylaşımlarının yeniden taranması tamamlandı"
+msgstr "Arkadaş paylaşımlarını herkes görüntüleyebilir"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:850
 #: pynicotine/gtkgui/dialogs/preferences.py:869
 #: pynicotine/gtkgui/dialogs/preferences.py:892
 msgid "Everyone can view trusted shares"
-msgstr ""
+msgstr "Güvenilen paylaşımları herkes görüntüleyebilir"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:854
 #: pynicotine/gtkgui/dialogs/preferences.py:872
 #: pynicotine/gtkgui/dialogs/preferences.py:893
 msgid "Everyone can view buddy & trusted shares"
 msgstr ""
+"Arkadaş paylaşımlarını ve güvenilen paylaşımları herkes görüntüleyebilir"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:876
-#, fuzzy
 msgid "Buddy Share Visibility"
-msgstr "Arkadaş paylaşımları"
+msgstr "Arkadaş Paylaşımları Görünürlüğü"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:878
 msgid ""
@@ -1499,6 +1503,11 @@ msgid ""
 "them, and users can choose whether or not they want to see the files in "
 "their search results."
 msgstr ""
+"Arkadaş paylaşımlarını/güvenilir paylaşımları herkesin görebileceği şekilde "
+"ayarlayın, ancak kullanıcıların size mesaj göndererek erişim izni "
+"istemelerini zorunlu kılın. Bu tür dosyaların yanında bir gösterge bulunur "
+"ve kullanıcılar arama sonuçlarında bu dosyaları görmek isteyip "
+"istemediklerini seçebilirler."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:883
 msgid ""
@@ -1507,6 +1516,10 @@ msgid ""
 "files are available on request. Including a comment about access requests on "
 "your user profile is recommended."
 msgstr ""
+"Bu seçenek çoğu durumda tavsiye edilmez. Sınırsız erişim sağlamak uygun "
+"olmadığında, ancak dosyaların istek üzerine erişilebilir olduğunu belirtmek "
+"istediğinizde son çare olarak kullanılabilir. Kullanıcı profilinize erişim "
+"istekleri hakkında bir açıklama eklemeniz tavsiye edilir."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1037
 msgid "Add Share Filter"
@@ -1599,7 +1612,7 @@ msgstr "Biçim kodları"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1764
 msgid "Keyword"
-msgstr ""
+msgstr "Anahtar sözcük"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1785
 #: pynicotine/gtkgui/dialogs/preferences.py:1806
@@ -1611,9 +1624,8 @@ msgid "Replacement"
 msgstr "Değişim"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1831
-#, fuzzy
 msgid "Mentions"
-msgstr "Bağlantılar"
+msgstr "Bahsetmeler"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1832
 msgid "Auto-Replace"
@@ -1625,41 +1637,43 @@ msgstr "Sansürle"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1965
 msgid "Add Keyword"
-msgstr ""
+msgstr "Anahtar Sözcük Ekle"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1966
 msgid ""
 "Enter a list of keywords or usernames you want to watch for. Chat messages "
 "containing the keywords will be highlighted."
 msgstr ""
+"İzlemek istediğiniz anahtar sözcüklerin veya kullanıcı adlarının listesini "
+"girin. Anahtar sözcükleri içeren sohbet mesajları vurgulanacaktır."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1996
 msgid "Edit Keyword"
-msgstr ""
+msgstr "Anahtar Sözcüğü Düzenle"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1997
 msgid ""
 "Enter a keyword or username you want to watch for. Chat messages containing "
 "the keyword will be highlighted."
 msgstr ""
+"İzlemek istediğiniz anahtar sözcüğü veya kullanıcı adını girin. Anahtar "
+"sözcüğü içeren sohbet mesajları vurgulanacaktır."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2033
 msgid "Censor Patterns"
 msgstr "Kalıpları Sansürle"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2034
-#, fuzzy
 msgid "Enter a list of patterns you want to censor:"
-msgstr "Yok saymak istediğiniz kullanıcı adlarının listesini girin:"
+msgstr "Sansürlemek istediğiniz kalıpların listesini girin:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2063
 msgid "Edit Censored Pattern"
 msgstr "Sansürlenen Kalıbı Düzenle"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2064
-#, fuzzy
 msgid "Enter a pattern you want to censor:"
-msgstr "Yok saymak istediğiniz kullanıcı adlarının listesini girin:"
+msgstr "Sansürlemek istediğiniz bir kalıp girin:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2096
 msgid "Add Replacement"
@@ -1929,9 +1943,8 @@ msgstr ""
 "depoladığı tüm dosyaları silecektir."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3596
-#, fuzzy
 msgid "Uninstall"
-msgstr "_Kaldır…"
+msgstr "Kaldır"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3657
 #: pynicotine/gtkgui/dialogs/shortcuts.py:41
@@ -2070,6 +2083,8 @@ msgid ""
 "Room names can only contain letters (A-Z), numbers, and a single space "
 "between characters."
 msgstr ""
+"Oda adları yalnızca harfler (A-Z), rakamlar ve karakterler arasında tek bir "
+"boşluk içerebilir."
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:361
 #, python-format
@@ -2290,9 +2305,8 @@ msgid "Do you really want to reset transfer statistics?"
 msgstr "Aktarım istatistiklerini gerçekten sıfırlamak istiyor musunuz?"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:113
-#, fuzzy
 msgid "Reset All"
-msgstr "Tümünün Seçimini Kaldır"
+msgstr "Tümünü Sıfırla"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:44 pynicotine/gtkgui/search.py:349
 msgid "Wish"
@@ -2638,24 +2652,26 @@ msgid "User Actions"
 msgstr "Kullanıcı Eylemleri"
 
 #: pynicotine/gtkgui/privatechat.py:491
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s mentioned you in a private message"
-msgstr "%(user)s, %(room)s odasında sizden bahsetti"
+msgstr "%(user)s, özel bir mesajda sizden bahsetti"
 
 #: pynicotine/gtkgui/privatechat.py:496
-#, fuzzy, python-format
+#, python-format
 msgid "Mentioned by %(user)s in Private"
-msgstr "%(room)s odasında %(user)s tarafından bahsedildi"
+msgstr "Özel sohbette %(user)s tarafından bahsedildi"
 
 #: pynicotine/gtkgui/privatechat.py:500
 #, python-format
 msgid "Keyword %(keyword)s mentioned by %(user)s in private"
 msgstr ""
+"Özel sohbette %(keyword)s anahtar sözcüğünden %(user)s tarafından bahsedildi"
 
 #: pynicotine/gtkgui/privatechat.py:508
 #, python-format
 msgid "Keyword %(keyword)s Mentioned by %(user)s in Private"
 msgstr ""
+"Özel sohbette %(keyword)s anahtar sözcüğünden %(user)s tarafından bahsedildi"
 
 #: pynicotine/gtkgui/privatechat.py:549
 msgid "* Messages sent while you were offline"
@@ -3236,9 +3252,8 @@ msgid "Do you really want to close all tabs?"
 msgstr "Tüm sekmeleri gerçekten kapatmak istiyor musunuz?"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:452
-#, fuzzy
 msgid "Close All"
-msgstr "Tümünü Temizle"
+msgstr "Tümünü Kapat"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:465
 #, python-format
@@ -3444,9 +3459,9 @@ msgid "Type %s to log in with another username or password."
 msgstr "Başka bir kullanıcı adı veya parola ile oturum açmak için %s yazın."
 
 #: pynicotine/headless/application.py:78
-#, fuzzy, python-format
+#, python-format
 msgid "Type %s to log in with another username."
-msgstr "Başka bir kullanıcı adı veya parola ile oturum açmak için %s yazın."
+msgstr "Başka bir kullanıcı adı ile oturum açmak için %s yazın."
 
 #: pynicotine/headless/application.py:94
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:272
@@ -5522,9 +5537,8 @@ msgstr ""
 "aralıklarla otomatik olarak aranır."
 
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:31
-#, fuzzy
 msgid "Search wish terms…"
-msgstr "Arama terimi…"
+msgstr "Dilek terimlerini ara…"
 
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:162
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:178
@@ -6188,15 +6202,15 @@ msgstr "IP Adresleri"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:38
 msgid "Watch for keyword mentions in messages"
-msgstr ""
+msgstr "Mesajlarda bahsedilen anahtar kelimeleri izle"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:195
 msgid "Substitute text patterns when sending messages"
-msgstr ""
+msgstr "Mesaj gönderirken metin kalıplarını değiştir"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:352
 msgid "Censor text patterns in incoming messages"
-msgstr ""
+msgstr "Gelen mesajlardaki metin kalıplarını sansürle"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:525
 msgid "Accept private room invitations"
@@ -6395,16 +6409,15 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/network.ui:63
 msgid "Account:"
-msgstr ""
+msgstr "Hesap:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:105
 msgid "_Log In As"
-msgstr ""
+msgstr "Şununla Oturum _Aç"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:132
-#, fuzzy
 msgid "Account Password:"
-msgstr "Parola: "
+msgstr "Hesap Parolası:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:164
 msgid "Change Pass_word"
@@ -6517,15 +6530,14 @@ msgid "Enable search history"
 msgstr "Arama geçmişini etkinleştir"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:75
-#, fuzzy
 msgid ""
 "Privately shared files that have been made visible to everyone will display "
 "a lock icon next to them. These files cannot be downloaded until the "
 "uploader gives explicit permission. Ask them kindly."
 msgstr ""
-"Özel olarak paylaşılan ve herkes tarafından görülebilen dosyaların önüne "
-"'[PRIVATE]' eklenir ve yükleyen kişi açık izin verene kadar indirilemez. Bu "
-"kişilerden nazikçe isteyin."
+"Herkese görünür hale getirilen özel paylaşılan dosyaların yanında bir kilit "
+"simgesi görüntülenir. Bu dosyalar, yükleyen kişi açıkça izin verene kadar "
+"indirilemez. Bu kişilerden nazikçe isteyin."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:81
 msgid "Show privately shared files in search results"
@@ -6630,14 +6642,12 @@ msgid "Daily:"
 msgstr "Günlük:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:452
-#, fuzzy
 msgid "Visible To"
-msgstr "Erişilebilir"
+msgstr "Görülebilir"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:468
-#, fuzzy
 msgid "_Visible To"
-msgstr "Erişilebilir"
+msgstr "_Görülebilir"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:70
 msgid "Automatically remove finished and cancelled uploads from list"
@@ -6800,9 +6810,8 @@ msgid "Private messages"
 msgstr "Özel mesajlar"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:360
-#, fuzzy
 msgid "Private message mentions"
-msgstr "Özel mesajlar"
+msgstr "Özel mesaj bahsetmeleri"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:372
 msgid "Chat room messages"
