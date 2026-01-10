@@ -15,6 +15,7 @@ from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
+from pynicotine.search import ResultFilterMode
 
 
 class WishList(Dialog):
@@ -123,7 +124,7 @@ class WishList(Dialog):
         self.list_view.add_row([
             search.auto_search,
             wish,
-            self.FILTERED_ICON_NAME if search.enable_filters else "",
+            self.FILTERED_ICON_NAME if search.filter_mode != ResultFilterMode.NONE else "",
             time.strftime("%x", time.localtime(search.time_added)),
             search.time_added
         ], select_row=select)
@@ -214,7 +215,7 @@ class WishList(Dialog):
 
         if wish != old_wish:
             old_search = core.search.wishlist[old_wish]
-            old_filters = old_search.filters
+            old_filters = old_search.custom_filters
 
             core.search.remove_wish(old_wish)
             core.search.add_wish(wish)
@@ -223,10 +224,10 @@ class WishList(Dialog):
         search = core.search.wishlist[wish]
 
         search.auto_search = auto_search
-        search.enable_filters = enable_filters
+        search.filter_mode = ResultFilterMode.CUSTOM if enable_filters else ResultFilterMode.NONE
 
         if old_filters:
-            search.filters = old_filters
+            search.custom_filters = old_filters
 
         self.list_view.set_row_value(iterator, "enabled", auto_search)
         self.list_view.set_row_value(iterator, "filtered", self.FILTERED_ICON_NAME if enable_filters else "")
@@ -234,6 +235,8 @@ class WishList(Dialog):
         self.select_wish(wish)
 
     def on_edit_wish(self, *_args):
+
+        _reserved = _("Default filters")
 
         for iterator in self.list_view.get_selected_rows():
             old_enabled = self.list_view.get_row_value(iterator, "enabled")
@@ -262,20 +265,20 @@ class WishList(Dialog):
         for iterator in self.list_view.get_selected_rows():
             wish = self.list_view.get_row_value(iterator, "wish")
             search = core.search.wishlist.get(wish)
-            old_enable_filters = False
-            olf_filters_visible = config.sections["searches"]["filters_visible"]
+            old_filter_mode = ResultFilterMode.NONE
+            old_filters_visible = config.sections["searches"]["filters_visible"]
 
             if search is not None:
-                old_enable_filters = search.enable_filters
-                search.enable_filters = True
+                old_filter_mode = search.filter_mode
+                search.filter_mode = ResultFilterMode.CUSTOM
 
             config.sections["searches"]["filters_visible"] = True
             core.search.do_search(wish, mode="wishlist")
 
             if search is not None:
-                search.enable_filters = old_enable_filters
+                search.filter_mode = old_filter_mode
 
-            config.sections["searches"]["filters_visible"] = olf_filters_visible
+            config.sections["searches"]["filters_visible"] = old_filters_visible
             self.close()
             return
 

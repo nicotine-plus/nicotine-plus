@@ -9,6 +9,7 @@ from unittest import TestCase
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.search import ResultFilterMode
 from pynicotine.shares import PermissionLevel
 from pynicotine.slskmessages import increment_token
 
@@ -88,10 +89,10 @@ class SearchTest(TestCase):
 
         self.assertEqual(wish.term, f"{SEARCH_TEXT}1")
         self.assertTrue(wish.auto_search)
-        self.assertTrue(wish.enable_filters)
+        self.assertEqual(wish.filter_mode, ResultFilterMode.CUSTOM)
         self.assertEqual(wish.time_added, 1768072220)
         self.assertEqual(
-            wish.filters,
+            wish.custom_filters,
             ["song title", "remix", "4MB", "320", True, "US", "mp3", "4:00", False]
         )
         self.assertEqual(wish.ignored_users, set())
@@ -100,9 +101,9 @@ class SearchTest(TestCase):
 
         self.assertEqual(wish.term, SEARCH_TEXT)
         self.assertTrue(wish.auto_search)
-        self.assertFalse(wish.enable_filters)
+        self.assertEqual(wish.filter_mode, ResultFilterMode.NONE)
         self.assertEqual(wish.time_added, 1768072220)
-        self.assertEqual(wish.filters, [])
+        self.assertEqual(wish.custom_filters, [])
         self.assertEqual(wish.ignored_users, {"user1", "user2", "user3"})
 
     def test_save_wishlist(self):
@@ -137,9 +138,9 @@ class SearchTest(TestCase):
         self.assertEqual(search.mode, "wishlist")
         self.assertTrue(search.is_ignored)
         self.assertTrue(search.auto_search)
-        self.assertFalse(search.enable_filters)
+        self.assertEqual(search.filter_mode, ResultFilterMode.NONE)
         self.assertIsInstance(search.time_added, int)
-        self.assertEqual(search.filters, [])
+        self.assertEqual(search.custom_filters, [])
         self.assertEqual(search.ignored_users, set())
 
         # Second item
@@ -171,10 +172,10 @@ class SearchTest(TestCase):
         self.assertTrue(search.is_ignored)
         self.assertEqual(search.term, new_item)
         self.assertTrue(search.auto_search)
-        self.assertTrue(search.enable_filters)
+        self.assertEqual(search.filter_mode, ResultFilterMode.CUSTOM)
         self.assertIsInstance(search.time_added, int)
         self.assertEqual(
-            search.filters,
+            search.custom_filters,
             ["song title", "remix", "4MB", "320", True, "US", "mp3", "4:00", False]
         )
         self.assertEqual(search.ignored_users, set())

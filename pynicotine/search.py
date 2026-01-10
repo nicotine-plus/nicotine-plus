@@ -35,6 +35,12 @@ from pynicotine.utils import load_file
 from pynicotine.utils import write_file_and_backup
 
 
+class ResultFilterMode:
+    NONE = "none"
+    DEFAULT = "default"
+    CUSTOM = "custom"
+
+
 class SearchRequest:
     __slots__ = ("token", "term", "term_sanitized", "term_transmitted", "included_words", "excluded_words",
                  "mode", "room", "users")
@@ -54,17 +60,17 @@ class SearchRequest:
 
 
 class WishSearchRequest(SearchRequest):
-    __slots__ = ("auto_search", "enable_filters", "time_added", "is_ignored", "filters", "ignored_users")
+    __slots__ = ("auto_search", "filter_mode", "time_added", "is_ignored", "custom_filters", "ignored_users")
 
-    def __init__(self, *args, auto_search=True, enable_filters=False, time_added=None, filters=None,
-                 ignored_users=None, **kwargs):
+    def __init__(self, *args, auto_search=True, filter_mode=ResultFilterMode.NONE, time_added=None,
+                 custom_filters=None, ignored_users=None, **kwargs):
 
         super().__init__(*args, **kwargs)
 
         self.auto_search = auto_search
-        self.enable_filters = enable_filters
+        self.filter_mode = filter_mode
         self.time_added = time_added
-        self.filters = filters
+        self.custom_filters = custom_filters
         self.ignored_users = ignored_users
         self.mode = "wishlist"
         self.is_ignored = True
@@ -72,8 +78,8 @@ class WishSearchRequest(SearchRequest):
         if time_added is None:
             self.time_added = int(time.time())
 
-        if filters is None:
-            self.filters = []
+        if custom_filters is None:
+            self.custom_filters = []
 
         if ignored_users is None:
             self.ignored_users = set()
@@ -83,9 +89,9 @@ class WishSearchRequest(SearchRequest):
         return {
             "term": self.term,
             "auto_search": self.auto_search,
-            "enable_filters": self.enable_filters,
+            "filter_mode": self.filter_mode,
             "time_added": self.time_added,
-            "filters": self.filters,
+            "custom_filters": self.custom_filters,
             "ignored_users": list(sorted(self.ignored_users))
         }
 
@@ -184,15 +190,15 @@ class Search:
                 continue
 
             auto_search = item.get("auto_search", True)
-            enable_filters = item.get("enable_filters", False)
+            filter_mode = item.get("filter_mode", ResultFilterMode.NONE)
             time_added = int(item.get("time_added", current_time))
-            filters = list(item.get("filters", []))
+            custom_filters = list(item.get("custom_filters", []))
             ignored_users = set(item.get("ignored_users", []))
             self.token = increment_token(self.token)
 
             self._add_wish_search(
-                self.token, term, auto_search=auto_search, enable_filters=enable_filters,
-                time_added=time_added, filters=filters, ignored_users=ignored_users)
+                self.token, term, auto_search=auto_search, filter_mode=filter_mode,
+                time_added=time_added, custom_filters=custom_filters, ignored_users=ignored_users)
 
         for term in reversed(config.sections["server"]["autosearch"]):
             if not isinstance(term, str) or term in self.wishlist:
@@ -300,19 +306,19 @@ class Search:
         if search is None:
             return
 
-        search.filters.clear()
+        search.custom_filters.clear()
 
-        search.filters.append(filter_in)
-        search.filters.append(filter_out)
-        search.filters.append(size)
-        search.filters.append(bitrate)
-        search.filters.append(has_free_slot)
-        search.filters.append(country)
-        search.filters.append(file_type)
-        search.filters.append(length)
-        search.filters.append(is_public)
+        search.custom_filters.append(filter_in)
+        search.custom_filters.append(filter_out)
+        search.custom_filters.append(size)
+        search.custom_filters.append(bitrate)
+        search.custom_filters.append(has_free_slot)
+        search.custom_filters.append(country)
+        search.custom_filters.append(file_type)
+        search.custom_filters.append(length)
+        search.custom_filters.append(is_public)
 
-        search.enable_filters = True
+        search.filter_mode = ResultFilterMode.CUSTOM
 
         events.emit("update-wish-filters", wish)
 
@@ -323,8 +329,8 @@ class Search:
         if search is None:
             return
 
-        search.filters.clear()
-        search.enable_filters = False
+        search.custom_filters.clear()
+        search.filter_mode = ResultFilterMode.NONE
 
         events.emit("clear-wish-filters", wish)
 
@@ -354,15 +360,16 @@ class Search:
 
         return search
 
-    def _add_wish_search(self, token, search_term, auto_search=True, enable_filters=False, time_added=None,
-                         filters=None, ignored_users=None):
+    def _add_wish_search(self, token, search_term, auto_search=True, filter_mode=ResultFilterMode.NONE,
+                         time_added=None, custom_filters=None, ignored_users=None):
 
         term_sanitized, term_transmitted, included_words, excluded_words = self._sanitize_search_term(search_term)
 
         self.wishlist[search_term] = self.searches[token] = search = WishSearchRequest(
             token=token, term=search_term, term_sanitized=term_sanitized, term_transmitted=term_transmitted,
             included_words=included_words, excluded_words=excluded_words, auto_search=auto_search,
-            enable_filters=enable_filters, time_added=time_added, filters=filters, ignored_users=ignored_users
+            filter_mode=filter_mode, time_added=time_added, custom_filters=custom_filters,
+            ignored_users=ignored_users
         )
 
         return search

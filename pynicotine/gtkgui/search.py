@@ -40,6 +40,7 @@ from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.treeview import create_grouping_menu
 from pynicotine.logfacility import log
+from pynicotine.search import ResultFilterMode
 from pynicotine.shares import FileTypes
 from pynicotine.slskmessages import FileListMessage
 from pynicotine.slskmessages import UserStatus
@@ -783,10 +784,10 @@ class Search:
             search = core.search.wishlist.get(self.text)
 
             if search is not None:
-                if not search.enable_filters:
+                if search.filter_mode == ResultFilterMode.NONE:
                     return
 
-                sfilter = search.filters
+                sfilter = search.custom_filters
 
         elif config.sections["searches"]["enablefilters"]:
             sfilter = config.sections["searches"]["defilter"]
