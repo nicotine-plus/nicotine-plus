@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-08 19:02+0200\n"
-"PO-Revision-Date: 2026-01-03 05:06+0000\n"
+"PO-Revision-Date: 2026-01-10 22:54+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -503,7 +503,7 @@ msgstr "Stuur een privébericht naar alle gebruikers die van je downloaden:"
 #: pynicotine/gtkgui/application.py:768 pynicotine/gtkgui/application.py:782
 #: pynicotine/gtkgui/userinfo.py:829
 msgid "_Send"
-msgstr ""
+msgstr "_Verzenden"
 
 #: pynicotine/gtkgui/application.py:780
 msgid "Message Buddies"
@@ -705,7 +705,7 @@ msgstr "Kamer privé maken"
 
 #: pynicotine/gtkgui/chatrooms.py:228 pynicotine/gtkgui/dialogs/roomlist.py:383
 msgid "Cre_ate"
-msgstr ""
+msgstr "C_reëer"
 
 #: pynicotine/gtkgui/chatrooms.py:563
 msgid "Search activity log…"
@@ -787,24 +787,24 @@ msgid "Mentioned by %(user)s in Room %(room)s"
 msgstr "Vermeld door %(user)s in kamer %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:909
-#, fuzzy, python-format
+#, python-format
 msgid "Keyword %(keyword)s mentioned by %(user)s in room %(room)s"
-msgstr "Vermeld door %(user)s in kamer %(room)s"
+msgstr "Sleutelwoord %(keyword)s genoemd door %(user)s in kamer %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:918
-#, fuzzy, python-format
+#, python-format
 msgid "Keyword %(keyword)s Mentioned by %(user)s in Room %(room)s"
-msgstr "Vermeld door %(user)s in kamer %(room)s"
+msgstr "Trefwoord %(keyword)s genoemd door %(user)s in Kamer %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:927
-#, fuzzy, python-format
+#, python-format
 msgid "Message by watched user %(user)s in room %(room)s"
-msgstr "Bericht van %(user)s in kamer %(room)s"
+msgstr "Bericht van bekeken gebruiker %(user)s in kamer %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:935
-#, fuzzy, python-format
+#, python-format
 msgid "Message by Watched User %(user)s in Room %(room)s"
-msgstr "Bericht van %(user)s in kamer %(room)s"
+msgstr "Bericht van Watched User %(user)s in Kamer %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:956
 #, python-format
@@ -888,9 +888,8 @@ msgstr ""
 #: pynicotine/gtkgui/dialogs/chathistory.py:301
 #: pynicotine/gtkgui/dialogs/roomlist.py:329
 #: pynicotine/gtkgui/privatechat.py:478
-#, fuzzy
 msgid "Delete"
-msgstr "Verwijderd"
+msgstr "Verwijder"
 
 #: pynicotine/gtkgui/chatrooms.py:1406
 msgid "Hide Room Users"
@@ -1159,13 +1158,14 @@ msgid "_Edit"
 msgstr "_Aanpassen"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:315
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "User %s already exists, and the password you entered is invalid. Please "
 "choose a different username if this is your first time logging in."
 msgstr ""
-"Gebruiker %s bestaat al,en het wachtwoord dat je hebt ingevoerd is ongeldig. "
-"Kies een andere gebruikersnaam, als dit de eerste keer is dat je inlogt."
+"Gebruiker %s bestaat al, en het wachtwoord dat je hebt ingevoerd is "
+"ongeldig. Kies dan een andere gebruikersnaam als dit je eerste keer is dat "
+"je inlogt."
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:320
 #: pynicotine/headless/application.py:76
@@ -1174,6 +1174,8 @@ msgid ""
 "Username %s is invalid, please choose a different one. Usernames can only "
 "contain letters (A-Z), numbers and spaces."
 msgstr ""
+"Gebruikersnaam %s is ongeldig, kies alsjeblieft een andere. Gebruikersnamen "
+"mogen alleen letters (A-Z), cijfers en spaties bevatten."
 
 #: pynicotine/gtkgui/dialogs/fileproperties.py:50
 #: pynicotine/gtkgui/dialogs/shortcuts.py:79
@@ -1250,40 +1252,39 @@ msgstr "<b>%(ip)s</b>, poort %(port)s"
 #: pynicotine/gtkgui/dialogs/preferences.py:213
 #: pynicotine/gtkgui/ui/settings/network.ui:78
 msgid "No account added"
-msgstr ""
+msgstr "Geen account toegevoegd"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:209
 msgid "Please enter a password, or leave the username empty to log out."
 msgstr ""
+"Voer alsjeblieft een wachtwoord in, of laat de gebruikersnaam leeg om uit te "
+"loggen."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:223
-#, fuzzy
 msgid ""
 "Enter a username and password to log in as. If the user does not exist, a "
 "new account will be registered."
 msgstr ""
-"Voer de naam van een kamer in die je wilt betreden. Als de kamer niet "
-"bestaat, zal deze worden aangemaakt."
+"Voer een gebruikersnaam en wachtwoord in om in te loggen. Als de gebruiker "
+"nog niet bestaat, wordt er een nieuw account aangemaakt."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:231
 #: pynicotine/gtkgui/ui/settings/network.ui:89
 msgid "Log In As"
-msgstr ""
+msgstr "Inloggen als"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:237
-#, fuzzy
 msgid "_Log In"
-msgstr "_Log"
+msgstr "In_loggen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:246
-#, fuzzy
 msgid "Please enter a password."
-msgstr "Voer een geldig aantal dagen in."
+msgstr "Voer een wachtwoord in."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:261
-#, fuzzy, python-format
+#, python-format
 msgid "Enter a new password for your account %s:"
-msgstr "Voer een nieuw wachtwoord in voor je Soulseek-account:"
+msgstr "Voer een nieuw wachtwoord voor je account %s in:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:265
 #: pynicotine/gtkgui/ui/settings/network.ui:148
@@ -1353,14 +1354,13 @@ msgid "Browse Folder"
 msgstr "Map verkennen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:353
-#, fuzzy
 msgid ""
 "Syntax: Case-insensitive. If enabled, Python regular expressions can be "
 "used, otherwise only wildcard * matches are supported."
 msgstr ""
-"<b>Syntax</b>: Niet hoofdlettergevoelig. Als dit ingeschakeld is, kunnen "
-"Python reguliere expressies gebruikt worden, anders worden alleen "
-"jokertekens * ondersteund."
+"Syntaxis: hoofdletterongevoelig. Als dit ingeschakeld is, kunnen Python-"
+"reguliere expressies worden gebruikt; anders wordt alleen het wildcard-teken "
+"* ondersteund."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:362
 #: pynicotine/gtkgui/dialogs/preferences.py:726
@@ -1465,31 +1465,29 @@ msgstr "Filters"
 #: pynicotine/gtkgui/dialogs/preferences.py:863
 #: pynicotine/gtkgui/dialogs/preferences.py:890
 msgid "Only buddies can view shares"
-msgstr ""
+msgstr "Alleen vrienden kunnen Shares bekijken"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:846
 #: pynicotine/gtkgui/dialogs/preferences.py:866
 #: pynicotine/gtkgui/dialogs/preferences.py:891
-#, fuzzy
 msgid "Everyone can view buddy shares"
-msgstr "Klaar met vrienden-shares opnieuw scannen"
+msgstr "Iedereen kan Shares van vrienden bekijken"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:850
 #: pynicotine/gtkgui/dialogs/preferences.py:869
 #: pynicotine/gtkgui/dialogs/preferences.py:892
 msgid "Everyone can view trusted shares"
-msgstr ""
+msgstr "Iedereen kan vertrouwde Shares bekijken"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:854
 #: pynicotine/gtkgui/dialogs/preferences.py:872
 #: pynicotine/gtkgui/dialogs/preferences.py:893
 msgid "Everyone can view buddy & trusted shares"
-msgstr ""
+msgstr "Iedereen kan vriend & vertrouwde Shares bekijken"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:876
-#, fuzzy
 msgid "Buddy Share Visibility"
-msgstr "Vrienden shares"
+msgstr "Vriend Share Zichtbaarheid"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:878
 msgid ""
@@ -1498,6 +1496,10 @@ msgid ""
 "them, and users can choose whether or not they want to see the files in "
 "their search results."
 msgstr ""
+"Maak vriend/vertrouwde Shares zichtbaar voor iedereen, maar laat gebruikers "
+"toegang aanvragen door je een bericht te sturen. Dergelijke bestanden worden "
+"weergegeven met een indicator ernaast, en gebruikers kunnen kiezen of ze de "
+"bestanden in hun zoekresultaten willen zien."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:883
 msgid ""
@@ -1506,6 +1508,10 @@ msgid ""
 "files are available on request. Including a comment about access requests on "
 "your user profile is recommended."
 msgstr ""
+"Deze optie wordt in de meeste gevallen niet aanbevolen. Het is een laatste "
+"redmiddel als het geven van onbeperkte toegang niet praktisch is, maar je "
+"wilt aangeven dat bestanden op verzoek beschikbaar zijn. Het wordt "
+"aangeraden een opmerking over toegangverzoeken op je profiel te zetten."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1037
 msgid "Add Share Filter"
@@ -1598,7 +1604,7 @@ msgstr "Format codes"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1764
 msgid "Keyword"
-msgstr ""
+msgstr "sleutelwoord"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1785
 #: pynicotine/gtkgui/dialogs/preferences.py:1806
@@ -1610,9 +1616,8 @@ msgid "Replacement"
 msgstr "Vervanging"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1831
-#, fuzzy
 msgid "Mentions"
-msgstr "Verbindingen"
+msgstr "Vermeldingen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1832
 msgid "Auto-Replace"
@@ -1624,41 +1629,43 @@ msgstr "Censureren"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1965
 msgid "Add Keyword"
-msgstr ""
+msgstr "Trefwoord toevoegen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1966
 msgid ""
 "Enter a list of keywords or usernames you want to watch for. Chat messages "
 "containing the keywords will be highlighted."
 msgstr ""
+"Voer een lijst in met trefwoorden of gebruikersnamen waar je op wilt letten. "
+"Chatberichten die de trefwoorden bevatten, worden gemarkeerd."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1996
 msgid "Edit Keyword"
-msgstr ""
+msgstr "Bewerk trefwoord"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1997
 msgid ""
 "Enter a keyword or username you want to watch for. Chat messages containing "
 "the keyword will be highlighted."
 msgstr ""
+"Voer een trefwoord of gebruikersnaam in waar je op wilt letten. "
+"Chatberichten die het trefwoord bevatten, worden gemarkeerd."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2033
 msgid "Censor Patterns"
 msgstr "Censuurpatronen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2034
-#, fuzzy
 msgid "Enter a list of patterns you want to censor:"
-msgstr "Voer een lijst met gebruikersnamen in die je wilt negeren:"
+msgstr "Voer een lijst met patronen in die je wilt censureren:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2063
 msgid "Edit Censored Pattern"
 msgstr "Gecensureerd patroon bewerken"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2064
-#, fuzzy
 msgid "Enter a pattern you want to censor:"
-msgstr "Voer een lijst met gebruikersnamen in die je wilt negeren:"
+msgstr "Voer een patroon in dat je wilt censureren:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2096
 msgid "Add Replacement"
@@ -1927,9 +1934,8 @@ msgstr ""
 "die de plugin heeft opgeslagen."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3596
-#, fuzzy
 msgid "Uninstall"
-msgstr "Verwijder…"
+msgstr "Verwijder"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3657
 #: pynicotine/gtkgui/dialogs/shortcuts.py:41
@@ -2068,6 +2074,8 @@ msgid ""
 "Room names can only contain letters (A-Z), numbers, and a single space "
 "between characters."
 msgstr ""
+"Kamer namen mogen alleen letters (A-Z), cijfers, en één spatie tussen tekens "
+"bevatten."
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:361
 #, python-format
@@ -2288,9 +2296,8 @@ msgid "Do you really want to reset transfer statistics?"
 msgstr "Wil je echt de overdrachtstatistieken resetten?"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:113
-#, fuzzy
 msgid "Reset All"
-msgstr "Alles deselecteren"
+msgstr "Alles resetten"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:44 pynicotine/gtkgui/search.py:349
 msgid "Wish"
@@ -2633,24 +2640,24 @@ msgid "User Actions"
 msgstr "Gebruikersacties"
 
 #: pynicotine/gtkgui/privatechat.py:491
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s mentioned you in a private message"
-msgstr "%(user)s heeft je genoemd in kamer %(room)s"
+msgstr "%(user)s noemde je in een privébericht"
 
 #: pynicotine/gtkgui/privatechat.py:496
-#, fuzzy, python-format
+#, python-format
 msgid "Mentioned by %(user)s in Private"
-msgstr "Vermeld door %(user)s in kamer %(room)s"
+msgstr "Genoemd door %(user)s in privé"
 
 #: pynicotine/gtkgui/privatechat.py:500
 #, python-format
 msgid "Keyword %(keyword)s mentioned by %(user)s in private"
-msgstr ""
+msgstr "Sleutelwoord %(keyword)s genoemd door %(user)s in privé"
 
 #: pynicotine/gtkgui/privatechat.py:508
 #, python-format
 msgid "Keyword %(keyword)s Mentioned by %(user)s in Private"
-msgstr ""
+msgstr "Sleutelwoord %(keyword)s genoemd door %(user)s in privé"
 
 #: pynicotine/gtkgui/privatechat.py:549
 msgid "* Messages sent while you were offline"
@@ -3230,9 +3237,8 @@ msgid "Do you really want to close all tabs?"
 msgstr "Wil je echt alle tabs sluiten?"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:452
-#, fuzzy
 msgid "Close All"
-msgstr "Alles wissen"
+msgstr "Alles sluiten"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:465
 #, python-format
@@ -3439,9 +3445,9 @@ msgid "Type %s to log in with another username or password."
 msgstr "Typ %s om in te loggen met een andere gebruikersnaam of wachtwoord."
 
 #: pynicotine/headless/application.py:78
-#, fuzzy, python-format
+#, python-format
 msgid "Type %s to log in with another username."
-msgstr "Typ %s om in te loggen met een andere gebruikersnaam of wachtwoord."
+msgstr "Typ %s om in te loggen met een andere gebruikersnaam."
 
 #: pynicotine/headless/application.py:94
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:272
@@ -5508,9 +5514,8 @@ msgstr ""
 "ongebruikelijke bestanden te ontdekken."
 
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:31
-#, fuzzy
 msgid "Search wish terms…"
-msgstr "Zoekterm…"
+msgstr "Zoek wenstermen…"
 
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:162
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:178
@@ -6184,16 +6189,15 @@ msgstr "IP-adressen"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:38
 msgid "Watch for keyword mentions in messages"
-msgstr ""
+msgstr "Houd in de gaten of sleutelwoorden genoemd worden in berichten"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:195
 msgid "Substitute text patterns when sending messages"
-msgstr ""
+msgstr "Vervang tekstpatronen als je berichten verstuurt"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:352
-#, fuzzy
 msgid "Censor text patterns in incoming messages"
-msgstr "Kan inkomend bericht, class %s, niet verwerken"
+msgstr "Censureer tekstpatronen in inkomende berichten"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:525
 msgid "Accept private room invitations"
@@ -6392,16 +6396,15 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/network.ui:63
 msgid "Account:"
-msgstr ""
+msgstr "Account:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:105
 msgid "_Log In As"
-msgstr ""
+msgstr "_Inloggen als"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:132
-#, fuzzy
 msgid "Account Password:"
-msgstr "Wachtwoord: "
+msgstr "Wachtwoord voor account:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:164
 msgid "Change Pass_word"
@@ -6514,15 +6517,14 @@ msgid "Enable search history"
 msgstr "Zoekgeschiedenis inschakelen"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:75
-#, fuzzy
 msgid ""
 "Privately shared files that have been made visible to everyone will display "
 "a lock icon next to them. These files cannot be downloaded until the "
 "uploader gives explicit permission. Ask them kindly."
 msgstr ""
-"Privé gedeelde bestanden die voor iedereen zichtbaar zijn gemaakt, krijgen "
-"het voorvoegsel '[PRIVÉ]', en kunnen niet worden gedownload totdat de "
-"uploader expliciete toestemming geeft. Vraag het hen vriendelijk."
+"Privé gedeelde bestanden die voor iedereen zichtbaar zijn gemaakt, tonen een "
+"slotje naast zich. Deze bestanden kunnen niet worden gedownload totdat de "
+"uploader expliciete toestemming geeft. Vraag ze vriendelijk om toestemming."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:81
 msgid "Show privately shared files in search results"
@@ -6626,14 +6628,12 @@ msgid "Daily:"
 msgstr "Dagelijks:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:452
-#, fuzzy
 msgid "Visible To"
-msgstr "Toegankelijk voor"
+msgstr "Zichtbaar voor"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:468
-#, fuzzy
 msgid "_Visible To"
-msgstr "Toegankelijk voor"
+msgstr "_Zichtbaar voor"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:70
 msgid "Automatically remove finished and cancelled uploads from list"
@@ -6799,9 +6799,8 @@ msgid "Private messages"
 msgstr "Privéberichten"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:360
-#, fuzzy
 msgid "Private message mentions"
-msgstr "Privéberichten"
+msgstr "Vermeldingen in privéberichten"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:372
 msgid "Chat room messages"
