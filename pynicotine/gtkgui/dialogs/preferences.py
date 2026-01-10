@@ -265,7 +265,7 @@ class NetworkPage:
             title=_("Change Password"),
             message=message,
             visibility=False,
-            action_button_label=_("_Change"),
+            action_button_label=_("Ch_ange"),
             callback=self.on_change_password_response
         ).present()
 

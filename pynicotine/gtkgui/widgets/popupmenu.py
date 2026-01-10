@@ -18,6 +18,7 @@ from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
+from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 from pynicotine.utils import humanize
 
@@ -505,6 +506,8 @@ class UserPopupMenu(PopupMenu):
 
         self.clear()
 
+        _reserved = _("Make Owner of %s")
+
         for room, data in core.chatrooms.private_rooms.items():
             is_owner = core.chatrooms.is_room_owner(room)
             is_operator = core.chatrooms.is_room_operator(room)
@@ -575,6 +578,23 @@ class UserPopupMenu(PopupMenu):
 
     def on_remove_room_operator(self, _action, _parameter, room):
         core.chatrooms.request_remove_room_operator(room, self.username)
+
+    def on_change_room_owner(self, _action, _parameter, room):
+        """Reserved for the future. Not implemented in the server yet."""
+
+        OptionDialog(
+            parent=self,
+            title=_("Change Room Owner?"),
+            message=_("Do you really want to make %(user)s the new owner of your private room %(room)s?") % {
+                "user": self.username,
+                "room": room
+            },
+            buttons=[
+                ("cancel", _("_Cancel")),
+                ("ok", _("Ch_ange"))
+            ],
+            callback=None
+        ).present()
 
     def on_add_to_list(self, action, state):
 
