@@ -24,7 +24,6 @@ class DummyHook:
 gi.Hook = DummyHook
 
 if sys.platform == "win32":
-    GUI_BASE = "Win32GUI"
     SYS_BASE_PATH = sys.prefix
     LIB_PATH = os.path.join(SYS_BASE_PATH, "bin")
     UNAVAILABLE_MODULES = [
@@ -33,7 +32,6 @@ if sys.platform == "win32":
     ICON_NAME = "icon.ico"
 
 elif sys.platform == "darwin":
-    GUI_BASE = None
     SYS_BASE_PATH = "/opt/homebrew" if platform.machine() == "arm64" else "/usr/local"
     LIB_PATH = os.path.join(SYS_BASE_PATH, "lib")
     UNAVAILABLE_MODULES = ["msvcrt", "nt", "nturl2path", "ossaudiodev", "spwd", "winreg", "winsound"]
@@ -308,7 +306,7 @@ setup(
     executables=[
         Executable(
             script=os.path.join(PROJECT_PATH, SCRIPT_NAME),
-            base=GUI_BASE,
+            base="gui",
             target_name=pynicotine.__application_name__,
             icon=os.path.join(CURRENT_PATH, ICON_NAME),
             manifest=MANIFEST_NAME,
