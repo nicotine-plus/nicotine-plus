@@ -592,7 +592,9 @@ class Downloads(Transfers):
 
         if transfers["uploadallowed"] == 1:
             # Everyone
-            return True
+            # Always reject uploads, since there's no good reason to allow any user to send
+            # arbitrary files. It has resulted in confusion in the past.
+            return False
 
         if transfers["uploadallowed"] == 2 and username in core.buddies.users:
             # Buddies
