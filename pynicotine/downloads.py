@@ -583,7 +583,7 @@ class Downloads(Transfers):
                 if self._enqueue_transfer(download):
                     self._update_transfer(download)
 
-    def can_upload(self, username):
+    def can_send_any_files(self, username):
 
         transfers = config.sections["transfers"]
 
@@ -1060,7 +1060,7 @@ class Downloads(Transfers):
                 # SoulseekQt sends "Complete" as the reason for rejecting the download if it exists
                 cancel_reason = TransferRejectReason.COMPLETE
 
-        elif self.can_upload(username):
+        elif self.can_send_any_files(username):
             # Check if download exists in our default download folder
             _file_path, file_exists = self.get_complete_download_file_path(username, virtual_path, size)
 
