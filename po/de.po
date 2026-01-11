@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-11 01:35+0200\n"
+"POT-Creation-Date: 2026-01-11 18:51+0200\n"
 "PO-Revision-Date: 2026-01-11 10:30+0000\n"
 "Last-Translator: Felix Hansen <gore-snagged-happy@duck.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -2334,7 +2334,8 @@ msgid "Added"
 msgstr "Hinzugefügt"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:95
-msgid "_Update _Filters…"
+#, fuzzy
+msgid "Update _Filters…"
 msgstr "_Filter _aktualisieren…"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:96 pynicotine/gtkgui/interests.py:187
@@ -3393,8 +3394,8 @@ msgid ""
 "Do you really want to make %(user)s the new owner of your private room "
 "%(room)s?"
 msgstr ""
-"Möchtest du %(user)s wirklich zum neuen Besitzer deines privaten Raums %"
-"(room)s machen?"
+"Möchtest du %(user)s wirklich zum neuen Besitzer deines privaten Raums "
+"%(room)s machen?"
 
 #: pynicotine/gtkgui/widgets/textentry.py:22
 msgid "Send message…"

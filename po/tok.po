@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-11 01:35+0200\n"
+"POT-Creation-Date: 2026-01-11 18:51+0200\n"
 "PO-Revision-Date: 2025-12-30 23:54+0000\n"
 "Last-Translator: Hannah Nosurname <jmejanbarjuniper@gmail.com>\n"
 "Language-Team: Toki Pona <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -2287,7 +2287,7 @@ msgid "Added"
 msgstr ""
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:95
-msgid "_Update _Filters…"
+msgid "Update _Filters…"
 msgstr ""
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:96 pynicotine/gtkgui/interests.py:187
