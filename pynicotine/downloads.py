@@ -619,6 +619,13 @@ class Downloads(Transfers):
             # arbitrary files. It has resulted in confusion in the past.
             return False
 
+        if username == core.users.login_username:
+            # Disallow arbitrary file uploads from our own username. There's no point in
+            # allowing them. Since it's quite common for users to add themselves to their
+            # buddy list, their own username would be the most obvious choice for someone to
+            # spoof in order to get uploads through.
+            return False
+
         if transfers["uploadallowed"] == 2 and username in core.buddies.users:
             # Buddies
             return True
