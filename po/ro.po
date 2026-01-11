@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-11 01:35+0200\n"
+"POT-Creation-Date: 2026-01-11 18:51+0200\n"
 "PO-Revision-Date: 2024-10-31 19:00+0000\n"
 "Last-Translator: Bugmenot <weblate@spam.care>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -2563,7 +2563,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:95
 #, fuzzy
-msgid "_Update _Filters…"
+msgid "Update _Filters…"
 msgstr "Încărcați dosarul…"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:96 pynicotine/gtkgui/interests.py:187

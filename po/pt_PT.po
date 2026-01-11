@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-11 01:35+0200\n"
+"POT-Creation-Date: 2026-01-11 18:51+0200\n"
 "PO-Revision-Date: 2024-11-17 12:58+0000\n"
 "Last-Translator: Mat <mail@mathias.is>\n"
 "Language-Team: Portuguese (Portugal) <https://hosted.weblate.org/projects/"
@@ -2384,7 +2384,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:95
 #, fuzzy
-msgid "_Update _Filters…"
+msgid "Update _Filters…"
 msgstr "Pasta para Upload…"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:96 pynicotine/gtkgui/interests.py:187

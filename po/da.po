@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-11 01:35+0200\n"
+"POT-Creation-Date: 2026-01-11 18:51+0200\n"
 "PO-Revision-Date: 2023-12-01 21:04+0000\n"
 "Last-Translator: Sigrid Davis <lizardlays@gmail.com>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -2584,7 +2584,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:95
 #, fuzzy
-msgid "_Update _Filters…"
+msgid "Update _Filters…"
 msgstr "Overfør mappe til…"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:96 pynicotine/gtkgui/interests.py:187

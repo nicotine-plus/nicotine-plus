@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-11 01:35+0200\n"
-"PO-Revision-Date: 2026-01-10 22:54+0000\n"
+"POT-Creation-Date: 2026-01-11 18:51+0200\n"
+"PO-Revision-Date: 2026-01-11 10:30+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -1294,7 +1294,6 @@ msgstr "Wachtwoord veranderen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:268
 #: pynicotine/gtkgui/widgets/popupmenu.py:594
-#, fuzzy
 msgid "Ch_ange"
 msgstr "_Veranderen"
 
@@ -2307,9 +2306,8 @@ msgid "Reset All"
 msgstr "Alles resetten"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:59
-#, fuzzy
 msgid "Search Term"
-msgstr "Zoekterm kopiëren"
+msgstr "Zoekterm"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:67 pynicotine/gtkgui/downloads.py:60
 #: pynicotine/gtkgui/transfers.py:57
@@ -2318,12 +2316,12 @@ msgstr "Gefilterd"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:73
 msgid "Added"
-msgstr ""
+msgstr "toegevoegd"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:95
 #, fuzzy
-msgid "_Update _Filters…"
-msgstr "_Mappen uploaden…"
+msgid "Update _Filters…"
+msgstr "Filters _bijwerken…"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:96 pynicotine/gtkgui/interests.py:187
 #: pynicotine/gtkgui/interests.py:196 pynicotine/gtkgui/interests.py:208
@@ -2332,9 +2330,8 @@ msgid "_Search for Item"
 msgstr "_Zoeken naar item"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:98
-#, fuzzy
 msgid "Reset Seen Results"
-msgstr "Resultaten gebruiker selecteren"
+msgstr "Reset bekeken resultaten"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:195
 msgid "Add Wishes"
@@ -2346,36 +2343,32 @@ msgstr "Voer een lijst met zoektermen in om toe te voegen aan je Verlanglijst:"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:200
 #: pynicotine/gtkgui/dialogs/wishlist.py:257
-#, fuzzy
 msgid "Enable automatic search"
-msgstr "Automatisch woordenvervanging inschakelen"
+msgstr "Automatisch zoeken inschakelen"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:208
 #: pynicotine/gtkgui/dialogs/wishlist.py:251
 #: pynicotine/gtkgui/dialogs/wishlist.py:252
-#, fuzzy
 msgid "Custom filters"
-msgstr "Filters herstellen"
+msgstr "Aangepaste filters"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:239
-#, fuzzy
 msgid "Default filters"
-msgstr "Standaardkleuren"
+msgstr "Standaardfilters"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:248
 msgid "Edit Wish"
 msgstr "Wens bewerken"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:249
-#, fuzzy, python-format
+#, python-format
 msgid "Modify the search term '%s':"
-msgstr "Pas het volgende Share-filter aan:"
+msgstr "Wijzig de zoekterm '%s':"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:251
 #: pynicotine/gtkgui/dialogs/wishlist.py:252
-#, fuzzy
 msgid "No filters"
-msgstr "Netwerkfilters"
+msgstr "Geen filters"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:317
 msgid "Clear Wishlist?"
@@ -3347,7 +3340,7 @@ msgstr "Privékamers"
 #: pynicotine/gtkgui/widgets/popupmenu.py:509
 #, python-format
 msgid "Make Owner of %s"
-msgstr ""
+msgstr "Maak eigenaar van %s"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:527
 #, python-format
@@ -3370,16 +3363,16 @@ msgid "Add as Operator of %s"
 msgstr "Als operator van %s toevoegen"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:587
-#, fuzzy
 msgid "Change Room Owner?"
-msgstr "Kamer Eigenaar"
+msgstr "Kamer eigenaar wijzigen?"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:588
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Do you really want to make %(user)s the new owner of your private room "
 "%(room)s?"
-msgstr "Wil je echt je privékamer %s permanent verwijderen?"
+msgstr ""
+"Wil je echt %(user)s de nieuwe eigenaar maken van jouw privé-kamer %(room)s?"
 
 #: pynicotine/gtkgui/widgets/textentry.py:22
 msgid "Send message…"
@@ -3434,14 +3427,12 @@ msgid "Unreadable Folder"
 msgstr "Onleesbare map"
 
 #: pynicotine/gtkgui/widgets/theme.py:268
-#, fuzzy
 msgid "Default Filters Active"
-msgstr "Resultaatfilters"
+msgstr "Standaardfilters actief"
 
 #: pynicotine/gtkgui/widgets/theme.py:269
-#, fuzzy
 msgid "Custom Filters Active"
-msgstr "Filters herstellen"
+msgstr "Aangepaste filters actief"
 
 #: pynicotine/gtkgui/widgets/theme.py:376
 #, python-format
@@ -6233,9 +6224,8 @@ msgid "Country code, e.g. US ES or !DE !GB"
 msgstr "Landcode, bijv. US ES of !DE !GB"
 
 #: pynicotine/gtkgui/ui/search.ui:222
-#, fuzzy
 msgid "Store Wishlist Filters"
-msgstr "Resultaatfilters"
+msgstr "Verlanglijstfilters opslaan"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:33
 msgid ""
