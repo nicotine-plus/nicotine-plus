@@ -92,7 +92,7 @@ class WishList(Dialog):
         self.popup_menu = PopupMenu(application, self.list_view.widget)
         self.popup_menu.add_items(
             ("#" + _("_Edit…"), self.on_edit_wish),
-            ("#" + _("_Update _Filters…"), self.on_update_filters),
+            ("#" + _("Update _Filters…"), self.on_update_filters),
             ("#" + _("_Search for Item"), self.on_search_wish),
             ("", None),
             ("#" + _("Reset Seen Results"), self.on_reset_seen_results),
