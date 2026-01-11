@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-11 01:35+0200\n"
-"PO-Revision-Date: 2026-01-10 20:01+0000\n"
+"PO-Revision-Date: 2026-01-11 10:30+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -1300,7 +1300,6 @@ msgstr "Parola Değiştir"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:268
 #: pynicotine/gtkgui/widgets/popupmenu.py:594
-#, fuzzy
 msgid "Ch_ange"
 msgstr "_Değiştir"
 
@@ -2316,9 +2315,8 @@ msgid "Reset All"
 msgstr "Tümünü Sıfırla"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:59
-#, fuzzy
 msgid "Search Term"
-msgstr "Arama Terimini Kopyala"
+msgstr "Arama Terimi"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:67 pynicotine/gtkgui/downloads.py:60
 #: pynicotine/gtkgui/transfers.py:57
@@ -2327,12 +2325,11 @@ msgstr "Filtrelendi"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:73
 msgid "Added"
-msgstr ""
+msgstr "Eklendi"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:95
-#, fuzzy
 msgid "_Update _Filters…"
-msgstr "_Klasörleri Yükle…"
+msgstr "_Filtreleri _Güncelle…"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:96 pynicotine/gtkgui/interests.py:187
 #: pynicotine/gtkgui/interests.py:196 pynicotine/gtkgui/interests.py:208
@@ -2341,9 +2338,8 @@ msgid "_Search for Item"
 msgstr "Ögeyi _Ara"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:98
-#, fuzzy
 msgid "Reset Seen Results"
-msgstr "Kullanıcının Sonuçlarını Seç"
+msgstr "Görüntülenen Sonuçları Sıfırla"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:195
 msgid "Add Wishes"
@@ -2355,36 +2351,32 @@ msgstr "Dilek listesine eklemek için arama terimlerinin listesini girin:"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:200
 #: pynicotine/gtkgui/dialogs/wishlist.py:257
-#, fuzzy
 msgid "Enable automatic search"
-msgstr "Sözcüklerin otomatik olarak değiştirilmesini etkinleştir"
+msgstr "Otomatik aramayı etkinleştir"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:208
 #: pynicotine/gtkgui/dialogs/wishlist.py:251
 #: pynicotine/gtkgui/dialogs/wishlist.py:252
-#, fuzzy
 msgid "Custom filters"
-msgstr "Filtreleri Geri Yükle"
+msgstr "Özel filtreler"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:239
-#, fuzzy
 msgid "Default filters"
-msgstr "Sonuç Filtreleri"
+msgstr "Öntanımlı filtreler"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:248
 msgid "Edit Wish"
 msgstr "Dileği Düzenle"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:249
-#, fuzzy, python-format
+#, python-format
 msgid "Modify the search term '%s':"
-msgstr "Aşağıdaki paylaşım filtresini değiştirin:"
+msgstr "'%s' arama terimini değiştirin:"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:251
 #: pynicotine/gtkgui/dialogs/wishlist.py:252
-#, fuzzy
 msgid "No filters"
-msgstr "Ağ Filtreleri"
+msgstr "Filtre yok"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:317
 msgid "Clear Wishlist?"
@@ -3362,7 +3354,7 @@ msgstr "Özel Odalar"
 #: pynicotine/gtkgui/widgets/popupmenu.py:509
 #, python-format
 msgid "Make Owner of %s"
-msgstr ""
+msgstr "%s Sahibi Yap"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:527
 #, python-format
@@ -3385,16 +3377,17 @@ msgid "Add as Operator of %s"
 msgstr "%s İşleticisi Olarak Ekle"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:587
-#, fuzzy
 msgid "Change Room Owner?"
-msgstr "Oda Sahibi"
+msgstr "Oda Sahibi Değiştirilsin mi?"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:588
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Do you really want to make %(user)s the new owner of your private room "
 "%(room)s?"
-msgstr "%s özel odanızı gerçekten kalıcı olarak silmek istiyor musunuz?"
+msgstr ""
+"%(user)s kullanıcısını %(room)s özel odanızın yeni sahibi yapmak istiyor "
+"musunuz?"
 
 #: pynicotine/gtkgui/widgets/textentry.py:22
 msgid "Send message…"
@@ -3449,14 +3442,12 @@ msgid "Unreadable Folder"
 msgstr "Klasör Okunamıyor"
 
 #: pynicotine/gtkgui/widgets/theme.py:268
-#, fuzzy
 msgid "Default Filters Active"
-msgstr "Sonuç Filtreleri"
+msgstr "Öntanımlı Filtreler Etkin"
 
 #: pynicotine/gtkgui/widgets/theme.py:269
-#, fuzzy
 msgid "Custom Filters Active"
-msgstr "Filtreleri Geri Yükle"
+msgstr "Özel Filtreler Etkin"
 
 #: pynicotine/gtkgui/widgets/theme.py:376
 #, python-format
@@ -6246,9 +6237,8 @@ msgid "Country code, e.g. US ES or !DE !GB"
 msgstr "Ülke kodu, örneğin US ES veya !DE !GB"
 
 #: pynicotine/gtkgui/ui/search.ui:222
-#, fuzzy
 msgid "Store Wishlist Filters"
-msgstr "Sonuç Filtreleri"
+msgstr "Dilek Listesi Filtrelerini Sakla"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:33
 msgid ""
