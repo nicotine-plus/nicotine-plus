@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-11 01:35+0200\n"
-"PO-Revision-Date: 2026-01-09 18:01+0000\n"
+"PO-Revision-Date: 2026-01-11 10:30+0000\n"
 "Last-Translator: Matthaiks <kitynska@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
@@ -1302,9 +1302,8 @@ msgstr "Zmień hasło"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:268
 #: pynicotine/gtkgui/widgets/popupmenu.py:594
-#, fuzzy
 msgid "Ch_ange"
-msgstr "Z_mień"
+msgstr "Zmi_eń"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:311
 msgid "No one"
@@ -2317,9 +2316,8 @@ msgid "Reset All"
 msgstr "Zresetuj wszystko"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:59
-#, fuzzy
 msgid "Search Term"
-msgstr "Kopiuj wyszukiwane hasło"
+msgstr "Termin wyszukiwania"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:67 pynicotine/gtkgui/downloads.py:60
 #: pynicotine/gtkgui/transfers.py:57
@@ -2328,12 +2326,11 @@ msgstr "Filtrowane"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:73
 msgid "Added"
-msgstr ""
+msgstr "Dodano"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:95
-#, fuzzy
 msgid "_Update _Filters…"
-msgstr "Wyślij _foldery…"
+msgstr "Aktualizuj _filtry…"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:96 pynicotine/gtkgui/interests.py:187
 #: pynicotine/gtkgui/interests.py:196 pynicotine/gtkgui/interests.py:208
@@ -2342,9 +2339,8 @@ msgid "_Search for Item"
 msgstr "_Szukaj tego obiektu"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:98
-#, fuzzy
 msgid "Reset Seen Results"
-msgstr "Wybierz wyniki użytkownika"
+msgstr "Zresetuj widoczne wyniki"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:195
 msgid "Add Wishes"
@@ -2356,36 +2352,32 @@ msgstr "Wprowadź listę wyszukiwanych haseł, aby dodać je do listy życzeń:"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:200
 #: pynicotine/gtkgui/dialogs/wishlist.py:257
-#, fuzzy
 msgid "Enable automatic search"
-msgstr "Włącz automatyczną podmianę wyrazów"
+msgstr "Włącz automatyczne wyszukiwanie"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:208
 #: pynicotine/gtkgui/dialogs/wishlist.py:251
 #: pynicotine/gtkgui/dialogs/wishlist.py:252
-#, fuzzy
 msgid "Custom filters"
-msgstr "Przywróć filtry"
+msgstr "Filtry niestandardowe"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:239
-#, fuzzy
 msgid "Default filters"
-msgstr "Domyślne kolory"
+msgstr "Filtry domyślne"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:248
 msgid "Edit Wish"
 msgstr "Edytuj życzenie"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:249
-#, fuzzy, python-format
+#, python-format
 msgid "Modify the search term '%s':"
-msgstr "Zmodyfikuj następujący filtr udostępniania:"
+msgstr "Zmodyfikuj termin wyszukiwania „%s”:"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:251
 #: pynicotine/gtkgui/dialogs/wishlist.py:252
-#, fuzzy
 msgid "No filters"
-msgstr "Filtry sieciowe"
+msgstr "Brak filtrów"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:317
 msgid "Clear Wishlist?"
@@ -3367,7 +3359,7 @@ msgstr "Prywatne pokoje"
 #: pynicotine/gtkgui/widgets/popupmenu.py:509
 #, python-format
 msgid "Make Owner of %s"
-msgstr ""
+msgstr "Uczyń właścicielem %s"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:527
 #, python-format
@@ -3390,16 +3382,17 @@ msgid "Add as Operator of %s"
 msgstr "Dodaj jako operatora %s"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:587
-#, fuzzy
 msgid "Change Room Owner?"
-msgstr "Właściciel pokoju"
+msgstr "Zmienić właściciela pokoju?"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:588
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Do you really want to make %(user)s the new owner of your private room "
 "%(room)s?"
-msgstr "Czy na pewno chcesz trwale usunąć swój prywatny pokój %s?"
+msgstr ""
+"Czy na pewno chcesz, aby %(user)s został nowym właścicielem Twojego "
+"prywatnego pokoju %(room)s?"
 
 #: pynicotine/gtkgui/widgets/textentry.py:22
 msgid "Send message…"
@@ -3454,14 +3447,12 @@ msgid "Unreadable Folder"
 msgstr "Nieczytelny folder"
 
 #: pynicotine/gtkgui/widgets/theme.py:268
-#, fuzzy
 msgid "Default Filters Active"
-msgstr "Filtrowanie wyników"
+msgstr "Aktywne filtry domyślne"
 
 #: pynicotine/gtkgui/widgets/theme.py:269
-#, fuzzy
 msgid "Custom Filters Active"
-msgstr "Przywróć filtry"
+msgstr "Aktywne filtry niestandardowe"
 
 #: pynicotine/gtkgui/widgets/theme.py:376
 #, python-format
@@ -6259,9 +6250,8 @@ msgid "Country code, e.g. US ES or !DE !GB"
 msgstr "Kod kraju, np. US ES lub !DE !GB"
 
 #: pynicotine/gtkgui/ui/search.ui:222
-#, fuzzy
 msgid "Store Wishlist Filters"
-msgstr "Filtrowanie wyników"
+msgstr "Przechowuj filtry listy życzeń"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:33
 msgid ""
