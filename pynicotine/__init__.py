@@ -1,11 +1,11 @@
-# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2020-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 __application_name__ = "Nicotine+"
 __application_id__ = "org.nicotine_plus.Nicotine"
 __version__ = "3.4.0.dev1"
 __author__ = "Nicotine+ Team"
-__copyright__ = """© 2004–2025 Nicotine+ Contributors
+__copyright__ = """© 2004–2026 Nicotine+ Contributors
 © 2003–2004 Nicotine Contributors
 © 2001–2003 PySoulSeek Contributors"""
 __website_url__ = "https://nicotine-plus.org"
