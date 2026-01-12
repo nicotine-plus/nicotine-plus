@@ -965,13 +965,19 @@ class Shares:
 
             return PermissionLevel.BANNED, ""
 
-        user_data = core.buddies.users.get(username)
+        # Since username spoofing can't be fully prevented in the Soulseek protocol, only give
+        # our own username a 'public' permission level, regardless of buddy status. It's quite
+        # common for users to add themselves to their buddy list, making their own username the
+        # easiest/most obvious choice for someone to spoof.
 
-        if user_data:
-            if user_data.is_trusted:
-                return PermissionLevel.TRUSTED, ""
+        if username != core.users.login_username:
+            user_data = core.buddies.users.get(username)
 
-            return PermissionLevel.BUDDY, ""
+            if user_data:
+                if user_data.is_trusted:
+                    return PermissionLevel.TRUSTED, ""
+
+                return PermissionLevel.BUDDY, ""
 
         if ip_address is None or not config.sections["transfers"]["geoblock"]:
             return PermissionLevel.PUBLIC, ""
