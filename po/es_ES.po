@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-11 18:51+0200\n"
-"PO-Revision-Date: 2025-11-27 05:01+0000\n"
+"PO-Revision-Date: 2026-01-12 17:01+0000\n"
 "Last-Translator: Lucas Vieites <lucas.vieites@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15-dev\n"
+"X-Generator: Weblate 5.15.2-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -508,7 +508,7 @@ msgstr ""
 #: pynicotine/gtkgui/application.py:768 pynicotine/gtkgui/application.py:782
 #: pynicotine/gtkgui/userinfo.py:829
 msgid "_Send"
-msgstr ""
+msgstr "_Enviar"
 
 #: pynicotine/gtkgui/application.py:780
 msgid "Message Buddies"
@@ -657,13 +657,13 @@ msgstr "Eliminar"
 #: pynicotine/gtkgui/interests.py:601
 #, python-format
 msgid "Files: %(num_files)s"
-msgstr ""
+msgstr "Archivos %(num_files)s"
 
 #: pynicotine/gtkgui/buddies.py:270 pynicotine/gtkgui/chatrooms.py:1318
 #: pynicotine/gtkgui/interests.py:602
 #, python-format
 msgid "Folders: %(num_folders)s"
-msgstr ""
+msgstr "Carpetas: %(num_folders)s"
 
 #: pynicotine/gtkgui/buddies.py:368
 msgid "Never seen"
@@ -710,7 +710,7 @@ msgstr "Hacer la sala privada"
 
 #: pynicotine/gtkgui/chatrooms.py:228 pynicotine/gtkgui/dialogs/roomlist.py:383
 msgid "Cre_ate"
-msgstr ""
+msgstr "Cre_ar"
 
 #: pynicotine/gtkgui/chatrooms.py:563
 msgid "Search activity log…"
@@ -769,18 +769,17 @@ msgid "Clear Message View"
 msgstr "Limpiar vista de mensajes"
 
 #: pynicotine/gtkgui/chatrooms.py:851 pynicotine/gtkgui/chatrooms.py:856
-#, fuzzy, python-format
+#, python-format
 msgid "%(username)s (%(role)s)"
-msgstr "%(username)s (%(status)s)"
+msgstr "%(username)s (%(role)s)"
 
 #: pynicotine/gtkgui/chatrooms.py:851 pynicotine/gtkgui/dialogs/roomlist.py:267
-#, fuzzy
 msgid "Room Owner"
-msgstr "Nombres de las salas"
+msgstr "Propietario de la sala"
 
 #: pynicotine/gtkgui/chatrooms.py:856
 msgid "Room Operator"
-msgstr ""
+msgstr "Operador de la sala"
 
 #: pynicotine/gtkgui/chatrooms.py:899
 #, python-format
@@ -793,24 +792,24 @@ msgid "Mentioned by %(user)s in Room %(room)s"
 msgstr "Mencionado por %(user)s en la sala %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:909
-#, fuzzy, python-format
+#, python-format
 msgid "Keyword %(keyword)s mentioned by %(user)s in room %(room)s"
-msgstr "Mencionado por %(user)s en la sala %(room)s"
+msgstr "Palabra clave %(keyword)s mencionada por %(user)s en la sala %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:918
-#, fuzzy, python-format
+#, python-format
 msgid "Keyword %(keyword)s Mentioned by %(user)s in Room %(room)s"
-msgstr "Mencionado por %(user)s en la sala %(room)s"
+msgstr "Palabra clave %(keyword)s mencionada por %(user)s en ls sala %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:927
-#, fuzzy, python-format
+#, python-format
 msgid "Message by watched user %(user)s in room %(room)s"
-msgstr "Mensaje de %(user)s en la sala %(room)s"
+msgstr "Mensaje por el usuario vigilado %(user)s en la sala %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:935
-#, fuzzy, python-format
+#, python-format
 msgid "Message by Watched User %(user)s in Room %(room)s"
-msgstr "Mensaje de %(user)s en la sala %(room)s"
+msgstr "Mensaje del usuario vigilado %(user)s en la sala %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:956
 #, python-format
@@ -839,7 +838,7 @@ msgstr "%s ha vuelto"
 
 #: pynicotine/gtkgui/chatrooms.py:1270
 msgid "Members"
-msgstr ""
+msgstr "Miembros"
 
 #: pynicotine/gtkgui/chatrooms.py:1270
 #: pynicotine/gtkgui/dialogs/preferences.py:2423
@@ -854,9 +853,9 @@ msgid "--- disconnected ---"
 msgstr "--- desconectado ---"
 
 #: pynicotine/gtkgui/chatrooms.py:1319
-#, fuzzy, python-format
+#, python-format
 msgid "Speed: %(speed)s"
-msgstr "Subidas: %(speed)s"
+msgstr "Velocidad: %(speed)s"
 
 #: pynicotine/gtkgui/chatrooms.py:1319
 #: pynicotine/gtkgui/dialogs/preferences.py:120
@@ -870,14 +869,12 @@ msgid "Unknown"
 msgstr "Desconocido"
 
 #: pynicotine/gtkgui/chatrooms.py:1355 pynicotine/gtkgui/ui/chatrooms.ui:192
-#, fuzzy
 msgid "Add Room Member"
-msgstr "Cancelar adhesión a la sala"
+msgstr "Añadir miembro de la sala"
 
 #: pynicotine/gtkgui/chatrooms.py:1356
-#, fuzzy
 msgid "Enter the name of the user you want to add to the private room:"
-msgstr "Introduce el nombre del usuario al que deseas subir archivos:"
+msgstr "Introduce el nombre del usuario que deseas añadir a la sala privada:"
 
 #: pynicotine/gtkgui/chatrooms.py:1389
 #: pynicotine/gtkgui/dialogs/chathistory.py:297
@@ -896,9 +893,8 @@ msgstr ""
 #: pynicotine/gtkgui/dialogs/chathistory.py:301
 #: pynicotine/gtkgui/dialogs/roomlist.py:329
 #: pynicotine/gtkgui/privatechat.py:478
-#, fuzzy
 msgid "Delete"
-msgstr "Eliminada"
+msgstr "Eliminar"
 
 #: pynicotine/gtkgui/chatrooms.py:1406
 msgid "Hide Room Users"
@@ -973,12 +969,10 @@ msgstr "Borrar registro de charla…"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:279
 #: pynicotine/gtkgui/ui/dialogs/chathistory.ui:36
-#, fuzzy
 msgid "Message User"
-msgstr "_Mensaje"
+msgstr "Enviar mensaje a usuario"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:280
-#, fuzzy
 msgid "Enter the name of the user you want to message:"
 msgstr "Introduce el nombre del usuario al que deseas enviar un mensaje:"
 
@@ -999,9 +993,8 @@ msgid "Folder / File"
 msgstr "Carpeta / Fichero"
 
 #: pynicotine/gtkgui/dialogs/download.py:100
-#, fuzzy
 msgid "Incomplete"
-msgstr "Descargas incompletas:"
+msgstr "Incompleto"
 
 #: pynicotine/gtkgui/dialogs/download.py:107 pynicotine/gtkgui/search.py:580
 #: pynicotine/gtkgui/transfers.py:181 pynicotine/gtkgui/userbrowse.py:333
@@ -1045,21 +1038,21 @@ msgstr[0] "Descargar %(num_files)s fichero  /  %(total_size)s"
 msgstr[1] "Descargar %(num_files)s ficheros  /  %(total_size)s"
 
 #: pynicotine/gtkgui/dialogs/download.py:402
-#, fuzzy, python-format
+#, python-format
 msgid "Unable to request folder contents from user %(user)s"
-msgstr "Error al solicitar los contenidos de la carpeta."
+msgstr "Error al solicitar los contenidos de la carpeta del usuario %(user)s"
 
 #: pynicotine/gtkgui/dialogs/download.py:405
-#, fuzzy, python-format
+#, python-format
 msgid "Unable to request folder contents from %(num)s user"
 msgid_plural "Unable to request folder contents from %(num)s users"
-msgstr[0] "Error al solicitar los contenidos de la carpeta."
-msgstr[1] "Error al solicitar los contenidos de la carpeta."
+msgstr[0] "Error al solicitar el contenido de la carpeta de %(num)s usuario"
+msgstr[1] "Error al solicitar el contenido de la carpeta de %(num)s usuarios"
 
 #: pynicotine/gtkgui/dialogs/download.py:521
 #, python-format
 msgid "Incomplete Folder Contents (%(user)s)"
-msgstr ""
+msgstr "Contenido de carpeta incompleto (%(user)s)"
 
 #: pynicotine/gtkgui/dialogs/download.py:578
 msgid "Rename Folder"
@@ -1171,13 +1164,13 @@ msgid "_Edit"
 msgstr "_Editar"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:315
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "User %s already exists, and the password you entered is invalid. Please "
 "choose a different username if this is your first time logging in."
 msgstr ""
 "El usuario %s ya existe y la contraseña que has introducido no es válida. "
-"Por favor, elige otro nombre de usuario si es la primera vez que te conectas."
+"Elige otro nombre de usuario si es la primera vez que te conectas."
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:320
 #: pynicotine/headless/application.py:76

@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-11 18:51+0200\n"
-"PO-Revision-Date: 2025-12-28 11:47+0000\n"
+"PO-Revision-Date: 2026-01-12 17:01+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15.1\n"
+"X-Generator: Weblate 5.15.2-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -505,7 +505,7 @@ msgstr "Küldjön privát üzenetet minden felhasználónak, akik letöltenek Ö
 #: pynicotine/gtkgui/application.py:768 pynicotine/gtkgui/application.py:782
 #: pynicotine/gtkgui/userinfo.py:829
 msgid "_Send"
-msgstr ""
+msgstr "El_küld"
 
 #: pynicotine/gtkgui/application.py:780
 msgid "Message Buddies"
@@ -707,7 +707,7 @@ msgstr "Tegye a szobát priváttá"
 
 #: pynicotine/gtkgui/chatrooms.py:228 pynicotine/gtkgui/dialogs/roomlist.py:383
 msgid "Cre_ate"
-msgstr ""
+msgstr "_Létrehoz"
 
 #: pynicotine/gtkgui/chatrooms.py:563
 msgid "Search activity log…"
@@ -766,18 +766,17 @@ msgid "Clear Message View"
 msgstr "Üzenetnézet törlése"
 
 #: pynicotine/gtkgui/chatrooms.py:851 pynicotine/gtkgui/chatrooms.py:856
-#, fuzzy, python-format
+#, python-format
 msgid "%(username)s (%(role)s)"
-msgstr "%(username)s (%(status)s)"
+msgstr "%(username)s (%(role)s)"
 
 #: pynicotine/gtkgui/chatrooms.py:851 pynicotine/gtkgui/dialogs/roomlist.py:267
-#, fuzzy
 msgid "Room Owner"
-msgstr "Szoba nevek"
+msgstr "Szobatulajdonos"
 
 #: pynicotine/gtkgui/chatrooms.py:856
 msgid "Room Operator"
-msgstr ""
+msgstr "Szobakezelő"
 
 #: pynicotine/gtkgui/chatrooms.py:899
 #, python-format
@@ -790,29 +789,33 @@ msgid "Mentioned by %(user)s in Room %(room)s"
 msgstr "%(user)s említette a(z) %(room)s szobában"
 
 #: pynicotine/gtkgui/chatrooms.py:909
-#, fuzzy, python-format
+#, python-format
 msgid "Keyword %(keyword)s mentioned by %(user)s in room %(room)s"
-msgstr "%(user)s említette a(z) %(room)s szobában"
+msgstr ""
+"%(user)s felhasználó által a(z) %(room)s szobában említett kulcsszó: %"
+"(keyword)s"
 
 #: pynicotine/gtkgui/chatrooms.py:918
-#, fuzzy, python-format
+#, python-format
 msgid "Keyword %(keyword)s Mentioned by %(user)s in Room %(room)s"
-msgstr "%(user)s említette a(z) %(room)s szobában"
+msgstr ""
+"A kulcsszó amit %(user)s felhasználó említett a(z) %(room)s szobában: %"
+"(keyword)s"
 
 #: pynicotine/gtkgui/chatrooms.py:927
-#, fuzzy, python-format
+#, python-format
 msgid "Message by watched user %(user)s in room %(room)s"
-msgstr "%(user)s üzenete a(z) %(room)s szobában"
+msgstr "%(user)s megfigyelt felhasználó üzenete a(z) %(room)s szobában"
 
 #: pynicotine/gtkgui/chatrooms.py:935
-#, fuzzy, python-format
+#, python-format
 msgid "Message by Watched User %(user)s in Room %(room)s"
-msgstr "%(user)s üzenete a(z) %(room)s szobában"
+msgstr "Üzenet a(z) %(room)s szobában %(user)s megfigyelt felhasználótól"
 
 #: pynicotine/gtkgui/chatrooms.py:956
 #, python-format
 msgid "Message by %(user)s in Room %(room)s"
-msgstr "%(user)s üzenete a(z) %(room)s szobában"
+msgstr "%(user)s felhasználó üzenete a(z) %(room)s szobában"
 
 #: pynicotine/gtkgui/chatrooms.py:1011 pynicotine/gtkgui/chatrooms.py:1279
 #, python-format
@@ -836,7 +839,7 @@ msgstr "%s visszajött"
 
 #: pynicotine/gtkgui/chatrooms.py:1270
 msgid "Members"
-msgstr ""
+msgstr "Tagok"
 
 #: pynicotine/gtkgui/chatrooms.py:1270
 #: pynicotine/gtkgui/dialogs/preferences.py:2423
@@ -867,14 +870,14 @@ msgid "Unknown"
 msgstr "Ismeretlen"
 
 #: pynicotine/gtkgui/chatrooms.py:1355 pynicotine/gtkgui/ui/chatrooms.ui:192
-#, fuzzy
 msgid "Add Room Member"
-msgstr "Szobatagság lemondása"
+msgstr "Szobatag hozzáadása"
 
 #: pynicotine/gtkgui/chatrooms.py:1356
-#, fuzzy
 msgid "Enter the name of the user you want to add to the private room:"
-msgstr "Adja meg a nevét a felhasználónak akinek szeretne feltölteni:"
+msgstr ""
+"Adja meg a nevét annak a felhasználónak akit a privát szobához hozzá "
+"szeretne adni:"
 
 #: pynicotine/gtkgui/chatrooms.py:1389
 #: pynicotine/gtkgui/dialogs/chathistory.py:297
@@ -891,9 +894,8 @@ msgstr "Véglegesen törölni akarja a szoba összes naplózott üzenetét?"
 #: pynicotine/gtkgui/dialogs/chathistory.py:301
 #: pynicotine/gtkgui/dialogs/roomlist.py:329
 #: pynicotine/gtkgui/privatechat.py:478
-#, fuzzy
 msgid "Delete"
-msgstr "Törölt"
+msgstr "Töröl"
 
 #: pynicotine/gtkgui/chatrooms.py:1406
 msgid "Hide Room Users"
@@ -1941,9 +1943,8 @@ msgstr ""
 "is törli."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3596
-#, fuzzy
 msgid "Uninstall"
-msgstr "_Eltávolítás…"
+msgstr "Eltávolítás"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3657
 #: pynicotine/gtkgui/dialogs/shortcuts.py:41
@@ -6526,9 +6527,8 @@ msgid "_Log In As"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/network.ui:132
-#, fuzzy
 msgid "Account Password:"
-msgstr "Jelszó: "
+msgstr "A fiók jelszava:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:164
 msgid "Change Pass_word"
