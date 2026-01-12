@@ -43,14 +43,20 @@ jobs:
           - arch: x86_64
             platform: ubuntu-latest
     container:
-      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-47
+      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-49
       options: --privileged
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+
+      - name: Validate manifest
+        run: flatpak-builder-lint --exceptions manifest build-aux/flatpak/org.nicotine_plus.Nicotine.json
+
+      - name: Validate appstream
+        run: flatpak-builder-lint appstream data/org.nicotine_plus.Nicotine.appdata.xml.in
 
       - name: Build Flatpak package
-        uses: flathub-infra/flatpak-github-actions/flatpak-builder@master
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
           bundle: org.nicotine_plus.Nicotine-${{ matrix.arch }}.flatpak
           manifest-path: build-aux/flatpak/org.nicotine_plus.Nicotine.json
@@ -59,7 +65,7 @@ jobs:
           upload-artifact: false
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: flatpak-${{ matrix.arch }}-package
           path: org.nicotine_plus.Nicotine-${{ matrix.arch }}.flatpak
