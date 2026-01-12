@@ -971,8 +971,6 @@ class Uploads(Transfers):
             transfer = Transfer(username, virtual_path, folder_path, size)
             self._append_transfer(transfer)
 
-        transfer.is_backslash_path = is_backslash_path
-
         self._enqueue_transfer(transfer)
         self._update_transfer(transfer)
 
