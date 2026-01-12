@@ -34,7 +34,7 @@ sudo add-apt-repository 'deb https://ppa.launchpadcontent.net/nicotine-team/unst
 sudo apt update; sudo apt install nicotine
 ```
 
-If you prefer to install a .deb package directly, you can [download one here](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/debian-package.zip).
+If you prefer to install a .deb package directly, you can [download one here](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/debian-package.zip).
 Unlike the repository installation method, you need to download and install
 Nicotine+ from the link above every time you want to update to the latest
 unstable build.
@@ -42,10 +42,10 @@ unstable build.
 ### Flatpak
 
 Unstable [Flatpak](https://www.flatpak.org/setup/) packages are built after
-every commit to the master branch.
+every commit to the 3.3.x branch.
 
- - [Download Unstable Flatpak Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-x86_64-package.zip)
-    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-x86_64-package)  
+ - [Download Unstable Flatpak Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/flatpak-x86_64-package.zip)
+    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/flatpak-x86_64-package)  
 
 ### Snap
 
@@ -64,17 +64,17 @@ Nicotine+ on other distributions.
 
 ## Windows
 
-Unstable packages are built after every commit to the master branch.
+Unstable packages are built after every commit to the 3.3.x branch.
 
- - [Download Unstable Windows Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer.zip)
-    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer)  
+ - [Download Unstable Windows Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/windows-x86_64-installer.zip)
+    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/windows-x86_64-installer)  
    for Windows 10 or later
 
 Standalone executables are also available. They can be run from any folder and
 do not require installation.
 
- - [Download Unstable Windows Standalone Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package.zip)
-    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package)  
+ - [Download Unstable Windows Standalone Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/windows-x86_64-package.zip)
+    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/windows-x86_64-package)  
    for Windows 10 or later
 
 > **NOTE**: Configuration files are always stored in  
@@ -82,17 +82,17 @@ do not require installation.
 
 ## macOS
 
-Unstable installers are built after every commit to the master branch.
+Unstable installers are built after every commit to the 3.3.x branch.
 
 > **IMPORTANT**: You must follow [these instructions](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac)
 > the first time you start Nicotine+.
 
- - [Download Unstable macOS Intel Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-x86_64-installer.zip)
-    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-x86_64-installer)  
+ - [Download Unstable macOS Intel Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/macos-x86_64-installer.zip)
+    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/macos-x86_64-installer)  
    for macOS 14 Sonoma or later
 
- - [Download Unstable macOS Apple Silicon Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-arm64-installer.zip)
-    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-arm64-installer)  
+ - [Download Unstable macOS Apple Silicon Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/macos-arm64-installer.zip)
+    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/macos-arm64-installer)  
    for macOS 14 Sonoma or later
 
 
