@@ -40,6 +40,7 @@ INT32_PACK = Struct("<i").pack
 UINT32_PACK = Struct("<I").pack
 UINT64_PACK = Struct("<Q").pack
 
+ZLIB_COMPRESSION_LEVEL = 4
 SEARCH_TOKENS_ALLOWED = set()
 
 
@@ -3172,7 +3173,7 @@ class SharedFileListResponse(PeerMessage):
         if private_share_groups:
             msg += self._make_shares_list(share_groups=private_share_groups)
 
-        self.built = zlib.compress(msg)
+        self.built = zlib.compress(msg, ZLIB_COMPRESSION_LEVEL)
         return self.built
 
     def parse_network_message(self, message):
@@ -3293,7 +3294,7 @@ class FileSearchResponse(PeerMessage):
             for fileinfo in self.privatelist:
                 msg += FileListMessage.pack_file_info(fileinfo)
 
-        return zlib.compress(msg)
+        return zlib.compress(msg, ZLIB_COMPRESSION_LEVEL)
 
     def parse_network_message(self, message):
         decompressor = zlib.decompressobj()
@@ -3538,7 +3539,7 @@ class FolderContentsResponse(PeerMessage):
             # No folder contents
             msg += self.pack_uint32(0)
 
-        return zlib.compress(msg)
+        return zlib.compress(msg, ZLIB_COMPRESSION_LEVEL)
 
 
 class TransferRequest(PeerMessage):
