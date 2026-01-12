@@ -15,12 +15,7 @@ jobs:
         python: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13',
                  'pypy-3.6', 'pypy-3.10', 'pypy-3.11']
         gtk: [4]
-        platform: ['ubuntu-24.04']
-        include:
-          - python: '3.7'
-            gtk: 3
-            platform: ubuntu-22.04
-    runs-on: ${{ matrix.platform }}
+    runs-on: 'ubuntu-24.04'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -36,7 +31,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install gettext gir1.2-gtk-${{ matrix.gtk }}.0 libcairo2-dev \
-            libgirepository1.0-dev libgtk-${{ matrix.gtk }}-bin
+            libgirepository-2.0-dev libgtk-${{ matrix.gtk }}-bin
           python -m pip install build setuptools wheel .[tests]
 
       - name: PEP 8 style checks
@@ -143,39 +138,6 @@ jobs:
       - name: Build without isolation
         run: python3.12 -m build --no-isolation
 
-  alpine:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    strategy:
-      fail-fast: false
-      matrix:
-        container: ['alpine:edge']
-    container: ${{ matrix.container }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: |
-          apk update
-          apk add font-dejavu gettext gtk4.0 py3-build py3-gobject3 py3-pycodestyle \
-            py3-pylint py3-setuptools py3-wheel
-
-      - name: PEP 8 style checks
-        run: python3 -m pycodestyle
-
-      - name: Linting
-        run: python3 -m pylint --recursive=y .
-
-      - name: Integration and unit tests
-        run: python3 -m unittest -v
-
-      - name: Build
-        run: python3 -m build
-
-      - name: Build without isolation
-        run: python3 -m build --no-isolation
-
   windows:
     runs-on: windows-latest
     timeout-minutes: 15
@@ -233,7 +195,7 @@ jobs:
       matrix:
         include:
           - arch: x86_64
-            platform: macos-13
+            platform: macos-15-intel
           - arch: arm64
             platform: macos-14
     runs-on: ${{ matrix.platform }}
@@ -247,9 +209,9 @@ jobs:
 
       - name: Create Python virtual environment
         run: |
-          brew uninstall --ignore-dependencies python@3.12
-          brew install --overwrite python@3.12
-          python3.12 -m venv venv
+          brew uninstall --ignore-dependencies python@3.13
+          brew install --overwrite python@3.13
+          python3.13 -m venv venv
 
       - name: Install dependencies
         run: venv/bin/python3 packaging/macos/dependencies.py

@@ -105,6 +105,9 @@ if USE_COLOR_SCHEME_PORTAL:
         log.add_debug("Cannot start color scheme settings portal, falling back to GTK theme preference: %s",
                       portal_error)
         USE_COLOR_SCHEME_PORTAL = False
+else:
+    def read_color_scheme():
+        return None
 
 
 def set_dark_mode(enabled):
