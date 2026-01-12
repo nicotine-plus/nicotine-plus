@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-11 18:51+0200\n"
-"PO-Revision-Date: 2026-01-12 17:01+0000\n"
-"Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
+"PO-Revision-Date: 2026-01-12 20:49+0000\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -1290,7 +1290,7 @@ msgstr "Por favor, insira uma senha."
 #: pynicotine/gtkgui/dialogs/preferences.py:261
 #, python-format
 msgid "Enter a new password for your account %s:"
-msgstr "Digite uma nova senha para sua conta  %s :"
+msgstr "Digite uma nova senha para sua conta %s :"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:265
 #: pynicotine/gtkgui/ui/settings/network.ui:148
@@ -2691,7 +2691,7 @@ msgstr "Ações do Usuário"
 #: pynicotine/gtkgui/privatechat.py:491
 #, python-format
 msgid "%(user)s mentioned you in a private message"
-msgstr "%(user)s mencionaram você em uma mensagem privada."
+msgstr "%(user)s mencionaram você em uma mensagem privada"
 
 #: pynicotine/gtkgui/privatechat.py:496
 #, python-format
