@@ -1,5 +1,5 @@
 <!--
-  SPDX-FileCopyrightText: 2013-2025 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2013-2026 Nicotine+ Contributors
   SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
@@ -85,4 +85,4 @@ Nicotine+ is free and open source software, released under the terms of the
 [GNU General Public License v3.0 or later](https://www.gnu.org/licenses/gpl-3.0-standalone.html).
 Nicotine+ exists thanks to its [authors](AUTHORS.md).
 
-© 2001–2025 Nicotine+, Nicotine and PySoulSeek Contributors
+© 2001–2026 Nicotine+, Nicotine and PySoulSeek Contributors
