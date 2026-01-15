@@ -2884,14 +2884,15 @@ class GlobalRoomMessage(ServerMessage):
     public room feed (every single line written in every public room).
     """
 
-    __slots__ = ("room", "user", "message", "formatted_message", "message_type")
+    __slots__ = ("room", "user", "message", "message_type", "mention_type", "mention_keyword")
 
     def __init__(self):
         self.room = None
         self.user = None
         self.message = None
-        self.formatted_message = None
         self.message_type = None
+        self.mention_type = None
+        self.mention_keyword = None
 
     def parse_network_message(self, message):
         pos, self.room = self.unpack_string(message)
