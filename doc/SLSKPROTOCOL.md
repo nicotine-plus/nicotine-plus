@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on January 1, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on January 17, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -2292,7 +2292,6 @@ See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
     2.  **string** *username*
   - Receive
     1.  **uint32** *token*
-    2.  **string** *username*
 
 
 ## Server Code 1003
