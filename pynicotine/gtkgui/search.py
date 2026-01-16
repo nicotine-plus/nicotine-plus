@@ -663,7 +663,13 @@ class Search:
         Accelerator("<Alt>Return", self.tree_view.widget, self.on_file_properties_accelerator)
 
         # Grouping
-        menu = create_grouping_menu(self.window, config.sections["searches"]["group_searches"], self.on_group)
+        self.expanding = False
+        self.expand_mode = config.sections["searches"]["expand_results"]
+        self.expand_button.set_active(self.expand_mode != "none")
+        self.expand_button.connect("toggled", self.on_toggle_expand_all)
+        self.update_expand_state()
+
+        menu = create_grouping_menu(self.window, config.sections["searches"]["group_searches"], self.on_toggle_grouping)
         self.grouping_button.set_menu_model(menu)
 
         if GTK_API_VERSION >= 4:
@@ -674,9 +680,6 @@ class Search:
         if GTK_API_VERSION >= 4 and os.environ.get("GDK_BACKEND") == "broadway":
             popover = list(self.grouping_button)[-1]
             popover.set_has_arrow(False)
-
-        self.expand_button.set_active(config.sections["searches"]["expand_searches"])
-        self.filter_public_files_button.set_visible(config.sections["searches"]["private_search_results"])
 
         # Filter button widgets
         self.filter_buttons = {
@@ -705,6 +708,7 @@ class Search:
             if GTK_API_VERSION == 3:
                 add_css_class(combobox.dropdown, "dropdown-scrollbar")
 
+        self.filter_public_files_button.set_visible(config.sections["searches"]["private_search_results"])
         self.filters_button.set_active(config.sections["searches"]["filters_visible"])
         self.store_filters_button.set_visible(core.search.is_wish(self.text))
         self.populate_filter_history()
@@ -1033,7 +1037,7 @@ class Search:
                 )
 
                 if expand_allowed:
-                    expand_user = self.grouping_mode == "folder_grouping" or self.expand_button.get_active()
+                    expand_user = self.grouping_mode == "folder_grouping" or self.expand_mode != "none"
 
                 self.row_id -= 1
                 self.users[user] = (iterator, deque())
@@ -1072,7 +1076,7 @@ class Search:
                         ], select_row=False, parent_iterator=user_iterator
                     )
                     user_child_iterators.append(iterator)
-                    expand_folder = expand_allowed and self.expand_button.get_active()
+                    expand_folder = expand_allowed and self.expand_mode == "all"
                     self.row_id -= 1
                     self.folders[user_folder_path] = (iterator, deque())
 
@@ -1372,17 +1376,7 @@ class Search:
         self.update_result_counter()
 
         self.tree_view.unfreeze()
-
-        if self.grouping_mode != "ungrouped":
-            # Group by folder or user
-
-            if self.expand_button.get_active():
-                self.tree_view.expand_all_rows()
-            else:
-                self.tree_view.collapse_all_rows()
-
-                if self.grouping_mode == "folder_grouping":
-                    self.tree_view.expand_root_rows()
+        self.update_expand_state()
 
         self.initialized = True
 
@@ -1853,7 +1847,7 @@ class Search:
         else:
             self.window.application.lookup_action("configure-searches").activate()
 
-    def on_group(self, action, state):
+    def on_toggle_grouping(self, action, state):
 
         mode = state.get_string()
         active = mode != "ungrouped"
@@ -1882,27 +1876,59 @@ class Search:
 
         action.set_state(state)
 
-    def on_toggle_expand_all(self, *_args):
+    def update_expand_state(self):
 
-        active = self.expand_button.get_active()
+        if not self.expand_button.get_visible():
+            return
 
-        if active:
+        self.expanding = True
+
+        if self.expand_mode == "all":
             icon_name = "view-restore-symbolic"
             tooltip_text = _("Collapse All")
+
+            self.expand_button.set_active(True)
             self.tree_view.expand_all_rows()
+
+        elif self.expand_mode == "partial" and self.grouping_mode == "folder_grouping":
+            icon_name = "view-fullscreen-symbolic"
+            tooltip_text = _("Expand All")
+
+            self.expand_button.set_active(True)
+            self.tree_view.collapse_all_rows()
+            self.tree_view.expand_root_rows()
+
         else:
             icon_name = "view-fullscreen-symbolic"
             tooltip_text = _("Expand All")
-            self.tree_view.collapse_all_rows()
 
-            if self.grouping_mode == "folder_grouping":
-                self.tree_view.expand_root_rows()
+            self.expand_button.set_active(False)
+            self.tree_view.collapse_all_rows()
 
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
         self.expand_icon.set_from_icon_name(icon_name, *icon_args)
         self.expand_button.set_tooltip_text(tooltip_text)
 
-        config.sections["searches"]["expand_searches"] = active
+        self.expanding = False
+
+    def on_toggle_expand_all(self, *_args):
+
+        if self.expanding or not self.expand_button.get_visible():
+            return
+
+        if self.expand_mode == "none":
+            self.expand_mode = "all" if self.grouping_mode == "user_grouping" else "partial"
+
+        elif self.expand_mode == "partial":
+            self.expand_mode = "all"
+
+        elif self.expand_mode == "all":
+            self.expand_mode = "none"
+
+        self.update_expand_state()
+
+        config.sections["searches"]["expand_results_depth"] = self.expand_mode
+        config.write_configuration()
 
     def on_toggle_filters(self, *_args):
 
