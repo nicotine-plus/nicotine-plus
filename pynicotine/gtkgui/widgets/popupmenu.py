@@ -548,13 +548,6 @@ class UserPopupMenu(PopupMenu):
 
     # Events #
 
-    def on_search_user(self, *_args):
-
-        self.application.window.lookup_action("search-mode").change_state(GLib.Variant.new_string("user"))
-        self.application.window.user_search_entry.set_text(self.username)
-        self.application.window.change_main_page(self.application.window.search_page)
-        GLib.idle_add(lambda: self.application.window.search_entry.grab_focus() == -1, priority=GLib.PRIORITY_HIGH_IDLE)
-
     def on_send_message(self, *_args):
         core.privatechat.show_user(self.username)
 

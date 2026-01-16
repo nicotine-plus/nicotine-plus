@@ -644,12 +644,6 @@ class ChatRoom:
             callback=self.on_popup_menu_user, tab_name="chatrooms"
         )
 
-        for menu in (self.popup_menu_user_chat, self.popup_menu_user_list):
-            menu.add_items(
-                ("", None),
-                ("#" + _("Sear_ch User's Files"), menu.on_search_user)
-            )
-
         self.popup_menu_activity_view = PopupMenu(self.window.application, self.activity_view.widget,
                                                   self.on_popup_menu_log)
         self.popup_menu_activity_view.add_items(
