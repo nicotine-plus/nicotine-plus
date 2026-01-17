@@ -179,8 +179,8 @@ class Dialog(Window):
 
             # Workaround for parent window minimizing when closing dialog
             # https://gitlab.gnome.org/GNOME/gtk/-/issues/7313
-            #if self.parent is not None and self.parent.is_visible():
-            #    self.parent.present()
+            if self.parent is not None and self.parent.is_visible():
+                self.parent.present()
 
         return True
 
