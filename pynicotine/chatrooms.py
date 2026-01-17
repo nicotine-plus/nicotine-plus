@@ -347,24 +347,40 @@ class ChatRooms:
     def _add_room_member(self, msg):
         """Server code 134."""
 
-        private_room = self.private_rooms.get(msg.room)
+        username = msg.user
+        room = msg.room
+        private_room = self.private_rooms.get(room)
 
         if private_room is None:
             return
 
-        private_room.members.add(msg.user)
-        core.pluginhandler.private_room_member_added_notification(msg.room, msg.user)
+        private_room.members.add(username)
+        core.pluginhandler.private_room_member_added_notification(room, username)
+
+        if username != core.users.login_username:
+            log.add(_("User %(user)s has been added to private room %(room)s"), {
+                "user": username,
+                "room": room
+            })
 
     def _remove_room_member(self, msg):
         """Server code 135."""
 
-        private_room = self.private_rooms.get(msg.room)
+        username = msg.user
+        room = msg.room
+        private_room = self.private_rooms.get(room)
 
         if private_room is None:
             return
 
-        private_room.members.discard(msg.user)
-        core.pluginhandler.private_room_member_removed_notification(msg.room, msg.user)
+        private_room.members.discard(username)
+        core.pluginhandler.private_room_member_removed_notification(room, username)
+
+        if username != core.users.login_username:
+            log.add(_("User %(user)s has been removed from private room %(room)s"), {
+                "user": username,
+                "room": room
+            })
 
     def _room_membership_granted(self, msg):
         """Server code 139."""
@@ -378,7 +394,7 @@ class ChatRooms:
             # Room tab previously opened, join room now
             self.show_room(msg.room, is_private=True, switch_page=False)
 
-        log.add(_("You have been added to a private room: %(room)s"), {"room": msg.room})
+        log.add(_("You have been added to private room %(room)s"), {"room": msg.room})
 
     def _room_membership_revoked(self, msg):
         """Server code 140."""
@@ -393,6 +409,8 @@ class ChatRooms:
         self.server_rooms.discard(room)
         del self.private_rooms[room]
 
+        log.add(_("You have been removed from private room %(room)s"), {"room": room})
+
     def _enable_room_invitations(self, msg):
         """Server code 141."""
 
@@ -401,38 +419,66 @@ class ChatRooms:
     def _add_room_operator(self, msg):
         """Server code 143."""
 
-        private_room = self.private_rooms.get(msg.room)
+        username = msg.user
+        room = msg.room
+        private_room = self.private_rooms.get(room)
 
-        if private_room is not None:
-            private_room.operators.add(msg.user)
-            core.pluginhandler.private_room_operator_added_notification(msg.room, msg.user)
+        if private_room is None:
+            return
+
+        private_room.operators.add(username)
+        core.pluginhandler.private_room_operator_added_notification(room, username)
+
+        if username != core.users.login_username:
+            log.add(_("User %(user)s has been made an operator of room %(room)s"), {
+                "user": username,
+                "room": room
+            })
 
     def _remove_room_operator(self, msg):
         """Server code 144."""
 
-        private_room = self.private_rooms.get(msg.room)
+        username = msg.user
+        room = msg.room
+        private_room = self.private_rooms.get(room)
 
-        if private_room is not None:
-            private_room.operators.discard(msg.user)
-            core.pluginhandler.private_room_operator_removed_notification(msg.room, msg.user)
+        if private_room is None:
+            return
+
+        private_room.operators.discard(username)
+        core.pluginhandler.private_room_operator_removed_notification(room, username)
+
+        if username != core.users.login_username:
+            log.add(_("User %(user)s is no longer an operator of room %(room)s"), {
+                "user": username,
+                "room": room
+            })
 
     def _room_operatorship_granted(self, msg):
         """Server code 145."""
 
         private_room = self.private_rooms.get(msg.room)
 
-        if private_room is not None:
-            private_room.operators.add(core.users.login_username)
-            core.pluginhandler.private_room_operatorship_granted_notification(msg.room)
+        if private_room is None:
+            return
+
+        private_room.operators.add(core.users.login_username)
+        core.pluginhandler.private_room_operatorship_granted_notification(msg.room)
+
+        log.add(_("You have been made an operator of room %(room)s"), {"room": msg.room})
 
     def _room_operatorship_revoked(self, msg):
         """Server code 146."""
 
         private_room = self.private_rooms.get(msg.room)
 
-        if private_room is not None:
-            private_room.operators.discard(core.users.login_username)
-            core.pluginhandler.private_room_operatorship_revoked_notification(msg.room)
+        if private_room is None:
+            return
+
+        private_room.operators.discard(core.users.login_username)
+        core.pluginhandler.private_room_operatorship_revoked_notification(msg.room)
+
+        log.add(_("You are no longer an operator of room %(room)s"), {"room": msg.room})
 
     def _room_operators(self, msg):
         """Server code 148."""
