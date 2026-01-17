@@ -29,10 +29,10 @@ Depends: ${python3:Depends},
          python3-gi-cairo
 Recommends: gir1.2-gspell-1
 Description: graphical client for Soulseek peer-to-peer network
- Nicotine+ is a graphical client for the Soulseek peer-to-peer
- network.
+ Nicotine+ is a graphical client for the Soulseek peer-to-peer network.
  .
- Nicotine+ aims to be a lightweight, pleasant, free and open
- source (FOSS) alternative to the official Soulseek client, while
- also providing a comprehensive set of features.
+ Share files, chat, and find people with similar interests. Nicotine+
+ is user-friendly, fast, free, and open source. It provides features
+ and refinements that focus on usability, while remaining fully
+ compatible with other Soulseek clients.
 
