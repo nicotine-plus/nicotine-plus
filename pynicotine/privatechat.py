@@ -232,13 +232,17 @@ class PrivateChat:
 
             if username == self.SERVER_USERNAME:
                 # Redirect the following messages to chat room tab:
+                first_paragraph = message.split("\n", 1)[0]
                 for start_str, end_str in (
                     ("The room you are trying to enter (", ") is registered as private."),
+                    ("The room you are trying to enter (", (") is moderated. Please contact one of these moderators "
+                                                            "if you are interested in being added to the room's "
+                                                            "member list:")),
                     ("Room (", ") is registered as public.")
                 ):
-                    if message.startswith(start_str) and message.endswith(end_str):
+                    if first_paragraph.startswith(start_str) and first_paragraph.endswith(end_str):
                         msg.user = None
-                        room = message[len(start_str):message.rfind(end_str)]
+                        room = first_paragraph[len(start_str):first_paragraph.rfind(end_str)]
                         events.emit("say-chat-room", SayChatroom(room=room, message=message, user=username))
                         return
             else:
