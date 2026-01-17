@@ -1735,7 +1735,7 @@ class Search:
     def on_download_files_to(self, *_args):
 
         FolderChooser(
-            parent=self.window,
+            application=self.window.application,
             title=_("Select Destination Folder for Files"),
             callback=self.on_download_files_to_selected,
             initial_folder=(

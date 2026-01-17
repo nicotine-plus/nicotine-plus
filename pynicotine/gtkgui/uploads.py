@@ -140,7 +140,7 @@ class Uploads(Transfers):
     def on_try_clear_queued(self, *_args):
 
         OptionDialog(
-            parent=self.window,
+            application=self.window.application,
             title=_("Clear Queued Uploads"),
             message=_("Do you really want to clear all queued uploads?"),
             buttons=[
@@ -157,7 +157,7 @@ class Uploads(Transfers):
     def on_try_clear_all(self, *_args):
 
         OptionDialog(
-            parent=self.window,
+            application=self.window.application,
             title=_("Clear All Uploads"),
             message=_("Do you really want to clear all uploads?"),
             buttons=[

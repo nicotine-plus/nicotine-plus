@@ -122,7 +122,7 @@ class Downloads(Transfers):
     def on_try_clear_queued(self, *_args):
 
         OptionDialog(
-            parent=self.window,
+            application=self.window.application,
             title=_("Clear Queued Downloads"),
             message=_("Do you really want to clear all queued downloads?"),
             buttons=[
@@ -139,7 +139,7 @@ class Downloads(Transfers):
     def on_try_clear_all(self, *_args):
 
         OptionDialog(
-            parent=self.window,
+            application=self.window.application,
             title=_("Clear All Downloads"),
             message=_("Do you really want to clear all downloads?"),
             buttons=[
@@ -161,7 +161,7 @@ class Downloads(Transfers):
     def download_large_folder(self, username, folder, num_files, download_callback, callback_args):
 
         OptionDialog(
-            parent=self.window,
+            application=self.window.application,
             title=ngettext(
                 "Download %(num)s File?",
                 "Download %(num)s Files?",

@@ -823,7 +823,7 @@ class UserInfo:
                     {"user": self.user, "days_left": _("%(days)s days left") % {"days": days}})
 
         EntryDialog(
-            parent=self.window,
+            application=self.window.application,
             title=_("Gift Privileges"),
             message=message,
             action_button_label=_("_Send"),
@@ -864,7 +864,7 @@ class UserInfo:
         current_date_time = time.strftime("%Y-%m-%d_%H-%M-%S")
 
         FileChooserSave(
-            parent=self.window,
+            application=self.window.application,
             callback=self.on_save_picture_response,
             initial_folder=core.downloads.get_default_download_folder(),
             initial_file=f"{self.user}_{current_date_time}.png"

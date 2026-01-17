@@ -20,7 +20,6 @@ class PluginSettings(Dialog):
 
     def __init__(self, application):
 
-        self.application = application
         self.plugin_name = None
         self.plugin_metasettings = None
         self.option_widgets = {}
@@ -42,7 +41,7 @@ class PluginSettings(Dialog):
         )
 
         super().__init__(
-            parent=application.preferences,
+            application=application,
             content_box=self.scrolled_window,
             buttons_start=(cancel_button,),
             buttons_end=(ok_button,),
@@ -52,7 +51,6 @@ class PluginSettings(Dialog):
             height=425,
             show_title_buttons=False
         )
-        application.add_window(self.widget)
 
     def destroy(self):
 
@@ -267,7 +265,7 @@ class PluginSettings(Dialog):
         label = self._generate_widget_container(description, container, homogeneous=True)
 
         self.option_widgets[option_name] = FileChooserButton(
-            container, window=self, label=label, chooser_type=file_chooser_type,
+            container, application=self.application, label=label, chooser_type=file_chooser_type,
             show_open_external_button=not self.application.isolated_mode
         )
         self.application.preferences.set_widget(self.option_widgets[option_name], option_value)
@@ -389,7 +387,7 @@ class PluginSettings(Dialog):
         treeview = args[-1]
 
         EntryDialog(
-            parent=self,
+            application=self.application,
             title=_("Add Item"),
             message=treeview.description,
             action_button_label=_("_Add"),
@@ -419,7 +417,7 @@ class PluginSettings(Dialog):
             row_id = treeview.get_row_value(iterator, "id_data")
 
             EntryDialog(
-                parent=self,
+                application=self.application,
                 title=_("Edit Item"),
                 message=treeview.description,
                 action_button_label=_("_Edit"),

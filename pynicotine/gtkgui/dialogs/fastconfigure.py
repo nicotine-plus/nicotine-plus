@@ -53,7 +53,7 @@ class FastConfigure(Dialog):
         self.pages = [self.welcome_page, self.account_page, self.port_page, self.share_page, self.summary_page]
 
         super().__init__(
-            parent=application.window,
+            application=application,
             content_box=self.stack,
             buttons_start=(self.previous_button,),
             buttons_end=(self.next_button,),
@@ -66,7 +66,6 @@ class FastConfigure(Dialog):
             resizable=False,
             show_title=False
         )
-        application.add_window(self.widget)
 
         icon_name = pynicotine.__application_id__
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
@@ -75,7 +74,7 @@ class FastConfigure(Dialog):
         self.username_entry.set_max_length(core.users.USERNAME_MAX_LENGTH)
 
         self.download_folder_button = FileChooserButton(
-            self.download_folder_container, window=self, chooser_type="folder",
+            self.download_folder_container, application=self.application, chooser_type="folder",
             selected_function=self.on_download_folder_selected,
             show_open_external_button=not application.isolated_mode
         )
@@ -177,7 +176,7 @@ class FastConfigure(Dialog):
     def on_add_shared_folder(self, *_args):
 
         FolderChooser(
-            parent=self,
+            application=self.application,
             title=_("Add a Shared Folder"),
             callback=self.on_add_shared_folder_selected,
             select_multiple=True
@@ -210,7 +209,7 @@ class FastConfigure(Dialog):
             folder_path = self.shares_list_view.get_row_value(iterator, "folder")
 
             EntryDialog(
-                parent=self,
+                application=self.application,
                 title=_("Edit Shared Folder"),
                 message=_("Enter new virtual name for '%(dir)s':") % {"dir": folder_path},
                 default=virtual_name,

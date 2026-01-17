@@ -446,7 +446,7 @@ class IconNotebook:
     def remove_all_pages(self, *_args):
 
         OptionDialog(
-            parent=self.window,
+            application=self.window.application,
             title=_("Close All Tabs?"),
             message=_("Do you really want to close all tabs?"),
             buttons=[

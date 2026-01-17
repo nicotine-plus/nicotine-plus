@@ -31,7 +31,7 @@ class WishList(Dialog):
         ) = ui.load(scope=self, path="dialogs/wishlist.ui")
 
         super().__init__(
-            parent=application.window,
+            application=application,
             modal=False,
             content_box=self.container,
             show_callback=self.on_show,
@@ -39,9 +39,7 @@ class WishList(Dialog):
             width=600,
             height=600
         )
-        application.add_window(self.widget)
 
-        self.application = application
         self.list_view = TreeView(
             application.window, parent=self.list_container, multi_select=True, activate_row_callback=self.on_edit_wish,
             delete_accelerator_callback=self.on_remove_wish,
@@ -191,7 +189,7 @@ class WishList(Dialog):
     def on_add_wish(self, *_args):
 
         EntryDialog(
-            parent=self,
+            application=self.application,
             title=_("Add Wishes"),
             message=_("Enter a list of search terms to add to the wishlist:"),
             default=self.default_text,
@@ -244,7 +242,7 @@ class WishList(Dialog):
             filtered = bool(self.list_view.get_row_value(iterator, "filtered"))
 
             EntryDialog(
-                parent=self,
+                application=self.application,
                 title=_("Edit Wish"),
                 message=_("Modify the search term '%s':") % old_wish,
                 default=old_wish,
@@ -313,7 +311,7 @@ class WishList(Dialog):
     def on_clear_wishlist(self, *_args):
 
         OptionDialog(
-            parent=self,
+            application=self.application,
             title=_("Clear Wishlist?"),
             message=_("Do you really want to clear your wishlist?"),
             buttons=[

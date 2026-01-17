@@ -49,7 +49,7 @@ class Download(Dialog):
         ) = ui.load(scope=self, path="dialogs/download.ui")
 
         super().__init__(
-            parent=application.window,
+            application=application,
             content_box=self.container,
             buttons_start=(self.cancel_button,),
             buttons_end=(self.download_paused_button, self.download_button),
@@ -60,9 +60,7 @@ class Download(Dialog):
             height=650,
             show_title_buttons=False
         )
-        application.add_window(self.widget)
 
-        self.application = application
         self.download_callback = None
         self.file_properties = None
         self.parent_iterators = {}
@@ -76,7 +74,7 @@ class Download(Dialog):
         self.total_selected_size = 0
 
         self.download_folder_button = FileChooserButton(
-            self.download_folder_label.get_parent(), window=self,
+            self.download_folder_label.get_parent(), application=self.application,
             label=self.download_folder_label, end_button=self.download_folder_default_button,
             chooser_type="folder"
         )
@@ -574,7 +572,7 @@ class Download(Dialog):
             parent_iterator, _child_iterators = self.parent_iterators[username + folder_path]
 
             EntryDialog(
-                parent=self,
+                application=self.application,
                 title=_("Rename Folder"),
                 message=_("Enter new folder name for '%s':") % folder_name,
                 default=folder_name,
@@ -646,7 +644,7 @@ class Download(Dialog):
 
         if data:
             if self.file_properties is None:
-                self.file_properties = FileProperties(self.application, parent=self)
+                self.file_properties = FileProperties(self.application)
 
             self.file_properties.update_properties(data, selected_size)
             self.file_properties.present()

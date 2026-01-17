@@ -35,14 +35,13 @@ class ChatHistory(Dialog):
         ) = ui.load(scope=self, path="dialogs/chathistory.ui")
 
         super().__init__(
-            parent=application.window,
+            application=application,
             content_box=self.container,
             show_callback=self.on_show,
             title=_("Chat History"),
             width=960,
             height=700
         )
-        application.add_window(self.widget)
 
         self.list_view = TreeView(
             application.window, parent=self.list_container, activate_row_callback=self.on_show_user,
@@ -275,7 +274,7 @@ class ChatHistory(Dialog):
     def on_message_user(self, *_args):
 
         EntryDialog(
-            parent=self,
+            application=self.application,
             title=_("Message User"),
             message=_("Enter the name of the user you want to message:"),
             action_button_label=_("_Add"),
@@ -293,7 +292,7 @@ class ChatHistory(Dialog):
             username = self.list_view.get_row_value(iterator, "user")
 
             OptionDialog(
-                parent=self.parent,
+                application=self.application,
                 title=_("Delete Logged Messages?"),
                 message=_("Do you really want to permanently delete all logged messages for this user?"),
                 buttons=[

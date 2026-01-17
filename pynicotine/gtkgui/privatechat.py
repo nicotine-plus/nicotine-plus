@@ -470,7 +470,7 @@ class PrivateChat:
     def on_delete_chat_log(self, *_args):
 
         OptionDialog(
-            parent=self.window,
+            application=self.window.application,
             title=_("Delete Logged Messages?"),
             message=_("Do you really want to permanently delete all logged messages for this user?"),
             buttons=[

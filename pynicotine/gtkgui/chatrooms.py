@@ -219,7 +219,7 @@ class ChatRooms(IconNotebook):
                 and room not in core.chatrooms.server_rooms and room not in core.chatrooms.private_rooms):
             room = core.chatrooms.sanitize_room_name(room)
             OptionDialog(
-                parent=self.window,
+                application=self.window.application,
                 title=_("Create New Room?"),
                 message=_('Do you really want to create a new room "%s"?') % room,
                 option_label=_("Make room private"),
@@ -1345,7 +1345,7 @@ class ChatRoom:
             return
 
         EntryDialog(
-            parent=self.window,
+            application=self.window.application,
             title=_("Add Room Member"),
             message=_("Enter the name of the user you want to add to the private room:"),
             action_button_label=_("_Add"),
@@ -1379,7 +1379,7 @@ class ChatRoom:
     def on_delete_room_log(self, *_args):
 
         OptionDialog(
-            parent=self.window,
+            application=self.window.application,
             title=_("Delete Logged Messages?"),
             message=_("Do you really want to permanently delete all logged messages for this room?"),
             buttons=[

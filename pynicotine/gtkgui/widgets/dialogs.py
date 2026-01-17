@@ -19,15 +19,16 @@ from pynicotine.gtkgui.widgets.window import Window
 
 class Dialog(Window):
 
-    def __init__(self, parent=None, content_box=None, buttons_start=(), buttons_end=(),
+    def __init__(self, application, content_box=None, buttons_start=(), buttons_end=(),
                  default_button=None, show_callback=None, close_callback=None, title="", width=0, height=0,
                  modal=True, resizable=True, show_title=True, show_title_buttons=True):
 
-        self.parent = parent
+        self.application = application
         self.modal = modal
         self.default_width = width
         self.default_height = height
         self.default_button = default_button
+        self.parent = None
 
         self.show_callback = show_callback
         self.close_callback = close_callback
@@ -148,6 +149,8 @@ class Dialog(Window):
 
     def _on_show(self, *_args):
 
+        self.application.add_window(self.widget)
+
         self._unselect_focus_label()
         self._focus_default_button()
 
@@ -160,6 +163,7 @@ class Dialog(Window):
             return False
 
         Window.active_dialogs.remove(self)
+        self.application.remove_window(self.widget)
 
         if self.close_callback is not None:
             self.close_callback(self)
@@ -175,8 +179,8 @@ class Dialog(Window):
 
             # Workaround for parent window minimizing when closing dialog
             # https://gitlab.gnome.org/GNOME/gtk/-/issues/7313
-            if self.parent is not None and self.parent.is_visible():
-                self.parent.present()
+            #if self.parent is not None and self.parent.is_visible():
+            #    self.parent.present()
 
         return True
 
@@ -188,9 +192,6 @@ class Dialog(Window):
             self.widget.connect("delete-event", self._on_close_request)
 
         self.widget.connect("show", self._on_show)
-
-        if self.parent:
-            self.widget.set_transient_for(self.parent.widget)
 
     def _resize_dialog(self):
 
@@ -249,16 +250,21 @@ class Dialog(Window):
         else:
             header_bar.set_show_close_button(visible)     # pylint: disable=no-member
 
-    def set_parent(self, parent):
-        self.parent = parent
-        self.widget.set_transient_for(self.parent.widget)
-
     def present(self):
+
+        self.parent = self.application.window
+
+        for active_dialog in reversed(Window.active_dialogs):
+            if isinstance(active_dialog, Dialog):
+                self.parent = active_dialog
+                break
+
+        self.widget.set_transient_for(self.parent.widget)
 
         if self not in Window.active_dialogs:
             Window.active_dialogs.append(self)
 
-        # Shrink the dialog if it's larger than the main window
+        # Shrink the dialog if it's larger than the parent window
         self._resize_dialog()
 
         # Show dialog after slight delay to work around issue where dialogs don't
@@ -276,20 +282,15 @@ class MessageDialog(Window):
                 self.set_css_name("messagedialog")
                 super().__init__(*args, **kwargs)
 
-    def __init__(self, parent, title, message, callback=None, callback_data=None, long_message=None,
+    def __init__(self, application, title, message, callback=None, callback_data=None, long_message=None,
                  buttons=None, destructive_response_id=None, selectable=False):
 
-        # Prioritize non-message dialogs as parent
-        for active_dialog in reversed(Window.active_dialogs):
-            if isinstance(active_dialog, Dialog):
-                parent = active_dialog
-                break
-
-        self.parent = parent
+        self.application = application
         self.callback = callback
         self.callback_data = callback_data
         self.destructive_response_id = destructive_response_id
         self.container = Gtk.Box(hexpand=True, orientation=Gtk.Orientation.VERTICAL, spacing=6, visible=False)
+        self.parent = None
         self.message_label = None
         self.default_focus_widget = None
 
@@ -316,7 +317,6 @@ class MessageDialog(Window):
 
         widget = window_class(
             destroy_with_parent=True,
-            transient_for=self.parent.widget if self.parent else None,
             title=title,
             resizable=False,
             child=window_child
@@ -454,6 +454,15 @@ class MessageDialog(Window):
         present_callback()
 
     def present(self):
+
+        self.parent = self.application.window
+
+        for active_dialog in reversed(Window.active_dialogs):
+            if isinstance(active_dialog, Dialog):
+                self.parent = active_dialog
+                break
+
+        self.widget.set_transient_for(self.parent.widget)
 
         if self not in Window.active_dialogs:
             Window.active_dialogs.append(self)

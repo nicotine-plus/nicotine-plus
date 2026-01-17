@@ -576,7 +576,7 @@ class UserPopupMenu(PopupMenu):
         """Reserved for the future. Not implemented in the server yet."""
 
         OptionDialog(
-            parent=self,
+            application=self.application,
             title=_("Change Room Owner?"),
             message=_("Do you really want to make %(user)s the new owner of your private room %(room)s?") % {
                 "user": self.username,

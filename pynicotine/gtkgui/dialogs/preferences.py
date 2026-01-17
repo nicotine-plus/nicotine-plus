@@ -227,7 +227,7 @@ class NetworkPage:
             username = core.users.login_username or config.sections["server"]["login"]
 
         EntryDialog(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Log In As"),
             message=message,
             default=username,
@@ -261,7 +261,7 @@ class NetworkPage:
         message += _("Enter a new password for your account %s:") % core.users.login_username
 
         EntryDialog(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Change Password"),
             message=message,
             visibility=False,
@@ -335,17 +335,17 @@ class DownloadsPage:
         )
 
         self.download_folder_button = FileChooserButton(
-            self.download_folder_label.get_parent(), window=application.preferences,
+            self.download_folder_label.get_parent(), application=application,
             label=self.download_folder_label, end_button=self.download_folder_default_button, chooser_type="folder",
             show_open_external_button=not self.application.isolated_mode
         )
         self.incomplete_folder_button = FileChooserButton(
-            self.incomplete_folder_label.get_parent(), window=application.preferences,
+            self.incomplete_folder_label.get_parent(), application=application,
             label=self.incomplete_folder_label, end_button=self.incomplete_folder_default_button, chooser_type="folder",
             show_open_external_button=not self.application.isolated_mode
         )
         self.received_folder_button = FileChooserButton(
-            self.received_folder_label.get_parent(), window=application.preferences,
+            self.received_folder_label.get_parent(), application=application,
             label=self.received_folder_label, end_button=self.received_folder_default_button, chooser_type="folder",
             show_open_external_button=not self.application.isolated_mode
         )
@@ -507,7 +507,7 @@ class DownloadsPage:
     def on_add_filter(self, *_args):
 
         EntryDialog(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Add Download Filter"),
             message=self.filter_syntax_description + "\n\n" + _("Enter a new download filter:"),
             action_button_label=_("_Add"),
@@ -537,7 +537,7 @@ class DownloadsPage:
             enable_regex = self.filter_list_view.get_row_value(iterator, "regex")
 
             EntryDialog(
-                parent=self.application.preferences,
+                application=self.application,
                 title=_("Edit Download Filter"),
                 message=self.filter_syntax_description + "\n\n" + _("Modify the following download filter:"),
                 action_button_label=_("_Edit"),
@@ -872,7 +872,7 @@ class SharesPage:
             default = _("Everyone can view buddy & trusted shares")
 
         EntryDialog(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Buddy Share Visibility"),
             message="\n\n".join((
                 _("Make buddy/trusted shares visible to everyone, but require users to "
@@ -926,7 +926,7 @@ class SharesPage:
             initial_folder = None
 
         FolderChooser(
-            parent=self.application.preferences,
+            application=self.application,
             callback=self.on_add_shared_folder_selected,
             title=_("Add a Shared Folder"),
             initial_folder=initial_folder,
@@ -970,7 +970,7 @@ class SharesPage:
             default_item = self.shares_list_view.get_row_value(iterator, "accessible_to")
 
             EntryDialog(
-                parent=self.application.preferences,
+                application=self.application,
                 title=_("Edit Shared Folder"),
                 message=_("Enter new virtual name for '%(dir)s':") % {"dir": folder_path},
                 default=virtual_name,
@@ -1033,7 +1033,7 @@ class SharesPage:
     def on_add_filter(self, *_args):
 
         EntryDialog(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Add Share Filter"),
             message=self.filter_syntax_description + "\n\n" + _("Enter a new share filter:"),
             second_droplist=self.FILTER_LEVELS,
@@ -1066,7 +1066,7 @@ class SharesPage:
             applies_to = self.filter_list_view.get_row_value(iterator, "applies_to")
 
             EntryDialog(
-                parent=self.application.preferences,
+                application=self.application,
                 title=_("Edit Share Filter"),
                 message=self.filter_syntax_description + "\n\n" + _("Modify the following share filter:"),
                 second_default={v: k for k, v in self.FILTER_LEVELS.items()}[applies_to],
@@ -1245,7 +1245,7 @@ class UserProfilePage:
 
         self.description_view = TextView(self.description_view_container, parse_urls=False)
         self.select_picture_button = FileChooserButton(
-            self.select_picture_label.get_parent(), window=application.preferences, label=self.select_picture_label,
+            self.select_picture_label.get_parent(), application=application, label=self.select_picture_label,
             end_button=self.reset_picture_button, chooser_type="image", is_flat=True,
             show_open_external_button=not self.application.isolated_mode
         )
@@ -1408,7 +1408,7 @@ class IgnoredUsersPage:
     def on_add_ignored_user(self, *_args):
 
         EntryDialog(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Ignore Users"),
             message=_("Enter a list of usernames you want to ignore:"),
             action_button_label=_("_Add"),
@@ -1458,7 +1458,7 @@ class IgnoredUsersPage:
     def on_add_ignored_ip(self, *_args):
 
         EntryDialog(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Ignore IP Addresses"),
             message=_("Enter a list of IP addresses you want to ignore:") + " " + _("* is a wildcard"),
             action_button_label=_("_Add"),
@@ -1635,7 +1635,7 @@ class BannedUsersPage:
     def on_add_banned_user(self, *_args):
 
         EntryDialog(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Ban Users"),
             message=_("Enter a list of usernames you want to ban:"),
             action_button_label=_("_Add"),
@@ -1685,7 +1685,7 @@ class BannedUsersPage:
     def on_add_banned_ip(self, *_args):
 
         EntryDialog(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Ban IP Addresses"),
             message=_("Enter a list of IP addresses you want to ban:") + " " + _("* is a wildcard"),
             action_button_label=_("_Add"),
@@ -1961,7 +1961,7 @@ class ChatsPage:
     def on_add_keyword(self, *_args):
 
         EntryDialog(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Add Keyword"),
             message=_("Enter a list of keywords or usernames you want to watch for. Chat messages "
                       "containing the keywords will be highlighted."),
@@ -1992,7 +1992,7 @@ class ChatsPage:
             keyword = self.keyword_list_view.get_row_value(iterator, "keyword")
 
             EntryDialog(
-                parent=self.application.preferences,
+                application=self.application,
                 title=_("Edit Keyword"),
                 message=_("Enter a keyword or username you want to watch for. Chat messages "
                           "containing the keyword will be highlighted."),
@@ -2029,7 +2029,7 @@ class ChatsPage:
     def on_add_censored(self, *_args):
 
         EntryDialog(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Censor Patterns"),
             message=_("Enter a list of patterns you want to censor:"),
             action_button_label=_("_Add"),
@@ -2059,7 +2059,7 @@ class ChatsPage:
             pattern = self.censor_list_view.get_row_value(iterator, "pattern")
 
             EntryDialog(
-                parent=self.application.preferences,
+                application=self.application,
                 title=_("Edit Censored Pattern"),
                 message=_("Enter a pattern you want to censor:"),
                 action_button_label=_("_Edit"),
@@ -2092,7 +2092,7 @@ class ChatsPage:
     def on_add_replacement(self, *_args):
 
         EntryDialog(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Add Replacement"),
             message=_("Enter a text pattern and what to replace it with:"),
             action_button_label=_("_Add"),
@@ -2124,7 +2124,7 @@ class ChatsPage:
             replacement = self.replacement_list_view.get_row_value(iterator, "replacement")
 
             EntryDialog(
-                parent=self.application.preferences,
+                application=self.application,
                 title=_("Edit Replacement"),
                 message=_("Enter a text pattern and what to replace it with:"),
                 action_button_label=_("_Edit"),
@@ -2453,7 +2453,7 @@ class UserInterfacePage:
             self.icon_view.insert(box, -1)
 
         self.icon_theme_button = FileChooserButton(
-            self.icon_theme_label.get_parent(), window=application.preferences,
+            self.icon_theme_label.get_parent(), application=application,
             label=self.icon_theme_label, end_button=self.icon_theme_clear_button, chooser_type="folder",
             show_open_external_button=not self.application.isolated_mode
         )
@@ -2723,22 +2723,22 @@ class LoggingPage:
         self.format_codes_label.connect("activate-link", self.on_activate_link)
 
         self.private_chat_log_folder_button = FileChooserButton(
-            self.private_chat_log_folder_label.get_parent(), window=application.preferences,
+            self.private_chat_log_folder_label.get_parent(), application=application,
             label=self.private_chat_log_folder_label, end_button=self.private_chat_log_folder_default_button,
             chooser_type="folder", show_open_external_button=not self.application.isolated_mode
         )
         self.chatroom_log_folder_button = FileChooserButton(
-            self.chatroom_log_folder_label.get_parent(), window=application.preferences,
+            self.chatroom_log_folder_label.get_parent(), application=application,
             label=self.chatroom_log_folder_label, end_button=self.chatroom_log_folder_default_button,
             chooser_type="folder", show_open_external_button=not self.application.isolated_mode
         )
         self.transfer_log_folder_button = FileChooserButton(
-            self.transfer_log_folder_label.get_parent(), window=application.preferences,
+            self.transfer_log_folder_label.get_parent(), application=application,
             label=self.transfer_log_folder_label, end_button=self.transfer_log_folder_default_button,
             chooser_type="folder", show_open_external_button=not self.application.isolated_mode
         )
         self.debug_log_folder_button = FileChooserButton(
-            self.debug_log_folder_label.get_parent(), window=application.preferences,
+            self.debug_log_folder_label.get_parent(), application=application,
             label=self.debug_log_folder_label, end_button=self.debug_log_folder_default_button,
             chooser_type="folder", show_open_external_button=not self.application.isolated_mode
         )
@@ -3093,7 +3093,7 @@ class UrlHandlersPage:
     def on_add_handler(self, *_args):
 
         EntryDialog(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Add URL Handler"),
             message=_("Enter the protocol and the command for the URL handler:"),
             action_button_label=_("_Add"),
@@ -3122,7 +3122,7 @@ class UrlHandlersPage:
             command = self.protocol_list_view.get_row_value(iterator, "command")
 
             EntryDialog(
-                parent=self.application.preferences,
+                application=self.application,
                 title=_("Edit Command"),
                 message=_("Enter a new command for protocol %s:") % protocol,
                 action_button_label=_("_Edit"),
@@ -3566,7 +3566,7 @@ class PluginsPage:
         from pynicotine.gtkgui.widgets.filechooser import FileChooser
 
         FileChooser(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Select a Zip File"),
             callback=self.on_install_plugin_selected
         ).present()
@@ -3587,7 +3587,7 @@ class PluginsPage:
             human_plugin_name = self.selected_plugin
 
         OptionDialog(
-            parent=self,
+            application=self.application,
             title=_("Uninstall Plugin?"),
             message=_("Do you really want to uninstall plugin %s? "
                       "This will remove any files the plugin has stored.") % human_plugin_name,
@@ -3633,8 +3633,6 @@ class Preferences(Dialog):
 
     def __init__(self, application):
 
-        self.application = application
-
         (
             self.apply_button,
             self.cancel_button,
@@ -3647,7 +3645,7 @@ class Preferences(Dialog):
         ) = self.widgets = ui.load(scope=self, path="dialogs/preferences.ui")
 
         super().__init__(
-            parent=application.window,
+            application=application,
             modal=False,
             content_box=self.container,
             buttons_start=(self.cancel_button, self.export_button),
@@ -3660,7 +3658,6 @@ class Preferences(Dialog):
             show_title_buttons=False
         )
         add_css_class(self.widget, "preferences-border")
-        application.add_window(self.widget)
 
         if GTK_API_VERSION == 3:
             # Scroll to focused widgets
@@ -4082,7 +4079,7 @@ class Preferences(Dialog):
         current_date_time = time.strftime("%Y-%m-%d_%H-%M-%S")
 
         FileChooserSave(
-            parent=self,
+            application=self.application,
             callback=self.on_back_up_config_response,
             initial_folder=os.path.dirname(config.config_file_path),
             initial_file=f"config_backup_{current_date_time}.tar.bz2",

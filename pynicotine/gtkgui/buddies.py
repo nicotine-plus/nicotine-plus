@@ -530,7 +530,7 @@ class Buddies:
         note = self.list_view.get_row_value(iterator, "comments") or ""
 
         EntryDialog(
-            parent=self.window,
+            application=self.window.application,
             title=_("Add User Note"),
             message=_("Add a note about user %s:") % user,
             action_button_label=_("_Add"),

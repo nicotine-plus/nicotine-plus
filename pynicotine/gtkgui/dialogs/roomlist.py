@@ -35,14 +35,13 @@ class RoomList(Dialog):
         ) = ui.load(scope=self, path="dialogs/roomlist.ui")
 
         super().__init__(
-            parent=application.window,
+            application=application,
             content_box=self.container,
             title=_("All Rooms"),
             width=500,
             height=625,
             resizable=False
         )
-        application.add_window(self.widget)
 
         self.list_view = TreeView(
             application.window, parent=self.list_container,
@@ -321,7 +320,7 @@ class RoomList(Dialog):
     def on_popup_delete_private_room(self, *_args):
 
         OptionDialog(
-            parent=self,
+            application=self.application,
             title=_("Delete Private Room?"),
             message=_("Do you really want to permanently delete your private room %s?") % self.popup_room,
             buttons=[
@@ -375,7 +374,7 @@ class RoomList(Dialog):
         message += _("Enter the name of the chat room you want to create:")
 
         EntryDialog(
-            parent=self,
+            application=self.application,
             title=_("Create New Room"),
             message=message,
             default=room,
