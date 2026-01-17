@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-11 18:51+0200\n"
-"PO-Revision-Date: 2026-01-03 22:43+0000\n"
+"PO-Revision-Date: 2026-01-17 16:01+0000\n"
 "Last-Translator: slrslr <adm@prnet.info>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Weblate 5.15.1\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -502,7 +502,7 @@ msgstr "Pošlete soukromou zprávu všem uživatelům, kteří od vás stahují:
 #: pynicotine/gtkgui/application.py:768 pynicotine/gtkgui/application.py:782
 #: pynicotine/gtkgui/userinfo.py:829
 msgid "_Send"
-msgstr ""
+msgstr "_Odeslat"
 
 #: pynicotine/gtkgui/application.py:780
 msgid "Message Buddies"
@@ -704,7 +704,7 @@ msgstr "Nastavit místnost jako soukromou"
 
 #: pynicotine/gtkgui/chatrooms.py:228 pynicotine/gtkgui/dialogs/roomlist.py:383
 msgid "Cre_ate"
-msgstr ""
+msgstr "Vyt_vořit"
 
 #: pynicotine/gtkgui/chatrooms.py:563
 msgid "Search activity log…"
@@ -786,24 +786,24 @@ msgid "Mentioned by %(user)s in Room %(room)s"
 msgstr "Zmínka od %(user)s v místnosti %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:909
-#, fuzzy, python-format
+#, python-format
 msgid "Keyword %(keyword)s mentioned by %(user)s in room %(room)s"
-msgstr "Zmínka od %(user)s v místnosti %(room)s"
+msgstr "Klíčové slovo %(keyword)s zmínil(a) %(user)s v místnosti %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:918
-#, fuzzy, python-format
+#, python-format
 msgid "Keyword %(keyword)s Mentioned by %(user)s in Room %(room)s"
-msgstr "Zmínka od %(user)s v místnosti %(room)s"
+msgstr "Klíčové slovo %(keyword)s zmínil(a) %(user)s v místnosti %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:927
-#, fuzzy, python-format
+#, python-format
 msgid "Message by watched user %(user)s in room %(room)s"
-msgstr "Zpráva od %(user)s v místnosti %(room)s"
+msgstr "Zpráva od sledovaného uživatele %(user)s v místnosti %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:935
-#, fuzzy, python-format
+#, python-format
 msgid "Message by Watched User %(user)s in Room %(room)s"
-msgstr "Zpráva od %(user)s v místnosti %(room)s"
+msgstr "Zpráva od sledovaného uživatele %(user)s v místnosti %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:956
 #, python-format
@@ -886,9 +886,8 @@ msgstr ""
 #: pynicotine/gtkgui/dialogs/chathistory.py:301
 #: pynicotine/gtkgui/dialogs/roomlist.py:329
 #: pynicotine/gtkgui/privatechat.py:478
-#, fuzzy
 msgid "Delete"
-msgstr "Smazané"
+msgstr "Smazat"
 
 #: pynicotine/gtkgui/chatrooms.py:1406
 msgid "Hide Room Users"
@@ -1161,13 +1160,13 @@ msgid "_Edit"
 msgstr "_Upravit"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:315
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "User %s already exists, and the password you entered is invalid. Please "
 "choose a different username if this is your first time logging in."
 msgstr ""
-"Uživatel %s již existuje a zadané heslo je neplatné. Pokud se přihlašujete "
-"poprvé, zvolte jiné uživatelské jméno."
+"Uživatel %s již existuje a zadané heslo je neplatné. Zadejte prosím jiné "
+"uživatelské jméno, pokud je toto váš první pokus o přihlášení."
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:320
 #: pynicotine/headless/application.py:76
@@ -1176,6 +1175,8 @@ msgid ""
 "Username %s is invalid, please choose a different one. Usernames can only "
 "contain letters (A-Z), numbers and spaces."
 msgstr ""
+"Uživatelské jméno %s je neplatné, vyberte prosím jiné. Uživatelská jména "
+"mohou obsahovat pouze písmena (A-Z), číslice a mezery."
 
 #: pynicotine/gtkgui/dialogs/fileproperties.py:50
 #: pynicotine/gtkgui/dialogs/shortcuts.py:79
@@ -1251,37 +1252,39 @@ msgstr "<b>%(ip)s</b>, port %(port)s"
 #: pynicotine/gtkgui/dialogs/preferences.py:213
 #: pynicotine/gtkgui/ui/settings/network.ui:78
 msgid "No account added"
-msgstr ""
+msgstr "Nebyl přidán žádný účet"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:209
 msgid "Please enter a password, or leave the username empty to log out."
 msgstr ""
+"Zadejte prosím heslo nebo ponechte pole pro uživatelské jméno prázdné, pokud "
+"se chcete odhlásit."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:223
 msgid ""
 "Enter a username and password to log in as. If the user does not exist, a "
 "new account will be registered."
 msgstr ""
+"Zadejte uživatelské jméno a heslo pro přihlášení. Pokud uživatel neexistuje, "
+"bude zaregistrován nový účet."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:231
 #: pynicotine/gtkgui/ui/settings/network.ui:89
 msgid "Log In As"
-msgstr ""
+msgstr "Přihlásit jako"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:237
-#, fuzzy
 msgid "_Log In"
-msgstr "_Protokol"
+msgstr "_Přihlásit jako"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:246
-#, fuzzy
 msgid "Please enter a password."
-msgstr "Zadejte prosím platný počet dnů."
+msgstr "Zadejte prosím heslo."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:261
-#, fuzzy, python-format
+#, python-format
 msgid "Enter a new password for your account %s:"
-msgstr "Zadejte nové heslo pro svůj účet Soulseek:"
+msgstr "Zadejte nové heslo pro svůj účet %s:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:265
 #: pynicotine/gtkgui/ui/settings/network.ui:148
@@ -1290,9 +1293,8 @@ msgstr "Změna hesla"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:268
 #: pynicotine/gtkgui/widgets/popupmenu.py:594
-#, fuzzy
 msgid "Ch_ange"
-msgstr "_Změna"
+msgstr "Z_měnit"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:311
 msgid "No one"
@@ -1352,14 +1354,13 @@ msgid "Browse Folder"
 msgstr "_Procházet složku"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:353
-#, fuzzy
 msgid ""
 "Syntax: Case-insensitive. If enabled, Python regular expressions can be "
 "used, otherwise only wildcard * matches are supported."
 msgstr ""
-"<b>Syntaxe</b>: Nerozlišují se malá a velká písmena. Pokud je povoleno, lze "
-"použít regulární výrazy Pythonu, jinak jsou podporovány pouze shody se "
-"zástupnými *."
+"Syntaxe: Nerozlišují se malá a velká písmena. Pokud je povoleno, lze použít "
+"regulární výrazy Pythonu, jinak jsou podporovány pouze shody pomocí "
+"zástupného znaku *."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:362
 #: pynicotine/gtkgui/dialogs/preferences.py:726
@@ -1464,30 +1465,29 @@ msgstr "Filtry"
 #: pynicotine/gtkgui/dialogs/preferences.py:863
 #: pynicotine/gtkgui/dialogs/preferences.py:890
 msgid "Only buddies can view shares"
-msgstr ""
+msgstr "Sdílení mohou vidět jen kamarádi"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:846
 #: pynicotine/gtkgui/dialogs/preferences.py:866
 #: pynicotine/gtkgui/dialogs/preferences.py:891
 msgid "Everyone can view buddy shares"
-msgstr ""
+msgstr "Každý může vidět sdílení kamarádů"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:850
 #: pynicotine/gtkgui/dialogs/preferences.py:869
 #: pynicotine/gtkgui/dialogs/preferences.py:892
 msgid "Everyone can view trusted shares"
-msgstr ""
+msgstr "Každý může vidět důvěryhodná sdílení"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:854
 #: pynicotine/gtkgui/dialogs/preferences.py:872
 #: pynicotine/gtkgui/dialogs/preferences.py:893
 msgid "Everyone can view buddy & trusted shares"
-msgstr ""
+msgstr "Každý může vidět sdílení s kamarády a důvěryhodná sdílení"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:876
-#, fuzzy
 msgid "Buddy Share Visibility"
-msgstr "Sdílení kamarádů"
+msgstr "Viditelnost sdílení s kamarády"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:878
 msgid ""
@@ -1496,6 +1496,10 @@ msgid ""
 "them, and users can choose whether or not they want to see the files in "
 "their search results."
 msgstr ""
+"Zviditelněte pro všechny sdílení s kamarády a důvěryhodná sdílení, uživatelé "
+"vám ale budou muset poslat zprávu s žádostí o přístup. Tyto soubory se "
+"zobrazují s indikátorem vedle nich a uživatelé si mohou vybrat, zda chtějí "
+"tyto soubory vidět ve svých výsledcích vyhledávání."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:883
 msgid ""
@@ -1504,6 +1508,10 @@ msgid ""
 "files are available on request. Including a comment about access requests on "
 "your user profile is recommended."
 msgstr ""
+"Tato možnost se ve většině případů nedoporučuje. Jedná se o poslední "
+"možnost, kdy je nepraktické poskytnout neomezený přístup, ale zároveň chcete "
+"uvést, že soubory jsou k dispozici na vyžádání. Doporučujeme uvést do svého "
+"uživatelského profilu poznámku o žádostech o přístup."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:896
 msgid "_Change"
@@ -1600,7 +1608,7 @@ msgstr "Kódy formátu"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1764
 msgid "Keyword"
-msgstr ""
+msgstr "Klíčové slovo"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1785
 #: pynicotine/gtkgui/dialogs/preferences.py:1806
@@ -1612,9 +1620,8 @@ msgid "Replacement"
 msgstr "Náhrada"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1831
-#, fuzzy
 msgid "Mentions"
-msgstr "Připojení"
+msgstr "Zmínky"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1832
 msgid "Auto-Replace"
@@ -1626,41 +1633,44 @@ msgstr "Cenzurovat"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1965
 msgid "Add Keyword"
-msgstr ""
+msgstr "Přidat klíčové slovo"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1966
 msgid ""
 "Enter a list of keywords or usernames you want to watch for. Chat messages "
 "containing the keywords will be highlighted."
 msgstr ""
+"Zadejte seznam klíčových slov nebo uživatelských jmen, která chcete "
+"sledovat. Dojde ke zvýraznění zpráv chatu, které budou obsahovat klíčová "
+"slova."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1996
 msgid "Edit Keyword"
-msgstr ""
+msgstr "Upravit klíčové slovo"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1997
 msgid ""
 "Enter a keyword or username you want to watch for. Chat messages containing "
 "the keyword will be highlighted."
 msgstr ""
+"Zadejte klíčové slovo nebo uživatelské jméno, které chcete sledovat. Dojde "
+"ke zvýraznění zpráv chatu, které budou obsahovat klíčové slovo."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2033
 msgid "Censor Patterns"
 msgstr "Vzory cenzury"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2034
-#, fuzzy
 msgid "Enter a list of patterns you want to censor:"
-msgstr "Zadejte seznam uživatelských jmen, která chcete ignorovat:"
+msgstr "Zadejte seznam vzorů, které chcete cenzurovat:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2063
 msgid "Edit Censored Pattern"
 msgstr "Úprava cenzurovaného vzoru"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2064
-#, fuzzy
 msgid "Enter a pattern you want to censor:"
-msgstr "Zadejte seznam uživatelských jmen, která chcete ignorovat:"
+msgstr "Zadejte vzor, který chcete cenzurovat:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2096
 msgid "Add Replacement"
@@ -1930,9 +1940,8 @@ msgstr ""
 "plugin uložil."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3596
-#, fuzzy
 msgid "Uninstall"
-msgstr "_Odinstalovat…"
+msgstr "Odinstalovat"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3657
 #: pynicotine/gtkgui/dialogs/shortcuts.py:41
@@ -2071,6 +2080,8 @@ msgid ""
 "Room names can only contain letters (A-Z), numbers, and a single space "
 "between characters."
 msgstr ""
+"Názvy místností mohou obsahovat pouze písmena (A-Z), číslice a jednu mezeru "
+"mezi znaky."
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:361
 #, python-format
@@ -2291,14 +2302,12 @@ msgid "Do you really want to reset transfer statistics?"
 msgstr "Opravdu chcete vynulovat statistiky přenosu?"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:113
-#, fuzzy
 msgid "Reset All"
-msgstr "Zrušit výběr všeho"
+msgstr "Resetovat vše"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:59
-#, fuzzy
 msgid "Search Term"
-msgstr "Kopírovat hledaný výraz"
+msgstr "Hledaný výraz"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:67 pynicotine/gtkgui/downloads.py:60
 #: pynicotine/gtkgui/transfers.py:57
@@ -2307,12 +2316,11 @@ msgstr "Filtrované"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:73
 msgid "Added"
-msgstr ""
+msgstr "Přidáno"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:95
-#, fuzzy
 msgid "Update _Filters…"
-msgstr "Nahrát _složky…"
+msgstr "Aktualizovat _filtry…"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:96 pynicotine/gtkgui/interests.py:187
 #: pynicotine/gtkgui/interests.py:196 pynicotine/gtkgui/interests.py:208
@@ -2321,9 +2329,8 @@ msgid "_Search for Item"
 msgstr "_Hledat položku"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:98
-#, fuzzy
 msgid "Reset Seen Results"
-msgstr "Vybrat výsledky uživatele"
+msgstr "Resetovat viděné výsledky"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:195
 msgid "Add Wishes"
@@ -2336,36 +2343,32 @@ msgstr ""
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:200
 #: pynicotine/gtkgui/dialogs/wishlist.py:257
-#, fuzzy
 msgid "Enable automatic search"
-msgstr "Povolit automatické nahrazování slov"
+msgstr "Povolit automatické hledání"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:208
 #: pynicotine/gtkgui/dialogs/wishlist.py:251
 #: pynicotine/gtkgui/dialogs/wishlist.py:252
-#, fuzzy
 msgid "Custom filters"
-msgstr "Obnovit filtry"
+msgstr "Vlastní filtry"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:239
-#, fuzzy
 msgid "Default filters"
-msgstr "Filtry výsledků"
+msgstr "Výchozí filtry"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:248
 msgid "Edit Wish"
 msgstr "Upravit přání"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:249
-#, fuzzy, python-format
+#, python-format
 msgid "Modify the search term '%s':"
-msgstr "Upravit následující filtr sdílení:"
+msgstr "Upravit hledaný výraz '%s':"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:251
 #: pynicotine/gtkgui/dialogs/wishlist.py:252
-#, fuzzy
 msgid "No filters"
-msgstr "Síťové filtry"
+msgstr "Žádné filtry"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:317
 msgid "Clear Wishlist?"
@@ -2683,24 +2686,24 @@ msgid "User Actions"
 msgstr "Uživatelské akce"
 
 #: pynicotine/gtkgui/privatechat.py:491
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s mentioned you in a private message"
-msgstr "%(user)s se o vás zmínil v místnosti %(room)s"
+msgstr "%(user)s vás zmínil(a) v soukromé zprávě"
 
 #: pynicotine/gtkgui/privatechat.py:496
-#, fuzzy, python-format
+#, python-format
 msgid "Mentioned by %(user)s in Private"
-msgstr "Zmínka od %(user)s v místnosti %(room)s"
+msgstr "Zmínka od %(user)s v soukromí"
 
 #: pynicotine/gtkgui/privatechat.py:500
 #, python-format
 msgid "Keyword %(keyword)s mentioned by %(user)s in private"
-msgstr ""
+msgstr "Klíčové slovo %(keyword)s zmínil(a) %(user)s v soukromí"
 
 #: pynicotine/gtkgui/privatechat.py:508
 #, python-format
 msgid "Keyword %(keyword)s Mentioned by %(user)s in Private"
-msgstr ""
+msgstr "Klíčové slovo %(keyword)s zmínil(a) %(user)s v soukromí"
 
 #: pynicotine/gtkgui/privatechat.py:549
 msgid "* Messages sent while you were offline"
@@ -3280,9 +3283,8 @@ msgid "Do you really want to close all tabs?"
 msgstr "Opravdu chcete zavřít všechny karty?"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:454
-#, fuzzy
 msgid "Close All"
-msgstr "Vyčistit vše"
+msgstr "Zavřít vše"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:467
 #, python-format
@@ -3346,7 +3348,7 @@ msgstr "Soukromé místnosti"
 #: pynicotine/gtkgui/widgets/popupmenu.py:509
 #, python-format
 msgid "Make Owner of %s"
-msgstr ""
+msgstr "Stanovit majitelem %s"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:527
 #, python-format
@@ -3369,16 +3371,17 @@ msgid "Add as Operator of %s"
 msgstr "Přidat jako operátora %s"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:587
-#, fuzzy
 msgid "Change Room Owner?"
-msgstr "Majitel místnosti"
+msgstr "Změnit majitele místnosti?"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:588
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Do you really want to make %(user)s the new owner of your private room "
 "%(room)s?"
-msgstr "Opravdu chcete trvale smazat %s vaší soukromé místnosti?"
+msgstr ""
+"Opravdu chcete nastavit %(user)s jako majitele vaší soukromé místnosti %"
+"(room)s?"
 
 #: pynicotine/gtkgui/widgets/textentry.py:22
 msgid "Send message…"
@@ -3433,14 +3436,12 @@ msgid "Unreadable Folder"
 msgstr "Nečitelná složka"
 
 #: pynicotine/gtkgui/widgets/theme.py:268
-#, fuzzy
 msgid "Default Filters Active"
-msgstr "Filtry výsledků"
+msgstr "Výchozí filtry aktivní"
 
 #: pynicotine/gtkgui/widgets/theme.py:269
-#, fuzzy
 msgid "Custom Filters Active"
-msgstr "Obnovit filtry"
+msgstr "Vlastní filtry aktivní"
 
 #: pynicotine/gtkgui/widgets/theme.py:376
 #, python-format
@@ -3518,10 +3519,9 @@ msgstr ""
 "Zadejte %s pro přihlášení pomocí jiného uživatelského jména nebo hesla."
 
 #: pynicotine/headless/application.py:78
-#, fuzzy, python-format
+#, python-format
 msgid "Type %s to log in with another username."
-msgstr ""
-"Zadejte %s pro přihlášení pomocí jiného uživatelského jména nebo hesla."
+msgstr "Zadejte %s pro přihlášení pomocí jiného uživatelského jména."
 
 #: pynicotine/headless/application.py:94
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:272
@@ -5598,9 +5598,8 @@ msgstr ""
 "aby byly nalezeny neobyčejné soubory."
 
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:31
-#, fuzzy
 msgid "Search wish terms…"
-msgstr "Hledaný výraz…"
+msgstr "Hledat výrazy přání…"
 
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:162
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:178
@@ -6231,9 +6230,8 @@ msgid "Country code, e.g. US ES or !DE !GB"
 msgstr "Kód země, např. US CZ nebo !DE !GB"
 
 #: pynicotine/gtkgui/ui/search.ui:222
-#, fuzzy
 msgid "Store Wishlist Filters"
-msgstr "Filtry výsledků"
+msgstr "Ochovávat filtry seznamu přání"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:33
 msgid ""
@@ -6266,15 +6264,15 @@ msgstr "IP adresy"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:38
 msgid "Watch for keyword mentions in messages"
-msgstr ""
+msgstr "Sledovat zmínky klíčových slov ve zprávách"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:195
 msgid "Substitute text patterns when sending messages"
-msgstr ""
+msgstr "Nahrazení textových vzorů při odesílání zpráv"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:352
 msgid "Censor text patterns in incoming messages"
-msgstr ""
+msgstr "Cenzurovat textové vzory v příchozích zprávách"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:525
 msgid "Accept private room invitations"
@@ -6469,16 +6467,15 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/network.ui:63
 msgid "Account:"
-msgstr ""
+msgstr "Účet:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:105
 msgid "_Log In As"
-msgstr ""
+msgstr "_Přihlásit se jako"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:132
-#, fuzzy
 msgid "Account Password:"
-msgstr "Heslo: "
+msgstr "Heslo účtu:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:164
 msgid "Change Pass_word"
@@ -6590,15 +6587,14 @@ msgid "Enable search history"
 msgstr "Povolit historii vyhledávání"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:75
-#, fuzzy
 msgid ""
 "Privately shared files that have been made visible to everyone will display "
 "a lock icon next to them. These files cannot be downloaded until the "
 "uploader gives explicit permission. Ask them kindly."
 msgstr ""
-"Soukromě sdílené soubory, které byly zviditelněny pro všechny, budou mít "
-"předponu „[SOUKROMÉ]“ a nebude možné je stáhnout, dokud k tomu nahrávající "
-"nedá výslovné svolení. Požádejte je o ně laskavě."
+"Soukromě sdílené soubory, které byly zviditelněny pro všechny, budou "
+"označeny ikonou zámku. Pro stažení těchto souborů bude nutné výslovné "
+"svolení majitele. Slušně o ně požádejte."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:81
 msgid "Show privately shared files in search results"
@@ -6703,14 +6699,12 @@ msgid "Daily:"
 msgstr "Denně:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:452
-#, fuzzy
 msgid "Visible To"
-msgstr "Přístupné pro"
+msgstr "Viditelné pro"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:468
-#, fuzzy
 msgid "_Visible To"
-msgstr "Přístupné pro"
+msgstr "_Viditelné pro"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:70
 msgid "Automatically remove finished and cancelled uploads from list"
@@ -6876,9 +6870,8 @@ msgid "Private messages"
 msgstr "Soukromé zprávy"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:360
-#, fuzzy
 msgid "Private message mentions"
-msgstr "Soukromé zprávy"
+msgstr "Zmínky v soukromých zprávách"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:372
 msgid "Chat room messages"
