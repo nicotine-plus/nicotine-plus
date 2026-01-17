@@ -894,10 +894,9 @@ share.
 
 ### GetUserStats
 
-The server sends this to indicate a change in a user's statistics, if we've
-requested to watch the user in [WatchUser](#server-code-5) previously. A user's
-stats can also be requested by sending a [GetUserStats](#server-code-36)
-message to the server, but [WatchUser](#server-code-5) should be used instead.
+The server sends this to indicate a change in a user's stats, if we have
+joined the same chat room. We can also request a user's stats by sending
+the message to the server.
 
 ### Data Order
 

@@ -1298,10 +1298,9 @@ class SharedFoldersFiles(ServerMessage):
 class GetUserStats(ServerMessage):
     """Server code 36.
 
-    The server sends this to indicate a change in a user's statistics,
-    if we've requested to watch the user in WatchUser previously. A
-    user's stats can also be requested by sending a GetUserStats message
-    to the server, but WatchUser should be used instead.
+    The server sends this to indicate a change in a user's stats, if we have
+    joined the same chat room. We can also request a user's stats by sending
+    the message to the server.
     """
 
     __slots__ = ("user", "avgspeed", "uploadnum", "unknown", "files", "dirs")
