@@ -565,7 +565,7 @@ class Scanner:
             try:
                 with os.scandir(encode_path(folder_path, prefix=False)) as entries:
                     for entry in entries:
-                        basename = basename_escaped = entry.name.decode("utf-8", "replace")
+                        basename = basename_escaped = os.fsdecode(entry.name)
 
                         if "\\" in basename:
                             # Substitute backslashes with backslash sentinels in basenames. This is necessary
