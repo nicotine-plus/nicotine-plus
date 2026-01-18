@@ -245,7 +245,6 @@
                 <child>
                   <object class="GtkToggleButton" id="expand_button">
                     <property name="tooltip-text" translatable="yes">Expand All</property>
-                    <signal name="toggled" handler="on_toggle_expand_all"/>
                     <child>
                       <object class="GtkImage" id="expand_icon">
                         <property name="icon-name">view-fullscreen-symbolic</property>
