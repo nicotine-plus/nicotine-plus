@@ -1268,7 +1268,7 @@ class NetworkThread(Thread):
                          "token %s, address %s", (conn_type, username, pierce_token, addr))
 
             if conn_type in self.ALLOWED_PEER_CONN_TYPES:
-                init = PeerInit(init_user=username, target_user=username, conn_type=conn_type)
+                init = PeerInit(target_user=username, conn_type=conn_type)
                 self._connect_to_peer(username, addr, init, pierce_token=pierce_token)
             else:
                 log.add_conn("Unknown connection type %s", conn_type)
