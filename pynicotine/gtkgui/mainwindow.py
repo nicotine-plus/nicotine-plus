@@ -1108,9 +1108,9 @@ class MainWindow(Window):
             ("$" + _("Search"), "app.log-searches"),
             ("$" + _("Chat"), "app.log-chat"),
             ("", None),
-            ("$" + _("[Debug] Connections"), "app.log-connections"),
-            ("$" + _("[Debug] Messages"), "app.log-messages"),
-            ("$" + _("[Debug] Transfers"), "app.log-transfers"),
+            ("$" + _("[Debug] [SLOW] Connections"), "app.log-connections"),
+            ("$" + _("[Debug] [SLOW] Messages"), "app.log-messages"),
+            ("$" + _("[Debug] [SLOW] Transfers"), "app.log-transfers"),
             ("$" + _("[Debug] Miscellaneous"), "app.log-miscellaneous"),
         )
 
