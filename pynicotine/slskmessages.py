@@ -3056,7 +3056,7 @@ class PeerInit(PeerInitMessage):
 
     def __init__(self, sock=None, init_user=None, target_user=None, conn_type=None):
         self.sock = sock
-        self.init_user = init_user      # username of peer who initiated the message
+        self.init_user = init_user      # our own username
         self.target_user = target_user  # username of peer we're connected to
         self.conn_type = conn_type
         self.outgoing_msgs = []
@@ -3071,12 +3071,8 @@ class PeerInit(PeerInitMessage):
         return msg
 
     def parse_network_message(self, message):
-        pos, self.init_user = self.unpack_string(message)
+        pos, self.target_user = self.unpack_string(message)
         pos, self.conn_type = self.unpack_string(message, pos)
-
-        if self.target_user is None:
-            # The user we're connecting to initiated the connection. Set them as target user.
-            self.target_user = self.init_user
 
 
 # Peer Messages #

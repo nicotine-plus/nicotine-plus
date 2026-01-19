@@ -1369,7 +1369,7 @@ class NetworkThread(Thread):
             addr = (msg.ip_address, msg.port)
             conn_type = msg.conn_type
             token = msg.token
-            init = PeerInit(init_user=username, target_user=username, conn_type=conn_type)
+            init = PeerInit(target_user=username, conn_type=conn_type)
 
             log.add_conn("Received indirect connection request of type %s from user %s, "
                          "token %s, address %s", (conn_type, username, token, addr))
