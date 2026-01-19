@@ -62,7 +62,7 @@ class Plugin(BasePlugin):
     def check_phrases(self, user, line):
 
         for phrase in self.settings["badprivatephrases"]:
-            if line.lower().find(phrase) > -1:
+            if line.lower().find(phrase.lower()) > -1:
                 self.log("Blocked spam from %s: %s", (user, line))
                 return returncode["zap"]
 
