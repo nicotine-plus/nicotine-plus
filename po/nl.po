@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-11 18:51+0200\n"
-"PO-Revision-Date: 2026-01-12 20:25+0000\n"
+"PO-Revision-Date: 2026-01-19 08:01+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -15,11 +15,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15.2-dev\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
-msgstr "Soulseek programma"
+msgstr "Soulseek-applicatie"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6 pynicotine/__init__.py:34
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:116
