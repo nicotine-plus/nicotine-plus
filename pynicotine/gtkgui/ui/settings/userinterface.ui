@@ -238,7 +238,7 @@
               <object class="GtkLabel">
                 <property name="height-request">24</property>
                 <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Show notification for private chats and mentions in the window title</property>
+                <property name="label" translatable="yes">Show window notification for private messages and mentions</property>
                 <property name="mnemonic-widget">notification_window_title_toggle</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
