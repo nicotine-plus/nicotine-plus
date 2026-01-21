@@ -474,9 +474,6 @@ class Application:
             high_priority=high_priority
         )
 
-        if high_priority:
-            self.window.set_urgency_hint(True)
-
     def _show_download_notification(self, message, title=None, high_priority=False):
 
         self._show_notification(
@@ -490,7 +487,6 @@ class Application:
             message, title, action="app.private-chat-notification-activated", action_target=user,
             high_priority=True
         )
-        self.window.set_urgency_hint(True)
 
     def _show_search_notification(self, search_token, message, title=None):
 
