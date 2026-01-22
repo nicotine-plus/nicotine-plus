@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-11 18:51+0200\n"
-"PO-Revision-Date: 2026-01-19 08:01+0000\n"
+"PO-Revision-Date: 2026-01-22 19:16+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -2641,7 +2641,7 @@ msgstr "Poort %i (TCP) is open"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:82
 msgid "Most users can connect to you."
-msgstr "De meeste gebruikers kunnen verbinding met u maken."
+msgstr "De meeste gebruikers kunnen met jou verbinden."
 
 #: pynicotine/gtkgui/popovers/portchecker.py:87
 #, python-format
@@ -2653,8 +2653,8 @@ msgid ""
 "You can only connect to a few users. Ensure the port is forwarded and your "
 "device's firewall is not blocking it."
 msgstr ""
-"Je kunt slechts met een paar gebruikers verbinding maken. Zorg ervoor dat de "
-"poort is doorgestuurd en dat de firewall van je apparaat deze niet blokkeert."
+"Je kunt maar met een paar gebruikers verbinden. Zorg dat de poort "
+"doorgestuurd wordt en dat de firewall die poort niet blokkeert."
 
 #: pynicotine/gtkgui/privatechat.py:355 pynicotine/gtkgui/search.py:650
 #: pynicotine/gtkgui/userbrowse.py:273 pynicotine/gtkgui/userinfo.py:344
@@ -4574,7 +4574,7 @@ msgstr "Last.fm: Kon recent nummer niet ophalen van Audioscrobbler: %(error)s"
 #: pynicotine/nowplaying.py:181
 #, python-format
 msgid "Libre.fm: Could not connect to Libre.fm: %(error)s"
-msgstr "Libre.fm: kon geen verbinding maken met Libre.fm: %(error)s"
+msgstr "Libre.fm: kon niet met Libre.fm verbinden: %(error)s"
 
 #: pynicotine/nowplaying.py:189
 #, python-format
@@ -4608,7 +4608,7 @@ msgstr "ListenBrainz: vul je ListenBrainz gebruikersnaam in"
 #: pynicotine/nowplaying.py:302
 #, python-format
 msgid "ListenBrainz: Could not connect to ListenBrainz: %(error)s"
-msgstr "ListenBrainz: Kon geen verbinding maken met ListenBrainz: %(error)s"
+msgstr "ListenBrainz: Kon niet met ListenBrainz verbinden: %(error)s"
 
 #: pynicotine/nowplaying.py:310
 msgid "ListenBrainz: You don't seem to be listening to anything right now"
@@ -5190,7 +5190,7 @@ msgstr "Gebruiker %(user)s bekijkt je profiel"
 #: pynicotine/users.py:267
 #, python-format
 msgid "Unable to connect to the server. Reason: %s"
-msgstr "Kan geen verbinding maken met de server. Reden: %s"
+msgstr "Kan niet met de server verbinden. Reden: %s"
 
 #: pynicotine/users.py:267
 msgid "Cannot Connect"
@@ -5412,8 +5412,8 @@ msgid ""
 "To connect with other Soulseek peers, a listening port on your router has to "
 "be forwarded to your computer."
 msgstr ""
-"Om verbinding te maken met andere Soulseek-peers, moet een luisterpoort op "
-"je router doorgestuurd worden naar je computer."
+"Om met Soulseek-peers te verbinden, moet een luisterpoort op je router "
+"doorgestuurd worden naar je computer."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:336
 msgid ""
