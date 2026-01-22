@@ -284,12 +284,13 @@ class Interests:
 
     def show_recommendations(self, always_global=False):
 
-        self.recommendations_label.set_label(_("Recommendations"))
         self.similar_users_label.set_label(_("Similar Users"))
 
         if always_global or (not self.likes_list_view.iterators and not self.dislikes_list_view.iterators):
+            self.recommendations_label.set_label(_("Popular Interests"))
             core.interests.request_global_recommendations()
         else:
+            self.recommendations_label.set_label(_("Recommendations"))
             core.interests.request_recommendations()
 
         core.interests.request_similar_users()
@@ -424,10 +425,14 @@ class Interests:
     def on_refresh_recommendations(self, *_args):
         self.show_recommendations()
 
-    def set_recommendations(self, recommendations, unrecommendations, item=None):
+    def set_recommendations(self, recommendations, unrecommendations, item=None, is_global=False):
 
-        if item:
-            self.recommendations_label.set_label(_("Recommendations (%s)") % item)
+        if is_global:
+            self.recommendations_label.set_label(_("Popular Interests"))
+
+        elif item:
+            self.recommendations_label.set_label(_("Recommendations for %(item)s") % {"item": item})
+
         else:
             self.recommendations_label.set_label(_("Recommendations"))
 
@@ -453,7 +458,7 @@ class Interests:
             widget.unfreeze()
 
     def global_recommendations(self, msg):
-        self.set_recommendations(msg.recommendations, msg.unrecommendations)
+        self.set_recommendations(msg.recommendations, msg.unrecommendations, is_global=True)
 
     def recommendations(self, msg):
 
@@ -470,7 +475,7 @@ class Interests:
     def set_similar_users(self, users, item=None):
 
         if item:
-            self.similar_users_label.set_label(_("Similar Users (%s)") % item)
+            self.similar_users_label.set_label(_("Users who like %(item)s") % {"item": item})
         else:
             self.similar_users_label.set_label(_("Similar Users"))
 
