@@ -513,10 +513,11 @@ class NetworkThread(Thread):
 
     # Connections #
 
-    def _indirect_request_error(self, token, init):
+    def _indirect_request_error(self, init):
 
         username = init.target_user
         conn_type = init.conn_type
+        token = init.indirect_token
 
         log.add_conn("Indirect connect request of type %s to user %s with "
                      "token %s failed", (conn_type, username, token))
@@ -543,7 +544,7 @@ class NetworkThread(Thread):
             if not expire_all and (current_time - init.created_time) < self.INDIRECT_REQUEST_TIMEOUT:
                 continue
 
-            self._indirect_request_error(indirect_token, init)
+            self._indirect_request_error(init)
             timed_out_requests.add(indirect_token)
 
         if not timed_out_requests:
@@ -1278,7 +1279,7 @@ class NetworkThread(Thread):
 
             if pierce_token in self._indirect_token_init_msgs:
                 init = self._indirect_token_init_msgs.pop(pierce_token)
-                self._indirect_request_error(pierce_token, init)
+                self._indirect_request_error(init)
 
         elif msg_class is GetUserStatus:
             if msg.status == UserStatus.OFFLINE and msg.user in self._user_addresses:
