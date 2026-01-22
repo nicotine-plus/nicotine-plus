@@ -1055,8 +1055,8 @@ class NetworkThread(Thread):
             stale_conns.clear()
 
         if self._pending_peer_conns:
-            for addr, init in self._pending_peer_conns.copy().items():
-                self._init_peer_connection(addr, init)
+            for init, (addr, pierce_token) in self._pending_peer_conns.copy().items():
+                self._init_peer_connection(addr, init, pierce_token=pierce_token)
 
     # Server Connection #
 
@@ -1687,11 +1687,11 @@ class NetworkThread(Thread):
 
         if self._num_sockets >= self.MAX_SOCKETS:
             # Connection limit reached, re-queue
-            self._pending_peer_conns[addr] = init
+            self._pending_peer_conns[init] = (addr, pierce_token)
             return
 
         _ip_address, port = addr
-        self._pending_peer_conns.pop(addr, None)
+        self._pending_peer_conns.pop(init, None)
 
         if port <= 0 or port > 65535:
             log.add_conn("Skipping direct connection attempt of type %s to user %s "
