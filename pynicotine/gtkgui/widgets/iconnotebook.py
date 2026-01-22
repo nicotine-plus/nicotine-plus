@@ -462,7 +462,7 @@ class IconNotebook:
         tab_pos = self.get_tab_pos()
 
         if self.unread_pages:
-            icon_name = "emblem-important-symbolic"
+            icon_name = "notifications-symbolic"
             num_pages = len(self.unread_pages)
             tooltip_text = ngettext("%s Unread Tab", "%s Unread Tabs", num_pages) % humanize(num_pages)
         else:
