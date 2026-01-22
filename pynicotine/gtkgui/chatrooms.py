@@ -305,12 +305,12 @@ class ChatRooms(IconNotebook):
             combobox = self.window.search.room_search_combobox
             combobox.remove_id(room)
 
-    def highlight_room(self, room, user):
+    def highlight_room(self, room, user, mention_type, mention_keyword):
 
-        if not room or room in self.highlighted_rooms:
+        if not room:
             return
 
-        self.highlighted_rooms[room] = user
+        self.highlighted_rooms[room] = (user, mention_type, mention_keyword)
         self.window.update_title()
         self.window.application.tray_icon.update()
 
@@ -912,7 +912,7 @@ class ChatRoom:
 
         if mention_type is not None:
             # We were mentioned, update tray icon and show urgency hint
-            self.chatrooms.highlight_room(room, user)
+            self.chatrooms.highlight_room(room, user, mention_type, mention_keyword)
 
         if config.sections["notifications"]["notification_popup_chatroom_mention"]:
             if mention_type == "self":

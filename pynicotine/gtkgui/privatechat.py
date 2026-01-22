@@ -56,7 +56,7 @@ class PrivateChats(IconNotebook):
             entry=window.private_entry, visible=True
         )
         self.command_help = None
-        self.highlighted_users = []
+        self.highlighted_users = {}
 
         for event_name, callback in (
             ("clear-private-messages", self.clear_messages),
@@ -229,12 +229,12 @@ class PrivateChats(IconNotebook):
 
         self.chat_entry.clear_unsent_message(user)
 
-    def highlight_user(self, user):
+    def highlight_user(self, user, mention_type, mention_keyword):
 
-        if not user or user in self.highlighted_users:
+        if not user:
             return
 
-        self.highlighted_users.append(user)
+        self.highlighted_users[user] = (mention_type, mention_keyword)
         self.window.update_title()
         self.window.application.tray_icon.update()
 
@@ -243,7 +243,7 @@ class PrivateChats(IconNotebook):
         if user not in self.highlighted_users:
             return
 
-        self.highlighted_users.remove(user)
+        del self.highlighted_users[user]
         self.window.update_title()
         self.window.application.tray_icon.update()
 
@@ -502,7 +502,7 @@ class PrivateChat:
             return
 
         # Update tray icon and show urgency hint
-        self.chats.highlight_user(self.user)
+        self.chats.highlight_user(self.user, mention_type, mention_keyword)
 
         if config.sections["notifications"]["notification_popup_private_mention"]:
             if mention_type == "self":

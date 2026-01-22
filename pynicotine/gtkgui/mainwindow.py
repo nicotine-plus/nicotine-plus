@@ -403,14 +403,41 @@ class MainWindow(Window):
 
         elif self.privatechat.highlighted_users:
             # Private Chats have a higher priority
-            user = self.privatechat.highlighted_users[-1]
-            notification_text = _("Private Message from %(user)s") % {"user": user}
+            user, (mention_type, mention_keyword) = list(self.privatechat.highlighted_users.items())[-1]
+
+            if mention_type == "self":
+                notification_text = _("Mentioned by %(user)s in Private") % {"user": user}
+
+            elif mention_type == "keyword":
+                notification_text = _("Keyword %(keyword)s Mentioned by %(user)s in Private") % {
+                    "keyword": mention_keyword,
+                    "user": user
+                }
+            else:
+                notification_text = _("Private Message from %(user)s") % {"user": user}
+
             self.set_urgency_hint(True)
 
         elif self.chatrooms.highlighted_rooms:
             # Allow for the possibility the username is not available
-            room, user = list(self.chatrooms.highlighted_rooms.items())[-1]
-            notification_text = _("Mentioned by %(user)s in Room %(room)s") % {"user": user, "room": room}
+            room, (user, mention_type, mention_keyword) = list(self.chatrooms.highlighted_rooms.items())[-1]
+
+            if mention_type == "self":
+                notification_text = _("Mentioned by %(user)s in Room %(room)s") % {"user": user, "room": room}
+
+            elif mention_type == "keyword":
+                notification_text = _("Keyword %(keyword)s Mentioned by %(user)s in Room %(room)s") % {
+                    "keyword": mention_keyword,
+                    "user": user,
+                    "room": room
+                }
+
+            elif mention_type == "username":
+                notification_text = _("Message by Watched User %(user)s in Room %(room)s") % {
+                    "user": mention_keyword,
+                    "room": room
+                }
+
             self.set_urgency_hint(True)
 
         elif any(is_important for is_important in self.search.unread_pages.values()):
