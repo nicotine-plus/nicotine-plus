@@ -472,6 +472,14 @@ class IconNotebook:
         self.pages_button.set_direction(
             Gtk.ArrowType.DOWN if tab_pos == Gtk.PositionType.TOP else Gtk.ArrowType.UP)
 
+        if self.pages_button.get_tooltip_text() == tooltip_text:
+            return
+
+        # Hide widget to keep tooltips for other widgets visible
+        self.pages_button.set_visible(False)
+        self.pages_button.set_tooltip_text(tooltip_text)
+        self.pages_button.set_visible(True)
+
         if self.pages_button.icon_name == icon_name:
             return
 
@@ -481,11 +489,6 @@ class IconNotebook:
             self.pages_button.set_icon_name(icon_name)                   # pylint: disable=no-member
         else:
             self.pages_button.set_image(Gtk.Image(icon_name=icon_name))  # pylint: disable=no-member
-
-        # Hide widget to keep tooltips for other widgets visible
-        self.pages_button.set_visible(False)
-        self.pages_button.set_tooltip_text(tooltip_text)
-        self.pages_button.set_visible(True)
 
     def get_current_page(self):
         return self.get_nth_page(self.widget.get_current_page())
