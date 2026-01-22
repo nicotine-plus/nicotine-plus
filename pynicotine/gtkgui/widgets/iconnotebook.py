@@ -726,8 +726,21 @@ class IconNotebook:
 
         self.popup_menu_pages.clear()
 
+        # Important pages (most recently changed first)
+        for page, is_important in reversed(self.unread_pages.items()):
+            if not is_important:
+                continue
+
+            tab_label = self.get_tab_label(page)
+            self.popup_menu_pages.add_items(
+                ("#**  " + tab_label.get_text(), self.on_show_page, page)
+            )
+
         # Unread pages (most recently changed first)
-        for page in reversed(list(self.unread_pages)):
+        for page, is_important in reversed(self.unread_pages.items()):
+            if is_important:
+                continue
+
             tab_label = self.get_tab_label(page)
             self.popup_menu_pages.add_items(
                 ("#*  " + tab_label.get_text(), self.on_show_page, page)
