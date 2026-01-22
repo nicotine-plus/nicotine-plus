@@ -490,26 +490,11 @@ class PrivateChat:
         if mention_type == "self":
             log.add(_("%(user)s mentioned you in a private message") % {"user": self.user})
 
-            if config.sections["notifications"]["notification_popup_private_mention"]:
-                core.notifications.show_private_chat_notification(
-                    self.user, text,
-                    title=_("Mentioned by %(user)s in Private") % {"user": self.user}
-                )
-
         elif mention_type == "keyword":
             log.add(_("Keyword %(keyword)s mentioned by %(user)s in private") % {
                 "keyword": mention_keyword,
                 "user": self.user
             })
-
-            if config.sections["notifications"]["notification_popup_private_mention"]:
-                core.notifications.show_private_chat_notification(
-                    self.user, text,
-                    title=_("Keyword %(keyword)s Mentioned by %(user)s in Private") % {
-                        "keyword": mention_keyword,
-                        "user": self.user
-                    }
-                )
 
         if (self.chats.get_current_page() == self.container
                 and self.window.current_page_id == self.window.private_page.id and self.window.is_active()):
@@ -519,7 +504,25 @@ class PrivateChat:
         # Update tray icon and show urgency hint
         self.chats.highlight_user(self.user)
 
-        if mention_type is None and config.sections["notifications"]["notification_popup_private_message"]:
+        if config.sections["notifications"]["notification_popup_private_mention"]:
+            if mention_type == "self":
+                core.notifications.show_private_chat_notification(
+                    self.user, text,
+                    title=_("Mentioned by %(user)s in Private") % {"user": self.user}
+                )
+                return
+
+            if mention_type == "keyword":
+                core.notifications.show_private_chat_notification(
+                    self.user, text,
+                    title=_("Keyword %(keyword)s Mentioned by %(user)s in Private") % {
+                        "keyword": mention_keyword,
+                        "user": self.user
+                    }
+                )
+                return
+
+        if config.sections["notifications"]["notification_popup_private_message"]:
             core.notifications.show_private_chat_notification(
                 self.user, text,
                 title=_("Private Message from %(user)s") % {"user": self.user}
