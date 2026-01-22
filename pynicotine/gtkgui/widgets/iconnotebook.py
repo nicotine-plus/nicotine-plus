@@ -477,7 +477,7 @@ class IconNotebook:
     def update_pages_menu_button(self):
 
         if self.unread_pages:
-            icon_name = "emblem-important-symbolic"
+            icon_name = "notifications-symbolic"
             tooltip_text = _("%i Unread Tab(s)") % len(self.unread_pages)
         else:
             icon_name = "pan-down-symbolic"
