@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-11 18:51+0200\n"
-"PO-Revision-Date: 2026-01-19 08:01+0000\n"
+"PO-Revision-Date: 2026-01-25 07:13+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -188,44 +188,46 @@ msgid "Buddy Status"
 msgstr "Barát státusz"
 
 #: pynicotine/chatrooms.py:361
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been added to private room %(room)s"
-msgstr "Hozzá lett adva egy privát szobához: %(room)s"
+msgstr ""
+"%(user)s felhasználó hozzá lett adva a következő privát szobához: %(room)s"
 
 #: pynicotine/chatrooms.py:380
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been removed from private room %(room)s"
-msgstr "Hozzá lett adva egy privát szobához: %(room)s"
+msgstr ""
+"%(user)s felhasználó el lett távolítva a következő privát szobából: %(room)s"
 
 #: pynicotine/chatrooms.py:397
-#, fuzzy, python-format
+#, python-format
 msgid "You have been added to private room %(room)s"
-msgstr "Hozzá lett adva egy privát szobához: %(room)s"
+msgstr "Ön hozzá lett adva a következő privát szobához: %(room)s"
 
 #: pynicotine/chatrooms.py:412
-#, fuzzy, python-format
+#, python-format
 msgid "You have been removed from private room %(room)s"
-msgstr "Hozzá lett adva egy privát szobához: %(room)s"
+msgstr "Ön el lett távolítva a következő privát szobából: %(room)s"
 
 #: pynicotine/chatrooms.py:433
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been made an operator of room %(room)s"
-msgstr "Hozzá lett adva egy privát szobához: %(room)s"
+msgstr "%(user)s felhasználó a következő szoba operátora lett: %(room)s"
 
 #: pynicotine/chatrooms.py:452
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is no longer an operator of room %(room)s"
-msgstr "%(user)s említette önt a(z) %(room)s szobában"
+msgstr "%(user)s felhasználó többé nem operátor a következő szobában: %(room)s"
 
 #: pynicotine/chatrooms.py:468
-#, fuzzy, python-format
+#, python-format
 msgid "You have been made an operator of room %(room)s"
-msgstr "Hozzá lett adva egy privát szobához: %(room)s"
+msgstr "Ön lett a következő szoba operátora: %(room)s"
 
 #: pynicotine/chatrooms.py:481
-#, fuzzy, python-format
+#, python-format
 msgid "You are no longer an operator of room %(room)s"
-msgstr "Hozzá lett adva egy privát szobához: %(room)s"
+msgstr "Ön már nem operátora a következő szobának: %(room)s"
 
 #: pynicotine/chatrooms.py:556
 #, python-format
@@ -242,7 +244,7 @@ msgstr "Nem hozható létre mappa itt: %(path)s, %(error)s"
 #: pynicotine/config.py:826
 #, python-format
 msgid "Error backing up config: %s"
-msgstr "Hiba a konfiguráció mentése során: %s"
+msgstr "Hiba történt a konfiguráció biztonsági mentése közben: %s"
 
 #: pynicotine/config.py:829
 #, python-format
@@ -2542,28 +2544,27 @@ msgid "Similar Users"
 msgstr "Hasonló felhasználók"
 
 #: pynicotine/gtkgui/interests.py:290 pynicotine/gtkgui/interests.py:431
-#, fuzzy
 msgid "Popular Interests"
-msgstr "Személyes érdeklődés"
+msgstr "Népszerű érdeklődési körök"
 
 #: pynicotine/gtkgui/interests.py:293 pynicotine/gtkgui/interests.py:437
 #: pynicotine/gtkgui/ui/interests.ui:142
 msgid "Recommendations"
-msgstr "Javaslatok"
+msgstr "Ajánlások"
 
 #: pynicotine/gtkgui/interests.py:434
-#, fuzzy, python-format
+#, python-format
 msgid "Recommendations for %(item)s"
-msgstr "_Javaslatok a tételhez"
+msgstr "Ajánlások ehez: %(item)s"
 
 #: pynicotine/gtkgui/interests.py:478
 #, python-format
 msgid "Users who like %(item)s"
-msgstr ""
+msgstr "Felhasználók akik kedvelik ezt: %(item)s"
 
 #: pynicotine/gtkgui/mainwindow.py:226
 msgid "Search log…"
-msgstr "Napló keresés…"
+msgstr "Keresési napló…"
 
 #: pynicotine/gtkgui/mainwindow.py:409 pynicotine/gtkgui/privatechat.py:511
 #, python-format
@@ -2583,7 +2584,7 @@ msgstr "Privát üzenet tőle: %(user)s"
 
 #: pynicotine/gtkgui/mainwindow.py:444 pynicotine/gtkgui/search.py:975
 msgid "Wishlist Results Found"
-msgstr "Talált Kívánságlista-eredmények"
+msgstr "A kívánságlista találatai"
 
 #: pynicotine/gtkgui/mainwindow.py:784 pynicotine/gtkgui/ui/mainwindow.ui:1046
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:697
@@ -2611,19 +2612,16 @@ msgid "Chat"
 msgstr "Csevegés"
 
 #: pynicotine/gtkgui/mainwindow.py:1138
-#, fuzzy
 msgid "[Debug] [SLOW] Connections"
-msgstr "[Debug] Kapcsolatok"
+msgstr "[Hibakeresés] [LASSÚ] kapcsolatok"
 
 #: pynicotine/gtkgui/mainwindow.py:1139
-#, fuzzy
 msgid "[Debug] [SLOW] Messages"
-msgstr "[Debug] Üzenetek"
+msgstr "[Hibakeresés] [LASSÚ] üzenetek"
 
 #: pynicotine/gtkgui/mainwindow.py:1140
-#, fuzzy
 msgid "[Debug] [SLOW] Transfers"
-msgstr "[Debug] Átvitelek"
+msgstr "[Hibakeresés] [LASSÚ] átvitelek"
 
 #: pynicotine/gtkgui/mainwindow.py:1141
 msgid "[Debug] Miscellaneous"
@@ -6918,21 +6916,16 @@ msgid "Notifications"
 msgstr "Értesítések"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:217
-#, fuzzy
 msgid "Enable sound for popup notifications"
-msgstr "Hang engedélyezése az értesítésekhez"
+msgstr "Hang engedélyezése a felugró értesítésekhez"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:241
-#, fuzzy
 msgid "Show window notification for private messages and mentions"
-msgstr ""
-"A privát csevegések és az említések értesítéseinek megjelenítése az "
-"ablakcímmezőben"
+msgstr "A privát üzenetek és említések értesítéseinek megjelenítése ablakban"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:273
-#, fuzzy
 msgid "Show popup notifications for:"
-msgstr "Értesítések megjelenítése a következőhöz:"
+msgstr "Felugró értesítések megjelenítése a következőhöz:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:300
 msgid "Finished file downloads"

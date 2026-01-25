@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-11 18:51+0200\n"
-"PO-Revision-Date: 2026-01-22 19:16+0000\n"
+"PO-Revision-Date: 2026-01-24 10:35+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -189,44 +189,44 @@ msgid "Buddy Status"
 msgstr "Vriendstatus"
 
 #: pynicotine/chatrooms.py:361
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been added to private room %(room)s"
-msgstr "Je bent toegevoegd aan een privékamer: %(room)s"
+msgstr "Gebruiker %(user)s is toegevoegd aan privékamer %(room)s"
 
 #: pynicotine/chatrooms.py:380
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been removed from private room %(room)s"
-msgstr "Je bent toegevoegd aan een privékamer: %(room)s"
+msgstr "Gebruiker %(user)s is verwijderd uit privékamer %(room)s"
 
 #: pynicotine/chatrooms.py:397
-#, fuzzy, python-format
+#, python-format
 msgid "You have been added to private room %(room)s"
-msgstr "Je bent toegevoegd aan een privékamer: %(room)s"
+msgstr "Je bent toegevoegd aan privékamer %(room)s"
 
 #: pynicotine/chatrooms.py:412
-#, fuzzy, python-format
+#, python-format
 msgid "You have been removed from private room %(room)s"
-msgstr "Je bent toegevoegd aan een privékamer: %(room)s"
+msgstr "Je bent verwijderd uit privékamer %(room)s"
 
 #: pynicotine/chatrooms.py:433
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been made an operator of room %(room)s"
-msgstr "Je bent toegevoegd aan een privékamer: %(room)s"
+msgstr "Gebruiker %(user)s is aangesteld als operator van kamer %(room)s"
 
 #: pynicotine/chatrooms.py:452
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is no longer an operator of room %(room)s"
-msgstr "%(user)s heeft je genoemd in kamer %(room)s"
+msgstr "Gebruiker %(user)s is geen operator meer van kamer %(room)s"
 
 #: pynicotine/chatrooms.py:468
-#, fuzzy, python-format
+#, python-format
 msgid "You have been made an operator of room %(room)s"
-msgstr "Je bent toegevoegd aan een privékamer: %(room)s"
+msgstr "Je bent aangesteld als operator van kamer %(room)s"
 
 #: pynicotine/chatrooms.py:481
-#, fuzzy, python-format
+#, python-format
 msgid "You are no longer an operator of room %(room)s"
-msgstr "Je bent toegevoegd aan een privékamer: %(room)s"
+msgstr "Je bent niet langer de operator van kamer %(room)s"
 
 #: pynicotine/chatrooms.py:556
 #, python-format
@@ -2530,9 +2530,8 @@ msgid "Similar Users"
 msgstr "Vergelijkbare gebruikers"
 
 #: pynicotine/gtkgui/interests.py:290 pynicotine/gtkgui/interests.py:431
-#, fuzzy
 msgid "Popular Interests"
-msgstr "Interesses"
+msgstr "Populaire interesses"
 
 #: pynicotine/gtkgui/interests.py:293 pynicotine/gtkgui/interests.py:437
 #: pynicotine/gtkgui/ui/interests.ui:142
@@ -2540,14 +2539,14 @@ msgid "Recommendations"
 msgstr "Aanbevelingen"
 
 #: pynicotine/gtkgui/interests.py:434
-#, fuzzy, python-format
+#, python-format
 msgid "Recommendations for %(item)s"
-msgstr "_Aanbevelingen voor onderwerp"
+msgstr "Aanbevelingen voor %(item)s"
 
 #: pynicotine/gtkgui/interests.py:478
 #, python-format
 msgid "Users who like %(item)s"
-msgstr ""
+msgstr "Gebruikers die %(item)s leuk vinden"
 
 #: pynicotine/gtkgui/mainwindow.py:226
 msgid "Search log…"
@@ -2598,19 +2597,16 @@ msgid "Chat"
 msgstr "Chat"
 
 #: pynicotine/gtkgui/mainwindow.py:1138
-#, fuzzy
 msgid "[Debug] [SLOW] Connections"
-msgstr "[Debug] Verbindingen"
+msgstr "[Debug] [LANGZAME] Verbindingen"
 
 #: pynicotine/gtkgui/mainwindow.py:1139
-#, fuzzy
 msgid "[Debug] [SLOW] Messages"
-msgstr "[Debug] Berichten"
+msgstr "[Debug] [LANGZAME] Berichten"
 
 #: pynicotine/gtkgui/mainwindow.py:1140
-#, fuzzy
 msgid "[Debug] [SLOW] Transfers"
-msgstr "[Debug] Overdrachten"
+msgstr "[Debug] [LANGZAME] Overdrachten"
 
 #: pynicotine/gtkgui/mainwindow.py:1141
 msgid "[Debug] Miscellaneous"
@@ -6872,21 +6868,16 @@ msgid "Notifications"
 msgstr "Meldingen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:217
-#, fuzzy
 msgid "Enable sound for popup notifications"
-msgstr "Geluid inschakelen voor meldingen"
+msgstr "Geluid inschakelen voor pop-up-meldingen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:241
-#, fuzzy
 msgid "Show window notification for private messages and mentions"
-msgstr ""
-"Meldingen voor privéchats en vermeldingen in de titel van het venster "
-"weergeven"
+msgstr "Toon venstermelding voor privéberichten en vermeldingen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:273
-#, fuzzy
 msgid "Show popup notifications for:"
-msgstr "Meldingen weergeven voor:"
+msgstr "Toon pop-up-meldingen voor:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:300
 msgid "Finished file downloads"
