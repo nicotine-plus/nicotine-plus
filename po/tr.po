@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-11 18:51+0200\n"
-"PO-Revision-Date: 2026-01-12 17:01+0000\n"
+"PO-Revision-Date: 2026-01-24 10:35+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15.2-dev\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -190,44 +190,44 @@ msgid "Buddy Status"
 msgstr "Arkadaş Durumu"
 
 #: pynicotine/chatrooms.py:361
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been added to private room %(room)s"
-msgstr "Özel bir odaya eklendiniz: %(room)s"
+msgstr "%(user)s kullanıcısı %(room)s özel odasına eklendi"
 
 #: pynicotine/chatrooms.py:380
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been removed from private room %(room)s"
-msgstr "Özel bir odaya eklendiniz: %(room)s"
+msgstr "%(user)s kullanıcısı %(room)s özel odasından kaldırıldı"
 
 #: pynicotine/chatrooms.py:397
-#, fuzzy, python-format
+#, python-format
 msgid "You have been added to private room %(room)s"
-msgstr "Özel bir odaya eklendiniz: %(room)s"
+msgstr "%(room)s özel odasına eklendiniz"
 
 #: pynicotine/chatrooms.py:412
-#, fuzzy, python-format
+#, python-format
 msgid "You have been removed from private room %(room)s"
-msgstr "Özel bir odaya eklendiniz: %(room)s"
+msgstr "%(room)s özel odasından kaldırıldınız"
 
 #: pynicotine/chatrooms.py:433
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been made an operator of room %(room)s"
-msgstr "Özel bir odaya eklendiniz: %(room)s"
+msgstr "%(user)s kullanıcısı, %(room)s odasının işleticisi yapıldı"
 
 #: pynicotine/chatrooms.py:452
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is no longer an operator of room %(room)s"
-msgstr "%(user)s, %(room)s odasında sizden bahsetti"
+msgstr "%(user)s kullanıcısı artık %(room)s odasının işleticisi değil"
 
 #: pynicotine/chatrooms.py:468
-#, fuzzy, python-format
+#, python-format
 msgid "You have been made an operator of room %(room)s"
-msgstr "Özel bir odaya eklendiniz: %(room)s"
+msgstr "%(room)s odasının işleticisi yapıldınız"
 
 #: pynicotine/chatrooms.py:481
-#, fuzzy, python-format
+#, python-format
 msgid "You are no longer an operator of room %(room)s"
-msgstr "Özel bir odaya eklendiniz: %(room)s"
+msgstr "Artık %(room)s odasının işleticisi değilsiniz"
 
 #: pynicotine/chatrooms.py:556
 #, python-format
@@ -2541,9 +2541,8 @@ msgid "Similar Users"
 msgstr "Benzer Kullanıcılar"
 
 #: pynicotine/gtkgui/interests.py:290 pynicotine/gtkgui/interests.py:431
-#, fuzzy
 msgid "Popular Interests"
-msgstr "Kişisel İlgi Alanları"
+msgstr "Popüler İlgi Alanları"
 
 #: pynicotine/gtkgui/interests.py:293 pynicotine/gtkgui/interests.py:437
 #: pynicotine/gtkgui/ui/interests.ui:142
@@ -2551,14 +2550,14 @@ msgid "Recommendations"
 msgstr "Tavsiyeler"
 
 #: pynicotine/gtkgui/interests.py:434
-#, fuzzy, python-format
+#, python-format
 msgid "Recommendations for %(item)s"
-msgstr "Öge için _Tavsiyeler"
+msgstr "%(item)s için Tavsiyeler"
 
 #: pynicotine/gtkgui/interests.py:478
 #, python-format
 msgid "Users who like %(item)s"
-msgstr ""
+msgstr "%(item)s seven kullanıcılar"
 
 #: pynicotine/gtkgui/mainwindow.py:226
 msgid "Search log…"
@@ -2610,19 +2609,16 @@ msgid "Chat"
 msgstr "Sohbet"
 
 #: pynicotine/gtkgui/mainwindow.py:1138
-#, fuzzy
 msgid "[Debug] [SLOW] Connections"
-msgstr "[Hata ayıklama] Bağlantılar"
+msgstr "[Hata ayıklama] [YAVAŞ] Bağlantılar"
 
 #: pynicotine/gtkgui/mainwindow.py:1139
-#, fuzzy
 msgid "[Debug] [SLOW] Messages"
-msgstr "[Hata ayıklama] Mesajlar"
+msgstr "[Hata ayıklama] [YAVAŞ] Mesajlar"
 
 #: pynicotine/gtkgui/mainwindow.py:1140
-#, fuzzy
 msgid "[Debug] [SLOW] Transfers"
-msgstr "[Hata ayıklama] Aktarımlar"
+msgstr "[Hata ayıklama] [YAVAŞ] Aktarımlar"
 
 #: pynicotine/gtkgui/mainwindow.py:1141
 msgid "[Debug] Miscellaneous"
@@ -6886,19 +6882,16 @@ msgid "Notifications"
 msgstr "Bildirimler"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:217
-#, fuzzy
 msgid "Enable sound for popup notifications"
-msgstr "Bildirimler için sesi etkinleştir"
+msgstr "Açılır bildirimler için sesi etkinleştir"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:241
-#, fuzzy
 msgid "Show window notification for private messages and mentions"
-msgstr "Pencere başlığında özel sohbetler ve bahsetmeler için bildirim göster"
+msgstr "Özel mesajlar ve bahsetmeler için pencere bildirimi göster"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:273
-#, fuzzy
 msgid "Show popup notifications for:"
-msgstr "Şunlar için bildirimleri göster:"
+msgstr "Şunlar için açılır bildirimler göster:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:300
 msgid "Finished file downloads"
