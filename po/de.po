@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-11 18:51+0200\n"
-"PO-Revision-Date: 2026-01-12 17:01+0000\n"
-"Last-Translator: Felix Hansen <gore-snagged-happy@duck.com>\n"
+"PO-Revision-Date: 2026-01-24 15:06+0000\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15.2-dev\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -189,44 +189,44 @@ msgid "Buddy Status"
 msgstr "Freunde Status"
 
 #: pynicotine/chatrooms.py:361
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been added to private room %(room)s"
-msgstr "Du wurdest einem privaten Raum hinzugefügt: %(room)s"
+msgstr "Benutzer %(user)s wurde dem privaten Raum %(room)s hinzugefügt"
 
 #: pynicotine/chatrooms.py:380
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been removed from private room %(room)s"
-msgstr "Du wurdest einem privaten Raum hinzugefügt: %(room)s"
+msgstr "Nutzer %(user)s wurde aus dem privaten Raum %(room)s entfernt"
 
 #: pynicotine/chatrooms.py:397
-#, fuzzy, python-format
+#, python-format
 msgid "You have been added to private room %(room)s"
-msgstr "Du wurdest einem privaten Raum hinzugefügt: %(room)s"
+msgstr "Du wurdest dem privaten Raum %(room)s hinzugefügt"
 
 #: pynicotine/chatrooms.py:412
-#, fuzzy, python-format
+#, python-format
 msgid "You have been removed from private room %(room)s"
-msgstr "Du wurdest einem privaten Raum hinzugefügt: %(room)s"
+msgstr "Du wurdest aus dem privaten Raum %(room)s entfernt"
 
 #: pynicotine/chatrooms.py:433
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been made an operator of room %(room)s"
-msgstr "Du wurdest einem privaten Raum hinzugefügt: %(room)s"
+msgstr "Nutzer %(user)s wurde Raumbetreiber %(room)s gemacht"
 
 #: pynicotine/chatrooms.py:452
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is no longer an operator of room %(room)s"
-msgstr "%(user)s hat dich im Raum %(room)s erwähnt"
+msgstr "Nutzer %(user)s ist nicht mehr ein Raumbetreiber %(room)s"
 
 #: pynicotine/chatrooms.py:468
-#, fuzzy, python-format
+#, python-format
 msgid "You have been made an operator of room %(room)s"
-msgstr "Du wurdest einem privaten Raum hinzugefügt: %(room)s"
+msgstr "Du wurdest Betreiber des Raums %(room)s"
 
 #: pynicotine/chatrooms.py:481
-#, fuzzy, python-format
+#, python-format
 msgid "You are no longer an operator of room %(room)s"
-msgstr "Du wurdest einem privaten Raum hinzugefügt: %(room)s"
+msgstr "Du bist nicht mehr der Betreiber des Raums %(room)s"
 
 #: pynicotine/chatrooms.py:556
 #, python-format
@@ -2549,9 +2549,8 @@ msgid "Similar Users"
 msgstr "Ähnliche Benutzer"
 
 #: pynicotine/gtkgui/interests.py:290 pynicotine/gtkgui/interests.py:431
-#, fuzzy
 msgid "Popular Interests"
-msgstr "Persönliche Interessen"
+msgstr "Beliebte Interessen"
 
 #: pynicotine/gtkgui/interests.py:293 pynicotine/gtkgui/interests.py:437
 #: pynicotine/gtkgui/ui/interests.ui:142
@@ -2559,14 +2558,14 @@ msgid "Recommendations"
 msgstr "Empfehlungen"
 
 #: pynicotine/gtkgui/interests.py:434
-#, fuzzy, python-format
+#, python-format
 msgid "Recommendations for %(item)s"
-msgstr "_Empfehlungen für Element"
+msgstr "Empfehlungen für %(item)s"
 
 #: pynicotine/gtkgui/interests.py:478
 #, python-format
 msgid "Users who like %(item)s"
-msgstr ""
+msgstr "Nutzer, die %(item)s mögen"
 
 #: pynicotine/gtkgui/mainwindow.py:226
 msgid "Search log…"
@@ -2617,19 +2616,16 @@ msgid "Chat"
 msgstr "Chat"
 
 #: pynicotine/gtkgui/mainwindow.py:1138
-#, fuzzy
 msgid "[Debug] [SLOW] Connections"
-msgstr "[Debug] Verbindungen"
+msgstr "[Debug] [LANGSAME] Verbindungen"
 
 #: pynicotine/gtkgui/mainwindow.py:1139
-#, fuzzy
 msgid "[Debug] [SLOW] Messages"
-msgstr "[Debug] Meldungen"
+msgstr "[Debug] [LANGSAME] Nachrichten"
 
 #: pynicotine/gtkgui/mainwindow.py:1140
-#, fuzzy
 msgid "[Debug] [SLOW] Transfers"
-msgstr "[Debug] Übertragungen"
+msgstr "[Debug] [LANGSAME] Dateiübertragungen"
 
 #: pynicotine/gtkgui/mainwindow.py:1141
 msgid "[Debug] Miscellaneous"
@@ -6941,20 +6937,17 @@ msgid "Notifications"
 msgstr "Benachrichtigungen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:217
-#, fuzzy
 msgid "Enable sound for popup notifications"
-msgstr "Aktiviere Ton für Benachrichtigungen"
+msgstr "Ton für Pop-up-Benachrichtigungen aktivieren"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:241
-#, fuzzy
 msgid "Show window notification for private messages and mentions"
 msgstr ""
-"Benachrichtigungen für private Chats und Erwähnungen im Fenstertitel anzeigen"
+"Fensterbenachrichtigung für private Nachrichten und Erwähnungen anzeigen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:273
-#, fuzzy
 msgid "Show popup notifications for:"
-msgstr "Benachrichtigungen anzeigen für:"
+msgstr "Pop-up-Benachrichtigungen anzeigen für:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:300
 msgid "Finished file downloads"
