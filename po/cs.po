@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-11 18:51+0200\n"
-"PO-Revision-Date: 2026-01-17 16:01+0000\n"
+"PO-Revision-Date: 2026-01-27 18:29+0000\n"
 "Last-Translator: slrslr <adm@prnet.info>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Weblate 5.15.2\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -188,44 +188,44 @@ msgid "Buddy Status"
 msgstr "Stav kamaráda"
 
 #: pynicotine/chatrooms.py:361
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been added to private room %(room)s"
-msgstr "Byli jste přidáni do soukromé místnosti: %(room)s"
+msgstr "Uživatel %(user)s byl přidán do soukromé místnosti %(room)s"
 
 #: pynicotine/chatrooms.py:380
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been removed from private room %(room)s"
-msgstr "Byli jste přidáni do soukromé místnosti: %(room)s"
+msgstr "Uživatel %(user)s byl odebrán ze soukromé místnosti %(room)s"
 
 #: pynicotine/chatrooms.py:397
-#, fuzzy, python-format
+#, python-format
 msgid "You have been added to private room %(room)s"
-msgstr "Byli jste přidáni do soukromé místnosti: %(room)s"
+msgstr "Byli jste přidáni do soukromé místnosti %(room)s"
 
 #: pynicotine/chatrooms.py:412
-#, fuzzy, python-format
+#, python-format
 msgid "You have been removed from private room %(room)s"
-msgstr "Byli jste přidáni do soukromé místnosti: %(room)s"
+msgstr "Byli jste odebráni ze soukromé místnosti %(room)s"
 
 #: pynicotine/chatrooms.py:433
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been made an operator of room %(room)s"
-msgstr "Byli jste přidáni do soukromé místnosti: %(room)s"
+msgstr "Uživatel %(user)s byl nastaven jako operátor místnosti %(room)s"
 
 #: pynicotine/chatrooms.py:452
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is no longer an operator of room %(room)s"
-msgstr "%(user)s se o vás zmínil v místnosti %(room)s"
+msgstr "Uživatel %(user)s již není operátorem místnosti %(room)s"
 
 #: pynicotine/chatrooms.py:468
-#, fuzzy, python-format
+#, python-format
 msgid "You have been made an operator of room %(room)s"
-msgstr "Byli jste přidáni do soukromé místnosti: %(room)s"
+msgstr "Byli jste nastaveni jako operátor místnosti %(room)s"
 
 #: pynicotine/chatrooms.py:481
-#, fuzzy, python-format
+#, python-format
 msgid "You are no longer an operator of room %(room)s"
-msgstr "Byli jste přidáni do soukromé místnosti: %(room)s"
+msgstr "Již nejste operátorem místnosti %(room)s"
 
 #: pynicotine/chatrooms.py:556
 #, python-format
@@ -2537,9 +2537,8 @@ msgid "Similar Users"
 msgstr "Podobní uživatelé"
 
 #: pynicotine/gtkgui/interests.py:290 pynicotine/gtkgui/interests.py:431
-#, fuzzy
 msgid "Popular Interests"
-msgstr "Osobní zájmy"
+msgstr "Populární zájmy"
 
 #: pynicotine/gtkgui/interests.py:293 pynicotine/gtkgui/interests.py:437
 #: pynicotine/gtkgui/ui/interests.ui:142
@@ -2547,14 +2546,14 @@ msgid "Recommendations"
 msgstr "Doporučení"
 
 #: pynicotine/gtkgui/interests.py:434
-#, fuzzy, python-format
+#, python-format
 msgid "Recommendations for %(item)s"
-msgstr "_Doporučení položky"
+msgstr "Doporučení pro %(item)s"
 
 #: pynicotine/gtkgui/interests.py:478
 #, python-format
 msgid "Users who like %(item)s"
-msgstr ""
+msgstr "Uživatelé, kteří mají rádi %(item)s"
 
 #: pynicotine/gtkgui/mainwindow.py:226
 msgid "Search log…"
@@ -2605,19 +2604,16 @@ msgid "Chat"
 msgstr "Chat"
 
 #: pynicotine/gtkgui/mainwindow.py:1138
-#, fuzzy
 msgid "[Debug] [SLOW] Connections"
-msgstr "[Ladění] Připojení"
+msgstr "[Ladění] [POMALÝCH] připojení"
 
 #: pynicotine/gtkgui/mainwindow.py:1139
-#, fuzzy
 msgid "[Debug] [SLOW] Messages"
-msgstr "[Ladění] Zprávy"
+msgstr "[Ladění] [POMALÝCH] zpráv"
 
 #: pynicotine/gtkgui/mainwindow.py:1140
-#, fuzzy
 msgid "[Debug] [SLOW] Transfers"
-msgstr "[Debug] Přenosy"
+msgstr "[Ladění] [POMALÝCH] přenosů"
 
 #: pynicotine/gtkgui/mainwindow.py:1141
 msgid "[Debug] Miscellaneous"
@@ -6270,7 +6266,7 @@ msgstr "Kód země, např. US CZ nebo !DE !GB"
 
 #: pynicotine/gtkgui/ui/search.ui:222
 msgid "Store Wishlist Filters"
-msgstr "Ochovávat filtry seznamu přání"
+msgstr "Uchovávat filtry seznamu přání"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:33
 msgid ""
@@ -6877,19 +6873,16 @@ msgid "Notifications"
 msgstr "Oznámení"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:217
-#, fuzzy
 msgid "Enable sound for popup notifications"
-msgstr "Povolení zvuku oznámení"
+msgstr "Zapnout zvuk vyskakovacích oznámení"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:241
-#, fuzzy
 msgid "Show window notification for private messages and mentions"
-msgstr "Zobrazit oznámení soukromých chatů a zmínek v titulku okna"
+msgstr "Zobrazovat okna upozorňující na nové soukromé zprávy a zmínky"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:273
-#, fuzzy
 msgid "Show popup notifications for:"
-msgstr "Zobrazit oznámení pro:"
+msgstr "Zobrazit vyskakovací oznámení pro:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:300
 msgid "Finished file downloads"
