@@ -227,8 +227,14 @@ class Transfers:
         Accelerator("<Primary>s", self.tree_view.widget, self.on_retry_transfers_accelerator)
         Accelerator("<Alt>Return", self.tree_view.widget, self.on_file_properties_accelerator)
 
+        self.expanding = False
+        self.expand_mode = config.sections["transfers"][f"expand_{transfer_type}s"]
+        self.expand_button.set_active(self.expand_mode != "none")
+        self.expand_button.connect("toggled", self.on_toggle_expand_all)
+        self.update_expand_state()
+
         menu = create_grouping_menu(
-            window, config.sections["transfers"][f"group{transfer_type}s"], self.on_toggle_tree)
+            window, config.sections["transfers"][f"group{transfer_type}s"], self.on_toggle_grouping)
         self.grouping_button.set_menu_model(menu)
 
         if GTK_API_VERSION >= 4:
@@ -239,9 +245,6 @@ class Transfers:
             if os.environ.get("GDK_BACKEND") == "broadway":
                 popover = list(self.grouping_button)[-1]
                 popover.set_has_arrow(False)
-
-        self.expand_button.connect("toggled", self.on_expand_tree)
-        self.expand_button.set_active(config.sections["transfers"][f"{transfer_type}sexpanded"])
 
         self.popup_menu_users = UserPopupMenu(window.application, tab_name="transfers")
         self.popup_menu_clear = PopupMenu(window.application)
@@ -450,7 +453,7 @@ class Transfers:
             self.tree_view.unfreeze()
 
         if not self.initialized:
-            self.on_expand_tree()
+            self.update_expand_state()
             self.initialized = True
 
         self.tree_view.redraw()
@@ -770,7 +773,7 @@ class Transfers:
                 )
 
                 if expand_allowed:
-                    expand_user = self.grouping_mode == "folder_grouping" or self.expand_button.get_active()
+                    expand_user = self.grouping_mode == "folder_grouping" or self.expand_mode != "none"
 
                 self.row_id += 1
                 self.users[user] = (iterator, [])
@@ -817,7 +820,7 @@ class Transfers:
                         ], select_row=False, parent_iterator=user_iterator
                     )
                     user_child_transfers.append(path_transfer)
-                    expand_folder = expand_allowed and self.expand_button.get_active()
+                    expand_folder = expand_allowed and self.expand_mode == "all"
                     self.row_id += 1
                     self.paths[user_folder_path] = (iterator, [])
 
@@ -1021,33 +1024,61 @@ class Transfers:
         self.popup_menu_users.setup_user_menu(user)
         self.add_popup_menu_user(self.popup_menu_users, user)
 
-    def on_expand_tree(self, *_args):
+    def update_expand_state(self):
 
         if not self.expand_button.get_visible():
             return
 
-        expanded = self.expand_button.get_active()
+        self.expanding = True
 
-        if expanded:
+        if self.expand_mode == "all":
             icon_name = "view-restore-symbolic"
             tooltip_text = _("Collapse All")
+
+            self.expand_button.set_active(True)
             self.tree_view.expand_all_rows()
+
+        elif self.expand_mode == "partial" and self.grouping_mode == "folder_grouping":
+            icon_name = "view-fullscreen-symbolic"
+            tooltip_text = _("Expand All")
+
+            self.expand_button.set_active(True)
+            self.tree_view.collapse_all_rows()
+            self.tree_view.expand_root_rows()
+
         else:
             icon_name = "view-fullscreen-symbolic"
             tooltip_text = _("Expand All")
-            self.tree_view.collapse_all_rows()
 
-            if self.grouping_mode == "folder_grouping":
-                self.tree_view.expand_root_rows()
+            self.expand_button.set_active(False)
+            self.tree_view.collapse_all_rows()
 
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
         self.expand_icon.set_from_icon_name(icon_name, *icon_args)
         self.expand_button.set_tooltip_text(tooltip_text)
 
-        config.sections["transfers"][f"{self.type}sexpanded"] = expanded
+        self.expanding = False
+
+    def on_toggle_expand_all(self, *_args):
+
+        if self.expanding or not self.expand_button.get_visible():
+            return
+
+        if self.expand_mode == "none":
+            self.expand_mode = "all" if self.grouping_mode == "user_grouping" else "partial"
+
+        elif self.expand_mode == "partial":
+            self.expand_mode = "all"
+
+        elif self.expand_mode == "all":
+            self.expand_mode = "none"
+
+        self.update_expand_state()
+
+        config.sections["transfers"][f"expand_{self.type}s"] = self.expand_mode
         config.write_configuration()
 
-    def on_toggle_tree(self, action, state):
+    def on_toggle_grouping(self, action, state):
 
         mode = state.get_string()
         active = mode != "ungrouped"
