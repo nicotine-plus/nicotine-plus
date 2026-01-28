@@ -115,6 +115,14 @@ class PeerConnection(Connection):
         self.has_post_init_activity = False
 
 
+class UserAddress:
+    __slots__ = ("addr", "last_update")
+
+    def __init__(self, addr):
+        self.addr = addr
+        self.last_update = time.monotonic()
+
+
 class NetworkInterfaces:
 
     IP_BIND_ADDRESS_NO_PORT = SO_BINDTODEVICE = None
@@ -322,6 +330,7 @@ class NetworkThread(Thread):
     INDIRECT_REQUEST_TIMEOUT = 20
     CONNECTION_MAX_IDLE = 60
     CONNECTION_MAX_IDLE_GHOST = 10
+    USER_ADDRESS_TTL = 1800                      # 30 minutes
     CONNECTION_BACKLOG_LENGTH = 65535            # OS limit can be lower
     MAX_INCOMING_MESSAGE_SIZE_LARGE = 469762048  # 448 MiB, to leave headroom for large shares
     MAX_INCOMING_MESSAGE_SIZE_SMALL = 16384      # 16 KiB
@@ -743,17 +752,26 @@ class NetworkThread(Thread):
             init_user=self._server_username, target_user=username, conn_type=conn_type,
             indirect_token=indirect_token
         )
-        user_address = self._user_addresses.get(username)
+        addr = None
 
         if in_address is not None:
-            user_address = in_address
+            addr = in_address
 
-        elif user_address is not None:
-            _ip_address, port = user_address
+        elif username in self._user_addresses:
+            user_address = self._user_addresses[username]
+            addr = user_address.addr
+            _ip_address, port = addr
 
             if not port:
-                # Port 0 means the user is likely bugged, ask the server for a new address
-                user_address = None
+                # Port 0 likely means the server hasn't received the user's port yet.
+                # Ask the server for a new address.
+                addr = None
+
+            elif (time.monotonic() - user_address.last_update) > self.USER_ADDRESS_TTL:
+                # Certain clients may prefer sending a listening port update to the server without
+                # reconnecting. Make sure we request the user's port again every now and then.
+                log.add_conn("User %s's address expired, requesting new one", username)
+                addr = None
 
         if msg is not None:
             init.outgoing_msgs.append(msg)
@@ -763,13 +781,13 @@ class NetworkThread(Thread):
 
         log.add_conn("Requesting indirect connection to user %s with token %s", (username, indirect_token))
 
-        if user_address is None:
+        if addr is None:
             self._pending_init_msgs[username].append(init)
             self._send_message_to_server(GetPeerAddress(username))
 
             log.add_conn("Requesting address for user %s", username)
         else:
-            self._connect_to_peer(username, user_address, init)
+            self._connect_to_peer(username, addr, init)
 
     def _connect_to_peer(self, username, addr, init, pierce_token=None):
         """Initiate a connection with a peer."""
@@ -1196,7 +1214,7 @@ class NetworkThread(Thread):
         )
 
         login, password = conn.login
-        self._user_addresses[login] = (self._local_ip_address, self._listen_port)
+        self._user_addresses[login] = UserAddress((self._local_ip_address, self._listen_port))
         conn.login = True
 
         self._server_address = conn.addr
@@ -1242,7 +1260,8 @@ class NetworkThread(Thread):
         elif msg_class is Login:
             if msg.success:
                 # Ensure listening port is open
-                msg.local_address = self._user_addresses[self._server_username]
+                user_address = self._user_addresses[self._server_username]
+                msg.local_address = user_address.addr
                 local_ip_address, port = msg.local_address
 
                 if self._portmapper is not None:
@@ -1311,7 +1330,7 @@ class NetworkThread(Thread):
                 if user_offline or not msg.port:
                     addr = None
 
-                self._user_addresses[username] = addr
+                self._user_addresses[username] = UserAddress(addr)
 
         elif msg_class in (WatchUser, GetUserStats):
             if msg.user == self._server_username:
