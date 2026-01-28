@@ -235,7 +235,6 @@ class MainWindow(Window):
             ("server-login", self.update_user_status),
             ("server-disconnect", self.update_user_status),
             ("set-connection-stats", self.set_connection_stats),
-            ("shares-preparing", self.shares_preparing),
             ("shares-ready", self.shares_ready),
             ("shares-scanning", self.shares_scanning),
             ("user-status", self.user_status)
@@ -1221,32 +1220,22 @@ class MainWindow(Window):
         if self.connections_label.get_text() != total_conns_text:
             self.connections_label.set_text(total_conns_text)
 
-    def shares_preparing(self):
+    def shares_scanning(self, progress=None):
 
-        label = _("Preparing Shares")
-
-        # Hide widget to keep tooltips for other widgets visible
-        self.scan_progress_container.set_visible(False)
-        self.scan_progress_container.set_tooltip_text(label)
-        self.scan_progress_label.set_label(label)
-        self.scan_progress_container.set_visible(True)
-        self.scan_progress_spinner.start()
-
-    def shares_scanning(self, folder_count=None):
-
-        if folder_count is not None:
-            self.scan_progress_label.set_label(
-                _("Scanned Folders: %s") % humanize(folder_count))
+        if progress is None:
+            # Hide widget to keep tooltips for other widgets visible
+            self.scan_progress_container.set_visible(False)
+            self.scan_progress_container.set_tooltip_text("")
+            self.scan_progress_label.set_label(_("Preparing Shares"))
+            self.scan_progress_container.set_visible(True)
+            self.scan_progress_spinner.start()
             return
 
-        label = _("Scanning Shares")
+        self.scan_progress_label.set_label(
+            _("Scanned Folders: %s") % humanize(progress["num_folders"]))
 
-        # Hide widget to keep tooltips for other widgets visible
-        self.scan_progress_container.set_visible(False)
-        self.scan_progress_container.set_tooltip_text(label)
-        self.scan_progress_label.set_label(label)
-        self.scan_progress_container.set_visible(True)
-        self.scan_progress_spinner.start()
+        if progress["sleeping"]:
+            self.scan_progress_container.set_tooltip_text(progress["path"])
 
     def shares_ready(self, _successful):
         self.scan_progress_container.set_visible(False)
