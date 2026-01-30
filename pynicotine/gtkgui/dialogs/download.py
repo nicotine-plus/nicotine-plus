@@ -709,7 +709,7 @@ class Download(Dialog):
             )
             self.tree_view.set_row_value(parent_iterator, "selected", True)
 
-        self.unselect_all_button.set_visible(False)
+        self.unselect_all_button.set_visible(self.num_selected_files == self.num_files)
         self.update_title()
 
     def on_expand_tree(self, *_args):
