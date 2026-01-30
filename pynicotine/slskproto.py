@@ -759,19 +759,21 @@ class NetworkThread(Thread):
 
         elif username in self._user_addresses:
             user_address = self._user_addresses[username]
-            addr = user_address.addr
-            _ip_address, port = addr
 
-            if not port:
-                # Port 0 likely means the server hasn't received the user's port yet.
-                # Ask the server for a new address.
-                addr = None
+            if user_address is not None:
+                addr = user_address.addr
+                _ip_address, port = addr
 
-            elif (time.monotonic() - user_address.last_update) > self.USER_ADDRESS_TTL:
-                # Certain clients may prefer sending a listening port update to the server without
-                # reconnecting. Make sure we request the user's port again every now and then.
-                log.add_conn("User %s's address expired, requesting new one", username)
-                addr = None
+                if not port:
+                    # Port 0 likely means the server hasn't received the user's port yet.
+                    # Ask the server for a new address.
+                    addr = None
+
+                elif (time.monotonic() - user_address.last_update) > self.USER_ADDRESS_TTL:
+                    # Certain clients may prefer sending a listening port update to the server without
+                    # reconnecting. Make sure we request the user's port again every now and then.
+                    log.add_conn("User %s's address expired, requesting new one", username)
+                    addr = None
 
         if msg is not None:
             init.outgoing_msgs.append(msg)
