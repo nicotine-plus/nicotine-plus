@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-11 18:51+0200\n"
-"PO-Revision-Date: 2025-10-26 17:02+0000\n"
-"Last-Translator: Aniol <aneolus@gmail.com>\n"
+"PO-Revision-Date: 2026-01-30 00:01+0000\n"
+"Last-Translator: HUMET <ressaguer@proton.me>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ca/>\n"
 "Language: ca\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.1-dev\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -190,14 +190,14 @@ msgid "Buddy Status"
 msgstr "Estat de l'amistat"
 
 #: pynicotine/chatrooms.py:361
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been added to private room %(room)s"
-msgstr "T'han afegit a una sala privada: %(room)s"
+msgstr "S'ha afegit l'usuari %(user)s a la sala privada %(room)s"
 
 #: pynicotine/chatrooms.py:380
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been removed from private room %(room)s"
-msgstr "T'han afegit a una sala privada: %(room)s"
+msgstr "S'ha eliminat l'usuari %(user)s de la sala privada %(room)s"
 
 #: pynicotine/chatrooms.py:397
 #, fuzzy, python-format
@@ -210,9 +210,9 @@ msgid "You have been removed from private room %(room)s"
 msgstr "T'han afegit a una sala privada: %(room)s"
 
 #: pynicotine/chatrooms.py:433
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been made an operator of room %(room)s"
-msgstr "T'han afegit a una sala privada: %(room)s"
+msgstr "L'usuari %(user)s ara és operador de la sala %(room)s"
 
 #: pynicotine/chatrooms.py:452
 #, fuzzy, python-format
@@ -804,9 +804,9 @@ msgid "Clear Message View"
 msgstr "Netejar la visualització de missatges"
 
 #: pynicotine/gtkgui/chatrooms.py:845 pynicotine/gtkgui/chatrooms.py:850
-#, fuzzy, python-format
+#, python-format
 msgid "%(username)s (%(role)s)"
-msgstr "%(username)s (%(status)s)"
+msgstr "%(username)s (%(role)s)"
 
 #: pynicotine/gtkgui/chatrooms.py:845 pynicotine/gtkgui/dialogs/roomlist.py:266
 #, fuzzy
@@ -1037,9 +1037,8 @@ msgid "Folder / File"
 msgstr "Carpeta"
 
 #: pynicotine/gtkgui/dialogs/download.py:98
-#, fuzzy
 msgid "Incomplete"
-msgstr "Descàrregues incompletes:"
+msgstr "Incomplet"
 
 #: pynicotine/gtkgui/dialogs/download.py:105 pynicotine/gtkgui/search.py:580
 #: pynicotine/gtkgui/transfers.py:181 pynicotine/gtkgui/userbrowse.py:333
@@ -2328,9 +2327,8 @@ msgid "Previous Match"
 msgstr "Trobar la coincidència anterior"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:77
-#, fuzzy
 msgid "Transfer To"
-msgstr "Tipus de lletra de transferència:"
+msgstr "Transfereix a"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:79
 msgid "Save List to Disk"
@@ -2835,7 +2833,7 @@ msgstr "Desitjos"
 #: pynicotine/gtkgui/search.py:535
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:283
 msgid "In Queue"
-msgstr "En cua"
+msgstr "A la cua"
 
 #: pynicotine/gtkgui/search.py:542 pynicotine/gtkgui/widgets/theme.py:251
 #, fuzzy
@@ -3043,7 +3041,7 @@ msgstr "Error de lectura de fitxer"
 
 #: pynicotine/gtkgui/transfers.py:169
 msgid "Queue"
-msgstr "En cua"
+msgstr "Cua"
 
 #: pynicotine/gtkgui/transfers.py:175
 msgid "Percent"
@@ -5409,9 +5407,9 @@ msgstr ""
 "descàrregues es posaran a la cua abans que les dels usuaris sense privilegis."
 
 #: pynicotine/users.py:438
-#, fuzzy, python-format
+#, python-format
 msgid "%(duration)s of Soulseek privileges left"
-msgstr "Aconsegueix els privilegis de Soulseek…"
+msgstr "Resten %(duration)s de privilegis de Soulseek"
 
 #: pynicotine/users.py:450
 msgid "Your password has been changed"
@@ -5558,9 +5556,8 @@ msgid "Default"
 msgstr "Per defecte"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:76
-#, fuzzy
 msgid "Download location:"
-msgstr "Descarregar / Pujar a"
+msgstr "Ubicació de la descàrrega:"
 
 #: pynicotine/gtkgui/ui/dialogs/download.ui:139
 #, fuzzy
@@ -6681,9 +6678,8 @@ msgid "_Log In As"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/network.ui:132
-#, fuzzy
 msgid "Account Password:"
-msgstr "Contrasenya: "
+msgstr "Contrasenya del compte:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:164
 #, fuzzy
@@ -6903,9 +6899,8 @@ msgid "Add"
 msgstr "Afegir"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:381
-#, fuzzy
 msgid "Rescan shares:"
-msgstr "Torna a escanejar els fitxers compartits"
+msgstr "Torna a escanejar els fitxers compartits:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:395
 msgid "On startup"
