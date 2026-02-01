@@ -81,6 +81,8 @@ class Users:
         config.sections["server"]["passw"] = password
         config.write_configuration()
 
+        log.add_conn("Configured new log in as user %s", username)
+
         if self.login_status != UserStatus.OFFLINE:
             core.reconnect()
             return
