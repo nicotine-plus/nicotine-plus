@@ -281,10 +281,9 @@ class FastConfigure(Dialog):
 
         # account_page
         if self.invalid_password or self.invalid_username or config.need_config():
-            config.sections["server"]["login"] = self.username_entry.get_text()
-            config.sections["server"]["passw"] = self.password_entry.get_text()
+            core.users.log_in_as(self.username_entry.get_text(), self.password_entry.get_text())
 
-        if core.users.login_status == UserStatus.OFFLINE:
+        elif core.users.login_status == UserStatus.OFFLINE:
             core.connect()
 
         self.close()
