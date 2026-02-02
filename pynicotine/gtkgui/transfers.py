@@ -213,7 +213,7 @@ class Transfers:
                 "time_elapsed_data": {"data_type": GObject.TYPE_INT},
                 "time_left_data": {"data_type": GObject.TYPE_UINT64},
                 "is_sensitive_data": {"data_type": GObject.TYPE_BOOLEAN},
-                "username_underline_data": {"data_type": Pango.Weight},
+                "username_underline_data": {"data_type": Pango.Underline},
                 "transfer_data": {"data_type": GObject.TYPE_PYOBJECT},
                 "id_data": {
                     "data_type": GObject.TYPE_INT,
