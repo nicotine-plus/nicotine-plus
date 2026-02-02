@@ -1113,7 +1113,9 @@ class Transfers:
 
         num_files = len(self.selected_transfers)
         menu.set_num_selected_files(num_files)
-        menu.update_item_label("open_file", _("_Open File") if num_files == 1 else _("_Open Files"))
+
+        if not self.window.application.isolated_mode:
+            menu.update_item_label("open_file", _("_Open File") if num_files == 1 else _("_Open Files"))
 
         self.populate_popup_menu_users()
 
