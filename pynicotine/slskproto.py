@@ -1330,9 +1330,9 @@ class NetworkThread(Thread):
             # We already store a local IP address for our username
             if username != self._server_username and username in self._user_addresses:
                 if user_offline or not msg.port:
-                    addr = None
-
-                self._user_addresses[username] = UserAddress(addr)
+                    self._user_addresses[username] = None
+                else:
+                    self._user_addresses[username] = UserAddress(addr)
 
         elif msg_class in (WatchUser, GetUserStats):
             if msg.user == self._server_username:
