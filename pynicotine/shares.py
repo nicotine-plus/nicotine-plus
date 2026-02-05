@@ -223,6 +223,13 @@ class ScannerState:
     INITIALIZED = "initialized"
     RESCANNING = "rescanning"
     FAILURE = "failure"
+    SUCCESS = "success"
+
+
+class ScannerProgress(dict):
+    # TODO: Use a more efficient data class with __slots__ or a DefaultDict to
+    # track the current scanner state and display better progress information
+    pass
 
 
 class ScannerLogMessage:
@@ -292,10 +299,10 @@ class Scanner:
                     # Failed to load shares or version is invalid, rebuild
                     self.rescan = self.rebuild = True
 
-                self.writer.send(ScannerState.INITIALIZED)
+                self.writer.send(ScannerProgress(state=ScannerState.INITIALIZED))
 
             if self.rescan:
-                self.writer.send(ScannerState.RESCANNING)
+                self.writer.send(ScannerProgress(state=ScannerState.RESCANNING))
                 self.writer.send(
                     ScannerLogMessage(_("Rebuilding shares…") if self.rebuild else _("Rescanning shares…"))
                 )
@@ -329,6 +336,7 @@ class Scanner:
                         {"num": humanize(self.current_folder_count)}
                     )
                 )
+                self.writer.send(ScannerProgress(state=ScannerState.SUCCESS, num_folders=self.current_folder_count))
 
         except Exception:
             from traceback import format_exc
@@ -343,7 +351,7 @@ class Scanner:
                     }
                 )
             )
-            self.writer.send(ScannerState.FAILURE)
+            self.writer.send(ScannerProgress(state=ScannerState.FAILURE))
 
         finally:
             self.writer.close()
@@ -459,15 +467,19 @@ class Scanner:
                 destination = f"{permission_level}_{destination}"
 
             share_db = None
+            share_db_path = self.share_db_paths[destination]
+
+            self.writer.send(ScannerProgress(path=share_db_path))
 
             try:
-                share_db_path = self.share_db_paths[destination]
                 share_db = Shares.create_db_file(share_db_path)
                 share_db.update(source)
 
             finally:
                 if share_db is not None:
                     share_db.close()
+
+        self.writer.send(ScannerProgress(path=config.data_folder_path))
 
     def rescan_dirs(self, permission_level):
 
@@ -555,7 +567,14 @@ class Scanner:
             if self.folder_filter_regex and self.folder_filter_regex.search(f"\\{virtual_folder_path}\\") is not None:
                 continue
 
-            self.writer.send(self.current_folder_count)
+            self.writer.send(
+                ScannerProgress(
+                    num_folders=self.current_folder_count,
+                    path=virtual_folder_path,
+                    sleeping=0.0,
+                    update=True
+                )
+            )
 
             file_list = []
             has_filtered_files = False
@@ -1144,7 +1163,7 @@ class Shares:
         self.close_shares(self.share_dbs)
         self.file_path_index = ()
 
-        events.emit("shares-preparing")
+        events.emit("shares-scanning")
 
         share_groups = self.get_shared_folders()
         self._scanner_process, reader = self._build_scanner_process(share_groups, init, rescan, rebuild)
@@ -1212,32 +1231,34 @@ class Shares:
 
     def _process_scanner(self, reader, emit_event=None):
 
-        successful = True
-        current_folder_count = None
+        progress = ScannerProgress(update=False, state=None, sleeping=0.0, num_folders=0, path="")
 
-        while self._scanner_process.is_alive() and successful:
+        while self._scanner_process.is_alive():
             # Cooldown
             time.sleep(0.2)
+            progress["sleeping"] += 0.2
 
             while True:
                 try:
                     if not reader.poll():
                         break
-                except BrokenPipeError:
-                    break
 
-                try:
                     item = reader.recv()
-                except EOFError:
+
+                except (EOFError, BrokenPipeError):
                     break
 
-                if item == ScannerState.FAILURE:
-                    successful = False
-                    break
+                if isinstance(item, ScannerProgress):
+                    progress |= item
 
-                if isinstance(item, int):
-                    if emit_event is not None:
-                        current_folder_count = item
+                    if progress["state"] == ScannerState.RESCANNING:
+                        progress["update"] = (emit_event is not None)
+
+                    elif progress["state"] == ScannerState.INITIALIZED:
+                        self.initialized = True
+
+                    elif progress["state"] == ScannerState.FAILURE:
+                        break
 
                 elif isinstance(item, ScannerLogMessage):
                     log.add(item.msg, item.msg_args)
@@ -1248,25 +1269,35 @@ class Shares:
                 elif isinstance(item, SharedFileListResponse):
                     self.compressed_shares[item.permission_level] = item
 
-                elif item == ScannerState.RESCANNING:
-                    if emit_event is not None:
-                        emit_event("shares-scanning")
+            if progress["update"]:
+                emit_event("shares-scanning", progress)
+                progress["update"] = False
 
-                elif item == ScannerState.INITIALIZED:
-                    self.initialized = True
+            elif not progress["sleeping"] % 10:
+                if emit_event is not None:
+                    emit_event("shares-scanning", progress)
 
-            if current_folder_count:
-                emit_event("shares-scanning", current_folder_count)
-                current_folder_count = None
+                if progress["sleeping"] == 600:
+                    log.add(_("Error while scanning folder %(path)s: %(error)s"),
+                            {"path": progress["path"], "error": _("File read error")})
+
+                elif progress["sleeping"] >= 3600:
+                    progress["state"] = ScannerState.FAILURE
+
+            if progress["state"] == ScannerState.FAILURE:
+                log.add(_("Error while scanning folder %(path)s: %(error)s"),
+                        {"path": progress["path"], "error": _("Failed")})
+                # TODO: consider if necessary to call self._scanner_process.terminate()
+                break
 
         reader.close()
         self._scanner_process.close()
         self._scanner_process = None
 
         if emit_event is not None:
-            emit_event("shares-ready", successful)
+            emit_event("shares-ready", (progress["state"] == ScannerState.SUCCESS))
 
-        return successful
+        return (progress["state"] == ScannerState.SUCCESS)
 
     def _shares_ready(self, successful):
 
