@@ -9,7 +9,9 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.shares import PermissionLevel
-from pynicotine.slskmessages import CloseConnection
+from pynicotine.slskmessages import AddAllowedResponse
+from pynicotine.slskmessages import ConnectionType
+from pynicotine.slskmessages import RemoveAllowedResponse
 from pynicotine.slskmessages import UserInfoRequest
 from pynicotine.slskmessages import UserInfoResponse
 from pynicotine.slskmessages import UserInterests
@@ -26,11 +28,13 @@ class UserInfo:
         self.requested_info_times = {}
 
         for event_name, callback in (
+            ("peer-connection-closed", self._peer_connection_error),
+            ("peer-connection-error", self._peer_connection_error),
             ("quit", self._quit),
             ("server-login", self._server_login),
             ("server-disconnect", self._server_disconnect),
-            ("user-info-progress", self._user_info_progress),
-            ("user-info-request", self._user_info_request)
+            ("user-info-request", self._user_info_request),
+            ("user-info-response", self._user_info_response)
         ):
             events.connect(event_name, callback)
 
@@ -123,11 +127,13 @@ class UserInfo:
             events.emit("user-info-response", msg)
         else:
             # Request user description, picture and queue information
+            core.send_message_to_network_thread(AddAllowedResponse(UserInfoResponse, username))
             core.send_message_to_peer(username, UserInfoRequest())
 
     def remove_user(self, username):
 
         self.users.remove(username)
+        core.send_message_to_network_thread(RemoveAllowedResponse(UserInfoResponse, username))
         core.users.unwatch_user(username, context="userinfo")
         events.emit("user-info-remove-user", username)
 
@@ -150,12 +156,20 @@ class UserInfo:
                 "error": error
             })
 
-    def _user_info_progress(self, username, sock, _buffer_len, _msg_size_total):
+    def _peer_connection_error(self, username, conn_type, msgs, **_unused):
 
-        if username not in self.users:
-            # We've removed the user. Close the connection to stop the user from
-            # sending their response and wasting bandwidth.
-            core.send_message_to_network_thread(CloseConnection(sock))
+        if not msgs:
+            return
+
+        if conn_type != ConnectionType.PEER:
+            return
+
+        failed_msg_types = {UserInfoRequest, UserInfoResponse}
+
+        for msg in msgs:
+            if msg.__class__ in failed_msg_types:
+                core.send_message_to_network_thread(RemoveAllowedResponse(UserInfoResponse, username))
+                break
 
     def _user_info_request(self, msg):
         """Peer code 15."""
@@ -174,3 +188,6 @@ class UserInfo:
 
         log.add(_("User %(user)s is viewing your profile"), {"user": username})
         core.send_message_to_peer(username, msg)
+
+    def _user_info_response(self, msg):
+        core.send_message_to_network_thread(RemoveAllowedResponse(UserInfoResponse, msg.username))

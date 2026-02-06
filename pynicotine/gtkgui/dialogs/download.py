@@ -418,17 +418,24 @@ class Download(Dialog):
 
     def folder_contents_response(self, msg):
 
-        self.tree_view.freeze()
+        if msg.dir is None:
+            return
 
         username = msg.username
+
+        if username not in self.pending_folders:
+            return
+
+        if msg.dir not in self.pending_folders[username]:
+            return
+
+        self.tree_view.freeze()
+
         selected = True
         has_added_file = False
 
         for folder_path, files in msg.list.items():
-            if username not in self.pending_folders:
-                continue
-
-            if folder_path not in self.pending_folders[username]:
+            if folder_path != msg.dir:
                 continue
 
             parent_iterator, child_iterators = self.parent_iterators[username + folder_path]

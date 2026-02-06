@@ -19,12 +19,13 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.shares import PermissionLevel
+from pynicotine.slskmessages import AddAllowedResponse
 from pynicotine.slskmessages import FileSearch
 from pynicotine.slskmessages import FileSearchResponse
 from pynicotine.slskmessages import increment_token
 from pynicotine.slskmessages import initial_token
+from pynicotine.slskmessages import RemoveAllowedResponse
 from pynicotine.slskmessages import RoomSearch
-from pynicotine.slskmessages import SEARCH_TOKENS_ALLOWED
 from pynicotine.slskmessages import UserSearch
 from pynicotine.slskmessages import WishlistSearch
 from pynicotine.utils import TRANSLATE_PUNCTUATION
@@ -212,12 +213,12 @@ class Search:
     @staticmethod
     def add_allowed_token(token):
         """Allow parsing search result messages for a search ID."""
-        SEARCH_TOKENS_ALLOWED.add(token)
+        core.send_message_to_network_thread(AddAllowedResponse(FileSearchResponse, token))
 
     @staticmethod
     def remove_allowed_token(token):
         """Disallow parsing search result messages for a search ID."""
-        SEARCH_TOKENS_ALLOWED.discard(token)
+        core.send_message_to_network_thread(RemoveAllowedResponse(FileSearchResponse, token))
 
     def do_search(self, search_term, mode, room=None, users=None, switch_page=True):
 
@@ -605,7 +606,8 @@ class Search:
     def _file_search_response(self, msg):
         """Peer code 9."""
 
-        if msg.token not in SEARCH_TOKENS_ALLOWED:
+        if msg.list is None:
+            # Response was rejected
             msg.token = None
             return
 
