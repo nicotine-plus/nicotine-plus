@@ -658,8 +658,8 @@ class NetworkThread(Thread):
 
         return None
 
-    @staticmethod
-    def _unpack_embedded_message(msg):
+    @classmethod
+    def _unpack_embedded_message(cls, msg, sock=None, username=None):
         """This message embeds a distributed message.
 
         We unpack the distributed message and process it.
@@ -672,8 +672,14 @@ class NetworkThread(Thread):
             return None
 
         distrib_class = DISTRIBUTED_MESSAGE_CLASSES[msg_type]
-        unpacked_msg = distrib_class()
-        unpacked_msg.parse_network_message(memoryview(msg.distrib_message))
+        unpacked_msg = cls._unpack_network_message(
+            distrib_class,
+            memoryview(msg.distrib_message),
+            len(msg.distrib_message),
+            conn_type="distrib",
+            sock=sock,
+            username=username
+        )
 
         return unpacked_msg
 
@@ -2241,7 +2247,7 @@ class NetworkThread(Thread):
             if not self._verify_parent_connection(conn, msg_class):
                 return False
 
-            unpacked_msg = self._unpack_embedded_message(msg)
+            unpacked_msg = self._unpack_embedded_message(msg, conn.sock, conn.init.target_user)
 
             if unpacked_msg is not None:
                 self._send_message_to_child_peers(unpacked_msg, msg.distrib_message)
