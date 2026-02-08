@@ -128,6 +128,12 @@ class FileAttribute:
     BIT_DEPTH = 5
 
 
+class ParentStatus:
+    ACCEPTED = 0
+    WAITING = 1
+    REJECTED = 2
+
+
 # Internal Messages #
 
 
@@ -624,6 +630,20 @@ class UsersMessage(SlskMessage):
             pos, users[i].country = cls.unpack_string(message, pos)
 
         return pos, users
+
+
+class ParentCandidate:
+
+    __slots__ = ("username", "ip_address", "port", "conn", "branch_root", "branch_level")
+
+    def __init__(self, username, ip_address, port):
+        self.username = username
+        self.ip_address = ip_address
+        self.port = port
+
+        self.conn = None
+        self.branch_root = None
+        self.branch_level = None
 
 
 # Server Messages #
@@ -2090,7 +2110,7 @@ class PossibleParents(ServerMessage):
             pos, ip_address = self.unpack_ip(message, pos)
             pos, port = self.unpack_uint32(message, pos)
 
-            self.list[username] = (ip_address, port)
+            self.list[username] = ParentCandidate(username, ip_address, port)
 
 
 class WishlistSearch(FileSearch):

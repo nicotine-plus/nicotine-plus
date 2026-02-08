@@ -57,6 +57,7 @@ from pynicotine.slskmessages import MessageType
 from pynicotine.slskmessages import PossibleParents
 from pynicotine.slskmessages import ParentMinSpeed
 from pynicotine.slskmessages import ParentSpeedRatio
+from pynicotine.slskmessages import ParentStatus
 from pynicotine.slskmessages import PeerInit
 from pynicotine.slskmessages import PierceFireWall
 from pynicotine.slskmessages import Relogged
@@ -401,7 +402,7 @@ class NetworkThread(Thread):
         self._manual_server_reconnect = False
         self._server_relogged = False
 
-        self._parent_conn = None
+        self._parent = None
         self._potential_parents = {}
         self._child_peers = {}
         self._branch_level = 0
@@ -951,7 +952,7 @@ class NetworkThread(Thread):
             if child_conn is conn:
                 self._remove_child_peer_connection(username)
 
-            elif conn is self._parent_conn:
+            elif self._parent is not None and conn is self._parent.conn:
                 self._send_have_no_parent()
 
         elif conn in self._file_init_msgs:
@@ -1361,13 +1362,18 @@ class NetworkThread(Thread):
             # Server sent a list of 10 potential parents, whose purpose is to forward us search requests.
             # We attempt to connect to them all at once, since connection errors are fairly common.
 
-            self._potential_parents = msg.list
-            log.add_conn("Server sent us a list of %s possible parents", len(msg.list))
+            if self._parent is None:
+                self._close_parent_candidate_connections()
 
-            if self._parent_conn is None and self._potential_parents:
-                for username, addr in self._potential_parents.items():
+                self._potential_parents = msg.list
+                log.add_conn("Server sent us a list of %s possible parents", len(msg.list))
+
+                for username, parent_candidate in self._potential_parents.items():
                     log.add_conn("Attempting parent connection to user %s", username)
-                    self._initiate_connection_to_peer(username, ConnectionType.DISTRIBUTED, in_address=addr)
+                    self._initiate_connection_to_peer(
+                        username, ConnectionType.DISTRIBUTED,
+                        in_address=(parent_candidate.ip_address, parent_candidate.port)
+                    )
 
         elif msg_class is ParentMinSpeed:
             self._distrib_parent_min_speed = msg.speed
@@ -1382,8 +1388,8 @@ class NetworkThread(Thread):
         elif msg_class is ResetDistributed:
             log.add_conn("Received a reset request for distributed network")
 
-            if self._parent_conn is not None:
-                self._close_connection(self._parent_conn)
+            if self._parent is not None:
+                self._close_connection(self._parent.conn)
 
             for child_conn in self._child_peers.copy().values():
                 self._close_connection(child_conn)
@@ -1477,7 +1483,7 @@ class NetworkThread(Thread):
             self._portmapper.set_port(port=None, local_ip_address=None)
             self._portmapper = None
 
-        self._parent_conn = None
+        self._parent = None
         self._potential_parents.clear()
         self._branch_level = 0
         self._branch_root = None
@@ -2081,7 +2087,7 @@ class NetworkThread(Thread):
             # This is not a child peer, ignore
             return
 
-        if self._parent_conn is None and not self._is_server_parent:
+        if self._parent is None and not self._is_server_parent:
             # We have no parent user and the server hasn't sent search requests, no point
             # in accepting child peers
             log.add_conn("Rejecting distributed child peer connection from user %s, since we have no parent", username)
@@ -2103,7 +2109,7 @@ class NetworkThread(Thread):
         self._child_peers[username] = conn
         self._send_message_to_peer(username, DistribBranchLevel(self._branch_level))
 
-        if self._parent_conn is not None:
+        if self._parent is not None:
             # Only sent when we're not the branch root
             self._send_message_to_peer(username, DistribBranchRoot(self._branch_root))
 
@@ -2140,7 +2146,7 @@ class NetworkThread(Thread):
         """Distributes an embedded message from the server to our child
         peers."""
 
-        if self._parent_conn is not None:
+        if self._parent is not None:
             # The server shouldn't send embedded messages while it's not our parent, but let's be safe
             return
 
@@ -2156,15 +2162,18 @@ class NetworkThread(Thread):
 
         log.add_conn("Server is our parent, ready to distribute search requests as a branch root")
 
-    def _verify_parent_connection(self, conn, msg_class):
+    def _verify_parent_status(self, conn, msg_class):
         """Verify that a connection is our current parent connection."""
 
-        if conn is not self._parent_conn:
-            log.add_conn("Received a distributed message %s from user %s, who is not our parent. "
-                         "Closing connection.", (msg_class, conn.init.target_user))
-            return False
+        if self._parent is None:
+            return ParentStatus.WAITING
 
-        return True
+        if conn is self._parent.conn:
+            return ParentStatus.ACCEPTED
+
+        log.add_conn("Received a distributed message %s from user %s, who is not our parent. "
+                     "Closing connection.", (msg_class, conn.init.target_user))
+        return ParentStatus.REJECTED
 
     def _send_have_no_parent(self):
         """Inform the server we have no parent.
@@ -2179,7 +2188,7 @@ class NetworkThread(Thread):
         # Note that we don't clear the previous list of possible parents here, since
         # it's possible the parent connection was closed immediately or superseded by
         # an indirect connection
-        self._parent_conn = None
+        self._parent = None
         self._branch_level = 0
         self._branch_root = self._server_username
 
@@ -2190,20 +2199,60 @@ class NetworkThread(Thread):
         self._send_message_to_server(BranchLevel(self._branch_level))
         self._send_message_to_server(AcceptChildren(False))
 
-    def _set_branch_root(self, username):
-        """Inform the server and child peers of our branch root."""
+    def _adopt_parent(self, username):
 
-        if not username:
+        if self._parent is not None:
             return
 
-        if username == self._branch_root:
+        parent_candidate = self._potential_parents.get(username)
+
+        if parent_candidate is None:
             return
 
-        self._branch_root = username
-        self._send_message_to_server(BranchRoot(username))
-        self._send_message_to_child_peers(DistribBranchRoot(username))
+        if parent_candidate.branch_level is None or not parent_candidate.branch_root:
+            return
 
-        log.add_conn("Our branch root is user %s", username)
+        # We have a successful connection with a potential parent. Tell the server who
+        # our parent is, and stop requesting new potential parents.
+        self._parent = parent_candidate
+        self._branch_level = parent_candidate.branch_level + 1
+        self._branch_root = parent_candidate.branch_root
+        self._is_server_parent = False
+        parent_candidate.branch_level = parent_candidate.branch_root = None
+
+        self._close_parent_candidate_connections()
+
+        self._send_message_to_server(HaveNoParent(False))
+        self._send_message_to_server(BranchRoot(self._branch_root))
+        self._send_message_to_server(BranchLevel(self._branch_level))
+
+        if len(self._child_peers) < self._max_distrib_children:
+            self._send_message_to_server(AcceptChildren(True))
+
+        self._send_message_to_child_peers(DistribBranchRoot(self._branch_root))
+        self._send_message_to_child_peers(DistribBranchLevel(self._branch_level))
+        self._child_peers.pop(username, None)
+
+        log.add_conn(
+            "Received first search request from parent candidate %s, adopting them as our parent",
+            username
+        )
+        log.add_conn("Our branch root is user %s", self._branch_root)
+        log.add_conn("Our branch level is %s", self._branch_level)
+
+    def _close_parent_candidate_connections(self):
+
+        for parent_candidate in self._potential_parents.values():
+            conn = parent_candidate.conn
+
+            if conn is None:
+                continue
+
+            if self._parent is not None and conn is self._parent.conn:
+                continue
+
+            self._close_connection(conn)
+            parent_candidate.conn = None
 
     def _update_maximum_distributed_children(self):
 
@@ -2240,57 +2289,46 @@ class NetworkThread(Thread):
             # Ignore unknown message and keep connection open
             return True
 
-        if msg_class is DistribSearch:
-            if not self._verify_parent_connection(conn, msg_class):
-                return False
+        username = msg.username
+        parent_status = ParentStatus.REJECTED
 
-            self._send_message_to_child_peers(msg, msg_content)
+        if msg_class is DistribSearch:
+            if self._parent is None:
+                self._adopt_parent(username)
+
+            parent_status = self._verify_parent_status(conn, msg_class)
+
+            if parent_status == ParentStatus.ACCEPTED:
+                self._send_message_to_child_peers(msg, msg_content)
 
         elif msg_class is DistribEmbeddedMessage:
-            if not self._verify_parent_connection(conn, msg_class):
-                return False
-
             unpacked_msg = self._unpack_embedded_message(msg, conn.sock, conn.init.target_user)
 
-            if unpacked_msg is not None:
+            if unpacked_msg is None:
+                # Ignore unknown message and keep connection open
+                return True
+
+            if self._parent is None:
+                self._adopt_parent(username)
+
+            parent_status = self._verify_parent_status(conn, msg_class)
+
+            if parent_status == ParentStatus.ACCEPTED:
                 self._send_message_to_child_peers(unpacked_msg, msg.distrib_message)
-                msg = unpacked_msg
+
+            msg = unpacked_msg
 
         elif msg_class is DistribBranchLevel:
             if msg.level < 0:
                 # There are rare cases of parents sending a branch level value of -1,
                 # presumably buggy clients
                 log.add_conn("Received an invalid branch level value %s from user %s. "
-                             "Closing connection.", (msg.level, msg.username))
+                             "Closing connection.", (msg.level, username))
                 return False
 
-            if self._parent_conn is None and msg.username in self._potential_parents:
-                # We have a successful connection with a potential parent. Tell the server who
-                # our parent is, and stop requesting new potential parents.
-                self._parent_conn = conn
-                self._branch_level = msg.level + 1
-                self._is_server_parent = False
+            parent_status = self._verify_parent_status(conn, msg_class)
 
-                self._send_message_to_server(HaveNoParent(False))
-                self._send_message_to_server(BranchLevel(self._branch_level))
-
-                if len(self._child_peers) < self._max_distrib_children:
-                    self._send_message_to_server(AcceptChildren(True))
-
-                self._send_message_to_child_peers(DistribBranchLevel(self._branch_level))
-                self._child_peers.pop(msg.username, None)
-
-                log.add_conn("Adopting user %s as parent", msg.username)
-                log.add_conn("Our branch level is %s", self._branch_level)
-
-                if self._branch_level == 1:
-                    # Our current branch level is 1, our parent is a branch root
-                    self._set_branch_root(msg.username)
-
-            elif not self._verify_parent_connection(conn, msg_class):
-                return False
-
-            else:
+            if parent_status == ParentStatus.ACCEPTED:
                 # Inform the server and child peers of our new branch level
                 self._branch_level = msg.level + 1
                 self._send_message_to_server(BranchLevel(self._branch_level))
@@ -2299,14 +2337,39 @@ class NetworkThread(Thread):
                 log.add_conn("Received a branch level update from our parent. Our new branch level is %s",
                              self._branch_level)
 
+            elif parent_status == ParentStatus.WAITING and username in self._potential_parents:
+                self._potential_parents[username].conn = conn
+                self._potential_parents[username].branch_level = msg.level
+
+                # Branch roots are not guaranteed to send a separate branch root message
+                if not msg.level:
+                    self._potential_parents[username].branch_root = username
+
         elif msg_class is DistribBranchRoot:
-            if not self._verify_parent_connection(conn, msg_class):
+            if not msg.root_username:
+                log.add_conn("Received an empty branch root value from user %s. "
+                             "Closing connection.", username)
                 return False
 
-            self._set_branch_root(msg.root_username)
+            parent_status = self._verify_parent_status(conn, msg_class)
 
-        self._emit_network_message_event(msg)
-        return True
+            if parent_status == ParentStatus.ACCEPTED:
+                self._branch_root = msg.root_username
+                self._send_message_to_server(BranchRoot(self._branch_root))
+                self._send_message_to_child_peers(DistribBranchRoot(self._branch_root))
+
+                log.add_conn("Received a branch root update from our parent. Our new branch root is %s",
+                             self._branch_root)
+
+            elif parent_status == ParentStatus.WAITING and username in self._potential_parents:
+                self._potential_parents[username].conn = conn
+                self._potential_parents[username].branch_root = msg.root_username
+
+        if parent_status == ParentStatus.ACCEPTED:
+            self._emit_network_message_event(msg)
+
+        keep_connection_open = (parent_status != ParentStatus.REJECTED)
+        return keep_connection_open
 
     def _process_distrib_input(self, conn):
         """Reads messages from the input buffer of a 'D' connection."""
