@@ -666,12 +666,12 @@ class NetworkThread(Thread):
         """
 
         msg_type = msg.distrib_code
+        distrib_class = DISTRIBUTED_MESSAGE_CLASSES.get(msg_type)
 
-        if msg_type not in DISTRIBUTED_MESSAGE_CLASSES:
-            log.add_debug("Embedded distrib message type %s unknown", msg_type)
+        if distrib_class is not DistribSearch:
+            log.add_debug("Embedded distrib message type %s unexpected, ignoring", msg_type)
             return None
 
-        distrib_class = DISTRIBUTED_MESSAGE_CLASSES[msg_type]
         unpacked_msg = cls._unpack_network_message(
             distrib_class,
             memoryview(msg.distrib_message),
@@ -1262,8 +1262,11 @@ class NetworkThread(Thread):
             return True
 
         if msg_class is EmbeddedMessage:
-            self._distribute_embedded_message(msg)
-            msg = self._unpack_embedded_message(msg)
+            unpacked_msg = self._unpack_embedded_message(msg)
+
+            if unpacked_msg is not None:
+                self._distribute_embedded_message(msg)
+                msg = unpacked_msg
 
         elif msg_class is Login:
             if msg.success:
@@ -2251,8 +2254,7 @@ class NetworkThread(Thread):
 
             if unpacked_msg is not None:
                 self._send_message_to_child_peers(unpacked_msg, msg.distrib_message)
-
-            msg = unpacked_msg
+                msg = unpacked_msg
 
         elif msg_class is DistribBranchLevel:
             if msg.level < 0:
