@@ -1301,7 +1301,7 @@ class NetworkThread(Thread):
 
                 log.add_conn("Server is our parent, ready to distribute search requests as a branch root")
 
-            self._send_message_to_child_peers(DistribEmbeddedMessage(msg.distrib_code, msg.distrib_message))
+            self._send_message_to_child_peers(unpacked_msg, msg.distrib_message)
             msg = unpacked_msg
 
         elif msg_class is Login:
