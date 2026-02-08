@@ -1374,11 +1374,11 @@ is sent by the server, and we eventually become a branch root.
 
 ## Server Code 73
 
-### SearchParent
+### ParentIP
 
 **DEPRECATED, sent by Soulseek NS but not SoulseekQt**
 
-We send the IP address of our parent to the server.
+We tell the server the IP address of our parent in the distributed network.
 
 ### Data Order
 

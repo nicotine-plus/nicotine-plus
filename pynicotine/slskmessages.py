@@ -1879,10 +1879,10 @@ class HaveNoParent(ServerMessage):
         return self.pack_bool(self.noparent)
 
 
-class SearchParent(ServerMessage):
+class ParentIP(ServerMessage):
     """Server code 73.
 
-    We send the IP address of our parent to the server.
+    We tell the server the IP address of our parent in the distributed network.
 
     DEPRECATED, sent by Soulseek NS but not SoulseekQt
     """
@@ -4114,7 +4114,7 @@ SERVER_MESSAGE_CODES = {
     TunneledMessage: 68,          # Obsolete
     PrivilegedUsers: 69,
     HaveNoParent: 71,
-    SearchParent: 73,             # Deprecated
+    ParentIP: 73,                 # Deprecated
     ParentMinSpeed: 83,
     ParentSpeedRatio: 84,
     ParentInactivityTimeout: 86,  # Obsolete
