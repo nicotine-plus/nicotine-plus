@@ -1272,7 +1272,7 @@ class NetworkThread(Thread):
             unpacked_msg = self._unpack_embedded_message(msg)
 
             if unpacked_msg is not None:
-                self._distribute_embedded_message(msg)
+                self._distribute_embedded_message(unpacked_msg, msg.distrib_message)
                 msg = unpacked_msg
 
         elif msg_class is Login:
@@ -2151,7 +2151,7 @@ class NetworkThread(Thread):
         for conn in self._child_peers.values():
             self._process_distrib_output(conn, msg, msg_content)
 
-    def _distribute_embedded_message(self, msg):
+    def _distribute_embedded_message(self, msg, msg_content):
         """Distributes an embedded message from the server to our child
         peers."""
 
@@ -2159,7 +2159,7 @@ class NetworkThread(Thread):
             # The server shouldn't send embedded messages while it's not our parent, but let's be safe
             return
 
-        self._send_message_to_child_peers(DistribEmbeddedMessage(msg.distrib_code, msg.distrib_message))
+        self._send_message_to_child_peers(msg, msg_content)
 
         if self._is_server_parent:
             return

@@ -2055,11 +2055,15 @@ class CheckPrivileges(ServerMessage):
 class EmbeddedMessage(ServerMessage):
     """Server code 93.
 
-    The server sends us an embedded distributed message. The only type
-    of distributed message sent at present is DistribSearch (distributed
-    code 3). If we receive such a message, we are a branch root in the
-    distributed network, and we distribute the embedded message (not the
-    unpacked distributed message) to our child peers.
+    The server sends us an embedded distributed message. The only sent message
+    type is DistribSearch (distributed code 3). If we receive such a message,
+    we are a branch root in the distributed network, and we distribute the
+    unpacked message to our child peers.
+
+    Note that older SoulseekQt versions incorrectly distributed the whole
+    server message instead of the unpacked message, which resulted in other
+    client implementations adopting this erroneous behavior. This bug was
+    fixed in SoulseekQt in early 2026.
     """
 
     __slots__ = ("distrib_code", "distrib_message")
@@ -2091,10 +2095,15 @@ class AcceptChildren(ServerMessage):
 class PossibleParents(ServerMessage):
     """Server code 102.
 
-    The server send us a list of 10 possible distributed parents to
-    connect to. This message is sent to us at regular intervals until we
-    tell the server we don't need more possible parents, through a
+    The server send us a list of max 10 possible distributed parents to
+    connect to. Messages of this type are sent to us at regular intervals,
+    until we tell the server we don't need more possible parents with a
     HaveNoParent message.
+
+    The received list always contains users whose upload speed is higher than
+    our own. If we have the highest upload speed on the server, we become a
+    branch root, and start receiving EmbeddedMessage messages directly from
+    the server.
     """
 
     __slots__ = ("list",)
@@ -3994,10 +4003,17 @@ class DistribChildDepth(DistribMessage):
 class DistribEmbeddedMessage(DistribMessage):
     """Distrib code 93.
 
-    A branch root sends us an embedded distributed message. We unpack
-    the distributed message and distribute it to our child peers. The
-    only type of distributed message sent at present is DistribSearch
-    (distributed code 3).
+    A branch root sends us an embedded distributed message. When the embedded
+    message type is DistribSearch (distributed code 3), we unpack and
+    distribute the raw message to our child peers. All other message types
+    are unsupported and ignored.
+
+    Note that older SoulseekQt versions incorrectly distributed this message
+    instead of the unpacked message, which resulted in other client
+    implementations adopting this erroneous behavior. This bug was fixed in
+    SoulseekQt in early 2026.
+
+    DEPRECATED, accidentally sent by older SoulseekQt versions
     """
 
     __slots__ = ("distrib_code", "distrib_message")
@@ -4007,15 +4023,11 @@ class DistribEmbeddedMessage(DistribMessage):
         self.distrib_code = distrib_code
         self.distrib_message = distrib_message
 
-    def make_network_message(self):
-        msg = bytearray()
-        msg += self.pack_uint8(self.distrib_code)
-        msg += self.distrib_message
-
-        return msg
-
     def parse_network_message(self, message):
-        pos, self.distrib_code = self.unpack_uint8(message, 3)
+        # Start from an offset, since the message type is actually uint32,
+        # but parsed as uint8 by the message handler.
+        pos = 3
+        pos, self.distrib_code = self.unpack_uint8(message, pos)
         self.distrib_message = message[pos:].tobytes()
 
 
@@ -4225,7 +4237,7 @@ DISTRIBUTED_MESSAGE_CODES = {
     DistribBranchLevel: 4,
     DistribBranchRoot: 5,
     DistribChildDepth: 7,         # Deprecated
-    DistribEmbeddedMessage: 93
+    DistribEmbeddedMessage: 93    # Deprecated
 }
 
 SERVER_MESSAGE_CLASSES = {v: k for k, v in SERVER_MESSAGE_CODES.items()}
