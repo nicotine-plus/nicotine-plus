@@ -334,6 +334,7 @@ class NetworkThread(Thread):
     USER_ADDRESS_TTL = 1800                      # 30 minutes
     CONNECTION_BACKLOG_LENGTH = 65535            # OS limit can be lower
     MAX_INCOMING_MESSAGE_SIZE_LARGE = 469762048  # 448 MiB, to leave headroom for large shares
+    MAX_INCOMING_MESSAGE_SIZE_MEDIUM = 16777216  # 16 MiB
     MAX_INCOMING_MESSAGE_SIZE_SMALL = 16384      # 16 KiB
     ALLOWED_PEER_CONN_TYPES = {
         ConnectionType.PEER,
@@ -1774,18 +1775,21 @@ class NetworkThread(Thread):
         # Peer messages are 8 bytes or greater in length
         while buffer_len >= msg_content_offset:
             msg_size, msg_type = DOUBLE_UINT32_UNPACK(in_buffer, idx)
-
-            if msg_size > self.MAX_INCOMING_MESSAGE_SIZE_LARGE:
-                log.add_conn("Received message larger than maximum size %s from user %s. "
-                             "Closing connection.", (self.MAX_INCOMING_MESSAGE_SIZE_LARGE, conn.init.target_user))
-                self._close_connection(conn)
-                return
-
             msg_size_total = msg_size + 4
+            max_msg_size = self.MAX_INCOMING_MESSAGE_SIZE_MEDIUM
             msg_class = None
 
             if msg_type in PEER_MESSAGE_CLASSES:
                 msg_class = PEER_MESSAGE_CLASSES[msg_type]
+
+            if msg_class is SharedFileListResponse or msg_class is UserInfoResponse:
+                max_msg_size = self.MAX_INCOMING_MESSAGE_SIZE_LARGE
+
+            if msg_size > max_msg_size:
+                log.add_conn("Received message larger than maximum size %s from user %s. "
+                             "Closing connection.", (max_msg_size, conn.init.target_user))
+                self._close_connection(conn)
+                return
 
             # Send progress to the main thread
             if msg_class is SharedFileListResponse:
