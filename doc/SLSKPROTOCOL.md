@@ -1,16 +1,17 @@
 <!--
-  SPDX-FileCopyrightText: 2006-2025 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2006-2026 Nicotine+ Contributors
   SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
 # Soulseek Protocol Documentation
 
-[Last updated on January 17, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on February 9, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
-To preserve the health of the Soulseek network, please do not modify or extend
-the protocol in ways that negatively impact the network.
+The protocol is old and rigid, with various client implementations existing in
+the wild. Careful coordination between clients is necessary. Please don't
+extend the protocol without the approval of Soulseek's administrators.
 
 If you find any inconsistencies, errors or omissions in the documentation,
 please report them.
