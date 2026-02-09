@@ -947,13 +947,18 @@ class NetworkThread(Thread):
             init.sock = None
 
         if conn_type == ConnectionType.DISTRIBUTED:
+            parent_candidate = self._potential_parents.get(username)
+
+            if self._parent is not None and conn is self._parent.conn:
+                self._send_have_no_parent()
+
+            elif parent_candidate is not None and conn is parent_candidate.conn:
+                parent_candidate.conn = None
+
             child_conn = self._child_peers.get(username)
 
             if child_conn is conn:
                 self._remove_child_peer_connection(username)
-
-            elif self._parent is not None and conn is self._parent.conn:
-                self._send_have_no_parent()
 
         elif conn in self._file_init_msgs:
             file_init = self._file_init_msgs.pop(conn)
@@ -2206,7 +2211,7 @@ class NetworkThread(Thread):
 
         parent_candidate = self._potential_parents.get(username)
 
-        if parent_candidate is None:
+        if parent_candidate is None or parent_candidate.conn is None:
             return
 
         if parent_candidate.branch_level is None or not parent_candidate.branch_root:
@@ -2218,7 +2223,9 @@ class NetworkThread(Thread):
         self._branch_level = parent_candidate.branch_level + 1
         self._branch_root = parent_candidate.branch_root
         self._is_server_parent = False
-        parent_candidate.branch_level = parent_candidate.branch_root = None
+
+        parent_candidate.branch_level = None
+        parent_candidate.branch_root = None
 
         self._close_parent_candidate_connections()
 
@@ -2338,12 +2345,13 @@ class NetworkThread(Thread):
                              self._branch_level)
 
             elif parent_status == ParentStatus.WAITING and username in self._potential_parents:
-                self._potential_parents[username].conn = conn
-                self._potential_parents[username].branch_level = msg.level
+                parent_candidate = self._potential_parents[username]
+                parent_candidate.conn = conn
+                parent_candidate.branch_level = msg.level
 
                 # Branch roots are not guaranteed to send a separate branch root message
                 if not msg.level:
-                    self._potential_parents[username].branch_root = username
+                    parent_candidate.branch_root = username
 
         elif msg_class is DistribBranchRoot:
             if not msg.root_username:
@@ -2362,8 +2370,9 @@ class NetworkThread(Thread):
                              self._branch_root)
 
             elif parent_status == ParentStatus.WAITING and username in self._potential_parents:
-                self._potential_parents[username].conn = conn
-                self._potential_parents[username].branch_root = msg.root_username
+                parent_candidate = self._potential_parents[username]
+                parent_candidate.conn = conn
+                parent_candidate.branch_root = msg.root_username
 
         if parent_status == ParentStatus.ACCEPTED:
             self._emit_network_message_event(msg)
