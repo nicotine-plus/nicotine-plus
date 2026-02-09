@@ -103,17 +103,17 @@ class SoulseekNetworkTest(TestCase):
 
         if hasattr(socket, "TCP_KEEPIDLE") or hasattr(socket, "TCP_KEEPALIVE"):
             if sys.platform == "win32":
-                self.assertEqual(sock.setsockopt.call_count, 5)
+                self.assertEqual(sock.setsockopt.call_count, 6)
 
             elif hasattr(socket, "TCP_USER_TIMEOUT"):
-                self.assertEqual(sock.setsockopt.call_count, 7)
+                self.assertEqual(sock.setsockopt.call_count, 8)
 
             else:
-                self.assertEqual(sock.setsockopt.call_count, 6)
+                self.assertEqual(sock.setsockopt.call_count, 7)
 
         elif hasattr(socket, "SIO_KEEPALIVE_VALS"):
             self.assertEqual(sock.ioctl.call_count, 1)
-            self.assertEqual(sock.setsockopt.call_count, 2)
+            self.assertEqual(sock.setsockopt.call_count, 3)
 
         self.assertEqual(sock.setblocking.call_count, 2)
         self.assertEqual(sock.connect_ex.call_count, 1)

@@ -336,6 +336,8 @@ class NetworkThread(Thread):
     MAX_INCOMING_MESSAGE_SIZE_LARGE = 469762048  # 448 MiB, to leave headroom for large shares
     MAX_INCOMING_MESSAGE_SIZE_MEDIUM = 16777216  # 16 MiB
     MAX_INCOMING_MESSAGE_SIZE_SMALL = 16384      # 16 KiB
+    TCP_BUFFER_SIZE_MEDIUM = 262144              # 256 KiB
+    TCP_BUFFER_SIZE_SMALL = 16384                # 16 KiB
     ALLOWED_PEER_CONN_TYPES = {
         ConnectionType.PEER,
         ConnectionType.FILE,
@@ -523,6 +525,22 @@ class NetworkThread(Thread):
         return True
 
     # Connections #
+
+    def _set_tcp_buffer_size(self, sock, conn_type):
+        """Set a sane TCP buffer size limit for connections, to prevent boundless message
+        flooding. The limit is smaller for distributed connections due to the larger attack
+        surface and messages always remaining small. File connections use the OS limit,
+        to allow for optimal file transfer speeds.
+        """
+
+        if conn_type == ConnectionType.FILE:
+            return
+
+        if conn_type == ConnectionType.DISTRIBUTED:
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.TCP_BUFFER_SIZE_SMALL)
+            return
+
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.TCP_BUFFER_SIZE_MEDIUM)
 
     def _indirect_request_error(self, init):
 
@@ -849,6 +867,8 @@ class NetworkThread(Thread):
         pierce_token = conn.pierce_token
         username = init.target_user
         conn_type = init.conn_type
+
+        self._set_tcp_buffer_size(conn.sock, conn_type)
 
         log.add_conn("Established outgoing connection of type %s with user %s. List of "
                      "outgoing messages: %s", (conn_type, username, init.outgoing_msgs))
@@ -1198,6 +1218,7 @@ class NetworkThread(Thread):
 
         sock.setblocking(False)
         sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+        self._set_tcp_buffer_size(sock, ConnectionType.SERVER)
 
         # Detect if our connection to the server is still alive
         self._set_server_socket_keepalive(sock)
@@ -1601,6 +1622,8 @@ class NetworkThread(Thread):
             log.add_conn("Indirect connection to user %s with token %s established",
                          (init.target_user, pierce_token))
 
+            self._set_tcp_buffer_size(conn.sock, init.conn_type)
+
             if previous_sock is None or is_direct_conn_in_progress:
                 init.sock = conn.sock
                 log.add_conn("Using as primary connection, since no direct connection is established")
@@ -1624,6 +1647,8 @@ class NetworkThread(Thread):
             if conn_type not in self.ALLOWED_PEER_CONN_TYPES:
                 log.add_conn("Unknown connection type %s", conn_type)
                 return None
+
+            self._set_tcp_buffer_size(conn.sock, conn_type)
 
             init = msg
             self._replace_existing_connection(init)
