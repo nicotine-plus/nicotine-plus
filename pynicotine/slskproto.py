@@ -953,7 +953,7 @@ class NetworkThread(Thread):
             if self._parent is not None and conn is self._parent.conn:
                 self._send_have_no_parent()
 
-            elif parent_candidate is not None and conn is parent_candidate.conn:
+            if parent_candidate is not None and conn is parent_candidate.conn:
                 parent_candidate.conn = None
 
             child_conn = self._child_peers.get(username)
