@@ -195,6 +195,7 @@ class About(Dialog):
          "\n •  Maite Guix (2022)"),
 
         ("<b>Chinese (Simplified)</b>"
+         "\n •  Eric Zhang (2025)"
          "\n •  Ys413 (2024)"
          "\n •  Bonislaw (2023)"
          "\n •  hylau (2023)"
@@ -208,16 +209,17 @@ class About(Dialog):
          "\n •  mathsped (2003–2004)"),
 
         ("<b>Dutch</b>"
+         "\n •  Han Boetes (hboetes) (2021–2026)"
+         "\n •  Jan Wesselink (wesselaar) (2025)"
          "\n •  Toine Rademacher (toineenzo) (2023–2024)"
-         "\n •  Han Boetes (hboetes) (2021–2024)"
          "\n •  Kenny Verstraete (2009)"
          "\n •  nince78 (2007)"
          "\n •  Ingmar K. Steen (Hyriand) (2003–2004)"),
 
         ("<b>English</b>"
-         "\n •  slook (2021–2024)"
-         "\n •  Han Boetes (hboetes) (2021–2024)"
-         "\n •  Mat (mathiascode) (2020–2024)"
+         "\n •  Mat (mathiascode) (2020–2026)"
+         "\n •  slook (2021–2026)"
+         "\n •  Han Boetes (hboetes) (2021–2026)"
          "\n •  Michael Labouebe (gfarmerfr) (2016)"
          "\n •  daelstorm (2004–2009)"
          "\n •  Ingmar K. Steen (Hyriand) (2003–2004)"),
@@ -226,7 +228,7 @@ class About(Dialog):
          "\n •  phlostically (2021)"),
 
         ("<b>Estonian</b>"
-         "\n •  rimasx (2024)"
+         "\n •  rimasx (2024-2025)"
          "\n •  PriitUring (2023)"),
 
         ("<b>Euskara</b>"
@@ -249,7 +251,8 @@ class About(Dialog):
          "\n •  Julien Wajsberg (flashfr) (2003–2004)"),
 
         ("<b>German</b>"
-         "\n •  Han Boetes (hboetes) (2021–2024)"
+         "\n •  Felix Hansen (Felix00xileF) (2025–2026)"
+         "\n •  Han Boetes (hboetes) (2021–2026)"
          "\n •  phelissimo_ (2023)"
          "\n •  Meokater (2007)"
          "\n •  (._.) (2007)"
@@ -257,9 +260,12 @@ class About(Dialog):
          "\n •  Ingmar K. Steen (Hyriand) (2003–2004)"),
 
         ("<b>Hungarian</b>"
-         "\n •  Szia Tomi (2022–2024)"
+         "\n •  Szia Tomi (2022–2025)"
          "\n •  Nils (2009)"
          "\n •  David Balazs (djbaloo) (2006–2020)"),
+
+        ("<b>Indonesian</b>"
+         "\n •  Delly Store (dellystore.07) (2025)"),
 
         ("<b>Italian</b>"
          "\n •  Gabriele (Gabboxl) (2022–2023)"
@@ -279,13 +285,14 @@ class About(Dialog):
          "\n •  Allan Nordhøy (comradekingu) (2021)"),
 
         ("<b>Polish</b>"
+         "\n •  Matthaiks (Kityn) (2025)"
          "\n •  Mariusz (mariachini) (2017–2024)"
          "\n •  Amun-Ra (2007)"
          "\n •  thine (2007)"
          "\n •  Wojciech Owczarek (owczi) (2003–2004)"),
 
         ("<b>Portuguese (Brazil)</b>"
-         "\n •  Havokdan (2022–2023)"
+         "\n •  Havokdan (2022–2025)"
          "\n •  Guilherme Santos (2022)"
          "\n •  b1llso (2022)"
          "\n •  Nicolas Abril (2021)"
@@ -300,7 +307,7 @@ class About(Dialog):
          "\n •  Slendi (xslendix) (2023)"),
 
         ("<b>Russian</b>"
-         "\n •  Kirill Feoktistov (SnIPeRSnIPeR) (2022–2024)"
+         "\n •  Kirill Feoktistov (SnIPeRSnIPeR) (2022–2025)"
          "\n •  Mehavoid (2021–2023)"
          "\n •  AHOHNMYC (2022)"),
 
@@ -308,16 +315,16 @@ class About(Dialog):
          "\n •  Jozef Říha (2006–2008)"),
 
         ("<b>Spanish (Chile)</b>"
-         "\n •  MELERIX (2021–2023)"
+         "\n •  MELERIX (2021–2025)"
          "\n •  tagomago (2021–2022)"
          "\n •  Strange (2021)"
          "\n •  Silvio Orta (2007)"
          "\n •  Dreslo (2003–2004)"),
 
         ("<b>Spanish (Spain)</b>"
+         "\n •  tagomago (2021–2025)"
          "\n •  gallegonovato (2023–2024)"
          "\n •  MELERIX (2021–2023)"
-         "\n •  tagomago (2021–2022)"
          "\n •  Strange (2021)"
          "\n •  Silvio Orta (2007)"
          "\n •  Dreslo (2003–2004)"),
@@ -329,11 +336,14 @@ class About(Dialog):
         ("<b>Tamil</b>"
          "\n •  தமிழ்நேரம் (2025)"),
 
+        ("<b>Toki Pona</b>"
+         "\n •  Hannah Nosurname (jmejuniper) (2025)"),
+
         ("<b>Turkish</b>"
-         "\n •  Oğuz Ersen (2021–2024)"),
+         "\n •  Oğuz Ersen (2021–2025)"),
 
         ("<b>Ukrainian</b>"
-         "\n •  Oleg Gritsun (2024–2025)"
+         "\n •  Олег Грицун (oleg.gritsun) (2024–2025)"
          "\n •  uniss2209 (2022)")]
 
     LICENSE = [
