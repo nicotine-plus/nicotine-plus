@@ -2147,10 +2147,7 @@ class NetworkThread(Thread):
 
         self._child_peers[username] = conn
         self._send_message_to_peer(username, DistribBranchLevel(self._branch_level))
-
-        if self._parent_conn is not None:
-            # Only sent when we're not the branch root
-            self._send_message_to_peer(username, DistribBranchRoot(self._branch_root))
+        self._send_message_to_peer(username, DistribBranchRoot(self._branch_root))
 
         log.add_conn("Adopting user %s as distributed child peer. Number of current child peers: %s",
                      (username, len(self._child_peers)))
