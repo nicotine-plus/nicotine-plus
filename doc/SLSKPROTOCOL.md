@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on February 9, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on February 12, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -3123,7 +3123,8 @@ We tell our distributed children what our position is in our branch (xth
 generation) on the distributed network.
 
 If we receive a branch level of 0 from a parent, we should mark the parent as
-our branch root, since they won't send a [DistribBranchRoot](#distributed-code-5)
+our branch root. Due to incorrect behavior in older client versions, they
+aren't guaranteed to send a separate [DistribBranchRoot](#distributed-code-5)
 message in this case.
 
 ### Data Order
@@ -3141,7 +3142,9 @@ message in this case.
 We tell our distributed children the username of the root of the branch we're
 in on the distributed network.
 
-This message should not be sent when we're the branch root.
+Note that SoulseekQt used to not send this message when becoming a branch root.
+This behavior was corrected in early 2026. We should always send the message
+regardless of our status in the distributed network.
 
 ### Data Order
 

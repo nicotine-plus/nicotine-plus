@@ -3939,7 +3939,8 @@ class DistribBranchLevel(DistribMessage):
     (xth generation) on the distributed network.
 
     If we receive a branch level of 0 from a parent, we should mark the
-    parent as our branch root, since they won't send a DistribBranchRoot
+    parent as our branch root. Due to incorrect behavior in older client
+    versions, they aren't guaranteed to send a separate DistribBranchRoot
     message in this case.
     """
 
@@ -3962,7 +3963,9 @@ class DistribBranchRoot(DistribMessage):
     We tell our distributed children the username of the root of the
     branch we’re in on the distributed network.
 
-    This message should not be sent when we're the branch root.
+    Note that SoulseekQt used to not send this message when becoming a branch
+    root. This behavior was corrected in early 2026. We should always send the
+    message regardless of our status in the distributed network.
     """
 
     __slots__ = ("root_username",)
