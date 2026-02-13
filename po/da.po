@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-11 18:51+0200\n"
-"PO-Revision-Date: 2026-02-10 00:10+0000\n"
+"PO-Revision-Date: 2026-02-13 07:10+0000\n"
 "Last-Translator: Denisa Alicia Rissa <denisarissa@gmail.com>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/da/>\n"
@@ -153,11 +153,13 @@ msgid "display version and exit"
 msgstr "vis version og afslut"
 
 #: pynicotine/__init__.py:107
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "You are using an unsupported version of Python (%(old_version)s).\n"
 "You should install Python %(min_version)s or newer."
-msgstr "\"Du bruger en ikke-understøttet version af Python (%(old_version)s)."
+msgstr ""
+"Du bruger en ikke-understøttet version af Python (%(old_version)s).\n"
+"Du bør installere Python %(min_version)s eller nyere."
 
 #: pynicotine/__init__.py:179
 msgid ""
@@ -329,7 +331,7 @@ msgstr "%(tempfile)s' kunne ikke flyttes til '%(file)s': %(error)s"
 
 #: pynicotine/downloads.py:435 pynicotine/downloads.py:1166
 msgid "Download Folder Error"
-msgstr "Fejl i downloadmappe"
+msgstr "Fejl ved download af mappe"
 
 #: pynicotine/downloads.py:473
 #, python-format
@@ -386,7 +388,7 @@ msgstr "Soulseek-_privilegier"
 
 #: pynicotine/gtkgui/application.py:317
 msgid "_Preferences"
-msgstr "_Indstillinger"
+msgstr "_Tilpasninger"
 
 #: pynicotine/gtkgui/application.py:323 pynicotine/gtkgui/application.py:539
 #: pynicotine/gtkgui/widgets/trayicon.py:91
@@ -817,7 +819,7 @@ msgstr "Nøgleord %(keyword)s nævnt af %(user)s i rum %(room)s"
 #: pynicotine/gtkgui/chatrooms.py:903
 #, python-format
 msgid "Message by watched user %(user)s in room %(room)s"
-msgstr "Besked fra overvåget bruger %(user)s i rum %(room)s"
+msgstr "Besked fra bruger du følger, %(user)s, i rum %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:921 pynicotine/gtkgui/mainwindow.py:426
 #, python-format
@@ -832,7 +834,7 @@ msgstr "Nøgleord %(keyword)s nævnt af %(user)s i rum %(room)s"
 #: pynicotine/gtkgui/chatrooms.py:941 pynicotine/gtkgui/mainwindow.py:436
 #, python-format
 msgid "Message by Watched User %(user)s in Room %(room)s"
-msgstr "Besked fra overvåget bruger %(user)s i rum %(room)s"
+msgstr "Besked fra bruger du følger, %(user)s, i rum %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:953
 #, python-format
@@ -2662,9 +2664,8 @@ msgid "Port %i (TCP) status unknown"
 msgstr "Port %i (TCP) status ukendt"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:76
-#, fuzzy
 msgid "Cannot check connection status."
-msgstr "Kunne ikke håndtere tilslutningstypen %s"
+msgstr "Kan ikke tjekke forbindelsesstatus."
 
 #: pynicotine/gtkgui/popovers/portchecker.py:81
 #, python-format
@@ -4825,9 +4826,9 @@ msgid "Ignored %s"
 msgstr "%s ignoreret"
 
 #: pynicotine/plugins/core_commands/__init__.py:515
-#, fuzzy, python-format
+#, python-format
 msgid "Unignored %s"
-msgstr "%(num_listed)s delinger vist (%(num_total)s konfigureret)"
+msgstr "Ignorering af %s ophævet"
 
 #: pynicotine/plugins/core_commands/__init__.py:551
 #, python-format
@@ -4899,11 +4900,13 @@ msgid "Loaded plugin %s"
 msgstr "Plugin %s indlæst"
 
 #: pynicotine/pluginsystem.py:728
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Unable to load plugin %(module)s\n"
 "%(exc_trace)s"
-msgstr "\"Kan ikke indlæse plugin %(module)s"
+msgstr ""
+"Kan ikke indlæse plugin %(module)s\n"
+"%(exc_trace)s"
 
 #: pynicotine/pluginsystem.py:768
 #, python-format
@@ -5024,15 +5027,16 @@ msgstr[0] "Genindlæsning fuldført: %(num)s mappe fundet"
 msgstr[1] "Genindlæsning fuldført: %(num)s mappe fundet"
 
 #: pynicotine/shares.py:338
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
 "delete %(dir)s/*.dbn and try again. If that doesn't help, please file a bug "
 "report with this stack trace included: %(trace)s"
 msgstr ""
-"Der opstod en alvorlig fejl under genindlæsning af delinger. Hvis problemet "
-"fortsætter, slet %(dir)s/*.dbn og prøv igen. Hvis det ikke hjælper, opret "
-"venligst en fejlrapport."
+"Der opstod en alvorlig fejl under genindlæsningen af delinger. Hvis "
+"problemet fortsætter, slet %(dir)s/*.dbn og prøv igen. Hvis det ikke "
+"hjælper, opret venligst en fejlrapport med denne stack trace inkluderet: %"
+"(trace)s"
 
 #: pynicotine/shares.py:631
 #, python-format
@@ -5129,10 +5133,10 @@ msgid "%(user)s is downloading file %(file)s (%(size)s) from folder %(folder)s"
 msgstr "%(user)s downloader fil %(file)s (%(size)s) fra mappe %(folder)s"
 
 #: pynicotine/uploads.py:655
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "%(user)s is downloading %(files)s files (%(size)s) from folder %(folder)s"
-msgstr "%(user)s downloader %(files)s filer (%(size)s) fra mappe %(folder)"
+msgstr "%(user)s downloader fil %(files)s (%(size)s) fra mappe %(folder)s"
 
 #: pynicotine/uploads.py:662
 #, python-format
@@ -5900,13 +5904,12 @@ msgstr ""
 "vigtig: 'Instrumental Remix' vil ikke vise 'Remix Instrumental'"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:109
-#, fuzzy
 msgid ""
 "Use | (or pipes) to seperate several exact phrases. Example:\n"
 "    Remix|Dub Mix|Instrumental"
 msgstr ""
 "Brug | (rør) til at adskille flere nøjagtige fraser. Eksempel:\n"
-"Remix|Dub Mix|Instrumental"
+"    Remix|Dub Mix|Instrumental"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:122
 msgid "Exclude Text"
@@ -5925,7 +5928,6 @@ msgid "Filters files based upon their file extension."
 msgstr "Filtrerer filer baseret på deres filtypenavn."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:164
-#, fuzzy
 msgid ""
 "Multiple file extensions can be specified, which in turn will reveal more "
 "from the list of results. Example:\n"
@@ -5933,18 +5935,18 @@ msgid ""
 msgstr ""
 "Der kan angives flere filtypenavne, som udvider listen over resultater. "
 "Eksempel:\n"
-"flac wav ape"
+"    flac wav ape"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:175
-#, fuzzy
 msgid ""
 "It is also possible to invert the filter, specifying file extensions you "
 "don't want in your results with an exclamation mark! Example:\n"
 "    !mp3 !jpg"
 msgstr ""
 "Det er også muligt at invertere filteret og angive filtypenavne, du ikke "
-"ønsker, med et udråbstegn. Eksempel:\n"
-"!mp3 !m4a"
+"ønsker, med et udråbstegn. \n"
+"Eksempel:\n"
+"    !mp3 !jpg"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:186
 msgid "File Size"
@@ -5963,7 +5965,6 @@ msgstr ""
 "værdien, vil blive matchet."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:222
-#, fuzzy
 msgid ""
 "Append b, k, m, or g (alternatively kib, mib, or gib) to specify byte, "
 "kibibyte, mebibyte, or gibibyte units:\n"
@@ -5971,36 +5972,33 @@ msgid ""
 msgstr ""
 "Tilføj b, k, m eller g (alternativt kib, mib eller gib) for at angive byte-, "
 "kibibyte-, mebibyte- eller gibibyte-enheder:\n"
-"20m for at vise filer på 20 MiB eller mere"
+"    20m for at vise filer på 20 MiB (mebibytes) eller mere."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:233
-#, fuzzy
 msgid ""
 "Prepend = to a value to specify an exact match:\n"
 "    =1024 matches files that are exactly 1 KiB (kibibyte)."
 msgstr ""
-"\"Sæt = foran en værdi for at angive et nøjagtigt match:\n"
-"=1024 matcher filer, der er præcis 1 KiB (kibibyte).\""
+"Sæt = foran en værdi for at angive et nøjagtigt match:\n"
+"    =1024 matcher filer, der er præcis 1 KiB (kibibyte)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:244
-#, fuzzy
 msgid ""
 "Prepend ! to a value to exclude files of a specific size:\n"
 "    !30.5m to hide files that are 30.5 MiB (mebibytes)."
 msgstr ""
 "Sæt ! foran en værdi for at udelukke filer af en bestemt størrelse:\n"
-"!30.5m for at skjule filer, der er 30,5 MiB.\""
+"    !30.5m for at skjule filer, der er 30,5 MiB (mebibytes)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:255
-#, fuzzy
 msgid ""
 "Prepend < or > to find files smaller/larger than the given value. Use a "
 "space between each condition to include a range:\n"
 "    >10.5m <1g to show files larger than 10.5 MiB, but smaller than 1 GiB."
 msgstr ""
 "Sæt < eller > foran for at finde filer, der er mindre/større end den givne "
-"værdi. \n"
-"Brug mellemrum mellem betingelser for at angive et interval:"
+"værdi. Brug mellemrum mellem betingelser for at angive et interval:\n"
+"   >10,5m <1g for at vise filer større end 10,5 MiB, men mindre end 1 GiB."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:266
 msgid ""
@@ -6023,7 +6021,6 @@ msgstr ""
 "sekund)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:314
-#, fuzzy
 msgid ""
 "Like File Size (above), operators =, !, <, >, <= or >= can be used, and "
 "multiple conditions can be specified, for example to show files with a "
@@ -6031,8 +6028,8 @@ msgid ""
 "    256 <=1411"
 msgstr ""
 "Ligesom filstørrelse (ovenfor) kan operatorerne =, !, <, >, <= eller >= "
-"bruges, og flere betingelser kan angives. \n"
-"Eksempel:>256 <1412"
+"bruges, og flere betingelser kan angives:\n"
+"    256 <=1411"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:343
 msgid "Filters files based upon their duration."
@@ -6047,7 +6044,6 @@ msgstr ""
 "indtastede varighed, medmindre en operator er angivet."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:363
-#, fuzzy
 msgid ""
 "Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:\n"
 "    =53 shows files that are around 53 seconds long.\n"
@@ -6055,10 +6051,11 @@ msgid ""
 "    <5:30:00 shows files less than 5 and a half hours long."
 msgstr ""
 "Angiv en rå værdi i sekunder, eller brug tidsformaterne MM:SS og TT:MM:SS:\n"
-"=53 viser filer, der er ca. 53 sekunder lange"
+"    =53 viser filer der er omkring 53 sekunder lange. \n"
+"    >5:30 for at vise filer der er længere end 5½ minut.\n"
+"    <5:30:00 viser filer der er kortere end 5½ time."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:376
-#, fuzzy
 msgid ""
 "Multiple conditions can be specified:\n"
 "    >6:00 <12:00 to show files between 6 and 12 minutes long.\n"
@@ -6066,11 +6063,11 @@ msgid ""
 "    =5:34 =4:23 =3:05 to include files with specific durations."
 msgstr ""
 "Flere betingelser kan angives:\n"
-">6:00 <12:00 for at vise filer mellem 6 og 12 minutter.\n"
-"!9:54 !8:43 for at skjule filer med disse varigheder."
+"    >6:00 <12:00 for at vise filer mellem 6 og 12 minutter.\n"
+"    !9:54 !8:43 for at skjule filer med disse varigheder.\n"
+"    =5:34 =4:23 =3:05 for at inkludere filer med specifikke varigheder."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:402
-#, fuzzy
 msgid ""
 "Filters files based upon users' geographical location according to country "
 "codes defined by ISO 3166-2:\n"
@@ -6080,7 +6077,8 @@ msgid ""
 msgstr ""
 "Filtrerer filer baseret på brugernes geografiske placering ifølge landekoder "
 "defineret af ISO 3166-2:\n"
-"US viser kun filer fra brugere i USA"
+"    US viser kun filer fra brugere i USA.\n"
+"    !GB skjuler resultater der kommer fra brugere i Storbritannien."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:414
 msgid "Multiple countries can be specified with commas or spaces."
@@ -6383,9 +6381,8 @@ msgstr "Aktivér downloadfiltre"
 #: pynicotine/gtkgui/ui/settings/downloads.ui:567
 #: pynicotine/gtkgui/ui/settings/shares.ui:306
 #: pynicotine/gtkgui/ui/settings/shares.ui:322
-#, fuzzy
 msgid "Load Defaults"
-msgstr "Standard"
+msgstr "Brug standardfiltre"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:611
 msgid "_Verify Filters"
@@ -6941,7 +6938,6 @@ msgid "Highlighted text color:"
 msgstr "Fremhævet tekstfarve:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1321
-#, fuzzy
 msgid "URL link text color:"
 msgstr "Tekstfarve for URL-link:"
 
