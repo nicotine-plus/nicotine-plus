@@ -1,6 +1,6 @@
 <!--
-   Before submitting a PR, please discuss changes you wish to make in an
-   issue report or discussion thread (small bug fixes are an exception).
-   Talking with the maintainers before writing a large amount of code saves
-   everyone's time. Thank you!
+   Before submitting a PR, please discuss the change you wish to make in an
+   issue report or discussion thread, in order to see if it fits the direction
+   of the project. If you skip this step, a PR containing anything other than
+   a trivial bug fix will likely be rejected.
 -->
