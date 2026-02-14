@@ -32,6 +32,7 @@ using the package manager.
 | [Haiku Ports](https://depot.haiku-os.org/#!/pkg/nicotineplus)                            | `nicotineplus`             |
 | [Mageia](https://madb.mageialinux-online.org/show?distribution=cauldron&rpm=nicotine%2B) | `nicotine+`                |
 | [Manjaro](https://manjaristas.org/branch_compare?q=nicotine%2B)                          | `nicotine+`                |
+| [NetBSD](https://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc/net/nicotine-plus)             | `nicotine-plus`            |
 | [NixOS](https://search.nixos.org/packages?show=nicotine-plus)                            | `nicotine-plus`            |
 | [OpenBSD Ports](https://openports.pl/path/net/nicotine-plus)                             | `net/nicotine-plus`        |
 | [OpenMandriva](https://github.com/OpenMandrivaAssociation/nicotineplus)                  | `nicotine+`                |
