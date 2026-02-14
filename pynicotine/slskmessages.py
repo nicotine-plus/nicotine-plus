@@ -2070,7 +2070,7 @@ class EmbeddedMessage(ServerMessage):
 
     def parse_network_message(self, message):
         pos, self.distrib_code = self.unpack_uint8(message)
-        self.distrib_message = message[pos:].tobytes()
+        self.distrib_message = message[pos:]
 
 
 class AcceptChildren(ServerMessage):
@@ -4016,7 +4016,7 @@ class DistribEmbeddedMessage(DistribMessage):
 
     def parse_network_message(self, message):
         pos, self.distrib_code = self.unpack_uint8(message, 3)
-        self.distrib_message = message[pos:].tobytes()
+        self.distrib_message = message[pos:]
 
 
 # Message Events #

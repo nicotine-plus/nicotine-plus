@@ -676,7 +676,7 @@ class NetworkThread(Thread):
 
         unpacked_msg = cls._unpack_network_message(
             distrib_class,
-            memoryview(msg.distrib_message),
+            msg.distrib_message,
             len(msg.distrib_message),
             conn_type="distrib",
             sock=sock,
@@ -1269,11 +1269,27 @@ class NetworkThread(Thread):
             return True
 
         if msg_class is EmbeddedMessage:
+            if self._parent is not None:
+                # Another peer is currently our parent. The server shouldn't send embedded messages
+                # while it's not our parent, but let's be safe.
+                return True
+
             unpacked_msg = self._unpack_embedded_message(msg)
 
-            if unpacked_msg is not None:
-                self._distribute_embedded_message(msg)
-                msg = unpacked_msg
+            if unpacked_msg is None:
+                # Ignore unknown message and keep connection open
+                return True
+
+            if not self._is_server_parent:
+                self._is_server_parent = True
+
+                if len(self._child_peers) < self._max_distrib_children:
+                    self._send_message_to_server(AcceptChildren(True))
+
+                log.add_conn("Server is our parent, ready to distribute search requests as a branch root")
+
+            self._send_message_to_child_peers(DistribEmbeddedMessage(msg.distrib_code, msg.distrib_message))
+            msg = unpacked_msg
 
         elif msg_class is Login:
             if msg.success:
@@ -2150,26 +2166,6 @@ class NetworkThread(Thread):
 
         for conn in self._child_peers.values():
             self._process_distrib_output(conn, msg, msg_content)
-
-    def _distribute_embedded_message(self, msg):
-        """Distributes an embedded message from the server to our child
-        peers."""
-
-        if self._parent is not None:
-            # The server shouldn't send embedded messages while it's not our parent, but let's be safe
-            return
-
-        self._send_message_to_child_peers(DistribEmbeddedMessage(msg.distrib_code, msg.distrib_message))
-
-        if self._is_server_parent:
-            return
-
-        self._is_server_parent = True
-
-        if len(self._child_peers) < self._max_distrib_children:
-            self._send_message_to_server(AcceptChildren(True))
-
-        log.add_conn("Server is our parent, ready to distribute search requests as a branch root")
 
     def _verify_parent_status(self, conn, msg_class):
         """Verify that a connection is our current parent connection."""
