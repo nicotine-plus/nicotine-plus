@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on February 9, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on February 12, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -1512,11 +1512,15 @@ responds with the remaining time, in seconds.
 
 ### EmbeddedMessage
 
-The server sends us an embedded distributed message. The only type of
-distributed message sent at present is [DistribSearch](#distributed-code-3)
-(distributed code 3). If we receive such a message, we are a branch root in
-the distributed network, and we distribute the embedded message (not the
-unpacked distributed message) to our child peers.
+The server sends us an embedded distributed message. The only sent message
+type is [DistribSearch](#distributed-code-3) (distributed code 3). If we
+receive such a message, we are a branch root in the distributed network, and
+we distribute the unpacked message to our child peers.
+
+Note that older SoulseekQt versions incorrectly distributed the whole
+server message instead of the unpacked message, which resulted in other
+client implementations adopting this erroneous behavior. This bug was
+fixed in SoulseekQt in early 2026.
 
 ### Data Order
 
@@ -1554,7 +1558,7 @@ message.
 
 The received list always contains users whose upload speed is higher than our
 own. If we have the highest upload speed on the server, we become a branch
-root, and start receiving [SearchRequest](#server-code-93) messages directly
+root, and start receiving [EmbeddedMessage](#server-code-93) messages directly
 from the server.
 
 ### Data Order
@@ -3071,7 +3075,7 @@ peer is allowed. In Nicotine+, these messages are defined in slskmessages.py.
 | `4`  | [Branch Level](#distributed-code-4)                   |
 | `5`  | [Branch Root](#distributed-code-5)                    |
 | `7`  | [Child Depth](#distributed-code-7) `DEPRECATED`       |
-| `93` | [Embedded Message](#distributed-code-93)              |
+| `93` | [Embedded Message](#distributed-code-93) `DEPRECATED` |
 
 
 ## Distributed Code 0
@@ -3119,7 +3123,8 @@ We tell our distributed children what our position is in our branch (xth
 generation) on the distributed network.
 
 If we receive a branch level of 0 from a parent, we should mark the parent as
-our branch root, since they won't send a [DistribBranchRoot](#distributed-code-5)
+our branch root. Due to incorrect behavior in older client versions, they
+aren't guaranteed to send a separate [DistribBranchRoot](#distributed-code-5)
 message in this case.
 
 ### Data Order
@@ -3137,7 +3142,9 @@ message in this case.
 We tell our distributed children the username of the root of the branch we're
 in on the distributed network.
 
-This message should not be sent when we're the branch root.
+Note that SoulseekQt used to not send this message when becoming a branch root.
+This behavior was corrected in early 2026. We should always send the message
+regardless of our status in the distributed network.
 
 ### Data Order
 
@@ -3168,11 +3175,17 @@ have on the distributed network.
 
 ### DistribEmbeddedMessage
 
-A branch root sends us an embedded distributed message. We unpack the
-distributed message and distribute it to our child peers.
+**DEPRECATED, accidentally sent by older SoulseekQt versions**
 
-The only type of distributed message sent at present is [DistribSearch](#distributed-code-3)
-(distributed code 3).
+A branch root sends us an embedded distributed message. When the embedded
+message type is [DistribSearch](#distributed-code-3) (distributed code 3), we
+unpack and distribute the raw message to our child peers. All other message
+types are unsupported and ignored.
+
+Note that older SoulseekQt versions incorrectly distributed this message
+instead of the unpacked message, which resulted in other client
+implementations adopting this erroneous behavior. This bug was fixed in
+SoulseekQt in early 2026.
 
 ### Data Order
 
