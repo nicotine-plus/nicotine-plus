@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-11 18:51+0200\n"
-"PO-Revision-Date: 2026-02-11 19:09+0000\n"
+"PO-Revision-Date: 2026-02-14 18:09+0000\n"
 "Last-Translator: Felix Hansen <gore-snagged-happy@duck.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -127,7 +127,7 @@ msgstr "Starte das Programm, ohne das Fenster anzuzeigen"
 
 #: pynicotine/__init__.py:56
 msgid "ip"
-msgstr "IP"
+msgstr "ip"
 
 #: pynicotine/__init__.py:57
 msgid "bind sockets to the given IP (useful for VPN)"
@@ -789,7 +789,7 @@ msgstr "_Raum verlassen"
 #: pynicotine/gtkgui/chatrooms.py:665 pynicotine/gtkgui/chatrooms.py:870
 #: pynicotine/gtkgui/privatechat.py:364 pynicotine/gtkgui/privatechat.py:435
 msgid "Copy Link"
-msgstr "URL kopieren"
+msgstr "Link kopieren"
 
 #: pynicotine/gtkgui/chatrooms.py:671
 msgid "View Room Log"
@@ -1596,7 +1596,7 @@ msgstr "Rundlaufverfahren (Round Robin)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1158
 msgid "First In, First Out"
-msgstr "Zuerst rein, zuerst raus (FIFO - First In, First Out)"
+msgstr "Zuerst rein, zuerst raus (First In, First Out)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1307
 #: pynicotine/gtkgui/dialogs/preferences.py:1515
@@ -1970,7 +1970,7 @@ msgstr "Dies ist kein integriertes Plugin. Verwendung auf eigene Gefahr."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3570
 msgid "Select a Zip File"
-msgstr "ZIP‑Datei auswählen"
+msgstr "Zip‑Datei auswählen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3591
 msgid "Uninstall Plugin?"
@@ -3107,7 +3107,8 @@ msgstr ""
 #: pynicotine/gtkgui/userbrowse.py:605 pynicotine/gtkgui/userinfo.py:509
 msgid "Cannot request information from the user, since they are offline."
 msgstr ""
-"Kann die IP des Benutzers nicht abrufen, da dieser Benutzer offline ist."
+"Vom Benutzer können keine Informationen angefordert werden, da er offline "
+"ist."
 
 #: pynicotine/gtkgui/userbrowse.py:607 pynicotine/gtkgui/userinfo.py:511
 msgid ""
@@ -4537,7 +4538,7 @@ msgstr "Uganda"
 
 #: pynicotine/networkfilter.py:257
 msgid "U.S. Minor Outlying Islands"
-msgstr "US‑Amerikanische Übersee‑Kleininseln"
+msgstr "U.S.‑Amerikanische Übersee‑Kleininseln"
 
 #: pynicotine/networkfilter.py:258
 msgid "United States"
