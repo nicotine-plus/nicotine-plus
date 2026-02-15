@@ -26,8 +26,14 @@ from pynicotine.utils import encode_path
 # Global Style #
 
 
+GLOBAL_CSS_PROVIDER = Gtk.CssProvider()
 CUSTOM_CSS_PROVIDER = Gtk.CssProvider()
 GTK_SETTINGS = Gtk.Settings.get_default()
+GLOBAL_CSS_PROVIDER_REGISTERED = False
+THEME_FILE_MONITORS = []
+THEME_RELOAD_SOURCE_ID = 0
+THEME_CSS_PATHS = set()
+RESETTING_THEME_NAME = False
 use_color_scheme_portal = (  # pylint: disable=invalid-name
     sys.platform not in {"win32", "darwin"} and not LIBADWAITA_API_VERSION
 )
@@ -185,9 +191,8 @@ def set_visual_settings(isolated_mode=False):
     set_use_header_bar(config.sections["ui"]["header_bar"])
 
 
-def set_global_css():
+def _load_global_css():
 
-    global_css_provider = Gtk.CssProvider()
     css_folder_path = os.path.join(GTK_GUI_FOLDER_PATH, "css")
     css = bytearray()
 
@@ -195,9 +200,6 @@ def set_global_css():
         css += file_handle.read()
 
     if GTK_API_VERSION >= 4:
-        add_provider_func = Gtk.StyleContext.add_provider_for_display  # pylint: disable=no-member
-        display = Gdk.Display.get_default()
-
         with open(encode_path(os.path.join(css_folder_path, "style_gtk4.css")), "rb") as file_handle:
             css += file_handle.read()
 
@@ -217,25 +219,44 @@ def set_global_css():
             with open(encode_path(os.path.join(css_folder_path, "style_libadwaita.css")), "rb") as file_handle:
                 css += file_handle.read()
 
-        load_css(global_css_provider, css)
+    else:
+        with open(encode_path(os.path.join(css_folder_path, "style_gtk3.css")), "rb") as file_handle:
+            css += file_handle.read()
 
+    load_css(GLOBAL_CSS_PROVIDER, css)
+
+
+def reload_global_css():
+    _load_global_css()
+
+
+def set_global_css():
+
+    global GLOBAL_CSS_PROVIDER_REGISTERED
+
+    _load_global_css()
+
+    if GLOBAL_CSS_PROVIDER_REGISTERED:
+        return
+
+    if GTK_API_VERSION >= 4:
+        add_provider_func = Gtk.StyleContext.add_provider_for_display  # pylint: disable=no-member
+        display = Gdk.Display.get_default()
     else:
         add_provider_func = Gtk.StyleContext.add_provider_for_screen  # pylint: disable=no-member
         display = Gdk.Screen.get_default()
 
-        with open(encode_path(os.path.join(css_folder_path, "style_gtk3.css")), "rb") as file_handle:
-            css += file_handle.read()
-
-        load_css(global_css_provider, css)
-
-    add_provider_func(display, global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+    add_provider_func(display, GLOBAL_CSS_PROVIDER, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
     add_provider_func(display, CUSTOM_CSS_PROVIDER, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+
+    GLOBAL_CSS_PROVIDER_REGISTERED = True
 
 
 def set_global_style(isolated_mode=False):
     set_visual_settings(isolated_mode)
     set_global_css()
     update_custom_css()
+    start_theme_file_monitoring()
 
 
 # Icons #
@@ -632,6 +653,218 @@ def update_custom_css():
     css += _get_custom_color_css()
 
     load_css(CUSTOM_CSS_PROVIDER, css)
+
+
+def _get_theme_search_roots():
+
+    roots = [
+        os.path.join(GLib.get_home_dir(), ".themes"),
+        os.path.join(os.environ.get("XDG_DATA_HOME", os.path.join(GLib.get_home_dir(), ".local", "share")), "themes")
+    ]
+
+    user_data_dir = GLib.get_user_data_dir()
+
+    if user_data_dir:
+        roots.append(os.path.join(user_data_dir, "themes"))
+
+    for data_dir in GLib.get_system_data_dirs():
+        roots.append(os.path.join(data_dir, "themes"))
+
+    seen = set()
+
+    for root in roots:
+        normalized_root = os.path.normpath(root)
+
+        if normalized_root in seen:
+            continue
+
+        seen.add(normalized_root)
+
+        if os.path.isdir(encode_path(normalized_root)):
+            yield normalized_root
+
+
+def _get_theme_css_files():
+
+    theme_name = GTK_SETTINGS.props.gtk_theme_name
+
+    if not theme_name:
+        return ()
+
+    version_folder = f"gtk-{GTK_API_VERSION}"
+    version_folder_alt = f"{version_folder}.0"
+    css_files = []
+
+    for root in _get_theme_search_roots():
+        base_path = os.path.join(root, theme_name)
+
+        for subfolder in (version_folder, version_folder_alt):
+            css_path = os.path.join(base_path, subfolder, "gtk.css")
+
+            if os.path.isfile(encode_path(css_path)):
+                css_files.append(css_path)
+                break
+
+        else:
+            css_path = os.path.join(base_path, "gtk.css")
+
+            if os.path.isfile(encode_path(css_path)):
+                css_files.append(css_path)
+
+    return css_files
+
+
+def _queue_theme_reload():
+
+    global THEME_RELOAD_SOURCE_ID
+
+    if THEME_RELOAD_SOURCE_ID:
+        log.add_debug("GTK theme reload already scheduled")
+        return
+
+    THEME_RELOAD_SOURCE_ID = GLib.timeout_add(200, _reload_theme_assets)
+    log.add_debug("Scheduled GTK theme reload in response to file changes")
+
+
+def _reload_theme_assets():
+
+    global THEME_RELOAD_SOURCE_ID
+    global RESETTING_THEME_NAME
+
+    THEME_RELOAD_SOURCE_ID = 0
+
+    log.add_debug("Reloading GTK theme assets")
+    reload_global_css()
+    update_custom_css()
+
+    try:
+        ICON_THEME.rescan_if_needed()
+    except AttributeError:
+        pass
+
+    theme_name = GTK_SETTINGS.props.gtk_theme_name
+
+    if theme_name:
+        RESETTING_THEME_NAME = True
+
+        try:
+            try:
+                GTK_SETTINGS.reset_property("gtk-theme-name")
+            except AttributeError:
+                pass
+
+            GTK_SETTINGS.props.gtk_theme_name = theme_name
+
+        finally:
+            RESETTING_THEME_NAME = False
+
+    if GTK_API_VERSION >= 4:
+        display = Gdk.Display.get_default()
+
+        if display and hasattr(Gtk.StyleContext, "invalidate"):
+            Gtk.StyleContext.invalidate(display)  # pylint: disable=no-member
+    else:
+        screen = Gdk.Screen.get_default()
+
+        if screen and hasattr(Gtk.StyleContext, "reset_widgets"):
+            Gtk.StyleContext.reset_widgets(screen)  # pylint: disable=no-member
+
+    return GLib.SOURCE_REMOVE
+
+
+def _on_theme_file_changed(_monitor, _file, _other_file, event_type):
+
+    file_path = _file.get_path() if _file else None
+
+    if not file_path:
+        return
+
+    normalized_path = os.path.normpath(file_path)
+
+    if normalized_path not in THEME_CSS_PATHS:
+        return
+
+    event_name = getattr(event_type, "value_nick", str(event_type))
+    log.add_debug(f"Theme file event {event_name} for {normalized_path}")
+
+    relevant_events = (
+        Gio.FileMonitorEvent.CHANGES_DONE_HINT,
+        Gio.FileMonitorEvent.CHANGED,
+        Gio.FileMonitorEvent.CREATED,
+        Gio.FileMonitorEvent.DELETED,
+        Gio.FileMonitorEvent.ATTRIBUTE_CHANGED,
+        Gio.FileMonitorEvent.MOVED_IN,
+        Gio.FileMonitorEvent.MOVED_OUT
+    )
+
+    if event_type in relevant_events:
+        _queue_theme_reload()
+
+
+def _clear_theme_file_monitors():
+
+    THEME_CSS_PATHS.clear()
+
+    if THEME_FILE_MONITORS:
+        log.add_debug("Stopping monitoring of GTK theme directories")
+
+    for monitor in THEME_FILE_MONITORS:
+        try:
+            monitor.cancel()
+        except AttributeError:
+            pass
+
+    THEME_FILE_MONITORS.clear()
+
+
+def start_theme_file_monitoring():
+
+    _clear_theme_file_monitors()
+
+    css_files = _get_theme_css_files()
+
+    if not css_files:
+        log.add_debug("No GTK theme CSS file found for theme %s", GTK_SETTINGS.props.gtk_theme_name)
+        return
+
+    monitored_directories = set()
+
+    for css_file in css_files:
+        normalized_css = os.path.normpath(css_file)
+        THEME_CSS_PATHS.add(normalized_css)
+
+        directory = os.path.dirname(normalized_css)
+
+        if directory in monitored_directories:
+            continue
+
+        monitored_directories.add(directory)
+        gio_directory = Gio.File.new_for_path(directory)
+
+        try:
+            monitor = gio_directory.monitor_directory(Gio.FileMonitorFlags.NONE, None)
+
+        except GLib.Error as error:
+            log.add_debug("Unable to monitor theme directory %s: %s", (directory, error))
+            continue
+
+        monitor.connect("changed", _on_theme_file_changed)
+        THEME_FILE_MONITORS.append(monitor)
+
+    log.add_debug("Monitoring GTK theme CSS files: %s", ", ".join(sorted(THEME_CSS_PATHS)))
+
+
+def _on_theme_name_changed(*_args):
+
+    if RESETTING_THEME_NAME:
+        return
+
+    log.add_debug("GTK theme name changed to %s", GTK_SETTINGS.props.gtk_theme_name)
+    start_theme_file_monitoring()
+    _queue_theme_reload()
+
+
+GTK_SETTINGS.connect("notify::gtk-theme-name", _on_theme_name_changed)
 
 
 def update_tag_visuals(tag):
