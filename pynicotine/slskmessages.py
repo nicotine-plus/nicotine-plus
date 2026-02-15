@@ -41,7 +41,6 @@ UINT32_PACK = Struct("<I").pack
 UINT64_PACK = Struct("<Q").pack
 
 ZLIB_COMPRESSION_LEVEL = 4
-SEARCH_TOKENS_ALLOWED = set()
 
 
 def initial_token():
@@ -242,6 +241,31 @@ class SetDownloadLimit(InternalMessage):
 
     def __init__(self, limit):
         self.limit = limit
+
+
+class AddAllowedResponse(InternalMessage):
+    """Sent to the networking thread to indicate that we're expecting a message response
+    with a certain ID (username, token, etc). More heavy tasks can be performed for allowed
+    responses, such as decompression.
+    """
+
+    __slots__ = ("msg_class", "response_id")
+
+    def __init__(self, msg_class, response_id):
+        self.msg_class = msg_class
+        self.response_id = response_id
+
+
+class RemoveAllowedResponse(InternalMessage):
+    """Sent to the networking thread to indicate that we're no longer expecting a message
+    response with a certain ID (username, token, etc).
+    """
+
+    __slots__ = ("msg_class", "response_id")
+
+    def __init__(self, msg_class, response_id):
+        self.msg_class = msg_class
+        self.response_id = response_id
 
 
 # Network Messages #
@@ -3073,13 +3097,14 @@ class PeerInit(PeerInitMessage):
 
 class PeerMessage(SlskMessage):
 
-    __slots__ = ("username", "sock", "addr")
+    __slots__ = ("username", "sock", "addr", "allowed_responses")
     msg_type = MessageType.PEER
 
     def __init__(self):
         self.username = None
         self.sock = None
         self.addr = None
+        self.allowed_responses = set()
 
 
 class SharedFileListRequest(PeerMessage):
@@ -3306,9 +3331,8 @@ class FileSearchResponse(PeerMessage):
         _pos, self.token = self.unpack_uint32(
             decompressor.decompress(decompressor.unconsumed_tail, username_len + 4), username_len)
 
-        if self.token not in SEARCH_TOKENS_ALLOWED:
+        if self.token not in self.allowed_responses:
             # Results are no longer accepted for this search token, stop parsing message
-            self.list = []
             return
 
         # Optimization: only decompress the rest of the message when needed
@@ -3497,12 +3521,23 @@ class FolderContentsResponse(PeerMessage):
         self.list = shares
 
     def parse_network_message(self, message):
-        self._parse_network_message(memoryview(zlib.decompress(message)))
+        decompressor = zlib.decompressobj()
+        decompressed_part = decompressor.decompress(message, 8)
+        pos, self.token = self.unpack_uint32(decompressed_part)
+        _pos, dir_len = self.unpack_uint32(decompressed_part, pos)
+        _pos, self.dir = self.unpack_string(
+            memoryview(decompressed_part[pos:] + decompressor.decompress(decompressor.unconsumed_tail, dir_len)))
 
-    def _parse_network_message(self, message):
-        pos, self.token = self.unpack_uint32(message)
-        pos, self.dir = self.unpack_string(message, pos)
-        pos, ndir = self.unpack_uint32(message, pos)
+        if self.username + self.dir not in self.allowed_responses:
+            return
+
+        # Optimization: only decompress the rest of the message when needed
+        self._parse_remaining_network_message(
+            memoryview(decompressor.decompress(decompressor.unconsumed_tail))
+        )
+
+    def _parse_remaining_network_message(self, message):
+        pos, ndir = self.unpack_uint32(message)
 
         folders = {}
 
