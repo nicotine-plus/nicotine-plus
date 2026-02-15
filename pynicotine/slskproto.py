@@ -362,9 +362,9 @@ class NetworkThread(Thread):
         resource.setrlimit(resource.RLIMIT_NOFILE, (MAX_FILE_LIMIT, MAX_FILE_LIMIT))  # pylint: disable=no-member
 
         # Reserve 2/3 of the file limit for sockets, but always limit the maximum number
-        # of sockets to 3072 to improve performance.
+        # of sockets to 2048 to make resource exhaustion attacks more difficult.
 
-        MAX_SOCKETS = min(int(MAX_FILE_LIMIT * (2 / 3)), 3072)
+        MAX_SOCKETS = min(int(MAX_FILE_LIMIT * (2 / 3)), 2048)
 
     except ImportError:
         # For Windows, FD_SETSIZE is set to 512 in CPython.
