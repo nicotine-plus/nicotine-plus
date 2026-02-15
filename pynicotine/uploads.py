@@ -431,11 +431,12 @@ class Uploads(Transfers):
                 self._enqueue_transfer(upload)
                 self._update_transfer(upload)
 
-    def _check_queue_upload_allowed(self, username, addr, virtual_path, real_path, msg):
+    def _check_queue_upload_allowed(self, username, addr, virtual_path, msg):
 
         # Is user allowed to download?
         ip_address, _port = addr
         permission_level, reject_reason = core.shares.check_user_permission(username, ip_address)
+        real_path = None
         size = None
 
         if permission_level == PermissionLevel.BANNED:
@@ -444,19 +445,19 @@ class Uploads(Transfers):
             if reject_reason:
                 reject_message += f" ({reject_reason})"
 
-            return False, reject_message, size
+            return False, reject_message, real_path, size
 
         if core.shares.rescanning:
             self._pending_network_msgs.append(msg)
-            return False, None, size
+            return False, None, real_path, size
 
         # Is that file already in the queue?
         if self.is_upload_queued(username, virtual_path):
-            return False, TransferRejectReason.QUEUED, size
+            return False, TransferRejectReason.QUEUED, real_path, size
 
         # Are we waiting for existing uploads to finish?
         if self.pending_shutdown:
-            return False, TransferRejectReason.PENDING_SHUTDOWN, size
+            return False, TransferRejectReason.PENDING_SHUTDOWN, real_path, size
 
         # Has user hit queue limit?
         enable_limits = True
@@ -469,15 +470,16 @@ class Uploads(Transfers):
             limit_reached, reason = self.is_queue_limit_reached(username)
 
             if limit_reached:
-                return False, reason, size
+                return False, reason, real_path, size
 
+        real_path = core.shares.virtual2real(virtual_path)
         is_file_shared, size = core.shares.file_is_shared(username, virtual_path, real_path)
 
         # Do we actually share that file with the world?
         if not is_file_shared:
-            return False, TransferRejectReason.FILE_NOT_SHARED, size
+            return False, TransferRejectReason.FILE_NOT_SHARED, real_path, size
 
-        return True, None, size
+        return True, None, real_path, size
 
     def _check_backslash_path_exists(self, username, virtual_path):
         """Replace a backslash sentinel with an actual backslash in a file path, and check
@@ -926,8 +928,7 @@ class Uploads(Transfers):
 
         username = msg.username
         virtual_path = msg.file
-        real_path = core.shares.virtual2real(virtual_path)
-        allowed, reason, size = self._check_queue_upload_allowed(username, msg.addr, virtual_path, real_path, msg)
+        allowed, reason, real_path, size = self._check_queue_upload_allowed(username, msg.addr, virtual_path, msg)
         is_backslash_path = False
         is_lowercase_path = False
 
@@ -1027,8 +1028,7 @@ class Uploads(Transfers):
                          (token, virtual_path, username))
 
         # Is user allowed to download?
-        real_path = core.shares.virtual2real(virtual_path)
-        allowed, reason, size = self._check_queue_upload_allowed(username, msg.addr, virtual_path, real_path, msg)
+        allowed, reason, real_path, size = self._check_queue_upload_allowed(username, msg.addr, virtual_path, msg)
 
         if reason == TransferRejectReason.FILE_NOT_SHARED:
             # Possibly a file path with a backslash sentinel that should be substituted
