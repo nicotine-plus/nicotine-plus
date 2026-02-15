@@ -43,6 +43,7 @@ from pynicotine.slskmessages import SERVER_MESSAGE_CODES
 from pynicotine.slskmessages import DOUBLE_UINT32_UNPACK
 from pynicotine.slskmessages import UINT32_UNPACK
 from pynicotine.slskmessages import AcceptChildren
+from pynicotine.slskmessages import AddAllowedResponse
 from pynicotine.slskmessages import BranchLevel
 from pynicotine.slskmessages import BranchRoot
 from pynicotine.slskmessages import CantConnectToPeer
@@ -72,6 +73,7 @@ from pynicotine.slskmessages import ParentSpeedRatio
 from pynicotine.slskmessages import PeerInit
 from pynicotine.slskmessages import PierceFireWall
 from pynicotine.slskmessages import Relogged
+from pynicotine.slskmessages import RemoveAllowedResponse
 from pynicotine.slskmessages import ResetDistributed
 from pynicotine.slskmessages import ServerConnect
 from pynicotine.slskmessages import ServerDisconnect
@@ -405,6 +407,7 @@ class NetworkThread(Thread):
         self._indirect_token_init_msgs = {}
         self._username_init_msgs = {}
         self._user_addresses = {}
+        self._allowed_message_responses = defaultdict(set)
         self._should_process_queue = False
         self._want_abort = False
 
@@ -702,7 +705,8 @@ class NetworkThread(Thread):
         return None
 
     @staticmethod
-    def _unpack_network_message(msg_class, msg_content, msg_size, conn_type, sock=None, addr=None, username=None):
+    def _unpack_network_message(msg_class, msg_content, msg_size, conn_type, sock=None, addr=None, username=None,
+                                allowed_responses=None):
 
         try:
             msg = msg_class()
@@ -715,6 +719,9 @@ class NetworkThread(Thread):
 
             if username is not None:
                 msg.username = username
+
+            if allowed_responses is not None:
+                msg.allowed_responses = allowed_responses
 
             msg.parse_network_message(msg_content)
             return msg
@@ -1592,6 +1599,7 @@ class NetworkThread(Thread):
         self._pending_peer_conns.clear()
         self._pending_init_msgs.clear()
         self._username_init_msgs.clear()
+        self._allowed_message_responses.clear()
 
         # Reset connection stats
         events.emit_main_thread("set-connection-stats")
@@ -1898,6 +1906,12 @@ class NetworkThread(Thread):
                 # Larger limit since these responses can contain large file lists or user pictures
                 max_msg_size = self.MAX_INCOMING_MESSAGE_SIZE_448M
 
+                if conn.init.target_user not in self._allowed_message_responses[msg_class]:
+                    # Since these responses tend to be large, close the connection when receiving
+                    # unsolicited messages to save bandwidth.
+                    self._close_connection(conn)
+                    return
+
             if msg_size > max_msg_size:
                 log.add_conn("Received message larger than maximum size %s from user %s. "
                              "Closing connection.", (max_msg_size, conn.init.target_user))
@@ -1926,7 +1940,8 @@ class NetworkThread(Thread):
                     conn_type="peer",
                     sock=conn.sock,
                     addr=conn.addr,
-                    username=conn.init.target_user
+                    username=conn.init.target_user,
+                    allowed_responses=self._allowed_message_responses.get(msg_class, set())
                 )
 
                 if msg_class is FileSearchResponse:
@@ -2532,6 +2547,12 @@ class NetworkThread(Thread):
 
             self._upload_limit = msg.limit * 1024
             self._calc_upload_limit_function()
+
+        elif msg_class is AddAllowedResponse:
+            self._allowed_message_responses[msg.msg_class].add(msg.response_id)
+
+        elif msg_class is RemoveAllowedResponse:
+            self._allowed_message_responses[msg.msg_class].discard(msg.response_id)
 
         elif msg_class is EmitNetworkMessageEvents:
             for network_msg in msg.msgs:

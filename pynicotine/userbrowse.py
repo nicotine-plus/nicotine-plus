@@ -26,7 +26,9 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import CloseConnection
+from pynicotine.slskmessages import AddAllowedResponse
+from pynicotine.slskmessages import ConnectionType
+from pynicotine.slskmessages import RemoveAllowedResponse
 from pynicotine.slskmessages import SharedFileListRequest
 from pynicotine.slskmessages import SharedFileListResponse
 from pynicotine.slskmessages import UploadQueueNotification
@@ -62,9 +64,10 @@ class UserBrowse:
         self.users = {}
 
         for event_name, callback in (
+            ("peer-connection-closed", self._peer_connection_error),
+            ("peer-connection-error", self._peer_connection_error),
             ("quit", self._quit),
             ("server-login", self._server_login),
-            ("shared-file-list-progress", self._shared_file_list_progress),
             ("shared-file-list-response", self._shared_file_list_response)
         ):
             events.connect(event_name, callback)
@@ -99,6 +102,7 @@ class UserBrowse:
     def remove_user(self, username):
 
         del self.users[username]
+        core.send_message_to_network_thread(RemoveAllowedResponse(SharedFileListResponse, username))
         core.users.unwatch_user(username, context="userbrowse")
         events.emit("user-browse-remove-user", username)
 
@@ -142,6 +146,7 @@ class UserBrowse:
         core.users.watch_user(username, context="userbrowse")
 
     def request_user_shares(self, username):
+        core.send_message_to_network_thread(AddAllowedResponse(SharedFileListResponse, username))
         core.send_message_to_peer(username, SharedFileListRequest())
 
     def browse_user(self, username, path=None, new_request=False, switch_page=True):
@@ -375,12 +380,20 @@ class UserBrowse:
 
         self.browse_user(username, path=file_path)
 
-    def _shared_file_list_progress(self, username, sock, _buffer_len, _msg_size_total):
+    def _peer_connection_error(self, username, conn_type, msgs, **_unused):
 
-        if username not in self.users:
-            # We've removed the user. Close the connection to stop the user from
-            # sending their response and wasting bandwidth.
-            core.send_message_to_network_thread(CloseConnection(sock))
+        if not msgs:
+            return
+
+        if conn_type != ConnectionType.PEER:
+            return
+
+        failed_msg_types = {SharedFileListRequest, SharedFileListResponse}
+
+        for msg in msgs:
+            if msg.__class__ in failed_msg_types:
+                core.send_message_to_network_thread(RemoveAllowedResponse(SharedFileListResponse, username))
+                break
 
     def _shared_file_list_response(self, msg):
 
@@ -402,6 +415,8 @@ class UserBrowse:
             browsed_user.num_folders = num_folders
             browsed_user.num_files = num_files
             browsed_user.shared_size = shared_size
+
+        core.send_message_to_network_thread(RemoveAllowedResponse(SharedFileListResponse, username))
 
         core.pluginhandler.user_stats_notification(username, stats={
             "avgspeed": None,
