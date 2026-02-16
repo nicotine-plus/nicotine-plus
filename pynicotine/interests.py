@@ -30,16 +30,10 @@ from pynicotine.slskmessages import RemoveThingIHate
 from pynicotine.slskmessages import SimilarUsers
 
 
-class SimilarUser:
-    __slots__ = ("username", "rating")
-
-    def __init__(self, username, rating=None):
-        self.username = username
-        self.rating = rating
-
-
 class Interests:
     __slots__ = ("similar_users",)
+
+    MAX_SIMILAR_USERS = 200
 
     def __init__(self):
 
@@ -154,27 +148,28 @@ class Interests:
     def request_similar_users(self):
         core.send_message_to_server(SimilarUsers())
 
-    def _similar_users(self, msg, has_ratings=True):
+    def _similar_users(self, msg):
         """Server code 110."""
 
-        new_users = set(msg.users)
+        # Limit number of users to prevent excessive status requests
+        msg.users = msg.users[:self.MAX_SIMILAR_USERS]
+        new_usernames = set(x.username for x in msg.users)
 
         # Unwatch and remove old users
-        for username in self.similar_users:
-            if username not in new_users:
+        for username, similar_user in self.similar_users.items():
+            if similar_user.username not in new_usernames:
                 core.users.unwatch_user(username, context="interests")
 
         self.similar_users.clear()
 
         # Add new users
-        for username in msg.users:
-            rating = msg.users[username] if has_ratings else None
-            self.similar_users[username] = SimilarUser(username, rating)
+        for user in msg.users:
+            self.similar_users[user.username] = user
 
             # Request user status, speed and number of shared files
-            core.users.watch_user(username, context="interests")
+            core.users.watch_user(user.username, context="interests")
 
     def _item_similar_users(self, msg):
         """Server code 112."""
 
-        self._similar_users(msg, has_ratings=False)
+        self._similar_users(msg)
