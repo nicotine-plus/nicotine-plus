@@ -746,63 +746,57 @@ class Search:
         """Returns a list of common file indices for each word in a search
         term."""
 
-        results = None
-
         for word in included_words:
             if word not in word_index:
                 # No results
-                return results
+                return None
 
         start_word = next(iter(included_words), None)
-        has_single_word = (sum(len(words) for words in (included_words, excluded_words, partial_words)) == 1)
+
+        if not start_word:
+            # Require at least one complete word to return results. Matches official clients.
+            return None
+
+        results = None
+        has_single_word = (len(included_words) + len(excluded_words) + len(partial_words) == 1)
         included_words.discard(start_word)
+
+        # Included search words (e.g. hello)
+        start_results = word_index[start_word]
+
+        if has_single_word:
+            # Attempt to avoid large memory usage if someone searches for e.g. "flac"
+            start_results = start_results[:max_results]
+
+        results = self._update_search_results(results, start_results)
+
+        for included_word in included_words:
+            results = self._update_search_results(results, word_index[included_word])
+
+            if not results:
+                return None
 
         # Partial search words (e.g. *ello)
         for partial_word in partial_words:
             partial_word_len = len(partial_word)
             partial_results = set()
-            num_partial_results = 0
 
             for complete_word in word_index:
                 if len(complete_word) < partial_word_len or not complete_word.endswith(partial_word):
                     continue
 
-                indices = word_index[complete_word]
+                indices = {i for i in word_index[complete_word] if i in results}
 
-                if has_single_word:
-                    # Attempt to avoid large memory usage if someone searches for e.g. "*lac"
-                    indices = indices[:max_results - num_partial_results]
-
-                partial_results.update(indices)
-
-                if not has_single_word:
-                    continue
-
-                num_partial_results = len(partial_results)
-
-                if num_partial_results >= max_results:
-                    break
+                if indices:
+                    partial_results.update(indices)
 
             if not partial_results:
                 return None
 
             results = self._update_search_results(results, partial_results)
 
-        # Included search words (e.g. hello)
-        if start_word:
-            start_results = word_index[start_word]
-
-            if has_single_word:
-                # Attempt to avoid large memory usage if someone searches for e.g. "flac"
-                start_results = start_results[:max_results]
-
-            results = self._update_search_results(results, start_results)
-
-            for included_word in included_words:
-                if included_word not in word_index:
-                    return None
-
-                results = self._update_search_results(results, word_index[included_word])
+            if not results:
+                return None
 
         # Excluded search words (e.g. -hello)
         if results:
@@ -811,6 +805,9 @@ class Search:
                     continue
 
                 results = self._update_search_results(results, word_index[excluded_word], excluded=True)
+
+                if not results:
+                    return None
 
         if not results:
             return None
