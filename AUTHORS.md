@@ -185,16 +185,18 @@
  - Maite Guix (2022)
 
 ### Chinese (Simplified)
+ - Poesty Li (2026)
  - Ys413 (2024)
  - Bonislaw (2023)
  - hylau (2023)
  - hadwin (2022)
 
 ### Czech
- - slrslr (2024–2025)
+ - slrslr (2024–2026)
  - burnmail123 (2021–2023)
 
 ### Danish
+ - Denisa Alicia Rissa (2026)
  - mathsped (2003–2004)
 
 ### Dutch
@@ -217,7 +219,7 @@
  - phlostically (2021)
 
 ### Estonian
- - rimasx (2024-2025)
+ - rimasx (2024-2026)
  - PriitUring (2023)
 
 ### Euskara
@@ -227,11 +229,11 @@
  - Kari Viittanen (Kalevi) (2006–2007)
 
 ### French
+ - Mohamed El Morabity (melmorabity) (2021–2024)
  - Saumon (2023)
  - subu_versus (2023)
  - zniavre (2007–2023)
  - Maxime Leroy (Lisapple) (2021–2022)
- - Mohamed El Morabity (melmorabity) (2021–2024)
  - m-balthazar (2020)
  - Michael Labouebe (gfarmerfr) (2016–2017)
  - Monsieur Poisson (2009–2010)
@@ -249,7 +251,7 @@
  - Ingmar K. Steen (Hyriand) (2003–2004)
 
 ### Hungarian
- - Szia Tomi (2022–2025)
+ - Szia Tomi (2022–2026)
  - Nils (2009)
  - David Balazs (djbaloo) (2006–2020)
 
@@ -264,7 +266,7 @@
  - dbazza (2003–2004)
 
 ### Latvian
- - Pagal3 (2022–2025)
+ - Pagal3 (2022–2026)
 
 ### Lithuanian
  - mantas (2020)
@@ -274,14 +276,14 @@
  - Allan Nordhøy (comradekingu) (2021)
 
 ### Polish
- - Matthaiks (Kityn) (2025-2025)
+ - Matthaiks (Kityn) (2025-2026)
  - Mariusz (mariachini) (2017–2024)
  - Amun-Ra (2007)
  - thine (2007)
  - Wojciech Owczarek (owczi) (2003–2004)
 
 ### Portuguese (Brazil)
- - Havokdan (2022–2025)
+ - Havokdan (2022–2026)
  - Guilherme Santos (2022)
  - b1llso (2022)
  - Nicolas Abril (2021)
@@ -296,7 +298,7 @@
  - Slendi (xslendix) (2023)
 
 ### Russian
- - Kirill Feoktistov (SnIPeRSnIPeR) (2022–2025)
+ - Kirill Feoktistov (SnIPeRSnIPeR) (2022–2026)
  - Mehavoid (2021–2023)
  - AHOHNMYC (2022)
 
@@ -311,6 +313,7 @@
  - Dreslo (2003–2004)
 
 ### Spanish (Spain)
+ - Lucas Vieites (2026)
  - tagomago (2021–2025)
  - gallegonovato (2023–2024)
  - MELERIX (2021–2023)
@@ -329,7 +332,7 @@
  - Hannah Nosurname (jmejuniper) (2025)
 
 ### Turkish
- - Oğuz Ersen (2021–2025)
+ - Oğuz Ersen (2021–2026)
 
 ### Ukrainian
  - Олег Грицун (oleg.gritsun) (2024–2025)

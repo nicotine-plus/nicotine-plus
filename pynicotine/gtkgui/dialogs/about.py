@@ -195,6 +195,7 @@ class About(Dialog):
          "\n •  Maite Guix (2022)"),
 
         ("<b>Chinese (Simplified)</b>"
+         "\n •  Poestly Li (2026)"
          "\n •  Eric Zhang (2025)"
          "\n •  Ys413 (2024)"
          "\n •  Bonislaw (2023)"
@@ -202,10 +203,11 @@ class About(Dialog):
          "\n •  hadwin (2022)"),
 
         ("<b>Czech</b>"
-         "\n •  slrslr (2024–2025)"
+         "\n •  slrslr (2024–2026)"
          "\n •  burnmail123 (2021–2023)"),
 
         ("<b>Danish</b>"
+         "\n •  Denisa Alicia Rissa (2026)"
          "\n •  mathsped (2003–2004)"),
 
         ("<b>Dutch</b>"
@@ -228,7 +230,7 @@ class About(Dialog):
          "\n •  phlostically (2021)"),
 
         ("<b>Estonian</b>"
-         "\n •  rimasx (2024-2025)"
+         "\n •  rimasx (2024-2026)"
          "\n •  PriitUring (2023)"),
 
         ("<b>Euskara</b>"
@@ -238,11 +240,11 @@ class About(Dialog):
          "\n •  Kari Viittanen (Kalevi) (2006–2007)"),
 
         ("<b>French</b>"
+         "\n •  Mohamed El Morabity (melmorabity) (2021–2024)"
          "\n •  Saumon (2023)"
          "\n •  subu_versus (2023)"
          "\n •  zniavre (2007–2023)"
          "\n •  Maxime Leroy (Lisapple) (2021–2022)"
-         "\n •  Mohamed El Morabity (melmorabity) (2021–2024)"
          "\n •  m-balthazar (2020)"
          "\n •  Michael Labouebe (gfarmerfr) (2016–2017)"
          "\n •  Monsieur Poisson (2009–2010)"
@@ -260,7 +262,7 @@ class About(Dialog):
          "\n •  Ingmar K. Steen (Hyriand) (2003–2004)"),
 
         ("<b>Hungarian</b>"
-         "\n •  Szia Tomi (2022–2025)"
+         "\n •  Szia Tomi (2022–2026)"
          "\n •  Nils (2009)"
          "\n •  David Balazs (djbaloo) (2006–2020)"),
 
@@ -275,7 +277,7 @@ class About(Dialog):
          "\n •  dbazza (2003–2004)"),
 
         ("<b>Latvian</b>"
-         "\n •  Pagal3 (2022–2025)"),
+         "\n •  Pagal3 (2022–2026)"),
 
         ("<b>Lithuanian</b>"
          "\n •  mantas (2020)"
@@ -285,14 +287,14 @@ class About(Dialog):
          "\n •  Allan Nordhøy (comradekingu) (2021)"),
 
         ("<b>Polish</b>"
-         "\n •  Matthaiks (Kityn) (2025)"
+         "\n •  Matthaiks (Kityn) (2025-2026)"
          "\n •  Mariusz (mariachini) (2017–2024)"
          "\n •  Amun-Ra (2007)"
          "\n •  thine (2007)"
          "\n •  Wojciech Owczarek (owczi) (2003–2004)"),
 
         ("<b>Portuguese (Brazil)</b>"
-         "\n •  Havokdan (2022–2025)"
+         "\n •  Havokdan (2022–2026)"
          "\n •  Guilherme Santos (2022)"
          "\n •  b1llso (2022)"
          "\n •  Nicolas Abril (2021)"
@@ -307,7 +309,7 @@ class About(Dialog):
          "\n •  Slendi (xslendix) (2023)"),
 
         ("<b>Russian</b>"
-         "\n •  Kirill Feoktistov (SnIPeRSnIPeR) (2022–2025)"
+         "\n •  Kirill Feoktistov (SnIPeRSnIPeR) (2022–2026)"
          "\n •  Mehavoid (2021–2023)"
          "\n •  AHOHNMYC (2022)"),
 
@@ -322,6 +324,7 @@ class About(Dialog):
          "\n •  Dreslo (2003–2004)"),
 
         ("<b>Spanish (Spain)</b>"
+         "\n •  Lucas Vieites (2026)"
          "\n •  tagomago (2021–2025)"
          "\n •  gallegonovato (2023–2024)"
          "\n •  MELERIX (2021–2023)"
@@ -340,7 +343,7 @@ class About(Dialog):
          "\n •  Hannah Nosurname (jmejuniper) (2025)"),
 
         ("<b>Turkish</b>"
-         "\n •  Oğuz Ersen (2021–2025)"),
+         "\n •  Oğuz Ersen (2021–2026)"),
 
         ("<b>Ukrainian</b>"
          "\n •  Олег Грицун (oleg.gritsun) (2024–2025)"
