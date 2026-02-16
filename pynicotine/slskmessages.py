@@ -3220,7 +3220,12 @@ class SharedFileListResponse(PeerMessage):
         return self.built
 
     def parse_network_message(self, message):
-        self._parse_network_message(memoryview(zlib.decompress(message)))
+        decompressor = zlib.decompressobj()
+        max_uncompressed_size = 2147483648  # 2 GiB
+        decompressed_message = decompressor.decompress(message, max_uncompressed_size)
+
+        if not decompressor.unconsumed_tail:
+            self._parse_network_message(memoryview(decompressed_message))
 
     def _parse_result_list(self, message, pos=0):
         pos, ndir = self.unpack_uint32(message, pos)
@@ -3341,6 +3346,8 @@ class FileSearchResponse(PeerMessage):
 
     def parse_network_message(self, message):
         decompressor = zlib.decompressobj()
+        max_uncompressed_size = 134217728  # 128 MiB
+
         _pos, username_len = self.unpack_uint32(decompressor.decompress(message, 4))
         _pos, self.token = self.unpack_uint32(
             decompressor.decompress(decompressor.unconsumed_tail, username_len + 4), username_len)
@@ -3350,9 +3357,10 @@ class FileSearchResponse(PeerMessage):
             return
 
         # Optimization: only decompress the rest of the message when needed
-        self._parse_remaining_network_message(
-            memoryview(decompressor.decompress(decompressor.unconsumed_tail))
-        )
+        decompressed_message = decompressor.decompress(decompressor.unconsumed_tail, max_uncompressed_size)
+
+        if not decompressor.unconsumed_tail:
+            self._parse_remaining_network_message(memoryview(decompressed_message))
 
     def _parse_remaining_network_message(self, message):
         pos, self.list = self._parse_result_list(message)
@@ -3536,7 +3544,9 @@ class FolderContentsResponse(PeerMessage):
 
     def parse_network_message(self, message):
         decompressor = zlib.decompressobj()
+        max_uncompressed_size = 134217728  # 128 MiB
         decompressed_part = decompressor.decompress(message, 8)
+
         pos, self.token = self.unpack_uint32(decompressed_part)
         _pos, dir_len = self.unpack_uint32(decompressed_part, pos)
         _pos, self.dir = self.unpack_string(
@@ -3546,9 +3556,10 @@ class FolderContentsResponse(PeerMessage):
             return
 
         # Optimization: only decompress the rest of the message when needed
-        self._parse_remaining_network_message(
-            memoryview(decompressor.decompress(decompressor.unconsumed_tail))
-        )
+        decompressed_message = decompressor.decompress(decompressor.unconsumed_tail, max_uncompressed_size)
+
+        if not decompressor.unconsumed_tail:
+            self._parse_remaining_network_message(memoryview(decompressed_message))
 
     def _parse_remaining_network_message(self, message):
         pos, ndir = self.unpack_uint32(message)
