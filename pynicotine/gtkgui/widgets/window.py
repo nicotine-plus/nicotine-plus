@@ -56,6 +56,10 @@ class Window:
                     "notify::dark", self._on_dark_mode_win32
                 )
 
+        elif sys.platform == "darwin":
+            # Workaround for GTK 4 bug where tooltips restore minimized window on hover
+            self.widget.connect("notify::suspended", self._on_suspended_darwin)
+
         elif os.environ.get("GDK_BACKEND") == "broadway":
             # Workaround for GTK 4 bug where broadwayd uses a lot of CPU after hiding window
             self.widget.connect("hide", self._on_hide_broadway)
@@ -152,6 +156,9 @@ class Window:
             windll.dwmapi.DwmSetWindowAttribute(
                 h_wnd, self.DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1, byref(value), sizeof(value)
             )
+
+    def _on_suspended_darwin(self, *_args):
+        self.widget.set_can_target(not self.widget.is_suspended())
 
     def _on_hide_broadway(self, *_args):
         self.widget.unrealize()
