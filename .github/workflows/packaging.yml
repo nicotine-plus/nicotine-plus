@@ -32,7 +32,7 @@ jobs:
           cp -Lr ../nicotine_* build/package/
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: debian-package
           path: build/package/
@@ -68,7 +68,7 @@ jobs:
           upload-artifact: false
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: flatpak-${{ matrix.arch }}-package
           path: org.nicotine_plus.Nicotine-${{ matrix.arch }}.flatpak
@@ -95,7 +95,7 @@ jobs:
         run: sudo snap install --dangerous ${{ steps.build-snap.outputs.snap }}
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: snap-${{ matrix.arch }}-package
           path: ${{ steps.build-snap.outputs.snap }}
@@ -154,13 +154,13 @@ jobs:
           cp build-aux/windows/readme-portable.txt build-aux/windows/build/package/Nicotine+/portable/README.txt
 
       - name: Archive installer artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: windows-${{ matrix.arch }}-installer
           path: build-aux/windows/build/*.msi
 
       - name: Archive portable artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: windows-${{ matrix.arch }}-portable
           path: build-aux/windows/build/package
@@ -192,7 +192,7 @@ jobs:
         run: venv/bin/python3 build-aux/macos/setup.py bdist_dmg
 
       - name: Archive installer artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: macos-${{ matrix.arch }}-installer
           path: build-aux/macos/build/*.dmg
