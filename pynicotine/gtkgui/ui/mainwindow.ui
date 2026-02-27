@@ -166,7 +166,7 @@
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="icon-name">emblem-system-symbolic</property>
+                            <property name="icon-name">applications-system-symbolic</property>
                             <property name="visible">True</property>
                           </object>
                         </child>
@@ -405,7 +405,7 @@
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="icon-name">emblem-system-symbolic</property>
+                            <property name="icon-name">applications-system-symbolic</property>
                             <property name="visible">True</property>
                           </object>
                         </child>
@@ -644,7 +644,7 @@
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="icon-name">emblem-system-symbolic</property>
+                            <property name="icon-name">applications-system-symbolic</property>
                             <property name="visible">True</property>
                           </object>
                         </child>
@@ -812,7 +812,7 @@
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="icon-name">emblem-system-symbolic</property>
+                            <property name="icon-name">applications-system-symbolic</property>
                             <property name="visible">True</property>
                           </object>
                         </child>
@@ -979,7 +979,7 @@
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="icon-name">emblem-system-symbolic</property>
+                            <property name="icon-name">applications-system-symbolic</property>
                             <property name="visible">True</property>
                           </object>
                         </child>
@@ -1139,7 +1139,7 @@
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="icon-name">emblem-system-symbolic</property>
+                            <property name="icon-name">applications-system-symbolic</property>
                             <property name="visible">True</property>
                           </object>
                         </child>
@@ -1308,7 +1308,7 @@
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="icon-name">emblem-system-symbolic</property>
+                            <property name="icon-name">applications-system-symbolic</property>
                             <property name="visible">True</property>
                           </object>
                         </child>
@@ -1473,7 +1473,7 @@
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkImage">
-                                <property name="icon-name">emblem-system-symbolic</property>
+                                <property name="icon-name">applications-system-symbolic</property>
                                 <property name="visible">True</property>
                               </object>
                             </child>
@@ -1601,7 +1601,7 @@
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="icon-name">emblem-system-symbolic</property>
+                            <property name="icon-name">applications-system-symbolic</property>
                             <property name="visible">True</property>
                           </object>
                         </child>
