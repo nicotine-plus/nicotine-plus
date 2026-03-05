@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-03 01:43+0200\n"
-"PO-Revision-Date: 2026-01-27 18:29+0000\n"
+"PO-Revision-Date: 2026-03-05 19:10+0000\n"
 "Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.16-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -47,6 +47,10 @@ msgid ""
 "that focus on usability, while remaining fully compatible with other "
 "Soulseek clients."
 msgstr ""
+"Compartilhe arquivos, converse e encontre pessoas com interesses "
+"semelhantes. Nicotine+ é fácil de usar, rápido, gratuito e de código aberto. "
+"Ele oferece recursos e aprimoramentos que focam na usabilidade, mantendo-se "
+"totalmente compatível com outros clientes da Soulseek."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:30
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:46
@@ -2392,18 +2396,16 @@ msgid "Public Files"
 msgstr "Arquivos Públicos"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:61
-#, fuzzy
 msgid "Automatic Search"
-msgstr "Habilitar pesquisa automática"
+msgstr "Pesquisa Automática"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:68
 msgid "Search Term"
 msgstr "Pesquisar Termo"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:76
-#, fuzzy
 msgid "Custom Filters"
-msgstr "Personalizar filtros"
+msgstr "Filtros Personalizados"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:85
 msgid "Added"
@@ -2416,28 +2418,26 @@ msgid "_Search for Item"
 msgstr "Pesqui_sar por este item"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:110
-#, fuzzy
 msgid "Set Custom _Filters…"
-msgstr "Personalizar filtros"
+msgstr "Definir _Filtros Personalizados"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:112
 msgid "Reset Seen Results"
 msgstr "Redefinir Resultados Vistos"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:113
-#, fuzzy
 msgid "Reset Filters"
-msgstr "Filtros de Resultado"
+msgstr "Redefinir Filtros"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:195
-#, fuzzy, python-format
+#, python-format
 msgid "Custom Filters Enabled (%(num)s Active)"
-msgstr "Filtros Personalizados Ativos"
+msgstr "Filtros Personalizados Habilitados (%(num)s Ativos)"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:215
-#, python-format
+#, fuzzy, python-format
 msgid "• %(filter)s %(value)s"
-msgstr ""
+msgstr "• %(filter)s %(value)s"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:257
 msgid "Add Wishes"
@@ -2464,9 +2464,9 @@ msgid "Default filters"
 msgstr "Filtros padrões"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:310
-#, fuzzy, python-format
+#, python-format
 msgid "Custom filters (%(num)s active)"
-msgstr "Filtros Personalizados Ativos"
+msgstr "Filtros Personalizados (%(num)s ativos)"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:314
 msgid "Edit Wish"
@@ -6551,9 +6551,8 @@ msgid "_Log In As"
 msgstr "_Entrar Como"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:132
-#, fuzzy
 msgid "Account password:"
-msgstr "Senha da Conta:"
+msgstr "Senha da conta:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:164
 msgid "Change Pass_word"
