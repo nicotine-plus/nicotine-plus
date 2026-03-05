@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-03 01:43+0200\n"
-"PO-Revision-Date: 2026-01-24 10:35+0000\n"
+"PO-Revision-Date: 2026-03-03 20:34+0000\n"
 "Last-Translator: Matthaiks <kitynska@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -46,6 +46,11 @@ msgid ""
 "that focus on usability, while remaining fully compatible with other "
 "Soulseek clients."
 msgstr ""
+"Udostępniaj pliki, czatuj i znajduj osoby o podobnych zainteresowaniach. "
+"Nicotine+ jest łatwy w obsłudze, szybki, darmowy i oparty na otwartym kodzie "
+"źródłowym. Oferuje funkcje i udoskonalenia, które koncentrują się na "
+"użyteczności, zachowując jednocześnie pełną kompatybilność z innymi "
+"klientami Soulseek."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:30
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:46
@@ -2395,16 +2400,14 @@ msgid "Public Files"
 msgstr "Pliki publiczne"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:61
-#, fuzzy
 msgid "Automatic Search"
-msgstr "Włącz automatyczne wyszukiwanie"
+msgstr "Automatyczne wyszukiwanie"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:68
 msgid "Search Term"
 msgstr "Termin wyszukiwania"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:76
-#, fuzzy
 msgid "Custom Filters"
 msgstr "Filtry niestandardowe"
 
@@ -2419,28 +2422,26 @@ msgid "_Search for Item"
 msgstr "_Szukaj tego obiektu"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:110
-#, fuzzy
 msgid "Set Custom _Filters…"
-msgstr "Filtry niestandardowe"
+msgstr "Ustaw _filtry niestandardowe…"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:112
 msgid "Reset Seen Results"
 msgstr "Zresetuj widoczne wyniki"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:113
-#, fuzzy
 msgid "Reset Filters"
-msgstr "Filtrowanie wyników"
+msgstr "Zresetuj filtry"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:195
-#, fuzzy, python-format
+#, python-format
 msgid "Custom Filters Enabled (%(num)s Active)"
-msgstr "Aktywne filtry niestandardowe"
+msgstr "Filtry niestandardowe włączone (aktywne: %(num)s)"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:215
 #, python-format
 msgid "• %(filter)s %(value)s"
-msgstr ""
+msgstr "• %(filter)s %(value)s"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:257
 msgid "Add Wishes"
@@ -2466,9 +2467,9 @@ msgid "Default filters"
 msgstr "Filtry domyślne"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:310
-#, fuzzy, python-format
+#, python-format
 msgid "Custom filters (%(num)s active)"
-msgstr "Aktywne filtry niestandardowe"
+msgstr "Filtry niestandardowe (aktywne: %(num)s)"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:314
 msgid "Edit Wish"
@@ -6379,7 +6380,7 @@ msgstr "Dopełnianie czatu"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:693
 msgid "Enable tab-key completion"
-msgstr "Włącz dopełnianie przy pomocy klawisza TAB"
+msgstr "Włącz dopełnianie klawiszem Tab"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:721
 msgid "Enable completion drop-down list"
@@ -6551,7 +6552,6 @@ msgid "_Log In As"
 msgstr "_Zaloguj się jako"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:132
-#, fuzzy
 msgid "Account password:"
 msgstr "Hasło do konta:"
 
