@@ -49,7 +49,7 @@ class PortChecker(Popover):
         if self.port is None:
             icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
 
-            self.status_icon.set_from_icon_name("emblem-important-symbolic", *icon_args)
+            self.status_icon.set_from_icon_name("dialog-error-symbolic", *icon_args)
             self.status_label.set_label(_("You are offline"))
             self.description_label.set_label(_("Connect to the server to check port status."))
 

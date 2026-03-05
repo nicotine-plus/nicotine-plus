@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on February 19, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on February 28, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -314,7 +314,7 @@ server, but it handles the protocol well enough (and can be modified).
 | `125`  | [Acknowledge Notify Privileges](#server-code-125) `DEPRECATED` |
 | `126`  | [Branch Level](#server-code-126)                               |
 | `127`  | [Branch Root](#server-code-127)                                |
-| `129`  | [Child Depth](#server-code-129) `DEPRECATED`                   |
+| `129`  | [Child Depth](#server-code-129) `OBSOLETE`                     |
 | `130`  | [Reset Distributed](#server-code-130)                          |
 | `133`  | [Room Members](#server-code-133)                               |
 | `134`  | [Add Room Member](#server-code-134)                            |
@@ -440,7 +440,7 @@ given the peer's username.
     1.  **string** *username*
   - Receive
     1.  **string** *username*
-    2.  **ip** *ip*
+    2.  **uint32** *ip*
     3.  **uint32** *port*
     4.  **uint32** *obfuscation type*  
         See [Obfuscation Types](#obfuscation-types)
@@ -703,7 +703,7 @@ See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
     1.  **string** *username*
     2.  **string** *type*  
         See [Connection Types](#connection-types)
-    3.  **ip** *ip*
+    3.  **uint32** *ip*
     4.  **uint32** *port*
     5.  **uint32** *token*  
         Use this token for [PierceFireWall](#peer-init-code-0)
@@ -1335,7 +1335,7 @@ Server message for tunneling a chat message.
     1.  **string** *username*
     2.  **uint32** *code*
     3.  **uint32** *token*
-    4.  **ip** *ip*
+    4.  **uint32** *ip*
     5.  **uint32** *port*
     6.  **string** *message*
 
@@ -1363,7 +1363,8 @@ The server sends us a list of privileged users, a.k.a. users who have donated.
 We inform the server if we have a distributed parent or not. If not, the server
 eventually sends us a [PossibleParents](#server-code-102) message with a list
 of possible parents to connect to. If no candidates are found, no such message
-is sent by the server, and we eventually become a branch root.
+is sent by the server, and we eventually become a branch root (i.e. the server
+starts sending us [EmbeddedMessage](#server-code-93) messages).
 
 ### Data Order
 
@@ -1384,7 +1385,7 @@ We tell the server the IP address of our parent in the distributed network.
 ### Data Order
 
   - Send
-    1.  **ip** *ip*
+    1.  **uint32** *ip*
   - Receive
     -   *No Message*
 
@@ -1522,6 +1523,13 @@ server message instead of the unpacked message, which resulted in other
 client implementations adopting this erroneous behavior. This bug was
 fixed in SoulseekQt in early 2026.
 
+Soulseek NS also distributes [DistribBranchLevel](#distributed-code-4) and
+[DistribBranchRoot](#distributed-code-5) messages, although the server doesn't
+send them, and increments the branch level before distribution. This is
+presumably a side effect of processing embedded messages as regular distributed
+messages, since SoulseekQt doesn't accept messages other than
+[DistribSearch](#distributed-code-3) from the server.
+
 ### Data Order
 
   - Send
@@ -1569,7 +1577,7 @@ from the server.
     1.  **uint32** *number of parents*
     2.  Iterate for *number of parents*
         1.  **string** *username*
-        2.  **ip** *ip*
+        2.  **uint32** *ip*
         3.  **uint32** *port*
 
 
@@ -1867,7 +1875,7 @@ network.
 
 ### BranchLevel
 
-We tell the server what our position is in our branch (xth generation) on the
+We tell the server what our position is in our branch (nth generation) in the
 distributed network.
 
 ### Data Order
@@ -1882,7 +1890,7 @@ distributed network.
 
 ### BranchRoot
 
-We tell the server the username of the root of the branch we're in on the
+We tell the server the username of the root of the branch we're in in the
 distributed network.
 
 ### Data Order
@@ -1897,10 +1905,16 @@ distributed network.
 
 ### ChildDepth
 
-**DEPRECATED, sent by Soulseek NS but not SoulseekQt**
+**OBSOLETE, no longer used**
 
-We tell the server the maximum number of generation of children we have on the
-distributed network.
+When we are a branch root in the distributed network, and receive a
+[DistribChildDepth](#distributed-code-7) message from a child peer, we
+increment the depth and send this final value to the server.
+
+This message is obsolete. While Soulseek NS sends the correct value to the
+server, SoulseekQt doesn't implement this message correctly, always sending a
+uint8 value of 1 instead. Presumably, the server has opted to calculate child
+depths on its own, based on branch level/root information sent by peers.
 
 ### Data Order
 
@@ -3074,7 +3088,7 @@ peer is allowed. In Nicotine+, these messages are defined in slskmessages.py.
 | `3`  | [Search Request](#distributed-code-3)                 |
 | `4`  | [Branch Level](#distributed-code-4)                   |
 | `5`  | [Branch Root](#distributed-code-5)                    |
-| `7`  | [Child Depth](#distributed-code-7) `DEPRECATED`       |
+| `7`  | [Child Depth](#distributed-code-7) `OBSOLETE`         |
 | `93` | [Embedded Message](#distributed-code-93) `DEPRECATED` |
 
 
@@ -3084,7 +3098,7 @@ peer is allowed. In Nicotine+, these messages are defined in slskmessages.py.
 
 **DEPRECATED, sent by Soulseek NS but not SoulseekQt**
 
-We ping distributed children every 60 seconds.
+We ping our parent and children every minute.
 
 ### Data Order
 
@@ -3098,18 +3112,24 @@ We ping distributed children every 60 seconds.
 
 ### DistribSearch
 
-Search request that arrives through the distributed network. We transmit the
-search request to our child peers.
+Search request that arrives through the distributed network. We distribute the
+raw message (including unknown message attributes) to our child peers.
+
+The first potential parent that sends us a search request in addition to branch
+root/level information becomes our actual parent Some clients, such as
+Soulseek NS and earlier Nicotine+ versions, adopt a parent as soon as it sends
+the branch root/level information instead.
+
+Identifier is always the code point of ASCII character 1 (49). We reject
+messages that use any other value.
 
 ### Data Order
 
   - Send
-    1.  **uint32** *unknown*
-    2.  **string** *username*
-    3.  **uint32** *token*
-    4.  **string** *query*
+    -   *Raw Message*
   - Receive
-    1.  **uint32** *unknown*
+    1.  **uint32** *identifier*  
+        Value is always the code point of ASCII character 1 (`49`)
     2.  **string** *username*
     3.  **uint32** *token*
     4.  **string** *query*
@@ -3119,8 +3139,15 @@ search request to our child peers.
 
 ### DistribBranchLevel
 
-We tell our distributed children what our position is in our branch (xth
-generation) on the distributed network.
+We tell our distributed children what our position is in our branch (nth
+generation) in the distributed network. Our branch level is the branch
+level from our parent incremented by one. If we are a branch root (i.e. the
+server sends us [EmbeddedMessage](#server-code-93) messages), our branch level
+is 0 instead.
+
+When connecting to potential parents, they send us this message. We record
+the information, and adopt the first parent that sends us a [DistribSearch](#distributed-code-3)
+message in addition to branch root/level information.
 
 If we receive a branch level of 0 from a parent, we should mark the parent as
 our branch root. Due to incorrect behavior in older client versions, they
@@ -3140,7 +3167,12 @@ message in this case.
 ### DistribBranchRoot
 
 We tell our distributed children the username of the root of the branch we're
-in on the distributed network.
+in in the distributed network. If we are the branch root (i.e. the server sends
+us [EmbeddedMessage](#server-code-93) messages), we send our own username.
+
+When connecting to potential parents, they send us this message. We record
+the information, and adopt the first parent that sends us a [DistribSearch](#distributed-code-3)
+message in addition to branch root/level information.
 
 Note that SoulseekQt used to not send this message when becoming a branch root.
 This behavior was corrected in early 2026. We should always send the message
@@ -3158,10 +3190,16 @@ regardless of our status in the distributed network.
 
 ### DistribChildDepth
 
-**DEPRECATED, sent by Soulseek NS but not SoulseekQt**
+**OBSOLETE, no longer used**
 
-We tell our distributed parent the maximum number of generation of children we
-have on the distributed network.
+When adopting a new parent, we send them this message with a child depth of
+zero. Our parent increments the depth, sends the message to their parent,
+who does the same, until it reaches the branch root, who sends the final child
+depth to the server in the form of a [ChildDepth](#server-code-129) message.
+
+This message is obsolete, since SoulseekQt doesn't send it. Presumably, the
+server has opted to calculate child depths on its own, based on branch
+level/root information sent by peers.
 
 ### Data Order
 
@@ -3190,10 +3228,7 @@ SoulseekQt in early 2026.
 ### Data Order
 
   - Send
-    1.  **uint8** *distributed code*  
-        See [Distributed Message Codes](#distributed-message-codes)
-    2.  **bytes** *distributed message*  
-        Raw message associated with distributed code
+    -   *No Message*
   - Receive
     1.  **uint8** *distributed code*  
         See [Distributed Message Codes](#distributed-message-codes)

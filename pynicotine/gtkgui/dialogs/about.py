@@ -458,7 +458,7 @@ class About(Dialog):
     def on_check_latest_version(self, latest_version, is_outdated, error):
 
         if error:
-            icon_name = "emblem-important-symbolic"
+            icon_name = "dialog-error-symbolic"
             css_class = "error"
             message = _("Error checking latest version: %s") % error
 

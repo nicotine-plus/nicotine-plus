@@ -159,28 +159,6 @@
                         </style>
                       </object>
                     </child>
-                    <child>
-                      <object class="GtkSeparator">
-                        <property name="orientation">vertical</property>
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton">
-                        <property name="action-name">app.configure-searches</property>
-                        <property name="tooltip-text" translatable="yes">Configure Searches</property>
-                        <property name="visible">True</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="icon-name">emblem-system-symbolic</property>
-                            <property name="visible">True</property>
-                          </object>
-                        </child>
-                        <style>
-                          <class name="image-button"/>
-                        </style>
-                      </object>
-                    </child>
                   </object>
                 </child>
               </object>
@@ -403,22 +381,6 @@
                         </child>
                         <style>
                           <class name="linked"/>
-                        </style>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton">
-                        <property name="action-name">app.configure-downloads</property>
-                        <property name="tooltip-text" translatable="yes">Configure Downloads</property>
-                        <property name="visible">True</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="icon-name">emblem-system-symbolic</property>
-                            <property name="visible">True</property>
-                          </object>
-                        </child>
-                        <style>
-                          <class name="image-button"/>
                         </style>
                       </object>
                     </child>
@@ -647,22 +609,6 @@
                         </style>
                       </object>
                     </child>
-                    <child>
-                      <object class="GtkButton">
-                        <property name="action-name">app.configure-uploads</property>
-                        <property name="tooltip-text" translatable="yes">Configure Uploads</property>
-                        <property name="visible">True</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="icon-name">emblem-system-symbolic</property>
-                            <property name="visible">True</property>
-                          </object>
-                        </child>
-                        <style>
-                          <class name="image-button"/>
-                        </style>
-                      </object>
-                    </child>
                   </object>
                 </child>
               </object>
@@ -810,28 +756,6 @@
                         </style>
                       </object>
                     </child>
-                    <child>
-                      <object class="GtkSeparator">
-                        <property name="orientation">vertical</property>
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton">
-                        <property name="action-name">app.configure-shares</property>
-                        <property name="tooltip-text" translatable="yes">Configure Shares</property>
-                        <property name="visible">True</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="icon-name">emblem-system-symbolic</property>
-                            <property name="visible">True</property>
-                          </object>
-                        </child>
-                        <style>
-                          <class name="image-button"/>
-                        </style>
-                      </object>
-                    </child>
                   </object>
                 </child>
               </object>
@@ -975,28 +899,6 @@
                         </child>
                         <style>
                           <class name="image-text-button"/>
-                        </style>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkSeparator">
-                        <property name="orientation">vertical</property>
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton">
-                        <property name="action-name">app.configure-account</property>
-                        <property name="tooltip-text" translatable="yes">Configure Account</property>
-                        <property name="visible">True</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="icon-name">emblem-system-symbolic</property>
-                            <property name="visible">True</property>
-                          </object>
-                        </child>
-                        <style>
-                          <class name="image-button"/>
                         </style>
                       </object>
                     </child>
@@ -1152,22 +1054,6 @@
                     <property name="spacing">6</property>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
-                    <child>
-                      <object class="GtkButton">
-                        <property name="action-name">app.configure-chats</property>
-                        <property name="tooltip-text" translatable="yes">Configure Chats</property>
-                        <property name="visible">True</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="icon-name">emblem-system-symbolic</property>
-                            <property name="visible">True</property>
-                          </object>
-                        </child>
-                        <style>
-                          <class name="image-button"/>
-                        </style>
-                      </object>
-                    </child>
                   </object>
                 </child>
               </object>
@@ -1313,28 +1199,6 @@
                         </child>
                         <style>
                           <class name="image-text-button"/>
-                        </style>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkSeparator">
-                        <property name="orientation">vertical</property>
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton">
-                        <property name="action-name">app.configure-ignored-users</property>
-                        <property name="tooltip-text" translatable="yes">Configure Ignored Users</property>
-                        <property name="visible">True</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="icon-name">emblem-system-symbolic</property>
-                            <property name="visible">True</property>
-                          </object>
-                        </child>
-                        <style>
-                          <class name="image-button"/>
                         </style>
                       </object>
                     </child>
@@ -1493,22 +1357,6 @@
                         <property name="spacing">6</property>
                         <property name="valign">center</property>
                         <property name="visible">True</property>
-                        <child>
-                          <object class="GtkButton">
-                            <property name="action-name">app.configure-chats</property>
-                            <property name="tooltip-text" translatable="yes">Configure Chats</property>
-                            <property name="visible">True</property>
-                            <child>
-                              <object class="GtkImage">
-                                <property name="icon-name">emblem-system-symbolic</property>
-                                <property name="visible">True</property>
-                              </object>
-                            </child>
-                            <style>
-                              <class name="image-button"/>
-                            </style>
-                          </object>
-                        </child>
                       </object>
                     </child>
                   </object>
@@ -1621,22 +1469,6 @@
                   <object class="GtkBox" id="interests_end">
                     <property name="valign">center</property>
                     <property name="visible">True</property>
-                    <child>
-                      <object class="GtkButton">
-                        <property name="action-name">app.configure-user-profile</property>
-                        <property name="tooltip-text" translatable="yes">Configure User Profile</property>
-                        <property name="visible">True</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="icon-name">emblem-system-symbolic</property>
-                            <property name="visible">True</property>
-                          </object>
-                        </child>
-                        <style>
-                          <class name="image-button"/>
-                        </style>
-                      </object>
-                    </child>
                   </object>
                 </child>
               </object>

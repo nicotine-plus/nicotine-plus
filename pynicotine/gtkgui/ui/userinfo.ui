@@ -123,10 +123,10 @@
                             </child>
                             <child>
                               <object class="GtkButton" id="edit_profile_button">
+                                <property name="action-name">app.preferences</property>
                                 <property name="tooltip-text" translatable="yes">Edit Profile</property>
                                 <property name="valign">center</property>
                                 <property name="visible">True</property>
-                                <signal name="clicked" handler="on_edit_profile"/>
                                 <child>
                                   <object class="GtkImage">
                                     <property name="icon-name">document-edit-symbolic</property>

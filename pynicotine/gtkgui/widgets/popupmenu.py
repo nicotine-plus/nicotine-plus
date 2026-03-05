@@ -54,6 +54,7 @@ class PopupMenu:
 
         self.menu_section = None
         self.editing = False
+        self.has_clicked_content = False
 
         PopupMenu.popup_id_counter += 1
         self.popup_id = PopupMenu.popup_id_counter
@@ -103,6 +104,16 @@ class PopupMenu:
 
             # Workaround for wrong widget receiving focus after closing menu in GTK 4
             self.popup_menu.connect("closed", lambda *_args: self.parent.child_focus(Gtk.DirectionType.TAB_FORWARD))
+
+            # Workaround for popover not closing after showing and hiding submenu in GTK 4
+            # https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
+            for widget, callback in (
+                (self.popup_menu, self._on_click_popover_gtk4),
+                (self.popup_menu.get_child().get_parent(), self._on_click_content_gtk4)
+            ):
+                gesture_click = Gtk.GestureClick(button=0)
+                gesture_click.connect("pressed", callback)
+                widget.add_controller(gesture_click)
         else:
             self.popup_menu = Gtk.Menu.new_from_model(self.model)
             self.popup_menu.attach_to_widget(parent)
@@ -349,6 +360,19 @@ class PopupMenu:
 
     def _callback_menu(self, *_args):
         return self._callback()
+
+    def _on_click_popover_gtk4(self, *_args):
+
+        if not self.has_clicked_content:
+            # Clicked outside the popover, close it. Normally GTK handles this,
+            # but due to a bug, a popover intercepts clicks outside it after
+            # closing a child popover.
+            self.popup_menu.set_visible(False)
+
+        self.has_clicked_content = False
+
+    def _on_click_content_gtk4(self, *_args):
+        self.has_clicked_content = True
 
     def connect_events(self, parent):
 

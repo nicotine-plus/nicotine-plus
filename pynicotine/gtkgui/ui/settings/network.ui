@@ -129,7 +129,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">Account Password:</property>
+                        <property name="label" translatable="yes">Account password:</property>
                         <property name="mnemonic-widget">_change_password_button</property>
                         <property name="visible">True</property>
                         <property name="wrap">True</property>

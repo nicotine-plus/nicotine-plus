@@ -306,6 +306,7 @@ class UserInfo:
         self.picture_bytes = None
         self.picture_data = None
         self.picture_surface = None
+        self.picture_extension = None
         self.indeterminate_progress = False
         self.refreshing = False
 
@@ -438,9 +439,34 @@ class UserInfo:
         self.picture_bytes = None
         self.picture_data = None
         self.picture_surface = None
+        self.picture_extension = None
 
         self.toggle_picture_button.set_sensitive(False)
         self.hide_picture()
+
+    def load_svg(self, data):
+
+        try:
+            paintable = Gtk.Svg()
+
+        except AttributeError:
+            # GTK <4.22
+            return None
+
+        is_invalid = False
+
+        def on_error(_svg, error):
+            if error.code == Gtk.SvgError.INVALID_SYNTAX:
+                nonlocal is_invalid
+                is_invalid = True
+
+        paintable.connect("error", on_error)
+        paintable.load_from_bytes(data)
+
+        if is_invalid:
+            return None
+
+        return paintable
 
     def load_picture(self):
 
@@ -448,16 +474,26 @@ class UserInfo:
         self.picture_bytes = None
 
         try:
+            g_bytes = GLib.Bytes(picture_bytes)
+
             if GTK_API_VERSION >= 4:
-                self.picture_data = Gdk.Texture.new_from_bytes(GLib.Bytes(picture_bytes))
+                self.picture_data = self.load_svg(g_bytes)
+                self.picture_extension = "svg"
+
+                if self.picture_data is None:
+                    self.picture_data = Gdk.Texture.new_from_bytes(g_bytes)
+                    self.picture_extension = "png"
+
                 self.picture.set_paintable(self.picture_data)
             else:
                 from gi.repository import GdkPixbuf
 
-                data_stream = Gio.MemoryInputStream.new_from_bytes(GLib.Bytes(picture_bytes))
+                data_stream = Gio.MemoryInputStream.new_from_bytes(g_bytes)
                 self.picture_data = GdkPixbuf.Pixbuf.new_from_stream(data_stream, cancellable=None)
                 self.picture_surface = Gdk.cairo_surface_create_from_pixbuf(
-                    self.picture_data, scale=1, for_window=None)
+                    self.picture_data, scale=1, for_window=None
+                )
+                self.picture_extension = "png"
 
         except Exception as error:
             log.add(_("Failed to load picture for user %(user)s: %(error)s"), {
@@ -734,9 +770,6 @@ class UserInfo:
     def on_popup_dislikes_menu(self, menu, *_args):
         self.window.interests.toggle_menu_items(menu, self.dislikes_list_view, column_id="dislikes")
 
-    def on_edit_profile(self, *_args):
-        self.window.application.on_preferences(page_id="user-profile")
-
     def on_edit_interests(self, *_args):
         self.window.change_main_page(self.window.interests_page)
 
@@ -835,6 +868,10 @@ class UserInfo:
         if self.picture_data is None:
             return
 
+        if self.picture_extension == "svg":
+            clipboard.copy_svg(self.picture_data)
+            return
+
         clipboard.copy_image(self.picture_data)
 
     def on_save_picture_response(self, selected, *_args):
@@ -849,7 +886,10 @@ class UserInfo:
             return
 
         if GTK_API_VERSION >= 4:
-            picture_bytes = self.picture_data.save_to_png_bytes().get_data()
+            if self.picture_extension == "svg":
+                picture_bytes = self.picture_data.serialize().get_data()
+            else:
+                picture_bytes = self.picture_data.save_to_png_bytes().get_data()
         else:
             _success, picture_bytes = self.picture_data.save_to_bufferv(
                 type="png", option_keys=[], option_values=[])
@@ -867,7 +907,7 @@ class UserInfo:
             application=self.window.application,
             callback=self.on_save_picture_response,
             initial_folder=core.downloads.get_default_download_folder(),
-            initial_file=f"{self.user}_{current_date_time}.png"
+            initial_file=f"{self.user}_{current_date_time}.{self.picture_extension}"
         ).present()
 
     def on_hide_picture(self, *_args):

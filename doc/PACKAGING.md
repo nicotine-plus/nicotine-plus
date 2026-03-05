@@ -114,8 +114,8 @@ cd nicotine-plus
 Install dependencies:
 
 ```sh
-brew install python@3.13
-python3.13 -m venv venv
+brew install python@3.14
+python3.14 -m venv venv
 venv/bin/python3 build-aux/macos/dependencies.py
 ```
 

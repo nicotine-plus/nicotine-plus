@@ -602,10 +602,6 @@ class MainWindow(Window):
             if isinstance(widget, Gtk.Button):
                 remove_css_class(widget, "flat")
 
-            # Header bars never contain separators, hide them
-            elif isinstance(widget, Gtk.Separator):
-                widget.set_visible(False)
-
         if GTK_API_VERSION >= 4:
             self.header_title.append(title_widget)
             self.header_end_container.append(end_widget)
@@ -659,9 +655,6 @@ class MainWindow(Window):
             # next to text entries raised for more prominence.
             if isinstance(widget, Gtk.Button):
                 add_css_class(widget, "flat")
-
-            elif isinstance(widget, Gtk.Separator):
-                widget.set_visible(True)
 
         toolbar = self.tabs[page_id].toolbar
         toolbar.set_visible(True)

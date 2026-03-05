@@ -7,8 +7,6 @@ import sys
 from gi.repository import Gtk
 
 from pynicotine.gtkgui.application import GTK_API_VERSION
-from pynicotine.gtkgui.application import GTK_MINOR_VERSION
-from pynicotine.gtkgui.application import GTK_MICRO_VERSION
 from pynicotine.gtkgui.application import LIBADWAITA_API_VERSION
 
 
@@ -61,42 +59,6 @@ class Window:
         # Workaround for GTK 4 bug where broadwayd uses a lot of CPU after hiding popover
         if popover is not None and os.environ.get("GDK_BACKEND") == "broadway":
             popover.hide_handler_broadway = popover.connect_after("hide", self._on_popover_hide_broadway)
-
-        if not (4, 16, 0) <= (GTK_API_VERSION, GTK_MINOR_VERSION, GTK_MICRO_VERSION) <= (4, 16, 5):
-            return
-
-        # Workaround for GTK 4.16 bug where text is replaced when inserting emoji
-        if not isinstance(popover, Gtk.EmojiChooser):
-            self._text_widget = focus_widget if isinstance(focus_widget, Gtk.Text) else None
-            return
-
-        if self._text_widget is None:
-            return
-
-        popover.old_text = self._text_widget.get_text()
-        popover.old_pos = self._text_widget.get_position()
-
-        popover.picked_handler = popover.connect("emoji-picked", self._on_emoji_chooser_picked)
-        popover.hide_handler = popover.connect("hide", self._on_emoji_chooser_hide)
-
-    def _on_emoji_chooser_picked(self, chooser, emoji):
-
-        old_text = chooser.old_text
-        old_pos = chooser.old_pos
-        new_text = old_text[:old_pos] + emoji + old_text[old_pos:]
-
-        self._text_widget.set_text(new_text)
-        self._text_widget.set_position(old_pos + len(emoji))
-
-    def _on_emoji_chooser_hide(self, chooser):
-
-        if chooser.picked_handler is not None:
-            chooser.disconnect(chooser.picked_handler)
-            chooser.picked_handler = None
-
-        if chooser.hide_handler is not None:
-            chooser.disconnect(chooser.hide_handler)
-            chooser.hide_handler = None
 
     def _on_popover_hide_broadway(self, popover):
 

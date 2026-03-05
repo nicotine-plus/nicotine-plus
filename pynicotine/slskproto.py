@@ -708,6 +708,10 @@ class NetworkThread(Thread):
             username=username
         )
 
+        if unpacked_msg.identifier != "1":
+            # Ignore invalid message
+            return None
+
         return unpacked_msg
 
     def _emit_network_message_event(self, msg):
@@ -2333,16 +2337,24 @@ class NetworkThread(Thread):
             return True
 
         username = msg.username
-        parent_status = ParentStatus.REJECTED
 
         if msg_class is DistribSearch:
+            if msg.identifier != "1":
+                # Ignore invalid message
+                return True
+
             if self._parent is None:
                 self._adopt_parent(username)
 
             parent_status = self._verify_parent_status(conn, msg_class)
 
+            if parent_status == ParentStatus.REJECTED:
+                # Close rejected connection
+                return False
+
             if parent_status == ParentStatus.ACCEPTED:
                 self._send_message_to_child_peers(msg, msg_content)
+                self._emit_network_message_event(msg)
 
         elif msg_class is DistribEmbeddedMessage:
             unpacked_msg = self._unpack_embedded_message(msg, conn.sock, conn.init.target_user)
@@ -2356,10 +2368,13 @@ class NetworkThread(Thread):
 
             parent_status = self._verify_parent_status(conn, msg_class)
 
+            if parent_status == ParentStatus.REJECTED:
+                # Close rejected connection
+                return False
+
             if parent_status == ParentStatus.ACCEPTED:
                 self._send_message_to_child_peers(unpacked_msg, msg.distrib_message)
-
-            msg = unpacked_msg
+                self._emit_network_message_event(unpacked_msg)
 
         elif msg_class is DistribBranchLevel:
             if msg.level < 0:
@@ -2389,6 +2404,12 @@ class NetworkThread(Thread):
                 if not msg.level:
                     parent_candidate.branch_root = username
 
+            self._emit_network_message_event(msg)
+
+            if parent_status == ParentStatus.REJECTED:
+                # Close rejected connection
+                return False
+
         elif msg_class is DistribBranchRoot:
             if not msg.root_username:
                 log.add_conn("Received an empty branch root value from user %s. "
@@ -2410,11 +2431,15 @@ class NetworkThread(Thread):
                 parent_candidate.conn = conn
                 parent_candidate.branch_root = msg.root_username
 
-        if parent_status == ParentStatus.ACCEPTED:
             self._emit_network_message_event(msg)
 
-        keep_connection_open = (parent_status != ParentStatus.REJECTED)
-        return keep_connection_open
+            if parent_status == ParentStatus.REJECTED:
+                # Close rejected connection
+                return False
+        else:
+            self._emit_network_message_event(msg)
+
+        return True
 
     def _process_distrib_input(self, conn):
         """Reads messages from the input buffer of a 'D' connection."""

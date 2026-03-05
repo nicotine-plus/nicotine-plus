@@ -150,6 +150,8 @@ class Application:
             ("message-downloading-users", self.on_message_downloading_users, None, False),
             ("message-buddies", self.on_message_buddies, None, False),
             ("wishlist", self.on_wishlist, None, True),
+            ("personal-profile", self.on_personal_profile, None, True),
+            ("preferences", self.on_preferences, None, True),
             ("confirm-quit", self.on_confirm_quit_request, None, True),
             ("force-quit", self.on_force_quit_request, None, True),
             ("quit", self.on_quit_request, None, True),
@@ -160,18 +162,6 @@ class Application:
             ("browse-buddy-shares", self.on_browse_buddy_shares, None, True),
             ("browse-trusted-shares", self.on_browse_trusted_shares, None, True),
             ("load-shares-from-disk", self.on_load_shares_from_disk, None, True),
-
-            # Configuration
-            ("preferences", self.on_preferences, None, True),
-            ("configure-shares", self.on_configure_shares, None, True),
-            ("configure-downloads", self.on_configure_downloads, None, True),
-            ("configure-uploads", self.on_configure_uploads, None, True),
-            ("configure-chats", self.on_configure_chats, None, True),
-            ("configure-searches", self.on_configure_searches, None, True),
-            ("configure-ignored-users", self.on_configure_ignored_users, None, True),
-            ("configure-account", self.on_configure_account, None, True),
-            ("configure-user-profile", self.on_configure_user_profile, None, True),
-            ("personal-profile", self.on_personal_profile, None, True),
 
             # Notifications
             ("chatroom-notification-activated", self.on_chatroom_notification_activated, "s", True),
@@ -598,14 +588,29 @@ class Application:
     def on_soulseek_privileges(self, *_args):
         core.users.request_check_privileges(should_open_url=True)
 
-    def on_preferences(self, *_args, page_id="network"):
+    def on_preferences(self, *_args):
 
         if self.preferences is None:
             from pynicotine.gtkgui.dialogs.preferences import Preferences
             self.preferences = Preferences(self)
 
         self.preferences.set_settings()
-        self.preferences.set_active_page(page_id)
+
+        if self.window.is_visible():
+            page_ids = {
+                "search": "searches",
+                "downloads": "downloads",
+                "uploads": "uploads",
+                "userbrowse": "shares",
+                "userinfo": "user-profile",
+                "private": "chats",
+                "userlist": "network",
+                "chatrooms": "chats",
+                "interests": "user-profile"
+            }
+            page_id = page_ids.get(self.window.current_page_id)
+            self.preferences.set_active_page(page_id)
+
         self.preferences.present()
 
     def on_set_debug_level(self, action, state, level):
@@ -813,30 +818,6 @@ class Application:
 
     def on_personal_profile(self, *_args):
         core.userinfo.show_user()
-
-    def on_configure_shares(self, *_args):
-        self.on_preferences(page_id="shares")
-
-    def on_configure_searches(self, *_args):
-        self.on_preferences(page_id="searches")
-
-    def on_configure_chats(self, *_args):
-        self.on_preferences(page_id="chats")
-
-    def on_configure_downloads(self, *_args):
-        self.on_preferences(page_id="downloads")
-
-    def on_configure_uploads(self, *_args):
-        self.on_preferences(page_id="uploads")
-
-    def on_configure_ignored_users(self, *_args):
-        self.on_preferences(page_id="ignored-users")
-
-    def on_configure_account(self, *_args):
-        self.on_preferences(page_id="network")
-
-    def on_configure_user_profile(self, *_args):
-        self.on_preferences(page_id="user-profile")
 
     def on_window_hide_unhide(self, *_args):
 
