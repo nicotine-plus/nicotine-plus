@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-03 01:43+0200\n"
-"PO-Revision-Date: 2026-01-25 07:13+0000\n"
+"PO-Revision-Date: 2026-03-03 20:33+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -45,6 +45,10 @@ msgid ""
 "that focus on usability, while remaining fully compatible with other "
 "Soulseek clients."
 msgstr ""
+"Fájlok megosztása, csevegés és hasonló érdeklődésű emberek keresése. A "
+"Nicotine+ felhasználóbarát, gyors, ingyenes és nyílt forráskódú. "
+"Használhatóságra összpontosító képességeket kínál, miközben teljes mértékben "
+"kompatibilis marad más Soulseek kliensekkel."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:30
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:46
@@ -2396,16 +2400,14 @@ msgid "Public Files"
 msgstr "Nyilvános fájlok"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:61
-#, fuzzy
 msgid "Automatic Search"
-msgstr "Automatikus keresés engedélyezése"
+msgstr "Automatikus keresés"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:68
 msgid "Search Term"
 msgstr "Keresési kifejezés"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:76
-#, fuzzy
 msgid "Custom Filters"
 msgstr "Saját szűrők"
 
@@ -2420,28 +2422,26 @@ msgid "_Search for Item"
 msgstr "Kere_sés a tételre"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:110
-#, fuzzy
 msgid "Set Custom _Filters…"
-msgstr "Saját szűrők"
+msgstr "Saját _szűrők beállítása…"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:112
 msgid "Reset Seen Results"
 msgstr "Megtekintett eredmények visszaállítása"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:113
-#, fuzzy
 msgid "Reset Filters"
-msgstr "Szűrési eredmélyek"
+msgstr "Szűrők alaphelyzetbe"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:195
-#, fuzzy, python-format
+#, python-format
 msgid "Custom Filters Enabled (%(num)s Active)"
-msgstr "A saját szűrők aktívak"
+msgstr "Saját szűrők engedélyezve (%(num)s aktív)"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:215
 #, python-format
 msgid "• %(filter)s %(value)s"
-msgstr ""
+msgstr "• %(filter)s %(value)s"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:257
 msgid "Add Wishes"
@@ -2468,9 +2468,9 @@ msgid "Default filters"
 msgstr "Alapértelmezett szűrők"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:310
-#, fuzzy, python-format
+#, python-format
 msgid "Custom filters (%(num)s active)"
-msgstr "A saját szűrők aktívak"
+msgstr "Saját szűrők (%(num)s aktív)"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:314
 msgid "Edit Wish"
@@ -6568,7 +6568,6 @@ msgid "_Log In As"
 msgstr "Be_jelentkezés"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:132
-#, fuzzy
 msgid "Account password:"
 msgstr "A fiók jelszava:"
 
