@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-03 01:43+0200\n"
-"PO-Revision-Date: 2026-01-24 10:35+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2026-03-03 20:34+0000\n"
+"Last-Translator: Han <han@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
 "Language: nl\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -46,6 +46,10 @@ msgid ""
 "that focus on usability, while remaining fully compatible with other "
 "Soulseek clients."
 msgstr ""
+"Share bestanden, chat en vind mensen met vergelijkbare interesses. Nicotine+ "
+"is gebruiksvriendelijk, snel, gratis en open source. Het biedt functies en "
+"verfijningen die zich richten op gebruiksvriendelijkheid, terwijl het "
+"volledig compatibel blijft met andere Soulseek-clients."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:30
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:46
@@ -1582,7 +1586,7 @@ msgstr "Round-Robin"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1158
 msgid "First In, First Out"
-msgstr "FIFO (First In, First Out)"
+msgstr "Eerst in, eerst uit"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1307
 #: pynicotine/gtkgui/dialogs/preferences.py:1515
@@ -2385,16 +2389,14 @@ msgid "Public Files"
 msgstr "Openbare Bestanden"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:61
-#, fuzzy
 msgid "Automatic Search"
-msgstr "Automatisch zoeken inschakelen"
+msgstr "Automatisch zoeken"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:68
 msgid "Search Term"
 msgstr "Zoekterm"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:76
-#, fuzzy
 msgid "Custom Filters"
 msgstr "Aangepaste filters"
 
@@ -2409,28 +2411,26 @@ msgid "_Search for Item"
 msgstr "_Zoeken naar item"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:110
-#, fuzzy
 msgid "Set Custom _Filters…"
-msgstr "Aangepaste filters"
+msgstr "Aangepaste filters instellen…"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:112
 msgid "Reset Seen Results"
 msgstr "Reset bekeken resultaten"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:113
-#, fuzzy
 msgid "Reset Filters"
-msgstr "Resultaatfilters"
+msgstr "Filters opnieuw instellen"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:195
-#, fuzzy, python-format
+#, python-format
 msgid "Custom Filters Enabled (%(num)s Active)"
-msgstr "Aangepaste filters actief"
+msgstr "Aangepaste filters ingeschakeld (%(num)s Actief)"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:215
 #, python-format
 msgid "• %(filter)s %(value)s"
-msgstr ""
+msgstr "• %(filter)s %(value)s"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:257
 msgid "Add Wishes"
@@ -2456,9 +2456,9 @@ msgid "Default filters"
 msgstr "Standaardfilters"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:310
-#, fuzzy, python-format
+#, python-format
 msgid "Custom filters (%(num)s active)"
-msgstr "Aangepaste filters actief"
+msgstr "Aangepaste filters (%(num)s actief)"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:314
 msgid "Edit Wish"
@@ -4086,7 +4086,7 @@ msgstr "Iran"
 
 #: pynicotine/networkfilter.py:134
 msgid "Iceland"
-msgstr "IJsland"
+msgstr "Ĳsland"
 
 #: pynicotine/networkfilter.py:135
 msgid "Italy"
@@ -6525,9 +6525,8 @@ msgid "_Log In As"
 msgstr "_Inloggen als"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:132
-#, fuzzy
 msgid "Account password:"
-msgstr "Wachtwoord voor account:"
+msgstr "Wachtwoord van account:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:164
 msgid "Change Pass_word"
