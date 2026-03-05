@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-11 18:51+0200\n"
-"PO-Revision-Date: 2026-02-25 10:51+0000\n"
-"Last-Translator: \"ℂ𝕠𝕠𝕠𝕝 (𝕘𝕚𝕥𝕙𝕦𝕓.𝕔𝕠𝕞/ℂ𝕠𝕠𝕠𝕝)\" <coool@mail.lv>\n"
+"PO-Revision-Date: 2026-03-02 23:48+0000\n"
+"Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
 "Language: lv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= "
 "19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.1-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -190,44 +190,44 @@ msgid "Buddy Status"
 msgstr "Draugu statuss"
 
 #: pynicotine/chatrooms.py:361
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been added to private room %(room)s"
-msgstr "Jūs esat pievienots privātai istabai: %(room)s"
+msgstr "Lietotājs %(user)s ir pievienots privātajai istabai %(room)s"
 
 #: pynicotine/chatrooms.py:380
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been removed from private room %(room)s"
-msgstr "Jūs esat pievienots privātai istabai: %(room)s"
+msgstr "Lietotājs %(user)s ir izslēgts no privātās istabas %(room)s"
 
 #: pynicotine/chatrooms.py:397
-#, fuzzy, python-format
+#, python-format
 msgid "You have been added to private room %(room)s"
-msgstr "Jūs esat pievienots privātai istabai: %(room)s"
+msgstr "Jūs esat pievienots privātajai istabai %(room)s"
 
 #: pynicotine/chatrooms.py:412
-#, fuzzy, python-format
+#, python-format
 msgid "You have been removed from private room %(room)s"
-msgstr "Jūs esat pievienots privātai istabai: %(room)s"
+msgstr "Jūs esat izslēgts no privātās istabas %(room)s"
 
 #: pynicotine/chatrooms.py:433
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been made an operator of room %(room)s"
-msgstr "Jūs esat pievienots privātai istabai: %(room)s"
+msgstr "Lietotājs %(user)s ir kļuvis par istabas %(room)s operatoru"
 
 #: pynicotine/chatrooms.py:452
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is no longer an operator of room %(room)s"
-msgstr "%(user)s pieminēja Jūs istabā %(room)s"
+msgstr "Lietotājs %(user)s vairs nav istabas %(room)s operators"
 
 #: pynicotine/chatrooms.py:468
-#, fuzzy, python-format
+#, python-format
 msgid "You have been made an operator of room %(room)s"
-msgstr "Jūs esat pievienots privātai istabai: %(room)s"
+msgstr "Jūs esat kļuvis par istabas %(room)s operatoru"
 
 #: pynicotine/chatrooms.py:481
-#, fuzzy, python-format
+#, python-format
 msgid "You are no longer an operator of room %(room)s"
-msgstr "Jūs esat pievienots privātai istabai: %(room)s"
+msgstr "Jūs vairs neesat istabas %(room)s operators"
 
 #: pynicotine/chatrooms.py:556
 #, python-format
@@ -542,7 +542,7 @@ msgstr "Nosūtīt privātu ziņu visiem lietotājiem, kuri lejupielādē no jums
 #: pynicotine/gtkgui/application.py:766 pynicotine/gtkgui/application.py:780
 #: pynicotine/gtkgui/userinfo.py:829
 msgid "_Send"
-msgstr ""
+msgstr "_Sūtīt"
 
 #: pynicotine/gtkgui/application.py:778
 msgid "Message Buddies"
@@ -744,7 +744,7 @@ msgstr "Padarīt istabu privātu"
 
 #: pynicotine/gtkgui/chatrooms.py:228 pynicotine/gtkgui/dialogs/roomlist.py:382
 msgid "Cre_ate"
-msgstr ""
+msgstr "_Izveidot"
 
 #: pynicotine/gtkgui/chatrooms.py:563
 msgid "Search activity log…"
@@ -817,14 +817,14 @@ msgid "%(user)s mentioned you in room %(room)s"
 msgstr "%(user)s pieminēja Jūs istabā %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:896
-#, fuzzy, python-format
+#, python-format
 msgid "Keyword %(keyword)s mentioned by %(user)s in room %(room)s"
-msgstr "%(user)s Jūs pieminēja istabā %(room)s"
+msgstr "Atslēgvārdu %(keyword)s pieminēja %(user)s istabā %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:903
-#, fuzzy, python-format
+#, python-format
 msgid "Message by watched user %(user)s in room %(room)s"
-msgstr "Ziņa no %(user)s istabā %(room)s"
+msgstr "Ziņa no novērotā lietotāja %(user)s istabā %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:921 pynicotine/gtkgui/mainwindow.py:426
 #, python-format
@@ -832,14 +832,14 @@ msgid "Mentioned by %(user)s in Room %(room)s"
 msgstr "%(user)s Jūs pieminēja istabā %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:929 pynicotine/gtkgui/mainwindow.py:429
-#, fuzzy, python-format
+#, python-format
 msgid "Keyword %(keyword)s Mentioned by %(user)s in Room %(room)s"
-msgstr "%(user)s Jūs pieminēja istabā %(room)s"
+msgstr "Atslēgvārdu %(keyword)s pieminēja %(user)s istabā %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:941 pynicotine/gtkgui/mainwindow.py:436
-#, fuzzy, python-format
+#, python-format
 msgid "Message by Watched User %(user)s in Room %(room)s"
-msgstr "Ziņa no %(user)s istabā %(room)s"
+msgstr "Ziņa no novērotā lietotāja %(user)s istabā %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:953
 #, python-format
@@ -924,9 +924,8 @@ msgstr ""
 #: pynicotine/gtkgui/dialogs/chathistory.py:300
 #: pynicotine/gtkgui/dialogs/roomlist.py:328
 #: pynicotine/gtkgui/privatechat.py:478
-#, fuzzy
 msgid "Delete"
-msgstr "Izdzēsts"
+msgstr "Izdzēst"
 
 #: pynicotine/gtkgui/chatrooms.py:1403
 msgid "Hide Room Users"
@@ -1199,7 +1198,7 @@ msgid "_Edit"
 msgstr "_Rediģēt"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:314
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "User %s already exists, and the password you entered is invalid. Please "
 "choose a different username if this is your first time logging in."
@@ -1214,6 +1213,8 @@ msgid ""
 "Username %s is invalid, please choose a different one. Usernames can only "
 "contain letters (A-Z), numbers and spaces."
 msgstr ""
+"Lietotājvārds %s ir nederīgs, lūdzu, izvēlieties citu. Lietotājvārdos drīkst "
+"izmantot tikai burtus (A-Z), ciparus un atstarpes."
 
 #: pynicotine/gtkgui/dialogs/fileproperties.py:50
 #: pynicotine/gtkgui/dialogs/shortcuts.py:78
@@ -1289,40 +1290,37 @@ msgstr "<b>%(ip)s</b>, ports %(port)s"
 #: pynicotine/gtkgui/dialogs/preferences.py:213
 #: pynicotine/gtkgui/ui/settings/network.ui:78
 msgid "No account added"
-msgstr ""
+msgstr "Nav pievienots konts"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:209
 msgid "Please enter a password, or leave the username empty to log out."
-msgstr ""
+msgstr "Lūdzu, ievadiet paroli vai atstājiet lietotājvārdu tukšu, lai izietu."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:223
-#, fuzzy
 msgid ""
 "Enter a username and password to log in as. If the user does not exist, a "
 "new account will be registered."
 msgstr ""
-"Ievadiet istabas nosaukumu, kurai vēlaties pievienoties. Ja istaba "
-"neeksistē, tā tiks izveidota."
+"Ievadiet lietotājvārdu un paroli, lai pieslēgtos. Ja lietotājs nepastāv, "
+"tiks reģistrēts jauns konts."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:231
 #: pynicotine/gtkgui/ui/settings/network.ui:89
 msgid "Log In As"
-msgstr ""
+msgstr "Pieslēgties kā"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:237
-#, fuzzy
 msgid "_Log In"
-msgstr "_Žurnāls"
+msgstr "Pies_lēgties"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:246
-#, fuzzy
 msgid "Please enter a password."
-msgstr "Lūdzu, ievadiet derīgu dienu skaitu."
+msgstr "Lūdzu, ievadiet paroli."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:261
-#, fuzzy, python-format
+#, python-format
 msgid "Enter a new password for your account %s:"
-msgstr "Ievadiet jaunu paroli savam Soulseek kontam:"
+msgstr "Ievadiet jaunu paroli savam kontam %s:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:265
 #: pynicotine/gtkgui/ui/settings/network.ui:148
@@ -1331,9 +1329,8 @@ msgstr "Mainīt paroli"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:268
 #: pynicotine/gtkgui/widgets/popupmenu.py:587
-#, fuzzy
 msgid "Ch_ange"
-msgstr "_Izmainīt"
+msgstr "Izm_ainīt"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:311
 msgid "No one"
@@ -1393,14 +1390,12 @@ msgid "Browse Folder"
 msgstr "Pārlūkot mapi"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:353
-#, fuzzy
 msgid ""
 "Syntax: Case-insensitive. If enabled, Python regular expressions can be "
 "used, otherwise only wildcard * matches are supported."
 msgstr ""
-"<b>Sintakse</b>: Nav reģistrjutīga. Ja iespējots, var izmantot Python "
-"regulārās izteiksmes, pretējā gadījumā tiek atbalstītas tikai aizstājējzīmju "
-"* sakritības."
+"Sintakse: Nav reģistrjutīga. Ja iespējots, var izmantot Python regulārās "
+"izteiksmes, citādi tiek atbalstītas tikai aizstājējzīmju * sakritības."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:362
 #: pynicotine/gtkgui/dialogs/preferences.py:726
@@ -1505,30 +1500,29 @@ msgstr "Filtri"
 #: pynicotine/gtkgui/dialogs/preferences.py:863
 #: pynicotine/gtkgui/dialogs/preferences.py:890
 msgid "Only buddies can view shares"
-msgstr ""
+msgstr "Tikai draugi var skatīt koplietojumus"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:846
 #: pynicotine/gtkgui/dialogs/preferences.py:866
 #: pynicotine/gtkgui/dialogs/preferences.py:891
 msgid "Everyone can view buddy shares"
-msgstr ""
+msgstr "Visi var skatīt draugu koplietojumus"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:850
 #: pynicotine/gtkgui/dialogs/preferences.py:869
 #: pynicotine/gtkgui/dialogs/preferences.py:892
 msgid "Everyone can view trusted shares"
-msgstr ""
+msgstr "Visi var skatīt uzticamos koplietojumus"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:854
 #: pynicotine/gtkgui/dialogs/preferences.py:872
 #: pynicotine/gtkgui/dialogs/preferences.py:893
 msgid "Everyone can view buddy & trusted shares"
-msgstr ""
+msgstr "Visi var skatīt draugu un uzticamos koplietojumus"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:876
-#, fuzzy
 msgid "Buddy Share Visibility"
-msgstr "Draugu koplietojumi"
+msgstr "Draugu koplietojumu redzamība"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:878
 msgid ""
@@ -1537,6 +1531,10 @@ msgid ""
 "them, and users can choose whether or not they want to see the files in "
 "their search results."
 msgstr ""
+"Padariet draugu/uzticamo koplietojumus redzamus visiem, bet pieprasiet, lai "
+"lietotāji jautā piekļuvi, nosūtot jums ziņu. Šādi faili tiek parādīti ar "
+"indikatoru blakus, un lietotāji var izvēlēties, vai viņi vēlas redzēt failus "
+"savos meklēšanas rezultātos."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:883
 msgid ""
@@ -1545,6 +1543,10 @@ msgid ""
 "files are available on request. Including a comment about access requests on "
 "your user profile is recommended."
 msgstr ""
+"Šī opcija vairumā gadījumu nav ieteicama. Tā ir pēdējā iespēja, ja "
+"neierobežotas piekļuves nodrošināšana nav praktiski iespējama, bet jūs "
+"vēlaties norādīt, ka faili ir pieejami pēc pieprasījuma. Ir ieteicams savā "
+"lietotāja profilā iekļaut komentāru par piekļuves pieprasījumiem."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:896
 msgid "_Change"
@@ -1641,7 +1643,7 @@ msgstr "Formatēt kodus"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1764
 msgid "Keyword"
-msgstr ""
+msgstr "Atslēgvārds"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1785
 #: pynicotine/gtkgui/dialogs/preferences.py:1806
@@ -1653,9 +1655,8 @@ msgid "Replacement"
 msgstr "Aizvietotājs"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1831
-#, fuzzy
 msgid "Mentions"
-msgstr "Savienojumi"
+msgstr "Pieminēts"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1832
 msgid "Auto-Replace"
@@ -1667,7 +1668,7 @@ msgstr "Cenzēt"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1965
 msgid "Add Keyword"
-msgstr ""
+msgstr "Pievienot atslēgvārdu"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1966
 msgid ""
