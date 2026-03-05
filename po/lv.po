@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-03 01:43+0200\n"
-"PO-Revision-Date: 2026-03-02 23:48+0000\n"
+"PO-Revision-Date: 2026-03-03 20:33+0000\n"
 "Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
@@ -47,6 +47,10 @@ msgid ""
 "that focus on usability, while remaining fully compatible with other "
 "Soulseek clients."
 msgstr ""
+"Kopīgojiet failus, tērzējiet un atrodiet cilvēkus ar līdzīgām interesēm. "
+"Nicotine+ ir lietotājdraudzīgs, ātrs, bezmaksas un ar atvērtu pirmkodu. Tas "
+"piedāvā funkcijas un uzlabojumus, kas ir vērsti uz lietošanas ērtumu, "
+"vienlaikus saglabājot pilnīgu saderību ar citiem Soulseek klientiem."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:30
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:46
@@ -1565,7 +1569,7 @@ msgstr "Rediģēt koplietojuma filtru"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1071
 msgid "Modify the following share filter:"
-msgstr "Pārveidojiet šo koplietojuma filtru:"
+msgstr "Mainiet šo koplietojuma filtru:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1144
 #: pynicotine/gtkgui/ui/uploads.ui:45
@@ -1674,34 +1678,36 @@ msgid ""
 "Enter a list of keywords or usernames you want to watch for. Chat messages "
 "containing the keywords will be highlighted."
 msgstr ""
+"Ievadiet atslēgvārdus vai lietotājvārdus, kurus vēlaties novērot. Tērzēšanas "
+"ziņas ar šiem atslēgvārdiem tiks izceltas."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1996
 msgid "Edit Keyword"
-msgstr ""
+msgstr "Rediģēt atslēgvārdu"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1997
 msgid ""
 "Enter a keyword or username you want to watch for. Chat messages containing "
 "the keyword will be highlighted."
 msgstr ""
+"Ievadiet atslēgvārdu vai lietotājvārdu, kuru vēlaties novērot. Tērzēšanas "
+"ziņas ar šiem atslēgvārdiem tiks izceltas."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2033
 msgid "Censor Patterns"
 msgstr "Cenzūras šabloni"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2034
-#, fuzzy
 msgid "Enter a list of patterns you want to censor:"
-msgstr "Ievadiet lietotāju vārdus, kurus vēlaties ignorēt:"
+msgstr "Ievadiet cenzūras šablonus:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2063
 msgid "Edit Censored Pattern"
 msgstr "Rediģēt cenzūras šablonu"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2064
-#, fuzzy
 msgid "Enter a pattern you want to censor:"
-msgstr "Ievadiet lietotāju vārdus, kurus vēlaties ignorēt:"
+msgstr "Ievadiet cenzūras šablonu:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2096
 msgid "Add Replacement"
@@ -1970,9 +1976,8 @@ msgstr ""
 "spraudnis ir saglabājis."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3596
-#, fuzzy
 msgid "Uninstall"
-msgstr "_Atinstalēt…"
+msgstr "Atinstalēt"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3655
 #: pynicotine/gtkgui/dialogs/shortcuts.py:40
@@ -2111,6 +2116,8 @@ msgid ""
 "Room names can only contain letters (A-Z), numbers, and a single space "
 "between characters."
 msgstr ""
+"Istabu nosaukumos drīkst izmantot tikai burtus (A-Z), ciparus un vienu "
+"atstarpi starp simboliem."
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:360
 #, python-format
@@ -2331,9 +2338,8 @@ msgid "Do you really want to reset transfer statistics?"
 msgstr "Vai tiešām vēlaties atiestatīt pārsūtīšanas statistiku?"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:113
-#, fuzzy
 msgid "Reset All"
-msgstr "Atcelt visu atlasi"
+msgstr "Atiestatīt visu"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:25
 #: pynicotine/gtkgui/ui/settings/search.ui:212
@@ -2386,23 +2392,20 @@ msgid "Public Files"
 msgstr "Publiskie faili"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:61
-#, fuzzy
 msgid "Automatic Search"
-msgstr "Iespējot automātisku vārdu aizstāšanu"
+msgstr "Automātiska meklēšana"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:68
-#, fuzzy
 msgid "Search Term"
-msgstr "Kopēt meklēšanas vienumu"
+msgstr "Meklēšanas vienums"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:76
-#, fuzzy
 msgid "Custom Filters"
-msgstr "Atjaunot filtrus"
+msgstr "Pielāgotie filtri"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:85
 msgid "Added"
-msgstr ""
+msgstr "Pievienoti"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:107 pynicotine/gtkgui/interests.py:187
 #: pynicotine/gtkgui/interests.py:196 pynicotine/gtkgui/interests.py:208
@@ -2411,29 +2414,26 @@ msgid "_Search for Item"
 msgstr "_Meklēt vienumu"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:110
-#, fuzzy
 msgid "Set Custom _Filters…"
-msgstr "Atjaunot filtrus"
+msgstr "Iestatīt pielāgotos _filtrus…"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:112
-#, fuzzy
 msgid "Reset Seen Results"
-msgstr "Atlasīt lietotāja rezultātus"
+msgstr "Atiestatīt redzētos rezultātus"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:113
-#, fuzzy
 msgid "Reset Filters"
-msgstr "Rezultātu filtri"
+msgstr "Atiestatīt filtrus"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:195
-#, fuzzy, python-format
+#, python-format
 msgid "Custom Filters Enabled (%(num)s Active)"
-msgstr "Atjaunot filtrus"
+msgstr "Pielāgotie filtri ir ieslēgti (%(num)s aktīvi)"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:215
 #, python-format
 msgid "• %(filter)s %(value)s"
-msgstr ""
+msgstr "• %(filter)s %(value)s"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:257
 msgid "Add Wishes"
@@ -2445,35 +2445,32 @@ msgstr "Ievadiet meklēšanas vienumus, ko pievienot vēlmju sarakstam:"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:262
 #: pynicotine/gtkgui/dialogs/wishlist.py:323
-#, fuzzy
 msgid "Enable automatic search"
-msgstr "Iespējot automātisku vārdu aizstāšanu"
+msgstr "Iespējot automātisku meklēšanu"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:270
 #: pynicotine/gtkgui/dialogs/wishlist.py:309
-#, fuzzy
 msgid "No filters"
-msgstr "Tīkla filtri"
+msgstr "Nav filtru"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:270
 #: pynicotine/gtkgui/dialogs/wishlist.py:309
-#, fuzzy
 msgid "Default filters"
-msgstr "Rezultātu filtri"
+msgstr "Noklusējuma filtri"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:310
-#, fuzzy, python-format
+#, python-format
 msgid "Custom filters (%(num)s active)"
-msgstr "Atjaunot filtrus"
+msgstr "Pielāgotie filtri (%(num)s aktīvi)"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:314
 msgid "Edit Wish"
 msgstr "Rediģēt vēlmi"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:315
-#, fuzzy, python-format
+#, python-format
 msgid "Modify the search term '%s':"
-msgstr "Pārveidojiet šo koplietojuma filtru:"
+msgstr "Mainiet meklēšanas vienumu '%s':"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:380
 msgid "Clear Wishlist?"
@@ -2612,9 +2609,8 @@ msgid "Similar Users"
 msgstr "Līdzīgi lietotāji"
 
 #: pynicotine/gtkgui/interests.py:290 pynicotine/gtkgui/interests.py:431
-#, fuzzy
 msgid "Popular Interests"
-msgstr "Personīgās intereses"
+msgstr "Populārās intereses"
 
 #: pynicotine/gtkgui/interests.py:293 pynicotine/gtkgui/interests.py:437
 #: pynicotine/gtkgui/ui/interests.ui:142
@@ -2622,28 +2618,28 @@ msgid "Recommendations"
 msgstr "Ieteikumi"
 
 #: pynicotine/gtkgui/interests.py:434
-#, fuzzy, python-format
+#, python-format
 msgid "Recommendations for %(item)s"
-msgstr "_Ieteikumi vienumam"
+msgstr "Ieteikumi par %(item)s"
 
 #: pynicotine/gtkgui/interests.py:478
 #, python-format
 msgid "Users who like %(item)s"
-msgstr ""
+msgstr "Lietotāji, kuriem patīk %(item)s"
 
 #: pynicotine/gtkgui/mainwindow.py:226
 msgid "Search log…"
 msgstr "Meklēšana žurnālā…"
 
 #: pynicotine/gtkgui/mainwindow.py:409 pynicotine/gtkgui/privatechat.py:511
-#, fuzzy, python-format
+#, python-format
 msgid "Mentioned by %(user)s in Private"
-msgstr "%(user)s Jūs pieminēja istabā %(room)s"
+msgstr "%(user)s privāti pieminēja"
 
 #: pynicotine/gtkgui/mainwindow.py:412 pynicotine/gtkgui/privatechat.py:518
 #, python-format
 msgid "Keyword %(keyword)s Mentioned by %(user)s in Private"
-msgstr ""
+msgstr "Atslēgvārdu %(keyword)s pieminēja %(user)s privāti"
 
 #: pynicotine/gtkgui/mainwindow.py:417 pynicotine/gtkgui/privatechat.py:528
 #, python-format
@@ -2680,19 +2676,16 @@ msgid "Chat"
 msgstr "Tērzēšana"
 
 #: pynicotine/gtkgui/mainwindow.py:1131
-#, fuzzy
 msgid "[Debug] [SLOW] Connections"
-msgstr "[Debug] Savienojumi"
+msgstr "[Atkļūdošana] [LĒNI] Savienojumi"
 
 #: pynicotine/gtkgui/mainwindow.py:1132
-#, fuzzy
 msgid "[Debug] [SLOW] Messages"
-msgstr "[Debug] Ziņas"
+msgstr "[Atkļūdošana] [LĒNI] Ziņas"
 
 #: pynicotine/gtkgui/mainwindow.py:1133
-#, fuzzy
 msgid "[Debug] [SLOW] Transfers"
-msgstr "[Debug] Pārsūtījumi"
+msgstr "[Atkļūdošana] [LĒNI] Pārsūtījumi"
 
 #: pynicotine/gtkgui/mainwindow.py:1134
 msgid "[Debug] Miscellaneous"
@@ -2810,14 +2803,14 @@ msgid "User Actions"
 msgstr "Lietotāja darbības"
 
 #: pynicotine/gtkgui/privatechat.py:491
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s mentioned you in a private message"
-msgstr "%(user)s pieminēja Jūs istabā %(room)s"
+msgstr "%(user)s pieminēja jūs privātajā ziņā"
 
 #: pynicotine/gtkgui/privatechat.py:494
 #, python-format
 msgid "Keyword %(keyword)s mentioned by %(user)s in private"
-msgstr ""
+msgstr "Atslēgvārdu %(keyword)s pieminēja %(user)s privāti"
 
 #: pynicotine/gtkgui/privatechat.py:552
 msgid "* Messages sent while you were offline"
@@ -3396,9 +3389,8 @@ msgid "Do you really want to close all tabs?"
 msgstr "Vai tiešām vēlaties aizvērt visas cilnes?"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:454
-#, fuzzy
 msgid "Close All"
-msgstr "Notīrīt visu"
+msgstr "Aizvērt visu"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:467
 #, python-format
@@ -3462,7 +3454,7 @@ msgstr "Privātās istabas"
 #: pynicotine/gtkgui/widgets/popupmenu.py:533
 #, python-format
 msgid "Make Owner of %s"
-msgstr ""
+msgstr "Padarīt par %s īpašnieku"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:551
 #, python-format
@@ -3485,16 +3477,17 @@ msgid "Add as Operator of %s"
 msgstr "Pievienot kā %s operatoru"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:604
-#, fuzzy
 msgid "Change Room Owner?"
-msgstr "Istabas īpašnieks"
+msgstr "Vai mainīt istabas īpašnieku?"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:605
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Do you really want to make %(user)s the new owner of your private room "
 "%(room)s?"
-msgstr "Vai tiešām vēlaties neatgriezeniski dzēst savu privāto istabu %s?"
+msgstr ""
+"Vai tiešām vēlaties padarīt %(user)s par jūsu privātās istabas %(room)s "
+"jauno īpašnieku?"
 
 #: pynicotine/gtkgui/widgets/textentry.py:22
 msgid "Send message…"
@@ -3623,9 +3616,9 @@ msgid "Type %s to log in with another username or password."
 msgstr "Ierakstiet %s, lai pieslēgtos ar citu lietotājvārdu vai paroli."
 
 #: pynicotine/headless/application.py:78
-#, fuzzy, python-format
+#, python-format
 msgid "Type %s to log in with another username."
-msgstr "Ierakstiet %s, lai pieslēgtos ar citu lietotājvārdu vai paroli."
+msgstr "Ierakstiet %s, lai pieslēgtos ar citu lietotājvārdu."
 
 #: pynicotine/headless/application.py:94
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:272
@@ -5700,9 +5693,8 @@ msgstr ""
 "atrastu reti sastopamus failus."
 
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:31
-#, fuzzy
 msgid "Search wish terms…"
-msgstr "Meklēšanas vienums…"
+msgstr "Meklēt vēlmju vienumus…"
 
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:162
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:178
@@ -6290,9 +6282,8 @@ msgid "Country code, e.g. US ES or !DE !GB"
 msgstr "Valsts kods, piem., US ES vai !DE !GB"
 
 #: pynicotine/gtkgui/ui/search.ui:222
-#, fuzzy
 msgid "Store Wishlist Filters"
-msgstr "Rezultātu filtri"
+msgstr "Saglabāt vēlmju saraksta filtrus"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:33
 msgid ""
@@ -6325,7 +6316,7 @@ msgstr "IP adreses"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:38
 msgid "Watch for keyword mentions in messages"
-msgstr ""
+msgstr "Novērot atslēgvārdu pieminējumus tērzēšanas ziņās"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:195
 msgid "Substitute text patterns when sending messages"
