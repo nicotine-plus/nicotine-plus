@@ -1230,6 +1230,11 @@ class MainWindow(Window):
         self.scan_progress_spinner.start()
 
     def shares_ready(self, _successful):
+
+        if core.shares.rescanning:
+            # Scanner was restarted
+            return
+
         self.scan_progress_container.set_visible(False)
         self.scan_progress_spinner.stop()
 
