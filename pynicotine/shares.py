@@ -739,7 +739,7 @@ class Scanner:
 
 
 class Shares:
-    __slots__ = ("share_dbs", "requested_share_times", "initialized", "rescanning", "compressed_shares",
+    __slots__ = ("share_dbs", "requested_share_times", "initialized", "compressed_shares",
                  "share_db_paths", "file_path_index", "_scanner_process", "_rescan_daily_timer_id")
 
     BACKSLASH_SENTINEL = "@@BACKSLASH@@"
@@ -749,7 +749,6 @@ class Shares:
         self.share_dbs = {}
         self.requested_share_times = {}
         self.initialized = False
-        self.rescanning = False
         self.compressed_shares = {
             PermissionLevel.PUBLIC: SharedFileListResponse(permission_level=PermissionLevel.PUBLIC),
             PermissionLevel.BUDDY: SharedFileListResponse(permission_level=PermissionLevel.BUDDY),
@@ -799,11 +798,9 @@ class Shares:
 
     def _quit(self):
 
+        self.stop_scanner()
         self.close_shares(self.share_dbs)
         self.initialized = False
-
-        if self._scanner_process is not None:
-            self._scanner_process.terminate()
 
     def _server_login(self, msg):
         if msg.success:
@@ -1132,8 +1129,7 @@ class Shares:
 
     def rescan_shares(self, init=False, rescan=True, rebuild=False, use_thread=True, force=False):
 
-        if self.rescanning:
-            return None
+        self.stop_scanner()
 
         if rescan and not force:
             # Verify all shares are mounted before allowing destructive rescan
@@ -1149,24 +1145,35 @@ class Shares:
                     return None
 
         # Hand over database control to the scanner process
-        self.rescanning = True
+        share_groups = self.get_shared_folders()
+        self._scanner_process, reader = self._build_scanner_process(share_groups, init, rescan, rebuild)
+
         self.close_shares(self.share_dbs)
         self.file_path_index = ()
 
         events.emit("shares-preparing")
-
-        share_groups = self.get_shared_folders()
-        self._scanner_process, reader = self._build_scanner_process(share_groups, init, rescan, rebuild)
         self._scanner_process.start()
 
         if use_thread:
             Thread(
-                target=self._process_scanner, args=(reader, events.emit_main_thread),
+                target=self._process_scanner, args=(self._scanner_process, reader, events.emit_main_thread),
                 name="ProcessShareScanner"
             ).start()
             return None
 
-        return self._process_scanner(reader)
+        return self._process_scanner(self._scanner_process, reader)
+
+    @property
+    def rescanning(self):
+        return self._scanner_process is not None
+
+    def stop_scanner(self):
+
+        if self._scanner_process is None:
+            return
+
+        self._scanner_process.terminate()
+        self._scanner_process = None
 
     def check_shares_available(self):
 
@@ -1219,7 +1226,7 @@ class Shares:
         scanner = context.Process(target=scanner_obj.run, daemon=True)
         return scanner, reader
 
-    def _process_scanner(self, reader, emit_event=None):
+    def _process_scanner(self, process, reader, emit_event=None):
 
         successful = False
         current_folder_count = None
@@ -1263,15 +1270,23 @@ class Shares:
                 last_count_update = current_time
 
         reader.close()
-        self._scanner_process.join()
-        self._scanner_process = None
+        process.join()
 
         if emit_event is not None:
             emit_event("shares-ready", successful)
 
+        elif process == self._scanner_process:
+            self._scanner_process = None
+
         return successful
 
     def _shares_ready(self, successful):
+
+        if self._scanner_process is not None and self._scanner_process.is_alive():
+            # Scanner was restarted
+            return
+
+        self._scanner_process = None
 
         # Scanning done, load shares in the main process again
         if successful:
@@ -1285,7 +1300,6 @@ class Shares:
             except Exception:
                 successful = False
 
-        self.rescanning = False
         self.start_rescan_daily_timer()
 
         if not successful:
