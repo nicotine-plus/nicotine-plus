@@ -117,6 +117,7 @@ class MainWindow(Window):
             self.private_title,
             self.private_toolbar,
             self.room_search_entry,
+            self.scan_failed_container,
             self.scan_progress_container,
             self.scan_progress_label,
             self.scan_progress_spinner,
@@ -1223,6 +1224,7 @@ class MainWindow(Window):
         self.scan_progress_container.set_tooltip_text(label)
         self.scan_progress_label.set_label(label)
         self.scan_progress_container.set_visible(True)
+        self.scan_failed_container.set_visible(False)
         self.scan_progress_spinner.start()
 
     def shares_scanning(self, folder_count=None):
@@ -1241,9 +1243,13 @@ class MainWindow(Window):
         self.scan_progress_container.set_visible(True)
         self.scan_progress_spinner.start()
 
-    def shares_ready(self, _successful):
+    def shares_ready(self, successful):
+
         self.scan_progress_container.set_visible(False)
         self.scan_progress_spinner.stop()
+
+        if not successful:
+            self.scan_failed_container.set_visible(True)
 
     def on_toggle_status(self, *_args):
 
