@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-11 18:51+0200\n"
+"POT-Creation-Date: 2026-03-03 01:43+0200\n"
 "PO-Revision-Date: 2024-09-04 07:09+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Malay <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -43,22 +43,19 @@ msgstr "Layari rangkaian Soulseek"
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
 msgstr "Nicotine+ adalah klien grafik untuk rangkaian peer-to-peer Soulseek."
 
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:18
-#, fuzzy
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:17
 msgid ""
-"Nicotine+ aims to be a lightweight, pleasant, free and open source (FOSS) "
-"alternative to the official Soulseek client, while also providing a "
-"comprehensive set of features."
+"Share files, chat, and find people with similar interests. Nicotine+ is user-"
+"friendly, fast, free, and open source. It provides features and refinements "
+"that focus on usability, while remaining fully compatible with other "
+"Soulseek clients."
 msgstr ""
-"Nicotine+ bertujuan untuk menjadi alternatif ringan, menyenangkan, percuma "
-"dan sumber terbuka (FOSS) kepada klien Soulseek rasmi, sambil juga "
-"menyediakan set ciri yang komprehensif."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:30
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:46
-#: pynicotine/gtkgui/mainwindow.py:780
+#: pynicotine/gtkgui/mainwindow.py:773
 #: pynicotine/plugins/core_commands/__init__.py:14
-#: pynicotine/gtkgui/ui/mainwindow.ui:227
+#: pynicotine/gtkgui/ui/mainwindow.ui:205
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:649
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:835
 #: pynicotine/gtkgui/ui/userbrowse.ui:153
@@ -69,9 +66,9 @@ msgstr "Cari Fail"
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:34
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:50
 #: pynicotine/gtkgui/dialogs/preferences.py:3671
-#: pynicotine/gtkgui/mainwindow.py:781 pynicotine/gtkgui/mainwindow.py:1133
+#: pynicotine/gtkgui/mainwindow.py:774 pynicotine/gtkgui/mainwindow.py:1126
 #: pynicotine/gtkgui/widgets/trayicon.py:73
-#: pynicotine/gtkgui/ui/mainwindow.ui:468
+#: pynicotine/gtkgui/ui/mainwindow.ui:430
 #: pynicotine/gtkgui/ui/settings/downloads.ui:76
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:661
 msgid "Downloads"
@@ -81,7 +78,7 @@ msgstr ""
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:54
 #: pynicotine/gtkgui/dialogs/shortcuts.py:76
 #: pynicotine/gtkgui/dialogs/shortcuts.py:105
-#: pynicotine/gtkgui/mainwindow.py:783 pynicotine/gtkgui/ui/mainwindow.ui:878
+#: pynicotine/gtkgui/mainwindow.py:776 pynicotine/gtkgui/ui/mainwindow.ui:802
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:685
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:857
 #, fuzzy
@@ -90,9 +87,9 @@ msgstr "Lihat Shares"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:42
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:58
-#: pynicotine/gtkgui/mainwindow.py:785 pynicotine/gtkgui/widgets/trayicon.py:78
+#: pynicotine/gtkgui/mainwindow.py:778 pynicotine/gtkgui/widgets/trayicon.py:78
 #: pynicotine/plugins/core_commands/__init__.py:12
-#: pynicotine/gtkgui/ui/mainwindow.ui:1214
+#: pynicotine/gtkgui/ui/mainwindow.ui:1100
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:709
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:901
 #, fuzzy
@@ -254,17 +251,17 @@ msgid "Chat message from user '%(user)s' in room '%(room)s': %(message)s"
 msgstr "Mesej chat dari pengguna '%(user)s' di bilik '%(room)s': %(message)s"
 
 #: pynicotine/config.py:117 pynicotine/config.py:136
-#: pynicotine/userbrowse.py:169
+#: pynicotine/userbrowse.py:174
 #, fuzzy, python-format
 msgid "Cannot create folder %(path)s: %(error)s"
 msgstr "Tidak dapat mengakses fail log %(path)s: %(error)s"
 
-#: pynicotine/config.py:826
+#: pynicotine/config.py:843
 #, python-format
 msgid "Error backing up config: %s"
 msgstr ""
 
-#: pynicotine/config.py:829
+#: pynicotine/config.py:846
 #, fuzzy, python-format
 msgid "Config backed up to: %s"
 msgstr "Konfigurasi disandarkan ke: %s"
@@ -274,7 +271,7 @@ msgstr "Konfigurasi disandarkan ke: %s"
 msgid "Starting %(program)s %(version)s"
 msgstr "Memuatkan %(program)s %(version)s"
 
-#: pynicotine/core.py:197 pynicotine/gtkgui/application.py:995
+#: pynicotine/core.py:197 pynicotine/gtkgui/application.py:976
 #, fuzzy, python-format
 msgid "Loaded %(program)s %(version)s"
 msgstr "Memuatkan %(program)s %(version)s"
@@ -305,88 +302,88 @@ msgid "You need to specify a username and password before connecting…"
 msgstr ""
 "Anda perlu menentukan nama pengguna dan kata laluan sebelum menyambung…"
 
-#: pynicotine/downloads.py:223
+#: pynicotine/downloads.py:226
 #, python-format
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr ""
 
-#: pynicotine/downloads.py:238
+#: pynicotine/downloads.py:241
 #, fuzzy, python-format
 msgid "Error: %(num)d Download filters failed! %(error)s "
 msgstr "Ralat: %(num)d Muat turun penapis gagal! %(error)s "
 
-#: pynicotine/downloads.py:350
+#: pynicotine/downloads.py:353
 #, fuzzy, python-format
 msgid "%(file)s downloaded from %(user)s"
 msgstr "%(file)s dimuat turun dari %(user)s"
 
-#: pynicotine/downloads.py:354
+#: pynicotine/downloads.py:357
 #, fuzzy
 msgid "File Downloaded"
 msgstr "Fail Dimuat Turun"
 
-#: pynicotine/downloads.py:362
+#: pynicotine/downloads.py:365
 #, fuzzy, python-format
 msgid "Executed: %s"
 msgstr "Dilaksanakan: %s"
 
-#: pynicotine/downloads.py:365 pynicotine/downloads.py:406
+#: pynicotine/downloads.py:368 pynicotine/downloads.py:409
 #: pynicotine/nowplaying.py:339
 #, fuzzy, python-format
 msgid "Executing '%(command)s' failed: %(error)s"
 msgstr "Melaksanakan '%(command)s' gagal: %(error)s"
 
-#: pynicotine/downloads.py:391
+#: pynicotine/downloads.py:394
 #, fuzzy, python-format
 msgid "%(folder)s downloaded from %(user)s"
 msgstr "%(folder)s dimuat turun dari %(user)s"
 
-#: pynicotine/downloads.py:395
+#: pynicotine/downloads.py:398
 #, fuzzy
 msgid "Folder Downloaded"
 msgstr "Folder Dimuat Turun"
 
-#: pynicotine/downloads.py:403
+#: pynicotine/downloads.py:406
 #, fuzzy, python-format
 msgid "Executed on folder: %s"
 msgstr "Dilaksanakan pada folder: %s"
 
-#: pynicotine/downloads.py:427
+#: pynicotine/downloads.py:430
 #, fuzzy, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
 msgstr "Tidak dapat memindahkan '%(tempfile)s' ke '%(file)s': %(error)s"
 
-#: pynicotine/downloads.py:435 pynicotine/downloads.py:1166
+#: pynicotine/downloads.py:438 pynicotine/downloads.py:1188
 #, fuzzy
 msgid "Download Folder Error"
 msgstr "Ralat Folder Muat Turun"
 
-#: pynicotine/downloads.py:473
+#: pynicotine/downloads.py:476
 #, fuzzy, python-format
 msgid "Download finished: user %(user)s, file %(file)s"
 msgstr "Muat turun selesai: pengguna %(user)s, fail %(file)s"
 
-#: pynicotine/downloads.py:483
+#: pynicotine/downloads.py:486
 #, fuzzy, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Muat turun dibatalkan, pengguna %(user)s fail %(file)s"
 
-#: pynicotine/downloads.py:1106
+#: pynicotine/downloads.py:1128
 #, fuzzy, python-format
 msgid "Download I/O error: %s"
 msgstr "Ralat I/O muat turun: %s"
 
-#: pynicotine/downloads.py:1147
+#: pynicotine/downloads.py:1169
 #, fuzzy, python-format
 msgid "Can't get an exclusive lock on file - I/O error: %s"
 msgstr "Tak dapat dapatkan kunci eksklusif pada fail - ralat I/O: %s"
 
-#: pynicotine/downloads.py:1160
+#: pynicotine/downloads.py:1182
 #, python-format
 msgid "Cannot save file in %(folder_path)s: %(error)s"
 msgstr ""
 
-#: pynicotine/downloads.py:1179
+#: pynicotine/downloads.py:1201
 #, fuzzy, python-format
 msgid "Download started: user %(user)s, file %(file)s"
 msgstr "Muat turun bermula: pengguna %(user)s, fail %(file)s"
@@ -402,153 +399,153 @@ msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr ""
 "Tiada persekitaran grafik tersedia, menggunakan mod tanpa kepala (tiada GUI)"
 
-#: pynicotine/gtkgui/application.py:309
+#: pynicotine/gtkgui/application.py:299
 #: pynicotine/gtkgui/widgets/trayicon.py:85
 #, fuzzy
 msgid "_Connect"
 msgstr "_Sambung"
 
-#: pynicotine/gtkgui/application.py:310
+#: pynicotine/gtkgui/application.py:300
 #: pynicotine/gtkgui/widgets/trayicon.py:86
 #, fuzzy
 msgid "_Disconnect"
 msgstr "_Putuskan Sambungan"
 
-#: pynicotine/gtkgui/application.py:311
+#: pynicotine/gtkgui/application.py:301
 #, fuzzy
 msgid "Soulseek _Privileges"
 msgstr "Soulseek _Kelayakan"
 
-#: pynicotine/gtkgui/application.py:317
+#: pynicotine/gtkgui/application.py:307
 #, fuzzy
 msgid "_Preferences"
 msgstr "_Pilihan"
 
-#: pynicotine/gtkgui/application.py:323 pynicotine/gtkgui/application.py:539
+#: pynicotine/gtkgui/application.py:313 pynicotine/gtkgui/application.py:529
 #: pynicotine/gtkgui/widgets/trayicon.py:91
 msgid "_Quit"
 msgstr ""
 
-#: pynicotine/gtkgui/application.py:340
+#: pynicotine/gtkgui/application.py:330
 #, fuzzy
 msgid "Browse _Public Shares"
 msgstr "Lihat _Shares Awam"
 
-#: pynicotine/gtkgui/application.py:341
+#: pynicotine/gtkgui/application.py:331
 #, fuzzy
 msgid "Browse _Buddy Shares"
 msgstr "Semak _Shares Kawan"
 
-#: pynicotine/gtkgui/application.py:342
+#: pynicotine/gtkgui/application.py:332
 msgid "Browse _Trusted Shares"
 msgstr ""
 
-#: pynicotine/gtkgui/application.py:351 pynicotine/gtkgui/application.py:412
+#: pynicotine/gtkgui/application.py:341 pynicotine/gtkgui/application.py:402
 #, fuzzy
 msgid "_Rescan Shares"
 msgstr "_Rescan Shares"
 
-#: pynicotine/gtkgui/application.py:352 pynicotine/gtkgui/application.py:414
+#: pynicotine/gtkgui/application.py:342 pynicotine/gtkgui/application.py:404
 msgid "Configure _Shares"
 msgstr ""
 
-#: pynicotine/gtkgui/application.py:374
+#: pynicotine/gtkgui/application.py:364
 #, fuzzy
 msgid "_Keyboard Shortcuts"
 msgstr "_Pintasan Papan Kekunci"
 
-#: pynicotine/gtkgui/application.py:375
+#: pynicotine/gtkgui/application.py:365
 #, fuzzy
 msgid "_Setup Assistant"
 msgstr "Pembantu Persediaan"
 
-#: pynicotine/gtkgui/application.py:376
+#: pynicotine/gtkgui/application.py:366
 msgid "_Transfer Statistics"
 msgstr ""
 
-#: pynicotine/gtkgui/application.py:381
+#: pynicotine/gtkgui/application.py:371
 #, fuzzy
 msgid "Report a _Bug"
 msgstr "Laporkan _Bug"
 
-#: pynicotine/gtkgui/application.py:382
+#: pynicotine/gtkgui/application.py:372
 msgid "Improve T_ranslations"
 msgstr ""
 
-#: pynicotine/gtkgui/application.py:386
+#: pynicotine/gtkgui/application.py:376
 #, fuzzy
 msgid "_About Nicotine+"
 msgstr "_Tentang Nicotine+"
 
-#: pynicotine/gtkgui/application.py:397
+#: pynicotine/gtkgui/application.py:387
 #, fuzzy
 msgid "_File"
 msgstr "_Fail"
 
-#: pynicotine/gtkgui/application.py:398
+#: pynicotine/gtkgui/application.py:388
 #, fuzzy
 msgid "_Shares"
 msgstr "_Kongsi"
 
-#: pynicotine/gtkgui/application.py:399 pynicotine/gtkgui/application.py:416
+#: pynicotine/gtkgui/application.py:389 pynicotine/gtkgui/application.py:406
 #, fuzzy
 msgid "_Help"
 msgstr "_Bantuan"
 
-#: pynicotine/gtkgui/application.py:413
+#: pynicotine/gtkgui/application.py:403
 #, fuzzy
 msgid "_Browse Shares"
 msgstr "_Browse Shares"
 
-#: pynicotine/gtkgui/application.py:468
+#: pynicotine/gtkgui/application.py:458
 #, python-format
 msgid "Unable to show notification: %s"
 msgstr ""
 
-#: pynicotine/gtkgui/application.py:531
+#: pynicotine/gtkgui/application.py:521
 #, fuzzy
 msgid "You are still uploading files. Do you really want to exit?"
 msgstr "Anda masih memuat naik fail. Adakah anda benar-benar ingin keluar?"
 
-#: pynicotine/gtkgui/application.py:532
+#: pynicotine/gtkgui/application.py:522
 #, fuzzy
 msgid "Wait for uploads to finish"
 msgstr "Tunggu muat naik selesai"
 
-#: pynicotine/gtkgui/application.py:534
+#: pynicotine/gtkgui/application.py:524
 #, fuzzy
 msgid "Do you really want to exit?"
 msgstr "Adakah anda benar-benar ingin keluar?"
 
-#: pynicotine/gtkgui/application.py:538
-#: pynicotine/gtkgui/widgets/dialogs.py:484
+#: pynicotine/gtkgui/application.py:528
+#: pynicotine/gtkgui/widgets/dialogs.py:488
 #, fuzzy
 msgid "_No"
 msgstr "_Tidak"
 
-#: pynicotine/gtkgui/application.py:540
+#: pynicotine/gtkgui/application.py:530
 #, fuzzy
 msgid "_Run in Background"
 msgstr "_Jalankan di Latar Belakang"
 
-#: pynicotine/gtkgui/application.py:545
+#: pynicotine/gtkgui/application.py:535
 #: pynicotine/gtkgui/dialogs/preferences.py:2259
 #: pynicotine/plugins/core_commands/__init__.py:53
 #, fuzzy
 msgid "Quit Nicotine+"
 msgstr "Keluar dari Nicotine+"
 
-#: pynicotine/gtkgui/application.py:566
+#: pynicotine/gtkgui/application.py:556
 #, fuzzy
 msgid "Shares Not Available"
 msgstr "Shares Tidak Tersedia"
 
-#: pynicotine/gtkgui/application.py:567 pynicotine/headless/application.py:119
+#: pynicotine/gtkgui/application.py:557 pynicotine/headless/application.py:119
 msgid ""
 "Verify that external disks are mounted and folder permissions are correct."
 msgstr ""
 
-#: pynicotine/gtkgui/application.py:570 pynicotine/gtkgui/chatrooms.py:227
+#: pynicotine/gtkgui/application.py:560 pynicotine/gtkgui/chatrooms.py:227
 #: pynicotine/gtkgui/chatrooms.py:1389
 #: pynicotine/gtkgui/dialogs/chathistory.py:299
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:133
@@ -556,67 +553,67 @@ msgstr ""
 #: pynicotine/gtkgui/dialogs/preferences.py:3595
 #: pynicotine/gtkgui/dialogs/roomlist.py:327
 #: pynicotine/gtkgui/dialogs/statistics.py:112
-#: pynicotine/gtkgui/dialogs/wishlist.py:318 pynicotine/gtkgui/downloads.py:129
+#: pynicotine/gtkgui/dialogs/wishlist.py:383 pynicotine/gtkgui/downloads.py:129
 #: pynicotine/gtkgui/downloads.py:146 pynicotine/gtkgui/downloads.py:176
 #: pynicotine/gtkgui/privatechat.py:477 pynicotine/gtkgui/uploads.py:147
 #: pynicotine/gtkgui/uploads.py:164 pynicotine/gtkgui/widgets/dialogs.py:137
-#: pynicotine/gtkgui/widgets/dialogs.py:524
+#: pynicotine/gtkgui/widgets/dialogs.py:528
 #: pynicotine/gtkgui/widgets/iconnotebook.py:453
-#: pynicotine/gtkgui/widgets/popupmenu.py:586
+#: pynicotine/gtkgui/widgets/popupmenu.py:610
 #: pynicotine/gtkgui/ui/dialogs/download.ui:9
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:9
 #, fuzzy
 msgid "_Cancel"
 msgstr "_Batal"
 
-#: pynicotine/gtkgui/application.py:571 pynicotine/gtkgui/uploads.py:32
+#: pynicotine/gtkgui/application.py:561 pynicotine/gtkgui/uploads.py:32
 #, fuzzy
 msgid "_Retry"
 msgstr "_Cuba Lagi"
 
-#: pynicotine/gtkgui/application.py:572
+#: pynicotine/gtkgui/application.py:562
 #, fuzzy
 msgid "_Force Rescan"
 msgstr "_Paksa Rescan"
 
-#: pynicotine/gtkgui/application.py:764
+#: pynicotine/gtkgui/application.py:769
 #, fuzzy
 msgid "Message Downloading Users"
 msgstr "Mesej Memuat Turun Pengguna"
 
-#: pynicotine/gtkgui/application.py:765
+#: pynicotine/gtkgui/application.py:770
 #, fuzzy
 msgid "Send private message to all users who are downloading from you:"
 msgstr ""
 "Hantar mesej peribadi kepada semua pengguna yang sedang memuat turun dari "
 "anda:"
 
-#: pynicotine/gtkgui/application.py:766 pynicotine/gtkgui/application.py:780
-#: pynicotine/gtkgui/userinfo.py:829
+#: pynicotine/gtkgui/application.py:771 pynicotine/gtkgui/application.py:785
+#: pynicotine/gtkgui/userinfo.py:862
 msgid "_Send"
 msgstr ""
 
-#: pynicotine/gtkgui/application.py:778
+#: pynicotine/gtkgui/application.py:783
 #, fuzzy
 msgid "Message Buddies"
 msgstr "Rakan Mesej"
 
-#: pynicotine/gtkgui/application.py:779
+#: pynicotine/gtkgui/application.py:784
 #, fuzzy
 msgid "Send private message to all online buddies:"
 msgstr "Hantar mesej peribadi kepada semua rakan dalam talian:"
 
-#: pynicotine/gtkgui/application.py:808
+#: pynicotine/gtkgui/application.py:813
 #, fuzzy
 msgid "Select a Saved Shares List File"
 msgstr "Pilih Fail Senarai Shares Tersimpan"
 
-#: pynicotine/gtkgui/application.py:894
+#: pynicotine/gtkgui/application.py:875
 #, fuzzy
 msgid "Critical Error"
 msgstr "Ralat Kritikal"
 
-#: pynicotine/gtkgui/application.py:895
+#: pynicotine/gtkgui/application.py:876
 #, fuzzy
 msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
@@ -625,12 +622,12 @@ msgstr ""
 "Nicotine+ telah mengalami ralat kritikal dan perlu keluar. Sila salin mesej "
 "berikut dan sertakan dalam laporan ralat:"
 
-#: pynicotine/gtkgui/application.py:899
+#: pynicotine/gtkgui/application.py:880
 #, fuzzy
 msgid "_Quit Nicotine+"
 msgstr "_Keluar Nicotine+"
 
-#: pynicotine/gtkgui/application.py:900
+#: pynicotine/gtkgui/application.py:881
 #, fuzzy
 msgid "_Copy & Report Bug"
 msgstr "_Salin & Laporkan Bug"
@@ -670,8 +667,8 @@ msgstr "Kelajuan"
 #: pynicotine/gtkgui/dialogs/preferences.py:632
 #: pynicotine/gtkgui/dialogs/preferences.py:810
 #: pynicotine/gtkgui/dialogs/preferences.py:1101
-#: pynicotine/gtkgui/interests.py:141 pynicotine/gtkgui/ui/mainwindow.ui:345
-#: pynicotine/gtkgui/ui/mainwindow.ui:586
+#: pynicotine/gtkgui/interests.py:141 pynicotine/gtkgui/ui/mainwindow.ui:323
+#: pynicotine/gtkgui/ui/mainwindow.ui:548
 msgid "Files"
 msgstr ""
 
@@ -724,8 +721,8 @@ msgstr "Tambah Pengguna _Nota…"
 #: pynicotine/gtkgui/dialogs/preferences.py:1795
 #: pynicotine/gtkgui/dialogs/preferences.py:1823
 #: pynicotine/gtkgui/dialogs/preferences.py:3032
-#: pynicotine/gtkgui/dialogs/wishlist.py:97 pynicotine/gtkgui/interests.py:189
-#: pynicotine/gtkgui/interests.py:198 pynicotine/gtkgui/transfers.py:273
+#: pynicotine/gtkgui/dialogs/wishlist.py:115 pynicotine/gtkgui/interests.py:189
+#: pynicotine/gtkgui/interests.py:198 pynicotine/gtkgui/transfers.py:276
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:517
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:533
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:127
@@ -796,7 +793,7 @@ msgstr "Tambah nota tentang pengguna %s:"
 #: pynicotine/gtkgui/dialogs/preferences.py:2035
 #: pynicotine/gtkgui/dialogs/preferences.py:2098
 #: pynicotine/gtkgui/dialogs/preferences.py:3099
-#: pynicotine/gtkgui/dialogs/wishlist.py:196
+#: pynicotine/gtkgui/dialogs/wishlist.py:260
 msgid "_Add"
 msgstr ""
 
@@ -956,9 +953,9 @@ msgstr ""
 
 #: pynicotine/gtkgui/chatrooms.py:1267
 #: pynicotine/gtkgui/dialogs/preferences.py:2423
-#: pynicotine/gtkgui/mainwindow.py:1017
+#: pynicotine/gtkgui/mainwindow.py:1010
 #: pynicotine/gtkgui/widgets/iconnotebook.py:626
-#: pynicotine/gtkgui/widgets/theme.py:272 pynicotine/gtkgui/ui/chatrooms.ui:170
+#: pynicotine/gtkgui/widgets/theme.py:268 pynicotine/gtkgui/ui/chatrooms.ui:170
 #, fuzzy
 msgid "Online"
 msgstr "Dalam Talian"
@@ -975,9 +972,9 @@ msgstr "Muat naik: %(speed)s"
 
 #: pynicotine/gtkgui/chatrooms.py:1316
 #: pynicotine/gtkgui/dialogs/preferences.py:120
-#: pynicotine/gtkgui/userinfo.py:651 pynicotine/gtkgui/userinfo.py:669
-#: pynicotine/gtkgui/userinfo.py:813 pynicotine/gtkgui/widgets/treeview.py:703
-#: pynicotine/users.py:305 pynicotine/gtkgui/ui/settings/network.ui:254
+#: pynicotine/gtkgui/userinfo.py:687 pynicotine/gtkgui/userinfo.py:705
+#: pynicotine/gtkgui/userinfo.py:846 pynicotine/gtkgui/widgets/treeview.py:705
+#: pynicotine/users.py:307 pynicotine/gtkgui/ui/settings/network.ui:254
 #: pynicotine/gtkgui/ui/userinfo.ui:186 pynicotine/gtkgui/ui/userinfo.ui:216
 #: pynicotine/gtkgui/ui/userinfo.ui:246 pynicotine/gtkgui/ui/userinfo.ui:276
 #: pynicotine/gtkgui/ui/userinfo.ui:303 pynicotine/gtkgui/ui/userinfo.ui:333
@@ -1047,30 +1044,30 @@ msgstr "Dinding R_oom"
 msgid "Room Wall"
 msgstr "Dinding Bilik"
 
-#: pynicotine/gtkgui/dialogs/about.py:396
+#: pynicotine/gtkgui/dialogs/about.py:409
 #, fuzzy
 msgid "About"
 msgstr "Tentang"
 
-#: pynicotine/gtkgui/dialogs/about.py:407
+#: pynicotine/gtkgui/dialogs/about.py:420
 msgid "Website"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/about.py:450
+#: pynicotine/gtkgui/dialogs/about.py:463
 #, fuzzy, python-format
 msgid "Error checking latest version: %s"
 msgstr "Ralat semak versi terkini: %s"
 
-#: pynicotine/gtkgui/dialogs/about.py:455
+#: pynicotine/gtkgui/dialogs/about.py:468
 #, fuzzy, python-format
 msgid "New release available: %s"
 msgstr "Keluaran baru tersedia: %s"
 
-#: pynicotine/gtkgui/dialogs/about.py:460
+#: pynicotine/gtkgui/dialogs/about.py:473
 msgid "Up to date"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/about.py:489
+#: pynicotine/gtkgui/dialogs/about.py:502
 #, fuzzy
 msgid "Checking latest version…"
 msgstr "Semak versi terkini…"
@@ -1140,27 +1137,27 @@ msgid "Selected"
 msgstr "_Pilih"
 
 #: pynicotine/gtkgui/dialogs/download.py:133
-#: pynicotine/gtkgui/dialogs/download.py:537
+#: pynicotine/gtkgui/dialogs/download.py:534
 #: pynicotine/gtkgui/widgets/filechooser.py:171
 #, fuzzy
 msgid "_Select"
 msgstr "_Pilih"
 
 #: pynicotine/gtkgui/dialogs/download.py:134
-#: pynicotine/gtkgui/dialogs/download.py:538
+#: pynicotine/gtkgui/dialogs/download.py:535
 #, fuzzy
 msgid "_Deselect"
 msgstr "_Pilih"
 
 #: pynicotine/gtkgui/dialogs/download.py:136
-#: pynicotine/gtkgui/dialogs/download.py:539
+#: pynicotine/gtkgui/dialogs/download.py:536
 #: pynicotine/gtkgui/ui/dialogs/download.ui:155
 #, fuzzy
 msgid "_Rename…"
 msgstr "Nama pengguna…"
 
 #: pynicotine/gtkgui/dialogs/download.py:137 pynicotine/gtkgui/search.py:635
-#: pynicotine/gtkgui/transfers.py:269 pynicotine/gtkgui/userbrowse.py:291
+#: pynicotine/gtkgui/transfers.py:272 pynicotine/gtkgui/userbrowse.py:291
 #: pynicotine/gtkgui/userbrowse.py:303 pynicotine/gtkgui/userbrowse.py:374
 #: pynicotine/gtkgui/userbrowse.py:386
 msgid "F_ile Properties"
@@ -1183,38 +1180,39 @@ msgid "Unable to request folder contents from %(num)s user"
 msgid_plural "Unable to request folder contents from %(num)s users"
 msgstr[0] ""
 
-#: pynicotine/gtkgui/dialogs/download.py:519
+#: pynicotine/gtkgui/dialogs/download.py:516
 #, python-format
 msgid "Incomplete Folder Contents (%(user)s)"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/download.py:576
+#: pynicotine/gtkgui/dialogs/download.py:573
 #, fuzzy
 msgid "Rename Folder"
 msgstr "Folder yang Dikongsi"
 
-#: pynicotine/gtkgui/dialogs/download.py:577
+#: pynicotine/gtkgui/dialogs/download.py:574
 #, fuzzy, python-format
 msgid "Enter new folder name for '%s':"
 msgstr "Masukkan nama maya baru untuk '%(dir)s':"
 
-#: pynicotine/gtkgui/dialogs/download.py:579
+#: pynicotine/gtkgui/dialogs/download.py:576
 #, fuzzy
 msgid "_Rename"
 msgstr "Nama Fail"
 
-#: pynicotine/gtkgui/dialogs/download.py:724 pynicotine/gtkgui/search.py:1891
-#: pynicotine/gtkgui/transfers.py:1033 pynicotine/gtkgui/userbrowse.py:1468
+#: pynicotine/gtkgui/dialogs/download.py:721 pynicotine/gtkgui/search.py:1882
+#: pynicotine/gtkgui/transfers.py:1036 pynicotine/gtkgui/userbrowse.py:1468
 #, fuzzy
 msgid "Collapse All"
 msgstr "Kembangkan / Lipat Semua"
 
-#: pynicotine/gtkgui/dialogs/download.py:728
-#: pynicotine/gtkgui/dialogs/shortcuts.py:84 pynicotine/gtkgui/search.py:1895
-#: pynicotine/gtkgui/transfers.py:1037 pynicotine/gtkgui/userbrowse.py:1472
+#: pynicotine/gtkgui/dialogs/download.py:725
+#: pynicotine/gtkgui/dialogs/shortcuts.py:84 pynicotine/gtkgui/search.py:1889
+#: pynicotine/gtkgui/search.py:1897 pynicotine/gtkgui/transfers.py:1043
+#: pynicotine/gtkgui/transfers.py:1051 pynicotine/gtkgui/userbrowse.py:1472
 #: pynicotine/gtkgui/ui/dialogs/download.ui:269
-#: pynicotine/gtkgui/ui/mainwindow.ui:379
-#: pynicotine/gtkgui/ui/mainwindow.ui:620 pynicotine/gtkgui/ui/search.ui:247
+#: pynicotine/gtkgui/ui/mainwindow.ui:357
+#: pynicotine/gtkgui/ui/mainwindow.ui:582 pynicotine/gtkgui/ui/search.ui:247
 #: pynicotine/gtkgui/ui/userbrowse.ui:112
 #, fuzzy
 msgid "Expand All"
@@ -1249,7 +1247,7 @@ msgstr "Folder"
 #: pynicotine/gtkgui/dialogs/preferences.py:1793
 #: pynicotine/gtkgui/dialogs/preferences.py:1821
 #: pynicotine/gtkgui/dialogs/preferences.py:3030
-#: pynicotine/gtkgui/dialogs/wishlist.py:92
+#: pynicotine/gtkgui/dialogs/wishlist.py:109
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:502
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:112
 #: pynicotine/gtkgui/ui/settings/chats.ui:132
@@ -1306,12 +1304,12 @@ msgstr "Masukkan nama maya baru untuk '%(dir)s':"
 #: pynicotine/gtkgui/dialogs/preferences.py:2065
 #: pynicotine/gtkgui/dialogs/preferences.py:2130
 #: pynicotine/gtkgui/dialogs/preferences.py:3128
-#: pynicotine/gtkgui/dialogs/wishlist.py:253
+#: pynicotine/gtkgui/dialogs/wishlist.py:321
 #, fuzzy
 msgid "_Edit"
 msgstr "_Edit"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:314
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:313
 #, fuzzy, python-format
 msgid ""
 "User %s already exists, and the password you entered is invalid. Please "
@@ -1320,7 +1318,7 @@ msgstr ""
 "Pengguna %s sudah wujud, dan kata laluan yang anda masukkan tidak sah. Sila "
 "pilih nama pengguna lain jika ini adalah kali pertama anda log masuk."
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:319
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:318
 #: pynicotine/headless/application.py:76
 #, python-format
 msgid ""
@@ -1446,7 +1444,7 @@ msgid "Change Password"
 msgstr "Tukar Kata Laluan"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:268
-#: pynicotine/gtkgui/widgets/popupmenu.py:587
+#: pynicotine/gtkgui/widgets/popupmenu.py:611
 #, fuzzy
 msgid "Ch_ange"
 msgstr "_Ubah"
@@ -1459,8 +1457,8 @@ msgstr "Tiada siapa"
 #: pynicotine/gtkgui/dialogs/preferences.py:312
 #: pynicotine/gtkgui/dialogs/preferences.py:628
 #: pynicotine/gtkgui/dialogs/preferences.py:802
-#: pynicotine/gtkgui/mainwindow.py:786 pynicotine/gtkgui/search.py:281
-#: pynicotine/gtkgui/ui/buddies.ui:22 pynicotine/gtkgui/ui/mainwindow.ui:1384
+#: pynicotine/gtkgui/mainwindow.py:779 pynicotine/gtkgui/search.py:281
+#: pynicotine/gtkgui/ui/buddies.ui:22 pynicotine/gtkgui/ui/mainwindow.ui:1248
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:721
 msgid "Buddies"
 msgstr ""
@@ -1493,7 +1491,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/dialogs/preferences.py:326
 #: pynicotine/gtkgui/dialogs/preferences.py:1143
-#: pynicotine/gtkgui/mainwindow.py:1135
+#: pynicotine/gtkgui/mainwindow.py:1128
 #, fuzzy
 msgid "Search"
 msgstr "Cari"
@@ -1608,7 +1606,7 @@ msgstr "Akses Untuk"
 #: pynicotine/gtkgui/dialogs/preferences.py:712
 #: pynicotine/gtkgui/dialogs/preferences.py:3422
 #: pynicotine/gtkgui/dialogs/preferences.py:3480
-#: pynicotine/gtkgui/transfers.py:266 pynicotine/gtkgui/userbrowse.py:288
+#: pynicotine/gtkgui/transfers.py:269 pynicotine/gtkgui/userbrowse.py:288
 #: pynicotine/gtkgui/userbrowse.py:371
 #, fuzzy
 msgid "Open in File _Manager"
@@ -1951,19 +1949,19 @@ msgstr ""
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2424
 #: pynicotine/gtkgui/dialogs/shortcuts.py:37
-#: pynicotine/gtkgui/mainwindow.py:1014
+#: pynicotine/gtkgui/mainwindow.py:1007
 #: pynicotine/gtkgui/widgets/iconnotebook.py:623
-#: pynicotine/gtkgui/widgets/theme.py:273
+#: pynicotine/gtkgui/widgets/theme.py:269
 #: pynicotine/gtkgui/widgets/trayicon.py:84
 #, fuzzy
 msgid "Away"
 msgstr "Jauh"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2425
-#: pynicotine/gtkgui/mainwindow.py:1021
+#: pynicotine/gtkgui/mainwindow.py:1014
 #: pynicotine/gtkgui/widgets/iconnotebook.py:629
-#: pynicotine/gtkgui/widgets/theme.py:274
-#: pynicotine/gtkgui/ui/mainwindow.ui:1874
+#: pynicotine/gtkgui/widgets/theme.py:270
+#: pynicotine/gtkgui/ui/mainwindow.ui:1706
 #, fuzzy
 msgid "Offline"
 msgstr "Luar talian"
@@ -2115,7 +2113,6 @@ msgid "Program"
 msgstr ""
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3400
-#: pynicotine/gtkgui/dialogs/wishlist.py:50
 #, fuzzy
 msgid "Enabled"
 msgstr "Diaktifkan"
@@ -2205,9 +2202,9 @@ msgid "Shares"
 msgstr "Shares"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3672
-#: pynicotine/gtkgui/mainwindow.py:782 pynicotine/gtkgui/mainwindow.py:1134
+#: pynicotine/gtkgui/mainwindow.py:775 pynicotine/gtkgui/mainwindow.py:1127
 #: pynicotine/gtkgui/widgets/trayicon.py:74
-#: pynicotine/gtkgui/ui/mainwindow.ui:709
+#: pynicotine/gtkgui/ui/mainwindow.ui:655
 #: pynicotine/gtkgui/ui/settings/uploads.ui:52
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:673
 #, fuzzy
@@ -2285,8 +2282,8 @@ msgstr ""
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:62
 #: pynicotine/plugins/core_commands/__init__.py:16
-#: pynicotine/gtkgui/ui/mainwindow.ui:304
-#: pynicotine/gtkgui/ui/mainwindow.ui:545
+#: pynicotine/gtkgui/ui/mainwindow.ui:282
+#: pynicotine/gtkgui/ui/mainwindow.ui:507
 #: pynicotine/gtkgui/ui/settings/ban.ui:129
 #: pynicotine/gtkgui/ui/settings/ignore.ui:64
 #, fuzzy
@@ -2433,7 +2430,7 @@ msgid "Focus Next View"
 msgstr ""
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:52
-#: pynicotine/gtkgui/ui/mainwindow.ui:1892
+#: pynicotine/gtkgui/ui/mainwindow.ui:1724
 #, fuzzy
 msgid "Show Log Pane"
 msgstr "Tunjukkan Panel Log"
@@ -2554,7 +2551,7 @@ msgid "Result Filters"
 msgstr "Penapis Hasil"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:89
-#: pynicotine/gtkgui/dialogs/wishlist.py:38
+#: pynicotine/gtkgui/dialogs/wishlist.py:49
 #, fuzzy
 msgid "Wishlist"
 msgstr "Senarai Keinginan"
@@ -2604,91 +2601,168 @@ msgstr "Adakah anda benar-benar ingin menetapkan semula statistik pemindahan?"
 msgid "Reset All"
 msgstr "Pilih Semua"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:57
+#: pynicotine/gtkgui/dialogs/wishlist.py:25
+#: pynicotine/gtkgui/ui/settings/search.ui:212
+#, fuzzy
+msgid "Include:"
+msgstr "Sertakan:"
+
+#: pynicotine/gtkgui/dialogs/wishlist.py:26
+#: pynicotine/gtkgui/ui/settings/search.ui:237
+#, fuzzy
+msgid "Exclude:"
+msgstr "Kecualikan:"
+
+#: pynicotine/gtkgui/dialogs/wishlist.py:27
+#: pynicotine/gtkgui/ui/settings/search.ui:262
+#, fuzzy
+msgid "File Type:"
+msgstr "Jenis Fail:"
+
+#: pynicotine/gtkgui/dialogs/wishlist.py:28
+#: pynicotine/gtkgui/ui/settings/search.ui:290
+#, fuzzy
+msgid "Size:"
+msgstr "Saiz:"
+
+#: pynicotine/gtkgui/dialogs/wishlist.py:29
+#: pynicotine/gtkgui/ui/settings/search.ui:321
+#, fuzzy
+msgid "Bitrate:"
+msgstr "Bitrate:"
+
+#: pynicotine/gtkgui/dialogs/wishlist.py:30
+#: pynicotine/gtkgui/ui/settings/search.ui:352
+#, fuzzy
+msgid "Duration:"
+msgstr "Tempoh:"
+
+#: pynicotine/gtkgui/dialogs/wishlist.py:31
+#: pynicotine/gtkgui/ui/settings/search.ui:383
+#, fuzzy
+msgid "Country Code:"
+msgstr "Kod Negara:"
+
+#: pynicotine/gtkgui/dialogs/wishlist.py:32
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:424
+#: pynicotine/gtkgui/ui/search.ui:392
+#: pynicotine/gtkgui/ui/settings/search.ui:412
+#: pynicotine/gtkgui/ui/userinfo.ui:265
+#, fuzzy
+msgid "Upload Slot Available"
+msgstr "Shares Tidak Tersedia"
+
+#: pynicotine/gtkgui/dialogs/wishlist.py:33
+#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:445
+#: pynicotine/gtkgui/ui/search.ui:408
+#: pynicotine/gtkgui/ui/settings/search.ui:437
+#, fuzzy
+msgid "Public Files"
+msgstr "Awam"
+
+#: pynicotine/gtkgui/dialogs/wishlist.py:61
+msgid "Automatic Search"
+msgstr ""
+
+#: pynicotine/gtkgui/dialogs/wishlist.py:68
 #, fuzzy
 msgid "Search Term"
 msgstr "Salin Terma Carian"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:65 pynicotine/gtkgui/downloads.py:60
-#: pynicotine/gtkgui/transfers.py:57
-msgid "Filtered"
-msgstr ""
+#: pynicotine/gtkgui/dialogs/wishlist.py:76
+#, fuzzy
+msgid "Custom Filters"
+msgstr "Pulihkan Penapis"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:71
+#: pynicotine/gtkgui/dialogs/wishlist.py:85
 msgid "Added"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:93
-#, fuzzy
-msgid "Update _Filters…"
-msgstr "Muat Naik Folder…"
-
-#: pynicotine/gtkgui/dialogs/wishlist.py:94 pynicotine/gtkgui/interests.py:187
+#: pynicotine/gtkgui/dialogs/wishlist.py:107 pynicotine/gtkgui/interests.py:187
 #: pynicotine/gtkgui/interests.py:196 pynicotine/gtkgui/interests.py:208
-#: pynicotine/gtkgui/userinfo.py:354
+#: pynicotine/gtkgui/userinfo.py:355
 #, fuzzy
 msgid "_Search for Item"
 msgstr "_Cari Item"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:96
+#: pynicotine/gtkgui/dialogs/wishlist.py:110
+#, fuzzy
+msgid "Set Custom _Filters…"
+msgstr "Pulihkan Penapis"
+
+#: pynicotine/gtkgui/dialogs/wishlist.py:112
 #, fuzzy
 msgid "Reset Seen Results"
 msgstr "Pilih Hasil Pengguna"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:193
+#: pynicotine/gtkgui/dialogs/wishlist.py:113
+#, fuzzy
+msgid "Reset Filters"
+msgstr "Penapis Hasil"
+
+#: pynicotine/gtkgui/dialogs/wishlist.py:195
+#, fuzzy, python-format
+msgid "Custom Filters Enabled (%(num)s Active)"
+msgstr "Pulihkan Penapis"
+
+#: pynicotine/gtkgui/dialogs/wishlist.py:215
+#, python-format
+msgid "• %(filter)s %(value)s"
+msgstr ""
+
+#: pynicotine/gtkgui/dialogs/wishlist.py:257
 #, fuzzy
 msgid "Add Wishes"
 msgstr "Tambah Wi_sh"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:194
+#: pynicotine/gtkgui/dialogs/wishlist.py:258
 msgid "Enter a list of search terms to add to the wishlist:"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:198
-#: pynicotine/gtkgui/dialogs/wishlist.py:255
+#: pynicotine/gtkgui/dialogs/wishlist.py:262
+#: pynicotine/gtkgui/dialogs/wishlist.py:323
 msgid "Enable automatic search"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:206
-#: pynicotine/gtkgui/dialogs/wishlist.py:249
-#: pynicotine/gtkgui/dialogs/wishlist.py:250
-#, fuzzy
-msgid "Custom filters"
-msgstr "Pulihkan Penapis"
-
-#: pynicotine/gtkgui/dialogs/wishlist.py:237
-#, fuzzy
-msgid "Default filters"
-msgstr "Penapis Hasil"
-
-#: pynicotine/gtkgui/dialogs/wishlist.py:246
-#, fuzzy
-msgid "Edit Wish"
-msgstr "Edit Harapan"
-
-#: pynicotine/gtkgui/dialogs/wishlist.py:247
-#, fuzzy, python-format
-msgid "Modify the search term '%s':"
-msgstr "Ubah penapis muat turun berikut:"
-
-#: pynicotine/gtkgui/dialogs/wishlist.py:249
-#: pynicotine/gtkgui/dialogs/wishlist.py:250
+#: pynicotine/gtkgui/dialogs/wishlist.py:270
+#: pynicotine/gtkgui/dialogs/wishlist.py:309
 #, fuzzy
 msgid "No filters"
 msgstr "Penapis Rangkaian"
 
+#: pynicotine/gtkgui/dialogs/wishlist.py:270
+#: pynicotine/gtkgui/dialogs/wishlist.py:309
+#, fuzzy
+msgid "Default filters"
+msgstr "Penapis Hasil"
+
+#: pynicotine/gtkgui/dialogs/wishlist.py:310
+#, fuzzy, python-format
+msgid "Custom filters (%(num)s active)"
+msgstr "Pulihkan Penapis"
+
+#: pynicotine/gtkgui/dialogs/wishlist.py:314
+#, fuzzy
+msgid "Edit Wish"
+msgstr "Edit Harapan"
+
 #: pynicotine/gtkgui/dialogs/wishlist.py:315
+#, fuzzy, python-format
+msgid "Modify the search term '%s':"
+msgstr "Ubah penapis muat turun berikut:"
+
+#: pynicotine/gtkgui/dialogs/wishlist.py:380
 #, fuzzy
 msgid "Clear Wishlist?"
 msgstr "Kosongkan Senarai Keinginan?"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:316
+#: pynicotine/gtkgui/dialogs/wishlist.py:381
 #, fuzzy
 msgid "Do you really want to clear your wishlist?"
 msgstr "Adakah anda benar-benar ingin mengosongkan senarai keinginan anda?"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:319 pynicotine/gtkgui/downloads.py:130
-#: pynicotine/gtkgui/downloads.py:147 pynicotine/gtkgui/transfers.py:279
+#: pynicotine/gtkgui/dialogs/wishlist.py:384 pynicotine/gtkgui/downloads.py:130
+#: pynicotine/gtkgui/downloads.py:147 pynicotine/gtkgui/transfers.py:282
 #: pynicotine/gtkgui/uploads.py:148 pynicotine/gtkgui/uploads.py:165
 #, fuzzy
 msgid "Clear All"
@@ -2719,6 +2793,10 @@ msgstr "Selesai"
 #, fuzzy
 msgid "Paused"
 msgstr "Dihentikan"
+
+#: pynicotine/gtkgui/downloads.py:60 pynicotine/gtkgui/transfers.py:57
+msgid "Filtered"
+msgstr ""
 
 #: pynicotine/gtkgui/downloads.py:61
 #, fuzzy
@@ -2785,12 +2863,12 @@ msgstr[0] ""
 msgid "_Download"
 msgstr "_Penggalak Muat Turun"
 
-#: pynicotine/gtkgui/interests.py:67 pynicotine/gtkgui/userinfo.py:319
+#: pynicotine/gtkgui/interests.py:67 pynicotine/gtkgui/userinfo.py:320
 #, fuzzy
 msgid "Likes"
 msgstr "Suka"
 
-#: pynicotine/gtkgui/interests.py:79 pynicotine/gtkgui/userinfo.py:332
+#: pynicotine/gtkgui/interests.py:79 pynicotine/gtkgui/userinfo.py:333
 #, fuzzy
 msgid "Dislikes"
 msgstr "Tidak Suka"
@@ -2806,18 +2884,18 @@ msgid "Item"
 msgstr "Item"
 
 #: pynicotine/gtkgui/interests.py:186 pynicotine/gtkgui/interests.py:195
-#: pynicotine/gtkgui/interests.py:207 pynicotine/gtkgui/userinfo.py:353
+#: pynicotine/gtkgui/interests.py:207 pynicotine/gtkgui/userinfo.py:354
 #, fuzzy
 msgid "_Recommendations for Item"
 msgstr "_Pencadangan untuk Item"
 
 #: pynicotine/gtkgui/interests.py:204 pynicotine/gtkgui/interests.py:586
-#: pynicotine/gtkgui/userinfo.py:350
+#: pynicotine/gtkgui/userinfo.py:351
 msgid "I _Like This"
 msgstr ""
 
 #: pynicotine/gtkgui/interests.py:205 pynicotine/gtkgui/interests.py:589
-#: pynicotine/gtkgui/userinfo.py:351
+#: pynicotine/gtkgui/userinfo.py:352
 #, fuzzy
 msgid "I _Dislike This"
 msgstr "Saya _Tidak Suka Ini"
@@ -2869,104 +2947,104 @@ msgstr ""
 msgid "Private Message from %(user)s"
 msgstr "Mesej Peribadi dari %(user)s"
 
-#: pynicotine/gtkgui/mainwindow.py:444 pynicotine/gtkgui/search.py:975
+#: pynicotine/gtkgui/mainwindow.py:444 pynicotine/gtkgui/search.py:976
 #, fuzzy
 msgid "Wishlist Results Found"
 msgstr "Keputusan Senarai Keinginan Ditemui"
 
-#: pynicotine/gtkgui/mainwindow.py:784 pynicotine/gtkgui/ui/mainwindow.ui:1046
+#: pynicotine/gtkgui/mainwindow.py:777 pynicotine/gtkgui/ui/mainwindow.ui:948
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:697
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:879
 msgid "User Profiles"
 msgstr ""
 
-#: pynicotine/gtkgui/mainwindow.py:787 pynicotine/gtkgui/widgets/trayicon.py:79
+#: pynicotine/gtkgui/mainwindow.py:780 pynicotine/gtkgui/widgets/trayicon.py:79
 #: pynicotine/plugins/core_commands/__init__.py:11
-#: pynicotine/gtkgui/ui/mainwindow.ui:1555
+#: pynicotine/gtkgui/ui/mainwindow.ui:1403
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:734
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:923
 #, fuzzy
 msgid "Chat Rooms"
 msgstr "Bilik Sembang"
 
-#: pynicotine/gtkgui/mainwindow.py:788 pynicotine/gtkgui/ui/mainwindow.ui:1611
+#: pynicotine/gtkgui/mainwindow.py:781 pynicotine/gtkgui/ui/mainwindow.ui:1459
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:746
 #: pynicotine/gtkgui/ui/userinfo.ui:381
 msgid "Interests"
 msgstr ""
 
-#: pynicotine/gtkgui/mainwindow.py:1136
+#: pynicotine/gtkgui/mainwindow.py:1129
 #: pynicotine/plugins/core_commands/__init__.py:10
 #, fuzzy
 msgid "Chat"
 msgstr "Sembang"
 
-#: pynicotine/gtkgui/mainwindow.py:1138
+#: pynicotine/gtkgui/mainwindow.py:1131
 #, fuzzy
 msgid "[Debug] [SLOW] Connections"
 msgstr "[Debug] Sambungan"
 
-#: pynicotine/gtkgui/mainwindow.py:1139
+#: pynicotine/gtkgui/mainwindow.py:1132
 #, fuzzy
 msgid "[Debug] [SLOW] Messages"
 msgstr "[Mesej] Debug"
 
-#: pynicotine/gtkgui/mainwindow.py:1140
+#: pynicotine/gtkgui/mainwindow.py:1133
 #, fuzzy
 msgid "[Debug] [SLOW] Transfers"
 msgstr "[Debug] Pemindahan"
 
-#: pynicotine/gtkgui/mainwindow.py:1141
+#: pynicotine/gtkgui/mainwindow.py:1134
 #, fuzzy
 msgid "[Debug] Miscellaneous"
 msgstr "[Debug] Pelbagai"
 
-#: pynicotine/gtkgui/mainwindow.py:1146
+#: pynicotine/gtkgui/mainwindow.py:1139
 #, fuzzy
 msgid "_Find…"
 msgstr "_Cari…"
 
-#: pynicotine/gtkgui/mainwindow.py:1148 pynicotine/gtkgui/mainwindow.py:1179
+#: pynicotine/gtkgui/mainwindow.py:1141 pynicotine/gtkgui/mainwindow.py:1172
 #: pynicotine/gtkgui/search.py:640
 #, fuzzy
 msgid "_Copy"
 msgstr "_Salin"
 
-#: pynicotine/gtkgui/mainwindow.py:1149
+#: pynicotine/gtkgui/mainwindow.py:1142
 #, fuzzy
 msgid "Copy _All"
 msgstr "Salin _Semua"
 
-#: pynicotine/gtkgui/mainwindow.py:1154
+#: pynicotine/gtkgui/mainwindow.py:1147
 #, fuzzy
 msgid "View _Debug Logs"
 msgstr "Lihat _Log Debug"
 
-#: pynicotine/gtkgui/mainwindow.py:1155
+#: pynicotine/gtkgui/mainwindow.py:1148
 #, fuzzy
 msgid "View _Transfer Logs"
 msgstr "Lihat _Log Pemindahan"
 
-#: pynicotine/gtkgui/mainwindow.py:1159
+#: pynicotine/gtkgui/mainwindow.py:1152
 #, fuzzy
 msgid "_Log Categories"
 msgstr "_Kategori Log"
 
-#: pynicotine/gtkgui/mainwindow.py:1161
+#: pynicotine/gtkgui/mainwindow.py:1154
 #, fuzzy
 msgid "Clear Log View"
 msgstr "Bersihkan Paparan Log"
 
-#: pynicotine/gtkgui/mainwindow.py:1226
+#: pynicotine/gtkgui/mainwindow.py:1219
 msgid "Preparing Shares"
 msgstr ""
 
-#: pynicotine/gtkgui/mainwindow.py:1239
+#: pynicotine/gtkgui/mainwindow.py:1232
 #, fuzzy, python-format
 msgid "Scanned Folders: %s"
 msgstr "Folder yang Dikongsi"
 
-#: pynicotine/gtkgui/mainwindow.py:1242
+#: pynicotine/gtkgui/mainwindow.py:1235
 #, fuzzy
 msgid "Scanning Shares"
 msgstr "Mengimbas Shares"
@@ -3019,13 +3097,13 @@ msgid ""
 msgstr ""
 
 #: pynicotine/gtkgui/privatechat.py:355 pynicotine/gtkgui/search.py:650
-#: pynicotine/gtkgui/userbrowse.py:273 pynicotine/gtkgui/userinfo.py:344
+#: pynicotine/gtkgui/userbrowse.py:273 pynicotine/gtkgui/userinfo.py:345
 #: pynicotine/gtkgui/widgets/iconnotebook.py:768
 msgid "Close All Tabs…"
 msgstr ""
 
 #: pynicotine/gtkgui/privatechat.py:356 pynicotine/gtkgui/search.py:651
-#: pynicotine/gtkgui/userbrowse.py:274 pynicotine/gtkgui/userinfo.py:345
+#: pynicotine/gtkgui/userbrowse.py:274 pynicotine/gtkgui/userinfo.py:346
 #, fuzzy
 msgid "_Close Tab"
 msgstr "_Tutup Tab"
@@ -3036,7 +3114,7 @@ msgid "View Chat Log"
 msgstr "Lihat Log Sembang"
 
 #: pynicotine/gtkgui/privatechat.py:377 pynicotine/gtkgui/search.py:641
-#: pynicotine/gtkgui/transfers.py:280 pynicotine/gtkgui/userbrowse.py:296
+#: pynicotine/gtkgui/transfers.py:283 pynicotine/gtkgui/userbrowse.py:296
 #: pynicotine/gtkgui/userbrowse.py:308 pynicotine/gtkgui/userbrowse.py:379
 #: pynicotine/gtkgui/userbrowse.py:391
 #, fuzzy
@@ -3116,27 +3194,27 @@ msgstr "_Penggalak Muat Turun"
 msgid "Quality"
 msgstr "Kualiti"
 
-#: pynicotine/gtkgui/search.py:622 pynicotine/gtkgui/transfers.py:252
+#: pynicotine/gtkgui/search.py:622 pynicotine/gtkgui/transfers.py:255
 #, fuzzy
 msgid "Copy File Path"
 msgstr "Salin _Jalan Fail"
 
-#: pynicotine/gtkgui/search.py:623 pynicotine/gtkgui/transfers.py:253
+#: pynicotine/gtkgui/search.py:623 pynicotine/gtkgui/transfers.py:256
 #, fuzzy
 msgid "Copy File URL"
 msgstr "Salin Folder U_RL"
 
-#: pynicotine/gtkgui/search.py:624 pynicotine/gtkgui/transfers.py:254
+#: pynicotine/gtkgui/search.py:624 pynicotine/gtkgui/transfers.py:257
 #, fuzzy
 msgid "Copy Folder URL"
 msgstr "Salin Folder U_RL"
 
-#: pynicotine/gtkgui/search.py:637 pynicotine/gtkgui/transfers.py:275
-#: pynicotine/gtkgui/widgets/popupmenu.py:441
+#: pynicotine/gtkgui/search.py:637 pynicotine/gtkgui/transfers.py:278
+#: pynicotine/gtkgui/widgets/popupmenu.py:465
 msgid "View User _Profile"
 msgstr ""
 
-#: pynicotine/gtkgui/search.py:638 pynicotine/gtkgui/transfers.py:276
+#: pynicotine/gtkgui/search.py:638 pynicotine/gtkgui/transfers.py:279
 #, fuzzy
 msgid "_Browse Folder"
 msgstr "_Browse Folder"
@@ -3151,93 +3229,93 @@ msgstr "Cari Fail"
 msgid "Copy Search Term"
 msgstr "Salin Terma Carian"
 
-#: pynicotine/gtkgui/search.py:718
+#: pynicotine/gtkgui/search.py:722
 #, fuzzy
 msgid "Cannot search for files shared by other users, since you are offline."
 msgstr ""
 "Tidak dapat mengambil IP pengguna %s, kerana pengguna ini sedang offline"
 
-#: pynicotine/gtkgui/search.py:745
+#: pynicotine/gtkgui/search.py:749
 #, fuzzy
 msgid "Clear Filters"
 msgstr "Kosongkan Penapis"
 
-#: pynicotine/gtkgui/search.py:748
+#: pynicotine/gtkgui/search.py:752
 #, fuzzy
 msgid "Restore Filters"
 msgstr "Pulihkan Penapis"
 
-#: pynicotine/gtkgui/search.py:1329
+#: pynicotine/gtkgui/search.py:1330
 #, fuzzy, python-format
 msgid "_Result Filters [%d]"
 msgstr "Penapis Hasil [%d]"
 
-#: pynicotine/gtkgui/search.py:1331 pynicotine/gtkgui/ui/search.ui:206
+#: pynicotine/gtkgui/search.py:1332 pynicotine/gtkgui/ui/search.ui:206
 msgid "_Result Filters"
 msgstr ""
 
-#: pynicotine/gtkgui/search.py:1335
+#: pynicotine/gtkgui/search.py:1336
 #, python-format
 msgid "%(num)s Active Filter"
 msgid_plural "%(num)s Active Filters"
 msgstr[0] ""
 
-#: pynicotine/gtkgui/search.py:1399
+#: pynicotine/gtkgui/search.py:1390
 #, fuzzy
 msgid "Add Wi_sh"
 msgstr "Tambah Wi_sh"
 
-#: pynicotine/gtkgui/search.py:1405
+#: pynicotine/gtkgui/search.py:1396
 #, fuzzy
 msgid "Remove Wi_sh"
 msgstr "Buang Wi_sh"
 
-#: pynicotine/gtkgui/search.py:1446
+#: pynicotine/gtkgui/search.py:1434
 #, fuzzy
 msgid "Select User's Results"
 msgstr "Pilih Hasil Pengguna"
 
-#: pynicotine/gtkgui/search.py:1573
+#: pynicotine/gtkgui/search.py:1561
 #, fuzzy, python-format
 msgid "Total: %s"
 msgstr "Jumlah: %s"
 
-#: pynicotine/gtkgui/search.py:1576 pynicotine/gtkgui/ui/search.ui:126
+#: pynicotine/gtkgui/search.py:1564 pynicotine/gtkgui/ui/search.ui:126
 #, fuzzy
 msgid "Results"
 msgstr "Hasil"
 
-#: pynicotine/gtkgui/search.py:1631
+#: pynicotine/gtkgui/search.py:1619
 #, fuzzy
 msgid "Download _File"
 msgstr "_Muat Turun Fail"
 
-#: pynicotine/gtkgui/search.py:1631
+#: pynicotine/gtkgui/search.py:1619
 #, fuzzy
 msgid "Download _Files"
 msgstr "_Muat Turun Fail"
 
-#: pynicotine/gtkgui/search.py:1635 pynicotine/gtkgui/userbrowse.py:1153
+#: pynicotine/gtkgui/search.py:1623 pynicotine/gtkgui/userbrowse.py:1153
 #, fuzzy
 msgid "Download File _To…"
 msgstr "Muat Turun Fail _Ke…"
 
-#: pynicotine/gtkgui/search.py:1635 pynicotine/gtkgui/userbrowse.py:1153
+#: pynicotine/gtkgui/search.py:1623 pynicotine/gtkgui/userbrowse.py:1153
 #, fuzzy
 msgid "Download Files _To…"
 msgstr "Muat Turun Fail _Ke…"
 
-#: pynicotine/gtkgui/search.py:1647
+#: pynicotine/gtkgui/search.py:1635
 #, fuzzy
 msgid "_Download Folder…"
 msgstr "Muat Turun _Folder(s)"
 
-#: pynicotine/gtkgui/search.py:1647
+#: pynicotine/gtkgui/search.py:1635
 #, fuzzy
 msgid "_Download Folders…"
 msgstr "Muat Turun _Folder(s)"
 
-#: pynicotine/gtkgui/search.py:1739 pynicotine/gtkgui/userbrowse.py:1194
+#: pynicotine/gtkgui/search.py:1727 pynicotine/gtkgui/userbrowse.py:1194
 #, fuzzy
 msgid "Select Destination Folder for Files"
 msgstr "Pilih Folder Destinasi untuk Fail"
@@ -3275,7 +3353,7 @@ msgstr ""
 msgid "Connection timeout"
 msgstr "Sambungan tamat"
 
-#: pynicotine/gtkgui/transfers.py:53 pynicotine/gtkgui/transfers.py:677
+#: pynicotine/gtkgui/transfers.py:53 pynicotine/gtkgui/transfers.py:680
 #, fuzzy
 msgid "User logged off"
 msgstr "Pengguna telah log keluar"
@@ -3333,42 +3411,42 @@ msgstr ""
 msgid "Time Left"
 msgstr "Masa Tinggal"
 
-#: pynicotine/gtkgui/transfers.py:256
+#: pynicotine/gtkgui/transfers.py:259
 #, fuzzy
 msgid "Search for Folder Name"
 msgstr "_Cari Item"
 
-#: pynicotine/gtkgui/transfers.py:257
+#: pynicotine/gtkgui/transfers.py:260
 #, fuzzy
 msgid "Search for File Name"
 msgstr "_Cari Item"
 
-#: pynicotine/gtkgui/transfers.py:278
+#: pynicotine/gtkgui/transfers.py:281
 #, fuzzy
 msgid "_Copy & Search"
 msgstr "Salin Terma Carian"
 
-#: pynicotine/gtkgui/transfers.py:998
+#: pynicotine/gtkgui/transfers.py:1001
 #, fuzzy
 msgid "Select User's Transfers"
 msgstr "Pilih Pemindahan Pengguna"
 
-#: pynicotine/gtkgui/transfers.py:1085 pynicotine/gtkgui/userbrowse.py:370
+#: pynicotine/gtkgui/transfers.py:1118 pynicotine/gtkgui/userbrowse.py:370
 #, fuzzy
 msgid "_Open File"
 msgstr "_Buka Fail"
 
-#: pynicotine/gtkgui/transfers.py:1085
+#: pynicotine/gtkgui/transfers.py:1118
 #, fuzzy
 msgid "_Open Files"
 msgstr "_Buka Fail"
 
-#: pynicotine/gtkgui/transfers.py:1095
+#: pynicotine/gtkgui/transfers.py:1128
 #, python-format
 msgid "%(username)s (%(status)s)"
 msgstr ""
 
-#: pynicotine/gtkgui/transfers.py:1095
+#: pynicotine/gtkgui/transfers.py:1128
 #, fuzzy
 msgid "Buddy"
 msgstr "Tambah _Kawan"
@@ -3470,13 +3548,13 @@ msgstr ""
 "Senarai fail yang dikongsi oleh pengguna adalah kosong. Sama ada pengguna "
 "tidak berkongsi apa-apa, atau mereka berkongsi fail secara peribadi."
 
-#: pynicotine/gtkgui/userbrowse.py:605 pynicotine/gtkgui/userinfo.py:509
+#: pynicotine/gtkgui/userbrowse.py:605 pynicotine/gtkgui/userinfo.py:545
 #, fuzzy
 msgid "Cannot request information from the user, since they are offline."
 msgstr ""
 "Tidak dapat mengambil IP pengguna %s, kerana pengguna ini sedang offline"
 
-#: pynicotine/gtkgui/userbrowse.py:607 pynicotine/gtkgui/userinfo.py:511
+#: pynicotine/gtkgui/userbrowse.py:607 pynicotine/gtkgui/userinfo.py:547
 #, fuzzy
 msgid ""
 "Cannot request information from the user, possibly due to a closed listening "
@@ -3581,79 +3659,79 @@ msgstr "_Muat Turun Fail"
 msgid "Upload File To User"
 msgstr "Muat Naik Fail ke Pengguna"
 
-#: pynicotine/gtkgui/userinfo.py:367
+#: pynicotine/gtkgui/userinfo.py:368
 #, fuzzy
 msgid "_Copy Picture"
 msgstr "Gambar:"
 
-#: pynicotine/gtkgui/userinfo.py:368
+#: pynicotine/gtkgui/userinfo.py:369
 #, fuzzy
 msgid "_Save Picture"
 msgstr "Simpan Gambar"
 
-#: pynicotine/gtkgui/userinfo.py:370
+#: pynicotine/gtkgui/userinfo.py:371
 #, fuzzy
 msgid "_Hide Picture"
 msgstr "Simpan Gambar"
 
-#: pynicotine/gtkgui/userinfo.py:463
+#: pynicotine/gtkgui/userinfo.py:499
 #, fuzzy, python-format
 msgid "Failed to load picture for user %(user)s: %(error)s"
 msgstr "Gagal memuatkan gambar untuk pengguna %(user)s: %(error)s"
 
-#: pynicotine/gtkgui/userinfo.py:487
+#: pynicotine/gtkgui/userinfo.py:523
 #, fuzzy
 msgid "Hide Pi_cture"
 msgstr "Simpan Gambar"
 
-#: pynicotine/gtkgui/userinfo.py:499 pynicotine/gtkgui/ui/userinfo.ui:704
+#: pynicotine/gtkgui/userinfo.py:535 pynicotine/gtkgui/ui/userinfo.ui:704
 #, fuzzy
 msgid "Show Pi_cture"
 msgstr "Gambar:"
 
-#: pynicotine/gtkgui/userinfo.py:585
+#: pynicotine/gtkgui/userinfo.py:621
 #, fuzzy
 msgid "Remove _Buddy"
 msgstr "Buang _Buddy"
 
-#: pynicotine/gtkgui/userinfo.py:585
+#: pynicotine/gtkgui/userinfo.py:621
 #, fuzzy
 msgid "Add _Buddy"
 msgstr "Tambah _Kawan"
 
-#: pynicotine/gtkgui/userinfo.py:589
+#: pynicotine/gtkgui/userinfo.py:625
 #, fuzzy
 msgid "Unban User"
 msgstr "Bebaskan Pengguna"
 
-#: pynicotine/gtkgui/userinfo.py:589 pynicotine/gtkgui/widgets/popupmenu.py:454
-#: pynicotine/gtkgui/widgets/popupmenu.py:490
+#: pynicotine/gtkgui/userinfo.py:625 pynicotine/gtkgui/widgets/popupmenu.py:478
+#: pynicotine/gtkgui/widgets/popupmenu.py:514
 #, fuzzy
 msgid "Ban User"
 msgstr "Sekat Pengguna"
 
-#: pynicotine/gtkgui/userinfo.py:593
+#: pynicotine/gtkgui/userinfo.py:629
 #, fuzzy
 msgid "Unignore User"
 msgstr "Buka Semula Pengguna"
 
-#: pynicotine/gtkgui/userinfo.py:593 pynicotine/gtkgui/widgets/popupmenu.py:455
-#: pynicotine/gtkgui/widgets/popupmenu.py:491
+#: pynicotine/gtkgui/userinfo.py:629 pynicotine/gtkgui/widgets/popupmenu.py:479
+#: pynicotine/gtkgui/widgets/popupmenu.py:515
 #, fuzzy
 msgid "Ignore User"
 msgstr "Abaikan Pengguna"
 
-#: pynicotine/gtkgui/userinfo.py:621
+#: pynicotine/gtkgui/userinfo.py:657
 #, fuzzy
 msgid "Yes"
 msgstr "Ya"
 
-#: pynicotine/gtkgui/userinfo.py:621
+#: pynicotine/gtkgui/userinfo.py:657
 #, fuzzy
 msgid "No"
 msgstr "Tidak"
 
-#: pynicotine/gtkgui/userinfo.py:783
+#: pynicotine/gtkgui/userinfo.py:816
 #, fuzzy, python-format
 msgid ""
 "User %(user)s has Soulseek privileges. Their downloads are queued ahead of "
@@ -3662,44 +3740,44 @@ msgstr ""
 "Anda tiada hak Soulseek. Semasa hak aktif, muat turun anda akan disusun di "
 "hadapan pengguna yang tiada hak."
 
-#: pynicotine/gtkgui/userinfo.py:786 pynicotine/gtkgui/ui/userinfo.ui:75
+#: pynicotine/gtkgui/userinfo.py:819 pynicotine/gtkgui/ui/userinfo.ui:75
 #, fuzzy
 msgid "Privileged User"
 msgstr "%i pengguna berprivilege"
 
-#: pynicotine/gtkgui/userinfo.py:803
+#: pynicotine/gtkgui/userinfo.py:836
 #, fuzzy
 msgid "Please enter a valid number of days."
 msgstr "Sila masukkan bilangan hari."
 
-#: pynicotine/gtkgui/userinfo.py:822
+#: pynicotine/gtkgui/userinfo.py:855
 #, fuzzy, python-format
 msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
 msgstr ""
 "Hadiah hari keistimewaan Soulseek anda kepada pengguna %(user)s "
 "(%(days_left)s):"
 
-#: pynicotine/gtkgui/userinfo.py:823
+#: pynicotine/gtkgui/userinfo.py:856
 #, fuzzy, python-format
 msgid "%(days)s days left"
 msgstr "%(days)s hari lagi"
 
-#: pynicotine/gtkgui/userinfo.py:827
+#: pynicotine/gtkgui/userinfo.py:860
 #, fuzzy
 msgid "Gift Privileges"
 msgstr "Hadiah Kelayakan"
 
-#: pynicotine/gtkgui/widgets/dialogs.py:298
+#: pynicotine/gtkgui/widgets/dialogs.py:302
 #, fuzzy
 msgid "Close"
 msgstr "Tutup"
 
-#: pynicotine/gtkgui/widgets/dialogs.py:485
+#: pynicotine/gtkgui/widgets/dialogs.py:489
 #, fuzzy
 msgid "_Yes"
 msgstr "_Ya"
 
-#: pynicotine/gtkgui/widgets/dialogs.py:519
+#: pynicotine/gtkgui/widgets/dialogs.py:523
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:27
 #, fuzzy
 msgid "_OK"
@@ -3766,83 +3844,83 @@ msgstr "Semua Tab"
 msgid "Re_open Closed Tab"
 msgstr "Buka semula Tab Tertutup"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:411
+#: pynicotine/gtkgui/widgets/popupmenu.py:435
 #, fuzzy, python-format
 msgid "%(num)s File Selected"
 msgid_plural "%(num)s Files Selected"
 msgstr[0] "%s Fail yang Dipilih"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:444
+#: pynicotine/gtkgui/widgets/popupmenu.py:468
 #: pynicotine/gtkgui/ui/userinfo.ui:504
 #, fuzzy
 msgid "_Send Message"
 msgstr "_Hantar Mesej"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:447
+#: pynicotine/gtkgui/widgets/popupmenu.py:471
 #: pynicotine/gtkgui/ui/userinfo.ui:538
 #, fuzzy
 msgid "_Browse Files"
 msgstr "_Layari Fail"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:450
-#: pynicotine/gtkgui/widgets/popupmenu.py:484
+#: pynicotine/gtkgui/widgets/popupmenu.py:474
+#: pynicotine/gtkgui/widgets/popupmenu.py:508
 #, fuzzy
 msgid "_Add Buddy"
 msgstr "_Tambah Kawan"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:457
-#: pynicotine/gtkgui/widgets/popupmenu.py:492
+#: pynicotine/gtkgui/widgets/popupmenu.py:481
+#: pynicotine/gtkgui/widgets/popupmenu.py:516
 #, fuzzy
 msgid "Ban IP Address"
 msgstr "Larangan Alamat IP"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:458
-#: pynicotine/gtkgui/widgets/popupmenu.py:493
+#: pynicotine/gtkgui/widgets/popupmenu.py:482
+#: pynicotine/gtkgui/widgets/popupmenu.py:517
 #, fuzzy
 msgid "Ignore IP Address"
 msgstr "Abaikan Alamat IP"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:459
+#: pynicotine/gtkgui/widgets/popupmenu.py:483
 msgid "Show IP A_ddress"
 msgstr ""
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:461
-#: pynicotine/gtkgui/widgets/popupmenu.py:502
+#: pynicotine/gtkgui/widgets/popupmenu.py:485
+#: pynicotine/gtkgui/widgets/popupmenu.py:526
 #, fuzzy
 msgid "Private Rooms"
 msgstr "Bilik Peribadi"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:509
+#: pynicotine/gtkgui/widgets/popupmenu.py:533
 #, python-format
 msgid "Make Owner of %s"
 msgstr ""
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:527
+#: pynicotine/gtkgui/widgets/popupmenu.py:551
 #, fuzzy, python-format
 msgid "Remove from Private Room %s"
 msgstr "Buang dari Bilik Peribadi %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:530
+#: pynicotine/gtkgui/widgets/popupmenu.py:554
 #, fuzzy, python-format
 msgid "Add to Private Room %s"
 msgstr "Tambah ke Bilik Peribadi %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:537
+#: pynicotine/gtkgui/widgets/popupmenu.py:561
 #, fuzzy, python-format
 msgid "Remove as Operator of %s"
 msgstr "Buang sebagai Pengendali %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:541
+#: pynicotine/gtkgui/widgets/popupmenu.py:565
 #, fuzzy, python-format
 msgid "Add as Operator of %s"
 msgstr "Tambah sebagai Pengendali %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:580
+#: pynicotine/gtkgui/widgets/popupmenu.py:604
 #, fuzzy
 msgid "Change Room Owner?"
 msgstr "Nama bilik"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:581
+#: pynicotine/gtkgui/widgets/popupmenu.py:605
 #, fuzzy, python-format
 msgid ""
 "Do you really want to make %(user)s the new owner of your private room "
@@ -3915,17 +3993,7 @@ msgstr "Teks"
 msgid "Unreadable Folder"
 msgstr "Folder yang Dikongsi"
 
-#: pynicotine/gtkgui/widgets/theme.py:268
-#, fuzzy
-msgid "Default Filters Active"
-msgstr "Penapis Hasil"
-
-#: pynicotine/gtkgui/widgets/theme.py:269
-#, fuzzy
-msgid "Custom Filters Active"
-msgstr "Pulihkan Penapis"
-
-#: pynicotine/gtkgui/widgets/theme.py:376
+#: pynicotine/gtkgui/widgets/theme.py:372
 #, fuzzy, python-format
 msgid "Error loading custom icon %(path)s: %(error)s"
 msgstr "Ralat memuatkan ikon khusus %(path)s: %(error)s"
@@ -3940,46 +4008,46 @@ msgstr "Sembunyikan Nicotine+"
 msgid "Show Nicotine+"
 msgstr "Tunjukkan Nicotine+"
 
-#: pynicotine/gtkgui/widgets/treeview.py:854
+#: pynicotine/gtkgui/widgets/treeview.py:853
 msgid "A_scending"
 msgstr ""
 
-#: pynicotine/gtkgui/widgets/treeview.py:854
+#: pynicotine/gtkgui/widgets/treeview.py:853
 msgid "De_scending"
 msgstr ""
 
-#: pynicotine/gtkgui/widgets/treeview.py:859
+#: pynicotine/gtkgui/widgets/treeview.py:858
 msgid "_Reset Sort Column"
 msgstr ""
 
-#: pynicotine/gtkgui/widgets/treeview.py:866
+#: pynicotine/gtkgui/widgets/treeview.py:865
 #, fuzzy, python-format
 msgid "Column #%i"
 msgstr "Kolum #%i"
 
-#: pynicotine/gtkgui/widgets/treeview.py:881
+#: pynicotine/gtkgui/widgets/treeview.py:880
 msgid "_Sort Order"
 msgstr ""
 
-#: pynicotine/gtkgui/widgets/treeview.py:882
+#: pynicotine/gtkgui/widgets/treeview.py:881
 msgid "Reset Sizing"
 msgstr ""
 
-#: pynicotine/gtkgui/widgets/treeview.py:883
+#: pynicotine/gtkgui/widgets/treeview.py:882
 msgid "Reset Columns"
 msgstr ""
 
-#: pynicotine/gtkgui/widgets/treeview.py:1053
+#: pynicotine/gtkgui/widgets/treeview.py:1052
 #, fuzzy
 msgid "Ungrouped"
 msgstr "Tidak Berkumpulan"
 
-#: pynicotine/gtkgui/widgets/treeview.py:1056
+#: pynicotine/gtkgui/widgets/treeview.py:1055
 #, fuzzy
 msgid "Group by Folder"
 msgstr "Kumpulan mengikut Folder"
 
-#: pynicotine/gtkgui/widgets/treeview.py:1059
+#: pynicotine/gtkgui/widgets/treeview.py:1058
 #, fuzzy
 msgid "Group by User"
 msgstr "Kumpulan mengikut Pengguna"
@@ -5715,24 +5783,24 @@ msgstr ""
 msgid "Private message from user '%(user)s': %(message)s"
 msgstr "Mesej peribadi dari pengguna '%(user)s': %(message)s"
 
-#: pynicotine/search.py:519
+#: pynicotine/search.py:529
 #, fuzzy, python-format
 msgid "Searching for wishlist item \"%s\""
 msgstr "Mencari item wishlist \"%s\""
 
-#: pynicotine/search.py:580
+#: pynicotine/search.py:590
 #, fuzzy, python-format
 msgid "Wishlist wait period set to %(duration)s"
 msgstr "Tempoh menunggu senarai keinginan ditetapkan kepada %s saat"
 
-#: pynicotine/search.py:596
+#: pynicotine/search.py:606
 #, python-format
 msgid "Server provided %(num_phrases)s excluded search phrase: %(phrases)s"
 msgid_plural ""
 "Server provided %(num_phrases)s excluded search phrases: %(phrases)s"
 msgstr[0] ""
 
-#: pynicotine/search.py:919
+#: pynicotine/search.py:927
 #, fuzzy, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)s result"
 msgid_plural ""
@@ -5740,23 +5808,23 @@ msgid_plural ""
 msgstr[0] ""
 "Pengguna %(user)s sedang mencari \"%(query)s\", ditemui %(num)i hasil"
 
-#: pynicotine/shares.py:300
+#: pynicotine/shares.py:308
 #, fuzzy
 msgid "Rebuilding shares…"
 msgstr "Membina semula shares…"
 
-#: pynicotine/shares.py:300
+#: pynicotine/shares.py:308
 #, fuzzy
 msgid "Rescanning shares…"
 msgstr "Mengimbas semula Shares…"
 
-#: pynicotine/shares.py:325
+#: pynicotine/shares.py:333
 #, fuzzy, python-format
 msgid "Rescan complete: %(num)s folder found"
 msgid_plural "Rescan complete: %(num)s folders found"
 msgstr[0] "Pindai semula selesai: %(num)s folder ditemui"
 
-#: pynicotine/shares.py:338
+#: pynicotine/shares.py:346
 #, fuzzy, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
@@ -5767,43 +5835,43 @@ msgstr ""
 "berterusan, padamkan %(dir)s/*.dbn dan cuba lagi. Jika itu tidak membantu, "
 "sila buat laporan bug dengan jejak tumpukan ini disertakan: %(trace)s"
 
-#: pynicotine/shares.py:631
+#: pynicotine/shares.py:639
 #, fuzzy, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "Ralat semasa mengimbas fail %(path)s: %(error)s"
 
-#: pynicotine/shares.py:639
+#: pynicotine/shares.py:647
 #, fuzzy, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "Ralat semasa mengimbas folder %(path)s: %(error)s"
 
-#: pynicotine/shares.py:680
+#: pynicotine/shares.py:688
 #, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr ""
 
-#: pynicotine/shares.py:1134
+#: pynicotine/shares.py:1142
 #, fuzzy, python-format
 msgid "Rescan aborted due to unavailable shares: %s"
 msgstr "Rescan dibatalkan kerana shares tidak tersedia: %s"
 
-#: pynicotine/shares.py:1309
+#: pynicotine/shares.py:1317
 #, fuzzy, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Pengguna %(user)s sedang melayari senarai fail kongsi anda"
 
-#: pynicotine/slskmessages.py:3123
+#: pynicotine/slskmessages.py:3206
 #, fuzzy, python-format
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr ""
 "Tidak dapat membaca pangkalan data shares. Sila rescan shares anda. Ralat: %s"
 
-#: pynicotine/slskproto.py:488
+#: pynicotine/slskproto.py:504
 #, fuzzy, python-format
 msgid "Specified network interface '%s' is not available"
 msgstr "Antara muka rangkaian yang ditentukan '%s' tidak tersedia"
 
-#: pynicotine/slskproto.py:499
+#: pynicotine/slskproto.py:515
 #, fuzzy, python-format
 msgid ""
 "Cannot listen on port %(port)s. Ensure no other application uses it, or "
@@ -5812,37 +5880,37 @@ msgstr ""
 "Tidak dapat mendengar pada port %(port)s. Pastikan tiada aplikasi lain "
 "menggunakannya, atau pilih port yang berbeza. Ralat: %(error)s"
 
-#: pynicotine/slskproto.py:511
+#: pynicotine/slskproto.py:527
 #, fuzzy, python-format
 msgid "Listening on port: %i"
 msgstr "Mendengar pada port: %i"
 
-#: pynicotine/slskproto.py:794
+#: pynicotine/slskproto.py:851
 #, python-format
 msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr ""
 
-#: pynicotine/slskproto.py:1078
+#: pynicotine/slskproto.py:1140
 #, fuzzy, python-format
 msgid "Reconnecting to server in %(duration)s"
 msgstr "Sambung semula ke pelayan dalam %s saat"
 
-#: pynicotine/slskproto.py:1154
+#: pynicotine/slskproto.py:1216
 #, fuzzy, python-format
 msgid "Connecting to %(host)s:%(port)s"
 msgstr "Menghubungkan ke %(host)s:%(port)s"
 
-#: pynicotine/slskproto.py:1192
+#: pynicotine/slskproto.py:1255
 #, fuzzy, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in…"
 msgstr "Sambung ke pelayan %(host)s:%(port)s, sedang log masuk…"
 
-#: pynicotine/slskproto.py:1486
+#: pynicotine/slskproto.py:1575
 #, fuzzy, python-format
 msgid "Disconnected from server %(host)s:%(port)s"
 msgstr "Terputus dari pelayan %(host)s:%(port)s"
 
-#: pynicotine/slskproto.py:1492
+#: pynicotine/slskproto.py:1581
 #, fuzzy
 msgid "Someone logged in to your Soulseek account elsewhere"
 msgstr "Seseorang telah log masuk ke akaun Soulseek anda di tempat lain"
@@ -5857,14 +5925,14 @@ msgstr ""
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr "Muat naik dibatalkan, pengguna %(user)s fail %(file)s"
 
-#: pynicotine/uploads.py:648
+#: pynicotine/uploads.py:650
 #, fuzzy, python-format
 msgid "%(user)s is downloading file %(file)s (%(size)s) from folder %(folder)s"
 msgstr ""
 "Adakah kamu benar-benar ingin memuat turun %(num)i fail dari folder %(user)s "
 "milik %(folder)s?"
 
-#: pynicotine/uploads.py:655
+#: pynicotine/uploads.py:657
 #, fuzzy, python-format
 msgid ""
 "%(user)s is downloading %(files)s files (%(size)s) from folder %(folder)s"
@@ -5872,13 +5940,13 @@ msgstr ""
 "Adakah kamu benar-benar ingin memuat turun %(num)i fail dari folder %(user)s "
 "milik %(folder)s?"
 
-#: pynicotine/uploads.py:662
+#: pynicotine/uploads.py:664
 #, python-format
 msgid ""
 "%(user)s is downloading %(files)s files (%(size)s) from %(folders)s folders"
 msgstr ""
 
-#: pynicotine/uploads.py:669 pynicotine/gtkgui/ui/userinfo.ui:322
+#: pynicotine/uploads.py:671 pynicotine/gtkgui/ui/userinfo.ui:322
 #, fuzzy
 msgid "Queued Uploads"
 msgstr "Muatan Dalam Barisan"
@@ -5893,80 +5961,80 @@ msgstr "Ralat I/O muat naik: %s"
 msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr ""
 
-#: pynicotine/userbrowse.py:267
+#: pynicotine/userbrowse.py:272
 #, fuzzy, python-format
 msgid "Loading Shares from disk failed: %(error)s"
 msgstr "Memuatkan Shares dari disk gagal: %(error)s"
 
-#: pynicotine/userbrowse.py:315
+#: pynicotine/userbrowse.py:320
 #, fuzzy, python-format
 msgid "Saved list of shared files for user '%(user)s' to %(dir)s"
 msgstr "Senarai fail kongsi yang disimpan untuk pengguna '%(user)s' ke %(dir)s"
 
-#: pynicotine/userbrowse.py:319
+#: pynicotine/userbrowse.py:324
 #, fuzzy, python-format
 msgid "Cannot save shares for user %(user)s: %(error)s"
 msgstr "Gagal memuatkan gambar untuk pengguna %(user)s: %(error)s"
 
-#: pynicotine/userbrowse.py:395
+#: pynicotine/userbrowse.py:400
 #, python-format
 msgid ""
 "User %(user)s is sharing %(num_files)s files totaling %(shared_size)s across "
 "%(num_folders)s folders."
 msgstr ""
 
-#: pynicotine/userbrowse.py:401
+#: pynicotine/userbrowse.py:406
 #, fuzzy
 msgid "User Statistics"
 msgstr "Statistik Pemindahan"
 
-#: pynicotine/userinfo.py:145
+#: pynicotine/userinfo.py:151
 #, fuzzy, python-format
 msgid "Picture saved to %s"
 msgstr "Gambar disimpan ke %s"
 
-#: pynicotine/userinfo.py:148
+#: pynicotine/userinfo.py:154
 #, fuzzy, python-format
 msgid "Cannot save picture to %(filename)s: %(error)s"
 msgstr "Tidak dapat menyimpan gambar ke %(filename)s: %(error)s"
 
-#: pynicotine/userinfo.py:175
+#: pynicotine/userinfo.py:189
 #, fuzzy, python-format
 msgid "User %(user)s is viewing your profile"
 msgstr "Pengguna %(user)s sedang melihat profil anda"
 
-#: pynicotine/users.py:267
+#: pynicotine/users.py:269
 #, fuzzy, python-format
 msgid "Unable to connect to the server. Reason: %s"
 msgstr "Tidak dapat menyambung ke pelayan. Sebab: %s"
 
-#: pynicotine/users.py:267
+#: pynicotine/users.py:269
 #, fuzzy
 msgid "Cannot Connect"
 msgstr "Tidak Dapat Menyambung"
 
-#: pynicotine/users.py:301
+#: pynicotine/users.py:303
 #, fuzzy, python-format
 msgid "Cannot retrieve the IP of user %s, since this user is offline"
 msgstr ""
 "Tidak dapat mengambil IP pengguna %s, kerana pengguna ini sedang offline"
 
-#: pynicotine/users.py:310
+#: pynicotine/users.py:312
 #, fuzzy, python-format
 msgid "IP address of user %(user)s: %(ip)s, port %(port)i%(country)s"
 msgstr "Alamat IP pengguna %(user)s: %(ip)s, port %(port)i%(country)s"
 
-#: pynicotine/users.py:315
+#: pynicotine/users.py:317
 #, fuzzy
 msgid "User IP Address"
 msgstr "Alamat IP"
 
-#: pynicotine/users.py:418
+#: pynicotine/users.py:420
 #, fuzzy
 msgid "Soulseek Announcement"
 msgstr "Pengumuman Soulseek"
 
-#: pynicotine/users.py:432
+#: pynicotine/users.py:434
 #, fuzzy
 msgid ""
 "You have no Soulseek privileges. While privileges are active, your downloads "
@@ -5975,17 +6043,17 @@ msgstr ""
 "Anda tiada hak Soulseek. Semasa hak aktif, muat turun anda akan disusun di "
 "hadapan pengguna yang tiada hak."
 
-#: pynicotine/users.py:438
+#: pynicotine/users.py:440
 #, fuzzy, python-format
 msgid "%(duration)s of Soulseek privileges left"
 msgstr "Soulseek _Kelayakan"
 
-#: pynicotine/users.py:450
+#: pynicotine/users.py:452
 #, fuzzy
 msgid "Your password has been changed"
 msgstr "Kata laluan anda telah ditukar"
 
-#: pynicotine/users.py:450
+#: pynicotine/users.py:452
 #, fuzzy
 msgid "Password Changed"
 msgstr "Kata Laluan Ditukar"
@@ -6049,7 +6117,7 @@ msgstr "Tidak dapat menyimpan fail %(path)s: %(error)s"
 msgid "Unable to restore previous file %(path)s: %(error)s"
 msgstr "Tidak dapat memulihkan fail sebelumnya %(path)s: %(error)s"
 
-#: pynicotine/gtkgui/ui/buddies.ui:36 pynicotine/gtkgui/ui/mainwindow.ui:1275
+#: pynicotine/gtkgui/ui/buddies.ui:36 pynicotine/gtkgui/ui/mainwindow.ui:1161
 #, fuzzy
 msgid "Add buddy…"
 msgstr "Tambah kawan…"
@@ -6440,9 +6508,9 @@ msgstr "Segarkan Cadangan"
 msgid "Room…"
 msgstr "Bilik…"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:58 pynicotine/gtkgui/ui/mainwindow.ui:743
-#: pynicotine/gtkgui/ui/mainwindow.ui:912
-#: pynicotine/gtkgui/ui/mainwindow.ui:1080
+#: pynicotine/gtkgui/ui/mainwindow.ui:58 pynicotine/gtkgui/ui/mainwindow.ui:689
+#: pynicotine/gtkgui/ui/mainwindow.ui:836
+#: pynicotine/gtkgui/ui/mainwindow.ui:982
 #, fuzzy
 msgid "Username…"
 msgstr "Nama pengguna…"
@@ -6484,26 +6552,17 @@ msgstr "Skop Carian"
 msgid "_Wishlist"
 msgstr "_Senarai Keinginan"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:171
-#, fuzzy
-msgid "Configure Searches"
-msgstr "Konfigurasikan Carian"
-
-#: pynicotine/gtkgui/ui/mainwindow.ui:238
+#: pynicotine/gtkgui/ui/mainwindow.ui:216
 msgid "Enter a search term to search for files shared by other online users"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:394
-#: pynicotine/gtkgui/ui/mainwindow.ui:635 pynicotine/gtkgui/ui/search.ui:262
+#: pynicotine/gtkgui/ui/mainwindow.ui:372
+#: pynicotine/gtkgui/ui/mainwindow.ui:597 pynicotine/gtkgui/ui/search.ui:261
 #, fuzzy
 msgid "File Grouping Mode"
 msgstr "Mod Pengelompokan Fail"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:412
-msgid "Configure Downloads"
-msgstr ""
-
-#: pynicotine/gtkgui/ui/mainwindow.ui:479
+#: pynicotine/gtkgui/ui/mainwindow.ui:441
 #, fuzzy
 msgid ""
 "Files you download from other users are queued here, and can be paused and "
@@ -6512,11 +6571,7 @@ msgstr ""
 "Fail yang kamu muat turun dari pengguna lain akan disusun di sini, dan boleh "
 "dijeda dan disambung semula bila-bila masa"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:653
-msgid "Configure Uploads"
-msgstr ""
-
-#: pynicotine/gtkgui/ui/mainwindow.ui:720
+#: pynicotine/gtkgui/ui/mainwindow.ui:666
 #, fuzzy
 msgid ""
 "Users' attempts to download your shared files are queued and managed here"
@@ -6524,24 +6579,19 @@ msgstr ""
 "Usaha pengguna untuk memuat turun fail yang anda kongsikan sedang dalam "
 "barisan dan diurus di sini"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:799
+#: pynicotine/gtkgui/ui/mainwindow.ui:745
 #, fuzzy
 msgid "_Open List"
 msgstr "_Buka Senarai"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:801
+#: pynicotine/gtkgui/ui/mainwindow.ui:747
 #, fuzzy
 msgid "Opens a local list of shared files that was previously saved to disk"
 msgstr ""
 "Membuka senarai tempatan fail yang dikongsi yang telah disimpan ke cakera "
 "sebelum ini"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:822
-#, fuzzy
-msgid "Configure Shares"
-msgstr "Konfigurasikan Shares"
-
-#: pynicotine/gtkgui/ui/mainwindow.ui:889
+#: pynicotine/gtkgui/ui/mainwindow.ui:813
 #, fuzzy
 msgid ""
 "Enter the name of a user to browse their shared files, and save the list to "
@@ -6550,17 +6600,12 @@ msgstr ""
 "Masukkan nama pengguna yang fail yang dikongsi ingin anda semak. Anda juga "
 "boleh simpan senarai ke disk, dan semak kemudian."
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:968
+#: pynicotine/gtkgui/ui/mainwindow.ui:892
 #, fuzzy
 msgid "_Personal Profile"
 msgstr "_Profil Peribadi"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:990
-#, fuzzy
-msgid "Configure Account"
-msgstr "Konfigurasikan Akaun"
-
-#: pynicotine/gtkgui/ui/mainwindow.ui:1057
+#: pynicotine/gtkgui/ui/mainwindow.ui:959
 #, fuzzy
 msgid ""
 "Enter the name of a user to view their user description, information and "
@@ -6569,34 +6614,24 @@ msgstr ""
 "Masukkan nama pengguna untuk melihat penerangan pengguna, maklumat dan "
 "gambar peribadi mereka"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1135
+#: pynicotine/gtkgui/ui/mainwindow.ui:1037
 #, fuzzy
 msgid "Chat _History"
 msgstr "Sejarah _Chat"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1158
-#: pynicotine/gtkgui/ui/mainwindow.ui:1499
-#, fuzzy
-msgid "Configure Chats"
-msgstr "Konfigurasikan Sembang"
-
-#: pynicotine/gtkgui/ui/mainwindow.ui:1225
+#: pynicotine/gtkgui/ui/mainwindow.ui:1111
 #, fuzzy
 msgid "Enter the name of a user to start a conversation with them in private"
 msgstr ""
 "Masukkan nama pengguna untuk melihat penerangan pengguna, maklumat dan "
 "gambar peribadi mereka"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1306 pynicotine/gtkgui/ui/uploads.ui:131
+#: pynicotine/gtkgui/ui/mainwindow.ui:1192 pynicotine/gtkgui/ui/uploads.ui:131
 #, fuzzy
 msgid "_Message All"
 msgstr "_Mesej Semua"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1328
-msgid "Configure Ignored Users"
-msgstr ""
-
-#: pynicotine/gtkgui/ui/mainwindow.ui:1395
+#: pynicotine/gtkgui/ui/mainwindow.ui:1259
 #, fuzzy
 msgid ""
 "Add users as buddies to share specific folders with them and receive "
@@ -6605,39 +6640,34 @@ msgstr ""
 "Tambah pengguna sebagai rakan untuk berkongsi folder tertentu dengan mereka "
 "dan terima notifikasi apabila mereka dalam talian"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1418
+#: pynicotine/gtkgui/ui/mainwindow.ui:1282
 #, fuzzy
 msgid "Join or create room…"
 msgstr "Sertai atau buat bilik…"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1476
+#: pynicotine/gtkgui/ui/mainwindow.ui:1340
 #, fuzzy
 msgid "All _Rooms"
 msgstr "_Bilik"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1566
+#: pynicotine/gtkgui/ui/mainwindow.ui:1414
 msgid ""
 "Join a room to chat with other online users, or create a private room with "
 "restricted access"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1627
-#, fuzzy
-msgid "Configure User Profile"
-msgstr "Konfigurasikan Profil Pengguna"
-
-#: pynicotine/gtkgui/ui/mainwindow.ui:1758
+#: pynicotine/gtkgui/ui/mainwindow.ui:1590
 #: pynicotine/gtkgui/ui/settings/network.ui:373
 #, fuzzy
 msgid "Connections"
 msgstr "Sambungan"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1791
+#: pynicotine/gtkgui/ui/mainwindow.ui:1623
 #, fuzzy
 msgid "Downloading (Speed / Active Users)"
 msgstr "Muat turun (Kelajuan / Pengguna Aktif)"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1823
+#: pynicotine/gtkgui/ui/mainwindow.ui:1655
 #, fuzzy
 msgid "Uploading (Speed / Active Users)"
 msgstr "Muat naik (Kelajuan / Pengguna Aktif)"
@@ -6942,14 +6972,6 @@ msgstr ""
 msgid "Multiple countries can be specified with commas or spaces."
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:424
-#: pynicotine/gtkgui/ui/search.ui:393
-#: pynicotine/gtkgui/ui/settings/search.ui:412
-#: pynicotine/gtkgui/ui/userinfo.ui:265
-#, fuzzy
-msgid "Upload Slot Available"
-msgstr "Shares Tidak Tersedia"
-
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:435
 #, fuzzy
 msgid ""
@@ -6958,13 +6980,6 @@ msgid ""
 msgstr ""
 "Tunjukkan hanya hasil dari pengguna yang mempunyai sekurang-kurangnya satu "
 "slot muat naik yang kosong, iaitu fail yang tersedia segera."
-
-#: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:445
-#: pynicotine/gtkgui/ui/search.ui:409
-#: pynicotine/gtkgui/ui/settings/search.ui:437
-#, fuzzy
-msgid "Public Files"
-msgstr "Awam"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:456
 msgid ""
@@ -7371,7 +7386,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/network.ui:132
 #, fuzzy
-msgid "Account Password:"
+msgid "Account password:"
 msgstr "Kata laluan: "
 
 #: pynicotine/gtkgui/ui/settings/network.ui:164
@@ -7525,41 +7540,6 @@ msgstr "Bantuan Penapis Hasil"
 #, fuzzy
 msgid "Enable search result filters by default"
 msgstr "Aktifkan penapis hasil carian secara lalai"
-
-#: pynicotine/gtkgui/ui/settings/search.ui:212
-#, fuzzy
-msgid "Include:"
-msgstr "Sertakan:"
-
-#: pynicotine/gtkgui/ui/settings/search.ui:237
-#, fuzzy
-msgid "Exclude:"
-msgstr "Kecualikan:"
-
-#: pynicotine/gtkgui/ui/settings/search.ui:262
-#, fuzzy
-msgid "File Type:"
-msgstr "Jenis Fail:"
-
-#: pynicotine/gtkgui/ui/settings/search.ui:290
-#, fuzzy
-msgid "Size:"
-msgstr "Saiz:"
-
-#: pynicotine/gtkgui/ui/settings/search.ui:321
-#, fuzzy
-msgid "Bitrate:"
-msgstr "Bitrate:"
-
-#: pynicotine/gtkgui/ui/settings/search.ui:352
-#, fuzzy
-msgid "Duration:"
-msgstr "Tempoh:"
-
-#: pynicotine/gtkgui/ui/settings/search.ui:383
-#, fuzzy
-msgid "Country Code:"
-msgstr "Kod Negara:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:422
 #, fuzzy
@@ -8079,7 +8059,7 @@ msgstr "Simpan Senarai Shares ke Disk"
 msgid "Refresh Files"
 msgstr "Segarkan Fail"
 
-#: pynicotine/gtkgui/ui/userinfo.ui:126
+#: pynicotine/gtkgui/ui/userinfo.ui:127
 #, fuzzy
 msgid "Edit Profile"
 msgstr "Edit Profil"
@@ -8113,6 +8093,44 @@ msgstr "_Refresh Profil"
 #, fuzzy
 msgid "Nicotine+ Commands"
 msgstr "Perintah Nicotine+"
+
+#, fuzzy
+#~ msgid ""
+#~ "Nicotine+ aims to be a lightweight, pleasant, free and open source (FOSS) "
+#~ "alternative to the official Soulseek client, while also providing a "
+#~ "comprehensive set of features."
+#~ msgstr ""
+#~ "Nicotine+ bertujuan untuk menjadi alternatif ringan, menyenangkan, "
+#~ "percuma dan sumber terbuka (FOSS) kepada klien Soulseek rasmi, sambil "
+#~ "juga menyediakan set ciri yang komprehensif."
+
+#, fuzzy
+#~ msgid "Update _Filters…"
+#~ msgstr "Muat Naik Folder…"
+
+#, fuzzy
+#~ msgid "Default Filters Active"
+#~ msgstr "Penapis Hasil"
+
+#, fuzzy
+#~ msgid "Configure Searches"
+#~ msgstr "Konfigurasikan Carian"
+
+#, fuzzy
+#~ msgid "Configure Shares"
+#~ msgstr "Konfigurasikan Shares"
+
+#, fuzzy
+#~ msgid "Configure Account"
+#~ msgstr "Konfigurasikan Akaun"
+
+#, fuzzy
+#~ msgid "Configure Chats"
+#~ msgstr "Konfigurasikan Sembang"
+
+#, fuzzy
+#~ msgid "Configure User Profile"
+#~ msgstr "Konfigurasikan Profil Pengguna"
 
 #, fuzzy, python-format
 #~ msgid "Recommendations (%s)"
