@@ -13,6 +13,7 @@ TRANSLATION_DOMAIN = "nicotine"
 LANGUAGES = (
     ("ca", "Català"),
     ("cs", "Čeština"),
+    ("da", "Dansk"),
     ("de", "Deutsch"),
     ("en", "English"),
     ("es_CL", "Español (Chile)"),
