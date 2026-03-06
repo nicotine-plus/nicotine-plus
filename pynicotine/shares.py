@@ -310,7 +310,7 @@ class Scanner:
                 self.load_filters()
 
                 # Clear previous word index to prevent inconsistent state if the scanner fails
-                self.set_shares(word_index={})
+                self.set_shares(word_index={}, lowercase_paths={})
 
                 # Scan shares
                 for permission_level in (
