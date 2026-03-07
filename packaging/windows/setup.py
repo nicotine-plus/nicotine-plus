@@ -118,7 +118,7 @@ def add_pixbuf_loaders():
 
     pixbuf_loaders_path = os.path.join(SYS_BASE_PATH, "lib/gdk-pixbuf-2.0/2.10.0/loaders")
     loader_extension = "dll" if sys.platform == "win32" else "so"
-    image_formats = ["bmp", "gif", "svg"]
+    image_formats = ["bmp", "gif"]
 
     if sys.platform == "win32":
         image_formats += ["webp"]
@@ -127,17 +127,8 @@ def add_pixbuf_loaders():
 
     for image_format in image_formats:
         basename = f"libpixbufloader-{image_format}"
-        real_loader_extension = loader_extension
-
-        if image_format == "svg":
-            if sys.platform == "win32":
-                basename = basename.replace("lib", "")
-            elif sys.platform == "darwin":
-                real_loader_extension = "dylib"
-            basename = basename.replace("-", "_")
-
         add_file(
-            file_path=os.path.realpath(os.path.join(pixbuf_loaders_path, f"{basename}.{real_loader_extension}")),
+            file_path=os.path.realpath(os.path.join(pixbuf_loaders_path, f"{basename}.{loader_extension}")),
             output_path=f"lib/libpixbufloader-{image_format}.{loader_extension}"
         )
 
