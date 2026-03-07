@@ -309,8 +309,12 @@ class Scanner:
                 )
                 self.load_filters()
 
-                # Clear previous word index to prevent inconsistent state if the scanner fails
-                self.set_shares(word_index={}, lowercase_paths={})
+                # Delete previous word index and lowercase path databases. This ensures that we don't
+                # end up with inconsistent data in case the scanner process is terminated. A rescan
+                # will also be attempted on startup due to the missing databases.
+                for destination in ("words", "lowercase_paths"):
+                    share_db_path = self.share_db_paths[destination]
+                    Shares.remove_db_file(share_db_path)
 
                 # Scan shares
                 for permission_level in (
