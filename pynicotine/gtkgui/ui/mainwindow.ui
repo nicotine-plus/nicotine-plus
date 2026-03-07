@@ -1577,6 +1577,45 @@
           </object>
         </child>
         <child>
+          <object class="GtkBox" id="scan_failed_container">
+            <property name="spacing">8</property>
+            <property name="visible">False</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Rescan Failed</property>
+                <property name="ellipsize">end</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <style>
+                  <class name="caption"/>
+                  <class name="normal"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton">
+                <property name="action-name">app.rescan-shares</property>
+                <property name="tooltip-text" translatable="yes">Retry</property>
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="icon-name">view-refresh-symbolic</property>
+                    <property name="visible">True</property>
+                  </object>
+                </child>
+                <style>
+                  <class name="circular"/>
+                  <class name="flat"/>
+                  <class name="image-button"/>
+                </style>
+              </object>
+            </child>
+            <style>
+              <class name="error"/>
+            </style>
+          </object>
+        </child>
+        <child>
           <object class="GtkBox">
             <property name="margin-bottom">2</property>
             <property name="margin-end">2</property>
