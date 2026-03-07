@@ -302,8 +302,11 @@ class Scanner:
                     ScannerLogMessage(_("Rebuilding shares…") if self.rebuild else _("Rescanning shares…"))
                 )
 
-                # Clear previous word index to prevent inconsistent state if the scanner fails
-                self.set_shares(word_index={})
+                # Delete previous word index database. This ensures that we don't
+                # end up with inconsistent data in case the scanner process is terminated. A rescan
+                # will also be attempted on startup due to the missing databases.
+                share_db_path = self.share_db_paths["words"]
+                Shares.remove_db_file(share_db_path)
 
                 # Scan shares
                 for permission_level in (
