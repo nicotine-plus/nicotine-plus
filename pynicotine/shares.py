@@ -225,7 +225,6 @@ class Database:
 
 class ScannerState:
     INITIALIZED = "initialized"
-    RESCANNING = "rescanning"
     FAILURE = "failure"
 
 
@@ -303,7 +302,6 @@ class Scanner:
                 self.writer.send(ScannerState.INITIALIZED)
 
             if self.rescan:
-                self.writer.send(ScannerState.RESCANNING)
                 self.writer.send(
                     ScannerLogMessage(_("Rebuilding shares…") if self.rebuild else _("Rescanning shares…"))
                 )
@@ -1156,7 +1154,7 @@ class Shares:
         self.close_shares(self.share_dbs)
         self.file_path_index = ()
 
-        events.emit("shares-preparing")
+        events.emit("shares-scanning")
 
         share_groups = self.get_shared_folders()
         self._scanner_process, reader = self._build_scanner_process(share_groups, init, rescan, rebuild)
@@ -1259,10 +1257,6 @@ class Shares:
 
                 elif isinstance(item, SharedFileListResponse):
                     self.compressed_shares[item.permission_level] = item
-
-                elif item == ScannerState.RESCANNING:
-                    if emit_event is not None:
-                        emit_event("shares-scanning")
 
                 elif item == ScannerState.INITIALIZED:
                     self.initialized = True
