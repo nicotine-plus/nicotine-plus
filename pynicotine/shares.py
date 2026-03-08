@@ -225,7 +225,6 @@ class Database:
 
 class ScannerState:
     INITIALIZED = "initialized"
-    RESCANNING = "rescanning"
     SUCCESS = "success"
 
 
@@ -303,14 +302,17 @@ class Scanner:
                 self.writer.send(ScannerState.INITIALIZED)
 
             if self.rescan:
-                self.writer.send(ScannerState.RESCANNING)
                 self.writer.send(
                     ScannerLogMessage(_("Rebuilding shares…") if self.rebuild else _("Rescanning shares…"))
                 )
                 self.load_filters()
 
-                # Clear previous word index to prevent inconsistent state if the scanner fails
-                self.set_shares(word_index={})
+                # Delete previous word index and lowercase path databases. This ensures that we don't
+                # end up with inconsistent data in case the scanner process is terminated. A rescan
+                # will also be attempted on startup due to the missing databases.
+                for destination in ("words", "lowercase_paths"):
+                    share_db_path = self.share_db_paths[destination]
+                    Shares.remove_db_file(share_db_path)
 
                 # Scan shares
                 for permission_level in (
@@ -1153,7 +1155,7 @@ class Shares:
         self.close_shares(self.share_dbs)
         self.file_path_index = ()
 
-        events.emit("shares-preparing")
+        events.emit("shares-scanning")
 
         share_groups = self.get_shared_folders()
         self._scanner_process, reader = self._build_scanner_process(share_groups, init, rescan, rebuild)
@@ -1244,10 +1246,6 @@ class Shares:
 
             elif isinstance(item, SharedFileListResponse):
                 self.compressed_shares[item.permission_level] = item
-
-            elif item == ScannerState.RESCANNING:
-                if emit_event is not None:
-                    emit_event("shares-scanning")
 
             elif item == ScannerState.INITIALIZED:
                 self.initialized = True

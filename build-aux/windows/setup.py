@@ -105,14 +105,8 @@ def add_pixbuf_loaders():
 
     add_file(file_path=os.path.join(CURRENT_PATH, "pixbuf-loaders.cache"), output_path="lib/pixbuf-loaders.cache")
 
-    for image_format in ("bmp", "gif", "svg", "webp"):
+    for image_format in ("bmp", "gif", "webp"):
         basename = f"libpixbufloader-{image_format}"
-
-        if image_format == "svg":
-            if sys.platform == "win32":
-                basename = basename.replace("lib", "")
-            basename = basename.replace("-", "_")
-
         add_file(
             file_path=os.path.realpath(os.path.join(pixbuf_loaders_path, f"{basename}.{loader_extension}")),
             output_path=f"lib/libpixbufloader-{image_format}.{loader_extension}"

@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-03 01:43+0200\n"
-"PO-Revision-Date: 2026-03-05 19:10+0000\n"
+"PO-Revision-Date: 2026-03-08 15:19+0000\n"
 "Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
@@ -2435,7 +2435,7 @@ msgid "Custom Filters Enabled (%(num)s Active)"
 msgstr "Filtros Personalizados Habilitados (%(num)s Ativos)"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:215
-#, fuzzy, python-format
+#, python-format
 msgid "• %(filter)s %(value)s"
 msgstr "• %(filter)s %(value)s"
 

@@ -3490,40 +3490,6 @@ class UserInfoResponse(PeerMessage):
             pos, self.uploadallowed = self.unpack_uint32(message, pos)
 
 
-class PMessageUser(PeerMessage):
-    """Peer code 22.
-
-    Chat phrase sent to someone or received by us in private. This is a
-    Nicotine+ extension to the Soulseek protocol.
-
-    OBSOLETE
-    """
-
-    __slots__ = ("message_username", "msg", "msgid", "timestamp")
-
-    def __init__(self, message_username=None, msg=None):
-        PeerMessage.__init__(self)
-        self.message_username = message_username
-        self.msg = msg
-        self.msgid = None
-        self.timestamp = None
-
-    def make_network_message(self):
-        msg = bytearray()
-        msg += self.pack_uint32(0)
-        msg += self.pack_uint32(0)
-        msg += self.pack_string(self.message_username)
-        msg += self.pack_string(self.msg)
-
-        return msg
-
-    def parse_network_message(self, message):
-        pos, self.msgid = self.unpack_uint32(message)
-        pos, self.timestamp = self.unpack_uint32(message, pos)
-        pos, self.message_username = self.unpack_string(message, pos)
-        pos, self.msg = self.unpack_string(message, pos)
-
-
 class FolderContentsRequest(PeerMessage):
     """Peer code 36.
 
@@ -4312,7 +4278,6 @@ PEER_MESSAGE_CODES = {
     FileSearchResponse: 9,
     UserInfoRequest: 15,
     UserInfoResponse: 16,
-    PMessageUser: 22,             # Obsolete
     FolderContentsRequest: 36,
     FolderContentsResponse: 37,
     TransferRequest: 40,

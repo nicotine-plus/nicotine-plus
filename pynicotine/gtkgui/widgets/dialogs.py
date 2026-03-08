@@ -263,7 +263,8 @@ class Dialog(Window):
                 self.parent = active_dialog
                 break
 
-        self.widget.set_transient_for(self.parent.widget)
+        if self.parent is not None:
+            self.widget.set_transient_for(self.parent.widget)
 
         if self not in Window.active_dialogs:
             Window.active_dialogs.append(self)
@@ -466,7 +467,8 @@ class MessageDialog(Window):
                 self.parent = active_dialog
                 break
 
-        self.widget.set_transient_for(self.parent.widget)
+        if self.parent is not None:
+            self.widget.set_transient_for(self.parent.widget)
 
         if self not in Window.active_dialogs:
             Window.active_dialogs.append(self)
