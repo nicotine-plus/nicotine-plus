@@ -49,8 +49,11 @@ unstable build.
 Unstable [Flatpak](https://www.flatpak.org/setup/) packages are built after
 every commit to the master branch.
 
- - [Download Unstable Flatpak Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-x86_64-package.zip)
+ - [Download Unstable Flatpak x64 Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-x86_64-package.zip)
     — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-x86_64-package)  
+
+ - [Download Unstable Flatpak ARM64 Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-aarch64-package.zip)
+    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-aarch64-package)  
 
 ### Snap
 

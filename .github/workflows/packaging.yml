@@ -38,13 +38,15 @@ jobs:
           path: build/package/
 
   flatpak:
-    runs-on: ubuntu-latest
     timeout-minutes: 15
     strategy:
       matrix:
         include:
           - arch: x86_64
             platform: ubuntu-latest
+          - arch: aarch64
+            platform: ubuntu-24.04-arm
+    runs-on: ${{ matrix.platform }}
     container:
       image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-49
       options: --privileged
