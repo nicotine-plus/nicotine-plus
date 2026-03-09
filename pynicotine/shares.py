@@ -357,8 +357,8 @@ class Scanner:
             )
 
         finally:
-            self.writer.close()
             Shares.close_shares(self.share_dbs)
+            self.writer.close()
 
     def load_filters(self):
 
