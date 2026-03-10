@@ -742,7 +742,8 @@ class Scanner:
 
 class Shares:
     __slots__ = ("share_dbs", "requested_share_times", "initialized", "rescanning", "compressed_shares",
-                 "share_db_paths", "file_path_index", "_scanner_process", "_rescan_daily_timer_id")
+                 "share_db_paths", "file_path_index", "_scanner_process", "_scanner_reader",
+                 "_rescan_daily_timer_id")
 
     BACKSLASH_SENTINEL = "@@BACKSLASH@@"
 
@@ -774,6 +775,7 @@ class Shares:
         self.file_path_index = ()
 
         self._scanner_process = None
+        self._scanner_reader = None
         self._rescan_daily_timer_id = None
 
         for event_name, callback in (
@@ -806,6 +808,11 @@ class Shares:
 
         if self._scanner_process is not None:
             self._scanner_process.terminate()
+            self._scanner_process = None
+
+        if self._scanner_reader is not None:
+            self._scanner_reader.close()
+            self._scanner_reader = None
 
     def _server_login(self, msg):
         if msg.success:
@@ -1158,7 +1165,9 @@ class Shares:
         events.emit("shares-scanning")
 
         share_groups = self.get_shared_folders()
-        self._scanner_process, reader, writer = self._build_scanner_process(share_groups, init, rescan, rebuild)
+        self._scanner_process, self._scanner_reader, writer = self._build_scanner_process(
+            share_groups, init, rescan, rebuild
+        )
         self._scanner_process.start()
 
         # Ensure only the scanner process owns a handle, in order to promptly exit the
@@ -1167,12 +1176,12 @@ class Shares:
 
         if use_thread:
             Thread(
-                target=self._process_scanner, args=(reader, events.emit_main_thread),
+                target=self._process_scanner, args=(self._scanner_reader, events.emit_main_thread),
                 name="ProcessShareScanner"
             ).start()
             return None
 
-        return self._process_scanner(reader)
+        return self._process_scanner(self._scanner_reader)
 
     def check_shares_available(self):
 
@@ -1264,9 +1273,17 @@ class Shares:
                 current_folder_count = None
                 last_count_update = current_time
 
-        reader.close()
-        self._scanner_process.join()
-        self._scanner_process = None
+        try:
+            reader.close()
+        except OSError:
+            # Already closed in the main thread
+            pass
+
+        self._scanner_reader = None
+
+        if self._scanner_process is not None:
+            self._scanner_process.join()
+            self._scanner_process = None
 
         if emit_event is not None:
             emit_event("shares-ready", successful)
