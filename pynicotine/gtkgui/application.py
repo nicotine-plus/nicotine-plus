@@ -151,6 +151,8 @@ class Application:
             ("message-buddies", self.on_message_buddies, None, False),
             ("wishlist", self.on_wishlist, None, True),
             ("personal-profile", self.on_personal_profile, None, True),
+            ("configure-shares", self.on_configure_shares, None, True),
+            ("configure-ignored-users", self.on_configure_ignored_users, None, True),
             ("preferences", self.on_preferences, None, True),
             ("confirm-quit", self.on_confirm_quit_request, None, True),
             ("force-quit", self.on_force_quit_request, None, True),
@@ -589,7 +591,7 @@ class Application:
     def on_soulseek_privileges(self, *_args):
         core.users.request_check_privileges(should_open_url=True)
 
-    def on_preferences(self, *_args):
+    def on_preferences(self, *_args, page_id=None):
 
         if self.preferences is None:
             from pynicotine.gtkgui.dialogs.preferences import Preferences
@@ -597,7 +599,10 @@ class Application:
 
         self.preferences.set_settings()
 
-        if self.window.is_visible():
+        if page_id:
+            self.preferences.set_active_page(page_id)
+
+        elif self.window.is_visible():
             page_ids = {
                 "search": "searches",
                 "downloads": "downloads",
@@ -822,6 +827,12 @@ class Application:
 
     def on_personal_profile(self, *_args):
         core.userinfo.show_user()
+
+    def on_configure_shares(self, *_args):
+        self.on_preferences(page_id="shares")
+
+    def on_configure_ignored_users(self, *_args):
+        self.on_preferences(page_id="ignored-users")
 
     def on_window_hide_unhide(self, *_args):
 
