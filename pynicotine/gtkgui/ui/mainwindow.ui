@@ -1554,6 +1554,10 @@
         </child>
         <child>
           <object class="GtkBox" id="scan_progress_container">
+            <property name="margin-bottom">2</property>
+            <property name="margin-end">2</property>
+            <property name="margin-start">2</property>
+            <property name="margin-top">2</property>
             <property name="spacing">8</property>
             <property name="visible">False</property>
             <child>
@@ -1578,7 +1582,11 @@
         </child>
         <child>
           <object class="GtkBox" id="scan_failed_container">
-            <property name="spacing">8</property>
+            <property name="margin-bottom">2</property>
+            <property name="margin-end">2</property>
+            <property name="margin-start">2</property>
+            <property name="margin-top">2</property>
+            <property name="spacing">6</property>
             <property name="visible">False</property>
             <child>
               <object class="GtkLabel">
