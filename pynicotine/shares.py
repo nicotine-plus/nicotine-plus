@@ -1257,7 +1257,7 @@ class Shares:
         while True:
             try:
                 item = reader.recv()
-            except (EOFError, OSError):
+            except Exception:
                 # Connection was closed
                 break
 

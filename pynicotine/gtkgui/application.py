@@ -158,6 +158,7 @@ class Application:
 
             # Shares
             ("rescan-shares", self.on_rescan_shares, None, True),
+            ("stop-scanner", self.on_stop_scanner, None, True),
             ("browse-public-shares", self.on_browse_public_shares, None, True),
             ("browse-buddy-shares", self.on_browse_buddy_shares, None, True),
             ("browse-trusted-shares", self.on_browse_trusted_shares, None, True),
@@ -790,6 +791,9 @@ class Application:
 
     def on_rescan_shares(self, *_args):
         core.shares.rescan_shares()
+
+    def on_stop_scanner(self, *_args):
+        core.shares.stop_scanner()
 
     def on_browse_public_shares(self, *_args):
         core.userbrowse.browse_local_shares(permission_level=PermissionLevel.PUBLIC, new_request=True)

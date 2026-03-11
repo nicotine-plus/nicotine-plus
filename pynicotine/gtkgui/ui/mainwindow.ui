@@ -1554,73 +1554,56 @@
         </child>
         <child>
           <object class="GtkBox" id="scan_progress_container">
-            <property name="margin-bottom">2</property>
-            <property name="margin-end">2</property>
-            <property name="margin-start">2</property>
-            <property name="margin-top">2</property>
-            <property name="spacing">8</property>
+            <property name="spacing">6</property>
             <property name="visible">False</property>
             <child>
+              <object class="GtkImage" id="scan_progress_error_icon">
+                <property name="icon-name">dialog-error-symbolic</property>
+                <property name="visible">False</property>
+              </object>
+            </child>
+            <child>
               <object class="GtkLabel" id="scan_progress_label">
-                <property name="ellipsize">end</property>
+                <property name="ellipsize">middle</property>
                 <property name="selectable">True</property>
                 <property name="visible">True</property>
                 <style>
                   <class name="caption"/>
-                  <class name="dim-label"/>
                   <class name="normal"/>
                   <class name="tabular"/>
                 </style>
               </object>
             </child>
             <child>
-              <object class="GtkSpinner" id="scan_progress_spinner">
-                <property name="visible">True</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox" id="scan_failed_container">
-            <property name="margin-bottom">2</property>
-            <property name="margin-end">2</property>
-            <property name="margin-start">2</property>
-            <property name="margin-top">2</property>
-            <property name="spacing">6</property>
-            <property name="visible">False</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="label" translatable="yes">Rescan Failed</property>
-                <property name="ellipsize">end</property>
-                <property name="selectable">True</property>
-                <property name="visible">True</property>
-                <style>
-                  <class name="caption"/>
-                  <class name="normal"/>
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton">
-                <property name="action-name">app.rescan-shares</property>
-                <property name="tooltip-text" translatable="yes">Retry</property>
+              <object class="GtkStack" id="scan_progress_stack">
+                <property name="transition-type">crossfade</property>
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkImage">
-                    <property name="icon-name">view-refresh-symbolic</property>
+                  <object class="GtkSpinner" id="scan_progress_spinner">
+                    <property name="valign">center</property>
+                    <property name="valign">center</property>
                     <property name="visible">True</property>
                   </object>
                 </child>
-                <style>
-                  <class name="circular"/>
-                  <class name="flat"/>
-                  <class name="image-button"/>
-                </style>
+                <child>
+                  <object class="GtkButton" id="scan_progress_button">
+                    <property name="halign">center</property>
+                    <property name="valign">center</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkImage" id="scan_progress_button_icon">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <style>
+                      <class name="circular"/>
+                      <class name="flat"/>
+                      <class name="image-button"/>
+                    </style>
+                  </object>
+                </child>
               </object>
             </child>
-            <style>
-              <class name="error"/>
-            </style>
           </object>
         </child>
         <child>

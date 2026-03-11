@@ -117,10 +117,13 @@ class MainWindow(Window):
             self.private_title,
             self.private_toolbar,
             self.room_search_entry,
-            self.scan_failed_container,
+            self.scan_progress_button,
+            self.scan_progress_button_icon,
             self.scan_progress_container,
+            self.scan_progress_error_icon,
             self.scan_progress_label,
             self.scan_progress_spinner,
+            self.scan_progress_stack,
             self.search_content,
             self.search_end,
             self.search_entry,
@@ -1217,19 +1220,38 @@ class MainWindow(Window):
     def shares_scanning(self, folder_count=None):
 
         if folder_count is not None:
+            if self.scan_progress_stack.get_visible_child() != self.scan_progress_button:
+                # Hide widget to keep tooltips for other widgets visible
+                self.scan_progress_container.set_visible(False)
+                self.scan_progress_container.set_tooltip_text(_("Scanning Shares"))
+                self.scan_progress_container.set_visible(True)
+
+                self.scan_progress_stack.set_visible_child(self.scan_progress_button)
+
             self.scan_progress_label.set_label(
                 _("Scanned Folders: %s") % humanize(folder_count))
             return
 
         label = _("Preparing Shares")
 
+        remove_css_class(self.scan_progress_container, "error")
+        add_css_class(self.scan_progress_container, "dim-label")
+
         # Hide widget to keep tooltips for other widgets visible
         self.scan_progress_container.set_visible(False)
-        self.scan_progress_container.set_tooltip_text(label)
+
+        self.scan_progress_error_icon.set_visible(False)
         self.scan_progress_label.set_label(label)
-        self.scan_progress_container.set_visible(True)
-        self.scan_failed_container.set_visible(False)
+        self.scan_progress_container.set_tooltip_text(label)
+        self.scan_progress_stack.set_visible_child(self.scan_progress_spinner)
         self.scan_progress_spinner.start()
+
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+        self.scan_progress_button_icon.set_from_icon_name("media-playback-stop-symbolic", *icon_args)
+        self.scan_progress_button.set_action_name("app.stop-scanner")
+        self.scan_progress_button.set_tooltip_text(_("Stop Scanning"))
+
+        self.scan_progress_container.set_visible(True)
 
     def shares_ready(self, successful):
 
@@ -1237,11 +1259,31 @@ class MainWindow(Window):
             # Scanner was restarted
             return
 
-        self.scan_progress_container.set_visible(False)
+        self.scan_progress_container.set_visible(not successful)
         self.scan_progress_spinner.stop()
 
-        if not successful:
-            self.scan_failed_container.set_visible(True)
+        if successful:
+            return
+
+        label = _("Rescan Failed")
+
+        remove_css_class(self.scan_progress_container, "dim-label")
+        add_css_class(self.scan_progress_container, "error")
+
+        # Hide widget to keep tooltips for other widgets visible
+        self.scan_progress_container.set_visible(False)
+
+        self.scan_progress_error_icon.set_visible(True)
+        self.scan_progress_label.set_label(label)
+        self.scan_progress_container.set_tooltip_text(label)
+        self.scan_progress_stack.set_visible_child(self.scan_progress_button)
+
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+        self.scan_progress_button_icon.set_from_icon_name("view-refresh-symbolic", *icon_args)
+        self.scan_progress_button.set_action_name("app.rescan-shares")
+        self.scan_progress_button.set_tooltip_text(_("Retry"))
+
+        self.scan_progress_container.set_visible(True)
 
     def on_toggle_status(self, *_args):
 
