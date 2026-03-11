@@ -1331,6 +1331,10 @@ class MainWindow(Window):
             self.hide_window_button.emit("clicked")
             return
 
+        # Workaround for GTK issue where window size is wrong after restoring minimized window
+        if GTK_API_VERSION >= 4 and sys.platform == "win32" and self.widget.is_suspended():
+            self.widget.unminimize()
+
         super().hide()
 
     def destroy(self):
