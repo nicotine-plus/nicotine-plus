@@ -151,6 +151,28 @@ jobs:
             python3.11 -m build
             python3.11 -m build --no-isolation
 
+  openbsd:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Tests
+        uses: cross-platform-actions/action@233156312992f3f169d8d0c633c21d12a5d30455 # v1.0.0
+        with:
+          operating_system: openbsd
+          version: '7.8'
+          run: |
+            sudo pkg_add gettext-tools gtk+4 py3-build py3-gobject3 py3-setuptools py3-wheel
+
+            export DISPLAY=:99
+            Xvfb :99 > /dev/null 2>&1 &
+
+            python3 -m unittest -v
+            python3 -m build
+            python3 -m build --no-isolation
+
   netbsd:
     runs-on: ubuntu-latest
     timeout-minutes: 15
