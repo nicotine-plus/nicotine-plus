@@ -171,6 +171,25 @@ jobs:
       - name: Build without isolation
         run: python3 -m build --no-isolation
 
+  freebsd:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Tests
+        uses: cross-platform-actions/action@v0.32.0
+        with:
+          operating_system: freebsd
+          version: '15.0'
+          run: |
+            sudo pkg install -y dejavu gettext gtk4 python3 devel/py-build devel/py-pygobject \
+              devel/py-setuptools devel/py-wheel
+            python3 -m unittest -v
+            python3 -m build
+            python3 -m build --no-isolation
+
   windows:
     timeout-minutes: 15
     strategy:
