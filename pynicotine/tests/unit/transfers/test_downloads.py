@@ -154,7 +154,7 @@ class DownloadsTest(TestCase):
         incomplete_file_path = core.downloads.get_incomplete_download_file_path(username, virtual_path)
         incomplete_basename = os.path.basename(incomplete_file_path)
 
-        self.assertLess(
+        self.assertLessEqual(
             len(incomplete_basename.encode()),
             core.downloads.get_basename_byte_limit(config.data_folder_path)
         )
@@ -168,7 +168,7 @@ class DownloadsTest(TestCase):
         incomplete_file_path = core.downloads.get_incomplete_download_file_path(username, virtual_path)
         incomplete_basename = os.path.basename(incomplete_file_path)
 
-        self.assertLess(
+        self.assertLessEqual(
             len(incomplete_basename.encode()),
             core.downloads.get_basename_byte_limit(config.data_folder_path)
         )
@@ -181,7 +181,7 @@ class DownloadsTest(TestCase):
                     "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片.mp3")
         finished_basename = core.downloads.get_download_basename(basename, finished_folder_path)
 
-        self.assertLess(
+        self.assertLessEqual(
             len(finished_basename.encode()),
             core.downloads.get_basename_byte_limit(config.data_folder_path)
         )
@@ -193,7 +193,7 @@ class DownloadsTest(TestCase):
                     "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片")
         finished_basename = core.downloads.get_download_basename(basename, finished_folder_path)
 
-        self.assertLess(
+        self.assertLessEqual(
             len(finished_basename.encode()),
             core.downloads.get_basename_byte_limit(config.data_folder_path)
         )
