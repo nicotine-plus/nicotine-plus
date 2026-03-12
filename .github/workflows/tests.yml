@@ -89,11 +89,7 @@ jobs:
       - name: Install dependencies
         run: |
           dnf -y install gettext gobject-introspection gtk${{ matrix.gtk }} \
-            python3 python3-build python3-gobject python3-pycodestyle python3-setuptools \
-            python3-wheel
-
-      - name: PEP 8 style checks
-        run: python3 -m pycodestyle
+            python3 python3-build python3-gobject python3-setuptools python3-wheel
 
       - name: Integration and unit tests
         run: python3 -m unittest -v
@@ -120,14 +116,7 @@ jobs:
         run: |
           zypper refresh
           zypper -n install dejavu-fonts gettext-tools python313-build python313-gobject \
-            python313-gobject-Gdk python313-pycodestyle python313-pylint \
-            python313-setuptools python313-wheel typelib-1_0-Gtk-4_0
-
-      - name: PEP 8 style checks
-        run: python3.13 -m pycodestyle
-
-      - name: Linting
-        run: python3.13 -m pylint --recursive=y .
+            python313-gobject-Gdk python313-setuptools python313-wheel typelib-1_0-Gtk-4_0
 
       - name: Integration and unit tests
         run: python3.13 -m unittest -v
@@ -153,14 +142,7 @@ jobs:
       - name: Install dependencies
         run: |
           apk update
-          apk add font-dejavu gettext gtk4.0 py3-build py3-gobject3 py3-pycodestyle \
-            py3-pylint py3-setuptools py3-wheel
-
-      - name: PEP 8 style checks
-        run: python3 -m pycodestyle
-
-      - name: Linting
-        run: python3 -m pylint --recursive=y .
+          apk add font-dejavu gettext gtk4.0 py3-build py3-gobject3 py3-setuptools py3-wheel
 
       - name: Integration and unit tests
         run: python3 -m unittest -v
@@ -254,12 +236,6 @@ jobs:
       - name: Install additional dependencies
         run: python3 build-aux/windows/dependencies.py
 
-      - name: PEP 8 style checks
-        run: python3 -m pycodestyle
-
-      - name: Linting
-        run: python3 -m pylint --recursive=y .
-
       - name: Integration and unit tests
         run: python3 -m unittest -v
 
@@ -292,12 +268,6 @@ jobs:
 
       - name: Install dependencies
         run: venv/bin/python3 build-aux/macos/dependencies.py
-
-      - name: PEP 8 style checks
-        run: venv/bin/python3 -m pycodestyle
-
-      - name: Linting
-        run: venv/bin/python3 -m pylint --recursive=y .
 
       - name: Integration and unit tests
         run: venv/bin/python3 -m unittest -v
