@@ -57,7 +57,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        container: ['debian:bullseye', 'debian:bookworm', 'debian:unstable',
+        container: ['debian:bullseye', 'debian:bookworm', 'debian:trixie', 'debian:unstable',
                     'ubuntu:jammy', 'ubuntu:noble', 'ubuntu:devel']
     container: ${{ matrix.container }}
     steps:
