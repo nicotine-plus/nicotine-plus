@@ -190,6 +190,24 @@ jobs:
             python3 -m build
             python3 -m build --no-isolation
 
+  haiku:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Tests
+        uses: cross-platform-actions/action@v0.32.0
+        with:
+          operating_system: haiku
+          version: 'r1beta5'
+          run: |
+            pkgman install -y harfbuzz_glib gettext gtk4 build_python310 pygobject_python310 \
+              setuptools_python310 wheel_python310
+            python3.10 -m unittest -v
+            python3.10 -m build --no-isolation
+
   windows:
     timeout-minutes: 15
     strategy:
