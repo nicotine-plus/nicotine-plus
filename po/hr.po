@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-03 01:43+0200\n"
-"PO-Revision-Date: 2026-03-05 19:10+0000\n"
+"PO-Revision-Date: 2026-03-12 11:41+0000\n"
 "Last-Translator: Tko Toradi <random.mongoose052@passinbox.com>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hr/>\n"
@@ -2065,12 +2065,12 @@ msgstr "Korisnici"
 #: pynicotine/gtkgui/dialogs/roomlist.py:78
 #: pynicotine/gtkgui/dialogs/roomlist.py:291
 msgid "_Join Room"
-msgstr "_Pristup sobi"
+msgstr "_Uđi u sobu"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:81
 #: pynicotine/gtkgui/dialogs/roomlist.py:294
 msgid "Delete Private Room…"
-msgstr "Brisanje privatne sobe…"
+msgstr "Obriši privatnu sobu…"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:82
 #: pynicotine/gtkgui/dialogs/roomlist.py:295
@@ -2094,7 +2094,7 @@ msgstr "Brisanje privatne sobe?"
 #: pynicotine/gtkgui/dialogs/roomlist.py:325
 #, python-format
 msgid "Do you really want to permanently delete your private room %s?"
-msgstr "Želite li trajno izbrisati svoju privatnu sobu %s?"
+msgstr "Želiš li trajno izbrisati svoju privatnu sobu %s?"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:352
 msgid ""
@@ -2111,12 +2111,12 @@ msgstr "Soba naziva %s je već prijavljena kao javna."
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:374
 msgid "Enter the name of the chat room you want to create:"
-msgstr "Unos naziva chat sobe koju želite kreirati:"
+msgstr "Unos naziva chat sobe koju želiš kreirati:"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:378
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:37
 msgid "Create New Room"
-msgstr "Stvaranje nove sobe"
+msgstr "Stvori novu sobu"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:27
 #: pynicotine/gtkgui/dialogs/shortcuts.py:39
@@ -2138,7 +2138,7 @@ msgstr "Odspajanje"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:38
 msgid "Rescan Shares"
-msgstr "Ponovno skeniranje dijeljenja"
+msgstr "Ponovno skeniraj dijeljenja"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:41
 msgid "Confirm Quit"
@@ -2202,12 +2202,12 @@ msgstr "Sljedeća kartica"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:57
 msgid "Reopen Tab"
-msgstr "Ponovno otvaranje kartice"
+msgstr "Ponovno otvori karticu"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:58
 #: pynicotine/gtkgui/widgets/iconnotebook.py:107
 msgid "Close Tab"
-msgstr "Zatvaranje kartice"
+msgstr "Zatvori karticu"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:60
 #: pynicotine/gtkgui/dialogs/shortcuts.py:102
@@ -2264,7 +2264,7 @@ msgstr "Prethodno podudaranje"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:77
 msgid "Transfer To"
-msgstr "Transferiraj"
+msgstr "Prenesi"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:79
 msgid "Save List to Disk"
@@ -2291,7 +2291,7 @@ msgstr "Lista želja"
 #: pynicotine/gtkgui/dialogs/shortcuts.py:91
 #: pynicotine/gtkgui/dialogs/shortcuts.py:104
 msgid "File Transfers"
-msgstr "Prijenos datoteka"
+msgstr "Prijenosi datoteka"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:92
 msgid "Resume Transfer"
@@ -2320,7 +2320,7 @@ msgstr "Resetiranje statistike prijenosa?"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:110
 msgid "Do you really want to reset transfer statistics?"
-msgstr "Želite li resetirati statistiku prijenosa?"
+msgstr "Želiš li resetirati statistiku prijenosa?"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:113
 msgid "Reset All"
@@ -2367,7 +2367,7 @@ msgstr "Kod države:"
 #: pynicotine/gtkgui/ui/settings/search.ui:412
 #: pynicotine/gtkgui/ui/userinfo.ui:265
 msgid "Upload Slot Available"
-msgstr "Slobodno za slanje"
+msgstr "Dostupnost mjesta za slanje"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:33
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:445
@@ -2459,11 +2459,11 @@ msgstr "Prilagodi pojam pretrage %s:"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:380
 msgid "Clear Wishlist?"
-msgstr "Brisanje liste želja?"
+msgstr "Izbriši listu želja?"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:381
 msgid "Do you really want to clear your wishlist?"
-msgstr "Želite li izbrisati listu želja?"
+msgstr "Želiš li izbrisati listu želja?"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:384 pynicotine/gtkgui/downloads.py:130
 #: pynicotine/gtkgui/downloads.py:147 pynicotine/gtkgui/transfers.py:282
@@ -2720,11 +2720,11 @@ msgstr "Skeniranje dijeljenja"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:53
 msgid "You are offline"
-msgstr "Niste na vezi"
+msgstr "Nisi na vezi"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:54
 msgid "Connect to the server to check port status."
-msgstr "Spojite se na server radi provjere statusa porta."
+msgstr "Spoji se na server radi provjere statusa porta."
 
 #: pynicotine/gtkgui/popovers/portchecker.py:59
 msgid "Checking connection status…"
@@ -2750,7 +2750,7 @@ msgstr "Port %i (TCP) otvoren"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:82
 msgid "Most users can connect to you."
-msgstr "Većina korisnika je spojiva s Vama."
+msgstr "Većina korisnika je spojiva s tobom."
 
 #: pynicotine/gtkgui/popovers/portchecker.py:87
 #, python-format
@@ -2762,7 +2762,7 @@ msgid ""
 "You can only connect to a few users. Ensure the port is forwarded and your "
 "device's firewall is not blocking it."
 msgstr ""
-"Spojivi ste samo s nekolicinom korisnika. Provjerite da je port ispravno "
+"Spojivost ograničena na nekolicinu korisnika. Provjeri da je port ispravno "
 "proslijeđen, i da ga vatrozid ne blokira."
 
 #: pynicotine/gtkgui/privatechat.py:355 pynicotine/gtkgui/search.py:650
@@ -2790,7 +2790,7 @@ msgstr "Korisničke radnje"
 #: pynicotine/gtkgui/privatechat.py:491
 #, python-format
 msgid "%(user)s mentioned you in a private message"
-msgstr "%(user)s Vas spominje u privatnoj poruci"
+msgstr "%(user)s te spominje u privatnoj poruci"
 
 #: pynicotine/gtkgui/privatechat.py:494
 #, python-format
@@ -2799,7 +2799,7 @@ msgstr "Pojam %(keyword)s privatno spomenut od %(user)s"
 
 #: pynicotine/gtkgui/privatechat.py:552
 msgid "* Messages sent while you were offline"
-msgstr "* Poruke poslane dok ste bili van veze"
+msgstr "* Poruke poslane dok si van veze"
 
 #: pynicotine/gtkgui/search.py:82
 msgid "_Global"
@@ -3100,7 +3100,7 @@ msgstr "Obriši slanja na čekanju"
 
 #: pynicotine/gtkgui/uploads.py:145
 msgid "Do you really want to clear all queued uploads?"
-msgstr "Želite li obristai sva slanja na čekanju?"
+msgstr "Želiš li obrisati sva slanja na čekanju?"
 
 #: pynicotine/gtkgui/uploads.py:161
 msgid "Clear All Uploads"
@@ -3108,7 +3108,7 @@ msgstr "Obriši sva slanja"
 
 #: pynicotine/gtkgui/uploads.py:162
 msgid "Do you really want to clear all uploads?"
-msgstr "Želite li obrisati listu slanja?"
+msgstr "Želiš li obrisati listu slanja?"
 
 #: pynicotine/gtkgui/userbrowse.py:272
 msgid "_Save Shares List to Disk"
@@ -3309,13 +3309,13 @@ msgstr "Privilegirani korisnik"
 
 #: pynicotine/gtkgui/userinfo.py:836
 msgid "Please enter a valid number of days."
-msgstr "Unesite važeći broj dana."
+msgstr "Unesi važeći broj dana."
 
 #: pynicotine/gtkgui/userinfo.py:855
 #, python-format
 msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
 msgstr ""
-"Poklonite broj dana Soulseek privilegija korisniku %(user)s (%(days_left)s):"
+"Pokloni broj dana Soulseek privilegija korisniku %(user)s (%(days_left)s):"
 
 #: pynicotine/gtkgui/userinfo.py:856
 #, python-format
@@ -3366,15 +3366,15 @@ msgstr "(prazno)"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:450
 msgid "Close All Tabs?"
-msgstr "Zatvoriti sve kartice?"
+msgstr "Zatvori sve kartice?"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:451
 msgid "Do you really want to close all tabs?"
-msgstr "Želite li zatvoriti sve kartice?"
+msgstr "Želiš li zatvoriti sve kartice?"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:454
 msgid "Close All"
-msgstr "Zatvoriti sve"
+msgstr "Zatvori sve"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:467
 #, python-format
@@ -3469,12 +3469,11 @@ msgstr "Promjena vlasnika sobe?"
 msgid ""
 "Do you really want to make %(user)s the new owner of your private room "
 "%(room)s?"
-msgstr ""
-"Želite li stvarno %(user)s dodijeliti vlasništvo privatne sobe %(room)s?"
+msgstr "Želiš li stvarno %(user)s dodijeliti vlasništvo privatne sobe %(room)s?"
 
 #: pynicotine/gtkgui/widgets/textentry.py:22
 msgid "Send message…"
-msgstr "Slanje poruke…"
+msgstr "Pošalji poruku…"
 
 #: pynicotine/gtkgui/widgets/textentry.py:376
 msgid "Find Previous Match"
@@ -3560,11 +3559,11 @@ msgstr "_Redoslijed"
 
 #: pynicotine/gtkgui/widgets/treeview.py:881
 msgid "Reset Sizing"
-msgstr "Resetiranje veličine"
+msgstr "Resetiraj veličinu"
 
 #: pynicotine/gtkgui/widgets/treeview.py:882
 msgid "Reset Columns"
-msgstr "Resetiranje stupaca"
+msgstr "Resetiraj stupce"
 
 #: pynicotine/gtkgui/widgets/treeview.py:1052
 msgid "Ungrouped"
@@ -3581,12 +3580,12 @@ msgstr "Grupiranje po korisniku"
 #: pynicotine/headless/application.py:39
 #, python-format
 msgid "Type %s to connect to Soulseek"
-msgstr "Unesite %s za spajanje na Soulseek"
+msgstr "Unesi %s za spajanje na Soulseek"
 
 #: pynicotine/headless/application.py:64
 #, python-format
 msgid "Do you really want to exit? %s"
-msgstr "Želite li izaći? %s"
+msgstr "Želiš li izaći? %s"
 
 #: pynicotine/headless/application.py:68
 #, python-format
@@ -3596,12 +3595,12 @@ msgstr "Korisnik %s već postoji, a lozinka nije ispravna."
 #: pynicotine/headless/application.py:70
 #, python-format
 msgid "Type %s to log in with another username or password."
-msgstr "Unesite %s da se prijavite drugim imenom ili lozinkom."
+msgstr "Unesi %s da se prijaviš drugim imenom ili lozinkom."
 
 #: pynicotine/headless/application.py:78
 #, python-format
 msgid "Type %s to log in with another username."
-msgstr "Unesite %s za prijavu drugim imenom."
+msgstr "Unesi %s za prijavu drugim imenom."
 
 #: pynicotine/headless/application.py:94
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:272
@@ -3615,8 +3614,8 @@ msgid ""
 "password. If you already have an account, fill in your existing login "
 "details."
 msgstr ""
-"Za izradu novog Soulseek računa, unesite željeno ime i lozinku. Ako već "
-"imate račun, prijavite se postojećim podacima."
+"Za izradu novog Soulseek računa unesi željeno ime i lozinku. Ako imaš račun, "
+"prijavi se postojećim podacima."
 
 #: pynicotine/headless/application.py:114
 msgid "The following shares are unavailable:"
@@ -3638,312 +3637,387 @@ msgid "Cannot access log file %(path)s: %(error)s"
 msgstr "Ne mogu pristupiti zapisniku %(path)s: %(error)s"
 
 #: pynicotine/networkfilter.py:25
+#, fuzzy
 msgid "Andorra"
-msgstr ""
+msgstr "Andorra"
 
 #: pynicotine/networkfilter.py:26
+#, fuzzy
 msgid "United Arab Emirates"
-msgstr ""
+msgstr "United Arab Emirates"
 
 #: pynicotine/networkfilter.py:27
+#, fuzzy
 msgid "Afghanistan"
-msgstr ""
+msgstr "Afghanistan"
 
 #: pynicotine/networkfilter.py:28
+#, fuzzy
 msgid "Antigua & Barbuda"
-msgstr ""
+msgstr "Antigua & Barbuda"
 
 #: pynicotine/networkfilter.py:29
+#, fuzzy
 msgid "Anguilla"
-msgstr ""
+msgstr "Anguilla"
 
 #: pynicotine/networkfilter.py:30
+#, fuzzy
 msgid "Albania"
-msgstr ""
+msgstr "Albania"
 
 #: pynicotine/networkfilter.py:31
+#, fuzzy
 msgid "Armenia"
-msgstr ""
+msgstr "Armenia"
 
 #: pynicotine/networkfilter.py:32
+#, fuzzy
 msgid "Angola"
-msgstr ""
+msgstr "Angola"
 
 #: pynicotine/networkfilter.py:33
+#, fuzzy
 msgid "Antarctica"
-msgstr ""
+msgstr "Antarctica"
 
 #: pynicotine/networkfilter.py:34
+#, fuzzy
 msgid "Argentina"
-msgstr ""
+msgstr "Argentina"
 
 #: pynicotine/networkfilter.py:35
+#, fuzzy
 msgid "American Samoa"
-msgstr ""
+msgstr "American Samoa"
 
 #: pynicotine/networkfilter.py:36
+#, fuzzy
 msgid "Austria"
-msgstr ""
+msgstr "Austria"
 
 #: pynicotine/networkfilter.py:37
+#, fuzzy
 msgid "Australia"
-msgstr ""
+msgstr "Australia"
 
 #: pynicotine/networkfilter.py:38
+#, fuzzy
 msgid "Aruba"
-msgstr ""
+msgstr "Aruba"
 
 #: pynicotine/networkfilter.py:39
+#, fuzzy
 msgid "Åland Islands"
-msgstr ""
+msgstr "Åland Islands"
 
 #: pynicotine/networkfilter.py:40
+#, fuzzy
 msgid "Azerbaijan"
-msgstr ""
+msgstr "Azerbaijan"
 
 #: pynicotine/networkfilter.py:41
 msgid "Bosnia & Herzegovina"
-msgstr ""
+msgstr "Bosna i Hercegovina"
 
 #: pynicotine/networkfilter.py:42
+#, fuzzy
 msgid "Barbados"
-msgstr ""
+msgstr "Barbados"
 
 #: pynicotine/networkfilter.py:43
+#, fuzzy
 msgid "Bangladesh"
-msgstr ""
+msgstr "Bangladesh"
 
 #: pynicotine/networkfilter.py:44
+#, fuzzy
 msgid "Belgium"
-msgstr ""
+msgstr "Belgium"
 
 #: pynicotine/networkfilter.py:45
+#, fuzzy
 msgid "Burkina Faso"
-msgstr ""
+msgstr "Burkina Faso"
 
 #: pynicotine/networkfilter.py:46
+#, fuzzy
 msgid "Bulgaria"
-msgstr ""
+msgstr "Bulgaria"
 
 #: pynicotine/networkfilter.py:47
+#, fuzzy
 msgid "Bahrain"
-msgstr ""
+msgstr "Bahrain"
 
 #: pynicotine/networkfilter.py:48
+#, fuzzy
 msgid "Burundi"
-msgstr ""
+msgstr "Burundi"
 
 #: pynicotine/networkfilter.py:49
+#, fuzzy
 msgid "Benin"
-msgstr ""
+msgstr "Benin"
 
 #: pynicotine/networkfilter.py:50
+#, fuzzy
 msgid "Saint Barthelemy"
-msgstr ""
+msgstr "Saint Barthelemy"
 
 #: pynicotine/networkfilter.py:51
+#, fuzzy
 msgid "Bermuda"
-msgstr ""
+msgstr "Bermuda"
 
 #: pynicotine/networkfilter.py:52
+#, fuzzy
 msgid "Brunei Darussalam"
-msgstr ""
+msgstr "Brunei Darussalam"
 
 #: pynicotine/networkfilter.py:53
+#, fuzzy
 msgid "Bolivia"
-msgstr ""
+msgstr "Bolivia"
 
 #: pynicotine/networkfilter.py:54
+#, fuzzy
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr ""
+msgstr "Bonaire, Sint Eustatius and Saba"
 
 #: pynicotine/networkfilter.py:55
+#, fuzzy
 msgid "Brazil"
-msgstr ""
+msgstr "Brazil"
 
 #: pynicotine/networkfilter.py:56
+#, fuzzy
 msgid "Bahamas"
-msgstr ""
+msgstr "Bahamas"
 
 #: pynicotine/networkfilter.py:57
+#, fuzzy
 msgid "Bhutan"
-msgstr ""
+msgstr "Bhutan"
 
 #: pynicotine/networkfilter.py:58
+#, fuzzy
 msgid "Bouvet Island"
-msgstr ""
+msgstr "Bouvet Island"
 
 #: pynicotine/networkfilter.py:59
+#, fuzzy
 msgid "Botswana"
-msgstr ""
+msgstr "Botswana"
 
 #: pynicotine/networkfilter.py:60
+#, fuzzy
 msgid "Belarus"
-msgstr ""
+msgstr "Belarus"
 
 #: pynicotine/networkfilter.py:61
+#, fuzzy
 msgid "Belize"
-msgstr ""
+msgstr "Belize"
 
 #: pynicotine/networkfilter.py:62
+#, fuzzy
 msgid "Canada"
-msgstr ""
+msgstr "Canada"
 
 #: pynicotine/networkfilter.py:63
+#, fuzzy
 msgid "Cocos (Keeling) Islands"
-msgstr ""
+msgstr "Cocos (Keeling) Islands"
 
 #: pynicotine/networkfilter.py:64
+#, fuzzy
 msgid "Democratic Republic of Congo"
-msgstr ""
+msgstr "Democratic Republic of Congo"
 
 #: pynicotine/networkfilter.py:65
+#, fuzzy
 msgid "Central African Republic"
-msgstr ""
+msgstr "Central African Republic"
 
 #: pynicotine/networkfilter.py:66
+#, fuzzy
 msgid "Congo"
-msgstr ""
+msgstr "Congo"
 
 #: pynicotine/networkfilter.py:67
+#, fuzzy
 msgid "Switzerland"
-msgstr ""
+msgstr "Switzerland"
 
 #: pynicotine/networkfilter.py:68
+#, fuzzy
 msgid "Ivory Coast"
-msgstr ""
+msgstr "Ivory Coast"
 
 #: pynicotine/networkfilter.py:69
+#, fuzzy
 msgid "Cook Islands"
-msgstr ""
+msgstr "Cook Islands"
 
 #: pynicotine/networkfilter.py:70
+#, fuzzy
 msgid "Chile"
-msgstr ""
+msgstr "Chile"
 
 #: pynicotine/networkfilter.py:71
+#, fuzzy
 msgid "Cameroon"
-msgstr ""
+msgstr "Cameroon"
 
 #: pynicotine/networkfilter.py:72
+#, fuzzy
 msgid "China"
-msgstr ""
+msgstr "China"
 
 #: pynicotine/networkfilter.py:73
+#, fuzzy
 msgid "Colombia"
-msgstr ""
+msgstr "Colombia"
 
 #: pynicotine/networkfilter.py:74
+#, fuzzy
 msgid "Costa Rica"
-msgstr ""
+msgstr "Costa Rica"
 
 #: pynicotine/networkfilter.py:75
+#, fuzzy
 msgid "Cuba"
-msgstr ""
+msgstr "Cuba"
 
 #: pynicotine/networkfilter.py:76
+#, fuzzy
 msgid "Cabo Verde"
-msgstr ""
+msgstr "Cabo Verde"
 
 #: pynicotine/networkfilter.py:77
+#, fuzzy
 msgid "Curaçao"
-msgstr ""
+msgstr "Curaçao"
 
 #: pynicotine/networkfilter.py:78
+#, fuzzy
 msgid "Christmas Island"
-msgstr ""
+msgstr "Christmas Island"
 
 #: pynicotine/networkfilter.py:79
+#, fuzzy
 msgid "Cyprus"
-msgstr ""
+msgstr "Cyprus"
 
 #: pynicotine/networkfilter.py:80
 msgid "Czechia"
 msgstr "Češka"
 
 #: pynicotine/networkfilter.py:81
+#, fuzzy
 msgid "Germany"
-msgstr ""
+msgstr "Germany"
 
 #: pynicotine/networkfilter.py:82
+#, fuzzy
 msgid "Djibouti"
-msgstr ""
+msgstr "Djibouti"
 
 #: pynicotine/networkfilter.py:83
+#, fuzzy
 msgid "Denmark"
-msgstr ""
+msgstr "Denmark"
 
 #: pynicotine/networkfilter.py:84
+#, fuzzy
 msgid "Dominica"
-msgstr ""
+msgstr "Dominica"
 
 #: pynicotine/networkfilter.py:85
+#, fuzzy
 msgid "Dominican Republic"
-msgstr ""
+msgstr "Dominican Republic"
 
 #: pynicotine/networkfilter.py:86
+#, fuzzy
 msgid "Algeria"
-msgstr ""
+msgstr "Algeria"
 
 #: pynicotine/networkfilter.py:87
+#, fuzzy
 msgid "Ecuador"
-msgstr ""
+msgstr "Ecuador"
 
 #: pynicotine/networkfilter.py:88
+#, fuzzy
 msgid "Estonia"
-msgstr ""
+msgstr "Estonia"
 
 #: pynicotine/networkfilter.py:89
+#, fuzzy
 msgid "Egypt"
-msgstr ""
+msgstr "Egypt"
 
 #: pynicotine/networkfilter.py:90
+#, fuzzy
 msgid "Western Sahara"
-msgstr ""
+msgstr "Western Sahara"
 
 #: pynicotine/networkfilter.py:91
+#, fuzzy
 msgid "Eritrea"
-msgstr ""
+msgstr "Eritrea"
 
 #: pynicotine/networkfilter.py:92
+#, fuzzy
 msgid "Spain"
-msgstr ""
+msgstr "Spain"
 
 #: pynicotine/networkfilter.py:93
+#, fuzzy
 msgid "Ethiopia"
-msgstr ""
+msgstr "Ethiopia"
 
 #: pynicotine/networkfilter.py:94
+#, fuzzy
 msgid "Europe"
-msgstr ""
+msgstr "Europe"
 
 #: pynicotine/networkfilter.py:95
+#, fuzzy
 msgid "Finland"
-msgstr ""
+msgstr "Finland"
 
 #: pynicotine/networkfilter.py:96
+#, fuzzy
 msgid "Fiji"
-msgstr ""
+msgstr "Fiji"
 
 #: pynicotine/networkfilter.py:97
+#, fuzzy
 msgid "Falkland Islands (Malvinas)"
-msgstr ""
+msgstr "Falkland Islands (Malvinas)"
 
 #: pynicotine/networkfilter.py:98
+#, fuzzy
 msgid "Micronesia"
-msgstr ""
+msgstr "Micronesia"
 
 #: pynicotine/networkfilter.py:99
+#, fuzzy
 msgid "Faroe Islands"
-msgstr ""
+msgstr "Faroe Islands"
 
 #: pynicotine/networkfilter.py:100
+#, fuzzy
 msgid "France"
-msgstr ""
+msgstr "France"
 
 #: pynicotine/networkfilter.py:101
+#, fuzzy
 msgid "Gabon"
-msgstr ""
+msgstr "Gabon"
 
 #: pynicotine/networkfilter.py:102
 msgid "Great Britain"
