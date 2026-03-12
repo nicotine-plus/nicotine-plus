@@ -126,6 +126,31 @@ jobs:
       - name: Build without isolation
         run: python3.13 -m build --no-isolation
 
+  freebsd:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Tests
+        uses: cross-platform-actions/action@233156312992f3f169d8d0c633c21d12a5d30455 # v1.0.0
+        with:
+          operating_system: freebsd
+          version: '15.0'
+          run: |
+            sudo pkg install -y cage dejavu gettext gtk4 py311-build py311-pygobject \
+              py311-setuptools py311-wheel
+
+            export WLR_BACKENDS=headless
+            export XDG_RUNTIME_DIR=/tmp
+            export GDK_BACKEND=wayland
+            export DBUS_SESSION_BUS_ADDRESS=
+
+            cage python3.11 -m unittest -v
+            python3.11 -m build
+            python3.11 -m build --no-isolation
+
   netbsd:
     runs-on: ubuntu-latest
     timeout-minutes: 15
