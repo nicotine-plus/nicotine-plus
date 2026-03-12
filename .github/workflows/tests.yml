@@ -172,6 +172,28 @@ jobs:
             python3 -m build
             python3 -m build --no-isolation
 
+  openbsd:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Tests
+        uses: cross-platform-actions/action@v0.32.0
+        with:
+          operating_system: openbsd
+          version: '7.8'
+          run: |
+            sudo pkg_add gettext-tools gtk+4 py3-build py3-gobject3 py3-setuptools py3-wheel
+
+            export DISPLAY=:99
+            Xvfb :99 > /dev/null 2>&1 &
+
+            python3 -m unittest -v
+            python3 -m build
+            python3 -m build --no-isolation
+
   haiku:
     runs-on: ubuntu-latest
     timeout-minutes: 15
