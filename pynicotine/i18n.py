@@ -20,6 +20,7 @@ LANGUAGES = (
     ("es_ES", "Español (España)"),
     ("et", "Eesti"),
     ("fr", "Français"),
+    ("hr", "Hrvatski"),
     ("hu", "Magyar"),
     ("it", "Italiano"),
     ("lv", "Latviešu"),
