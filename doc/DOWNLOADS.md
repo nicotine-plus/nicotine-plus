@@ -22,6 +22,7 @@ using the package manager.
 | Operating System                                                                         | Package Name               |
 |------------------------------------------------------------------------------------------|----------------------------|
 | [Alpine Linux Edge](https://pkgs.alpinelinux.org/packages?name=nicotine-plus)            | `nicotine-plus`            |
+| [ALT Linux](https://packages.altlinux.org/en/sisyphus/srpms/nicotine-plus/)              | `nicotine-plus`            |
 | [Arch Linux](https://archlinux.org/packages/extra/any/nicotine+/)                        | `nicotine+`                |
 | [Chimera Linux](https://pkgs.chimera-linux.org/packages?name=nicotine-plus)              | `nicotine-plus`            |
 | [Debian](https://tracker.debian.org/pkg/nicotine)                                        | `nicotine`                 |
