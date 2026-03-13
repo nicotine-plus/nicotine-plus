@@ -109,6 +109,11 @@ python3 -m build
 
 The newly generated files will end up in the `pynicotine/locale/` folder.
 
+Note that when your translations are in the early stages, you have to add the
+language code to the `po/LINGUAS` file locally in order to generate the `.mo`
+file. Once you have translated most strings, we will add your language to the
+`po/LINGUAS` file and the `Preferences -> User Interface -> Language` dropdown.
+
 
 ## Testing Different Languages
 
