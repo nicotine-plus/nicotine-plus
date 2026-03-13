@@ -120,7 +120,7 @@ Unstable installers are built after every commit to the master branch.
 ## All Platforms
 
 The following installation methods work out of the box on GNU/Linux, *BSD and
-Solaris. On Windows, a [MinGW development environment](PACKAGING.md#windows) is
+illumos. On Windows, a [MinGW development environment](PACKAGING.md#windows) is
 required. On macOS, [Homebrew](PACKAGING.md#macos) is required. Consider using
 the Windows and macOS packages above if you do not need to modify the source
 code.

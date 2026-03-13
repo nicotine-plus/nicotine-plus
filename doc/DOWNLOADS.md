@@ -12,7 +12,7 @@ If you want to download the latest unstable build and help test Nicotine+,
 see [TESTING.md](TESTING.md).
 
 
-## GNU/Linux, *BSD, Haiku, Solaris
+## GNU/Linux, *BSD, Haiku, illumos
 
 ### Operating System Packages
 
@@ -79,7 +79,7 @@ If you prefer to install a .deb package manually, you can
 > update automatically. You need to download and install the latest version
 > from the link above after every update.
 
-### PyPi (GNU/Linux, *BSD, Solaris)
+### PyPi (GNU/Linux, *BSD, illumos)
 
 If no package is available for your operating system, you can install Nicotine+
 from [PyPi](https://pypi.org/project/nicotine-plus/).

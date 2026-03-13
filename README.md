@@ -30,7 +30,7 @@ See the [release notes](NEWS.md).
 
 Downloads are available for:
 
- - [GNU/Linux, *BSD, Haiku and Solaris](doc/DOWNLOADS.md#gnulinux-bsd-haiku-solaris)
+ - [GNU/Linux, *BSD, Haiku and illumos](doc/DOWNLOADS.md#gnulinux-bsd-haiku-solaris)
  - [Windows](doc/DOWNLOADS.md#windows)
  - [macOS](doc/DOWNLOADS.md#macos)
 
