@@ -19,7 +19,7 @@ class VersionTest(TestCase):
         sample_dev_version = UpdateChecker.create_integer_version("2.1.0.dev1")
         self.assertGreater(sample_stable_version, sample_dev_version)
 
-    @skipUnless(os.environ.get("NICOTINE_NETWORK_TESTS"), reason="Requires network connection")
+    @skipUnless(os.environ.get("NICOTINE_NETWORK_TESTS") == "1", reason="Requires network connection")
     def test_update_check(self):
 
         # Validate local version

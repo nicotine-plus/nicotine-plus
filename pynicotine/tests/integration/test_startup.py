@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import sys
 
+from unittest import skipIf
 from unittest import TestCase
 
 DATA_FOLDER_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), "temp_data")
@@ -18,6 +19,7 @@ class StartupTest(TestCase):
     def tearDownClass(cls):
         shutil.rmtree(DATA_FOLDER_PATH)
 
+    @skipIf(os.environ.get("NICOTINE_GUI_TESTS") == "0", reason="GUI tests disabled")
     def test_gui_startup(self):
         """Verify that regular GUI startup works."""
 
