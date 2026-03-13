@@ -126,6 +126,24 @@ jobs:
       - name: Build without isolation
         run: python3.13 -m build --no-isolation
 
+  netbsd:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Tests
+        uses: cross-platform-actions/action@233156312992f3f169d8d0c633c21d12a5d30455 # v1.0.0
+        with:
+          operating_system: netbsd
+          version: '10.1'
+          run: |
+            sudo pkgin -y install python314
+
+            export NICOTINE_GUI_TESTS=0
+            python3.14 -m unittest -v
+
   dragonflybsd:
     runs-on: ubuntu-latest
     timeout-minutes: 15
