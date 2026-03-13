@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-03 01:43+0200\n"
+"POT-Creation-Date: 2026-03-13 02:38+0200\n"
 "PO-Revision-Date: 2026-03-13 00:40+0000\n"
 "Last-Translator: Tko Toradi <random.mongoose052@passinbox.com>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -53,7 +53,7 @@ msgstr ""
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:30
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:46
-#: pynicotine/gtkgui/mainwindow.py:773
+#: pynicotine/gtkgui/mainwindow.py:776
 #: pynicotine/plugins/core_commands/__init__.py:14
 #: pynicotine/gtkgui/ui/mainwindow.ui:205
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:649
@@ -65,7 +65,7 @@ msgstr "Pretraži datoteke"
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:34
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:50
 #: pynicotine/gtkgui/dialogs/preferences.py:3671
-#: pynicotine/gtkgui/mainwindow.py:774 pynicotine/gtkgui/mainwindow.py:1126
+#: pynicotine/gtkgui/mainwindow.py:777 pynicotine/gtkgui/mainwindow.py:1129
 #: pynicotine/gtkgui/widgets/trayicon.py:73
 #: pynicotine/gtkgui/ui/mainwindow.ui:430
 #: pynicotine/gtkgui/ui/settings/downloads.ui:76
@@ -77,7 +77,7 @@ msgstr "Preuzimanja"
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:54
 #: pynicotine/gtkgui/dialogs/shortcuts.py:76
 #: pynicotine/gtkgui/dialogs/shortcuts.py:105
-#: pynicotine/gtkgui/mainwindow.py:776 pynicotine/gtkgui/ui/mainwindow.ui:802
+#: pynicotine/gtkgui/mainwindow.py:779 pynicotine/gtkgui/ui/mainwindow.ui:802
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:685
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:857
 msgid "Browse Shares"
@@ -85,7 +85,7 @@ msgstr "Pregledaj dijeljenja"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:42
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:58
-#: pynicotine/gtkgui/mainwindow.py:778 pynicotine/gtkgui/widgets/trayicon.py:78
+#: pynicotine/gtkgui/mainwindow.py:781 pynicotine/gtkgui/widgets/trayicon.py:78
 #: pynicotine/plugins/core_commands/__init__.py:12
 #: pynicotine/gtkgui/ui/mainwindow.ui:1100
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:709
@@ -256,7 +256,7 @@ msgstr "Postavke sačuvane na: %s"
 msgid "Starting %(program)s %(version)s"
 msgstr "Pokrećem %(program)s %(version)s"
 
-#: pynicotine/core.py:197 pynicotine/gtkgui/application.py:976
+#: pynicotine/core.py:197 pynicotine/gtkgui/application.py:991
 #, python-format
 msgid "Loaded %(program)s %(version)s"
 msgstr "Pokrenuto %(program)s %(version)s"
@@ -375,132 +375,132 @@ msgstr "%s nedostaje, potrebna instalacija."
 msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr "Grafičko sučelje nedostupno, aktiviran je mod bez GUI sučelja"
 
-#: pynicotine/gtkgui/application.py:299
+#: pynicotine/gtkgui/application.py:302
 #: pynicotine/gtkgui/widgets/trayicon.py:85
 msgid "_Connect"
 msgstr "_Poveži se"
 
-#: pynicotine/gtkgui/application.py:300
+#: pynicotine/gtkgui/application.py:303
 #: pynicotine/gtkgui/widgets/trayicon.py:86
 msgid "_Disconnect"
 msgstr "_Odspoji se"
 
-#: pynicotine/gtkgui/application.py:301
+#: pynicotine/gtkgui/application.py:304
 msgid "Soulseek _Privileges"
 msgstr "Soulseek _privilegije"
 
-#: pynicotine/gtkgui/application.py:307
+#: pynicotine/gtkgui/application.py:310
 msgid "_Preferences"
 msgstr "_Postavke"
 
-#: pynicotine/gtkgui/application.py:313 pynicotine/gtkgui/application.py:529
+#: pynicotine/gtkgui/application.py:316 pynicotine/gtkgui/application.py:532
 #: pynicotine/gtkgui/widgets/trayicon.py:91
 msgid "_Quit"
 msgstr "_Izađi"
 
-#: pynicotine/gtkgui/application.py:330
+#: pynicotine/gtkgui/application.py:333
 msgid "Browse _Public Shares"
 msgstr "Pregledaj _javna dijeljenja"
 
-#: pynicotine/gtkgui/application.py:331
+#: pynicotine/gtkgui/application.py:334
 msgid "Browse _Buddy Shares"
 msgstr "Pregledaj _dijeljenja prijatelja"
 
-#: pynicotine/gtkgui/application.py:332
+#: pynicotine/gtkgui/application.py:335
 msgid "Browse _Trusted Shares"
 msgstr "Pregledaj _pouzdana dijeljenja"
 
-#: pynicotine/gtkgui/application.py:341 pynicotine/gtkgui/application.py:402
+#: pynicotine/gtkgui/application.py:344 pynicotine/gtkgui/application.py:405
 msgid "_Rescan Shares"
 msgstr "_Opet skeniraj dijeljenja"
 
-#: pynicotine/gtkgui/application.py:342 pynicotine/gtkgui/application.py:404
+#: pynicotine/gtkgui/application.py:345 pynicotine/gtkgui/application.py:407
 msgid "Configure _Shares"
 msgstr "Postavi _dijeljenja"
 
-#: pynicotine/gtkgui/application.py:364
+#: pynicotine/gtkgui/application.py:367
 msgid "_Keyboard Shortcuts"
 msgstr "_Tipkovničke kratice"
 
-#: pynicotine/gtkgui/application.py:365
+#: pynicotine/gtkgui/application.py:368
 msgid "_Setup Assistant"
 msgstr "_Asistent pri postavljanju"
 
-#: pynicotine/gtkgui/application.py:366
+#: pynicotine/gtkgui/application.py:369
 msgid "_Transfer Statistics"
 msgstr "_Podaci o prijenosu"
 
-#: pynicotine/gtkgui/application.py:371
+#: pynicotine/gtkgui/application.py:374
 msgid "Report a _Bug"
 msgstr "Prijavi _grešku"
 
-#: pynicotine/gtkgui/application.py:372
+#: pynicotine/gtkgui/application.py:375
 msgid "Improve T_ranslations"
 msgstr "Poboljšaj p_rijevode"
 
-#: pynicotine/gtkgui/application.py:376
+#: pynicotine/gtkgui/application.py:379
 msgid "_About Nicotine+"
 msgstr "_O Nicotine+"
 
-#: pynicotine/gtkgui/application.py:387
+#: pynicotine/gtkgui/application.py:390
 msgid "_File"
 msgstr "_Datoteka"
 
-#: pynicotine/gtkgui/application.py:388
+#: pynicotine/gtkgui/application.py:391
 msgid "_Shares"
 msgstr "_Dijeljenja"
 
-#: pynicotine/gtkgui/application.py:389 pynicotine/gtkgui/application.py:406
+#: pynicotine/gtkgui/application.py:392 pynicotine/gtkgui/application.py:409
 msgid "_Help"
 msgstr "_Pomoć"
 
-#: pynicotine/gtkgui/application.py:403
+#: pynicotine/gtkgui/application.py:406
 msgid "_Browse Shares"
 msgstr "_Pregledaj dijeljenja"
 
-#: pynicotine/gtkgui/application.py:458
+#: pynicotine/gtkgui/application.py:461
 #, python-format
 msgid "Unable to show notification: %s"
 msgstr "Ne mogu prikazati obavijesti: %s"
 
-#: pynicotine/gtkgui/application.py:521
+#: pynicotine/gtkgui/application.py:524
 msgid "You are still uploading files. Do you really want to exit?"
 msgstr "Još uvijek šaljete datoteke. Želite li izaći?"
 
-#: pynicotine/gtkgui/application.py:522
+#: pynicotine/gtkgui/application.py:525
 msgid "Wait for uploads to finish"
 msgstr "Čekam da slanja završe"
 
-#: pynicotine/gtkgui/application.py:524
+#: pynicotine/gtkgui/application.py:527
 msgid "Do you really want to exit?"
 msgstr "Želite li izaći?"
 
-#: pynicotine/gtkgui/application.py:528
-#: pynicotine/gtkgui/widgets/dialogs.py:488
+#: pynicotine/gtkgui/application.py:531
+#: pynicotine/gtkgui/widgets/dialogs.py:490
 msgid "_No"
 msgstr "_Ne"
 
-#: pynicotine/gtkgui/application.py:530
+#: pynicotine/gtkgui/application.py:533
 msgid "_Run in Background"
 msgstr "_Nastavi u pozadini"
 
-#: pynicotine/gtkgui/application.py:535
+#: pynicotine/gtkgui/application.py:538
 #: pynicotine/gtkgui/dialogs/preferences.py:2259
 #: pynicotine/plugins/core_commands/__init__.py:53
 msgid "Quit Nicotine+"
 msgstr "Isključi Nicotine+"
 
-#: pynicotine/gtkgui/application.py:556
+#: pynicotine/gtkgui/application.py:559
 msgid "Shares Not Available"
 msgstr "Dijeljenja nedostupna"
 
-#: pynicotine/gtkgui/application.py:557 pynicotine/headless/application.py:119
+#: pynicotine/gtkgui/application.py:560 pynicotine/headless/application.py:119
 msgid ""
 "Verify that external disks are mounted and folder permissions are correct."
 msgstr ""
 "Provjeri jesu li vanjski diskovi spojeni i dozvole pristupa mapama ispravne."
 
-#: pynicotine/gtkgui/application.py:560 pynicotine/gtkgui/chatrooms.py:227
+#: pynicotine/gtkgui/application.py:563 pynicotine/gtkgui/chatrooms.py:227
 #: pynicotine/gtkgui/chatrooms.py:1389
 #: pynicotine/gtkgui/dialogs/chathistory.py:299
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:133
@@ -512,7 +512,7 @@ msgstr ""
 #: pynicotine/gtkgui/downloads.py:146 pynicotine/gtkgui/downloads.py:176
 #: pynicotine/gtkgui/privatechat.py:477 pynicotine/gtkgui/uploads.py:147
 #: pynicotine/gtkgui/uploads.py:164 pynicotine/gtkgui/widgets/dialogs.py:137
-#: pynicotine/gtkgui/widgets/dialogs.py:528
+#: pynicotine/gtkgui/widgets/dialogs.py:530
 #: pynicotine/gtkgui/widgets/iconnotebook.py:453
 #: pynicotine/gtkgui/widgets/popupmenu.py:610
 #: pynicotine/gtkgui/ui/dialogs/download.ui:9
@@ -520,44 +520,44 @@ msgstr ""
 msgid "_Cancel"
 msgstr "_Otkaži"
 
-#: pynicotine/gtkgui/application.py:561 pynicotine/gtkgui/uploads.py:32
+#: pynicotine/gtkgui/application.py:564 pynicotine/gtkgui/uploads.py:32
 msgid "_Retry"
 msgstr "_Pokušaj ponovno"
 
-#: pynicotine/gtkgui/application.py:562
+#: pynicotine/gtkgui/application.py:565
 msgid "_Force Rescan"
 msgstr "_Prisilno skeniranje"
 
-#: pynicotine/gtkgui/application.py:769
+#: pynicotine/gtkgui/application.py:775
 msgid "Message Downloading Users"
 msgstr "Poruka korisnicima što preuzimaju"
 
-#: pynicotine/gtkgui/application.py:770
+#: pynicotine/gtkgui/application.py:776
 msgid "Send private message to all users who are downloading from you:"
 msgstr "Pošalji privatnu poruku svim korisnicima koji preuzimaju od tebe:"
 
-#: pynicotine/gtkgui/application.py:771 pynicotine/gtkgui/application.py:785
+#: pynicotine/gtkgui/application.py:777 pynicotine/gtkgui/application.py:791
 #: pynicotine/gtkgui/userinfo.py:862
 msgid "_Send"
 msgstr "_Slanje"
 
-#: pynicotine/gtkgui/application.py:783
+#: pynicotine/gtkgui/application.py:789
 msgid "Message Buddies"
 msgstr "Kontaktiraj prijatelje"
 
-#: pynicotine/gtkgui/application.py:784
+#: pynicotine/gtkgui/application.py:790
 msgid "Send private message to all online buddies:"
 msgstr "Slanje privatne poruke svim prijateljima na vezi:"
 
-#: pynicotine/gtkgui/application.py:813
+#: pynicotine/gtkgui/application.py:822
 msgid "Select a Saved Shares List File"
 msgstr "Odabir sačuvane liste dijeljenih datoteka"
 
-#: pynicotine/gtkgui/application.py:875
+#: pynicotine/gtkgui/application.py:890
 msgid "Critical Error"
 msgstr "Kritična greška"
 
-#: pynicotine/gtkgui/application.py:876
+#: pynicotine/gtkgui/application.py:891
 msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
 "the following message and include it in a bug report:"
@@ -565,11 +565,11 @@ msgstr ""
 "Nicotine+ ima kritičnu grešku i treba izaći. Molimo kopirajte sljedeću "
 "poruku i pošaljite je skupa s prijavom problema:"
 
-#: pynicotine/gtkgui/application.py:880
+#: pynicotine/gtkgui/application.py:895
 msgid "_Quit Nicotine+"
 msgstr "_Isključi Nicotine+"
 
-#: pynicotine/gtkgui/application.py:881
+#: pynicotine/gtkgui/application.py:896
 msgid "_Copy & Report Bug"
 msgstr "_Kopiranje i prijava problema"
 
@@ -823,17 +823,17 @@ msgstr "Pojam %(keyword)s spomenut u sobi %(room)s od strane %(user)s"
 msgid "Message by watched user %(user)s in room %(room)s"
 msgstr "Poruka praćene osobe %(user)s u sobi %(room)s"
 
-#: pynicotine/gtkgui/chatrooms.py:921 pynicotine/gtkgui/mainwindow.py:426
+#: pynicotine/gtkgui/chatrooms.py:921 pynicotine/gtkgui/mainwindow.py:429
 #, python-format
 msgid "Mentioned by %(user)s in Room %(room)s"
 msgstr "%(user)s te spominje u sobi %(room)s"
 
-#: pynicotine/gtkgui/chatrooms.py:929 pynicotine/gtkgui/mainwindow.py:429
+#: pynicotine/gtkgui/chatrooms.py:929 pynicotine/gtkgui/mainwindow.py:432
 #, python-format
 msgid "Keyword %(keyword)s Mentioned by %(user)s in Room %(room)s"
 msgstr "Pojam %(keyword)s Spomenut u sobi %(room)s od strane %(user)s"
 
-#: pynicotine/gtkgui/chatrooms.py:941 pynicotine/gtkgui/mainwindow.py:436
+#: pynicotine/gtkgui/chatrooms.py:941 pynicotine/gtkgui/mainwindow.py:439
 #, python-format
 msgid "Message by Watched User %(user)s in Room %(room)s"
 msgstr "Poruka Praćene osobe %(user)s u sobi %(room)s"
@@ -869,7 +869,7 @@ msgstr "Članovi"
 
 #: pynicotine/gtkgui/chatrooms.py:1267
 #: pynicotine/gtkgui/dialogs/preferences.py:2423
-#: pynicotine/gtkgui/mainwindow.py:1010
+#: pynicotine/gtkgui/mainwindow.py:1013
 #: pynicotine/gtkgui/widgets/iconnotebook.py:626
 #: pynicotine/gtkgui/widgets/theme.py:268 pynicotine/gtkgui/ui/chatrooms.ui:170
 msgid "Online"
@@ -1332,7 +1332,7 @@ msgstr "Nitko"
 #: pynicotine/gtkgui/dialogs/preferences.py:312
 #: pynicotine/gtkgui/dialogs/preferences.py:628
 #: pynicotine/gtkgui/dialogs/preferences.py:802
-#: pynicotine/gtkgui/mainwindow.py:779 pynicotine/gtkgui/search.py:281
+#: pynicotine/gtkgui/mainwindow.py:782 pynicotine/gtkgui/search.py:281
 #: pynicotine/gtkgui/ui/buddies.ui:22 pynicotine/gtkgui/ui/mainwindow.ui:1248
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:721
 msgid "Buddies"
@@ -1363,7 +1363,7 @@ msgstr "Otvori u upravitelju datoteka"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:326
 #: pynicotine/gtkgui/dialogs/preferences.py:1143
-#: pynicotine/gtkgui/mainwindow.py:1128
+#: pynicotine/gtkgui/mainwindow.py:1131
 msgid "Search"
 msgstr "Pretraži"
 
@@ -1473,8 +1473,8 @@ msgid ""
 "Syntax: Case-insensitive. Virtual paths containing separators \\ are "
 "supported. Wildcard * matches are supported."
 msgstr ""
-"Sintaksa: neosjetljiva na Velika Slova. Virtualne putanje smiju sadržavati \\"
-" separatore. * Zamjenski znakovi podržani."
+"Sintaksa: neosjetljiva na Velika Slova. Virtualne putanje smiju sadržavati "
+"\\ separatore. * Zamjenski znakovi podržani."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:733
 msgid "Applies To"
@@ -1565,6 +1565,7 @@ msgid "Abort"
 msgstr "Prekini"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1146
+#: pynicotine/gtkgui/mainwindow.py:1284
 #: pynicotine/gtkgui/ui/dialogs/download.ui:55
 #: pynicotine/gtkgui/ui/search.ui:10 pynicotine/gtkgui/ui/userbrowse.ui:10
 #: pynicotine/gtkgui/ui/userinfo.ui:10
@@ -1768,7 +1769,7 @@ msgstr "Desno"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2424
 #: pynicotine/gtkgui/dialogs/shortcuts.py:37
-#: pynicotine/gtkgui/mainwindow.py:1007
+#: pynicotine/gtkgui/mainwindow.py:1010
 #: pynicotine/gtkgui/widgets/iconnotebook.py:623
 #: pynicotine/gtkgui/widgets/theme.py:269
 #: pynicotine/gtkgui/widgets/trayicon.py:84
@@ -1776,10 +1777,10 @@ msgid "Away"
 msgstr "Izbivanje"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2425
-#: pynicotine/gtkgui/mainwindow.py:1014
+#: pynicotine/gtkgui/mainwindow.py:1017
 #: pynicotine/gtkgui/widgets/iconnotebook.py:629
 #: pynicotine/gtkgui/widgets/theme.py:270
-#: pynicotine/gtkgui/ui/mainwindow.ui:1706
+#: pynicotine/gtkgui/ui/mainwindow.ui:1736
 msgid "Offline"
 msgstr "Offline"
 
@@ -1987,7 +1988,7 @@ msgid "Shares"
 msgstr "Dijeljenja"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3672
-#: pynicotine/gtkgui/mainwindow.py:775 pynicotine/gtkgui/mainwindow.py:1127
+#: pynicotine/gtkgui/mainwindow.py:778 pynicotine/gtkgui/mainwindow.py:1130
 #: pynicotine/gtkgui/widgets/trayicon.py:74
 #: pynicotine/gtkgui/ui/mainwindow.ui:655
 #: pynicotine/gtkgui/ui/settings/uploads.ui:52
@@ -2183,7 +2184,7 @@ msgid "Focus Next View"
 msgstr "Fokus sljedećeg pregleda"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:52
-#: pynicotine/gtkgui/ui/mainwindow.ui:1724
+#: pynicotine/gtkgui/ui/mainwindow.ui:1754
 msgid "Show Log Pane"
 msgstr "Prikaz okna zapisnika"
 
@@ -2612,36 +2613,36 @@ msgstr "Preporuke za %(item)s"
 msgid "Users who like %(item)s"
 msgstr "Korisnicima se sviđa %(item)s"
 
-#: pynicotine/gtkgui/mainwindow.py:226
+#: pynicotine/gtkgui/mainwindow.py:230
 msgid "Search log…"
 msgstr "Pretraga zapisnika…"
 
-#: pynicotine/gtkgui/mainwindow.py:409 pynicotine/gtkgui/privatechat.py:511
+#: pynicotine/gtkgui/mainwindow.py:412 pynicotine/gtkgui/privatechat.py:511
 #, python-format
 msgid "Mentioned by %(user)s in Private"
 msgstr "Privatno spominjanje od %(user)s"
 
-#: pynicotine/gtkgui/mainwindow.py:412 pynicotine/gtkgui/privatechat.py:518
+#: pynicotine/gtkgui/mainwindow.py:415 pynicotine/gtkgui/privatechat.py:518
 #, python-format
 msgid "Keyword %(keyword)s Mentioned by %(user)s in Private"
 msgstr "Pojam %(keyword)s privatno spomenut od %(user)s"
 
-#: pynicotine/gtkgui/mainwindow.py:417 pynicotine/gtkgui/privatechat.py:528
+#: pynicotine/gtkgui/mainwindow.py:420 pynicotine/gtkgui/privatechat.py:528
 #, python-format
 msgid "Private Message from %(user)s"
 msgstr "Privatna poruka od %(user)s"
 
-#: pynicotine/gtkgui/mainwindow.py:444 pynicotine/gtkgui/search.py:976
+#: pynicotine/gtkgui/mainwindow.py:447 pynicotine/gtkgui/search.py:976
 msgid "Wishlist Results Found"
 msgstr "Pronađeni rezultati s liste želja"
 
-#: pynicotine/gtkgui/mainwindow.py:777 pynicotine/gtkgui/ui/mainwindow.ui:948
+#: pynicotine/gtkgui/mainwindow.py:780 pynicotine/gtkgui/ui/mainwindow.ui:948
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:697
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:879
 msgid "User Profiles"
 msgstr "Korisnički profili"
 
-#: pynicotine/gtkgui/mainwindow.py:780 pynicotine/gtkgui/widgets/trayicon.py:79
+#: pynicotine/gtkgui/mainwindow.py:783 pynicotine/gtkgui/widgets/trayicon.py:79
 #: pynicotine/plugins/core_commands/__init__.py:11
 #: pynicotine/gtkgui/ui/mainwindow.ui:1403
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:734
@@ -2649,65 +2650,65 @@ msgstr "Korisnički profili"
 msgid "Chat Rooms"
 msgstr "Chat sobe"
 
-#: pynicotine/gtkgui/mainwindow.py:781 pynicotine/gtkgui/ui/mainwindow.ui:1459
+#: pynicotine/gtkgui/mainwindow.py:784 pynicotine/gtkgui/ui/mainwindow.ui:1459
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:746
 #: pynicotine/gtkgui/ui/userinfo.ui:381
 msgid "Interests"
 msgstr "Interesi"
 
-#: pynicotine/gtkgui/mainwindow.py:1129
+#: pynicotine/gtkgui/mainwindow.py:1132
 #: pynicotine/plugins/core_commands/__init__.py:10
 msgid "Chat"
 msgstr "Chat"
 
-#: pynicotine/gtkgui/mainwindow.py:1131
+#: pynicotine/gtkgui/mainwindow.py:1134
 msgid "[Debug] [SLOW] Connections"
 msgstr "[Debuganje] [SPORIH] veza"
 
-#: pynicotine/gtkgui/mainwindow.py:1132
+#: pynicotine/gtkgui/mainwindow.py:1135
 msgid "[Debug] [SLOW] Messages"
 msgstr "[Debuganje] [SPORIH] poruka"
 
-#: pynicotine/gtkgui/mainwindow.py:1133
+#: pynicotine/gtkgui/mainwindow.py:1136
 msgid "[Debug] [SLOW] Transfers"
 msgstr "[Debugiranje] [SPORIH] preuzimanja"
 
-#: pynicotine/gtkgui/mainwindow.py:1134
+#: pynicotine/gtkgui/mainwindow.py:1137
 msgid "[Debug] Miscellaneous"
 msgstr "[Debuganje] Razno"
 
-#: pynicotine/gtkgui/mainwindow.py:1139
+#: pynicotine/gtkgui/mainwindow.py:1142
 msgid "_Find…"
 msgstr "_Pronađi…"
 
-#: pynicotine/gtkgui/mainwindow.py:1141 pynicotine/gtkgui/mainwindow.py:1172
+#: pynicotine/gtkgui/mainwindow.py:1144 pynicotine/gtkgui/mainwindow.py:1175
 #: pynicotine/gtkgui/search.py:640
 msgid "_Copy"
 msgstr "_Kopiraj"
 
-#: pynicotine/gtkgui/mainwindow.py:1142
+#: pynicotine/gtkgui/mainwindow.py:1145
 msgid "Copy _All"
 msgstr "K_opiraj sve"
 
-#: pynicotine/gtkgui/mainwindow.py:1147
+#: pynicotine/gtkgui/mainwindow.py:1150
 msgid "View _Debug Logs"
 msgstr "Pregledaj _zapisnike debugiranja"
 
-#: pynicotine/gtkgui/mainwindow.py:1148
+#: pynicotine/gtkgui/mainwindow.py:1151
 msgid "View _Transfer Logs"
 msgstr "Pregledaj zapisnike _preuzimanja"
 
-#: pynicotine/gtkgui/mainwindow.py:1152
+#: pynicotine/gtkgui/mainwindow.py:1155
 msgid "_Log Categories"
 msgstr "_Kategorije zapisnika"
 
-#: pynicotine/gtkgui/mainwindow.py:1154
+#: pynicotine/gtkgui/mainwindow.py:1157
 msgid "Clear Log View"
 msgstr "Obriši pregled zapisnika"
 
-#: pynicotine/gtkgui/mainwindow.py:1219
-msgid "Preparing Shares"
-msgstr "Priprema dijeljenja"
+#: pynicotine/gtkgui/mainwindow.py:1226
+msgid "Scanning Shares"
+msgstr "Skeniranje dijeljenja"
 
 #: pynicotine/gtkgui/mainwindow.py:1232
 #, python-format
@@ -2715,8 +2716,17 @@ msgid "Scanned Folders: %s"
 msgstr "Skenirane mape: %s"
 
 #: pynicotine/gtkgui/mainwindow.py:1235
-msgid "Scanning Shares"
-msgstr "Skeniranje dijeljenja"
+msgid "Preparing Shares"
+msgstr "Priprema dijeljenja"
+
+#: pynicotine/gtkgui/mainwindow.py:1252
+msgid "Stop Scanning"
+msgstr ""
+
+#: pynicotine/gtkgui/mainwindow.py:1268
+#, fuzzy
+msgid "Rescan Failed"
+msgstr "Ponovno skeniraj dijeljenja"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:53
 msgid "You are offline"
@@ -3326,15 +3336,15 @@ msgstr "Preostalo dana: %(days)s"
 msgid "Gift Privileges"
 msgstr "Daruj privilegije"
 
-#: pynicotine/gtkgui/widgets/dialogs.py:302
+#: pynicotine/gtkgui/widgets/dialogs.py:303
 msgid "Close"
 msgstr "Zatvori"
 
-#: pynicotine/gtkgui/widgets/dialogs.py:489
+#: pynicotine/gtkgui/widgets/dialogs.py:491
 msgid "_Yes"
 msgstr "_Da"
 
-#: pynicotine/gtkgui/widgets/dialogs.py:523
+#: pynicotine/gtkgui/widgets/dialogs.py:525
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:27
 msgid "_OK"
 msgstr "_OK"
@@ -3469,7 +3479,8 @@ msgstr "Promjena vlasnika sobe?"
 msgid ""
 "Do you really want to make %(user)s the new owner of your private room "
 "%(room)s?"
-msgstr "Želiš li stvarno %(user)s dodijeliti vlasništvo privatne sobe %(room)s?"
+msgstr ""
+"Želiš li stvarno %(user)s dodijeliti vlasništvo privatne sobe %(room)s?"
 
 #: pynicotine/gtkgui/widgets/textentry.py:22
 msgid "Send message…"
@@ -5038,8 +5049,8 @@ msgstr "UPnP uređaji nisu nađeni"
 msgid ""
 "%(protocol)s: Failed to forward external port %(external_port)s: %(error)s"
 msgstr ""
-"%(protocol)s: Neuspjelo prosljeđivanje vanjskog porta %(external_port)s: %"
-"(error)s"
+"%(protocol)s: Neuspjelo prosljeđivanje vanjskog porta %(external_port)s: "
+"%(error)s"
 
 #: pynicotine/portmapper.py:652
 #, python-format
@@ -5070,8 +5081,10 @@ msgstr "Period čekanja za pretragu po listi želja %(duration)s"
 msgid "Server provided %(num_phrases)s excluded search phrase: %(phrases)s"
 msgid_plural ""
 "Server provided %(num_phrases)s excluded search phrases: %(phrases)s"
-msgstr[0] "Server je pronašao %(num_phrases)s izuzetu stavku pretrage: %(phrases)s"
-msgstr[1] "Server je pronašao %(num_phrases)s izuzete stavke pretrage: %(phrases)s"
+msgstr[0] ""
+"Server je pronašao %(num_phrases)s izuzetu stavku pretrage: %(phrases)s"
+msgstr[1] ""
+"Server je pronašao %(num_phrases)s izuzete stavke pretrage: %(phrases)s"
 msgstr[2] ""
 "Server je pronašao %(num_phrases)s izuzetih stavki pretrage: %(phrases)s"
 
@@ -5084,15 +5097,15 @@ msgstr[0] "Korisnik %(user)s traži \"%(query)s\", nađen %(num)s rezultat"
 msgstr[1] "Korisnik %(user)s traži \"%(query)s\", nađena %(num)s rezultata"
 msgstr[2] "Korisnik %(user)s traži \"%(query)s\", nađeno %(num)s rezultata"
 
-#: pynicotine/shares.py:308
+#: pynicotine/shares.py:306
 msgid "Rebuilding shares…"
 msgstr "Katalogiziranje dijeljenja…"
 
-#: pynicotine/shares.py:308
+#: pynicotine/shares.py:306
 msgid "Rescanning shares…"
 msgstr "Skeniranje dijeljenja…"
 
-#: pynicotine/shares.py:333
+#: pynicotine/shares.py:335
 #, python-format
 msgid "Rescan complete: %(num)s folder found"
 msgid_plural "Rescan complete: %(num)s folders found"
@@ -5100,7 +5113,7 @@ msgstr[0] "Skeniranje dovršeno: %(num)s mapa nađena"
 msgstr[1] "Skeniranje dovršeno: %(num)s mape nađene"
 msgstr[2] "Skeniranje dovršeno: %(num)s mapa nađeno"
 
-#: pynicotine/shares.py:346
+#: pynicotine/shares.py:350
 #, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
@@ -5111,27 +5124,27 @@ msgstr ""
 "nastavi, izbriši %(dir)s/*.dbn i pokušaj ponovno. Ako to ne pomogne, pošalji "
 "prijavu problema uz stack trace: %(trace)s"
 
-#: pynicotine/shares.py:639
+#: pynicotine/shares.py:642
 #, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "Greška skeniranja datoteke %(path)s: %(error)s"
 
-#: pynicotine/shares.py:647
+#: pynicotine/shares.py:650
 #, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "Greška skeniranja mape %(path)s: %(error)s"
 
-#: pynicotine/shares.py:688
+#: pynicotine/shares.py:691
 #, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr "Greška skeniranja metapodataka datoteke %(path)s: %(error)s"
 
-#: pynicotine/shares.py:1142
+#: pynicotine/shares.py:1143
 #, python-format
 msgid "Rescan aborted due to unavailable shares: %s"
 msgstr "Skeniranje prekinuto radi nedostupnih dijeljenja: %s"
 
-#: pynicotine/shares.py:1317
+#: pynicotine/shares.py:1347
 #, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Korisnik %(user)s pregledava listu vaših dijeljenja"
@@ -5193,7 +5206,8 @@ msgstr "Tvoj Soulseek račun se već koristi negdje"
 #: pynicotine/uploads.py:388
 #, python-format
 msgid "Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"
-msgstr "Slanje završeno: korisnik %(user)s, IP adresa %(ip)s, datoteka %(file)s"
+msgstr ""
+"Slanje završeno: korisnik %(user)s, IP adresa %(ip)s, datoteka %(file)s"
 
 #: pynicotine/uploads.py:401
 #, python-format
@@ -5229,7 +5243,8 @@ msgstr "I/O greška slanja: %s"
 #: pynicotine/uploads.py:1195
 #, python-format
 msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
-msgstr "Slanje započeto: korisnik %(user)s, IP adresa %(ip)s, datoteka %(file)s"
+msgstr ""
+"Slanje započeto: korisnik %(user)s, IP adresa %(ip)s, datoteka %(file)s"
 
 #: pynicotine/userbrowse.py:272
 #, python-format
@@ -5252,8 +5267,8 @@ msgid ""
 "User %(user)s is sharing %(num_files)s files totaling %(shared_size)s across "
 "%(num_folders)s folders."
 msgstr ""
-"Korisnik %(user)s dijeli %(num_files)s datoteka, ukupne veličine %"
-"(shared_size)s unutar %(num_folders)s mapa."
+"Korisnik %(user)s dijeli %(num_files)s datoteka, ukupne veličine "
+"%(shared_size)s unutar %(num_folders)s mapa."
 
 #: pynicotine/userbrowse.py:406
 msgid "User Statistics"
@@ -5845,16 +5860,16 @@ msgstr ""
 "Pristupi sobi i chataj s drugima, ili stvori vlastitu privatnu sobu s "
 "lozinkom"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1590
+#: pynicotine/gtkgui/ui/mainwindow.ui:1620
 #: pynicotine/gtkgui/ui/settings/network.ui:373
 msgid "Connections"
 msgstr "Veze"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1623
+#: pynicotine/gtkgui/ui/mainwindow.ui:1653
 msgid "Downloading (Speed / Active Users)"
 msgstr "Preuzimanje (brzina / aktivni korisnici)"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1655
+#: pynicotine/gtkgui/ui/mainwindow.ui:1685
 msgid "Uploading (Speed / Active Users)"
 msgstr "Slanje (brzina / aktivni korisnici)"
 
@@ -6074,8 +6089,8 @@ msgid ""
 "By default, files longer than or equal to (>=) the entered duration will be "
 "matched, unless an operator (=, !, <=, < or >) is used."
 msgstr ""
-"Zadani način je jednako ili duže od unosa (>=), a prihvaćeni su predznaci =, "
-"!, <=, < ili > ."
+"Zadani način je jednako ili duže od unosa (>=), a prihvaćeni su predznaci "
+"=, !, <=, < ili > ."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:363
 msgid ""
