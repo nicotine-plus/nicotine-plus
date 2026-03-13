@@ -212,6 +212,36 @@ jobs:
             python3.10 -m unittest -v
             python3.10 -m build --no-isolation
 
+  illumos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Tests
+        uses: cross-platform-actions/action@v0.32.0
+        with:
+          operating_system: omnios
+          version: 'r151056'
+          run: |
+            BOOTSTRAP_TAR="bootstrap-2025Q4-x86_64.tar.gz"
+            curl -O https://pkgsrc.smartos.org/packages/SmartOS/bootstrap/${BOOTSTRAP_TAR}
+            sudo tar -zxpf ${BOOTSTRAP_TAR} -C /
+            PATH=/opt/local/sbin:/opt/local/bin:$PATH
+
+            sudo pkgin -y update
+            sudo pkgin -y upgrade
+            sudo pkgin -y install gettext-tools gtk3+ modular-xorg-fonts modular-xorg-server py314-build \
+              py314-gobject3 py314-setuptools py314-wheel
+
+            export DISPLAY=:99
+            Xvfb :99 > /dev/null 2>&1 &
+
+            python3.14 -m unittest -v
+            python3.14 -m build
+            python3.14 -m build --no-isolation
+
   windows:
     timeout-minutes: 15
     strategy:
