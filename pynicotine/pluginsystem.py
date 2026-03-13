@@ -300,6 +300,77 @@ class BasePlugin:
     def output(self, text):
         self.echo_message(text, message_type="command")
 
+    def split_args(self, args, num_required_args, quiet=False):
+        """ Split command line arguments string into a list, supporting quoted
+        "long arguments" containing spaces, quotes optional where possible """
+
+        arg_list = []
+        quoted_positions = []
+
+        if '"' not in args and "'" not in args:
+            # Standard split by spaces, only last argument can contain spaces,
+            # which is okay for most arguments like single-word usernames etc.
+            arg_list = args.split(maxsplit=(num_required_args - 1))
+
+            if not num_required_args or len(arg_list) == num_required_args:
+                return arg_list
+
+        else:
+            # Support "long arguments" containing spaces, surrounded with quotes
+            from shlex import split
+
+            try:
+                # Preserve quotation marks for now
+                arg_list = split(args, posix=False)
+
+            except ValueError as error:
+                # Mismatched quotes etc
+                if not quiet:
+                    self.output(error)
+
+            # Identify "long arguments", and strip quotes
+            for i, arg in enumerate(arg_list):
+                if (arg.startswith('"') and arg.endswith('"')) or (arg.startswith("'") and arg.endswith("'")):
+                    quoted_positions.append(i)
+                    arg_list[i] = arg[1:-1]
+
+        # Find non-quoted items that should be merged together, this makes
+        # using quotes optional for first or last arguments. For example:
+        #     /msg "user name" "message text"
+        #     /msg user name "message text"
+        #     /msg "user name" message text
+        #     /usearch "user name" 'Artist Name "Song Title"'
+        # (all of the above examples are treated as having two arguments)
+        for i in reversed(range(len(arg_list))):
+            if not num_required_args or len(arg_list) <= num_required_args:
+                break
+
+            if i == 0:
+                if not quiet:
+                    self.output(_("Too many arguments, %(num_required_args)i required, "
+                                "%(num_given_args)i given (%(num_quoted_args)i quoted)") % {
+                        "num_required_args": int(num_required_args),
+                        "num_given_args": len(arg_list),
+                        "num_quoted_args": len(quoted_positions)
+                    })
+
+                # Wipe out all arguments to avoid mismatching
+                arg_list = []
+                break
+
+            if i in quoted_positions or i - 1 in quoted_positions:
+                continue
+
+            # Merge the previous argument with this non-quoted argument
+            removed_arg = arg_list.pop(i)
+            arg_list[i - 1] += " " + removed_arg
+
+        # Always return correct number of arguments, even if error
+        while len(arg_list) < num_required_args:
+            arg_list.append(False)
+
+        return arg_list
+
 
 class ResponseThrottle:
     """
@@ -999,7 +1070,7 @@ class PluginHandler:
                     command_found = True
                     rejection_message = None
                     parameters = data.get(f"parameters_{command_interface}", data.get("parameters", []))
-                    args_split = args.split()
+                    args_split = plugin.split_args(args, 0)
                     num_args = len(args_split)
                     num_required_args = 0
 
