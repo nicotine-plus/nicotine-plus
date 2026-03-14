@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-13 02:38+0200\n"
-"PO-Revision-Date: 2026-03-03 20:34+0000\n"
+"PO-Revision-Date: 2026-03-14 17:09+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -2742,12 +2742,11 @@ msgstr "Paylaşımlar Hazırlanıyor"
 
 #: pynicotine/gtkgui/mainwindow.py:1252
 msgid "Stop Scanning"
-msgstr ""
+msgstr "Taramayı Durdur"
 
 #: pynicotine/gtkgui/mainwindow.py:1268
-#, fuzzy
 msgid "Rescan Failed"
-msgstr "Paylaşımları Yeniden Tara"
+msgstr "Yeniden Tarama Başarısız"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:53
 msgid "You are offline"
