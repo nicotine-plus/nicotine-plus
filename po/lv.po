@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-13 02:38+0200\n"
-"PO-Revision-Date: 2026-03-03 20:33+0000\n"
-"Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
+"PO-Revision-Date: 2026-03-14 17:09+0000\n"
+"Last-Translator: \"ℂ𝕠𝕠𝕠𝕝 (𝕘𝕚𝕥𝕙𝕦𝕓.𝕔𝕠𝕞/ℂ𝕠𝕠𝕠𝕝)\" <coool@mail.lv>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
 "Language: lv\n"
@@ -2736,7 +2736,7 @@ msgstr "Sagatavo koplietojumus"
 
 #: pynicotine/gtkgui/mainwindow.py:1252
 msgid "Stop Scanning"
-msgstr ""
+msgstr "Apturēt skenēšanu"
 
 #: pynicotine/gtkgui/mainwindow.py:1268
 #, fuzzy
@@ -4594,7 +4594,7 @@ msgstr "Uganda"
 
 #: pynicotine/networkfilter.py:257
 msgid "U.S. Minor Outlying Islands"
-msgstr "ASV Mazās Aizjūras Salas"
+msgstr "ASV Mazās aizjūras salas"
 
 #: pynicotine/networkfilter.py:258
 msgid "United States"
@@ -4626,7 +4626,7 @@ msgstr "Britu Virdžīnu Salas"
 
 #: pynicotine/networkfilter.py:265
 msgid "U.S. Virgin Islands"
-msgstr "ASV Virdžīnu Salas"
+msgstr "ASV Virdžīnu salas"
 
 #: pynicotine/networkfilter.py:266
 msgid "Viet Nam"
@@ -6330,7 +6330,7 @@ msgstr "Novērot atslēgvārdu pieminējumus tērzēšanas ziņās"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:195
 msgid "Substitute text patterns when sending messages"
-msgstr ""
+msgstr "Aizstāt teksta šablonus, kad nosūta ziņojumus"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:352
 msgid "Censor text patterns in incoming messages"
@@ -6539,9 +6539,8 @@ msgid "_Log In As"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/network.ui:132
-#, fuzzy
 msgid "Account password:"
-msgstr "Parole: "
+msgstr "Konta parole:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:164
 msgid "Change Pass_word"
@@ -6653,15 +6652,14 @@ msgid "Enable search history"
 msgstr "Iespējot meklēšanas vēsturi"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:75
-#, fuzzy
 msgid ""
 "Privately shared files that have been made visible to everyone will display "
 "a lock icon next to them. These files cannot be downloaded until the "
 "uploader gives explicit permission. Ask them kindly."
 msgstr ""
-"Privāti kopīgotiem failiem, kas ir padarīti redzami visiem, tiks pievienots "
-"prefikss '[PRIVATE]', un tos nevarēs lejupielādēt, kamēr augšupielādētājs "
-"nebūs devis skaidru atļauju. Laipni palūdziet to!"
+"Privāti kopīgotām datnēm, kuras redzamas ikvienam, blakus būs attēlota "
+"slēdzenes ikona. Šīs datnes nevar lejupielādēt, kamēr augšupielādētājs nav "
+"devis skaidru atļauju. Laipni palūdziet to."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:81
 msgid "Show privately shared files in search results"
