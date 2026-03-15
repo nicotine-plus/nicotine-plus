@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-13 02:38+0200\n"
-"PO-Revision-Date: 2026-03-03 20:34+0000\n"
+"PO-Revision-Date: 2026-03-14 17:09+0000\n"
 "Last-Translator: Han <han@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -2730,12 +2730,11 @@ msgstr "Shares aan het voorbereiden"
 
 #: pynicotine/gtkgui/mainwindow.py:1252
 msgid "Stop Scanning"
-msgstr ""
+msgstr "Stop met scannen"
 
 #: pynicotine/gtkgui/mainwindow.py:1268
-#, fuzzy
 msgid "Rescan Failed"
-msgstr "Shares opnieuw scannen"
+msgstr "Opnieuw scannen mislukt"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:53
 msgid "You are offline"

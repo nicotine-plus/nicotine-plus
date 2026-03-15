@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-13 02:38+0200\n"
-"PO-Revision-Date: 2026-03-03 20:34+0000\n"
+"PO-Revision-Date: 2026-03-14 17:09+0000\n"
 "Last-Translator: Felix Hansen <gore-snagged-happy@duck.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -2750,12 +2750,11 @@ msgstr "Freigaben werden eingerichtet"
 
 #: pynicotine/gtkgui/mainwindow.py:1252
 msgid "Stop Scanning"
-msgstr ""
+msgstr "Scannen stoppen"
 
 #: pynicotine/gtkgui/mainwindow.py:1268
-#, fuzzy
 msgid "Rescan Failed"
-msgstr "Freigaben aktualisieren"
+msgstr "Erneuter Scan fehlgeschlagen"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:53
 msgid "You are offline"
