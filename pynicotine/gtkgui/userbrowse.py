@@ -500,6 +500,7 @@ class UserBrowse:
         add_row = self.folder_tree_view.add_row
         query = self.query
         private_template = _("[PRIVATE]  %s")
+        has_files_template = _("%s  ·")
 
         for folder_path, files in reversed(list(folders.items())):
             current_path = parent = None
@@ -532,6 +533,9 @@ class UserBrowse:
 
                 if private:
                     subfolder = private_template % subfolder
+
+                if current_path in folders and folders[current_path]:
+                    subfolder = has_files_template % subfolder
 
                 parent = add_row(
                     [subfolder, current_path], select_row=False, parent_iterator=parent
