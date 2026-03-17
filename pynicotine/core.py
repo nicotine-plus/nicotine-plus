@@ -5,10 +5,19 @@ import os
 import sys
 import threading
 
+from threading import Thread
+from types import FrameType
+from typing import IO
+
 import pynicotine
 from pynicotine.config import config
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import InternalMessage
+from pynicotine.slskmessages import PeerMessage
+from pynicotine.slskmessages import ServerDisconnect
+from pynicotine.slskmessages import ServerMessage
+from pynicotine.slskmessages import ServerReconnect
 
 
 class Core:
@@ -45,13 +54,13 @@ class Core:
         self.update_checker = None
         self._network_thread = None
 
-        self.cli_interface_address = None
-        self.cli_listen_port = None
-        self.cli_rescanning = None
+        self.cli_interface_address: str | None = None
+        self.cli_listen_port: int | None = None
+        self.cli_rescanning: bool | None = None
 
-        self.enabled_components = set()
+        self.enabled_components: set[str] = set()
 
-    def init_components(self, enabled_components=None, isolated_mode=False):
+    def init_components(self, enabled_components: set[str] | None = None, isolated_mode: bool = False):
 
         # Enable all components by default
         if enabled_components is None:
@@ -221,6 +230,17 @@ class Core:
             "version": pynicotine.__version__,
             "status": _("terminating") if signal_type == signal.SIGTERM else _("application closing")
         })
+    def quit(self, signal_type: int | None = None, _frame: FrameType | None = None):
+        log.add(
+            _("Quitting %(program)s %(version)s, %(status)s…"),
+            {
+                "program": pynicotine.__application_name__,
+                "version": pynicotine.__version__,
+                "status": _("terminating")
+                if signal_type == signal.SIGTERM
+                else _("application closing"),
+            },
+        )
 
         # Allow the networking thread to finish up before quitting
         events.emit("schedule-quit")
@@ -258,25 +278,23 @@ class Core:
         ))
 
     def disconnect(self):
-        from pynicotine.slskmessages import ServerDisconnect
         self.send_message_to_network_thread(ServerDisconnect())
 
     def reconnect(self):
-        from pynicotine.slskmessages import ServerReconnect
         self.send_message_to_network_thread(ServerReconnect())
 
-    def _server_reconnect(self, _msg):
+    def _server_reconnect(self, _msg: ServerReconnect):
         self.connect()
 
-    def send_message_to_network_thread(self, message):
+    def send_message_to_network_thread(self, message: InternalMessage):
         """Sends message to the networking thread to inform about something."""
         events.emit("queue-network-message", message)
 
-    def send_message_to_server(self, message):
+    def send_message_to_server(self, message: ServerMessage):
         """Sends message to the server."""
         events.emit("queue-network-message", message)
 
-    def send_message_to_peer(self, username, message):
+    def send_message_to_peer(self, username: str, message: PeerMessage):
         """Sends message to a peer."""
 
         message.username = username
@@ -287,14 +305,14 @@ class UpdateChecker:
     __slots__ = ("_thread",)
 
     def __init__(self):
-        self._thread = None
+        self._thread: Thread | None = None
 
     def check(self):
 
         if self._thread is not None and self._thread.is_alive():
             return
 
-        self._thread = threading.Thread(target=self._check, name="UpdateChecker")
+        self._thread = Thread(target=self._check, name="UpdateChecker")
         self._thread.start()
 
     def _check(self):
@@ -313,7 +331,7 @@ class UpdateChecker:
         events.emit_main_thread("check-latest-version", h_latest_version, is_outdated, error_message)
 
     @staticmethod
-    def create_integer_version(version):
+    def create_integer_version(version: str):
 
         major, minor, patch = version.split(".")[:3]
         stable = 1
@@ -331,11 +349,12 @@ class UpdateChecker:
         import json
         from urllib.request import urlopen
 
+        response: IO[bytes]
         with urlopen("https://pypi.org/pypi/nicotine-plus/json", timeout=5) as response:
             response_body = response.read().decode("utf-8", "replace")
 
         data = json.loads(response_body)
-        h_latest_version = data["info"]["version"]
+        h_latest_version: str = data["info"]["version"]
         latest_version = cls.create_integer_version(h_latest_version)
 
         return h_latest_version, latest_version
