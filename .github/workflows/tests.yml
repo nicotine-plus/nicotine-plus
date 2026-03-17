@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14', '3.15-dev',
+        python: ['3.10', '3.11', '3.12', '3.13', '3.14', '3.15-dev',
                  'pypy-3.11']
     steps:
       - name: Checkout code
@@ -57,7 +57,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        container: ['debian:bullseye', 'debian:bookworm', 'debian:trixie', 'debian:unstable',
+        container: ['debian:bookworm', 'debian:trixie', 'debian:unstable',
                     'ubuntu:jammy', 'ubuntu:noble', 'ubuntu:devel']
     container: ${{ matrix.container }}
     steps:
