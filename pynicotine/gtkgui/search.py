@@ -1839,7 +1839,7 @@ class Search:
         if self.num_results_found > self.num_results_visible:
             self.on_clear_undo_filters()
         else:
-            self.window.application.lookup_action("configure-searches").activate()
+            self.window.application.lookup_action("preferences").activate()
 
     def on_toggle_grouping(self, action, state):
 
