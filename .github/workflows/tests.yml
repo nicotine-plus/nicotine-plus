@@ -299,34 +299,38 @@ jobs:
         run: python3 -m build --no-isolation
 
   macos:
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
         include:
           - arch: x86_64
-            platform: macos-15-intel
+            platform: macos-26-intel
           - arch: arm64
-            platform: macos-15
+            platform: macos-26
     runs-on: ${{ matrix.platform }}
-    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash -el {0}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Create Python virtual environment
-        run: |
-          brew uninstall --ignore-dependencies python@3.14
-          brew install --overwrite python@3.14
-          python3.14 -m venv venv
+      - name: Set up Miniforge
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          activate-environment: nicotine-plus
+          miniforge-version: latest
+          conda-remove-defaults: "true"
 
       - name: Install dependencies
-        run: venv/bin/python3 build-aux/macos/dependencies.py
+        run: python3 build-aux/macos/dependencies.py
 
       - name: Integration and unit tests
-        run: venv/bin/python3 -m unittest -v
+        run: python3 -m unittest -v
 
       - name: Build
-        run: venv/bin/python3 -m build
+        run: python3 -m build
 
       - name: Build without isolation
-        run: venv/bin/python3 -m build --no-isolation
+        run: python3 -m build --no-isolation

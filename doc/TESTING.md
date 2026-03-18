@@ -1,5 +1,5 @@
 <!--
-  SPDX-FileCopyrightText: 2016-2025 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2016-2026 Nicotine+ Contributors
   SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
@@ -110,11 +110,11 @@ Unstable installers are built after every commit to the master branch.
 
  - [Download Unstable macOS Intel Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-x86_64-installer.zip)
     — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-x86_64-installer)  
-   for macOS 15 Sequoia or later
+   for macOS 11 Big Sur or later
 
  - [Download Unstable macOS Apple Silicon Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-arm64-installer.zip)
     — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-arm64-installer)  
-   for macOS 15 Sequoia or later
+   for macOS 11 Big Sur or later
 
 
 ## All Platforms

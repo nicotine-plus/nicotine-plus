@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2020-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
@@ -7,40 +7,26 @@ import subprocess
 import sys
 
 
-def install_brew():
-    """Install dependencies from the main Homebrew repos."""
+def install_conda_forge():
+    """Install dependencies from the main conda-forge repos."""
 
-    # Workaround for https://github.com/Homebrew/homebrew-core/issues/139497
-    os.environ["HOMEBREW_NO_INSTALL_FROM_API"] = "1"
+    environment_name = "nicotine-plus"
 
-    packages = ["gettext",
+    # Temporarily install older icu version to force non-icu variant of libsqlite
+    pre_packages = ["icu<78",
+                    "libsqlite"]
+
+    packages = ["icu",
+                "cx_freeze",
                 "gobject-introspection",
                 "gtk4",
                 "libadwaita",
-                "webp-pixbuf-loader"]
+                "pygobject",
+                "python-build"]
 
-    subprocess.check_call(["brew", "install", "--quiet"] + packages)
-
-
-def install_pypi():
-    """Install dependencies from PyPi."""
-
-    subprocess.check_call([
-        sys.executable, "-m", "pip", "install",
-
-        # For consistency, avoid including pre-built binaries from PyPI
-        # in the application.
-        "--no-binary", "cx_Freeze",
-        "--no-binary", "PyGObject",
-        "--no-binary", "pycairo",
-
-        "-e", ".[packaging,tests]",
-        "build",
-        "setuptools",
-        "wheel"
-    ])
+    subprocess.check_call(["mamba", "install", "-n", environment_name, "-y"] + pre_packages)
+    subprocess.check_call(["mamba", "install", "-n", environment_name, "-y"] + packages)
 
 
 if __name__ == "__main__":
-    install_brew()
-    install_pypi()
+    install_conda_forge()
