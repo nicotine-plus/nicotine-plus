@@ -222,11 +222,6 @@ def add_gtk():
     add_typelibs()
 
 
-def add_ssl_certs():
-    ssl_paths = ssl.get_default_verify_paths()
-    add_file(file_path=ssl_paths.openssl_cafile, output_path="lib/cert.pem")
-
-
 def add_translations():
 
     from setup import build_translations  # noqa: E402  # pylint: disable=import-self,no-name-in-module
@@ -240,9 +235,6 @@ def add_translations():
 
 # GTK
 add_gtk()
-
-# SSL
-add_ssl_certs()
 
 # Translations
 add_translations()
