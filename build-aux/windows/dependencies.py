@@ -14,6 +14,7 @@ def install_pacman():
 
     packages = [f"{prefix}-ca-certificates",
                 f"{prefix}-gettext-tools",
+                f"{prefix}-gobject-introspection",
                 f"{prefix}-gtk4",
                 f"{prefix}-libadwaita",
                 f"{prefix}-python-build",

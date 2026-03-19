@@ -274,6 +274,7 @@ jobs:
           install: >-
             ${{ matrix.prefix }}-ca-certificates
             ${{ matrix.prefix }}-gettext-tools
+            ${{ matrix.prefix }}-gobject-introspection
             ${{ matrix.prefix }}-gtk4
             ${{ matrix.prefix }}-libadwaita
             ${{ matrix.prefix }}-python-build
