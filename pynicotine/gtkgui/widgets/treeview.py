@@ -242,6 +242,178 @@ class TreeView:
 
         self._column_numbers = list(self._column_ids.values())
 
+    def _apply_column_iterator_and_sort_defaults(self, column_index, column_data, sort_column_id):
+
+        iterator_key = column_data.get("iterator_key")
+
+        if iterator_key:
+            # Use values from this column as keys for iterator mapping
+            self._iterator_key_column = column_index
+
+        default_sort_type = column_data.get("default_sort_type")
+
+        if default_sort_type:
+            # Sort treeview by values in this column by default
+            self._default_sort_column = sort_column_id
+            self._default_sort_type = (Gtk.SortType.DESCENDING if default_sort_type == "descending"
+                                       else Gtk.SortType.ASCENDING)
+
+            if self._sort_column is None and self._sort_type is None:
+                self._sort_column = self._default_sort_column
+                self._sort_type = self._default_sort_type
+
+                self.model.set_sort_column_id(self._default_sort_column, self._default_sort_type)
+
+    def _get_stored_column_config_root(self):
+
+        try:
+            return config.sections["columns"][self._widget_name][self._secondary_name]
+        except KeyError:
+            return config.sections["columns"][self._widget_name]
+
+    def _apply_stored_column_preferences(self, column_id, column_type, sort_column_id, width, column_config):
+
+        column_properties = column_config.get(column_id, {})
+        column_sort_type = column_properties.get("sort")
+
+        # Restore saved column width
+        if self._persistent_widths and column_type != "icon":
+            width = column_properties.get("width", width)
+
+        if column_sort_type and self._persistent_sort:
+            # Sort treeview by values in this column by default
+            self._sort_column = sort_column_id
+            self._sort_type = (Gtk.SortType.DESCENDING if column_sort_type == "descending"
+                               else Gtk.SortType.ASCENDING)
+            self.model.set_sort_column_id(self._sort_column, self._sort_type)
+
+        return width
+
+    def _create_visible_column_widgets(
+            self, column_type, column_data, column_id, column_index, title, activatable_cells,
+            width_padding, height_padding, progress_padding):
+
+        # Allow individual cells to receive visual focus
+        mode = Gtk.CellRendererMode.ACTIVATABLE if activatable_cells else Gtk.CellRendererMode.INERT
+        xalign = 0.0
+        attributes = None
+
+        if column_type == "number" or column_data.get("tabular"):
+            attributes = Pango.AttrList()
+            attributes.insert(Pango.attr_font_features_new("tnum=1"))
+
+        if column_type == "text":
+            renderer = Gtk.CellRendererText(
+                mode=mode, single_paragraph_mode=True, attributes=attributes, xpad=width_padding,
+                ypad=height_padding
+            )
+            column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, text=column_index)
+            text_underline_column = column_data.get("text_underline_column")
+            text_weight_column = column_data.get("text_weight_column")
+
+            if text_underline_column:
+                column.add_attribute(renderer, "underline", self._column_ids[text_underline_column])
+
+            if text_weight_column:
+                column.add_attribute(renderer, "weight", self._column_ids[text_weight_column])
+
+        elif column_type == "number":
+            xalign = 1
+            renderer = Gtk.CellRendererText(
+                mode=mode, attributes=attributes, xalign=xalign, xpad=width_padding, ypad=height_padding
+            )
+            column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, text=column_index)
+            column.set_alignment(xalign)
+
+        elif column_type == "progress":
+            xalign = 1
+            renderer = Gtk.CellRendererProgress(mode=mode, ypad=progress_padding)
+            column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, value=column_index)
+            column.set_alignment(xalign)
+
+        elif column_type == "toggle":
+            xalign = 0.5
+            renderer = Gtk.CellRendererToggle(mode=mode, xalign=xalign, xpad=13)
+            renderer.connect("toggled", self.on_toggle, column_data["toggle_callback"])
+
+            column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, active=column_index)
+            inconsistent_column = column_data.get("inconsistent_column")
+
+            if inconsistent_column is not None:
+                column.add_attribute(renderer, "inconsistent", self._column_ids[inconsistent_column])
+
+        elif column_type == "icon":
+            icon_args = {}
+
+            if column_id == "country":
+                if GTK_API_VERSION >= 4:
+                    # Custom icon size defined in theme.py
+                    icon_args["icon_size"] = Gtk.IconSize.NORMAL  # pylint: disable=no-member
+                else:
+                    # Use the same size as the original icon
+                    icon_args["stock_size"] = 0
+
+            renderer = Gtk.CellRendererPixbuf(mode=mode, xalign=1.0, **icon_args)
+            column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, icon_name=column_index)
+
+        return column, renderer, xalign
+
+    def _setup_column_header_gestures_and_title_widget(self, column, column_id, sort_column_id, xalign):
+
+        column_header = column.get_button()
+
+        if GTK_API_VERSION >= 4:
+            gesture_click = Gtk.GestureClick()
+            column_header.add_controller(gesture_click)                  # pylint: disable=no-member
+        else:
+            gesture_click = Gtk.GestureMultiPress(widget=column_header)
+
+        gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        gesture_click.connect("released", self.on_column_header_pressed, column_id, sort_column_id)
+        self._column_gesture_controllers.append(gesture_click)
+
+        title_container = next(iter(column_header))
+        title_widget = next(iter(title_container)) if xalign < 1 else list(title_container)[-1]
+
+        return title_widget
+
+    def _apply_visible_column_layout(
+            self, column, column_type, width, xalign, title_widget, column_data, sensitive_column,
+            should_expand_column, renderer, column_id, sort_column_id, column_widgets):
+
+        # Required for fixed height mode
+        column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
+
+        if width is not None:
+            column.set_resizable(column_type != "icon")
+
+        if isinstance(width, int) and width > 0:
+            column.set_fixed_width(width)
+
+        column.set_reorderable(True)
+        column.set_min_width(24)
+
+        if xalign == 1 and GTK_API_VERSION >= 4:
+            # Gtk.TreeViewColumn.set_alignment() only changes the sort arrow position in GTK 4
+            # Actually align the label to the right here instead
+            title_widget.set_halign(Gtk.Align.END)
+
+        if sensitive_column:
+            column.add_attribute(renderer, "sensitive", self._column_ids[sensitive_column])
+
+        if should_expand_column:
+            column.set_expand(True)
+
+        if self._widget_name:
+            column.connect("notify::x-offset", self.on_column_position_changed)
+
+        column.id = column_id
+        column.type = column_type
+        column.tooltip_callback = column_data.get("tooltip_callback")
+
+        column.set_sort_column_id(sort_column_id)
+        column_widgets[column_id] = column
+
     def _initialise_columns(self, columns):
 
         self._initialise_column_ids(columns)
@@ -254,29 +426,14 @@ class TreeView:
         column_widgets = {}
         column_config = {}
         has_visible_column_header = False
+        activatable_cells = len(columns) > 1
 
         for column_index, (column_id, column_data) in enumerate(columns.items()):
             title = column_data.get("title")
-            iterator_key = column_data.get("iterator_key")
             sort_data_column = column_data.get("sort_column", column_id)
             sort_column_id = self._column_ids[sort_data_column]
-            default_sort_type = column_data.get("default_sort_type")
 
-            if iterator_key:
-                # Use values from this column as keys for iterator mapping
-                self._iterator_key_column = column_index
-
-            if default_sort_type:
-                # Sort treeview by values in this column by default
-                self._default_sort_column = sort_column_id
-                self._default_sort_type = (Gtk.SortType.DESCENDING if default_sort_type == "descending"
-                                           else Gtk.SortType.ASCENDING)
-
-                if self._sort_column is None and self._sort_type is None:
-                    self._sort_column = self._default_sort_column
-                    self._sort_type = self._default_sort_type
-
-                    self.model.set_sort_column_id(self._default_sort_column, self._default_sort_type)
+            self._apply_column_iterator_and_sort_defaults(column_index, column_data, sort_column_id)
 
             if title is None:
                 # Hidden data column
@@ -288,140 +445,25 @@ class TreeView:
             sensitive_column = column_data.get("sensitive_column")
 
             if self._widget_name:
-                try:
-                    column_config = config.sections["columns"][self._widget_name][self._secondary_name]
-                except KeyError:
-                    column_config = config.sections["columns"][self._widget_name]
+                column_config = self._get_stored_column_config_root()
+                width = self._apply_stored_column_preferences(
+                    column_id, column_type, sort_column_id, width, column_config)
 
-                column_properties = column_config.get(column_id, {})
-                column_sort_type = column_properties.get("sort")
+            column, renderer, xalign = self._create_visible_column_widgets(
+                column_type, column_data, column_id, column_index, title, activatable_cells,
+                width_padding, height_padding, progress_padding)
 
-                # Restore saved column width
-                if self._persistent_widths and column_type != "icon":
-                    width = column_properties.get("width", width)
-
-                if column_sort_type and self._persistent_sort:
-                    # Sort treeview by values in this column by default
-                    self._sort_column = sort_column_id
-                    self._sort_type = (Gtk.SortType.DESCENDING if column_sort_type == "descending"
-                                       else Gtk.SortType.ASCENDING)
-                    self.model.set_sort_column_id(self._sort_column, self._sort_type)
-
-            # Allow individual cells to receive visual focus
-            mode = Gtk.CellRendererMode.ACTIVATABLE if len(columns) > 1 else Gtk.CellRendererMode.INERT
-            xalign = 0.0
-            attributes = None
-
-            if column_type == "number" or column_data.get("tabular"):
-                attributes = Pango.AttrList()
-                attributes.insert(Pango.attr_font_features_new("tnum=1"))
-
-            if column_type == "text":
-                renderer = Gtk.CellRendererText(
-                    mode=mode, single_paragraph_mode=True, attributes=attributes, xpad=width_padding,
-                    ypad=height_padding
-                )
-                column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, text=column_index)
-                text_underline_column = column_data.get("text_underline_column")
-                text_weight_column = column_data.get("text_weight_column")
-
-                if text_underline_column:
-                    column.add_attribute(renderer, "underline", self._column_ids[text_underline_column])
-
-                if text_weight_column:
-                    column.add_attribute(renderer, "weight", self._column_ids[text_weight_column])
-
-            elif column_type == "number":
-                xalign = 1
-                renderer = Gtk.CellRendererText(
-                    mode=mode, attributes=attributes, xalign=xalign, xpad=width_padding, ypad=height_padding
-                )
-                column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, text=column_index)
-                column.set_alignment(xalign)
-
-            elif column_type == "progress":
-                xalign = 1
-                renderer = Gtk.CellRendererProgress(mode=mode, ypad=progress_padding)
-                column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, value=column_index)
-                column.set_alignment(xalign)
-
-            elif column_type == "toggle":
-                xalign = 0.5
-                renderer = Gtk.CellRendererToggle(mode=mode, xalign=xalign, xpad=13)
-                renderer.connect("toggled", self.on_toggle, column_data["toggle_callback"])
-
-                column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, active=column_index)
-                inconsistent_column = column_data.get("inconsistent_column")
-
-                if inconsistent_column is not None:
-                    column.add_attribute(renderer, "inconsistent", self._column_ids[inconsistent_column])
-
-            elif column_type == "icon":
-                icon_args = {}
-
-                if column_id == "country":
-                    if GTK_API_VERSION >= 4:
-                        # Custom icon size defined in theme.py
-                        icon_args["icon_size"] = Gtk.IconSize.NORMAL  # pylint: disable=no-member
-                    else:
-                        # Use the same size as the original icon
-                        icon_args["stock_size"] = 0
-
-                renderer = Gtk.CellRendererPixbuf(mode=mode, xalign=1.0, **icon_args)
-                column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, icon_name=column_index)
-
-            column_header = column.get_button()
-
-            if GTK_API_VERSION >= 4:
-                gesture_click = Gtk.GestureClick()
-                column_header.add_controller(gesture_click)                  # pylint: disable=no-member
-            else:
-                gesture_click = Gtk.GestureMultiPress(widget=column_header)
-
-            gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-            gesture_click.connect("released", self.on_column_header_pressed, column_id, sort_column_id)
-            self._column_gesture_controllers.append(gesture_click)
-
-            title_container = next(iter(column_header))
-            title_widget = next(iter(title_container)) if xalign < 1 else list(title_container)[-1]
+            title_widget = self._setup_column_header_gestures_and_title_widget(
+                column, column_id, sort_column_id, xalign)
 
             if column_data.get("hide_header"):
                 title_widget.set_visible(False)
             else:
                 has_visible_column_header = True
 
-            # Required for fixed height mode
-            column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
-
-            if width is not None:
-                column.set_resizable(column_type != "icon")
-
-            if isinstance(width, int) and width > 0:
-                column.set_fixed_width(width)
-
-            column.set_reorderable(True)
-            column.set_min_width(24)
-
-            if xalign == 1 and GTK_API_VERSION >= 4:
-                # Gtk.TreeViewColumn.set_alignment() only changes the sort arrow position in GTK 4
-                # Actually align the label to the right here instead
-                title_widget.set_halign(Gtk.Align.END)
-
-            if sensitive_column:
-                column.add_attribute(renderer, "sensitive", self._column_ids[sensitive_column])
-
-            if should_expand_column:
-                column.set_expand(True)
-
-            if self._widget_name:
-                column.connect("notify::x-offset", self.on_column_position_changed)
-
-            column.id = column_id
-            column.type = column_type
-            column.tooltip_callback = column_data.get("tooltip_callback")
-
-            column.set_sort_column_id(sort_column_id)
-            column_widgets[column_id] = column
+            self._apply_visible_column_layout(
+                column, column_type, width, xalign, title_widget, column_data, sensitive_column,
+                should_expand_column, renderer, column_id, sort_column_id, column_widgets)
 
         self.widget.set_headers_visible(has_visible_column_header)
 
