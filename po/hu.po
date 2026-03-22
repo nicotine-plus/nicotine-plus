@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-13 02:38+0200\n"
-"PO-Revision-Date: 2026-03-03 20:33+0000\n"
+"PO-Revision-Date: 2026-03-21 17:09+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -2162,7 +2162,7 @@ msgstr "Lecsatlakozás"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:38
 msgid "Rescan Shares"
-msgstr "Megosztások újra olvasása"
+msgstr "A megosztások újraolvasása"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:41
 msgid "Confirm Quit"
@@ -2745,12 +2745,11 @@ msgstr "Megosztások előkészítése"
 
 #: pynicotine/gtkgui/mainwindow.py:1252
 msgid "Stop Scanning"
-msgstr ""
+msgstr "Beolvasás leállítása"
 
 #: pynicotine/gtkgui/mainwindow.py:1268
-#, fuzzy
 msgid "Rescan Failed"
-msgstr "Megosztások újra olvasása"
+msgstr "Az újraolvasás nem sikerült"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:53
 msgid "You are offline"
