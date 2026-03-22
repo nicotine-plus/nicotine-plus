@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on February 28, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on March 22, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -348,6 +348,12 @@ server, but it handles the protocol well enough (and can be modified).
 We send this to the server right after the connection has been established.
 Server responds with the greeting message.
 
+The server uses the major and minor versions to differentiate between
+clients. Use unique version numbers when possible, to avoid impersonating
+other clients. Major versions reserved for popular Soulseek clients include
+157 for Soulseek NS and SoulseekQt, 160 for Nicotine+, and 170 for slskd
+(Soulseek.NET). These clients have their own rules for minor versions.
+
 ### Sending Login Example
 
 #### Message
@@ -361,13 +367,13 @@ Server responds with the greeting message.
 
 | Data      | Version       | Hash Length   | Hash                                                                                              | Minor Version |
 |-----------|---------------|---------------|---------------------------------------------------------------------------------------------------|---------------|
-| **Human** | 160           | 32            | d51c9a7e9353746a6020f9602d452929                                                                  | 1             |
-| **Hex**   | `a0 00 00 00` | `20 00 00 00` | `64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39` | `01 00 00 00` |
+| **Human** | 175           | 32            | d51c9a7e9353746a6020f9602d452929                                                                  | 1             |
+| **Hex**   | `af 00 00 00` | `20 00 00 00` | `64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39` | `01 00 00 00` |
 
 #### Message as Hex Stream
 
 ```
-48 00 00 00 01 00 00 00 08 00 00 00 75 73 65 72 6e 61 6d 65 08 00 00 00 70 61 73 73 77 6f 72 64 a0 00 00 00 20 00
+48 00 00 00 01 00 00 00 08 00 00 00 75 73 65 72 6e 61 6d 65 08 00 00 00 70 61 73 73 77 6f 72 64 af 00 00 00 20 00
 00 00 64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39 01 00 00 00
 ```
 
@@ -376,12 +382,10 @@ Server responds with the greeting message.
     1.  **string** *username*
     2.  **string** *password*  
         A non-empty string is required
-    3.  **uint32** *version number*  
-        `160` for Nicotine+
+    3.  **uint32** *major version*
     4.  **string** *hash*  
         MD5 hex digest of concatenated username and password
-    5.  **uint32** *minor version*  
-        `0x13000000` for 157 ns 13e, `0x11000000` for 157 ns 13c
+    5.  **uint32** *minor version*
   - Receive
     1.  **bool** *success*
     2.  If *success* is true
