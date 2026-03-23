@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-13 02:38+0200\n"
-"PO-Revision-Date: 2026-03-13 00:40+0000\n"
+"PO-Revision-Date: 2026-03-22 18:54+0000\n"
 "Last-Translator: Tko Toradi <random.mongoose052@passinbox.com>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hr/>\n"
@@ -2721,12 +2721,11 @@ msgstr "Priprema dijeljenja"
 
 #: pynicotine/gtkgui/mainwindow.py:1252
 msgid "Stop Scanning"
-msgstr ""
+msgstr "Prekini skeniranje"
 
 #: pynicotine/gtkgui/mainwindow.py:1268
-#, fuzzy
 msgid "Rescan Failed"
-msgstr "Ponovno skeniraj dijeljenja"
+msgstr "Re-skeniranje neuspjelo"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:53
 msgid "You are offline"
