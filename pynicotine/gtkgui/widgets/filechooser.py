@@ -264,7 +264,8 @@ class FileChooserButton:
         self.show_open_external_button = show_open_external_button
         self.path = ""
 
-        widget = Gtk.Box(visible=True)
+        widget = Gtk.Box(spacing=6, visible=True)
+        button_container = Gtk.Box(visible=True)
 
         self.chooser_button = Gtk.Button(hexpand=True, valign=Gtk.Align.CENTER, visible=True)
         self.chooser_button.connect("clicked", self.on_open_file_chooser)
@@ -288,8 +289,9 @@ class FileChooserButton:
 
         if GTK_API_VERSION >= 4:
             container.append(widget)                        # pylint: disable=no-member
-            widget.append(self.chooser_button)              # pylint: disable=no-member
+            widget.append(button_container)                 # pylint: disable=no-member
             widget.append(self.open_folder_button)          # pylint: disable=no-member
+            button_container.append(self.chooser_button)    # pylint: disable=no-member
             label_container.append(self.icon)               # pylint: disable=no-member
             label_container.append(self.label)              # pylint: disable=no-member
             self.chooser_button.set_child(label_container)  # pylint: disable=no-member
@@ -297,11 +299,12 @@ class FileChooserButton:
             self.open_folder_button.set_icon_name("external-link-symbolic")  # pylint: disable=no-member
 
             if end_button:
-                widget.append(end_button)                   # pylint: disable=no-member
+                button_container.append(end_button)         # pylint: disable=no-member
         else:
             container.add(widget)                           # pylint: disable=no-member
-            widget.add(self.chooser_button)                 # pylint: disable=no-member
+            widget.add(button_container)                    # pylint: disable=no-member
             widget.add(self.open_folder_button)             # pylint: disable=no-member
+            button_container.add(self.chooser_button)       # pylint: disable=no-member
             label_container.add(self.icon)                  # pylint: disable=no-member
             label_container.add(self.label)                 # pylint: disable=no-member
             self.chooser_button.add(label_container)        # pylint: disable=no-member
@@ -310,15 +313,13 @@ class FileChooserButton:
                 Gtk.Image(icon_name="external-link-symbolic"))
 
             if end_button:
-                widget.add(end_button)                      # pylint: disable=no-member
+                button_container.add(end_button)            # pylint: disable=no-member
 
         if is_flat:
-            widget.set_spacing(6)
-
             for button in (self.chooser_button, self.open_folder_button):
                 add_css_class(button, "flat")
         else:
-            add_css_class(widget, "linked")
+            add_css_class(button_container, "linked")
 
         self.open_folder_button.connect("clicked", self.on_open_folder)
 
