@@ -3898,6 +3898,16 @@ class FileOffset(FileMessage):
     to tell them how many bytes of the file we've previously downloaded. If nothing
     was downloaded, the offset is 0.
 
+    Note that the offset is intended for resuming previous file downloads, not
+    downloading specific chunks of a file. Attempting to retrofit such
+    functionality is a bad idea for several reasons:
+
+    1. The protocol doesn't support hashing of file chunks for verification.
+    2. Every download request occupies an upload slot, causing congestion if
+       small chunks are requested from many users at once.
+    3. Aborting an incomplete file transfer makes it appear as failed on the
+       uploader's end, resulting in confusion.
+
     Note that Soulseek NS fails to read the size of an incomplete download if more
     than 2 GB of the file has been downloaded, and the download is resumed. In
     consequence, the client sends an invalid file offset of -1.
