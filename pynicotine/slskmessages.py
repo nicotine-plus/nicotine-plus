@@ -695,11 +695,10 @@ class Login(ServerMessage):
     We send this to the server right after the connection has been
     established. Server responds with the greeting message.
 
-    The server uses the major and minor versions to differentiate between
-    clients. Use unique version numbers when possible, to avoid impersonating
-    other clients. Major versions reserved for popular Soulseek clients include
-    157 for Soulseek NS and SoulseekQt, 160 for Nicotine+, and 170 for slskd
-    (Soulseek.NET). These clients have their own rules for minor versions.
+    The server may use the client type and subtype (formally known here as
+    the major and minor protocol versions) to differentiate between client
+    implementations. Projects must choose a unique type number to avoid
+    impersonating other clients, and have thier own rules for subtypes.
     """
 
     __slots__ = ("username", "passwd", "version", "minorversion", "success", "rejection_reason",
@@ -710,8 +709,8 @@ class Login(ServerMessage):
     def __init__(self, username=None, passwd=None, version=None, minorversion=None):
         self.username = username
         self.passwd = passwd
-        self.version = version
-        self.minorversion = minorversion
+        self.version = version  # client_type
+        self.minorversion = minorversion  # client_subtype
         self.success = None
         self.rejection_reason = None
         self.rejection_detail = None
@@ -726,13 +725,13 @@ class Login(ServerMessage):
         msg = bytearray()
         msg += self.pack_string(self.username)
         msg += self.pack_string(self.passwd)
-        msg += self.pack_uint32(self.version)
+        msg += self.pack_uint32(self.version)  # client_type
 
         payload = self.username + self.passwd
         md5hash = md5(payload.encode()).hexdigest()
         msg += self.pack_string(md5hash)
 
-        msg += self.pack_uint32(self.minorversion)
+        msg += self.pack_uint32(self.minorversion)  # client_subtype
 
         return msg
 

@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on March 22, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on March 24, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -216,14 +216,81 @@ missing if a file does not provide them.
     -   `{1: duration, 4: sample rate, 5: bit depth}`
 
 
+## Client Types *(Major Versions)*
+
+Projects must choose a unique type number to avoid impersonating other clients.
+
+### Reserved
+
+| Type   | Client                                     | Compliance   |
+|--------|--------------------------------------------|--------------|
+| `157`  | [Soulseek NS](#soulseek) and SoulseekQt    | **OFFICIAL** |
+| `160`  | [Nicotine+](#nicotine)                     | **FULL**     |
+| `169`  | seeleseek *(for macOS)*                    | DEVELOPING   |
+| `170`  | [Soulseek.NET](#soulseeknet) *(API)*       | *(Various)*  |
+| `175`  | *Reserved for development and testing*     | EXPERIMENTAL |
+
+### Obsolete
+
+| Type   | Client                     | Compliance   |
+|--------|----------------------------|--------------|
+| `156`  | Old server *(pre 2008)*    | *(Offline)*  |
+| `157`* | Nicotine+ 1.2.12 to 2.2.0  | IMPERSONATED |
+| `180`  | PySoulSeek                 | MINIMAL      |
+| `181`  | Nicotine+ 1.2.0 to 1.2.11  | PARTIAL      |
+| `182`  | Museek+                    | PARTIAL      |
+| `198`  | Nicotine 1.0.6 to 1.0.8    | MINIMAL      |
+| `200`  | Nicotine 1.0.4 and below   | NO           |
+
+
+## Client Subtypes *(Minor Versions)*
+
+Projects have thier own rules for subtypes. The number can be set to anything.
+
+### Nicotine+
+
+The project maintainer increments the subtype number for new capabilities.
+
+#### Client type `160`
+
+| Subtype | Versions        | Protocol implementation details                               | Compliance   |
+|---------|-----------------|---------------------------------------------------------------|--------------|
+| *None*  | 1.x             | *The protocol minor subtype was not previously implemented*   | MINIMAL      |
+| `19`*   | 2.0.0 to 2.2.0  | Impersonated NS for experimental distributed network support  | IMPERSONATED |
+| `1`     | 2.2.1 to 3.2.9  | Send custom version number to server instead of Soulseek NS's | PARTIAL      |
+| `2`     | 3.3.0 to 3.3.10 | Added distributed child peer support                          | ALMOST FULL  |
+| `3`     | 3.4.0 and above | Distribute raw messages to child peers                        | **FULL**     |
+
+### Soulseek.NET
+
+API library requires projects to choose a `minorVersion` for their subtype.
+
+#### Client type `170`
+
+| Subtype | Project Name | Protocol implementation details | Compliance |
+|---------|--------------|---------------------------------|------------|
+| `760`   | slskd        | Reference implementation of API | **FULL**   |
+
+### Soulseek®
+
+Official client subtype number is incremented for each released version.
+
+#### Client type `157`
+
+| Subtype             | Version | Protocol implementation details                      | Compliance                         |
+|---------------------|---------|------------------------------------------------------|------------------------------------|
+| `17` (`0x11000000`) | NS 13c  | 2GB transfer limit; lowercase paths; not distributed | **OBSOLETE, no longer used**       |
+| `19` (`0x13000000`) | NS 13e  | 2GB transfer limit; lowercase paths; legacy encoding | **OBSOLETE, no longer functional** |
+
+
 # Server Messages
 
 Server messages are used by clients to interface with the server over a
 connection (TCP). In Nicotine+, these messages are defined in slskmessages.py.
 
-If you want a Soulseek server, check out [Soulfind](https://github.com/soulfind-dev/soulfind).
-Soulfind is obviously not exactly the same as the official proprietary Soulseek
-server, but it handles the protocol well enough (and can be modified).
+If you want a Soulseek server, [Soulfind](https://github.com/soulfind-dev/soulfind)
+is open source and not exactly the same as the official proprietary Soulseek
+server, but it handles the protocol well enough for development and testing.
 
 
 ## Server Message Format
@@ -348,11 +415,10 @@ server, but it handles the protocol well enough (and can be modified).
 We send this to the server right after the connection has been established.
 Server responds with the greeting message.
 
-The server uses the major and minor versions to differentiate between
-clients. Use unique version numbers when possible, to avoid impersonating
-other clients. Major versions reserved for popular Soulseek clients include
-157 for Soulseek NS and SoulseekQt, 160 for Nicotine+, and 170 for slskd
-(Soulseek.NET). These clients have their own rules for minor versions.
+The server may use the client type and subtype (formally known here as
+the major and minor protocol versions) to differentiate between client
+implementations. Projects must choose a unique type number to avoid
+impersonating other clients, and have thier own rules for subtypes.
 
 ### Sending Login Example
 
@@ -365,10 +431,10 @@ other clients. Major versions reserved for popular Soulseek clients include
 
 #### ...continued
 
-| Data      | Version       | Hash Length   | Hash                                                                                              | Minor Version |
-|-----------|---------------|---------------|---------------------------------------------------------------------------------------------------|---------------|
-| **Human** | 175           | 32            | d51c9a7e9353746a6020f9602d452929                                                                  | 1             |
-| **Hex**   | `af 00 00 00` | `20 00 00 00` | `64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39` | `01 00 00 00` |
+| Data      | Client Type   | Hash Length   | Hash of Username + Password                                                                       | Client Subtype |
+|-----------|---------------|---------------|---------------------------------------------------------------------------------------------------|----------------|
+| **Human** | 175           | 32            | d51c9a7e9353746a6020f9602d452929                                                                  | 1              |
+| **Hex**   | `af 00 00 00` | `20 00 00 00` | `64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39` | `01 00 00 00`  |
 
 #### Message as Hex Stream
 
@@ -382,10 +448,12 @@ other clients. Major versions reserved for popular Soulseek clients include
     1.  **string** *username*
     2.  **string** *password*  
         A non-empty string is required
-    3.  **uint32** *major version*
-    4.  **string** *hash*  
+    3.  **uint32** *client type*
+        See [Client Types](#client-types-major-versions)
+    4.  **string** *hash*
         MD5 hex digest of concatenated username and password
-    5.  **uint32** *minor version*
+    5.  **uint32** *client subtype*
+        See [Client Subtypes](#client-subtypes-minor-versions)
   - Receive
     1.  **bool** *success*
     2.  If *success* is true
