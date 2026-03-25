@@ -1,5 +1,5 @@
 <!--
-  SPDX-FileCopyrightText: 2004-2025 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2004-2026 Nicotine+ Contributors
   SPDX-FileCopyrightText: 2003-2004 Nicotine Contributors
   SPDX-FileCopyrightText: 2002-2003 PySoulSeek Contributors
   SPDX-License-Identifier: GPL-3.0-or-later
@@ -10,6 +10,50 @@
 The current stable version of Nicotine+ is available at [DOWNLOADS.md](doc/DOWNLOADS.md).
 
 You can run the latest unstable build of Nicotine+ to test recent changes and bug fixes, see [TESTING.md](doc/TESTING.md).
+
+
+## Version 3.3.11 (Release Candidate 1)
+
+### Changes
+
+ * Removed 'Everyone' permission for receiving files sent via manual upload
+ * Added support for Haiku
+ * Flatpak: Bumped runtime to Gnome 50
+ * macOS: Use new GTK renderer and prefer integrated GPU for improved power efficiency
+ * macOS: Re-added support for macOS 11 Big Sur and above
+
+### Corrections
+
+ * Important: Fixed a crash arising from shares database corruption that could occur on non-UTF8 filesystems
+ * Important: Enforce maximum sizes for uncompressed message to avoid OOM via TCP peer connection
+ * Important: Some fixes for incorrect behavior in the distributed network embedded messages
+ * Fixed a crash executing a file search in rooms mode with a empty room name
+ * Fixed a crash that occurred when opening File Properties dialog
+ * Fixed loading a saved shares file list from disk while offline
+ * Fixed minor sizing issues with pages context menu on some systems
+ * Fixed inaccurate stuck current folder count during rescan
+ * Added handling of system shutdown when running Nicotine+ in headless mode in a terminal
+ * Removed workaround for old server bug related to watching offline user statuses
+
+### Issues closed on GitHub
+
+ * Changing Virtual Desktops makes N+ Window jump around ([#3288](https://github.com/nicotine-plus/nicotine-plus/issues/3288))
+ * Nicotine spontaneously crashes ([#3325](https://github.com/nicotine-plus/nicotine-plus/issues/3325))
+ * Shares not loading if they are opened with switch_page=False ([#3344](https://github.com/nicotine-plus/nicotine-plus/issues/3344))
+ * Crash on browse your own shares after landing ([#3346](https://github.com/nicotine-plus/nicotine-plus/issues/3346))
+ * Private message something something ([#3351](https://github.com/nicotine-plus/nicotine-plus/issues/3351))
+ * Incorrect file sorting in Nicotine+ ([#3358](https://github.com/nicotine-plus/nicotine-plus/issues/3358))
+ * Upload and download list may be showing incomplete contents ([#3377](https://github.com/nicotine-plus/nicotine-plus/issues/3377))
+ * Chat History sorts by number not by Date ([#3412](https://github.com/nicotine-plus/nicotine-plus/issues/3412))
+ * Crash when stopping uwsm session ([#3443](https://github.com/nicotine-plus/nicotine-plus/issues/3443))
+ * Critical Error searching empty room name ([#3469](https://github.com/nicotine-plus/nicotine-plus/issues/3469))
+ * Downloads folder is blank when pointing to a network share ([#3501](https://github.com/nicotine-plus/nicotine-plus/issues/3501))
+ * App reopens immediately after being minimized when I click the desktop or any other apps (macOS) ([#3519](https://github.com/nicotine-plus/nicotine-plus/issues/3519))
+ * Nicotine+ WinError 32 ([#3526](https://github.com/nicotine-plus/nicotine-plus/issues/3526))
+ * Critical Error ([#3609](https://github.com/nicotine-plus/nicotine-plus/issues/3609))
+ * Heavy user interface input lagging affected by responding to searches option ([#3624](https://github.com/nicotine-plus/nicotine-plus/issues/3624))
+ * Upload view update issue ([#3660](https://github.com/nicotine-plus/nicotine-plus/issues/3660))
+ * Unable to pack message type <class 'pynicotine.slskmessages.SendUploadSpeed ([#3682](https://github.com/nicotine-plus/nicotine-plus/issues/3682))
 
 
 ## Version 3.3.10 (March 10, 2025)

@@ -233,7 +233,7 @@ class Application:
             ("app.force-quit", ["<Primary><Alt>q"]),
             ("app.quit", ["<Primary>q"]),  # Only used to show accelerator in menus
             ("app.rescan-shares", ["<Shift><Primary>r"]),
-            ("app.keyboard-shortcuts", ["<Primary>question", "F1"]),
+            ("app.keyboard-shortcuts", ["F1", "<Primary>question"]),
             ("app.preferences", ["<Primary>comma", "<Primary>p"]),
 
             # Window accelerators

@@ -5,13 +5,19 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on March 24, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on April 1, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
 The protocol is old and rigid, with various client implementations existing in
 the wild. Careful coordination between clients is necessary. Please don't
 extend the protocol without the approval of Soulseek's administrators.
+
+Please use existing client implementations when possible instead of
+implementing your own. There are a lot of subtle details to get right to ensure
+compatibility with other clients, and this documentation does not necessarily
+capture all of them. The risk of introducing bugs that have a negative effect
+on the network is also high.
 
 If you find any inconsistencies, errors or omissions in the documentation,
 please report them.
@@ -305,39 +311,39 @@ server, but it handles the protocol well enough for development and testing.
 | Code   | Message                                                        |
 |--------|----------------------------------------------------------------|
 | `1`    | [Login](#server-code-1)                                        |
-| `2`    | [Set Listen Port](#server-code-2)                              |
+| `2`    | [Set Wait Port](#server-code-2)                                |
 | `3`    | [Get Peer Address](#server-code-3)                             |
 | `5`    | [Watch User](#server-code-5)                                   |
 | `6`    | [Unwatch User](#server-code-6)                                 |
 | `7`    | [Get User Status](#server-code-7)                              |
 | `11`   | [Ignore User](#server-code-11) `OBSOLETE`                      |
 | `12`   | [Unignore User](#server-code-12) `OBSOLETE`                    |
-| `13`   | [Say in Chat Room](#server-code-13)                            |
+| `13`   | [Say Chatroom](#server-code-13)                                |
 | `14`   | [Join Room](#server-code-14)                                   |
 | `15`   | [Leave Room](#server-code-15)                                  |
 | `16`   | [User Joined Room](#server-code-16)                            |
 | `17`   | [User Left Room](#server-code-17)                              |
 | `18`   | [Connect To Peer](#server-code-18)                             |
-| `22`   | [Private Messages](#server-code-22)                            |
-| `23`   | [Acknowledge Private Message](#server-code-23)                 |
+| `22`   | [Message User](#server-code-22)                                |
+| `23`   | [Message Acked](#server-code-23)                               |
 | `25`   | [File Search Room](#server-code-25) `OBSOLETE`                 |
 | `26`   | [File Search](#server-code-26)                                 |
-| `28`   | [Set Online Status](#server-code-28)                           |
-| `32`   | [Ping](#server-code-32)                                        |
+| `28`   | [Set Status](#server-code-28)                                  |
+| `32`   | [Server Ping](#server-code-32)                                 |
 | `33`   | [Send Connect Token](#server-code-33) `OBSOLETE`               |
 | `34`   | [Send Download Speed](#server-code-34) `OBSOLETE`              |
 | `35`   | [Shared Folders & Files](#server-code-35)                      |
 | `36`   | [Get User Stats](#server-code-36)                              |
 | `40`   | [Upload Slots Full](#server-code-40) `OBSOLETE`                |
-| `41`   | [Kicked from Server](#server-code-41)                          |
+| `41`   | [Relogged](#server-code-41)                                    |
 | `42`   | [User Search](#server-code-42)                                 |
 | `50`   | [Similar Recommendations](#server-code-50) `OBSOLETE`          |
-| `51`   | [Interest Add](#server-code-51)                                |
-| `52`   | [Interest Remove](#server-code-52)                             |
-| `54`   | [Get Recommendations](#server-code-54)                         |
+| `51`   | [Add Thing I Like](#server-code-51)                            |
+| `52`   | [Remove Thing I Like](#server-code-52)                         |
+| `54`   | [Recommendations](#server-code-54)                             |
 | `55`   | [My Recommendations](#server-code-55) `OBSOLETE`               |
-| `56`   | [Get Global Recommendations](#server-code-56)                  |
-| `57`   | [Get User Interests](#server-code-57)                          |
+| `56`   | [Global Recommendations](#server-code-56)                      |
+| `57`   | [User Interests](#server-code-57)                              |
 | `58`   | [Admin Command](#server-code-58) `OBSOLETE`                    |
 | `59`   | [Place In Line Request](#server-code-59) `OBSOLETE`            |
 | `60`   | [Place In Line Response](#server-code-60) `OBSOLETE`           |
@@ -345,40 +351,40 @@ server, but it handles the protocol well enough for development and testing.
 | `63`   | [Room Removed](#server-code-63) `OBSOLETE`                     |
 | `64`   | [Room List](#server-code-64)                                   |
 | `65`   | [Exact File Search](#server-code-65) `OBSOLETE`                |
-| `66`   | [Global/Admin Message](#server-code-66)                        |
+| `66`   | [Admin Message](#server-code-66)                               |
 | `67`   | [Global User List](#server-code-67) `OBSOLETE`                 |
 | `68`   | [Tunneled Message](#server-code-68) `OBSOLETE`                 |
 | `69`   | [Privileged Users](#server-code-69)                            |
-| `71`   | [Have No Parents](#server-code-71)                             |
-| `73`   | [Parent's IP](#server-code-73) `DEPRECATED`                    |
+| `71`   | [Have No Parent](#server-code-71)                              |
+| `73`   | [Parent IP](#server-code-73) `DEPRECATED`                      |
 | `83`   | [Parent Min Speed](#server-code-83)                            |
 | `84`   | [Parent Speed Ratio](#server-code-84)                          |
 | `86`   | [Parent Inactivity Timeout](#server-code-86) `OBSOLETE`        |
 | `87`   | [Search Inactivity Timeout](#server-code-87) `OBSOLETE`        |
-| `88`   | [Minimum Parents In Cache](#server-code-88) `OBSOLETE`         |
-| `90`   | [Distributed Ping Interval](#server-code-90) `OBSOLETE`        |
-| `91`   | [Add Privileged User](#server-code-91) `OBSOLETE`              |
+| `88`   | [Min Parents In Cache](#server-code-88) `OBSOLETE`             |
+| `90`   | [Distrib Ping Interval](#server-code-90) `OBSOLETE`            |
+| `91`   | [Add To Privileged](#server-code-91) `OBSOLETE`                |
 | `92`   | [Check Privileges](#server-code-92)                            |
 | `93`   | [Embedded Message](#server-code-93)                            |
 | `100`  | [Accept Children](#server-code-100)                            |
 | `102`  | [Possible Parents](#server-code-102)                           |
 | `103`  | [Wishlist Search](#server-code-103)                            |
 | `104`  | [Wishlist Interval](#server-code-104)                          |
-| `110`  | [Get Similar Users](#server-code-110)                          |
-| `111`  | [Get Item Recommendations](#server-code-111)                   |
-| `112`  | [Get Item Similar Users](#server-code-112)                     |
+| `110`  | [Similar Users](#server-code-110)                              |
+| `111`  | [Item Recommendations](#server-code-111)                       |
+| `112`  | [Item Similar Users](#server-code-112)                         |
 | `113`  | [Room Tickers](#server-code-113)                               |
-| `114`  | [Room Ticker Add](#server-code-114)                            |
-| `115`  | [Room Ticker Remove](#server-code-115)                         |
+| `114`  | [Room Ticker Added](#server-code-114)                          |
+| `115`  | [Room Ticker Removed](#server-code-115)                        |
 | `116`  | [Set Room Ticker](#server-code-116)                            |
-| `117`  | [Hated Interest Add](#server-code-117)                         |
-| `118`  | [Hated Interest Remove](#server-code-118)                      |
+| `117`  | [Add Thing I Hate](#server-code-117)                           |
+| `118`  | [Remove Thing I Hate](#server-code-118)                        |
 | `120`  | [Room Search](#server-code-120)                                |
 | `121`  | [Send Upload Speed](#server-code-121)                          |
-| `122`  | [User Privileges](#server-code-122) `DEPRECATED`               |
+| `122`  | [User Privileged](#server-code-122) `DEPRECATED`               |
 | `123`  | [Give Privileges](#server-code-123)                            |
 | `124`  | [Notify Privileges](#server-code-124) `DEPRECATED`             |
-| `125`  | [Acknowledge Notify Privileges](#server-code-125) `DEPRECATED` |
+| `125`  | [Ack Notify Privileges](#server-code-125) `DEPRECATED`         |
 | `126`  | [Branch Level](#server-code-126)                               |
 | `127`  | [Branch Root](#server-code-127)                                |
 | `129`  | [Child Depth](#server-code-129) `OBSOLETE`                     |
@@ -392,7 +398,7 @@ server, but it handles the protocol well enough for development and testing.
 | `139`  | [Room Membership Granted](#server-code-139)                    |
 | `140`  | [Room Membership Revoked](#server-code-140)                    |
 | `141`  | [Enable Room Invitations](#server-code-141)                    |
-| `142`  | [New Password](#server-code-142)                               |
+| `142`  | [Change Password](#server-code-142)                            |
 | `143`  | [Add Room Operator](#server-code-143)                          |
 | `144`  | [Remove Room Operator](#server-code-144)                       |
 | `145`  | [Room Operatorship Granted](#server-code-145)                  |
@@ -402,7 +408,7 @@ server, but it handles the protocol well enough for development and testing.
 | `150`  | [Join Global Room](#server-code-150)                           |
 | `151`  | [Leave Global Room](#server-code-151)                          |
 | `152`  | [Global Room Message](#server-code-152)                        |
-| `153`  | [Related Searches](#server-code-153) `OBSOLETE`                |
+| `153`  | [Related Search](#server-code-153) `OBSOLETE`                  |
 | `160`  | [Excluded Search Phrases](#server-code-160)                    |
 | `1001` | [Can't Connect To Peer](#server-code-1001)                     |
 | `1003` | [Can't Create Room](#server-code-1003)                         |
@@ -1740,7 +1746,7 @@ is usually present in the like/dislike list or recommendation list.
 
 ## Server Code 113
 
-### RoomTickerState
+### RoomTickers
 
 The server returns a list of tickers in a chat room.
 
@@ -1761,7 +1767,7 @@ walls.
 
 ## Server Code 114
 
-### RoomTickerAdd
+### RoomTickerAdded
 
 The server sends us a new ticker that was added to a chat room.
 
@@ -1780,7 +1786,7 @@ walls.
 
 ## Server Code 115
 
-### RoomTickerRemove
+### RoomTickerRemoved
 
 The server informs us that a ticker was removed from a chat room.
 
@@ -1798,7 +1804,7 @@ walls.
 
 ## Server Code 116
 
-### RoomTickerSet
+### SetRoomTicker
 
 We send this to the server when we change our own ticker in a chat room.
 Sending an empty ticker string removes any existing ticker in the room.
@@ -2020,7 +2026,7 @@ room we are in.
 ### Data Order
 
   - Send
-    1.  *No Message*
+    -   *No Message*
   - Receive
     1.  **string** *room*
     2.  **uint32** *number of members*
@@ -2607,7 +2613,7 @@ A peer responds with a list of shared files after we've sent a
             1.  **uint8** *code*  
                 Value is always `1`
             2.  **string** *filename*
-            3.  **unit64** *file size*
+            3.  **uint64** *file size*
             4.  **string** *file extension*
             5.  **uint32** *number of attributes*
             6.  Iterate for *number of attributes*
@@ -3101,6 +3107,16 @@ We send this to the uploading peer at the beginning of a 'F' connection, to
 tell them how many bytes of the file we've previously downloaded. If nothing
 was downloaded, the offset is 0.
 
+Note that the offset is intended for resuming previous file downloads, not
+downloading specific chunks of a file. Attempting to retrofit such
+functionality is a bad idea for several reasons:
+
+1. The protocol doesn't support hashing of file chunks for verification.
+2. Every download request occupies an upload slot, causing congestion if
+   small chunks are requested from many users at once.
+3. Aborting an incomplete file transfer makes it appear as failed on the
+   uploader's end, resulting in confusion.
+
 Note that Soulseek NS fails to read the size of an incomplete download if more
 than 2 GB of the file has been downloaded, and the download is resumed. In
 consequence, the client sends an invalid file offset of -1.
@@ -3157,7 +3173,7 @@ peer is allowed. In Nicotine+, these messages are defined in slskmessages.py.
 | Code | Message                                               |
 |------|-------------------------------------------------------|
 | `0`  | [Ping](#distributed-code-0) `DEPRECATED`              |
-| `3`  | [Search Request](#distributed-code-3)                 |
+| `3`  | [Search](#distributed-code-3)                         |
 | `4`  | [Branch Level](#distributed-code-4)                   |
 | `5`  | [Branch Root](#distributed-code-5)                    |
 | `7`  | [Child Depth](#distributed-code-7) `OBSOLETE`         |

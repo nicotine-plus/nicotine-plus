@@ -366,13 +366,13 @@ class NetworkFilter:
             ip_address = next(iter(ip_addresses), f"? ({username})")
 
         if not ip_address:
-            return None
+            return username, ip_address
 
         if ip_address not in ip_list or (username and ip_list[ip_address] != username):
             ip_list[ip_address] = username or ""
             config.write_configuration()
 
-        return ip_address
+        return username, ip_address
 
     def _remove_user_ips_from_list(self, ip_list, username=None, ip_addresses=None):
         """Remove the previously saved IP address of a user from a list."""
@@ -593,7 +593,7 @@ class NetworkFilter:
 
     def ban_user_ip(self, username=None, ip_address=None):
 
-        ip_address = self._add_user_ip_to_list(
+        username, ip_address = self._add_user_ip_to_list(
             config.sections["server"]["ipblocklist"], username, ip_address)
 
         events.emit("ban-user-ip", username, ip_address)
@@ -647,7 +647,7 @@ class NetworkFilter:
 
     def ignore_user_ip(self, username=None, ip_address=None):
 
-        ip_address = self._add_user_ip_to_list(
+        username, ip_address = self._add_user_ip_to_list(
             config.sections["server"]["ipignorelist"], username, ip_address)
 
         events.emit("ignore-user-ip", username, ip_address)

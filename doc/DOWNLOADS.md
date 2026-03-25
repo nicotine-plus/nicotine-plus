@@ -24,6 +24,7 @@ using the package manager.
 | [Alpine Linux Edge](https://pkgs.alpinelinux.org/packages?name=nicotine-plus)            | `nicotine-plus`            |
 | [ALT Linux](https://packages.altlinux.org/en/sisyphus/srpms/nicotine-plus/)              | `nicotine-plus`            |
 | [Arch Linux](https://archlinux.org/packages/extra/any/nicotine+/)                        | `nicotine+`                |
+| [Artix](https://packages.artixlinux.org/packages/galaxy/any/nicotine+/)                  | `nicotine+`                |
 | [Chimera Linux](https://pkgs.chimera-linux.org/packages?name=nicotine-plus)              | `nicotine-plus`            |
 | [Debian](https://tracker.debian.org/pkg/nicotine)                                        | `nicotine`                 |
 | [Fedora](https://packages.fedoraproject.org/pkgs/nicotine+/nicotine+/)                   | `nicotine+`                |
@@ -35,6 +36,7 @@ using the package manager.
 | [Manjaro](https://manjaristas.org/branch_compare?q=nicotine%2B)                          | `nicotine+`                |
 | [NixOS](https://search.nixos.org/packages?show=nicotine-plus)                            | `nicotine-plus`            |
 | [OpenBSD Ports](https://openports.pl/path/net/nicotine-plus)                             | `net/nicotine-plus`        |
+| [openmamba](https://openmamba.org/en/rpms/base/nicotine+/)                               | `nicotine+`                |
 | [OpenMandriva](https://github.com/OpenMandrivaAssociation/nicotineplus)                  | `nicotine+`                |
 | [Parabola](https://www.parabola.nu/packages/extra/x86_64/nicotine+/)                     | `nicotine+`                |
 | [PLD Linux](https://git.pld-linux.org/?p=packages/nicotine.git;a=tree)                   | `nicotine`                 |

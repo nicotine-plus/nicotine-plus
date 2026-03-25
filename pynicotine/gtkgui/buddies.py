@@ -470,14 +470,14 @@ class Buddies:
         if flag_icon_name and flag_icon_name != self.list_view.get_row_value(iterator, "country"):
             self.list_view.set_row_value(iterator, "country", flag_icon_name)
 
-    def on_add_buddy(self, *_args):
+    def on_add_buddy(self, entry, *_args):
 
-        username = self.window.add_buddy_entry.get_text().strip()
+        username = entry.get_text().strip()
 
         if not username:
             return
 
-        self.window.add_buddy_entry.set_text("")
+        entry.set_text("")
         core.buddies.add_buddy(username)
         self.list_view.grab_focus()
 

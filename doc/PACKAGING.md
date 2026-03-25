@@ -1,5 +1,5 @@
 <!--
-  SPDX-FileCopyrightText: 2016-2025 Nicotine+ Contributors
+  SPDX-FileCopyrightText: 2016-2026 Nicotine+ Contributors
   SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
@@ -102,7 +102,14 @@ own machine.
 
 ### Building a Frozen Application with cx_Freeze
 
-Follow the instructions on [installing Homebrew](https://brew.sh/).
+Follow the instructions on [installing Miniforge](https://conda-forge.org/download/).
+
+Create and activate an environment:
+
+```sh
+mamba create --name nicotine-plus
+mamba activate nicotine-plus
+```
 
 Clone the `nicotine-plus` Git repository:
 
@@ -114,15 +121,13 @@ cd nicotine-plus
 Install dependencies:
 
 ```sh
-brew install python@3.14
-python3.14 -m venv venv
-venv/bin/python3 build-aux/macos/dependencies.py
+python3 build-aux/macos/dependencies.py
 ```
 
 Build the application:
 
 ```sh
-venv/bin/python3 build-aux/macos/setup.py bdist_dmg
+python3 build-aux/macos/setup.py bdist_dmg
 ```
 
 When the application has finished building, it is located in the

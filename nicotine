@@ -21,4 +21,10 @@ the application with.""")
 
 
 if __name__ == "__main__":
+    is_frozen = getattr(sys, "frozen", False)
+
+    if is_frozen:
+        import multiprocessing
+        multiprocessing.freeze_support()
+
     sys.exit(load_module())

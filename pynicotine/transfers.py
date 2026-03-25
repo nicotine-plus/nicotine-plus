@@ -299,6 +299,8 @@ class Transfers:
                     folder_path = normalized_paths[folder_path]
 
             # Status
+            status = None
+
             if num_attributes >= 4:
                 status = transfer_row[3]
 

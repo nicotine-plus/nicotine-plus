@@ -1117,8 +1117,8 @@ class MainWindow(Window):
 
     # User Actions #
 
-    def on_add_buddy(self, *_args):
-        self.buddies.on_add_buddy()
+    def on_add_buddy(self, entry, *_args):
+        self.buddies.on_add_buddy(entry)
 
     # Log Pane #
 

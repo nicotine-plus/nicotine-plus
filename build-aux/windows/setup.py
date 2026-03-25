@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-# SPDX-FileCopyrightText: 2021-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2021-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import glob
 import os
 import platform
-import ssl
 import subprocess
 import sys
 import tempfile
@@ -32,7 +31,7 @@ if sys.platform == "win32":
     ICON_NAME = "icon.ico"
 
 elif sys.platform == "darwin":
-    SYS_BASE_PATH = "/opt/homebrew" if platform.machine() == "arm64" else "/usr/local"
+    SYS_BASE_PATH = sys.prefix
     LIB_PATH = os.path.join(SYS_BASE_PATH, "lib")
     UNAVAILABLE_MODULES = ["msvcrt", "nt", "nturl2path", "winreg", "winsound"]
     ICON_NAME = "icon.icns"
@@ -102,10 +101,14 @@ def add_pixbuf_loaders():
 
     pixbuf_loaders_path = os.path.join(SYS_BASE_PATH, "lib/gdk-pixbuf-2.0/2.10.0/loaders")
     loader_extension = "dll" if sys.platform == "win32" else "so"
+    image_formats = ["bmp", "gif"]
+
+    if sys.platform == "win32":
+        image_formats += ["webp"]
 
     add_file(file_path=os.path.join(CURRENT_PATH, "pixbuf-loaders.cache"), output_path="lib/pixbuf-loaders.cache")
 
-    for image_format in ("bmp", "gif", "webp"):
+    for image_format in image_formats:
         basename = f"libpixbufloader-{image_format}"
         add_file(
             file_path=os.path.realpath(os.path.join(pixbuf_loaders_path, f"{basename}.{loader_extension}")),
@@ -167,8 +170,14 @@ def add_typelibs():
     ]
 
     if sys.platform == "win32":
-        required_typelibs.append("GdkWin32-4")
-        required_typelibs.append("win32-")
+        required_typelibs += [
+            "GdkWin32-4",
+            "GioWin32-",
+            "GLibWin32-",
+            "win32-"
+        ]
+    else:
+        required_typelibs.append("GioUnix-")
 
     required_typelibs = tuple(required_typelibs)
 
@@ -283,6 +292,14 @@ setup(
             copyright=pynicotine.__copyright__,
             shortcut_name=pynicotine.__application_name__,
             shortcut_dir="ProgramMenuFolder"
+        ),
+        # Separate "console" executable required for CI startup test and debugging
+        Executable(
+            script=os.path.join(PROJECT_PATH, SCRIPT_NAME),
+            base="console",
+            target_name=f"{pynicotine.__application_name__}-debug",
+            manifest=MANIFEST_NAME,
+            copyright=pynicotine.__copyright__
         )
     ],
 )
