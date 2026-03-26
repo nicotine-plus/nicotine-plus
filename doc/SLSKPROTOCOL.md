@@ -228,25 +228,27 @@ Projects must choose a unique type number to avoid impersonating other clients.
 
 ### Reserved
 
-| Type   | Client                                     | Compliance   |
-|--------|--------------------------------------------|--------------|
-| `157`  | [Soulseek NS](#soulseek) and SoulseekQt    | **OFFICIAL** |
-| `160`  | [Nicotine+](#nicotine)                     | **FULL**     |
-| `169`  | seeleseek *(for macOS)*                    | DEVELOPING   |
-| `170`  | [Soulseek.NET](#soulseeknet) *(API)*       | *(Various)*  |
-| `175`  | *Reserved for development and testing*     | EXPERIMENTAL |
+| Type   | Client                                  |
+|--------|-----------------------------------------|
+| `157`  | [Soulseek NS](#soulseek) and SoulseekQt |
+| `158`  | *Reserved for SoulseekQt development*   |
+| `159`  | *Reserved for SoulseekQt development*   |
+| `160`  | [Nicotine+](#nicotine)                  |
+| `169`  | seeleseek                               |
+| `170`  | [Soulseek.NET](#soulseeknet) *(API)*    |
+| `175`  | *Experimental development and testing*  |
+| `178`  | Museek+                                 |
 
 ### Obsolete
 
-| Type   | Client                     | Compliance   |
-|--------|----------------------------|--------------|
-| `156`  | Old server *(pre 2008)*    | *(Offline)*  |
-| `157`* | Nicotine+ 1.2.12 to 2.2.0  | IMPERSONATED |
-| `180`  | PySoulSeek                 | MINIMAL      |
-| `181`  | Nicotine+ 1.2.0 to 1.2.11  | PARTIAL      |
-| `182`  | Museek+                    | PARTIAL      |
-| `198`  | Nicotine 1.0.6 to 1.0.8    | MINIMAL      |
-| `200`  | Nicotine 1.0.4 and below   | NO           |
+| Type   | Client                    |
+|--------|---------------------------|
+| `156`  | Soulseek 156 *(pre 2008)* |
+| `180`  | PySoulSeek                |
+| `181`  | Nicotine+ 1.2.0 to 1.2.11 |
+| `182`  | Museek+                   |
+| `198`  | Nicotine 1.0.6 to 1.0.8   |
+| `200`  | Nicotine 1.0.4 and below  |
 
 
 ## Client Subtypes *(Minor Versions)*
@@ -259,23 +261,22 @@ The project maintainer increments the subtype number for new capabilities.
 
 #### Client type `160`
 
-| Subtype | Versions        | Protocol implementation details                               | Compliance   |
-|---------|-----------------|---------------------------------------------------------------|--------------|
-| *None*  | 1.x             | *The protocol minor subtype was not previously implemented*   | MINIMAL      |
-| `19`*   | 2.0.0 to 2.2.0  | Impersonated NS for experimental distributed network support  | IMPERSONATED |
-| `1`     | 2.2.1 to 3.2.9  | Send custom version number to server instead of Soulseek NS's | PARTIAL      |
-| `2`     | 3.3.0 to 3.3.10 | Added distributed child peer support                          | ALMOST FULL  |
-| `3`     | 3.4.0 and above | Distribute raw messages to child peers                        | **FULL**     |
+| Subtype | Versions        |
+|---------|-----------------|
+| `1`     | 2.2.1 to 3.2.9  |
+| `2`     | 3.3.0 to 3.3.10 |
+| `3`     | 3.4.0 and above |
 
 ### Soulseek.NET
 
-API library requires projects to choose a `minorVersion` for their subtype.
+API library requires clients to choose a `minorVersion` as their subtype.
 
 #### Client type `170`
 
-| Subtype | Project Name | Protocol implementation details | Compliance |
-|---------|--------------|---------------------------------|------------|
-| `760`   | slskd        | Reference implementation of API | **FULL**   |
+| Subtype | Client                                    |
+|---------|-------------------------------------------|
+| `760`   | slskd *(Reference implementation of API)* |
+| `9999`  | *Experimental development and testing*    |
 
 ### Soulseek®
 
@@ -283,10 +284,10 @@ Official client subtype number is incremented for each released version.
 
 #### Client type `157`
 
-| Subtype             | Version | Protocol implementation details                      | Compliance                         |
-|---------------------|---------|------------------------------------------------------|------------------------------------|
-| `17` (`0x11000000`) | NS 13c  | 2GB transfer limit; lowercase paths; not distributed | **OBSOLETE, no longer used**       |
-| `19` (`0x13000000`) | NS 13e  | 2GB transfer limit; lowercase paths; legacy encoding | **OBSOLETE, no longer functional** |
+| Subtype             | Version |
+|---------------------|---------|
+| `17` (`0x11000000`) | NS 13c  |
+| `19` (`0x13000000`) | NS 13e  |
 
 
 # Server Messages
