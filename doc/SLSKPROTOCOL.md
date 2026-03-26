@@ -275,6 +275,7 @@ API library requires clients to choose a `minorVersion` as their subtype.
 
 | Subtype | Client                                    |
 |---------|-------------------------------------------|
+| `100`   | *All legacy clients up to API 8.5.0*      |
 | `760`   | slskd *(Reference implementation of API)* |
 | `9999`  | *Experimental development and testing*    |
 
