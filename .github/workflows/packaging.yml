@@ -169,30 +169,34 @@ jobs:
           path: build-aux/windows/build/package
 
   macos:
+    timeout-minutes: 15
     strategy:
       matrix:
         include:
           - arch: x86_64
-            platform: macos-15-intel
+            platform: macos-26-intel
           - arch: arm64
-            platform: macos-15
+            platform: macos-26
     runs-on: ${{ matrix.platform }}
-    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash -el {0}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Create Python virtual environment
-        run: |
-          brew uninstall --ignore-dependencies python@3.14
-          brew install --overwrite python@3.14
-          python3.14 -m venv venv
+      - name: Set up Miniforge
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          activate-environment: nicotine-plus
+          miniforge-version: latest
+          conda-remove-defaults: "true"
 
-      - name: Install build dependencies
-        run: venv/bin/python3 build-aux/macos/dependencies.py
+      - name: Install dependencies
+        run: python3 build-aux/macos/dependencies.py
 
       - name: Freeze application
-        run: venv/bin/python3 build-aux/macos/setup.py bdist_dmg
+        run: python3 build-aux/macos/setup.py bdist_dmg
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v7
