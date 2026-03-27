@@ -973,6 +973,7 @@ class Uploads(Transfers):
 
             if transfer.status == TransferStatus.FINISHED:
                 transfer.current_byte_offset = None
+                transfer.transferred_bytes_total = 0
                 transfer.speed = transfer.avg_speed = transfer.time_elapsed = transfer.time_left = 0
         else:
             transfer = Transfer(username, virtual_path, folder_path, size)
@@ -1057,6 +1058,7 @@ class Uploads(Transfers):
 
             if transfer.status == TransferStatus.FINISHED:
                 transfer.current_byte_offset = None
+                transfer.transferred_bytes_total = 0
                 transfer.speed = transfer.avg_speed = transfer.time_elapsed = transfer.time_left = 0
         else:
             transfer = Transfer(username, virtual_path, folder_path, size)
