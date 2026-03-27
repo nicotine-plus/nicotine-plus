@@ -1165,9 +1165,10 @@ class Uploads(Transfers):
         sock = upload.sock = msg.sock
         need_update = True
         upload_started = False
+        is_resume = bool(upload.current_byte_offset)
 
-        log.add_transfer("Initializing upload with token %s for file %s to user %s",
-                         (token, virtual_path, username))
+        log.add_transfer("%s upload with token %s for file %s to user %s",
+                         ("Resuming" if is_resume else "Initializing", token, virtual_path, username))
 
         real_path = core.shares.virtual2real(
             virtual_path,
@@ -1191,8 +1192,13 @@ class Uploads(Transfers):
             core.statistics.append_stat_value("started_uploads", 1)
             upload_started = True
 
+            if is_resume:
+                log_message_template = _("Upload resumed: user %(user)s, IP address %(ip)s, file %(file)s")
+            else:
+                log_message_template = _("Upload started: user %(user)s, IP address %(ip)s, file %(file)s")
+
             log.add_upload(
-                _("Upload started: user %(user)s, IP address %(ip)s, file %(file)s"), {
+                log_message_template, {
                     "user": username,
                     "ip": core.users.addresses.get(username),
                     "file": virtual_path
