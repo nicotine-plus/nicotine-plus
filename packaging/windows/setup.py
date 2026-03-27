@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2026 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -43,12 +43,13 @@ if sys.platform == "win32":
     UNAVAILABLE_MODULES = [
         "fcntl", "grp", "nis", "ossaudiodev", "posix", "pwd", "readline", "resource", "spwd", "syslog", "termios"
     ]
+    BIN_EXCLUDES = []
     ICON_NAME = "icon.ico"
 
 elif sys.platform == "darwin":
-    SYS_BASE_PATH = "/opt/homebrew" if platform.machine() == "arm64" else "/usr/local"
+    SYS_BASE_PATH = sys.prefix
     LIB_PATH = os.path.join(SYS_BASE_PATH, "lib")
-    UNAVAILABLE_MODULES = ["msvcrt", "nt", "nturl2path", "ossaudiodev", "spwd", "winreg", "winsound"]
+    BIN_EXCLUDES = ["libappstream*.dylib"]
     ICON_NAME = "icon.icns"
 
 else:
@@ -116,10 +117,14 @@ def add_pixbuf_loaders():
 
     pixbuf_loaders_path = os.path.join(SYS_BASE_PATH, "lib/gdk-pixbuf-2.0/2.10.0/loaders")
     loader_extension = "dll" if sys.platform == "win32" else "so"
+    image_formats = ["bmp", "gif", "svg"]
+
+    if sys.platform == "win32":
+        image_formats += ["webp"]
 
     add_file(file_path=os.path.join(CURRENT_PATH, "pixbuf-loaders.cache"), output_path="lib/pixbuf-loaders.cache")
 
-    for image_format in ("bmp", "gif", "svg", "webp"):
+    for image_format in image_formats:
         basename = f"libpixbufloader-{image_format}"
 
         if image_format == "svg":
@@ -253,6 +258,7 @@ setup(
             "packages": INCLUDED_MODULES,
             "excludes": EXCLUDED_MODULES,
             "include_files": include_files,
+            "bin_excludes": BIN_EXCLUDES,
             "zip_include_packages": ["*"],
             "zip_exclude_packages": [MODULE_NAME],
             "optimize": 2

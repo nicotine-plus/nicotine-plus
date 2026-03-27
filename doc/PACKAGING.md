@@ -97,7 +97,14 @@ own machine.
 
 ### Building a Frozen Application with cx_Freeze
 
-Follow the instructions on [installing Homebrew](https://brew.sh/).
+Follow the instructions on [installing Miniforge](https://conda-forge.org/download/).
+
+Create and activate an environment:
+
+```sh
+mamba create --name nicotine-plus
+mamba activate nicotine-plus
+```
 
 Clone the `nicotine-plus` Git repository:
 
@@ -109,15 +116,13 @@ cd nicotine-plus
 Install dependencies:
 
 ```sh
-brew install python@3.11
-python3.11 -m venv venv
-venv/bin/python3 packaging/macos/dependencies.py
+python3 build-aux/macos/dependencies.py
 ```
 
 Build the application:
 
 ```sh
-venv/bin/python3 packaging/macos/setup.py bdist_dmg
+python3 build-aux/macos/setup.py bdist_dmg
 ```
 
 When the application has finished building, it is located in the

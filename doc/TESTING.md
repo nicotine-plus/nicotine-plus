@@ -89,11 +89,11 @@ Unstable installers are built after every commit to the 3.3.x branch.
 
  - [Download Unstable macOS Intel Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/macos-x86_64-installer.zip)
     — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/macos-x86_64-installer)  
-   for macOS 14 Sonoma or later
+   for macOS 11 Big Sur or later
 
  - [Download Unstable macOS Apple Silicon Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/macos-arm64-installer.zip)
     — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/macos-arm64-installer)  
-   for macOS 14 Sonoma or later
+   for macOS 11 Big Sur or later
 
 
 ## All Platforms

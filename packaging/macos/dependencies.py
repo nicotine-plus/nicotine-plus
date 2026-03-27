@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2026 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -21,37 +21,26 @@ import subprocess
 import sys
 
 
-def install_brew():
-    """Install dependencies from the main Homebrew repos."""
+def install_conda_forge():
+    """Install dependencies from the main conda-forge repos."""
 
-    packages = ["gettext",
+    environment_name = "nicotine-plus"
+
+    # Temporarily install older icu version to force non-icu variant of libsqlite
+    pre_packages = ["icu<78",
+                    "libsqlite"]
+
+    packages = ["icu",
+                "cx_freeze",
                 "gobject-introspection",
                 "gtk4",
                 "libadwaita",
-                "librsvg"]
+                "pygobject",
+                "python-build"]
 
-    subprocess.check_call(["brew", "install", "--quiet"] + packages)
-
-
-def install_pypi():
-    """Install dependencies from PyPi."""
-
-    subprocess.check_call([
-        sys.executable, "-m", "pip", "install",
-
-        # For consistency, avoid including pre-built binaries from PyPI
-        # in the application.
-        "--no-binary", "cx_Freeze",
-        "--no-binary", "PyGObject",
-        "--no-binary", "pycairo",
-
-        "-e", ".[packaging,tests]",
-        "build",
-        "setuptools",
-        "wheel"
-    ])
+    subprocess.check_call(["mamba", "install", "-n", environment_name, "-y"] + pre_packages)
+    subprocess.check_call(["mamba", "install", "-n", environment_name, "-y"] + packages)
 
 
 if __name__ == "__main__":
-    install_brew()
-    install_pypi()
+    install_conda_forge()
