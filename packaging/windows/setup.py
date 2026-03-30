@@ -20,7 +20,6 @@
 import glob
 import os
 import platform
-import ssl
 import subprocess
 import sys
 import tempfile
