@@ -1101,8 +1101,8 @@ class NetworkThread(Thread):
             stale_conns.clear()
 
         if self._pending_peer_conns:
-            for init, (addr, pierce_token) in self._pending_peer_conns.copy().items():
-                self._init_peer_connection(addr, init, pierce_token=pierce_token)
+            for init, (addr, response_token) in self._pending_peer_conns.copy().items():
+                self._init_peer_connection(addr, init, response_token=response_token)
 
     # Server Connection #
 
@@ -1746,7 +1746,7 @@ class NetworkThread(Thread):
 
         if self._num_sockets >= self.MAX_SOCKETS:
             # Connection limit reached, re-queue
-            self._pending_peer_conns[init] = (addr, pierce_token)
+            self._pending_peer_conns[init] = (addr, response_token)
             return
 
         request_token = None
@@ -2249,9 +2249,10 @@ class NetworkThread(Thread):
     def _process_distrib_message(self, conn, msg_type, msg_size, in_buffer, start_offset, end_offset):
 
         msg_class = DISTRIBUTED_MESSAGE_CLASSES[msg_type]
+        msg_content = memoryview(in_buffer)[start_offset:end_offset]
         msg = self._unpack_network_message(
             msg_class,
-            memoryview(in_buffer)[start_offset:end_offset],
+            msg_content,
             msg_size,
             conn_type="distrib",
             sock=conn.sock,

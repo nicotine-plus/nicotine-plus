@@ -3506,7 +3506,7 @@ class FolderContentsResponse(PeerMessage):
     def parse_network_message(self, message):
         decompressor = zlib.decompressobj()
         max_uncompressed_size = 134217728  # 128 MiB
-        decompressed_message = decompressor.decompress(decompressor.unconsumed_tail, max_uncompressed_size)
+        decompressed_message = decompressor.decompress(message, max_uncompressed_size)
 
         if not decompressor.unconsumed_tail:
             self._parse_network_message(memoryview(decompressed_message))
