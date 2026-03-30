@@ -49,6 +49,7 @@ if sys.platform == "win32":
 elif sys.platform == "darwin":
     SYS_BASE_PATH = sys.prefix
     LIB_PATH = os.path.join(SYS_BASE_PATH, "lib")
+    UNAVAILABLE_MODULES = ["msvcrt", "nt", "nturl2path", "ossaudiodev", "spwd", "winreg", "winsound"]
     BIN_EXCLUDES = ["libappstream*.dylib"]
     ICON_NAME = "icon.icns"
 
