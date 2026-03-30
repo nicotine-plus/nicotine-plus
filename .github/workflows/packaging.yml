@@ -179,10 +179,10 @@ jobs:
           conda-remove-defaults: "true"
 
       - name: Install dependencies
-        run: python3 build-aux/macos/dependencies.py
+        run: python3 packaging/macos/dependencies.py
 
       - name: Freeze application
-        run: python3 build-aux/macos/setup.py bdist_dmg
+        run: python3 packaging/macos/setup.py bdist_dmg
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v4

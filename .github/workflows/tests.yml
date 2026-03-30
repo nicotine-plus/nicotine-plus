@@ -219,7 +219,7 @@ jobs:
           conda-remove-defaults: "true"
 
       - name: Install dependencies
-        run: python3 build-aux/macos/dependencies.py
+        run: python3 packaging/macos/dependencies.py
 
       - name: Integration and unit tests
         run: python3 -m unittest -v

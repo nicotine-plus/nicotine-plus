@@ -116,13 +116,13 @@ cd nicotine-plus
 Install dependencies:
 
 ```sh
-python3 build-aux/macos/dependencies.py
+python3 packaging/macos/dependencies.py
 ```
 
 Build the application:
 
 ```sh
-python3 build-aux/macos/setup.py bdist_dmg
+python3 packaging/macos/setup.py bdist_dmg
 ```
 
 When the application has finished building, it is located in the
