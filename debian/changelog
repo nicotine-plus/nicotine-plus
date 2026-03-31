@@ -1,8 +1,8 @@
-nicotine (3.3.11-dev1) oracular; urgency=medium
+nicotine (3.3.11-rc1) questing; urgency=medium
 
-  * Development version 1.
+  * Release candidate 1.
 
- -- Mat <mail@mathias.is>  Mon, 12 Jan 2026 03:29:14 +0200
+ -- Mat <mail@mathias.is>  Tue, 31 Mar 2026 04:07:23 +0300
 
 nicotine (3.3.10-1) oracular; urgency=medium
 
