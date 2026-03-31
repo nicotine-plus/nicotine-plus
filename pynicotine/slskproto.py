@@ -1282,7 +1282,7 @@ class NetworkThread(Thread):
             return True
 
         if msg_class is EmbeddedMessage:
-            if self._parent is not None:
+            if self._parent_conn is not None:
                 # Another peer is currently our parent. The server shouldn't send embedded messages
                 # while it's not our parent, but let's be safe.
                 return True
