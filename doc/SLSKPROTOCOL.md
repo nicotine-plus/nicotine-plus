@@ -1,15 +1,23 @@
+<!--
+  SPDX-FileCopyrightText: 2006-2026 Nicotine+ Contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # Soulseek Protocol Documentation
 
-<<<<<<< HEAD
-[Last updated on October 20, 2025](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
-=======
-[Last updated on February 19, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
->>>>>>> 9a35d2a46 (slskproto.py: always send DistribBranchRoot messages)
+[Last updated on March 29, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
-To preserve the health of the Soulseek network, please do not modify or extend
-the protocol in ways that negatively impact the network.
+The protocol is old and rigid, with various client implementations existing in
+the wild. Careful coordination between clients is necessary. Please don't
+extend the protocol without the approval of Soulseek's administrators.
+
+Please use existing client implementations when possible instead of
+implementing your own. There are a lot of subtle details to get right to ensure
+compatibility with other clients, and this documentation does not necessarily
+capture all of them. The risk of introducing bugs that have a negative effect
+on the network is also high.
 
 If you find any inconsistencies, errors or omissions in the documentation,
 please report them.
@@ -88,13 +96,44 @@ please report them.
 | `D`  | Distributed Network |
 
 
-## Login Failure Reasons
+## Obfuscation Types
 
-| Reason            | Description                                                                      |
-|-------------------|----------------------------------------------------------------------------------|
-| `INVALIDUSERNAME` | Username is longer than 30 characters or contains invalid characters (non-ASCII) |
-| `INVALIDPASS`     | Password for existing user is incorrect                                          |
-| `INVALIDVERSION`  | Client version is outdated                                                       |
+| Code | Type    |
+|------|---------|
+| `0`  | None    |
+| `1`  | Rotated |
+
+
+## Login Rejection Reasons
+
+### In Use
+
+| Reason            | Description                             |
+|-------------------|-----------------------------------------|
+| `INVALIDUSERNAME` | Username is invalid                     |
+| `EMPTYPASSWORD`   | Password is empty                       |
+| `INVALIDPASS`     | Password for existing user is incorrect |
+| `INVALIDVERSION`  | Client version is outdated              |
+| `SVRFULL`         | Server does not accept new connections  |
+| `SVRPRIVATE`      | Server does not accept registrations    |
+
+### Obsolete
+
+| Reason            | Comments                                            |
+|-------------------|-----------------------------------------------------|
+| `BANNED`          | No longer sent, server omits login response instead |
+
+
+## Login Rejection Details
+
+### INVALIDUSERNAME
+
+| Detail                                            | Comments                                |
+|---------------------------------------------------|-----------------------------------------|
+| `Nick empty.`                                     |                                         |
+| `Nick too long.`                                  | Max 30 characters allowed               |
+| `Invalid characters in nick.`                     | Only printable ASCII characters allowed |
+| `No leading and trailing spaces allowed in nick.` |                                         |
 
 
 ## User Status Codes
@@ -228,17 +267,18 @@ server, but it handles the protocol well enough (and can be modified).
 | `34`   | [Send Download Speed](#server-code-34) `OBSOLETE`              |
 | `35`   | [Shared Folders & Files](#server-code-35)                      |
 | `36`   | [Get User Stats](#server-code-36)                              |
-| `40`   | [Queued Downloads](#server-code-40) `OBSOLETE`                 |
+| `40`   | [Upload Slots Full](#server-code-40) `OBSOLETE`                |
 | `41`   | [Kicked from Server](#server-code-41)                          |
 | `42`   | [User Search](#server-code-42)                                 |
 | `50`   | [Similar Recommendations](#server-code-50) `OBSOLETE`          |
-| `51`   | [Interest Add](#server-code-51) `DEPRECATED`                   |
-| `52`   | [Interest Remove](#server-code-52) `DEPRECATED`                |
-| `54`   | [Get Recommendations](#server-code-54) `DEPRECATED`            |
+| `51`   | [Interest Add](#server-code-51)                                |
+| `52`   | [Interest Remove](#server-code-52)                             |
+| `54`   | [Get Recommendations](#server-code-54)                         |
 | `55`   | [My Recommendations](#server-code-55) `OBSOLETE`               |
-| `56`   | [Get Global Recommendations](#server-code-56) `DEPRECATED`     |
-| `57`   | [Get User Interests](#server-code-57) `DEPRECATED`             |
+| `56`   | [Get Global Recommendations](#server-code-56)                  |
+| `57`   | [Get User Interests](#server-code-57)                          |
 | `58`   | [Admin Command](#server-code-58) `OBSOLETE`                    |
+| `59`   | [Place In Line Request](#server-code-59) `OBSOLETE`            |
 | `60`   | [Place In Line Response](#server-code-60) `OBSOLETE`           |
 | `62`   | [Room Added](#server-code-62) `OBSOLETE`                       |
 | `63`   | [Room Removed](#server-code-63) `OBSOLETE`                     |
@@ -263,15 +303,15 @@ server, but it handles the protocol well enough (and can be modified).
 | `102`  | [Possible Parents](#server-code-102)                           |
 | `103`  | [Wishlist Search](#server-code-103)                            |
 | `104`  | [Wishlist Interval](#server-code-104)                          |
-| `110`  | [Get Similar Users](#server-code-110) `DEPRECATED`             |
-| `111`  | [Get Item Recommendations](#server-code-111) `DEPRECATED`      |
-| `112`  | [Get Item Similar Users](#server-code-112) `DEPRECATED`        |
+| `110`  | [Get Similar Users](#server-code-110)                          |
+| `111`  | [Get Item Recommendations](#server-code-111)                   |
+| `112`  | [Get Item Similar Users](#server-code-112)                     |
 | `113`  | [Room Tickers](#server-code-113)                               |
 | `114`  | [Room Ticker Add](#server-code-114)                            |
 | `115`  | [Room Ticker Remove](#server-code-115)                         |
 | `116`  | [Set Room Ticker](#server-code-116)                            |
-| `117`  | [Hated Interest Add](#server-code-117) `DEPRECATED`            |
-| `118`  | [Hated Interest Remove](#server-code-118) `DEPRECATED`         |
+| `117`  | [Hated Interest Add](#server-code-117)                         |
+| `118`  | [Hated Interest Remove](#server-code-118)                      |
 | `120`  | [Room Search](#server-code-120)                                |
 | `121`  | [Send Upload Speed](#server-code-121)                          |
 | `122`  | [User Privileges](#server-code-122) `DEPRECATED`               |
@@ -280,27 +320,27 @@ server, but it handles the protocol well enough (and can be modified).
 | `125`  | [Acknowledge Notify Privileges](#server-code-125) `DEPRECATED` |
 | `126`  | [Branch Level](#server-code-126)                               |
 | `127`  | [Branch Root](#server-code-127)                                |
-| `129`  | [Child Depth](#server-code-129) `DEPRECATED`                   |
+| `129`  | [Child Depth](#server-code-129) `OBSOLETE`                     |
 | `130`  | [Reset Distributed](#server-code-130)                          |
-| `133`  | [Private Room Users](#server-code-133)                         |
-| `134`  | [Private Room Add User](#server-code-134)                      |
-| `135`  | [Private Room Remove User](#server-code-135)                   |
-| `136`  | [Private Room Cancel Membership](#server-code-136)             |
-| `137`  | [Private Room Disown](#server-code-137)                        |
-| `138`  | [Private Room Unknown](#server-code-138) `OBSOLETE`            |
-| `139`  | [Private Room Added](#server-code-139)                         |
-| `140`  | [Private Room Removed](#server-code-140)                       |
-| `141`  | [Private Room Toggle](#server-code-141)                        |
+| `133`  | [Room Members](#server-code-133)                               |
+| `134`  | [Add Room Member](#server-code-134)                            |
+| `135`  | [Remove Room Member](#server-code-135)                         |
+| `136`  | [Cancel Room Membership](#server-code-136)                     |
+| `137`  | [Cancel Room Ownership](#server-code-137)                      |
+| `138`  | [Room Something](#server-code-138) `OBSOLETE`                  |
+| `139`  | [Room Membership Granted](#server-code-139)                    |
+| `140`  | [Room Membership Revoked](#server-code-140)                    |
+| `141`  | [Enable Room Invitations](#server-code-141)                    |
 | `142`  | [New Password](#server-code-142)                               |
-| `143`  | [Private Room Add Operator](#server-code-143)                  |
-| `144`  | [Private Room Remove Operator](#server-code-144)               |
-| `145`  | [Private Room Operator Added](#server-code-145)                |
-| `146`  | [Private Room Operator Removed](#server-code-146)              |
-| `148`  | [Private Room Operators](#server-code-148)                     |
+| `143`  | [Add Room Operator](#server-code-143)                          |
+| `144`  | [Remove Room Operator](#server-code-144)                       |
+| `145`  | [Room Operatorship Granted](#server-code-145)                  |
+| `146`  | [Room Operatorship Revoked](#server-code-146)                  |
+| `148`  | [Room Operators](#server-code-148)                             |
 | `149`  | [Message Users](#server-code-149)                              |
-| `150`  | [Join Global Room](#server-code-150) `DEPRECATED`              |
-| `151`  | [Leave Global Room](#server-code-151) `DEPRECATED`             |
-| `152`  | [Global Room Message](#server-code-152) `DEPRECATED`           |
+| `150`  | [Join Global Room](#server-code-150)                           |
+| `151`  | [Leave Global Room](#server-code-151)                          |
+| `152`  | [Global Room Message](#server-code-152)                        |
 | `153`  | [Related Searches](#server-code-153) `OBSOLETE`                |
 | `160`  | [Excluded Search Phrases](#server-code-160)                    |
 | `1001` | [Can't Connect To Peer](#server-code-1001)                     |
@@ -313,6 +353,12 @@ server, but it handles the protocol well enough (and can be modified).
 
 We send this to the server right after the connection has been established.
 Server responds with the greeting message.
+
+The server uses the major and minor versions to differentiate between
+clients. Use unique version numbers when possible, to avoid impersonating
+other clients. Major versions reserved for popular Soulseek clients include
+157 for Soulseek NS and SoulseekQt, 160 for Nicotine+, and 170 for slskd
+(Soulseek.NET). These clients have their own rules for minor versions.
 
 ### Sending Login Example
 
@@ -327,13 +373,13 @@ Server responds with the greeting message.
 
 | Data      | Version       | Hash Length   | Hash                                                                                              | Minor Version |
 |-----------|---------------|---------------|---------------------------------------------------------------------------------------------------|---------------|
-| **Human** | 160           | 32            | d51c9a7e9353746a6020f9602d452929                                                                  | 1             |
-| **Hex**   | `a0 00 00 00` | `20 00 00 00` | `64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39` | `01 00 00 00` |
+| **Human** | 175           | 32            | d51c9a7e9353746a6020f9602d452929                                                                  | 1             |
+| **Hex**   | `af 00 00 00` | `20 00 00 00` | `64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39` | `01 00 00 00` |
 
 #### Message as Hex Stream
 
 ```
-48 00 00 00 01 00 00 00 08 00 00 00 75 73 65 72 6e 61 6d 65 08 00 00 00 70 61 73 73 77 6f 72 64 a0 00 00 00 20 00
+48 00 00 00 01 00 00 00 08 00 00 00 75 73 65 72 6e 61 6d 65 08 00 00 00 70 61 73 73 77 6f 72 64 af 00 00 00 20 00
 00 00 64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39 01 00 00 00
 ```
 
@@ -342,12 +388,10 @@ Server responds with the greeting message.
     1.  **string** *username*
     2.  **string** *password*  
         A non-empty string is required
-    3.  **uint32** *version number*  
-        `160` for Nicotine+
+    3.  **uint32** *major version*
     4.  **string** *hash*  
         MD5 hex digest of concatenated username and password
-    5.  **uint32** *minor version*  
-        `0x13000000` for 157 ns 13e, `0x11000000` for 157 ns 13c
+    5.  **uint32** *minor version*
   - Receive
     1.  **bool** *success*
     2.  If *success* is true
@@ -359,9 +403,11 @@ Server responds with the greeting message.
         4.  **bool** *is supporter*  
             If we have donated to Soulseek at some point in the past
     3.  If *success* is false
-        1.  **bool** *failure*
-        2.  **string** *reason*
-            See [Login Failure Reasons](#login-failure-reasons)
+        1.  **string** *rejection reason*
+            See [Login Rejection Reasons](#login-rejection-reasons)
+        2.  If *rejection reason* is `INVALIDUSERNAME`
+            1.  **string** *rejection detail*
+                See [Login Rejection Details](#login-rejection-details)
 
 
 ## Server Code 2
@@ -369,19 +415,24 @@ Server responds with the greeting message.
 ### SetWaitPort
 
 We send this to the server to indicate the port number that we listen on (2234
-by default).
+by default). Certain clients like SoulseekQt implement obfuscation of peer
+messages, and also send the obfuscation type and obfuscated port to accept such
+connections on.
 
-If this value is set to zero, or the message is not sent upon login (which
-defaults the listen port to 0), remote clients handling a [ConnectToPeer](#server-code-18)
-message will fail to properly purge the request.  Confirmed in SoulseekQt
-2020.3.12, but probably impacts most or all other versions.
+Nicotine+ does not support obfuscated connections, since there is no evidence
+that ISP traffic shaping targeting the Soulseek network (the original issue
+obfuscation attempted to mitigate) is prevalent today. Forwarding multiple
+ports is also becoming increasingly difficult due to IPv4 address exhaustion,
+and only requiring a single unobfuscated port allows users to use their
+remaining free ports in other applications instead.
 
 ### Data Order
   - Send
     1.  **uint32** *port*
-    2.  **uint32** *unknown*  
-        SoulseekQt uses a value of `1`
-    3.  **uint32** *obfuscated port*
+    2.  Optional
+        1.  **uint32** *obfuscation type*  
+            See [Obfuscation Types](#obfuscation-types)
+        2.  **uint32** *obfuscated port*
   - Receive
     -   *No Message*
 
@@ -399,10 +450,10 @@ given the peer's username.
     1.  **string** *username*
   - Receive
     1.  **string** *username*
-    2.  **ip** *ip*
+    2.  **uint32** *ip*
     3.  **uint32** *port*
-    4.  **uint32** *unknown*
-        SoulseekQt uses a value of `1`
+    4.  **uint32** *obfuscation type*  
+        See [Obfuscation Types](#obfuscation-types)
     5.  **uint16** *obfuscated port*
 
 
@@ -476,7 +527,7 @@ The server tells us if a user has gone away or has returned.
 
 ### IgnoreUser
 
-**OBSOLETE, no longer used**
+**OBSOLETE, no longer functional**
 
 We send this to the server to tell a user we have ignored them.
 
@@ -494,7 +545,7 @@ The server tells us a user has ignored us.
 
 ### UnignoreUser
 
-**OBSOLETE, no longer used**
+**OBSOLETE, no longer functional**
 
 We send this to the server to tell a user we are no longer ignoring them.
 
@@ -572,9 +623,10 @@ Requirements include:
         3.  **uint32** *unknown*
         4.  **uint32** *files*
         5.  **uint32** *dirs*
-    8.  **uint32** *number of slotsfree*
-    9.  Iterate for *number of slotsfree*
-        1.  **uint32** *slotsfree*
+    8.  **uint32** *number of slotsfull*
+    9.  Iterate for *number of slotsfull*
+        1.  **uint32** *slotsfull*  
+            Boolean value `1` or `0`, see [UploadSlotsFull](#server-code-40)
     10. **uint32** *number of user countries*
     11. Iterate for *number of user countries*
         1.  **string** *countrycode*  
@@ -619,7 +671,8 @@ The server tells us someone has just joined a room we're in.
     6.  **uint32** *unknown*
     7.  **uint32** *files*
     8.  **uint32** *dirs*
-    9.  **uint32** *slotsfree*
+    9.  **uint32** *slotsfull*  
+        Boolean value `1` or `0`, see [UploadSlotsFull](#server-code-40)
     10. **string** *countrycode*  
         Uppercase country code
 
@@ -660,13 +713,13 @@ See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
     1.  **string** *username*
     2.  **string** *type*  
         See [Connection Types](#connection-types)
-    3.  **ip** *ip*
+    3.  **uint32** *ip*
     4.  **uint32** *port*
     5.  **uint32** *token*  
         Use this token for [PierceFireWall](#peer-init-code-0)
     6.  **bool** *privileged*
-    7.  **uint32** *unknown*  
-        SoulseekQt uses a value of `1`
+    7.  **uint32** *obfuscation type*  
+        See [Obfuscation Types](#obfuscation-types)
     8.  **uint32** *obfuscated port*
 
 
@@ -709,7 +762,7 @@ don't send it, the server will keep sending the chat phrase to us.
 
 ### FileSearchRoom
 
-**OBSOLETE, use [RoomSearch](#server-code-120) server message**
+**OBSOLETE, superseded by [RoomSearch](#server-code-120) server message**
 
 We send this to the server when we search for something in a room.
 
@@ -794,6 +847,16 @@ Nicotine+ uses TCP keepalive instead of sending this message.
 
 **OBSOLETE, no longer used**
 
+This message used to be sent together with the [PeerInit](#peer-init-code-1)
+message when connecting to a user, with the same non-zero token included in
+both. The recipient could then cross-check the username and token, in order to
+reject spoofed connection attempts.
+
+While the server still recognizes and forwards this message today, no clients
+use it anymore. The lack of adoption by clients in the past has effectively
+rendered the message unusable, since its reintroduction in a client would
+isolate the client from the rest of the network.
+
 ### Data Order
 
   - Send
@@ -808,7 +871,7 @@ Nicotine+ uses TCP keepalive instead of sending this message.
 
 ### SendDownloadSpeed
 
-**OBSOLETE, use [SendUploadSpeed](#server-code-121) server message**
+**OBSOLETE, superseded by [SendUploadSpeed](#server-code-121) server message**
 
 We used to send this after a finished download to let the server update the
 speed statistics for a user.
@@ -842,10 +905,9 @@ share.
 
 ### GetUserStats
 
-The server sends this to indicate a change in a user's statistics, if we've
-requested to watch the user in [WatchUser](#server-code-5) previously. A user's
-stats can also be requested by sending a [GetUserStats](#server-code-36)
-message to the server, but [WatchUser](#server-code-5) should be used instead.
+The server sends this to indicate a change in a user's stats, if we have
+joined the same chat room. We can also request a user's stats by sending
+the message to the server.
 
 ### Data Order
 
@@ -862,21 +924,26 @@ message to the server, but [WatchUser](#server-code-5) should be used instead.
 
 ## Server Code 40
 
-### QueuedDownloads
+### UploadSlotsFull
 
-**OBSOLETE, no longer sent by the server**
+**OBSOLETE, no longer used**
 
-The server sends this to indicate if someone has download slots available or
-not.
+We send this to the server to indicate whether our upload slots are fully
+occupied or not. The server broadcasts the message to joined rooms.
+
+The official Soulseek client used to send this message on login, as well as
+when upload slots filled up or became available. Users with full slots were
+grayed out in room user lists.
 
 ### Data Order
 
   - Send
-    -   *No Message*
+    1.  **uint32** *slotsfull*  
+        Boolean value `1` or `0`
   - Receive
     1.  **string** *username*
-    2.  **bool** *slotsfree*  
-        Can immediately download
+    2.  **uint32** *slotsfull*  
+        Boolean value `1` or `0`
 
 
 ## Server Code 41
@@ -901,8 +968,8 @@ disconnects us.
 We send this to the server when we search a specific user's shares. The token
 is a number generated by the client and is used to track the search results.
 
-In the past, the server sent us this message for UserSearch requests from other
-users. Today, the server sends a [FileSearch](#server-code-26) message instead.
+The recipient receives the search request in the form of a [FileSearch](#server-code-26)
+message.
 
 ### Data Order
 
@@ -910,17 +977,15 @@ users. Today, the server sends a [FileSearch](#server-code-26) message instead.
     1.  **string** *username*
     2.  **uint32** *token*
     3.  **string** *search query*
-  - Receive `OBSOLETE`
-    1.  **string** *username*
-    2.  **uint32** *token*
-    3.  **string** *search query*
+  - Receive
+    -   *No Message*
 
 
 ## Server Code 50
 
 ### SimilarRecommendations
 
-**OBSOLETE**
+**OBSOLETE, no longer used, server sends empty list**
 
 We send this to the server when we are adding a recommendation to our
 "My recommendations" list, and want to receive a list of similar
@@ -946,8 +1011,6 @@ recommendation or one of the similar ones instead.
 
 ### AddThingILike
 
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
-
 We send this to the server when we add an item to our likes list.
 
 ### Data Order
@@ -962,8 +1025,6 @@ We send this to the server when we add an item to our likes list.
 
 ### RemoveThingILike
 
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
-
 We send this to the server when we remove an item from our likes list.
 
 ### Data Order
@@ -977,8 +1038,6 @@ We send this to the server when we remove an item from our likes list.
 ## Server Code 54
 
 ### Recommendations
-
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends us a list of personal recommendations and a number for each.
 
@@ -1001,7 +1060,7 @@ The server sends us a list of personal recommendations and a number for each.
 
 ### MyRecommendations
 
-**OBSOLETE**
+**OBSOLETE, no longer functional**
 
 We send this to the server to ask for our own list of added
 likes/recommendations (called "My recommendations" in older versions
@@ -1026,8 +1085,6 @@ message for each missing item.
 
 ### GlobalRecommendations
 
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
-
 The server sends us a list of global recommendations and a number for each.
 
 ### Data Order
@@ -1048,8 +1105,6 @@ The server sends us a list of global recommendations and a number for each.
 ## Server Code 57
 
 ### UserInterests
-
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 We ask the server for a user's liked and hated interests. The server responds
 with a list of interests.
@@ -1072,7 +1127,7 @@ with a list of interests.
 
 ### AdminCommand
 
-**OBSOLETE**
+**OBSOLETE, no longer functional**
 
 We send this to the server to run an admin command (e.g. to ban or silence a
 user) if we have admin status on the server.
@@ -1088,11 +1143,27 @@ user) if we have admin status on the server.
     -   *No Message*
 
 
+## Server Code 59
+
+### PlaceInLineRequest
+
+**OBSOLETE, superseded by [PlaceInQueueRequest](#peer-code-51) peer message**
+
+### Data Order
+
+  - Send
+    1.  **string** *username*
+    2.  **uint32** *token*
+  - Receive
+    1.  **string** *username*
+    2.  **uint32** *token*
+
+
 ## Server Code 60
 
 ### PlaceInLineResponse
 
-**OBSOLETE, use [PlaceInQueueResponse](#peer-code-44) peer message**
+**OBSOLETE, superseded by [PlaceInQueueResponse](#peer-code-44) peer message**
 
 The server sends this to indicate change in place in queue while we're waiting
 for files from another peer.
@@ -1101,11 +1172,11 @@ for files from another peer.
 
   - Send
     1.  **string** *username*
-    2.  **uint32** *req*
+    2.  **uint32** *token*
     3.  **uint32** *place*
   - Receive
     1.  **string** *username*
-    2.  **uint32** *req*
+    2.  **uint32** *token*
     3.  **uint32** *place*
 
 
@@ -1245,9 +1316,10 @@ We send this to get a global list of all users online.
         3.  **uint32** *unknown*
         4.  **uint32** *files*
         5.  **uint32** *dirs*
-    7.  **uint32** *number of slotsfree*
-    8.  Iterate for *number of slotsfree*
-        1.  **uint32** *slotsfree*
+    7.  **uint32** *number of slotsfull*
+    8.  Iterate for *number of slotsfull*
+        1.  **uint32** *slotsfull*  
+            Boolean value `1` or `0`, see [UploadSlotsFull](#server-code-40)
     9. **uint32** *number of usercountries*
     10. Iterate for *number of usercountries*
         1.  **string** *countrycode*  
@@ -1273,7 +1345,7 @@ Server message for tunneling a chat message.
     1.  **string** *username*
     2.  **uint32** *code*
     3.  **uint32** *token*
-    4.  **ip** *ip*
+    4.  **uint32** *ip*
     5.  **uint32** *port*
     6.  **string** *message*
 
@@ -1301,28 +1373,29 @@ The server sends us a list of privileged users, a.k.a. users who have donated.
 We inform the server if we have a distributed parent or not. If not, the server
 eventually sends us a [PossibleParents](#server-code-102) message with a list
 of possible parents to connect to. If no candidates are found, no such message
-is sent by the server, and we eventually become a branch root.
+is sent by the server, and we eventually become a branch root (i.e. the server
+starts sending us [EmbeddedMessage](#server-code-93) messages).
 
 ### Data Order
 
   - Send
-    1.  **bool** *have parents*
+    1.  **bool** *no parent*
   - Receive
     -   *No Message*
 
 
 ## Server Code 73
 
-### SearchParent
+### ParentIP
 
 **DEPRECATED, sent by Soulseek NS but not SoulseekQt**
 
-We send the IP address of our parent to the server.
+We tell the server the IP address of our parent in the distributed network.
 
 ### Data Order
 
   - Send
-    1.  **ip** *ip*
+    1.  **uint32** *ip*
   - Receive
     -   *No Message*
 
@@ -1460,6 +1533,13 @@ server message instead of the unpacked message, which resulted in other
 client implementations adopting this erroneous behavior. This bug was
 fixed in SoulseekQt in early 2026.
 
+Soulseek NS also distributes [DistribBranchLevel](#distributed-code-4) and
+[DistribBranchRoot](#distributed-code-5) messages, although the server doesn't
+send them, and increments the branch level before distribution. This is
+presumably a side effect of processing embedded messages as regular distributed
+messages, since SoulseekQt doesn't accept messages other than
+[DistribSearch](#distributed-code-3) from the server.
+
 ### Data Order
 
   - Send
@@ -1507,7 +1587,7 @@ from the server.
     1.  **uint32** *number of parents*
     2.  Iterate for *number of parents*
         1.  **string** *username*
-        2.  **ip** *ip*
+        2.  **uint32** *ip*
         3.  **uint32** *port*
 
 
@@ -1546,8 +1626,6 @@ This interval is almost always 12 minutes, or 2 minutes for privileged users.
 
 ### SimilarUsers
 
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
-
 The server sends us a list of similar users related to our interests.
 
 ### Data Order
@@ -1564,8 +1642,6 @@ The server sends us a list of similar users related to our interests.
 ## Server Code 111
 
 ### ItemRecommendations
-
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends us a list of recommendations related to a specific item, which
 is usually present in the like/dislike list or an existing recommendation list.
@@ -1585,8 +1661,6 @@ is usually present in the like/dislike list or an existing recommendation list.
 ## Server Code 112
 
 ### ItemSimilarUsers
-
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends us a list of similar users related to a specific item, which
 is usually present in the like/dislike list or recommendation list.
@@ -1683,8 +1757,6 @@ walls.
 
 ### AddThingIHate
 
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
-
 We send this to the server when we add an item to our hate list.
 
 ### Data Order
@@ -1698,8 +1770,6 @@ We send this to the server when we add an item to our hate list.
 ## Server Code 118
 
 ### RemoveThingIHate
-
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 We send this to the server when we remove an item from our hate list.
 
@@ -1719,8 +1789,8 @@ We send this to the server to search files shared by users who have joined a
 specific chat room. The token is a number generated by the client and is used
 to track the search results.
 
-In the past, the server sent us this message for RoomSearch requests from other
-users. Today, the server sends a [FileSearch](#server-code-26) message instead.
+Room users receive the search request in the form of a [FileSearch](#server-code-26)
+message.
 
 ### Data Order
 
@@ -1728,10 +1798,8 @@ users. Today, the server sends a [FileSearch](#server-code-26) message instead.
     1.  **string** *room*
     2.  **uint32** *token*
     3.  **string** *search query*
-  - Receive `OBSOLETE`
-    1.  **string** *username*
-    2.  **uint32** *token*
-    3.  **string** *search query*
+  - Receive
+    -   *No Message*
 
 
 ## Server Code 121
@@ -1817,7 +1885,7 @@ network.
 
 ### BranchLevel
 
-We tell the server what our position is in our branch (xth generation) on the
+We tell the server what our position is in our branch (nth generation) in the
 distributed network.
 
 ### Data Order
@@ -1832,7 +1900,7 @@ distributed network.
 
 ### BranchRoot
 
-We tell the server the username of the root of the branch we're in on the
+We tell the server the username of the root of the branch we're in in the
 distributed network.
 
 ### Data Order
@@ -1847,10 +1915,16 @@ distributed network.
 
 ### ChildDepth
 
-**DEPRECATED, sent by Soulseek NS but not SoulseekQt**
+**OBSOLETE, no longer used**
 
-We tell the server the maximum number of generation of children we have on the
-distributed network.
+When we are a branch root in the distributed network, and receive a
+[DistribChildDepth](#distributed-code-7) message from a child peer, we
+increment the depth and send this final value to the server.
+
+This message is obsolete. While Soulseek NS sends the correct value to the
+server, SoulseekQt doesn't implement this message correctly, always sending a
+uint8 value of 1 instead. Presumably, the server has opted to calculate child
+depths on its own, based on branch level/root information sent by peers.
 
 ### Data Order
 
@@ -1876,7 +1950,7 @@ The server asks us to reset our distributed parent and children.
 
 ## Server Code 133
 
-### PrivateRoomUsers
+### RoomMembers
 
 The server sends us a list of members (excluding the owner) in a private
 room we are in.
@@ -1887,14 +1961,14 @@ room we are in.
     1.  *No Message*
   - Receive
     1.  **string** *room*
-    2.  **uint32** *number of users*
-    3.  Iterate for *number of users*
-        1.  **string** *users*
+    2.  **uint32** *number of members*
+    3.  Iterate for *number of members*
+        1.  **string** *members*
 
 
 ## Server Code 134
 
-### PrivateRoomAddUser
+### AddRoomMember
 
 We send this to the server to add a member to a private room, if we are
 the owner or an operator.
@@ -1913,7 +1987,7 @@ The server tells us a member has been added to a private room we are in.
 
 ## Server Code 135
 
-### PrivateRoomRemoveUser
+### RemoveRoomMember
 
 We send this to the server to remove a member from a private room, if we
 are the owner or an operator. Owners can remove operators and regular
@@ -1933,7 +2007,7 @@ The server tells us a member has been removed from a private room we are in.
 
 ## Server Code 136
 
-### PrivateRoomCancelMembership
+### CancelRoomMembership
 
 We send this to the server to cancel our own membership of a private room.
 
@@ -1947,7 +2021,7 @@ We send this to the server to cancel our own membership of a private room.
 
 ## Server Code 137
 
-### PrivateRoomDisown
+### CancelRoomOwnership
 
 We send this to the server to stop owning a private room.
 
@@ -1961,7 +2035,7 @@ We send this to the server to stop owning a private room.
 
 ## Server Code 138
 
-### PrivateRoomSomething
+### RoomSomething
 
 **OBSOLETE, no longer used**
 
@@ -1977,7 +2051,7 @@ Unknown purpose
 
 ## Server Code 139
 
-### PrivateRoomAdded
+### RoomMembershipGranted
 
 The server tells us we were added to a private room.
 
@@ -1991,7 +2065,7 @@ The server tells us we were added to a private room.
 
 ## Server Code 140
 
-### PrivateRoomRemoved
+### RoomMembershipRevoked
 
 The server tells us we were removed from a private room.
 
@@ -2005,7 +2079,7 @@ The server tells us we were removed from a private room.
 
 ## Server Code 141
 
-### PrivateRoomToggle
+### EnableRoomInvitations
 
 We send this when we want to enable or disable invitations to private rooms.
 
@@ -2034,7 +2108,7 @@ password changes.
 
 ## Server Code 143
 
-### PrivateRoomAddOperator
+### AddRoomOperator
 
 We send this to the server to add private room operator abilities to
 a member.
@@ -2054,7 +2128,7 @@ room we are in.
 
 ## Server Code 144
 
-### PrivateRoomRemoveOperator
+### RemoveRoomOperator
 
 We send this to the server to remove private room operator abilities
 from a member.
@@ -2074,7 +2148,7 @@ private room we are in.
 
 ## Server Code 145
 
-### PrivateRoomOperatorAdded
+### RoomOperatorshipGranted
 
 The server tells us we were given operator abilities in a private room
 we are in.
@@ -2089,7 +2163,7 @@ we are in.
 
 ## Server Code 146
 
-### PrivateRoomOperatorRemoved
+### RoomOperatorshipRevoked
 
 The server tells us our operator abilities were removed in a private room
 we are in.
@@ -2104,7 +2178,7 @@ we are in.
 
 ## Server Code 148
 
-### PrivateRoomOperators
+### RoomOperators
 
 The server sends us a list of operators in a private room we are in.
 
@@ -2140,8 +2214,6 @@ Sends a broadcast private message to the given list of online users.
 
 ### JoinGlobalRoom
 
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
-
 We ask the server to send us messages from all public rooms, also known as
 public room feed.
 
@@ -2157,8 +2229,6 @@ public room feed.
 
 ### LeaveGlobalRoom
 
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
-
 We ask the server to stop sending us messages from all public rooms, also known
 as public room feed.
 
@@ -2173,8 +2243,6 @@ as public room feed.
 ## Server Code 152
 
 ### GlobalRoomMessage
-
-**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends this when a new message has been written in the public room
 feed (every single line written in every public room).
@@ -2248,7 +2316,6 @@ See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
     2.  **string** *username*
   - Receive
     1.  **uint32** *token*
-    2.  **string** *username*
 
 
 ## Server Code 1003
@@ -2297,47 +2364,57 @@ a peer. In Nicotine+, these messages are defined in slskmessages.py.
 (slskd, Seeker)*
 
 1.  User A sends [ConnectToPeer](#server-code-18) to the Server with a unique
-    token (indirect connection request)
-2.  User A sends a [PeerInit](#peer-init-code-1) to User B (direct connection
-    request)
-3.  The Server sends a [ConnectToPeer](#server-code-18) response to User B with
-    the same token.  
+    token (indirect connection request) and User B's username. The token is
+    stored for later use (see step 6).
+2.  User A sends [GetPeerAddress](#server-code-3) to the Server with User B's
+    username.
+3.  The Server responds to User A with [GetPeerAddress](#server-code-3), which
+    gives User A the IP address of User B.
+4.  User A sends a [PeerInit](#peer-init-code-1) to User B (direct connection
+    request) using the IP address received in step 3.
+5.  The Server sends a [ConnectToPeer](#server-code-18) response to User B with
+    the same token as in step 1.
     If User B receives the *PeerInit* message, a connection is established, and
     user A is free to send peer messages.  
     Otherwise, once User B receives the *ConnectToPeer* message from the
-    Server, User B proceeds with step 4.
-4.  User B sends a [PierceFireWall](#peer-init-code-0) to User A with the token
+    Server, User B proceeds with step 6.
+6.  User B sends a [PierceFireWall](#peer-init-code-0) to User A with the token
     included in the *ConnectToPeer* message.  
     If this succeeds, a connection is established, and User A is free to send
     peer messages.  
-    If this fails, no connection is possible, and User B proceeds with step 5.
-5.  User B sends a [CantConnectToPeer](#server-code-1001) to the Server.
-6.  The Server sends a [CantConnectToPeer](#server-code-1001) response to
+    If this fails, no connection is possible, and User B proceeds with step 7.
+7.  User B sends a [CantConnectToPeer](#server-code-1001) to the Server.
+8.  The Server sends a [CantConnectToPeer](#server-code-1001) response to
     User A.
 
 
 ## Legacy Peer Connection Message Order
 
-*Used by Soulseek NS, Nicotine+ 3.2.0 and earlier (excluding step 5-7),
-Museek+ (excluding step 7), soulseeX*
+*Used by Soulseek NS, Nicotine+ 3.2.0 and earlier (excluding step 7-9),
+Museek+ (excluding step 9), soulseeX*
 
-1.  User A sends a [PeerInit](#peer-init-code-1) to User B.  
+1.  User A sends [GetPeerAddress](#server-code-3) to the Server with User B's
+    username.
+2.  The Server responds to User A with [GetPeerAddress](#server-code-3), which
+    gives User A the IP address of User B.
+3.  User A sends a [PeerInit](#peer-init-code-1) to User B using the IP address
+    received in step 1.
     If this succeeds, a connection is established, and User A is free to send
-    peer messages.  
+    peer messages.
     If this fails (socket cannot connect), User A proceeds with an indirect
-    connection request (step 2).
-2.  User A sends [ConnectToPeer](#server-code-18) to the Server with a unique
-    token
-3.  The Server sends a [ConnectToPeer](#server-code-18) response to User B with
-    the same token
-4.  User B sends a [PierceFireWall](#peer-init-code-0) to User A with the same
+    connection request (step 4).
+4.  User A sends [ConnectToPeer](#server-code-18) to the Server with a unique
+    token.
+5.  The Server sends a [ConnectToPeer](#server-code-18) response to User B with
+    the same token.
+6.  User B sends a [PierceFireWall](#peer-init-code-0) to User A with the same
     token.  
     If this succeeds, a connection is established, and User A is free to send
     peer messages.  
-    If this fails, no connection is possible, and User B proceeds with step 5.
-5.  User B sends a [CantConnectToPeer](#server-code-1001) to the Server.
-6.  The Server sends a [CantConnectToPeer](#server-code-1001) response to User A.
-7.  After 20 seconds, user A retries an indirect connection request (step 2) up
+    If this fails, no connection is possible, and User B proceeds with step 7.
+7.  User B sends a [CantConnectToPeer](#server-code-1001) to the Server.
+8.  The Server sends a [CantConnectToPeer](#server-code-1001) response to User A.
+9.  After 20 seconds, user A retries an indirect connection request (step 4) up
     to three times before giving up.
 
 
@@ -2364,7 +2441,9 @@ See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 ### PeerInit
 
 This message is sent to initiate a direct connection to another peer. The token
-is apparently always 0 and ignored.
+is always zero and ignored today, but used to be non-zero and included in a
+concurrent [SendConnectToken](#server-code-33) server message for connection
+verification.
 
 See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 
@@ -2960,6 +3039,16 @@ We send this to the uploading peer at the beginning of a 'F' connection, to
 tell them how many bytes of the file we've previously downloaded. If nothing
 was downloaded, the offset is 0.
 
+Note that the offset is intended for resuming previous file downloads, not
+downloading specific chunks of a file. Attempting to retrofit such
+functionality is a bad idea for several reasons:
+
+1. The protocol doesn't support hashing of file chunks for verification.
+2. Every download request occupies an upload slot, causing congestion if
+   small chunks are requested from many users at once.
+3. Aborting an incomplete file transfer makes it appear as failed on the
+   uploader's end, resulting in confusion.
+
 Note that Soulseek NS fails to read the size of an incomplete download if more
 than 2 GB of the file has been downloaded, and the download is resumed. In
 consequence, the client sends an invalid file offset of -1.
@@ -2970,6 +3059,31 @@ consequence, the client sends an invalid file offset of -1.
     -   **uint64** *offset*
   - Receive
     -   **uint64** *offset*
+
+## Example Flow for Downloading a File
+
+1.  We send a [FileSearch](#server-code-26) message to the server, storing the
+    token for later use.
+2.  The server propagates the search query through the search network.
+3.  Any peers that have a match for the search query establish a `P` connection
+    with us, and send a [FileSearchResponse](#peer-code-9) message.  
+    See [Peer Connection Order](#modern-peer-connection-message-order) for how
+    to connect to a peer (in this scenario, we assume the role of User B).
+5.  If we decide to download a file received in the message from step 3, we
+    send a [QueueUpload](#peer-code-43) message to the peer.
+6.  The peer sends us a [TransferRequest](#peer-code-40) message.
+7.  We send the peer a [TransferResponse](#peer-code-41-a), accepting the
+    transfer request. We store the filesize for later use.
+8.  The peer establishes a `F` connection with us.
+9.  We send a [FileOffset](#file-offset) message to the peer, letting them
+    know how much we have downloaded so far. The peer starts the upload from
+    the file offset.
+10. The peer sends us the file data in small chunks until the transfer is
+    complete, or until the connection is dropped. See [UploadFailed](#peer-code-46)
+    for handling failed transfers.  
+    We can use the filesize stored previously to check how much data we expect
+    to receive.
+11. Once the transfer is complete, we are free to persist the file to disk.
 
 
 # Distributed Messages
@@ -2994,7 +3108,7 @@ peer is allowed. In Nicotine+, these messages are defined in slskmessages.py.
 | `3`  | [Search Request](#distributed-code-3)                 |
 | `4`  | [Branch Level](#distributed-code-4)                   |
 | `5`  | [Branch Root](#distributed-code-5)                    |
-| `7`  | [Child Depth](#distributed-code-7) `DEPRECATED`       |
+| `7`  | [Child Depth](#distributed-code-7) `OBSOLETE`         |
 | `93` | [Embedded Message](#distributed-code-93) `DEPRECATED` |
 
 
@@ -3004,7 +3118,7 @@ peer is allowed. In Nicotine+, these messages are defined in slskmessages.py.
 
 **DEPRECATED, sent by Soulseek NS but not SoulseekQt**
 
-We ping distributed children every 60 seconds.
+We ping our parent and children every minute.
 
 ### Data Order
 
@@ -3018,18 +3132,24 @@ We ping distributed children every 60 seconds.
 
 ### DistribSearch
 
-Search request that arrives through the distributed network. We transmit the
-search request to our child peers.
+Search request that arrives through the distributed network. We distribute the
+raw message (including unknown message attributes) to our child peers.
+
+The first potential parent that sends us a search request in addition to branch
+root/level information becomes our actual parent Some clients, such as
+Soulseek NS and earlier Nicotine+ versions, adopt a parent as soon as it sends
+the branch root/level information instead.
+
+Identifier is always the code point of ASCII character 1 (49). We reject
+messages that use any other value.
 
 ### Data Order
 
   - Send
-    1.  **uint32** *unknown*
-    2.  **string** *username*
-    3.  **uint32** *token*
-    4.  **string** *query*
+    -   *Raw Message*
   - Receive
-    1.  **uint32** *unknown*
+    1.  **uint32** *identifier*  
+        Value is always the code point of ASCII character 1 (`49`)
     2.  **string** *username*
     3.  **uint32** *token*
     4.  **string** *query*
@@ -3039,8 +3159,15 @@ search request to our child peers.
 
 ### DistribBranchLevel
 
-We tell our distributed children what our position is in our branch (xth
-generation) on the distributed network.
+We tell our distributed children what our position is in our branch (nth
+generation) in the distributed network. Our branch level is the branch
+level from our parent incremented by one. If we are a branch root (i.e. the
+server sends us [EmbeddedMessage](#server-code-93) messages), our branch level
+is 0 instead.
+
+When connecting to potential parents, they send us this message. We record
+the information, and adopt the first parent that sends us a [DistribSearch](#distributed-code-3)
+message in addition to branch root/level information.
 
 If we receive a branch level of 0 from a parent, we should mark the parent as
 our branch root. Due to incorrect behavior in older client versions, they
@@ -3060,7 +3187,12 @@ message in this case.
 ### DistribBranchRoot
 
 We tell our distributed children the username of the root of the branch we're
-in on the distributed network.
+in in the distributed network. If we are the branch root (i.e. the server sends
+us [EmbeddedMessage](#server-code-93) messages), we send our own username.
+
+When connecting to potential parents, they send us this message. We record
+the information, and adopt the first parent that sends us a [DistribSearch](#distributed-code-3)
+message in addition to branch root/level information.
 
 Note that SoulseekQt used to not send this message when becoming a branch root.
 This behavior was corrected in early 2026. We should always send the message
@@ -3078,10 +3210,16 @@ regardless of our status in the distributed network.
 
 ### DistribChildDepth
 
-**DEPRECATED, sent by Soulseek NS but not SoulseekQt**
+**OBSOLETE, no longer used**
 
-We tell our distributed parent the maximum number of generation of children we
-have on the distributed network.
+When adopting a new parent, we send them this message with a child depth of
+zero. Our parent increments the depth, sends the message to their parent,
+who does the same, until it reaches the branch root, who sends the final child
+depth to the server in the form of a [ChildDepth](#server-code-129) message.
+
+This message is obsolete, since SoulseekQt doesn't send it. Presumably, the
+server has opted to calculate child depths on its own, based on branch
+level/root information sent by peers.
 
 ### Data Order
 
@@ -3110,10 +3248,7 @@ SoulseekQt in early 2026.
 ### Data Order
 
   - Send
-    1.  **uint8** *distributed code*  
-        See [Distributed Message Codes](#distributed-message-codes)
-    2.  **bytes** *distributed message*  
-        Raw message associated with distributed code
+    -   *No Message*
   - Receive
     1.  **uint8** *distributed code*  
         See [Distributed Message Codes](#distributed-message-codes)
