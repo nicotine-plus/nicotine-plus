@@ -292,6 +292,14 @@ setup(
             copyright=pynicotine.__copyright__,
             shortcut_name=pynicotine.__application_name__,
             shortcut_dir="ProgramMenuFolder"
+        ),
+        # Separate "console" executable required for CI startup test and debugging
+        Executable(
+            script=os.path.join(PROJECT_PATH, SCRIPT_NAME),
+            base="console",
+            target_name=f"{pynicotine.__application_name__}-debug",
+            manifest=MANIFEST_NAME,
+            copyright=pynicotine.__copyright__
         )
     ],
 )

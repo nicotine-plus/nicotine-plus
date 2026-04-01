@@ -156,6 +156,10 @@ jobs:
           mkdir build-aux/windows/build/package/Nicotine+/portable/
           cp build-aux/windows/readme-portable.txt build-aux/windows/build/package/Nicotine+/portable/README.txt
 
+      - name: Test application startup
+        shell: cmd  # Exclude msys2 dependencies
+        run: python3 build-aux/windows/testrun.py
+
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v7
         with:
@@ -197,6 +201,10 @@ jobs:
 
       - name: Freeze application
         run: python3 build-aux/macos/setup.py bdist_dmg
+
+      - name: Test application startup
+        shell: sh  # Exclude conda-forge dependencies
+        run: python3 build-aux/macos/testrun.py
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v7
