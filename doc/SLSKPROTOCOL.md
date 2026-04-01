@@ -1958,7 +1958,7 @@ room we are in.
 ### Data Order
 
   - Send
-    1.  *No Message*
+    -   *No Message*
   - Receive
     1.  **string** *room*
     2.  **uint32** *number of members*
@@ -2545,7 +2545,7 @@ A peer responds with a list of shared files after we've sent a
             1.  **uint8** *code*  
                 Value is always `1`
             2.  **string** *filename*
-            3.  **unit64** *file size*
+            3.  **uint64** *file size*
             4.  **string** *file extension*
             5.  **uint32** *number of attributes*
             6.  Iterate for *number of attributes*
