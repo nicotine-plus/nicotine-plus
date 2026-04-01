@@ -141,6 +141,10 @@ jobs:
       - name: Freeze application
         run: python3 packaging/windows/setup.py bdist_msi
 
+      - name: Test application startup
+        shell: cmd  # Exclude msys2 dependencies
+        run: python3 packaging/windows/testrun.py
+
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -185,6 +189,10 @@ jobs:
 
       - name: Freeze application
         run: python3 packaging/macos/setup.py bdist_dmg
+
+      - name: Test application startup
+        shell: sh  # Exclude conda-forge dependencies
+        run: python3 packaging/macos/testrun.py
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v4
