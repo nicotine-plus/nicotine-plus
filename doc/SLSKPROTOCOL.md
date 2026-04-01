@@ -306,10 +306,10 @@ server, but it handles the protocol well enough (and can be modified).
 | `110`  | [Similar Users](#server-code-110)                              |
 | `111`  | [Item Recommendations](#server-code-111)                       |
 | `112`  | [Item Similar Users](#server-code-112)                         |
-| `113`  | [Room Ticker State](#server-code-113)                          |
-| `114`  | [Room Ticker Add](#server-code-114)                            |
-| `115`  | [Room Ticker Remove](#server-code-115)                         |
-| `116`  | [Room Ticker Set](#server-code-116)                            |
+| `113`  | [Room Tickers](#server-code-113)                               |
+| `114`  | [Room Ticker Added](#server-code-114)                          |
+| `115`  | [Room Ticker Removed](#server-code-115)                        |
+| `116`  | [Set Room Ticker](#server-code-116)                            |
 | `117`  | [Add Thing I Hate](#server-code-117)                           |
 | `118`  | [Remove Thing I Hate](#server-code-118)                        |
 | `120`  | [Room Search](#server-code-120)                                |
@@ -1678,7 +1678,7 @@ is usually present in the like/dislike list or recommendation list.
 
 ## Server Code 113
 
-### RoomTickerState
+### RoomTickers
 
 The server returns a list of tickers in a chat room.
 
@@ -1699,7 +1699,7 @@ walls.
 
 ## Server Code 114
 
-### RoomTickerAdd
+### RoomTickerAdded
 
 The server sends us a new ticker that was added to a chat room.
 
@@ -1718,7 +1718,7 @@ walls.
 
 ## Server Code 115
 
-### RoomTickerRemove
+### RoomTickerRemoved
 
 The server informs us that a ticker was removed from a chat room.
 
@@ -1736,7 +1736,7 @@ walls.
 
 ## Server Code 116
 
-### RoomTickerSet
+### SetRoomTicker
 
 We send this to the server when we change our own ticker in a chat room.
 Sending an empty ticker string removes any existing ticker in the room.
