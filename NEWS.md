@@ -28,7 +28,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Important: Enforce maximum sizes for uncompressed message to avoid OOM via TCP peer connection
  * Important: Some fixes for incorrect behavior in the distributed network embedded messages
  * Fixed a crash executing a file search in rooms mode with a empty room name
- * Fixed a crash that occured when opening File Properties dialog
+ * Fixed a crash that occurred when opening File Properties dialog
  * Fixed loading a saved shares file list from disk while offline
  * Fixed minor sizing issues with pages context menu on some systems
  * Fixed inaccurate stuck current folder count during rescan
