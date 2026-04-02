@@ -89,8 +89,8 @@ jobs:
       - name: Install dependencies
         run: |
           dnf -y upgrade --refresh
-          dnf -y install gettext gobject-introspection gtk${{ matrix.gtk }} \
-            python3 python3-build python3-gobject python3-setuptools python3-wheel
+          dnf -y install gettext gtk${{ matrix.gtk }} python3 python3-build \
+            python3-gobject python3-setuptools python3-wheel
 
       - name: Integration and unit tests
         run: python3 -m unittest -v
