@@ -28,14 +28,12 @@ if sys.platform == "win32":
     UNAVAILABLE_MODULES = [
         "fcntl", "grp", "posix", "pwd", "readline", "resource", "syslog", "termios"
     ]
-    BIN_EXCLUDES = []
     ICON_NAME = "icon.ico"
 
 elif sys.platform == "darwin":
     SYS_BASE_PATH = sys.prefix
     LIB_PATH = os.path.join(SYS_BASE_PATH, "lib")
     UNAVAILABLE_MODULES = ["msvcrt", "nt", "nturl2path", "winreg", "winsound"]
-    BIN_EXCLUDES = ["libappstream*.dylib"]
     ICON_NAME = "icon.icns"
 
 else:
@@ -238,7 +236,6 @@ setup(
             "packages": INCLUDED_MODULES,
             "excludes": EXCLUDED_MODULES,
             "include_files": include_files,
-            "bin_excludes": BIN_EXCLUDES,
             "zip_include_packages": ["*"],
             "zip_exclude_packages": [MODULE_NAME],
             "optimize": 2
