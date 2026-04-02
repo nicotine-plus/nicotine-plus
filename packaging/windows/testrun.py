@@ -27,7 +27,7 @@ def verify_min_macos_version():
     if sys.platform != "darwin":
         return
 
-    output = subprocess.check_output(["vtool", "-show-build", EXECUTABLE_PATH], text=True)
+    output = subprocess.check_output(["vtool", "-show-build", EXECUTABLE_PATH], encoding="utf-8")
     min_version = next(line.split()[1] for line in output.splitlines() if "minos" in line)
 
     if tuple(int(x) for x in min_version.split(".")) <= MIN_MACOS_VERSION:
