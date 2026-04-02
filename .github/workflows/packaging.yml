@@ -9,7 +9,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install dependencies
         run: |
@@ -29,7 +29,7 @@ jobs:
           cp -Lr ../nicotine_* build/package/
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: debian-package
           path: build/package/
@@ -49,7 +49,7 @@ jobs:
       options: --privileged
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Validate manifest
         run: flatpak-builder-lint --exceptions manifest build-aux/flatpak/org.nicotine_plus.Nicotine.json
@@ -67,7 +67,7 @@ jobs:
           upload-artifact: false
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: flatpak-${{ matrix.arch }}-package
           path: org.nicotine_plus.Nicotine-${{ matrix.arch }}.flatpak
@@ -84,7 +84,7 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Build Snap package
         uses: snapcore/action-build@v1
@@ -94,7 +94,7 @@ jobs:
         run: sudo snap install --dangerous ${{ steps.build-snap.outputs.snap }}
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: snap-${{ matrix.arch }}-package
           path: ${{ steps.build-snap.outputs.snap }}
@@ -118,7 +118,7 @@ jobs:
         shell: msys2 {0}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup msys2
         uses: msys2/setup-msys2@v2
@@ -151,13 +151,13 @@ jobs:
         run: python3 packaging/windows/testrun.py
 
       - name: Archive installer artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows-${{ matrix.arch }}-installer
           path: packaging/windows/build/*.msi
 
       - name: Archive package artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows-${{ matrix.arch }}-package
           path: packaging/windows/build/package
@@ -177,7 +177,7 @@ jobs:
         shell: bash -el {0}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set system language
         run: defaults write NSGlobalDomain AppleLanguages "(en-US)"
@@ -200,7 +200,7 @@ jobs:
         run: python3 packaging/macos/testrun.py
 
       - name: Archive installer artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: macos-${{ matrix.arch }}-installer
           path: packaging/macos/build/*.dmg
