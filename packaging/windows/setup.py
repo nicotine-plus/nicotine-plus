@@ -185,8 +185,14 @@ def add_typelibs():
     ]
 
     if sys.platform == "win32":
-        required_typelibs.append("GdkWin32-4")
-        required_typelibs.append("win32-")
+        required_typelibs += [
+            "GdkWin32-4",
+            "GioWin32-",
+            "GLibWin32-",
+            "win32-"
+        ]
+    else:
+        required_typelibs.append("GioUnix-")
 
     required_typelibs = tuple(required_typelibs)
 
