@@ -121,17 +121,11 @@ def set_up_python():
     if sys.stdout is not None:
         sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding="utf-8", line_buffering=True)
 
-    if is_frozen:
-        import multiprocessing
-        executable_folder = os.path.dirname(sys.executable)
-
-        # Support file scanning process in frozen binaries
-        multiprocessing.freeze_support()
-
+    if is_frozen and sys.platform == "win32":
         # Prioritize dlls in the 'lib' subfolder over system dlls, to avoid issues with conflicting dlls
-        if sys.platform == "win32":
-            import ctypes
-            ctypes.windll.kernel32.SetDllDirectoryW(os.path.join(executable_folder, "lib"))
+        import ctypes
+        executable_folder = os.path.dirname(sys.executable)
+        ctypes.windll.kernel32.SetDllDirectoryW(os.path.join(executable_folder, "lib"))
 
 
 def rename_process(new_name, debug_info=False):
