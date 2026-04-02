@@ -28,16 +28,22 @@ if sys.platform == "win32":
     UNAVAILABLE_MODULES = [
         "fcntl", "grp", "posix", "pwd", "readline", "resource", "syslog", "termios"
     ]
+    ZIP_INCLUDE_PACKAGES = ["*"]
     ICON_NAME = "icon.ico"
 
 elif sys.platform == "darwin":
     SYS_BASE_PATH = sys.prefix
     LIB_PATH = os.path.join(SYS_BASE_PATH, "lib")
     UNAVAILABLE_MODULES = ["msvcrt", "nt", "nturl2path", "winreg", "winsound"]
+    ZIP_INCLUDE_PACKAGES = ["*"]
     ICON_NAME = "icon.icns"
 
 else:
-    raise RuntimeError("Only Windows and macOS are supported")
+    SYS_BASE_PATH = sys.prefix
+    LIB_PATH = os.path.join(SYS_BASE_PATH, "lib")
+    UNAVAILABLE_MODULES = ["msvcrt", "nt", "nturl2path", "winreg", "winsound"]
+    ZIP_INCLUDE_PACKAGES = []
+    ICON_NAME = "icon.svg"
 
 TEMP_PATH = tempfile.mkdtemp()
 CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -106,13 +112,18 @@ def add_pixbuf_loaders():
     if sys.platform == "win32":
         image_formats += ["webp"]
 
-    add_file(file_path=os.path.join(CURRENT_PATH, "pixbuf-loaders.cache"), output_path="lib/pixbuf-loaders.cache")
-
     for image_format in image_formats:
         basename = f"libpixbufloader-{image_format}"
+        output_name = f"libpixbufloader-{image_format}.{loader_extension}"
+
+        if sys.platform in {"darwin", "win32"}:
+            output_path = os.path.join("lib", output_name)
+        else:
+            output_path = os.path.join("lib", "gi", output_name)
+
         add_file(
             file_path=os.path.realpath(os.path.join(pixbuf_loaders_path, f"{basename}.{loader_extension}")),
-            output_path=f"lib/libpixbufloader-{image_format}.{loader_extension}"
+            output_path=output_path
         )
 
 
@@ -136,10 +147,22 @@ def _add_typelibs_callback(full_path, short_path, _callback_data=None):
 
             for path in namespace.attrib["shared-library"].split(","):
                 basename = os.path.basename(path)
-                updated_path = os.path.join("@loader_path", basename) if sys.platform == "darwin" else path
-                paths.append(updated_path)
 
-                add_file(file_path=os.path.join(LIB_PATH, basename), output_path=os.path.join("lib", basename))
+                if sys.platform == "darwin":
+                    updated_path = os.path.join("@executable_path", "lib", basename)
+                    add_file(file_path=os.path.join(LIB_PATH, basename), output_path=os.path.join("lib", basename))
+
+                elif sys.platform == "win32":
+                    updated_path = path
+                    add_file(file_path=os.path.join(LIB_PATH, basename), output_path=os.path.join("lib", basename))
+
+                else:
+                    updated_path = path
+                    add_file(
+                        file_path=os.path.join(LIB_PATH, basename), output_path=os.path.join("lib", "gi", basename)
+                    )
+
+                paths.append(updated_path)
 
             namespace.attrib["shared-library"] = ",".join(paths)
 
@@ -209,6 +232,21 @@ def add_gtk():
     # Pixbuf loaders
     add_pixbuf_loaders()
 
+    if sys.platform in {"darwin", "win32"}:
+        return
+
+    # Fontconfig
+    add_files(
+        folder_path=os.path.join(SYS_BASE_PATH, "etc/fonts"), output_path="share/fonts",
+        ends_with=".conf", recursive=True
+    )
+
+    # xkb
+    add_files(
+        folder_path=os.path.join(SYS_BASE_PATH, "share/X11/xkb"), output_path="share/xkb",
+        recursive=True
+    )
+
 
 def add_translations():
 
@@ -242,7 +280,7 @@ setup(
             "packages": INCLUDED_MODULES,
             "excludes": EXCLUDED_MODULES,
             "include_files": include_files,
-            "zip_include_packages": ["*"],
+            "zip_include_packages": ZIP_INCLUDE_PACKAGES,
             "zip_exclude_packages": [MODULE_NAME],
             "optimize": 2
         },
@@ -278,7 +316,11 @@ setup(
         "bdist_dmg": {
             "volume_label": FULL_NAME,
             "applications_shortcut": True
-        }
+        },
+        "bdist_appimage": {
+            "target_name": FULL_NAME + ".AppImage",
+            "dist_dir": BUILD_PATH
+        },
     },
     data_files=[],
     packages=[],

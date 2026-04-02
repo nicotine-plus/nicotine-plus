@@ -102,15 +102,76 @@ def run(hidden, ci_mode, isolated_mode, multi_instance):
     """Run Nicotine+ GTK GUI."""
 
     if getattr(sys, "frozen", False):
-        # Set up paths for frozen binaries (Windows and macOS)
+        # Set up paths for frozen binaries (cx_Freeze)
+        from tempfile import NamedTemporaryFile
         executable_folder = os.path.dirname(sys.executable)
+        loaders_file_handle = NamedTemporaryFile(  # pylint: disable=consider-using-with,unexpected-keyword-arg
+            delete_on_close=False
+        )
 
         os.environ["GTK_EXE_PREFIX"] = executable_folder
         os.environ["GTK_DATA_PREFIX"] = executable_folder
         os.environ["GTK_PATH"] = executable_folder
-        os.environ["GDK_PIXBUF_MODULE_FILE"] = os.path.join(executable_folder, "lib", "pixbuf-loaders.cache")
+        os.environ["GDK_PIXBUF_MODULE_FILE"] = loaders_file_handle.name
         os.environ["GI_TYPELIB_PATH"] = os.path.join(executable_folder, "lib", "typelibs")
         os.environ["GSETTINGS_SCHEMA_DIR"] = os.path.join(executable_folder, "lib", "schemas")
+        os.environ["FONTCONFIG_FILE"] = os.path.join(executable_folder, "share", "fonts", "fonts.conf")
+        os.environ["FONTCONFIG_PATH"] = os.path.join(executable_folder, "share", "fonts")
+        os.environ["XKB_CONFIG_EXTRA_PATH"] = os.path.join(executable_folder, "share", "xkb")
+
+        if sys.platform == "win32":
+            loaders_file_handle.write(
+                '''"lib\\libpixbufloader-bmp.dll"
+"bmp" 5 "gdk-pixbuf" "BMP" "LGPL"
+"image/bmp" "image/x-bmp" "image/x-MS-bmp" ""
+"bmp" ""
+"BM" "" 100
+
+"lib\\libpixbufloader-gif.dll"
+"gif" 4 "gdk-pixbuf" "GIF" "LGPL"
+"image/gif" ""
+"gif" ""
+"GIF8" "" 100
+
+"lib\\libpixbufloader-webp.dll"
+"webp" 5 "gdk-pixbuf" "The WebP image format" "LGPL"
+"image/webp" "audio/x-riff" ""
+"webp" ""
+"RIFFsizeWEBP" "    xxxx    " 100'''.encode()
+            )
+
+        elif sys.platform == "darwin":
+            loaders_file_handle.write(
+                '''"@executable_path/lib/libpixbufloader-bmp.so"
+"bmp" 5 "gdk-pixbuf" "BMP" "LGPL"
+"image/bmp" "image/x-bmp" "image/x-MS-bmp" ""
+"bmp" ""
+"BM" "" 100
+
+"@executable_path/lib/libpixbufloader-gif.so"
+"gif" 4 "gdk-pixbuf" "GIF" "LGPL"
+"image/gif" ""
+"gif" ""
+"GIF8" "" 100'''.encode()
+            )
+
+        else:
+            loaders_folder_path = os.path.join(executable_folder, "lib", "gi")
+            loaders_file_handle.write(
+                f'''"{loaders_folder_path}/libpixbufloader-bmp.so"
+"bmp" 5 "gdk-pixbuf" "BMP" "LGPL"
+"image/bmp" "image/x-bmp" "image/x-MS-bmp" ""
+"bmp" ""
+"BM" "" 100
+
+"{loaders_folder_path}/libpixbufloader-gif.so"
+"gif" 4 "gdk-pixbuf" "GIF" "LGPL"
+"image/gif" ""
+"gif" ""
+"GIF8" "" 100'''.encode()
+            )
+
+        loaders_file_handle.close()
 
     if sys.platform == "win32":
         # Use Cairo software rendering due to flickering issues in the GPU renderer (#2859).
