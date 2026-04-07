@@ -324,8 +324,7 @@ class Users:
             self.watched.pop(msg.user, None)
             return
 
-        if msg.contains_stats:
-            events.emit("user-stats", msg)
+        events.emit("user-stats", msg)
 
     def _user_status(self, msg):
         """Server code 7."""
