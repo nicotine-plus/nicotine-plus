@@ -836,7 +836,7 @@ class Uploads(Transfers):
     def _set_connection_stats(self, upload_bandwidth=0, **_unused):
         self.total_bandwidth = upload_bandwidth
 
-    def _ban_user(self, username=None, ip_address=None):
+    def _ban_user(self, username, _ip_address=None):
         """Ban a user, cancel all the user's uploads, send a 'Banned' message
         via the transfers, and clear the transfers from the uploads list."""
 
@@ -851,20 +851,6 @@ class Uploads(Transfers):
             status = TransferRejectReason.BANNED
 
         removed_uploads = []
-
-        if not username and ip_address:
-            for active_uploads in self.active_users.values():
-                for upload in active_uploads.values():
-                    active_address = core.users.addresses.get(upload.username)
-
-                    if active_address is None:
-                        continue
-
-                    active_ip_address, _port = active_address
-
-                    if active_ip_address == ip_address:
-                        username = upload.username
-                        break
 
         for uploads in (
             self.active_users.get(username, {}),
