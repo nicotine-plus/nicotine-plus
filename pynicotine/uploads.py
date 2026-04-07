@@ -855,7 +855,12 @@ class Uploads(Transfers):
         if not username and ip_address:
             for active_uploads in self.active_users.values():
                 for upload in active_uploads.values():
-                    active_ip_address, _port = upload.sock.getsockname()
+                    active_address = core.users.addresses.get(upload.username)
+
+                    if active_address is None:
+                        continue
+
+                    active_ip_address, _port = active_address
 
                     if active_ip_address == ip_address:
                         username = upload.username
