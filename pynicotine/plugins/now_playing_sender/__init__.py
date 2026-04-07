@@ -16,13 +16,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gio
 from pynicotine.pluginsystem import BasePlugin
 
 
 class Plugin(BasePlugin):
 
     def __init__(self, *args, **kwargs):
+
+        from gi.repository import Gio  # pylint: disable=import-error
 
         super().__init__(*args, **kwargs)
 
@@ -70,6 +71,8 @@ class Plugin(BasePlugin):
     def get_current_mpris_player(self):
         """Returns the MPRIS client currently selected in Now Playing."""
 
+        from gi.repository import Gio  # pylint: disable=import-error
+
         player = self.config.sections["players"]["npothercommand"]
 
         if not player:
@@ -93,6 +96,8 @@ class Plugin(BasePlugin):
 
     def get_current_mpris_song_url(self, player):
         """Returns the current song url for the selected MPRIS client."""
+
+        from gi.repository import Gio  # pylint: disable=import-error
 
         dbus_proxy = Gio.DBusProxy.new_sync(
             connection=self.bus,
