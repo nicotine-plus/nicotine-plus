@@ -13,7 +13,6 @@
   </object>
   <object class="GtkButton" id="download_folder_default_button">
     <property name="tooltip-text" translatable="yes">Default</property>
-    <property name="valign">center</property>
     <property name="visible">True</property>
     <signal name="clicked" handler="on_default_download_folder"/>
     <child>
@@ -28,7 +27,6 @@
   </object>
   <object class="GtkButton" id="incomplete_folder_default_button">
     <property name="tooltip-text" translatable="yes">Default</property>
-    <property name="valign">center</property>
     <property name="visible">True</property>
     <signal name="clicked" handler="on_default_incomplete_folder"/>
     <child>
@@ -43,7 +41,6 @@
   </object>
   <object class="GtkButton" id="received_folder_default_button">
     <property name="tooltip-text" translatable="yes">Default</property>
-    <property name="valign">center</property>
     <property name="visible">True</property>
     <signal name="clicked" handler="on_default_received_folder"/>
     <child>
