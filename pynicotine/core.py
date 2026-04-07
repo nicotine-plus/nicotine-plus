@@ -42,6 +42,8 @@ if TYPE_CHECKING:
     from pynicotine.userinfo import UserInfo
     from pynicotine.users import Users
 
+__all__ = ["Core", "UpdateChecker", "core"]
+
 
 class Core:
     """Core handles initialization, quitting, as well as the various components
