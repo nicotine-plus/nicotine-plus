@@ -264,10 +264,10 @@ class FileChooserButton:
         self.show_open_external_button = show_open_external_button
         self.path = ""
 
-        widget = Gtk.Box(spacing=6, visible=True)
+        widget = Gtk.Box(spacing=6, valign=Gtk.Align.CENTER, visible=True)
         button_container = Gtk.Box(visible=True)
 
-        self.chooser_button = Gtk.Button(hexpand=True, valign=Gtk.Align.CENTER, visible=True)
+        self.chooser_button = Gtk.Button(hexpand=True, visible=True)
         self.chooser_button.connect("clicked", self.on_open_file_chooser)
 
         if label:
@@ -284,8 +284,7 @@ class FileChooserButton:
         self.label = Gtk.Label(label=_("(None)"), ellipsize=Pango.EllipsizeMode.END, width_chars=3,
                                mnemonic_widget=self.chooser_button, xalign=0, visible=True)
 
-        self.open_folder_button = Gtk.Button(
-            tooltip_text=_("Open in File Manager"), valign=Gtk.Align.CENTER, visible=False)
+        self.open_folder_button = Gtk.Button(tooltip_text=_("Open in File Manager"), visible=False)
 
         if GTK_API_VERSION >= 4:
             container.append(widget)                        # pylint: disable=no-member
