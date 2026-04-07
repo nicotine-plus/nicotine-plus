@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-13 02:38+0200\n"
-"PO-Revision-Date: 2026-03-24 15:09+0000\n"
+"PO-Revision-Date: 2026-04-05 19:09+0000\n"
 "Last-Translator: John Doe <thraex@numericable.fr>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
@@ -2694,7 +2694,7 @@ msgstr "Salons de discussions"
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:746
 #: pynicotine/gtkgui/ui/userinfo.ui:381
 msgid "Interests"
-msgstr "Centres d'intérêts"
+msgstr "Centres d'intérêt"
 
 #: pynicotine/gtkgui/mainwindow.py:1132
 #: pynicotine/plugins/core_commands/__init__.py:10
@@ -7200,7 +7200,7 @@ msgstr "Vitesse de téléversement"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:395
 msgid "Add Interests"
-msgstr "Ajouter des centres d'intérêts"
+msgstr "Ajouter des centres d'intérêt"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:665
 msgid "_Gift Privileges…"
