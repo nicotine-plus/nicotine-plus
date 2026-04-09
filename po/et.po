@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-13 02:38+0200\n"
-"PO-Revision-Date: 2026-03-14 17:09+0000\n"
+"PO-Revision-Date: 2026-04-07 14:52+0000\n"
 "Last-Translator: rimasx <riks_12@hot.ee>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/et/>\n"
@@ -1647,9 +1647,8 @@ msgid "Replacement"
 msgstr "Asendus"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1831
-#, fuzzy
 msgid "Mentions"
-msgstr "Ühendused"
+msgstr "Mainimised"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1832
 msgid "Auto-Replace"
@@ -1688,18 +1687,16 @@ msgid "Censor Patterns"
 msgstr "Tsensuurimustrid"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2034
-#, fuzzy
 msgid "Enter a list of patterns you want to censor:"
-msgstr "Sisesta kasutajanimed, keda soovid ignoreerida:"
+msgstr "Sisesta eiratavate mustrite loend:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2063
 msgid "Edit Censored Pattern"
 msgstr "Muuda tsenseeritud mustrit"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2064
-#, fuzzy
 msgid "Enter a pattern you want to censor:"
-msgstr "Sisesta kasutajanimed, keda soovid ignoreerida:"
+msgstr "Sisesta eiratav muster:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2096
 msgid "Add Replacement"
@@ -1967,9 +1964,8 @@ msgstr ""
 "Kas tahad plugina %s eemaldada? See eemaldab kõik plugina salvestatud failid."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3596
-#, fuzzy
 msgid "Uninstall"
-msgstr "_Eemalda…"
+msgstr "Eemalda"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3655
 #: pynicotine/gtkgui/dialogs/shortcuts.py:40
@@ -2223,9 +2219,8 @@ msgid "Lists"
 msgstr "Loendid"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:61
-#, fuzzy
 msgid "Copy Cell"
-msgstr "Kopeeri kõik"
+msgstr "Kopeeri lahter"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:62
 #: pynicotine/gtkgui/dialogs/shortcuts.py:71
@@ -2331,9 +2326,8 @@ msgid "Do you really want to reset transfer statistics?"
 msgstr "Kas soovid tõesti ülekandestatistika lähtestada?"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:113
-#, fuzzy
 msgid "Reset All"
-msgstr "Tühista kõigi valik"
+msgstr "Lähtesta kõik"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:25
 #: pynicotine/gtkgui/ui/settings/search.ui:212
@@ -2386,19 +2380,16 @@ msgid "Public Files"
 msgstr "Avalikud failid"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:61
-#, fuzzy
 msgid "Automatic Search"
-msgstr "Luba sõnade automaatne asendamine"
+msgstr "Automaatne otsing"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:68
-#, fuzzy
 msgid "Search Term"
-msgstr "Kopeeri otsingutermin"
+msgstr "Otsingutermin"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:76
-#, fuzzy
 msgid "Custom Filters"
-msgstr "Taasta filtrid"
+msgstr "Kohandatud filtrid"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:85
 msgid "Added"
@@ -2411,24 +2402,21 @@ msgid "_Search for Item"
 msgstr "_Otsi üksust"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:110
-#, fuzzy
 msgid "Set Custom _Filters…"
-msgstr "Taasta filtrid"
+msgstr "Määra kohandatud _filtrid…"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:112
-#, fuzzy
 msgid "Reset Seen Results"
-msgstr "Vali kasutaja tulemused"
+msgstr "Lähtesta nähtud tulemused"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:113
-#, fuzzy
 msgid "Reset Filters"
-msgstr "Tulemuste filtrid"
+msgstr "Lähtesta filtrid"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:195
-#, fuzzy, python-format
+#, python-format
 msgid "Custom Filters Enabled (%(num)s Active)"
-msgstr "Taasta filtrid"
+msgstr "Kohandatud filtrid lubatud (%(num)s aktiivset)"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:215
 #, python-format
@@ -2445,35 +2433,32 @@ msgstr "Sisesta soovinimekirja lisatavad otsinguterminid:"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:262
 #: pynicotine/gtkgui/dialogs/wishlist.py:323
-#, fuzzy
 msgid "Enable automatic search"
-msgstr "Luba sõnade automaatne asendamine"
+msgstr "Luba automaatne otsing"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:270
 #: pynicotine/gtkgui/dialogs/wishlist.py:309
-#, fuzzy
 msgid "No filters"
-msgstr "Võrgu filtrid"
+msgstr "Filtreid pole"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:270
 #: pynicotine/gtkgui/dialogs/wishlist.py:309
-#, fuzzy
 msgid "Default filters"
-msgstr "Tulemuste filtrid"
+msgstr "Vaikimisi filtrid"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:310
-#, fuzzy, python-format
+#, python-format
 msgid "Custom filters (%(num)s active)"
-msgstr "Taasta filtrid"
+msgstr "Kohandatud filtrid (%(num)s aktiivset)"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:314
 msgid "Edit Wish"
 msgstr "Muuda soovi"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:315
-#, fuzzy, python-format
+#, python-format
 msgid "Modify the search term '%s':"
-msgstr "Muuda järgmist jagamisfiltrit:"
+msgstr "Muuda otsinguterminit '%s':"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:380
 msgid "Clear Wishlist?"
@@ -2609,9 +2594,8 @@ msgid "Similar Users"
 msgstr "Sarnased kasutajad"
 
 #: pynicotine/gtkgui/interests.py:290 pynicotine/gtkgui/interests.py:431
-#, fuzzy
 msgid "Popular Interests"
-msgstr "Isiklikud huvid"
+msgstr "Populaarsed huvid"
 
 #: pynicotine/gtkgui/interests.py:293 pynicotine/gtkgui/interests.py:437
 #: pynicotine/gtkgui/ui/interests.ui:142
@@ -2633,9 +2617,9 @@ msgid "Search log…"
 msgstr "Otsingu logi…"
 
 #: pynicotine/gtkgui/mainwindow.py:412 pynicotine/gtkgui/privatechat.py:511
-#, fuzzy, python-format
+#, python-format
 msgid "Mentioned by %(user)s in Private"
-msgstr "%(user)s mainis toas %(room)s"
+msgstr "%(user)s mainis privaatsõnumis"
 
 #: pynicotine/gtkgui/mainwindow.py:415 pynicotine/gtkgui/privatechat.py:518
 #, python-format
@@ -2742,9 +2726,8 @@ msgid "Stop Scanning"
 msgstr "Peata skannimine"
 
 #: pynicotine/gtkgui/mainwindow.py:1268
-#, fuzzy
 msgid "Rescan Failed"
-msgstr "Skaneeri jagatud kataloogid uuesti"
+msgstr "Uuesti skannimine nurjus"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:53
 msgid "You are offline"
@@ -2816,9 +2799,9 @@ msgid "User Actions"
 msgstr "Kasutaja toimingud"
 
 #: pynicotine/gtkgui/privatechat.py:491
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s mentioned you in a private message"
-msgstr "%(user)s mainis sind toas %(room)s"
+msgstr "%(user)s mainis sind pirvaatsõnumis"
 
 #: pynicotine/gtkgui/privatechat.py:494
 #, python-format
@@ -3401,9 +3384,8 @@ msgid "Do you really want to close all tabs?"
 msgstr "Kas soovid tõesti kõik vahekaardid sulgeda?"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:454
-#, fuzzy
 msgid "Close All"
-msgstr "Eemalda kõik"
+msgstr "Sulge kõik"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:467
 #, python-format
@@ -3488,16 +3470,16 @@ msgid "Add as Operator of %s"
 msgstr "Lisa %s operaatoriks"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:604
-#, fuzzy
 msgid "Change Room Owner?"
-msgstr "Toa omanik"
+msgstr "Kas muuta toa omanikku?"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:605
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Do you really want to make %(user)s the new owner of your private room "
 "%(room)s?"
-msgstr "Kas tahad oma privaatse toa %s jäädavalt kustutada?"
+msgstr ""
+"Kas tahad teha kasutaja %(user)s oma privaatruumi %(room)s uueks omanikuks?"
 
 #: pynicotine/gtkgui/widgets/textentry.py:22
 msgid "Send message…"
@@ -3626,9 +3608,9 @@ msgid "Type %s to log in with another username or password."
 msgstr "Teise kasutajanime või parooliga sisselogimiseks kirjuta %s."
 
 #: pynicotine/headless/application.py:78
-#, fuzzy, python-format
+#, python-format
 msgid "Type %s to log in with another username."
-msgstr "Teise kasutajanime või parooliga sisselogimiseks kirjuta %s."
+msgstr "Teise kasutajanimega sisselogimiseks kirjuta %s."
 
 #: pynicotine/headless/application.py:94
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:272
@@ -6272,9 +6254,8 @@ msgid "Country code, e.g. US ES or !DE !GB"
 msgstr "Riigikood, nt. US|GB|ES või !DE|!GB"
 
 #: pynicotine/gtkgui/ui/search.ui:222
-#, fuzzy
 msgid "Store Wishlist Filters"
-msgstr "Tulemuste filtrid"
+msgstr "Salvesta soovinimekirja filtrid"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:33
 msgid ""
@@ -6517,9 +6498,8 @@ msgid "_Log In As"
 msgstr "_Logi sisse kui"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:132
-#, fuzzy
 msgid "Account password:"
-msgstr "Parool: "
+msgstr "Konto parool:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:164
 msgid "Change Pass_word"
@@ -6630,15 +6610,14 @@ msgid "Enable search history"
 msgstr "Luba otsinguajalugu"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:75
-#, fuzzy
 msgid ""
 "Privately shared files that have been made visible to everyone will display "
 "a lock icon next to them. These files cannot be downloaded until the "
 "uploader gives explicit permission. Ask them kindly."
 msgstr ""
-"Kõigile nähtavaks tehtud privaatselt jagatud failidele lisatakse eesliide "
-"„[PRIVAATNE]” ja neid ei saa alla laadida enne, kui üleslaadija on andnud "
-"selgesõnalise loa. Küsi neilt sõbralikult."
+"Kõigile nähtavaks tehtud privaatselt jagatud failide ees kuvatakse "
+"lukuikoon. Neid faile ei saa alla laadida enne, kui üleslaadija annab "
+"selleks selgesõnalise loa. Küsi neilt luba."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:81
 msgid "Show privately shared files in search results"
@@ -6857,14 +6836,12 @@ msgid "Enable sound for popup notifications"
 msgstr "Luba märguannete heli"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:241
-#, fuzzy
 msgid "Show window notification for private messages and mentions"
-msgstr "Kuva märguanne privaatvestluste ja mainimiste kohta akna pealkirjas"
+msgstr "Kuva privaatsõnumite ja mainimiste puhul teavitusaken"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:273
-#, fuzzy
 msgid "Show popup notifications for:"
-msgstr "Kuva märguanded:"
+msgstr "Kuva hüpikmärguanded:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:300
 msgid "Finished file downloads"
@@ -6887,9 +6864,8 @@ msgid "Private messages"
 msgstr "Privaatsõnumid"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:360
-#, fuzzy
 msgid "Private message mentions"
-msgstr "Privaatsõnumid"
+msgstr "Mainimised privaatsõnumites"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:372
 msgid "Chat room messages"
