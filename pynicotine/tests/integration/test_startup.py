@@ -27,7 +27,7 @@ class StartupTest(TestCase):
         broadway_process = None
         is_success = False
 
-        if sys.platform not in {"darwin", "win32"}:
+        if sys.platform not in {"darwin", "win32"} and "GDK_BACKEND" not in os.environ:
             # Display server is required, use GDK's Broadway backend if available.
             # If not available, leave it up to the user to run the tests with e.g. xvfb-run.
 
