@@ -192,12 +192,14 @@ jobs:
           operating_system: openbsd
           version: '7.8'
           run: |
-            sudo pkg_add gettext-tools gtk+4 py3-build py3-gobject3 py3-setuptools py3-wheel
+            sudo pkg_add cage gettext-tools gtk+4 py3-build py3-gobject3 py3-setuptools py3-wheel
 
-            export DISPLAY=:99
-            Xvfb :99 > /dev/null 2>&1 &
+            export WLR_BACKENDS=headless
+            export XDG_RUNTIME_DIR=/tmp
+            export GDK_BACKEND=wayland
+            export DBUS_SESSION_BUS_ADDRESS=
 
-            python3 -m unittest -v
+            cage python3 -m unittest -v
             python3 -m build
             python3 -m build --no-isolation
 
