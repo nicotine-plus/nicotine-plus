@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-13 02:38+0200\n"
-"PO-Revision-Date: 2026-04-07 14:52+0000\n"
+"PO-Revision-Date: 2026-04-12 10:09+0000\n"
 "Last-Translator: rimasx <riks_12@hot.ee>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/et/>\n"
@@ -2610,7 +2610,7 @@ msgstr "_Soovitused"
 #: pynicotine/gtkgui/interests.py:478
 #, python-format
 msgid "Users who like %(item)s"
-msgstr ""
+msgstr "Kasutajad, kellele meeldib %(item)s"
 
 #: pynicotine/gtkgui/mainwindow.py:230
 msgid "Search log…"
@@ -2661,19 +2661,16 @@ msgid "Chat"
 msgstr "Vestlus"
 
 #: pynicotine/gtkgui/mainwindow.py:1134
-#, fuzzy
 msgid "[Debug] [SLOW] Connections"
-msgstr "[Silumine] Ühendused"
+msgstr "[Silumine] [AEGLANE] ühendused"
 
 #: pynicotine/gtkgui/mainwindow.py:1135
-#, fuzzy
 msgid "[Debug] [SLOW] Messages"
-msgstr "[Silumine] Sõnumid"
+msgstr "[Silumine] [AEGLANE] sõnumid"
 
 #: pynicotine/gtkgui/mainwindow.py:1136
-#, fuzzy
 msgid "[Debug] [SLOW] Transfers"
-msgstr "[Silumine] Ülekanded"
+msgstr "[Silumine] [AEGLANE] ülekanded"
 
 #: pynicotine/gtkgui/mainwindow.py:1137
 msgid "[Debug] Miscellaneous"
