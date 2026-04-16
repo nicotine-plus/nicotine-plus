@@ -89,18 +89,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
+      - name: Install Snapcraft
+        run: |
+          sudo usermod --append --groups lxd "$USER"
+          sudo snap install lxd
+          sudo lxd init --auto
+          sudo iptables -P FORWARD ACCEPT
+          sudo snap install --classic snapcraft
+
       - name: Build Snap package
-        uses: snapcore/action-build@v1
-        id: build-snap
+        run: sudo -u "$USER" -E snapcraft pack
 
       - name: Install Snap package
-        run: sudo snap install --dangerous ${{ steps.build-snap.outputs.snap }}
+        run: sudo snap install --dangerous nicotine-plus_*.snap
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v7
         with:
           name: snap-${{ matrix.arch }}-package
-          path: ${{ steps.build-snap.outputs.snap }}
+          path: nicotine-plus_*.snap
 
   windows:
     timeout-minutes: 15
