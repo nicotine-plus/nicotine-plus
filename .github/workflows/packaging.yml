@@ -58,13 +58,18 @@ jobs:
         run: flatpak-builder-lint appstream data/org.nicotine_plus.Nicotine.appdata.xml.in
 
       - name: Build Flatpak package
-        uses: flatpak/flatpak-github-actions/flatpak-builder@401fe28a8384095fc1531b9d320b292f0ee45adb # v6.7
-        with:
-          bundle: org.nicotine_plus.Nicotine-${{ matrix.arch }}.flatpak
-          manifest-path: build-aux/flatpak/org.nicotine_plus.Nicotine.json
-          cache-key: flatpak-builder-${{ github.sha }}
-          arch: ${{ matrix.arch }}
-          upload-artifact: false
+        run: |
+          flatpak-builder \
+            --repo=repo \
+            --disable-download \
+            --disable-rofiles-fuse \
+            --force-clean \
+            flatpak_app build-aux/flatpak/org.nicotine_plus.Nicotine.json
+
+          flatpak build-bundle repo \
+            org.nicotine_plus.Nicotine-${{ matrix.arch }}.flatpak \
+            --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo \
+            org.nicotine_plus.Nicotine
 
       - name: Archive artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
