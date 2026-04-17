@@ -202,20 +202,29 @@ jobs:
         run: defaults write NSGlobalDomain AppleLanguages "(en-US)"
 
       - name: Set up Miniforge
-        uses: conda-incubator/setup-miniconda@fc2d68f6413eb2d87b895e92f8584b5b94a10167 # v3.3.0
-        with:
-          activate-environment: nicotine-plus
-          miniforge-version: latest
-          conda-remove-defaults: "true"
+        run: |
+          wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+          bash Miniforge3-$(uname)-$(uname -m).sh -b -p $HOME/miniforge3
+          echo "$HOME/miniforge3/bin" >> "$GITHUB_PATH"
+          $HOME/miniforge3/bin/mamba shell init
 
-      - name: Install dependencies
-        run: python3 packaging/macos/dependencies.py
+      - name: Set up environment
+        run: |
+          mamba create --name nicotine-plus
+          mamba activate nicotine-plus
+          python3 build-aux/macos/dependencies.py
 
       - name: Integration and unit tests
-        run: python3 -m unittest -v
+        run: |
+          mamba activate nicotine-plus
+          python3 -m unittest -v
 
       - name: Build
-        run: python3 -m build
+        run: |
+          mamba activate nicotine-plus
+          python3 -m build
 
       - name: Build without isolation
-        run: python3 -m build --no-isolation
+        run: |
+          mamba activate nicotine-plus
+          python3 -m build --no-isolation
