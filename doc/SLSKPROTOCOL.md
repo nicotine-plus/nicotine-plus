@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on April 1, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on April 20, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -222,73 +222,77 @@ missing if a file does not provide them.
     -   `{1: duration, 4: sample rate, 5: bit depth}`
 
 
-## Client Types *(Major Versions)*
+## Major Versions
 
-Projects must choose a unique type number to avoid impersonating other clients.
+Established clients have unique numbers to avoid impersonating each other.
 
 ### Reserved
 
-| Type   | Client                                  |
-|--------|-----------------------------------------|
-| `157`  | [Soulseek NS](#soulseek) and SoulseekQt |
-| `158`  | *Reserved for SoulseekQt development*   |
-| `159`  | *Reserved for SoulseekQt development*   |
-| `160`  | [Nicotine+](#nicotine)                  |
-| `169`  | seeleseek                               |
-| `170`  | [Soulseek.NET](#soulseeknet) *(API)*    |
-| `175`  | *Experimental development and testing*  |
-| `178`  | Museek+                                 |
+| Major Version | Client                                  |
+|---------------|-----------------------------------------|
+| `157`         | [Soulseek NS and SoulseekQt](#soulseek) |
+| `158`         | *Reserved for SoulseekQt development*   |
+| `159`         | *Reserved for SoulseekQt development*   |
+| `160`         | [Nicotine+](#nicotine)                  |
+| `169`         | seeleseek                               |
+| `170`         | [Soulseek.NET](#soulseeknet) *(API)*    |
+| `177`         | *Experimental development and testing*  |
 
 ### Obsolete
 
-| Type   | Client                    |
-|--------|---------------------------|
-| `156`  | Soulseek 156 *(pre 2008)* |
-| `180`  | PySoulSeek                |
-| `181`  | Nicotine+ 1.2.0 to 1.2.11 |
-| `182`  | Museek+                   |
-| `198`  | Nicotine 1.0.6 to 1.0.8   |
-| `200`  | Nicotine 1.0.4 and below  |
+| Major Version | Client                     |
+|---------------|----------------------------|
+| `139`...`155` | Soulseek® *(2002 onwards)* |
+| `156`         | Soulseek® *(2008)*         |
+| `178`         | Museek+                    |
+| `180`         | PySoulSeek                 |
+| `181`         | Nicotine+ 1.2.0 to 1.2.11  |
+| `182`         | Museek+                    |
+| `198`         | Nicotine 1.0.6 to 1.0.8    |
+| `200`         | Nicotine 1.0.4 and below   |
 
 
-## Client Subtypes *(Minor Versions)*
+## Minor Versions
 
-Projects have thier own rules for subtypes. The number can be set to anything.
+Projects have thier own rules for versioning. The number can be any **uint32**.
 
 ### Nicotine+
 
-The project maintainer increments the subtype number for new capabilities.
+The project maintainer increments the minor version when adding support for
+significant network capabilities.
 
-#### Client type `160`
+#### Major Version `160`
 
-| Subtype | Versions        |
-|---------|-----------------|
-| `1`     | 2.2.1 to 3.2.9  |
-| `2`     | 3.3.0 to 3.3.10 |
-| `3`     | 3.4.0 and above |
+| Minor Version | Release Versions |
+|---------------|------------------|
+| `1`           | 2.2.1 to 3.2.9   |
+| `2`           | 3.3.0 to 3.3.11  |
+| `3`           | 3.4.0 and above  |
 
 ### Soulseek.NET
 
-API library requires clients to choose a `minorVersion` as their subtype.
+API library requires each downstream project to choose a unique `minorVersion`.
 
-#### Client type `170`
+#### Major Version `170`
 
-| Subtype | Client                                    |
-|---------|-------------------------------------------|
-| `100`   | *All legacy clients up to API 8.5.0*      |
-| `760`   | slskd *(Reference implementation of API)* |
-| `9999`  | *Experimental development and testing*    |
+| Minor Version | Client                                    |
+|---------------|-------------------------------------------|
+| `100`         | *All legacy clients up to API 8.5.0*      |
+| `760`         | slskd *(Reference implementation of API)* |
+| `9999`        | *Experimental development and testing*    |
 
 ### Soulseek®
 
-Official client subtype number is incremented for each released version.
+Official client minor version number is incremented for each release.
 
-#### Client type `157`
+#### Major Version `157`
 
-| Subtype             | Version |
-|---------------------|---------|
-| `17` (`0x11000000`) | NS 13c  |
-| `19` (`0x13000000`) | NS 13e  |
+| Minor Version | Release                    |
+|---------------|----------------------------|
+| `17` (`0x11`) | NS 13c                     |
+| `19` (`0x13`) | NS 13e                     |
+| ...           | Qt Public Build 1 *(2011)* |
+|               | Qt *(2012 onwards)*        |
 
 
 # Server Messages
@@ -297,8 +301,8 @@ Server messages are used by clients to interface with the server over a
 connection (TCP). In Nicotine+, these messages are defined in slskmessages.py.
 
 If you want a Soulseek server, [Soulfind](https://github.com/soulfind-dev/soulfind)
-is open source and not exactly the same as the official proprietary Soulseek
-server, but it handles the protocol well enough for development and testing.
+is open source (unrelated to the official proprietary Soulseek server). It handles
+the protocol well enough for development and testing of client implementations.
 
 
 ## Server Message Format
@@ -423,10 +427,11 @@ server, but it handles the protocol well enough for development and testing.
 We send this to the server right after the connection has been established.
 Server responds with the greeting message.
 
-The server may use the client type and subtype (formally known here as
-the major and minor protocol versions) to differentiate between client
-implementations. Projects must choose a unique type number to avoid
-impersonating other clients, and have thier own rules for subtypes.
+The server uses the major and minor versions to differentiate between
+clients. Numbers are chosen that avoid impersonating clients with reserved
+[Major Versions](#major-versions). Downstream projects have their own rules
+for [Minor Versions](#minor-versions). Experimental scripts may use major
+version `177` and any minor version number they choose for each project.
 
 ### Sending Login Example
 
@@ -439,15 +444,15 @@ impersonating other clients, and have thier own rules for subtypes.
 
 #### ...continued
 
-| Data      | Client Type   | Hash Length   | Hash of Username + Password                                                                       | Client Subtype |
-|-----------|---------------|---------------|---------------------------------------------------------------------------------------------------|----------------|
-| **Human** | 175           | 32            | d51c9a7e9353746a6020f9602d452929                                                                  | 1              |
-| **Hex**   | `af 00 00 00` | `20 00 00 00` | `64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39` | `01 00 00 00`  |
+| Data      | Major Version | Hash Length   | Hash of Username + Password                                                                       | Minor Version |
+|-----------|---------------|---------------|---------------------------------------------------------------------------------------------------|---------------|
+| **Human** | 177           | 32            | d51c9a7e9353746a6020f9602d452929                                                                  | 1             |
+| **Hex**   | `b1 00 00 00` | `20 00 00 00` | `64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39` | `01 00 00 00` |
 
 #### Message as Hex Stream
 
 ```
-48 00 00 00 01 00 00 00 08 00 00 00 75 73 65 72 6e 61 6d 65 08 00 00 00 70 61 73 73 77 6f 72 64 af 00 00 00 20 00
+48 00 00 00 01 00 00 00 08 00 00 00 75 73 65 72 6e 61 6d 65 08 00 00 00 70 61 73 73 77 6f 72 64 b1 00 00 00 20 00
 00 00 64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39 01 00 00 00
 ```
 
@@ -456,12 +461,12 @@ impersonating other clients, and have thier own rules for subtypes.
     1.  **string** *username*
     2.  **string** *password*  
         A non-empty string is required
-    3.  **uint32** *client type*
-        See [Client Types](#client-types-major-versions)
-    4.  **string** *hash*
+    3.  **uint32** *major version*  
+        See [Major Versions](#major-versions)
+    4.  **string** *hash*  
         MD5 hex digest of concatenated username and password
-    5.  **uint32** *client subtype*
-        See [Client Subtypes](#client-subtypes-minor-versions)
+    5.  **uint32** *minor version*  
+        See [Minor Versions](#minor-versions)
   - Receive
     1.  **bool** *success*
     2.  If *success* is true

@@ -1269,15 +1269,15 @@ class NetworkThread(Thread):
         self._send_message_to_server(
             Login(
                 login, password,
-                # Soulseek client type
-                # NS and SoulseekQt use 157, slskd and Soulseek.NET use 170
-                # We use our reserved client type number for Nicotine+
+                # Soulseek client major version
+                # NS and SoulseekQt use 157, Soulseek.NET and slskd use 170
+                # We use our reserved major version number for Nicotine+
                 160,
 
-                # Soulseek client subtype
+                # Soulseek client minor version
                 # 17 stands for 157 ns 13c, 19 for 157 ns 13e
                 # SoulseekQt seems to go higher than this
-                # Nicotine+ increments the subtype number for new capabilities
+                # Nicotine+ increments the number for new network capabilities
                 # 1 was >=2.2.1, 2 was >=3.3.0, 3 since >=3.4.0
                 3
             )
