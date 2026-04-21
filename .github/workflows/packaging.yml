@@ -194,9 +194,6 @@ jobs:
           - arch: arm64
             platform: macos-26
     runs-on: ${{ matrix.platform }}
-    defaults:
-      run:
-        shell: bash -el {0}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -206,22 +203,18 @@ jobs:
           wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
           bash Miniforge3-$(uname)-$(uname -m).sh -b -p $HOME/miniforge3
           echo "$HOME/miniforge3/bin" >> "$GITHUB_PATH"
-          $HOME/miniforge3/bin/mamba shell init
 
       - name: Set up environment
         run: |
-          mamba create --name nicotine-plus
-          mamba activate nicotine-plus
-          python3 build-aux/macos/dependencies.py
+          mamba create -n nicotine-plus
+          mamba create -n startup-test
+          mamba run -n nicotine-plus python3 build-aux/macos/dependencies.py
 
       - name: Freeze application
-        run: |
-          mamba activate nicotine-plus
-          python3 build-aux/macos/setup.py bdist_dmg
+        run: mamba run -n nicotine-plus python3 build-aux/macos/setup.py bdist_dmg
 
       - name: Test application startup
-        shell: sh  # Exclude conda-forge dependencies
-        run: python3 build-aux/macos/testrun.py
+        run: mamba run -n startup-test python3 build-aux/macos/testrun.py
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v7

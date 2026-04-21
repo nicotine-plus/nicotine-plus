@@ -107,7 +107,7 @@ Follow the instructions on [installing Miniforge](https://conda-forge.org/downlo
 Create and activate an environment:
 
 ```sh
-mamba create --name nicotine-plus
+mamba create -n nicotine-plus
 mamba activate nicotine-plus
 ```
 

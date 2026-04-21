@@ -316,9 +316,6 @@ jobs:
           - arch: arm64
             platform: macos-26
     runs-on: ${{ matrix.platform }}
-    defaults:
-      run:
-        shell: bash -el {0}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -328,25 +325,17 @@ jobs:
           wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
           bash Miniforge3-$(uname)-$(uname -m).sh -b -p $HOME/miniforge3
           echo "$HOME/miniforge3/bin" >> "$GITHUB_PATH"
-          $HOME/miniforge3/bin/mamba shell init
 
       - name: Set up environment
         run: |
-          mamba create --name nicotine-plus
-          mamba activate nicotine-plus
-          python3 build-aux/macos/dependencies.py
+          mamba create -n nicotine-plus
+          mamba run -n nicotine-plus python3 build-aux/macos/dependencies.py
 
       - name: Integration and unit tests
-        run: |
-          mamba activate nicotine-plus
-          python3 -m unittest -v
+        run: mamba run -n nicotine-plus python3 -m unittest -v
 
       - name: Build
-        run: |
-          mamba activate nicotine-plus
-          python3 -m build
+        run: mamba run -n nicotine-plus python3 -m build
 
       - name: Build without isolation
-        run: |
-          mamba activate nicotine-plus
-          python3 -m build --no-isolation
+        run: mamba run -n nicotine-plus python3 -m build --no-isolation
