@@ -167,17 +167,17 @@ jobs:
           operating_system: freebsd
           version: '15.0'
           run: |
-            sudo pkg install -y cage dejavu gettext gtk4 python3 devel/py-build devel/py-pygobject \
-              devel/py-setuptools devel/py-wheel
+            sudo pkg install -y cage dejavu gettext gtk4 py311-build py311-pygobject \
+              py311-setuptools py311-wheel
 
             export WLR_BACKENDS=headless
             export XDG_RUNTIME_DIR=/tmp
             export GDK_BACKEND=wayland
             export DBUS_SESSION_BUS_ADDRESS=
 
-            cage python3 -m unittest -v
-            python3 -m build
-            python3 -m build --no-isolation
+            cage python3.11 -m unittest -v
+            python3.11 -m build
+            python3.11 -m build --no-isolation
 
   openbsd:
     runs-on: ubuntu-latest
