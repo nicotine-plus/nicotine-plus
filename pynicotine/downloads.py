@@ -655,6 +655,10 @@ class Downloads(Transfers):
                 max_bytes = os.statvfs(encode_path(folder_path)).f_namemax
 
             except (AttributeError, OSError):
+                pass
+
+            if not max_bytes:
+                # f_namemax doesn't exist, or might be zero in some cases (observed on DragonFlyBSD)
                 max_bytes = 255
 
             self._folder_basename_byte_limits[folder_path] = max_bytes
