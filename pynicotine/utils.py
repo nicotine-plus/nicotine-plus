@@ -231,7 +231,7 @@ def human_length(seconds: float) -> str:
     return f"{minutes}:{seconds:02d}"
 
 
-def _human_speed_or_size(number: float, unit: Literal["B"] | None = None) -> str:
+def _human_speed_or_size(number: int, unit: Literal["B"] | None = None) -> str:
 
     if unit == "B":
         return humanize(number)
@@ -248,11 +248,11 @@ def _human_speed_or_size(number: float, unit: Literal["B"] | None = None) -> str
     return str(number)
 
 
-def human_speed(speed: float):
+def human_speed(speed: int):
     return _human_speed_or_size(speed) + "/s"
 
 
-def human_size(filesize: float, unit: Literal["B"] | None = None):
+def human_size(filesize: int, unit: Literal["B"] | None = None):
     return _human_speed_or_size(filesize, unit)
 
 
