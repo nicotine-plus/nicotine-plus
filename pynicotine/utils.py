@@ -6,8 +6,10 @@
 # SPDX-FileCopyrightText: 2001-2003 Alexander Kanavin
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from collections.abc import Iterable
 import os
 import sys
+from typing import Literal
 
 UINT32_LIMIT = 4294967295
 UINT64_LIMIT = 18446744073709551615
@@ -131,7 +133,7 @@ REPLACEMENTCHAR = "_"
 TRANSLATE_PUNCTUATION = str.maketrans(dict.fromkeys(PUNCTUATION, " "))
 
 
-def clean_file(basename):
+def clean_file(basename: str) -> str:
 
     for char in ILLEGALFILECHARS:
         if char in basename:
@@ -146,7 +148,7 @@ def clean_file(basename):
     return basename
 
 
-def clean_path(path):
+def clean_path(path: str) -> str:
 
     path = os.path.normpath(path)
 
@@ -171,7 +173,7 @@ def clean_path(path):
     return path
 
 
-def encode_path(path, prefix=True):
+def encode_path(path: str, prefix: bool = True):
     """Converts a file path to bytes for processing by the system.
 
     On Windows, also append prefix to enable extended-length path.
@@ -188,7 +190,7 @@ def encode_path(path, prefix=True):
     return path.encode("utf-8")
 
 
-def human_duration_approx(seconds):
+def human_duration_approx(seconds: float) -> str:
     """Returns a string for an approximatation of any amount of time in a
     sensible unit of measurement, for use where precision isn't required."""
 
@@ -212,7 +214,7 @@ def human_duration_approx(seconds):
     return ngettext("%(num)s day", "%(num)s days", days) % {"num": humanize(days)}
 
 
-def human_length(seconds):
+def human_length(seconds: float) -> str:
     """Returns a string for exact ISO 8601 timestamp for track playing length
     when appropriate, approximate length otherwise."""
 
@@ -229,7 +231,7 @@ def human_length(seconds):
     return f"{minutes}:{seconds:02d}"
 
 
-def _human_speed_or_size(number, unit=None):
+def _human_speed_or_size(number: float, unit: Literal["B"] | None = None) -> str:
 
     if unit == "B":
         return humanize(number)
@@ -246,19 +248,21 @@ def _human_speed_or_size(number, unit=None):
     return str(number)
 
 
-def human_speed(speed):
+def human_speed(speed: float):
     return _human_speed_or_size(speed) + "/s"
 
 
-def human_size(filesize, unit=None):
+def human_size(filesize: float, unit: Literal["B"] | None = None):
     return _human_speed_or_size(filesize, unit)
 
 
-def humanize(number):
+def humanize(number: float) -> str:
     return f"{number:n}"
 
 
-def factorize(filesize, base=1024):
+def factorize(
+    filesize: str, base: int = 1024
+) -> tuple[None, None] | tuple[int | None, int]:
     """Converts filesize string with a given unit into raw integer size,
     defaults to binary for "k", "m", "g" suffixes (KiB, MiB, GiB)"""
 
@@ -296,7 +300,9 @@ def factorize(filesize, base=1024):
         return None, factor
 
 
-def truncate_string_byte(string, byte_limit, encoding="utf-8", ellipsize=False):
+def truncate_string_byte(
+    string: str, byte_limit: int, encoding: str = "utf-8", ellipsize: bool = False
+) -> str:
     """Truncates a string to fit inside a byte limit."""
 
     string_bytes = string.encode(encoding)
@@ -314,7 +320,7 @@ def truncate_string_byte(string, byte_limit, encoding="utf-8", ellipsize=False):
     return string_bytes.decode(encoding, "ignore")
 
 
-def unescape(string):
+def unescape(string: str) -> str:
     """Removes quotes from the beginning and end of strings, and unescapes
     it."""
 
@@ -329,7 +335,7 @@ def unescape(string):
     return string
 
 
-def find_whole_word(word, text):
+def find_whole_word(word: str, text: str) -> int:
     """Returns start position of a whole word that is not in a subword."""
 
     if word not in text:
@@ -351,7 +357,7 @@ def find_whole_word(word, text):
     return start if whole else -1
 
 
-def censor_text(text, censored_patterns, filler="*"):
+def censor_text(text: str, censored_patterns: Iterable[str], filler: str = "*"):
 
     for word in censored_patterns:
         word = str(word).strip().lower()
@@ -364,7 +370,7 @@ def censor_text(text, censored_patterns, filler="*"):
     return text
 
 
-def replace_text(text, replacements):
+def replace_text(text: str, replacements: dict[str, str]) -> str:
 
     for word, replacement in replacements.items():
         word = str(word).strip()
