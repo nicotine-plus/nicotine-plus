@@ -10,7 +10,7 @@ CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
 BASE_PATH = os.path.normpath(os.path.join(CURRENT_PATH, ".."))
 LOCALE_PATH = os.path.join(CURRENT_PATH, "locale")
 TRANSLATION_DOMAIN = "nicotine"
-LANGUAGES = (
+LANGUAGES: tuple[tuple[str, str], ...] = (
     ("ca", "Català"),
     ("cs", "Čeština"),
     ("da", "Dansk"),
