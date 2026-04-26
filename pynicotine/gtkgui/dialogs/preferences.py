@@ -45,6 +45,7 @@ from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import load_custom_icons
+from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.theme import set_dark_mode
 from pynicotine.gtkgui.widgets.theme import update_custom_css
 from pynicotine.gtkgui.widgets.treeview import TreeView
@@ -115,6 +116,16 @@ class NetworkPage:
         self.network_interface_combobox.destroy()
         self.__dict__.clear()
 
+    def set_username(self, username):
+
+        if username:
+            self.username_label.set_label(username)
+            add_css_class(self.username_label, "bold")
+            return
+
+        self.username_label.set_label(_("No account added"))
+        remove_css_class(self.username_label, "bold")
+
     def update_port(self, *_args):
 
         unknown_label = _("Unknown")
@@ -161,8 +172,7 @@ class NetworkPage:
         self.update_port()
 
         # Special options
-        username = core.users.login_username or config.sections["server"]["login"]
-        self.username_label.set_markup(f"<b>{username}</b>" if username else _("No account added"))
+        self.set_username(core.users.login_username or config.sections["server"]["login"])
         self.password_row_revealer.set_reveal_child(core.users.login_status != UserStatus.OFFLINE)
 
         server_hostname, server_port = config.sections["server"]["server"]
@@ -210,7 +220,7 @@ class NetworkPage:
             )
             return
 
-        self.username_label.set_markup(f"<b>{username}</b>" if username else _("No account added"))
+        self.set_username(username)
         core.users.log_in_as(username, password)
 
     def on_log_in_as(self, *_args, username=None, error=None):
