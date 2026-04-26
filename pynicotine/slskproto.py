@@ -806,7 +806,8 @@ class NetworkThread(Thread):
                     # Ask the server for a new address.
                     addr = None
 
-                elif (time.monotonic() - user_address.last_update) > self.USER_ADDRESS_TTL:
+                elif (username != self._server_username
+                        and (time.monotonic() - user_address.last_update) > self.USER_ADDRESS_TTL):
                     # Certain clients may prefer sending a listening port update to the server without
                     # reconnecting. Make sure we request the user's port again every now and then.
                     log.add_conn("User %s's address expired, requesting new one", username)
