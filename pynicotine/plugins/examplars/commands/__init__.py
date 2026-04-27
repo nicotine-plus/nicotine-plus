@@ -12,15 +12,18 @@ class Plugin(BasePlugin):
 
         self.commands = {
             "sample": {
-                "aliases": ["demo"],
                 "description": "Sample command description",
-                "disable": ["private_chat"],
+                "disable": ["cli"],
+                "aliases": ["demo"],
                 "callback": self.sample_command,
                 "callback_private_chat": self.sample_command,
-                "parameters": ["<choice1|choice2>", "<something..>"],
-                "parameters_chatroom": ["<choice55|choice2>"]
+                "parameters": ["<choice1|choice2>", "<second argument>", "[something else..]"],
+                "parameters_chatroom": ["<choiceA|choiceB>", "<some thing>", "<something else..>"]
             }
         }
 
-    def sample_command(self, _args, **_unused):
-        self.output("Hello")
+    def sample_command(self, args, **_unused):
+
+        one, two, three = self.split_args(args, 3)
+
+        self.output(f"Hello, testing 3 arguments: >{one}<  >{two}<  >{three}<\n")
