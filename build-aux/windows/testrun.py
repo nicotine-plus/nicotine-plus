@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: 2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import glob
 import os
 import subprocess
 import sys
@@ -18,7 +19,7 @@ elif sys.platform == "darwin":
         CURRENT_PATH, "build", "dist", "Nicotine+.app", "Contents", "MacOS", "Nicotine+-debug"
     )
 else:
-    EXECUTABLE_PATH = None
+    EXECUTABLE_PATH = next(glob.iglob(os.path.join(CURRENT_PATH, "build", "*.AppImage")))
 
 
 def verify_min_macos_version():
