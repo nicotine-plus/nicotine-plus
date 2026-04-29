@@ -26,6 +26,7 @@ class Plugin(BasePlugin):
             self.settings[function_name] = (function_name not in verbose_events)
             self.metasettings[function_name] = {
                 "description": f"{function_name}()",
+                "group": "Logged Events" if function_name.endswith("_event") else "Logged Notifications",
                 "type": "bool"
             }
 

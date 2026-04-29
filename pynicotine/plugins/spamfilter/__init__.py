@@ -22,18 +22,22 @@ class Plugin(BasePlugin):
         self.metasettings = {
             "minlength": {
                 "description": "The minimum length of a line before it's considered as ASCII spam",
+                "group": "Spam Thresholds",
                 "type": "integer"
             },
             "maxdiffcharacters": {
                 "description": "The maximum number of different characters that is still considered ASCII spam",
+                "group": "Spam Thresholds",
                 "type": "integer"
             },
             "maxlength": {
                 "description": "The maximum length of a line before it's considered as spam.",
+                "group": "Spam Thresholds",
                 "type": "integer"
             },
             "badprivatephrases": {
                 "description": "Filter chat messages containing phrase:",
+                "group": "Filtered Phrases",
                 "type": "list string"
             }
         }

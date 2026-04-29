@@ -18,6 +18,7 @@ class Plugin(BasePlugin):
         self.metasettings = {
             "player_radio": {
                 "description": "Choose an audio player",
+                "group": "Players",
                 "type": "radio",
                 "options": (
                     "Exaile",
@@ -27,6 +28,7 @@ class Plugin(BasePlugin):
             },
             "player_dropdown": {
                 "description": "Choose an audio player",
+                "group": "Players",
                 "type": "dropdown",
                 "options": (
                     "Exaile",
