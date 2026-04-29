@@ -696,10 +696,10 @@ class Login(ServerMessage):
     established. Server responds with the greeting message.
 
     The server uses the major and minor versions to differentiate between
-    clients. Use unique version numbers when possible, to avoid impersonating
-    other clients. Major versions reserved for popular Soulseek clients include
-    157 for Soulseek NS and SoulseekQt, 160 for Nicotine+, and 170 for slskd
-    (Soulseek.NET). These clients have their own rules for minor versions.
+    clients. Numbers are chosen that avoid impersonating clients with reserved
+    major versions. Downstream projects have their own rules for minor
+    versions. Experimental scripts may use major version `177` and any minor
+    version number they choose for each project.
     """
 
     __slots__ = ("username", "passwd", "version", "minorversion", "success", "rejection_reason",
