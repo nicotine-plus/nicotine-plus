@@ -621,10 +621,10 @@ class DownloadsPage:
                     "error": error
                 }
 
-            error = _("%(num)d Failed! %(error)s " % {
+            error = _("%(num)d Failed! %(error)s ") % {
                 "num": len(failed),
-                "error": errors}
-            )
+                "error": errors
+            }
 
             self.filter_status_label.set_text(error)
         else:
