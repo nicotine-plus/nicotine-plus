@@ -56,7 +56,7 @@ class Application:
 
     def __init__(self, start_hidden, ci_mode, isolated_mode, multi_instance):
 
-        self._instance = Gtk.Application(application_id=pynicotine.__application_id__)
+        self._instance = Gtk.Application(application_id=pynicotine.__application_id__, register_session=True)
         GLib.set_application_name(pynicotine.__application_name__)
         GLib.set_prgname(pynicotine.__application_id__)
 
@@ -80,6 +80,7 @@ class Application:
         self.tray_icon = None
         self.spell_checker = None
 
+        self.inhibit_logout_cookie = None
         self.previous_download_folder = None
         self.previous_file_download_folder = None
 
@@ -91,6 +92,7 @@ class Application:
         Gtk.Widget.set_default_direction(Gtk.TextDirection.LTR)
 
         self._instance.connect("activate", self.on_activate)
+        self._instance.connect("query-end", self.on_query_end)
         self._instance.connect("shutdown", self.on_shutdown)
 
         for event_name, callback in (
@@ -129,6 +131,23 @@ class Application:
 
     def remove_window(self, window):
         self._instance.remove_window(window)
+
+    def inhibit_logout(self, reason):
+
+        if self.inhibit_logout_cookie:
+            return
+
+        self.inhibit_logout_cookie = self._instance.inhibit(
+            self.window.widget, Gtk.ApplicationInhibitFlags.LOGOUT, reason
+        )
+
+    def uninhibit_logout(self):
+
+        if not self.inhibit_logout_cookie:
+            return
+
+        self._instance.uninhibit(self.inhibit_logout_cookie)
+        self.inhibit_logout_cookie = None
 
     def get_accels_for_action(self, action_name):
         return self._instance.get_accels_for_action(action_name)
@@ -1015,6 +1034,10 @@ class Application:
 
         core.confirm_quit()
 
+    def on_query_end(self, *_args):
+        self.inhibit_logout(_("Quitting…"))
+        core.quit()
+
     def on_shutdown(self, *_args):
 
         if self.about is not None:
@@ -1053,4 +1076,5 @@ class Application:
         if self.tray_icon is not None:
             self.tray_icon.destroy()
 
+        self.uninhibit_logout()
         self.__dict__.clear()
