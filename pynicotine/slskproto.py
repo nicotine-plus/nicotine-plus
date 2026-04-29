@@ -662,7 +662,7 @@ class NetworkThread(Thread):
                                 allowed_responses=None):
 
         try:
-            msg = msg_class()
+            msg = msg_class(msg_content=msg_content)
 
             if sock is not None:
                 msg.sock = sock
@@ -676,12 +676,15 @@ class NetworkThread(Thread):
             if allowed_responses is not None:
                 msg.allowed_responses = allowed_responses
 
-            msg.parse_network_message(msg_content)
+            msg.parse_network_message()
             return msg
 
         except Exception as error:
             log.add_debug("Unable to parse %s message type %s, size %s, contents %s. Error: %s",
                           (conn_type, msg_class, msg_size, msg_content, error))
+
+        finally:
+            msg.finish_parsing()
 
         return None
 
