@@ -219,6 +219,26 @@ jobs:
             export NICOTINE_GUI_TESTS=0
             python3.14 -m unittest -v
 
+  dragonflybsd:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Tests
+        uses: cross-platform-actions/action@master
+        with:
+          operating_system: dragonflybsd
+          version: '6.4.2'
+          run: |
+            sudo pkg install -y dejavu gettext gtk4 python311 py311-build py311-pygobject \
+              py311-setuptools py311-wheel
+
+            python3.11 -m unittest -v
+            python3.11 -m build
+            python3.11 -m build --no-isolation
+
   haiku:
     runs-on: ubuntu-latest
     timeout-minutes: 15
