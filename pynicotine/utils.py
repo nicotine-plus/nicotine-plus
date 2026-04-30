@@ -6,9 +6,10 @@
 # SPDX-FileCopyrightText: 2001-2003 Alexander Kanavin
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from collections.abc import Iterable
 import os
 import sys
+
+from collections.abc import Iterable
 from typing import Literal
 
 UINT32_LIMIT = 4294967295
@@ -262,7 +263,7 @@ def humanize(number: float) -> str:
 
 def factorize(
     filesize: str, base: int = 1024
-) -> tuple[None, None] | tuple[int | None, int]:
+) -> tuple[int | None, int | None]:
     """Converts filesize string with a given unit into raw integer size,
     defaults to binary for "k", "m", "g" suffixes (KiB, MiB, GiB)"""
 
