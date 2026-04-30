@@ -247,7 +247,7 @@ class Core:
     def confirm_quit(self) -> None:
         events.emit("confirm-quit")
 
-    def quit(self, signal_type: int | None = None, _frame: FrameType | None =None) -> FrameType | None:
+    def quit(self, signal_type: int | None = None, _frame: FrameType | None = None) -> FrameType | None:
 
         log.add(_("Quitting %(program)s %(version)s, %(status)s…"), {
             "program": pynicotine.__application_name__,
