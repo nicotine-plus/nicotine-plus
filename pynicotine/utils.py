@@ -12,6 +12,7 @@ import sys
 from collections.abc import Iterable
 from typing import Literal
 
+
 UINT32_LIMIT = 4294967295
 UINT64_LIMIT = 18446744073709551615
 FILE_SIZE_SUFFIXES = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"]
@@ -232,7 +233,7 @@ def human_length(seconds: float) -> str:
     return f"{minutes}:{seconds:02d}"
 
 
-def _human_speed_or_size(number: int, unit: Literal["B"] | None = None) -> str:
+def _human_speed_or_size(number: float, unit: Literal["B"] | None = None) -> str:
 
     if unit == "B":
         return humanize(number)
@@ -249,11 +250,11 @@ def _human_speed_or_size(number: int, unit: Literal["B"] | None = None) -> str:
     return str(number)
 
 
-def human_speed(speed: int):
+def human_speed(speed: int) -> str:
     return _human_speed_or_size(speed) + "/s"
 
 
-def human_size(filesize: int, unit: Literal["B"] | None = None):
+def human_size(filesize: int, unit: Literal["B"] | None = None) -> str:
     return _human_speed_or_size(filesize, unit)
 
 
@@ -261,9 +262,7 @@ def humanize(number: float) -> str:
     return f"{number:n}"
 
 
-def factorize(
-    filesize: str, base: int = 1024
-) -> tuple[int | None, int | None]:
+def factorize(filesize: str, base: int = 1024) -> tuple[None, None] | tuple[int, int] | tuple[None, int]:
     """Converts filesize string with a given unit into raw integer size,
     defaults to binary for "k", "m", "g" suffixes (KiB, MiB, GiB)"""
 
@@ -358,7 +357,7 @@ def find_whole_word(word: str, text: str) -> int:
     return start if whole else -1
 
 
-def censor_text(text: str, censored_patterns: Iterable[str], filler: str = "*"):
+def censor_text(text: str, censored_patterns: Iterable[str], filler: str = "*") -> str:
 
     for word in censored_patterns:
         word = str(word).strip().lower()
@@ -510,7 +509,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     return procs[-1].communicate()[0]
 
 
-def _try_open_uri(uri):
+def _try_open_uri(uri) -> None:
 
     if sys.platform not in {"darwin", "win32"}:
         try:
@@ -528,7 +527,7 @@ def _try_open_uri(uri):
         raise webbrowser.Error("No known URI provider available")
 
 
-def _open_path(path, is_folder=False, create_folder=False, create_file=False):
+def _open_path(path, is_folder=False, create_folder=False, create_file=False) -> bool:
     """Currently used to either open a folder or play an audio file.
 
     Tries to run a user-specified command first, and falls back to the system
@@ -747,7 +746,7 @@ def write_file_and_backup(path, callback, protect=False):
 # Debugging #
 
 
-def debug(*args):
+def debug(*args) -> None:
     """Prints debugging info."""
 
     from pynicotine.logfacility import log
