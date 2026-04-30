@@ -88,7 +88,7 @@ class Core:
 
     def init_components(
         self, enabled_components: set[str] | None = None, isolated_mode: bool = False
-    ):
+    ) -> None:
         # Enable all components by default
         if enabled_components is None:
             enabled_components = {
@@ -202,7 +202,7 @@ class Core:
             from pynicotine.pluginsystem import PluginHandler
             self.pluginhandler = PluginHandler(isolated_mode)
 
-    def _init_signal_handler(self):
+    def _init_signal_handler(self) -> None:
         """Handle Ctrl+C and "kill" exit gracefully."""
 
         signals = [signal.SIGINT, signal.SIGTERM]
@@ -213,14 +213,14 @@ class Core:
         for signal_type in signals:
             signal.signal(signal_type, self.quit)
 
-    def _init_error_handler(self):
+    def _init_error_handler(self) -> None:
 
-        def thread_excepthook(args):
+        def thread_excepthook(args) -> None:
             sys.excepthook(*args[:3])
 
         threading.excepthook = thread_excepthook
 
-    def start(self):
+    def start(self) -> None:
 
         script_folder_path = os.path.dirname(__file__)
 
@@ -241,13 +241,13 @@ class Core:
 
         events.emit("start")
 
-    def setup(self):
+    def setup(self) -> None:
         events.emit("setup")
 
-    def confirm_quit(self):
+    def confirm_quit(self) -> None:
         events.emit("confirm-quit")
 
-    def quit(self, signal_type: int | None = None, _frame: FrameType | None = None):
+    def quit(self, signal_type: int | None = None, _frame: FrameType | None =None) -> FrameType | None:
 
         log.add(_("Quitting %(program)s %(version)s, %(status)s…"), {
             "program": pynicotine.__application_name__,
@@ -258,10 +258,10 @@ class Core:
         # Allow the networking thread to finish up before quitting
         events.emit("schedule-quit")
 
-    def _schedule_quit(self):
+    def _schedule_quit(self) -> None:
         events.emit("quit")
 
-    def _quit(self):
+    def _quit(self) -> None:
 
         config.write_configuration()
 
@@ -270,7 +270,7 @@ class Core:
             "version": pynicotine.__version__
         })
 
-    def connect(self):
+    def connect(self) -> None:
 
         if config.need_config():
             log.add(_("You need to specify a username and password before connecting…"))
@@ -288,24 +288,24 @@ class Core:
             portmapper=self.portmapper
         ))
 
-    def disconnect(self):
+    def disconnect(self) -> None:
         self.send_message_to_network_thread(ServerDisconnect())
 
-    def reconnect(self):
+    def reconnect(self) -> None:
         self.send_message_to_network_thread(ServerReconnect())
 
-    def _server_reconnect(self, _msg: ServerReconnect):
+    def _server_reconnect(self, _msg: ServerReconnect) -> None:
         self.connect()
 
-    def send_message_to_network_thread(self, message: InternalMessage):
+    def send_message_to_network_thread(self, message: InternalMessage) -> None:
         """Sends message to the networking thread to inform about something."""
         events.emit("queue-network-message", message)
 
-    def send_message_to_server(self, message: ServerMessage):
+    def send_message_to_server(self, message: ServerMessage) -> None:
         """Sends message to the server."""
         events.emit("queue-network-message", message)
 
-    def send_message_to_peer(self, username: str, message: PeerMessage):
+    def send_message_to_peer(self, username: str, message: PeerMessage) -> None:
         """Sends message to a peer."""
 
         message.username = username
@@ -318,7 +318,7 @@ class UpdateChecker:
     def __init__(self):
         self._thread: Thread | None = None
 
-    def check(self):
+    def check(self) -> None:
 
         if self._thread is not None and self._thread.is_alive():
             return
@@ -326,7 +326,7 @@ class UpdateChecker:
         self._thread = Thread(target=self._check, name="UpdateChecker")
         self._thread.start()
 
-    def _check(self):
+    def _check(self) -> None:
 
         try:
             error_message = None
@@ -342,7 +342,7 @@ class UpdateChecker:
         events.emit_main_thread("check-latest-version", h_latest_version, is_outdated, error_message)
 
     @staticmethod
-    def create_integer_version(version: str):
+    def create_integer_version(version: str) -> int:
         major, minor, patch = version.split(".")[:3]
         stable = 1
 
@@ -354,7 +354,7 @@ class UpdateChecker:
         return (int(major) << 24) + (int(minor) << 16) + (int(patch.split("rc", 1)[0]) << 8) + stable
 
     @classmethod
-    def retrieve_latest_version(cls):
+    def retrieve_latest_version(cls) -> tuple[str, int]:
 
         import json
         from urllib.request import urlopen
