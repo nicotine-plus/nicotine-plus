@@ -219,6 +219,27 @@ jobs:
             export NICOTINE_GUI_TESTS=0
             python3.14 -m unittest -v
 
+  midnightbsd:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Tests
+        uses: cross-platform-actions/action@13ec3be3fbdfe52a660fe21c83f332747ed878be
+        with:
+          operating_system: midnightbsd
+          version: '4.0.4'
+          run: |
+            sudo mport index
+            sudo mport install dejavu gettext gtk4 python311 py311-build py311-pygobject \
+              py311-setuptools py311-wheel || true
+
+            python3.11 -m unittest -v
+            python3.11 -m build
+            python3.11 -m build --no-isolation
+
   haiku:
     runs-on: ubuntu-latest
     timeout-minutes: 15
