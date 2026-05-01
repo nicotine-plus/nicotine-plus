@@ -91,13 +91,13 @@ class Uploads(Transfers):
         ):
             events.connect(event_name, callback)
 
-    def _quit(self):
+    def _quit(self) -> None:
 
         super()._quit()
 
         self.upload_speed = 0
 
-    def _server_login(self, msg):
+    def _server_login(self, msg) -> None:
 
         if not msg.success:
             return
@@ -115,7 +115,7 @@ class Uploads(Transfers):
         self._retry_failed_uploads_timer_id = events.schedule(
             delay=180, callback=self._retry_failed_uploads, repeat=True)
 
-    def _server_disconnect(self, msg):
+    def _server_disconnect(self, msg) -> None:
 
         super()._server_disconnect(msg)
 
@@ -138,7 +138,7 @@ class Uploads(Transfers):
 
     # Load Transfers #
 
-    def _load_transfers(self):
+    def _load_transfers(self) -> None:
 
         for transfer in self._get_stored_transfers(
                 self.transfers_file_path, self._load_transfers_file, load_only_finished=True):
@@ -248,7 +248,7 @@ class Uploads(Transfers):
 
         return self.total_bandwidth >= bandwidth_limit
 
-    def is_new_upload_accepted(self, enforce_limits=True):
+    def is_new_upload_accepted(self, enforce_limits=True) -> bool:
 
         if core.shares is None or core.shares.rescanning:
             return False
@@ -312,7 +312,7 @@ class Uploads(Transfers):
 
     # Transfer Actions #
 
-    def _enqueue_transfer(self, transfer, show_notification=False):
+    def _enqueue_transfer(self, transfer, show_notification=False) -> bool:
 
         username = transfer.username
 
@@ -330,7 +330,7 @@ class Uploads(Transfers):
 
         return True
 
-    def _dequeue_transfer(self, transfer):
+    def _dequeue_transfer(self, transfer) -> bool:
 
         username = transfer.username
 
@@ -348,11 +348,11 @@ class Uploads(Transfers):
 
         return True
 
-    def _activate_transfer(self, transfer, token):
+    def _activate_transfer(self, transfer, token) -> None:
         super()._activate_transfer(transfer, token)
         self._user_update_counters.pop(transfer.username, None)
 
-    def _update_transfer(self, transfer, update_parent=True):
+    def _update_transfer(self, transfer, update_parent=True) -> None:
 
         username = transfer.username
 
@@ -364,7 +364,7 @@ class Uploads(Transfers):
 
         events.emit("update-upload", transfer, update_parent)
 
-    def _finish_transfer(self, transfer, already_exists=False):
+    def _finish_transfer(self, transfer, already_exists=False) -> None:
 
         username = transfer.username
         virtual_path = transfer.virtual_path
@@ -394,7 +394,7 @@ class Uploads(Transfers):
 
         self._check_upload_queue()
 
-    def _abort_transfer(self, transfer, status=None, denied_message=None, update_parent=True):
+    def _abort_transfer(self, transfer, status=None, denied_message=None, update_parent=True) -> None:
 
         if transfer.file_handle is not None:
             log.add_upload(
@@ -410,7 +410,7 @@ class Uploads(Transfers):
         if status:
             events.emit("abort-upload", transfer, status, update_parent)
 
-    def _clear_transfer(self, transfer, denied_message=None, update_parent=True):
+    def _clear_transfer(self, transfer, denied_message=None, update_parent=True) -> None:
 
         virtual_path = transfer.virtual_path
         username = transfer.username
@@ -420,7 +420,7 @@ class Uploads(Transfers):
 
         events.emit("clear-upload", transfer, update_parent)
 
-    def _retry_failed_uploads(self):
+    def _retry_failed_uploads(self) -> None:
 
         for failed_uploads in self.failed_users.copy().values():
             for upload in failed_uploads.copy().values():
@@ -546,7 +546,7 @@ class Uploads(Transfers):
 
         return upload_candidate, has_active_uploads
 
-    def _update_user_counter(self, username):
+    def _update_user_counter(self, username) -> None:
         """Called when an upload associated with a user has changed.
 
         The user update counter is used by the Round Robin queue system
@@ -558,7 +558,7 @@ class Uploads(Transfers):
             self._user_update_counter += 1
             self._user_update_counters[username] = self._user_update_counter
 
-    def _check_upload_queue(self, upload_candidate=None):
+    def _check_upload_queue(self, upload_candidate=None) -> None:
         """Find next file to upload."""
 
         final_upload_candidate = None
@@ -634,7 +634,7 @@ class Uploads(Transfers):
 
         self._update_transfer(final_upload_candidate)
 
-    def _show_queued_upload_notifications(self):
+    def _show_queued_upload_notifications(self) -> None:
 
         if not config.sections["notifications"]["notification_popup_queued_upload"]:
             self._queue_notification_users.clear()
@@ -672,7 +672,7 @@ class Uploads(Transfers):
 
         self._queue_notification_users.clear()
 
-    def enqueue_upload(self, username, virtual_path):
+    def enqueue_upload(self, username, virtual_path) -> None:
 
         transfer = self.transfers.get(username + virtual_path)
         real_path = core.shares.virtual2real(virtual_path)
@@ -708,7 +708,7 @@ class Uploads(Transfers):
         self._update_transfer(transfer)
         self._check_upload_queue()
 
-    def retry_upload(self, transfer):
+    def retry_upload(self, transfer) -> None:
 
         username = transfer.username
         active_uploads = self.active_users.get(username, {}).values()
@@ -726,7 +726,7 @@ class Uploads(Transfers):
             # No active upload, transfer a queued upload immediately
             self._check_upload_queue(transfer)
 
-    def retry_uploads(self, uploads):
+    def retry_uploads(self, uploads) -> None:
         for upload in uploads:
             self.retry_upload(upload)
 
@@ -741,7 +741,7 @@ class Uploads(Transfers):
 
         events.emit("abort-uploads", uploads, status)
 
-    def clear_uploads(self, uploads=None, statuses=None, denied_message=None):
+    def clear_uploads(self, uploads=None, statuses=None, denied_message=None) -> None:
 
         if uploads is None:
             # Clear all uploads
@@ -757,7 +757,7 @@ class Uploads(Transfers):
 
         events.emit("clear-uploads", uploads, statuses)
 
-    def request_shutdown(self):
+    def request_shutdown(self) -> None:
         """Schedule a shutdown after all queued uploads have finished."""
 
         if self.pending_shutdown:
@@ -768,7 +768,7 @@ class Uploads(Transfers):
 
         events.emit("uploads-shutdown-request")
 
-    def cancel_shutdown(self):
+    def cancel_shutdown(self) -> None:
 
         if not self.pending_shutdown:
             return
@@ -778,7 +778,7 @@ class Uploads(Transfers):
 
     # Events #
 
-    def _shares_ready(self, _successful):
+    def _shares_ready(self, _successful) -> None:
         """Process any file transfer queue requests that arrived while
         scanning shares.
         """
@@ -787,7 +787,7 @@ class Uploads(Transfers):
             core.send_message_to_network_thread(EmitNetworkMessageEvents(self._pending_network_msgs[:]))
             self._pending_network_msgs.clear()
 
-    def _user_status(self, msg):
+    def _user_status(self, msg) -> None:
         """Server code 7."""
 
         username = msg.user
@@ -822,21 +822,21 @@ class Uploads(Transfers):
 
         self._online_users.add(username)
 
-    def _user_stats(self, msg):
+    def _user_stats(self, msg) -> None:
         """Server code 36."""
 
         if msg.user == core.users.login_username:
             self.upload_speed = msg.avgspeed
 
-    def _privileged_users(self, _msg):
+    def _privileged_users(self, _msg) -> None:
         """Server code 69."""
 
         log.add_transfer("%s privileged users", len(core.users.privileged))
 
-    def _set_connection_stats(self, upload_bandwidth=0, **_unused):
+    def _set_connection_stats(self, upload_bandwidth=0, **_unused) -> None:
         self.total_bandwidth = upload_bandwidth
 
-    def _ban_user(self, username, _ip_address=None):
+    def _ban_user(self, username, _ip_address=None) -> None:
         """Ban a user, cancel all the user's uploads, send a 'Banned' message
         via the transfers, and clear the transfers from the uploads list."""
 
@@ -863,7 +863,7 @@ class Uploads(Transfers):
         self.clear_uploads(uploads=removed_uploads, denied_message=status)
         self._check_upload_queue()
 
-    def _peer_connection_error(self, username, conn_type, msgs, is_offline=False, is_timeout=True):
+    def _peer_connection_error(self, username, conn_type, msgs, is_offline=False, is_timeout=True) -> None:
 
         if not msgs:
             return
@@ -877,10 +877,10 @@ class Uploads(Transfers):
             if msg.__class__ in failed_msg_types:
                 self._cant_connect_upload(username, msg.token, is_offline, is_timeout)
 
-    def _peer_connection_closed(self, username, conn_type, msgs):
+    def _peer_connection_closed(self, username, conn_type, msgs) -> None:
         self._peer_connection_error(username, conn_type, msgs, is_timeout=False)
 
-    def _cant_connect_upload(self, username, token, is_offline, is_timeout):
+    def _cant_connect_upload(self, username, token, is_offline, is_timeout) -> None:
         """We can't connect to the user, either way (TransferRequest,
         FileTransferInit)."""
 
@@ -908,7 +908,7 @@ class Uploads(Transfers):
 
         self._check_upload_queue()
 
-    def _queue_upload(self, msg):
+    def _queue_upload(self, msg) -> None:
         """Peer code 43.
 
         Peer remotely queued a download (upload here). This is the
@@ -981,7 +981,7 @@ class Uploads(Transfers):
 
         self._check_upload_queue()
 
-    def _transfer_request(self, msg):
+    def _transfer_request(self, msg) -> None:
         """Peer code 40."""
 
         username = msg.username
@@ -1065,7 +1065,7 @@ class Uploads(Transfers):
 
         return TransferResponse(allowed=False, reason=TransferRejectReason.QUEUED, token=token)
 
-    def _transfer_response(self, msg):
+    def _transfer_response(self, msg) -> None:
         """Peer code 41.
 
         Received a response to the file request from the peer
@@ -1108,7 +1108,7 @@ class Uploads(Transfers):
         core.send_message_to_peer(upload.username, FileTransferInit(token=token, is_outgoing=True))
         self._check_upload_queue()
 
-    def _transfer_timeout(self, transfer):
+    def _transfer_timeout(self, transfer) -> None:
 
         if transfer.request_timer_id is None:
             return
@@ -1119,7 +1119,7 @@ class Uploads(Transfers):
         super()._transfer_timeout(transfer)
         self._check_upload_queue()
 
-    def _upload_file_error(self, username, token, error):
+    def _upload_file_error(self, username, token, error) -> None:
         """Networking thread encountered a local file error for upload."""
 
         upload = self.active_users.get(username, {}).get(token)
@@ -1138,7 +1138,7 @@ class Uploads(Transfers):
         log.add(_("Upload I/O error: %s"), error)
         self._check_upload_queue()
 
-    def _file_transfer_init(self, msg):
+    def _file_transfer_init(self, msg) -> None:
         """We are requesting to start uploading a file to a peer."""
 
         if not msg.is_outgoing:
@@ -1209,7 +1209,7 @@ class Uploads(Transfers):
             # Must be be emitted after the final update to prevent inconsistent state
             core.pluginhandler.upload_started_notification(username, virtual_path, real_path)
 
-    def _file_upload_progress(self, username, token, offset, bytes_sent, speed=None):
+    def _file_upload_progress(self, username, token, offset, bytes_sent, speed=None) -> None:
         """A file upload is in progress."""
 
         upload = self.active_users.get(username, {}).get(token)
@@ -1231,7 +1231,7 @@ class Uploads(Transfers):
         )
         self._update_transfer(upload)
 
-    def _file_connection_closed(self, username, token, sock, timed_out):
+    def _file_connection_closed(self, username, token, sock, timed_out) -> None:
         """A file upload connection has closed for any reason."""
 
         upload = self.active_users.get(username, {}).get(token)
@@ -1269,7 +1269,7 @@ class Uploads(Transfers):
 
         self._check_upload_queue()
 
-    def _place_in_queue_request(self, msg):
+    def _place_in_queue_request(self, msg) -> None:
         """Peer code 51."""
 
         username = msg.username
