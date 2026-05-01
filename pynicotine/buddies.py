@@ -45,7 +45,7 @@ class Buddies:
         ):
             events.connect(event_name, callback)
 
-    def _start(self):
+    def _start(self) -> None:
 
         for row in config.sections["server"]["userlist"]:
             if not row or not isinstance(row, list):
@@ -113,11 +113,11 @@ class Buddies:
 
         self._allow_saving_buddies = True
 
-    def _quit(self):
+    def _quit(self) -> None:
         self.users.clear()
         self._allow_saving_buddies = False
 
-    def _server_login(self, msg):
+    def _server_login(self, msg) -> None:
 
         if not msg.success:
             return
@@ -125,7 +125,7 @@ class Buddies:
         for username in self.users:
             core.users.watch_user(username, context="buddies")
 
-    def _server_disconnect(self, _msg):
+    def _server_disconnect(self, _msg) -> None:
 
         for username, user_data in self.users.items():
             user_data.status = UserStatus.OFFLINE
@@ -133,7 +133,7 @@ class Buddies:
 
         self.save_buddy_list()
 
-    def add_buddy(self, username):
+    def add_buddy(self, username) -> None:
 
         if username in self.users:
             return
@@ -166,7 +166,7 @@ class Buddies:
         # Request user status, speed and number of shared files
         core.users.watch_user(username, context="buddies")
 
-    def remove_buddy(self, username):
+    def remove_buddy(self, username) -> None:
 
         if username in self.users:
             del self.users[username]
@@ -179,7 +179,7 @@ class Buddies:
         self.save_buddy_list()
         events.emit("remove-buddy", username)
 
-    def set_buddy_note(self, username, note):
+    def set_buddy_note(self, username, note) -> None:
 
         if username not in self.users:
             return
@@ -189,7 +189,7 @@ class Buddies:
 
         events.emit("buddy-note", username, note)
 
-    def set_buddy_notify(self, username, notify):
+    def set_buddy_notify(self, username, notify) -> None:
 
         if username not in self.users:
             return
@@ -199,7 +199,7 @@ class Buddies:
 
         events.emit("buddy-notify", username, notify)
 
-    def set_buddy_prioritized(self, username, prioritized):
+    def set_buddy_prioritized(self, username, prioritized) -> None:
 
         if username not in self.users:
             return
@@ -209,7 +209,7 @@ class Buddies:
 
         events.emit("buddy-prioritized", username, prioritized)
 
-    def set_buddy_trusted(self, username, trusted):
+    def set_buddy_trusted(self, username, trusted) -> None:
 
         if username not in self.users:
             return
@@ -219,7 +219,7 @@ class Buddies:
 
         events.emit("buddy-trusted", username, trusted)
 
-    def set_buddy_last_seen(self, username, is_online):
+    def set_buddy_last_seen(self, username, is_online) -> None:
 
         if username not in self.users:
             return
@@ -237,7 +237,7 @@ class Buddies:
 
         events.emit("buddy-last-seen", username, is_online)
 
-    def _user_country(self, username, country_code):
+    def _user_country(self, username, country_code) -> None:
 
         if not country_code:
             return
@@ -247,7 +247,7 @@ class Buddies:
 
         self.users[username].country = f"flag_{country_code}"
 
-    def save_buddy_list(self):
+    def save_buddy_list(self) -> None:
 
         if not self._allow_saving_buddies:
             return
@@ -268,7 +268,7 @@ class Buddies:
         config.sections["server"]["userlist"] = user_rows
         config.write_configuration()
 
-    def _user_status(self, msg):
+    def _user_status(self, msg) -> None:
         """Server code 7."""
 
         username = msg.user
