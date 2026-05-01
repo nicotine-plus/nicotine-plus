@@ -428,7 +428,7 @@ class PluginHandler:
         ):
             events.connect(event_name, callback)
 
-    def _start(self):
+    def _start(self) -> None:
 
         BasePlugin.parent = self
         BasePlugin.config = config
@@ -446,7 +446,7 @@ class PluginHandler:
         for plugin in to_enable:
             self.enable_plugin(plugin)
 
-    def _quit(self):
+    def _quit(self) -> None:
 
         # Notify plugins
         self.shutdown_notification()
@@ -455,7 +455,7 @@ class PluginHandler:
         for plugin in self.list_installed_plugins():
             self.disable_plugin(plugin, is_permanent=False)
 
-    def _cli_command(self, command, args):
+    def _cli_command(self, command, args) -> None:
         self.trigger_cli_command_event(command, args)
 
     def update_completions(self, plugin):
