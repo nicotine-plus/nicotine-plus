@@ -62,10 +62,10 @@ class UserBrowse:
         ):
             events.connect(event_name, callback)
 
-    def _quit(self):
+    def _quit(self) -> None:
         self.remove_all_users()
 
-    def _server_login(self, msg):
+    def _server_login(self, msg) -> None:
 
         if not msg.success:
             return
@@ -79,7 +79,7 @@ class UserBrowse:
 
         core.send_message_to_peer(username, UploadQueueNotification())
 
-    def _show_user(self, username, path=None, new_request=False, switch_page=True):
+    def _show_user(self, username, path=None, new_request=False, switch_page=True) -> None:
 
         if username not in self.users:
             self.users[username] = BrowsedUser(username)
@@ -100,7 +100,7 @@ class UserBrowse:
         for username in self.users.copy():
             self.remove_user(username)
 
-    def _parse_local_shares(self, username, msg):
+    def _parse_local_shares(self, username, msg) -> None:
         """Parse a local shares list and show it in the UI."""
 
         msg.username = username
@@ -146,7 +146,7 @@ class UserBrowse:
         core.send_message_to_network_thread(AddAllowedResponse(SharedFileListResponse, username))
         core.send_message_to_peer(username, SharedFileListRequest())
 
-    def browse_user(self, username, path=None, new_request=False, switch_page=True):
+    def browse_user(self, username, path=None, new_request=False, switch_page=True) -> None:
         """Browse a user's shares."""
 
         if not username:
@@ -200,7 +200,7 @@ class UserBrowse:
                 if not recurse:
                     return
 
-    def load_shares_list_from_disk(self, file_path):
+    def load_shares_list_from_disk(self, file_path) -> None:
 
         file_path_encoded = encode_path(file_path)
 
@@ -296,7 +296,7 @@ class UserBrowse:
 
         events.emit("shared-file-list-response", msg)
 
-    def save_shares_list_to_disk(self, username):
+    def save_shares_list_to_disk(self, username) -> None:
 
         folder_path = self.create_user_shares_folder()
 
@@ -333,7 +333,7 @@ class UserBrowse:
         except Exception as error:
             log.add(_("Cannot save shares for user %(user)s: %(error)s"), {"user": username, "error": error})
 
-    def download_file(self, username, folder_path, file_data, download_folder_path=None):
+    def download_file(self, username, folder_path, file_data, download_folder_path=None) -> None:
 
         _code, basename, file_size, _file_extension, file_attributes, *_unused = file_data
         file_path = "\\".join([folder_path, basename])
@@ -342,7 +342,7 @@ class UserBrowse:
             username, file_path, folder_path=download_folder_path, size=file_size, file_attributes=file_attributes)
 
     def download_folder(self, username, requested_folder_path, download_folder_path=None, recurse=False,
-                        check_num_files=True):
+                        check_num_files=True) -> None:
 
         if requested_folder_path is None:
             return
@@ -381,14 +381,14 @@ class UserBrowse:
                         username, file_path, folder_path=destination_folder_path, size=file_size,
                         file_attributes=file_attributes)
 
-    def upload_file(self, username, folder_path, file_data):
+    def upload_file(self, username, folder_path, file_data) -> None:
 
         _code, basename, *_unused = file_data
         file_path = "\\".join([folder_path, basename])
 
         core.uploads.enqueue_upload(username, file_path)
 
-    def upload_folder(self, username, requested_folder_path, local_browsed_user, recurse=False):
+    def upload_folder(self, username, requested_folder_path, local_browsed_user, recurse=False) -> None:
 
         if not requested_folder_path or not username:
             return
@@ -400,7 +400,7 @@ class UserBrowse:
                 file_path = "\\".join([folder_path, basename])
                 core.uploads.enqueue_upload(username, file_path)
 
-    def show_user_statistics(self, username):
+    def show_user_statistics(self, username) -> None:
 
         browsed_user = self.users.get(username)
 
@@ -435,7 +435,7 @@ class UserBrowse:
 
         self.browse_user(username, path=file_path)
 
-    def _peer_connection_error(self, username, conn_type, msgs, is_offline=False):
+    def _peer_connection_error(self, username, conn_type, msgs, is_offline=False) -> None:
 
         if not msgs:
             return
@@ -449,7 +449,7 @@ class UserBrowse:
                 events.emit("shared-file-list-failed", username, is_offline)
                 break
 
-    def _shared_file_list_response(self, msg):
+    def _shared_file_list_response(self, msg) -> None:
 
         username = msg.username
         browsed_user = self.users.get(username)
