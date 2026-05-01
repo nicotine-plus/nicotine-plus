@@ -361,8 +361,8 @@ class RemoveRoomMemberMessageTest(TestCase):
         message = b"\x05\x00\x00\x00room7\x05\x00\x00\x00admin"
 
         # Act
-        obj = RemoveRoomMember()
-        obj.parse_network_message(memoryview(message))
+        obj = RemoveRoomMember(msg_content=memoryview(message))
+        obj.parse_network_message()
 
         # Assert
         self.assertEqual("room7", obj.room)
