@@ -126,6 +126,26 @@ jobs:
       - name: Build without isolation
         run: python3.13 -m build --no-isolation
 
+  dragonflybsd:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Tests
+        uses: cross-platform-actions/action@13ec3be3fbdfe52a660fe21c83f332747ed878be
+        with:
+          operating_system: dragonflybsd
+          version: '6.4.2'
+          run: |
+            sudo pkg install -y dejavu gettext gtk4 python311 py311-build py311-pygobject \
+              py311-setuptools py311-wheel
+
+            python3.11 -m unittest -v
+            python3.11 -m build
+            python3.11 -m build --no-isolation
+
   midnightbsd:
     runs-on: ubuntu-latest
     timeout-minutes: 15
