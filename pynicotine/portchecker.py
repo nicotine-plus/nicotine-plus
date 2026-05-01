@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2025 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import threading
+from threading import Thread
 
 import pynicotine
 from pynicotine.events import events
@@ -19,7 +19,7 @@ class PortChecker:
         if self._thread is not None and self._thread.is_alive():
             return
 
-        self._thread = threading.Thread(target=self._check_status, args=(port,), name="PortChecker")
+        self._thread = Thread(target=self._check_status, args=(port,), name="PortChecker")
         self._thread.start()
 
     def _check_status(self, port: int) -> None:
