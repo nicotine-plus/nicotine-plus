@@ -14,7 +14,7 @@ class PortChecker:
     def __init__(self):
         self._thread = None
 
-    def check_status(self, port):
+    def check_status(self, port: int) -> None:
 
         if self._thread is not None and self._thread.is_alive():
             return
@@ -22,7 +22,7 @@ class PortChecker:
         self._thread = threading.Thread(target=self._check_status, args=(port,), name="PortChecker")
         self._thread.start()
 
-    def _check_status(self, port):
+    def _check_status(self, port: int) -> None:
 
         try:
             is_successful = self._retrieve_status(port)
@@ -33,7 +33,7 @@ class PortChecker:
 
         events.emit_main_thread("check-port-status", port, is_successful)
 
-    def _retrieve_status(self, port):
+    def _retrieve_status(self, port: int) -> bool:
 
         from urllib.request import urlopen
 
