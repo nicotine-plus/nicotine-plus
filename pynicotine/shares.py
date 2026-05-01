@@ -788,7 +788,7 @@ class Shares:
         ):
             events.connect(event_name, callback)
 
-    def _start(self):
+    def _start(self) -> None:
 
         if core.cli_rescanning:
             # CLI rescan is performed elsewhere
@@ -800,17 +800,17 @@ class Shares:
         self.convert_shares()
         self.rescan_shares(init=True, rescan=rescan_startup)
 
-    def _quit(self):
+    def _quit(self) -> None:
 
         self.stop_scanner()
         self.close_shares(self.share_dbs)
         self.initialized = False
 
-    def _server_login(self, msg):
+    def _server_login(self, msg) -> None:
         if msg.success:
             self.send_num_shared_folders_files()
 
-    def _server_disconnect(self, _msg):
+    def _server_disconnect(self, _msg) -> None:
         self.requested_share_times.clear()
 
     # Shares-related Actions #
@@ -870,7 +870,7 @@ class Shares:
 
         return "__INVALID_SHARE__" + virtual_path
 
-    def convert_shares(self):
+    def convert_shares(self) -> None:
 
         def _convert_share(shared_folder):
             if isinstance(shared_folder, tuple):
@@ -1248,7 +1248,7 @@ class Shares:
         scanner = context.Process(target=scanner_obj.run, daemon=True)
         return scanner, reader, writer
 
-    def _process_scanner(self, process, reader, emit_event=None):
+    def _process_scanner(self, process, reader, emit_event=None) -> bool:
 
         successful = False
         current_folder_count = None
@@ -1300,7 +1300,7 @@ class Shares:
 
         return successful
 
-    def _shares_ready(self, successful):
+    def _shares_ready(self, successful) -> None:
 
         if self._scanner_process is not None and self._scanner_process.is_alive():
             # Scanner was restarted
@@ -1331,7 +1331,7 @@ class Shares:
 
     # Network Messages #
 
-    def _shared_file_list_request(self, msg):
+    def _shared_file_list_request(self, msg) -> None:
         """Peer code 4."""
 
         username = msg.username
@@ -1353,7 +1353,7 @@ class Shares:
 
         core.send_message_to_peer(username, shares_list)
 
-    def _folder_contents_request(self, msg):
+    def _folder_contents_request(self, msg) -> None:
         """Peer code 36."""
 
         ip_address, _port = msg.addr
