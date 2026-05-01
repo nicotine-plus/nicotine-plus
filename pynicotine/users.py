@@ -122,10 +122,10 @@ class Users:
         login = urllib.parse.quote(self.login_username)
         open_uri(pynicotine.__privileges_url__ % login)
 
-    def request_change_password(self, password):
+    def request_change_password(self, password) -> None:
         core.send_message_to_server(ChangePassword(password))
 
-    def request_check_privileges(self, should_open_url=False):
+    def request_check_privileges(self, should_open_url=False) -> None:
         self._should_open_privileges_url = should_open_url
         core.send_message_to_server(CheckPrivileges())
 
@@ -146,13 +146,13 @@ class Users:
         self._ip_requested[username] = notify
         core.send_message_to_server(GetPeerAddress(username))
 
-    def request_set_status(self, status):
+    def request_set_status(self, status) -> None:
         core.send_message_to_server(SetStatus(status))
 
-    def request_user_stats(self, username):
+    def request_user_stats(self, username) -> None:
         core.send_message_to_server(GetUserStats(username))
 
-    def watch_user(self, username, context=None, is_implicit=False):
+    def watch_user(self, username, context=None, is_implicit=False) -> None:
         """Tells the server we want to be notified of status updates for a
         user.
 
@@ -189,7 +189,7 @@ class Users:
         log.add_conn("Watching user %s in context '%s'. Active contexts: %s",
                      (username, context, watched_user.contexts))
 
-    def unwatch_user(self, username, context):
+    def unwatch_user(self, username, context) -> None:
         """Tells the server we no longer wish to receive status updates for a
         user.
 
@@ -222,7 +222,7 @@ class Users:
 
         del self.watched[username]
 
-    def _server_disconnect(self, msg):
+    def _server_disconnect(self, msg) -> None:
 
         self.login_status = UserStatus.OFFLINE
 
@@ -245,7 +245,7 @@ class Users:
         self.privileges_left = None
         self._should_open_privileges_url = False
 
-    def _server_login(self, msg):
+    def _server_login(self, msg) -> None:
         """Server code 1."""
 
         self._should_open_privileges_url = False
@@ -282,7 +282,7 @@ class Users:
 
         log.add(_("Unable to connect to the server. Reason: %s"), msg.rejection_reason, title=_("Cannot Connect"))
 
-    def _get_peer_address(self, msg):
+    def _get_peer_address(self, msg) -> None:
         """Server code 3."""
 
         username = msg.username
@@ -330,7 +330,7 @@ class Users:
             "country": country
         }, title=_("User IP Address"))
 
-    def _watch_user(self, msg):
+    def _watch_user(self, msg) -> None:
         """Server code 5."""
 
         if not msg.exists:
@@ -340,7 +340,7 @@ class Users:
 
         events.emit("user-stats", msg)
 
-    def _user_status(self, msg):
+    def _user_status(self, msg) -> None:
         """Server code 7."""
 
         username = msg.username
@@ -387,7 +387,7 @@ class Users:
 
         core.pluginhandler.user_status_notification(username, status, msg.privileged)
 
-    def _connect_to_peer(self, msg):
+    def _connect_to_peer(self, msg) -> None:
         """Server code 18."""
 
         username = msg.username
@@ -402,7 +402,7 @@ class Users:
         elif username in self.privileged:
             self.privileged.remove(username)
 
-    def _user_stats(self, msg):
+    def _user_stats(self, msg) -> None:
         """Server code 36."""
 
         username = msg.username
@@ -437,13 +437,13 @@ class Users:
             title=_("Server Announcement")
         )
 
-    def _privileged_users(self, msg):
+    def _privileged_users(self, msg) -> None:
         """Server code 69."""
 
         for username in msg.usernames:
             self.privileged.add(username)
 
-    def _check_privileges(self, msg):
+    def _check_privileges(self, msg) -> None:
         """Server code 92."""
 
         seconds = msg.seconds
@@ -461,7 +461,7 @@ class Users:
         self._should_open_privileges_url = False
 
     @staticmethod
-    def _change_password(msg):
+    def _change_password(msg) -> None:
         """Server code 142."""
 
         config.sections["server"]["passw"] = msg.password
