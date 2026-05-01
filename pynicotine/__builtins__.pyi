@@ -1,6 +1,6 @@
 """
 `__builtins__.pyi` informs Pyright-based type checkers of additional builtins.
-See `pynicotine/` for uses of `_` & `ngettext`.
+See other scripts in `pynicotine/` for uses of `_` & `ngettext`.
 """
 
 # SPDX-FileCopyrightText: 2026 Nicotine+ Contributors
