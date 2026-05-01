@@ -61,10 +61,10 @@ class UserBrowse:
         ):
             events.connect(event_name, callback)
 
-    def _quit(self):
+    def _quit(self) -> None:
         self.remove_all_users()
 
-    def _server_login(self, msg):
+    def _server_login(self, msg) -> None:
 
         if not msg.success:
             return
@@ -78,7 +78,7 @@ class UserBrowse:
 
         core.send_message_to_peer(username, UploadQueueNotification())
 
-    def _show_user(self, username, path=None, new_request=False, switch_page=True):
+    def _show_user(self, username, path=None, new_request=False, switch_page=True) -> None:
 
         if username not in self.users:
             self.users[username] = BrowsedUser(username)
@@ -99,7 +99,7 @@ class UserBrowse:
         for username in self.users.copy():
             self.remove_user(username)
 
-    def _parse_local_shares(self, username, msg):
+    def _parse_local_shares(self, username, msg) -> None:
         """Parse a local shares list and show it in the UI."""
 
         msg.parse_network_message(memoryview(msg.make_network_message()))
@@ -422,7 +422,7 @@ class UserBrowse:
 
         self.browse_user(username, path=file_path)
 
-    def _peer_connection_error(self, username, conn_type, msgs, **_unused):
+    def _peer_connection_error(self, username, conn_type, msgs, **_unused) -> None:
 
         if not msgs:
             return
@@ -437,7 +437,7 @@ class UserBrowse:
                 core.send_message_to_network_thread(RemoveAllowedResponse(SharedFileListResponse, username))
                 break
 
-    def _shared_file_list_response(self, msg):
+    def _shared_file_list_response(self, msg) -> None:
 
         username = msg.username
         browsed_user = self.users.get(username)
