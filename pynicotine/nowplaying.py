@@ -112,7 +112,7 @@ class NowPlaying:
 
         return None
 
-    def _parse_audioscrobbler_response(self, response_body):
+    def _parse_audioscrobbler_response(self, response_body) -> None:
 
         json_response = json.loads(response_body)
 
