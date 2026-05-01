@@ -542,7 +542,7 @@ class ChatRooms:
 
         return None, None
 
-    def _say_chat_room(self, msg, is_global=False):  # noqa: ANN202
+    def _say_chat_room(self, msg, is_global=False) -> None:
         """Server code 13."""
 
         room = msg.room
