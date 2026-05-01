@@ -292,7 +292,7 @@ class NetworkFilter:
         ):
             events.connect(event_name, callback)
 
-    def _start(self):
+    def _start(self) -> None:
 
         for source, target_set in (
             ("banlist", self._banned_users),
@@ -302,7 +302,7 @@ class NetworkFilter:
                 if isinstance(username, str):
                     target_set.add(username)
 
-    def _populate_ip_country_data(self):
+    def _populate_ip_country_data(self) -> None:
 
         if self._loaded_ip_country_data:
             return
@@ -325,11 +325,11 @@ class NetworkFilter:
 
         self._loaded_ip_country_data = True
 
-    def _server_disconnect(self, _msg):
+    def _server_disconnect(self, _msg) -> None:
         self._ip_ban_requested.clear()
         self._ip_ignore_requested.clear()
 
-    def _quit(self):
+    def _quit(self) -> None:
 
         self._banned_users.clear()
         self._ignored_users.clear()
@@ -339,7 +339,7 @@ class NetworkFilter:
 
     # IP Filter List Management #
 
-    def _request_ip(self, username, action, request_list):
+    def _request_ip(self, username, action, request_list) -> None:
         """Ask for the IP address of an unknown user.
 
         Once a GetPeerAddress response arrives, either
@@ -486,7 +486,7 @@ class NetworkFilter:
 
     # IP Filter Rule Processing #
 
-    def _check_user_ip_filtered(self, ip_list, username=None, ip_address=None):
+    def _check_user_ip_filtered(self, ip_list, username=None, ip_address=None) -> bool:
         """Check if an IP address is present in a list."""
 
         if username and username in ip_list.values():
@@ -535,7 +535,7 @@ class NetworkFilter:
 
     # Callbacks #
 
-    def _update_saved_user_ip_addresses(self, ip_list, username, ip_address):
+    def _update_saved_user_ip_addresses(self, ip_list, username, ip_address) -> None:
         """Check if a user's IP address has changed and update the lists."""
 
         previous_ip_addresses = self._get_previous_user_ip_addresses(username, ip_list)
@@ -552,7 +552,7 @@ class NetworkFilter:
         if ip_address not in previous_ip_addresses:
             self._add_user_ip_to_list(ip_list, username, ip_address)
 
-    def _get_peer_address(self, msg):
+    def _get_peer_address(self, msg) -> None:
         """Server code 3."""
 
         username = msg.username
@@ -607,7 +607,7 @@ class NetworkFilter:
         events.emit("unban-user-ip", username, ip_addresses)
         return ip_addresses
 
-    def _ban_unban_user_ip_callback(self, username, ip_address):
+    def _ban_unban_user_ip_callback(self, username, ip_address) -> None:
 
         request = self._ip_ban_requested.pop(username, None)
 
@@ -661,7 +661,7 @@ class NetworkFilter:
         events.emit("unignore-user-ip", username, ip_addresses)
         return ip_addresses
 
-    def _ignore_unignore_user_ip_callback(self, username, ip_address):
+    def _ignore_unignore_user_ip_callback(self, username, ip_address) -> None:
 
         request = self._ip_ignore_requested.pop(username, None)
 
