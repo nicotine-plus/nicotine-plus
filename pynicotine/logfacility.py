@@ -157,7 +157,7 @@ class Logger:
                 "error": error
             }, should_log_file=should_log_file)
 
-    def _close_log_file(self, log_file):
+    def _close_log_file(self, log_file) -> None:
 
         try:
             log_file.handle.close()
@@ -170,11 +170,11 @@ class Logger:
 
         del self._log_files[log_file.path]
 
-    def _close_log_files(self):
+    def _close_log_files(self) -> None:
         for log_file in self._log_files.copy().values():
             self._close_log_file(log_file)
 
-    def _close_inactive_log_files(self):
+    def _close_inactive_log_files(self) -> None:
 
         current_time = time.monotonic()
 
@@ -251,7 +251,7 @@ class Logger:
     def delete_log(self, folder_path, basename):
         self._log_file_operation(folder_path, basename, self.delete_log_callback)
 
-    def _log_file_operation(self, folder_path, basename, callback):
+    def _log_file_operation(self, folder_path, basename, callback) -> None:
 
         folder_path_encoded = encode_path(folder_path)
         file_path = safe_path_join(folder_path, f"{basename}.log")
@@ -295,7 +295,7 @@ class Logger:
 
         return msg
 
-    def _add(self, msg, msg_args=None, title=None, level=LogLevel.DEFAULT, should_log_file=True):
+    def _add(self, msg, msg_args=None, title=None, level=LogLevel.DEFAULT, should_log_file=True) -> None:
 
         msg = self._format_log_message(level, msg, msg_args)
         timestamp_format = None
