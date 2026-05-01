@@ -195,8 +195,8 @@ class ChatRooms:
         room_name = " ".join(room_name.split())
 
         # Limit to 24 characters
-        room = room[:cls.ROOM_NAME_MAX_LENGTH]
-        return room
+        room_name = room_name[:cls.ROOM_NAME_MAX_LENGTH]
+        return room_name
 
     def clear_room_messages(self, room_name) -> None:
         events.emit("clear-room-messages", room_name)
@@ -227,20 +227,17 @@ class ChatRooms:
         core.send_message_to_server(SayChatroom(room_name, message))
         core.pluginhandler.outgoing_public_chat_notification(room_name, message)
 
-    def request_remove_room_operator(self, room_name, username):
+    def request_remove_room_operator(self, room_name, username) -> None:
         core.send_message_to_server(RemoveRoomOperator(room_name, username))
 
     def request_add_room_member(self, room_name, username) -> None:
         core.send_message_to_server(AddRoomMember(room_name, username))
 
-    def request_add_room_operator(self, room_name, username):
+    def request_add_room_operator(self, room_name, username) -> None:
         core.send_message_to_server(AddRoomOperator(room_name, username))
 
-    def request_remove_room_member(self, room_name, username):
+    def request_remove_room_member(self, room_name, username) -> None:
         core.send_message_to_server(RemoveRoomMember(room_name, username))
-
-    def request_remove_room_operator(self, room_name, username) -> None:
-        core.send_message_to_server(RemoveRoomOperator(room_name, username))
 
     def is_room_owner(self, room_name):
         private_room = self.private_rooms.get(room_name)
@@ -571,7 +568,7 @@ class ChatRooms:
 
         return None, None
 
-    def _say_chat_room(self, msg, is_global=False):
+    def _say_chat_room(self, msg, is_global=False) -> None:
         """Server code 13."""
 
         room_name = msg.room_name
