@@ -37,7 +37,7 @@ class CLIInputProcessor(Thread):
         self.prompt_callback = None
         self.prompt_silent = False
 
-    def run(self):
+    def run(self) -> None:
 
         while True:
             # Small time window to set custom prompt
@@ -50,7 +50,7 @@ class CLIInputProcessor(Thread):
                 # CLI input prompt is no longer available
                 return
 
-    def _handle_prompt_callback(self, user_input, callback):
+    def _handle_prompt_callback(self, user_input, callback) -> bool:
 
         if not callback:
             return False
@@ -58,7 +58,7 @@ class CLIInputProcessor(Thread):
         events.invoke_main_thread(callback, user_input)
         return True
 
-    def _handle_prompt_command(self, user_input):
+    def _handle_prompt_command(self, user_input) -> bool:
 
         if not user_input:
             return False
@@ -72,7 +72,7 @@ class CLIInputProcessor(Thread):
         events.emit_main_thread("cli-command", command, args)
         return True
 
-    def _handle_prompt(self):
+    def _handle_prompt(self) -> None:
 
         callback = self.prompt_callback
         input_func = getpass if self.prompt_silent else input
@@ -94,7 +94,7 @@ class CLIInputProcessor(Thread):
         # No custom prompt, treat input as command
         self._handle_prompt_command(user_input)
 
-    def get_prompt_line(self):
+    def get_prompt_line(self) -> str:
 
         if not READLINE_ENABLED or not self.is_alive():
             return ""
@@ -114,7 +114,7 @@ class CLI:
 
         events.connect("quit", self._quit)
 
-    def enable_prompt(self):
+    def enable_prompt(self) -> None:
 
         if not self._has_tty:
             return
@@ -129,7 +129,7 @@ class CLI:
 
         self._input_processor.start()
 
-    def enable_logging(self):
+    def enable_logging(self) -> None:
 
         for event_name, callback in (
             ("cli-prompt-finished", self._cli_prompt_finished),
@@ -137,7 +137,7 @@ class CLI:
         ):
             events.connect(event_name, callback)
 
-    def prompt(self, message, callback, is_silent=False):
+    def prompt(self, message, callback, is_silent: bool = False) -> None:
 
         if not self._has_tty:
             return
@@ -146,7 +146,7 @@ class CLI:
         self._input_processor.prompt_callback = callback
         self._input_processor.prompt_silent = is_silent
 
-    def _print_log_message(self, log_message, prompt_line=None):
+    def _print_log_message(self, log_message, prompt_line=None) -> None:
 
         try:
             if prompt_line:
@@ -160,11 +160,11 @@ class CLI:
             events.disconnect("log-message", self._log_message)
             self._log_message_queue.clear()
 
-    def _cli_prompt_finished(self):
+    def _cli_prompt_finished(self) -> None:
         while self._log_message_queue:
             self._print_log_message(self._log_message_queue.popleft())
 
-    def _log_message(self, timestamp_format, msg, _title, _level):
+    def _log_message(self, timestamp_format, msg, _title, _level) -> None:
 
         if timestamp_format:
             timestamp = time.strftime(timestamp_format)
@@ -180,7 +180,7 @@ class CLI:
 
         self._print_log_message(log_message, prompt_line=self._input_processor.get_prompt_line())
 
-    def _quit(self):
+    def _quit(self) -> None:
         """Restores TTY attributes and re-enables echo on quit."""
 
         if self._tty_attributes is None:
