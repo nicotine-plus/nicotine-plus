@@ -32,10 +32,10 @@ class Interests:
         ):
             events.connect(event_name, callback)
 
-    def _quit(self):
+    def _quit(self) -> None:
         self.similar_users.clear()
 
-    def _server_login(self, msg):
+    def _server_login(self, msg) -> None:
 
         if not msg.success:
             return
@@ -58,7 +58,7 @@ class Interests:
             if item:
                 core.send_message_to_server(AddThingIHate(item))
 
-    def add_thing_i_like(self, item):
+    def add_thing_i_like(self, item) -> None:
 
         item = item.strip().lower()
 
@@ -74,7 +74,7 @@ class Interests:
 
         events.emit("add-interest", item)
 
-    def add_thing_i_hate(self, item):
+    def add_thing_i_hate(self, item) -> None:
 
         item = item.strip().lower()
 
@@ -90,7 +90,7 @@ class Interests:
 
         events.emit("add-dislike", item)
 
-    def remove_thing_i_like(self, item):
+    def remove_thing_i_like(self, item) -> None:
 
         if not item and not isinstance(item, str):
             return
@@ -118,27 +118,27 @@ class Interests:
 
         events.emit("remove-dislike", item)
 
-    def request_global_recommendations(self):
+    def request_global_recommendations(self) -> None:
         core.send_message_to_server(GlobalRecommendations())
 
-    def request_item_recommendations(self, item):
+    def request_item_recommendations(self, item) -> None:
         core.send_message_to_server(ItemRecommendations(item))
 
-    def request_item_similar_users(self, item):
+    def request_item_similar_users(self, item) -> None:
         core.send_message_to_server(ItemSimilarUsers(item))
 
-    def request_recommendations(self):
+    def request_recommendations(self) -> None:
         core.send_message_to_server(Recommendations())
 
-    def request_similar_users(self):
+    def request_similar_users(self) -> None:
         core.send_message_to_server(SimilarUsers())
 
-    def _similar_users(self, msg):
+    def _similar_users(self, msg) -> None:
         """Server code 110."""
 
         # Limit number of users to prevent excessive status requests
         msg.users = msg.users[:self.MAX_SIMILAR_USERS]
-        new_usernames = set(x.username for x in msg.users)
+        new_usernames = {x.username for x in msg.users}
 
         # Unwatch and remove old users
         for username, similar_user in self.similar_users.items():
@@ -154,7 +154,7 @@ class Interests:
             # Request user status, speed and number of shared files
             core.users.watch_user(user.username, context="interests")
 
-    def _item_similar_users(self, msg):
+    def _item_similar_users(self, msg) -> None:
         """Server code 112."""
 
         self._similar_users(msg)
