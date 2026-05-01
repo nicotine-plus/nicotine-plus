@@ -8,8 +8,6 @@ import sys
 import threading
 
 from threading import Thread
-from types import FrameType
-from typing import IO
 from typing import TYPE_CHECKING
 
 import pynicotine
@@ -25,6 +23,8 @@ from pynicotine.slskmessages import ServerMessage
 from pynicotine.slskmessages import ServerReconnect
 
 if TYPE_CHECKING:
+    from types import FrameType
+    from typing import IO
     from pynicotine.buddies import Buddies
     from pynicotine.chatrooms import ChatRooms
     from pynicotine.downloads import Downloads
@@ -251,7 +251,7 @@ class Core:
     def confirm_quit(self) -> None:
         events.emit("confirm-quit")
 
-    def quit(self, signal_type: int | None = None, _frame: FrameType | None = None) -> FrameType | None:
+    def quit(self, signal_type: int | None = None, _frame: FrameType | None = None) -> None:
 
         log.add(_("Quitting %(program)s %(version)s, %(status)s…"), {
             "program": pynicotine.__application_name__,
