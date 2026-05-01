@@ -494,7 +494,7 @@ class Scanner:
                 if share_db is not None:
                     share_db.close()
 
-    def rescan_dirs(self, permission_level):
+    def rescan_dirs(self, permission_level) -> None:
 
         shared_public_folders, shared_buddy_folders, shared_trusted_folders = self.share_groups
 
@@ -564,7 +564,7 @@ class Scanner:
 
         return False
 
-    def scan_shared_folder(self, shared_folder_path, old_mtimes, old_files):
+    def scan_shared_folder(self, shared_folder_path, old_mtimes, old_files) -> None:
         """Scan a shared folder for all subfolders, files and their metadata."""
 
         folder_paths = [shared_folder_path]
@@ -738,7 +738,7 @@ class Scanner:
         return [virtual_file_path, size, quality, duration]
 
     @staticmethod
-    def get_folder_stream(file_list):
+    def get_folder_stream(file_list) -> bytes:
         """Pack all files and metadata in folder."""
 
         stream = bytearray()
@@ -798,7 +798,7 @@ class Shares:
         ):
             events.connect(event_name, callback)
 
-    def _start(self):
+    def _start(self) -> None:
 
         if core.cli_rescanning:
             # CLI rescan is performed elsewhere
@@ -810,17 +810,17 @@ class Shares:
         self.convert_shares()
         self.rescan_shares(init=True, rescan=rescan_startup)
 
-    def _quit(self):
+    def _quit(self) -> None:
 
         self.stop_scanner()
         self.close_shares(self.share_dbs)
         self.initialized = False
 
-    def _server_login(self, msg):
+    def _server_login(self, msg) -> None:
         if msg.success:
             self.send_num_shared_folders_files()
 
-    def _server_disconnect(self, _msg):
+    def _server_disconnect(self, _msg) -> None:
         self._requested_share_times.clear()
 
     # Shares-related Actions #
@@ -831,7 +831,7 @@ class Shares:
         return Database(encode_path(db_path))
 
     @staticmethod
-    def remove_db_file(db_path):
+    def remove_db_file(db_path) -> None:
 
         db_path_encoded = encode_path(db_path)
 
@@ -880,7 +880,7 @@ class Shares:
 
         return "__INVALID_SHARE__" + virtual_path
 
-    def convert_shares(self):
+    def convert_shares(self) -> None:
 
         def _convert_share(shared_folder):
             if isinstance(shared_folder, tuple):
@@ -1278,7 +1278,7 @@ class Shares:
         scanner_process = context.Process(target=scanner.run, daemon=True)
         return scanner_process, reader, writer
 
-    def _process_scanner(self, process, reader, emit_event=None):
+    def _process_scanner(self, process, reader, emit_event=None) -> bool:
 
         successful = False
         current_folder_count = None
@@ -1330,7 +1330,7 @@ class Shares:
 
         return successful
 
-    def _shares_ready(self, successful):
+    def _shares_ready(self, successful) -> None:
 
         if self._scanner_process is not None and self._scanner_process.is_alive():
             # Scanner was restarted
@@ -1361,7 +1361,7 @@ class Shares:
 
     # Network Messages #
 
-    def _shared_file_list_request(self, msg):
+    def _shared_file_list_request(self, msg) -> None:
         """Peer code 4."""
 
         username = msg.username
@@ -1383,7 +1383,7 @@ class Shares:
 
         core.send_message_to_peer(username, shares_list)
 
-    def _folder_contents_request(self, msg):
+    def _folder_contents_request(self, msg) -> None:
         """Peer code 36."""
 
         ip_address, _port = msg.addr
