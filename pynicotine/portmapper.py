@@ -607,13 +607,13 @@ class PortMapper:
         self._natpmp = NATPMP()
         self._upnp = UPnP()
 
-    def _wait_until_ready(self):
+    def _wait_until_ready(self) -> None:
 
         while self._is_mapping_port:
             # Port mapping in progress, wait until it's finished
             time.sleep(0.1)
 
-    def _add_port_mapping(self):
+    def _add_port_mapping(self) -> None:
 
         self._wait_until_ready()
 
@@ -658,7 +658,7 @@ class PortMapper:
         })
         self._is_mapping_port = False
 
-    def _remove_port_mapping(self):
+    def _remove_port_mapping(self) -> None:
 
         self._wait_until_ready()
 
@@ -676,11 +676,11 @@ class PortMapper:
         self._active_implementation = None
         self._is_mapping_port = False
 
-    def _start_renewal_timer(self):
+    def _start_renewal_timer(self) -> None:
         self._cancel_renewal_timer()
         self._timer = events.schedule(delay=self.RENEWAL_INTERVAL, callback=self.add_port_mapping)
 
-    def _cancel_renewal_timer(self):
+    def _cancel_renewal_timer(self) -> None:
         events.cancel_scheduled(self._timer)
 
     def set_port(self, port, local_ip_address):
