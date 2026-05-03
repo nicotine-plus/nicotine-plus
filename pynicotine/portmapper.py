@@ -173,7 +173,7 @@ class NATPMP(BaseImplementation):
                     response = self.PortmapResponse(message=sock.recv(16))
                     return response.result
 
-                except TimeoutError:
+                except socket.timeout:
                     timeout *= 2
 
         log.add_debug("NAT-PMP: Giving up, all %s portmap requests timed out", self.REQUEST_ATTEMPTS)
@@ -409,7 +409,7 @@ class UPnP(BaseImplementation):
                         UPnP.SSDP.add_service(
                             services, locations, UPnP.SSDPResponse(message.decode("utf-8", "replace")))
 
-                    except TimeoutError:
+                    except socket.timeout:
                         break
 
                 log.add_debug("UPnP: %s service(s) detected", len(services))

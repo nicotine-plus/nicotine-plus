@@ -4,8 +4,6 @@
 import os
 import time
 
-from pathlib import Path
-
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -147,7 +145,9 @@ class UserInfo:
     def save_user_picture(file_path: str, picture_bytes: bytes) -> None:
 
         try:
-            Path(encode_path(file_path)).write_bytes(picture_bytes)
+            with open(encode_path(file_path), "wb") as file_handle:
+                file_handle.write(picture_bytes)
+
             log.add(_("Picture saved to %s"), file_path)
 
         except Exception as error:

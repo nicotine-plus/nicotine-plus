@@ -10,8 +10,7 @@ import os
 import sys
 
 from collections.abc import Iterable
-from typing import Any, Literal
-
+from typing import Literal
 
 
 UINT32_LIMIT = 4294967295
@@ -168,7 +167,7 @@ def clean_path(path: str) -> str:
         if char in path:
             path = path.replace(char, REPLACEMENTCHAR)
 
-    path = f"{drive}{path}"
+    path = "".join([drive, path])
 
     # Path can never end with a period or space on Windows machines
     path = path.rstrip(". ")
@@ -234,7 +233,7 @@ def human_length(seconds: float) -> str:
     return f"{minutes}:{seconds:02d}"
 
 
-def _human_speed_or_size(number: float, unit: Literal["B"] | None = None) -> str:
+def _human_speed_or_size(number: int, unit: Literal["B"] | None = None) -> str:
 
     if unit == "B":
         return humanize(number)
@@ -263,7 +262,9 @@ def humanize(number: float) -> str:
     return f"{number:n}"
 
 
-def factorize(filesize: str, base: int = 1024) -> tuple[int, int] | tuple[None, int] | tuple[None, None]:
+def factorize(
+    filesize: str, base: int = 1024
+) -> tuple[int | None, int | None]:
     """Converts filesize string with a given unit into raw integer size,
     defaults to binary for "k", "m", "g" suffixes (KiB, MiB, GiB)"""
 
@@ -470,7 +471,7 @@ def execute_command(command: str, replacement: str | None = None, background: bo
 
     # subcommands is now: [['C:\Program Files\WinAmp\WinAmp.exe', '--xforce', '--title=My Title', '$'], ['flite', '-t']]
     if replacement:
-        for i in range(len(subcommands)):
+        for i, _ in enumerate(subcommands):
             subcommands[i] = [x.replace(placeholder, replacement) for x in subcommands[i]]
 
     # Chaining commands...

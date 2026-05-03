@@ -549,7 +549,7 @@ class Scanner:
             else:
                 entry_stat = entry.stat()
 
-            return bool(entry_stat.st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN)
+            return entry_stat.st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN
 
         return False
 
