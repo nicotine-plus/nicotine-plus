@@ -30,7 +30,7 @@ class BrowsedUser:
     __slots__ = ("username", "public_folders", "private_folders", "num_folders", "num_files",
                  "shared_size")
 
-    def __init__(self, username):
+    def __init__(self, username: str):
 
         self.username = username
         self.public_folders = {}
@@ -39,7 +39,7 @@ class BrowsedUser:
         self.num_files = None
         self.shared_size = None
 
-    def clear(self):
+    def clear(self) -> None:
 
         self.public_folders.clear()
         self.private_folders.clear()
@@ -73,13 +73,13 @@ class UserBrowse:
         for username in self.users:
             core.users.watch_user(username, context="userbrowse")  # Get notified of user status
 
-    def send_upload_attempt_notification(self, username):
+    def send_upload_attempt_notification(self, username: str) -> None:
         """Send notification to user when attempting to initiate upload from
         our end."""
 
         core.send_message_to_peer(username, UploadQueueNotification())
 
-    def _show_user(self, username, path=None, new_request=False, switch_page=True) -> None:
+    def _show_user(self, username: str, path=None, new_request: bool = False, switch_page: bool = True) -> None:
 
         if username not in self.users:
             self.users[username] = BrowsedUser(username)
@@ -89,18 +89,18 @@ class UserBrowse:
             switch_page=switch_page
         )
 
-    def remove_user(self, username):
+    def remove_user(self, username: str) -> None:
 
         del self.users[username]
         core.send_message_to_network_thread(RemoveAllowedResponse(SharedFileListResponse, username))
         core.users.unwatch_user(username, context="userbrowse")
         events.emit("user-browse-remove-user", username)
 
-    def remove_all_users(self):
+    def remove_all_users(self) -> None:
         for username in self.users.copy():
             self.remove_user(username)
 
-    def _parse_local_shares(self, username, msg) -> None:
+    def _parse_local_shares(self, username: str, msg) -> None:
         """Parse a local shares list and show it in the UI."""
 
         msg.username = username
@@ -112,7 +112,7 @@ class UserBrowse:
 
         events.emit_main_thread("shared-file-list-response", msg)
 
-    def browse_local_shares(self, path=None, permission_level=None, new_request=False, switch_page=True):
+    def browse_local_shares(self, path=None, permission_level=None, new_request: bool = False, switch_page: bool = True) -> None:
         """Browse your own shares."""
 
         username = core.users.login_username or config.sections["server"]["login"]
@@ -137,7 +137,7 @@ class UserBrowse:
         self._show_user(username, path=path, new_request=new_request, switch_page=switch_page)
         core.users.watch_user(username, context="userbrowse")
 
-    def request_user_shares(self, username):
+    def request_user_shares(self, username: str) -> None:
 
         if core.users.login_status == UserStatus.OFFLINE:
             events.emit("shared-file-list-failed", username, is_offline=True)
@@ -187,7 +187,7 @@ class UserBrowse:
 
         return shares_folder
 
-    def iter_matching_folders(self, requested_folder_path, browsed_user, recurse=False):
+    def iter_matching_folders(self, requested_folder_path, browsed_user, recurse: bool = False):
 
         for folders in (browsed_user.public_folders, browsed_user.private_folders):
             for folder_path, files in folders.items():
@@ -200,7 +200,7 @@ class UserBrowse:
                 if not recurse:
                     return
 
-    def load_shares_list_from_disk(self, file_path) -> None:
+    def load_shares_list_from_disk(self, file_path: str) -> None:
 
         file_path_encoded = encode_path(file_path)
 
@@ -296,7 +296,7 @@ class UserBrowse:
 
         events.emit("shared-file-list-response", msg)
 
-    def save_shares_list_to_disk(self, username) -> None:
+    def save_shares_list_to_disk(self, username: str) -> None:
 
         folder_path = self.create_user_shares_folder()
 
@@ -341,8 +341,8 @@ class UserBrowse:
         core.downloads.enqueue_download(
             username, file_path, folder_path=download_folder_path, size=file_size, file_attributes=file_attributes)
 
-    def download_folder(self, username, requested_folder_path, download_folder_path=None, recurse=False,
-                        check_num_files=True) -> None:
+    def download_folder(self, username: str, requested_folder_path, download_folder_path=None, recurse: bool = False,
+                        check_num_files: bool = True) -> None:
 
         if requested_folder_path is None:
             return
@@ -381,14 +381,14 @@ class UserBrowse:
                         username, file_path, folder_path=destination_folder_path, size=file_size,
                         file_attributes=file_attributes)
 
-    def upload_file(self, username, folder_path, file_data) -> None:
+    def upload_file(self, username: str, folder_path: str, file_data) -> None:
 
         _code, basename, *_unused = file_data
-        file_path = "\\".join([folder_path, basename])
+        file_path = f"{folder_path}\\{basename}"
 
         core.uploads.enqueue_upload(username, file_path)
 
-    def upload_folder(self, username, requested_folder_path, local_browsed_user, recurse=False) -> None:
+    def upload_folder(self, username: str, requested_folder_path, local_browsed_user, recurse: bool = False) -> None:
 
         if not requested_folder_path or not username:
             return
@@ -397,10 +397,10 @@ class UserBrowse:
             requested_folder_path, browsed_user=local_browsed_user, recurse=recurse
         ):
             for _code, basename, *_unused in files:
-                file_path = "\\".join([folder_path, basename])
+                file_path = f"{folder_path}\\{basename}"
                 core.uploads.enqueue_upload(username, file_path)
 
-    def show_user_statistics(self, username) -> None:
+    def show_user_statistics(self, username: str) -> None:
 
         browsed_user = self.users.get(username)
 
@@ -416,13 +416,13 @@ class UserBrowse:
         }, title=_("User Statistics"))
 
     @staticmethod
-    def get_soulseek_url(username, path):
+    def get_soulseek_url(username: str, path: str) -> str:
 
         import urllib.parse
         path = path.replace("\\", "/")
         return "slsk://" + urllib.parse.quote(f"{username}/{path}")
 
-    def open_soulseek_url(self, url):
+    def open_soulseek_url(self, url: str) -> None:
 
         if not url.startswith("slsk://"):
             return
@@ -435,7 +435,7 @@ class UserBrowse:
 
         self.browse_user(username, path=file_path)
 
-    def _peer_connection_error(self, username, conn_type, msgs, is_offline=False) -> None:
+    def _peer_connection_error(self, username: str, conn_type, msgs, is_offline: bool = False) -> None:
 
         if not msgs:
             return

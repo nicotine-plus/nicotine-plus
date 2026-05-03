@@ -1,5 +1,8 @@
 # SPDX-FileCopyrightText: 2020-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -28,10 +31,14 @@ from pynicotine.utils import find_whole_word
 from pynicotine.utils import replace_text
 
 
+if TYPE_CHECKING:
+    from slskmessages import UserData
+
+
 class JoinedRoom:
     __slots__ = ("name", "is_private", "users", "tickers")
 
-    def __init__(self, name, is_private=False):
+    def __init__(self, name: str, is_private: bool = False):
 
         self.name = name
         self.is_private = is_private
@@ -42,10 +49,10 @@ class JoinedRoom:
 class PrivateRoom:
     __slots__ = ("name", "owner", "members", "operators")
 
-    def __init__(self, name):
+    def __init__(self, name: str):
 
         self.name = name
-        self.owner = None
+        self.owner: str | None = None
         self.members = set()
         self.operators = set()
 
@@ -133,7 +140,9 @@ class ChatRooms:
         self.private_rooms.clear()
         self.update_completions()
 
-    def show_room(self, room_name, is_private=False, switch_page=True, remembered=False) -> None:
+    def show_room(
+        self, room_name: str, is_private: bool = False, switch_page: bool = True, remembered: bool = False
+    ) -> None:
 
         room = self.joined_rooms.get(room_name)
 
@@ -156,7 +165,7 @@ class ChatRooms:
 
         events.emit("show-room", room_name, is_private, switch_page, remembered)
 
-    def remove_room(self, room_name, is_permanent=True) -> None:
+    def remove_room(self, room_name: str, is_permanent: bool = True) -> None:
 
         if room_name not in self.joined_rooms:
             return
@@ -180,7 +189,7 @@ class ChatRooms:
 
         events.emit("remove-room", room_name)
 
-    def remove_all_rooms(self, is_permanent=True) -> None:
+    def remove_all_rooms(self, is_permanent: bool = True) -> None:
         for room_name in self.joined_rooms.copy():
             self.remove_room(room_name, is_permanent)
 
@@ -250,7 +259,7 @@ class ChatRooms:
         private_room = self.private_rooms.get(room_name)
         return private_room is not None and core.users.login_username in private_room.operators
 
-    def request_room_list(self):
+    def request_room_list(self) -> None:
         core.send_message_to_server(RoomList())
 
     def request_cancel_room_ownership(self, room_name):
@@ -267,7 +276,7 @@ class ChatRooms:
 
         core.send_message_to_server(CancelRoomMembership(room_name))
 
-    def request_enable_room_invitations(self, enabled) -> None:
+    def request_enable_room_invitations(self, enabled: bool) -> None:
         core.send_message_to_server(EnableRoomInvitations(enabled))
 
     def request_update_ticker(self, room_name, message) -> None:
@@ -532,7 +541,7 @@ class ChatRooms:
             self.update_completions()
             core.privatechat.update_completions()
 
-    def get_message_type(self, username, message) -> str:
+    def get_message_type(self, username: str, message: str) -> str:
 
         if message.startswith("/me "):
             return "action"
@@ -542,7 +551,7 @@ class ChatRooms:
 
         return "remote"
 
-    def get_mention_type(self, username, message):
+    def get_mention_type(self, username: str, message: str):
 
         message_lower = message.lower()
 
@@ -568,7 +577,7 @@ class ChatRooms:
 
         return None, None
 
-    def _say_chat_room(self, msg, is_global=False) -> None:
+    def _say_chat_room(self, msg, is_global: bool = False) -> None:
         """Server code 13."""
 
         room_name = msg.room_name

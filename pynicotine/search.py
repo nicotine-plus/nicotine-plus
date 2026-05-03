@@ -64,7 +64,7 @@ class SearchRequest:
 class WishSearchRequest(SearchRequest):
     __slots__ = ("auto_search", "filter_mode", "time_added", "is_ignored", "custom_filters", "ignored_users")
 
-    def __init__(self, *args, auto_search=True, filter_mode=ResultFilterMode.NONE, time_added=None,
+    def __init__(self, *args, auto_search: bool = True, filter_mode=ResultFilterMode.NONE, time_added=None,
                  custom_filters=None, ignored_users=None, **kwargs):
 
         super().__init__(*args, **kwargs)
@@ -87,7 +87,7 @@ class WishSearchRequest(SearchRequest):
             self.ignored_users = set()
 
     @property
-    def num_active_filters(self):
+    def num_active_filters(self) -> int:
 
         num_filters = 0
 
@@ -223,16 +223,16 @@ class Search:
     # Outgoing Search Requests #
 
     @staticmethod
-    def add_allowed_token(token):
+    def add_allowed_token(token: int) -> None:
         """Allow parsing search result messages for a search ID."""
         core.send_message_to_network_thread(AddAllowedResponse(FileSearchResponse, token))
 
     @staticmethod
-    def remove_allowed_token(token):
+    def remove_allowed_token(token: int) -> None:
         """Disallow parsing search result messages for a search ID."""
         core.send_message_to_network_thread(RemoveAllowedResponse(FileSearchResponse, token))
 
-    def do_search(self, search_term, mode, room=None, users=None, switch_page=True):
+    def do_search(self, search_term: str, mode, room=None, users=None, switch_page: bool = True) -> None:
 
         # Validate search term and run it through plugins
         search_term, room, users = self._process_search_term(search_term, mode, room, users)
@@ -256,7 +256,7 @@ class Search:
         events.emit("add-search", search.token, search, switch_page)
         self.send_search_request(search.token)
 
-    def send_search_request(self, token):
+    def send_search_request(self, token: int) -> None:
 
         search = self.searches.get(token)
 
@@ -281,7 +281,7 @@ class Search:
         elif search.mode == "user":
             self._send_peer_search_request(search)
 
-    def remove_search(self, token):
+    def remove_search(self, token: int) -> None:
 
         self.remove_allowed_token(token)
         search = self.searches.get(token)
@@ -296,14 +296,14 @@ class Search:
 
         events.emit("remove-search", token)
 
-    def remove_all_searches(self):
+    def remove_all_searches(self) -> None:
         for token in self.searches.copy():
             self.remove_search(token)
 
-    def show_search(self, token):
+    def show_search(self, token: int) -> None:
         events.emit("show-search", token)
 
-    def add_wish(self, wish, auto_search=True):
+    def add_wish(self, wish, auto_search: bool = True) -> None:
 
         if not wish:
             return
@@ -315,8 +315,8 @@ class Search:
 
         events.emit("add-wish", wish)
 
-    def update_wish_filters(self, wish, filter_in="", filter_out="", size="", bitrate="", has_free_slot=False,
-                            country="", file_type="", length="", is_public=False):
+    def update_wish_filters(self, wish, filter_in="", filter_out="", size="", bitrate="", has_free_slot: bool = False,
+                            country="", file_type="", length="", is_public: bool = False) -> None:
 
         search = self.wishlist.get(wish)
 
@@ -339,7 +339,7 @@ class Search:
 
         events.emit("update-wish-filters", wish)
 
-    def clear_wish_filters(self, wish):
+    def clear_wish_filters(self, wish) -> None:
 
         search = self.wishlist.get(wish)
 
@@ -351,7 +351,7 @@ class Search:
 
         events.emit("clear-wish-filters", wish)
 
-    def remove_wish(self, wish):
+    def remove_wish(self, wish) -> None:
 
         if wish not in self.wishlist:
             return
@@ -366,7 +366,7 @@ class Search:
     def is_wish(self, wish) -> bool:
         return wish in self.wishlist
 
-    def _add_search(self, token, search_term, mode, room=None, users=None) -> SearchRequest:
+    def _add_search(self, token: int, search_term: str, mode, room=None, users=None) -> SearchRequest:
 
         term_sanitized, term_transmitted, included_words, excluded_words = self._sanitize_search_term(search_term)
 
@@ -377,7 +377,7 @@ class Search:
 
         return search
 
-    def _add_wish_search(self, token, search_term, auto_search=True, filter_mode=ResultFilterMode.NONE,
+    def _add_wish_search(self, token: int, search_term: str, auto_search: bool = True, filter_mode=ResultFilterMode.NONE,
                          time_added=None, custom_filters=None, ignored_users=None) -> WishSearchRequest:
 
         term_sanitized, term_transmitted, included_words, excluded_words = self._sanitize_search_term(search_term)
@@ -391,7 +391,7 @@ class Search:
 
         return search
 
-    def _sanitize_search_term(self, search_term):
+    def _sanitize_search_term(self, search_term: str):
 
         included_words = []
         excluded_words = []
@@ -463,7 +463,7 @@ class Search:
 
         return search_term, search_term_transmitted, included_words, excluded_words
 
-    def _process_search_term(self, search_term, mode, room=None, users=None):
+    def _process_search_term(self, search_term: str, mode, room=None, users=None):
 
         search_term = search_term.strip()
 
@@ -726,7 +726,7 @@ class Search:
         return num_fileinfos, fileinfos, private_fileinfos
 
     @staticmethod
-    def _update_search_results(results, word_indices, excluded=False):
+    def _update_search_results(results, word_indices, excluded: bool = False):
         """Updates the search result list with indices for a new word."""
 
         if not word_indices:
@@ -826,7 +826,7 @@ class Search:
 
         return results
 
-    def _process_search_request(self, search_term, username, token) -> None:
+    def _process_search_request(self, search_term: str, username: str, token: int) -> None:
         """This section is accessed every time a search request arrives,
         several times per second.
 

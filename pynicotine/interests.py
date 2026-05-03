@@ -121,10 +121,10 @@ class Interests:
     def request_global_recommendations(self) -> None:
         core.send_message_to_server(GlobalRecommendations())
 
-    def request_item_recommendations(self, item) -> None:
+    def request_item_recommendations(self, item: str) -> None:
         core.send_message_to_server(ItemRecommendations(item))
 
-    def request_item_similar_users(self, item) -> None:
+    def request_item_similar_users(self, item: str) -> None:
         core.send_message_to_server(ItemSimilarUsers(item))
 
     def request_recommendations(self) -> None:

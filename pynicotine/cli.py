@@ -57,7 +57,7 @@ class CLIInputProcessor(Thread):
         events.invoke_main_thread(callback, user_input)
         return True
 
-    def _handle_prompt_command(self, user_input) -> bool:
+    def _handle_prompt_command(self, user_input: str) -> bool:
 
         if not user_input:
             return False
@@ -65,8 +65,7 @@ class CLIInputProcessor(Thread):
         command, _separator, args = user_input.strip().partition(" ")
         args = args.strip()
 
-        if command.startswith("/"):
-            command = command[1:]
+        command = command.removeprefix("/")
 
         events.emit_main_thread("cli-command", command, args)
         return True
@@ -136,7 +135,7 @@ class CLI:
         ):
             events.connect(event_name, callback)
 
-    def prompt(self, message, callback, is_silent: bool = False) -> None:
+    def prompt(self, message: str, callback, is_silent: bool = False) -> None:
 
         if not self._has_tty:
             return

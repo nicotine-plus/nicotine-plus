@@ -5,9 +5,9 @@ __application_name__ = "Nicotine+"
 __application_id__ = "org.nicotine_plus.Nicotine"
 __version__ = "3.4.0.dev2"
 __author__ = "Nicotine+ Team"
-__copyright__ = """© 2004–2026 Nicotine+ Contributors
-© 2003–2004 Nicotine Contributors
-© 2001–2003 PySoulSeek Contributors"""
+__copyright__ = """© 2004-2026 Nicotine+ Contributors
+© 2003-2004 Nicotine Contributors
+© 2001-2003 PySoulSeek Contributors"""
 __website_url__ = "https://nicotine-plus.org"
 __privileges_url__ = "https://www.slsknet.org/qtlogin.php?username=%s"
 __port_checker_url__ = "https://www.slsknet.org/porttest.php?port=%s"
@@ -125,7 +125,7 @@ You should install Python %(min_version)s or newer.""") % {
     return None
 
 
-def set_up_python():
+def set_up_python() -> None:
 
     if sys.stdout is not None:
         # Always use UTF-8 and enable line buffering
@@ -140,7 +140,7 @@ def set_up_python():
         faulthandler.enable()
 
 
-def rename_process(new_name, debug_info=False):
+def rename_process(new_name: bytes, debug_info: bool = False) -> None:
 
     errors = []
 
