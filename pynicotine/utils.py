@@ -10,8 +10,7 @@ import os
 import sys
 
 from collections.abc import Iterable
-from typing import Any, Literal
-
+from typing import Literal
 
 
 UINT32_LIMIT = 4294967295
@@ -225,7 +224,7 @@ def human_length(seconds: float) -> str:
     return f"{minutes}:{seconds:02d}"
 
 
-def _human_speed_or_size(number: float, unit: Literal["B"] | None = None) -> str:
+def _human_speed_or_size(number: int, unit: Literal["B"] | None = None) -> str:
 
     if unit == "B":
         return humanize(number)
@@ -254,7 +253,9 @@ def humanize(number: float) -> str:
     return f"{number:n}"
 
 
-def factorize(filesize: str, base: int = 1024) -> tuple[int, int] | tuple[None, int] | tuple[None, None]:
+def factorize(
+    filesize: str, base: int = 1024
+) -> tuple[int | None, int | None]:
     """Converts filesize string with a given unit into raw integer size,
     defaults to binary for "k", "m", "g" suffixes (KiB, MiB, GiB)"""
 
