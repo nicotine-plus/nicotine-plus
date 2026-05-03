@@ -90,7 +90,7 @@ class Logger:
         for level in config.sections["logging"]["debugmodes"]:
             self._log_levels.add(level)
 
-    def add_log_level(self, log_level, is_permanent=True):
+    def add_log_level(self, log_level, is_permanent: bool = True):
 
         self._log_levels.add(log_level)
 
@@ -102,7 +102,7 @@ class Logger:
         if log_level not in log_levels:
             log_levels.append(log_level)
 
-    def remove_log_level(self, log_level, is_permanent=True):
+    def remove_log_level(self, log_level, is_permanent: bool = True):
 
         self._log_levels.discard(log_level)
 
@@ -116,7 +116,7 @@ class Logger:
 
     # Log Files #
 
-    def _get_log_file(self, folder_path, basename, should_create_file=True):
+    def _get_log_file(self, folder_path, basename: str, should_create_file: bool = True):
 
         file_path = os.path.join(folder_path, clean_file(f"{basename}.log"))
         log_file = self._log_files.get(file_path)
@@ -142,7 +142,7 @@ class Logger:
 
         return log_file
 
-    def write_log_file(self, folder_path, basename, text, timestamp=None):
+    def write_log_file(self, folder_path, basename: str, text: str, timestamp=None):
 
         folder_path = os.path.normpath(folder_path)
 
@@ -203,7 +203,7 @@ class Logger:
         self.room_folder_path = self._normalize_folder_path(config.sections["logging"]["roomlogsdir"])
         self.private_chat_folder_path = self._normalize_folder_path(config.sections["logging"]["privatelogsdir"])
 
-    def open_log(self, folder_path, basename):
+    def open_log(self, folder_path, basename: str):
         self._log_file_operation(folder_path, basename, self.open_log_callback)
 
     def _get_log_lines(self, log_file, num_lines):
@@ -237,7 +237,7 @@ class Logger:
         file_handle.seek(0, os.SEEK_END)
         return b''.join(blocks).splitlines()[-num_lines:]
 
-    def read_log(self, folder_path, basename, num_lines):
+    def read_log(self, folder_path, basename: str, num_lines):
 
         lines = None
         log_file = None
@@ -259,10 +259,10 @@ class Logger:
 
         return lines
 
-    def delete_log(self, folder_path, basename):
+    def delete_log(self, folder_path, basename: str):
         self._log_file_operation(folder_path, basename, self.delete_log_callback)
 
-    def _log_file_operation(self, folder_path, basename, callback) -> None:
+    def _log_file_operation(self, folder_path, basename: str, callback) -> None:
 
         folder_path_encoded = encode_path(folder_path)
         file_path = os.path.join(folder_path, clean_file(f"{basename}.log"))
@@ -282,7 +282,7 @@ class Logger:
     def delete_log_callback(self, file_path):
         os.remove(encode_path(file_path))
 
-    def log_transfer(self, basename, msg, msg_args=None):
+    def log_transfer(self, basename: str, msg, msg_args=None):
 
         if not config.sections["logging"]["transfers"]:
             return
@@ -306,7 +306,7 @@ class Logger:
 
         return msg
 
-    def _add(self, msg, msg_args=None, title=None, level=LogLevel.DEFAULT, should_log_file=True) -> None:
+    def _add(self, msg, msg_args=None, title=None, level=LogLevel.DEFAULT, should_log_file: bool = True) -> None:
 
         msg = self._format_log_message(level, msg, msg_args)
 
@@ -369,7 +369,7 @@ class Logger:
         if level in self._log_levels:
             self._add(msg, msg_args, level=level)
 
-    def add_msg_contents(self, msg, is_outgoing=False):
+    def add_msg_contents(self, msg, is_outgoing: bool = False):
 
         level = LogLevel.MESSAGE
 

@@ -1,5 +1,8 @@
 # SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -24,10 +27,14 @@ from pynicotine.utils import find_whole_word
 from pynicotine.utils import replace_text
 
 
+if TYPE_CHECKING:
+    from slskmessages import UserData
+
+
 class JoinedRoom:
     __slots__ = ("name", "is_private", "users", "tickers")
 
-    def __init__(self, name, is_private=False):
+    def __init__(self, name: str, is_private: bool = False):
 
         self.name = name
         self.is_private = is_private
@@ -38,10 +45,10 @@ class JoinedRoom:
 class PrivateRoom:
     __slots__ = ("name", "owner", "members", "operators")
 
-    def __init__(self, name):
+    def __init__(self, name: str):
 
         self.name = name
-        self.owner = None
+        self.owner: str | None = None
         self.members = set()
         self.operators = set()
 
@@ -127,7 +134,7 @@ class ChatRooms:
         self.private_rooms.clear()
         self.update_completions()
 
-    def show_room(self, room, is_private=False, switch_page=True, remembered=False) -> None:
+    def show_room(self, room: str, is_private: bool = False, switch_page: bool = True, remembered: bool = False) -> None:
 
         room_obj = self.joined_rooms.get(room)
 
@@ -146,7 +153,7 @@ class ChatRooms:
 
         events.emit("show-room", room, is_private, switch_page, remembered)
 
-    def remove_room(self, room, is_permanent=True) -> None:
+    def remove_room(self, room: str, is_permanent: bool = True) -> None:
 
         if room not in self.joined_rooms:
             return
@@ -170,12 +177,12 @@ class ChatRooms:
 
         events.emit("remove-room", room)
 
-    def remove_all_rooms(self, is_permanent=True) -> None:
+    def remove_all_rooms(self, is_permanent: bool = True) -> None:
         for room in self.joined_rooms.copy():
             self.remove_room(room, is_permanent)
 
     @classmethod
-    def sanitize_room_name(cls, room):
+    def sanitize_room_name(cls, room: str) -> str:
         """Sanitize room name according to server requirements."""
 
         # Replace non-ASCII characters
@@ -188,13 +195,13 @@ class ChatRooms:
         room = room[:cls.ROOM_NAME_MAX_LENGTH]
         return room
 
-    def clear_room_messages(self, room) -> None:
+    def clear_room_messages(self, room: str) -> None:
         events.emit("clear-room-messages", room)
 
-    def echo_message(self, room, message, message_type="local") -> None:
+    def echo_message(self, room: str, message: str, message_type: str = "local") -> None:
         events.emit("echo-room-message", room, message, message_type)
 
-    def send_message(self, room, message) -> None:
+    def send_message(self, room: str, message: str) -> None:
 
         if room not in self.joined_rooms:
             return
@@ -214,54 +221,53 @@ class ChatRooms:
         core.send_message_to_server(SayChatroom(room, message))
         core.pluginhandler.outgoing_public_chat_notification(room, message)
 
-    def request_add_room_member(self, room, username) -> None:
+    def request_add_room_member(self, room: str, username: str) -> None:
         core.send_message_to_server(AddRoomMember(room, username))
 
-    def request_add_room_operator(self, room, username) -> None:
+    def request_add_room_operator(self, room: str, username: str) -> None:
         core.send_message_to_server(AddRoomOperator(room, username))
 
-    def request_remove_room_member(self, room, username) -> None:
+    def request_remove_room_member(self, room: str, username: str) -> None:
         core.send_message_to_server(RemoveRoomMember(room, username))
 
-    def request_remove_room_operator(self, room, username) -> None:
+    def request_remove_room_operator(self, room: str, username: str) -> None:
         core.send_message_to_server(RemoveRoomOperator(room, username))
 
-    def is_room_owner(self, room):
+    def is_room_owner(self, room: str) -> bool:
         private_room = self.private_rooms.get(room)
         return private_room is not None and private_room.owner == core.users.login_username
 
-    def is_room_member(self, room):
+    def is_room_member(self, room: str) -> bool:
         return room in self.private_rooms
 
-    def is_room_operator(self, room):
+    def is_room_operator(self, room: str) -> bool:
         private_room = self.private_rooms.get(room)
         return private_room is not None and core.users.login_username in private_room.operators
 
-    def request_room_list(self):
+    def request_room_list(self) -> None:
         core.send_message_to_server(RoomList())
 
-    def request_cancel_room_ownership(self, room):
+    def request_cancel_room_ownership(self, room: str) -> None:
 
         if not self.is_room_owner(room):
             return
 
         core.send_message_to_server(CancelRoomOwnership(room))
 
-    def request_cancel_room_membership(self, room):
+    def request_cancel_room_membership(self, room: str) -> None:
 
         if not self.is_room_member(room):
             return
 
         core.send_message_to_server(CancelRoomMembership(room))
 
-    def request_enable_room_invitations(self, enabled) -> None:
+    def request_enable_room_invitations(self, enabled: bool) -> None:
         core.send_message_to_server(EnableRoomInvitations(enabled))
 
-    def request_update_ticker(self, room, message) -> None:
+    def request_update_ticker(self, room: str, message: str) -> None:
         core.send_message_to_server(SetRoomTicker(room, message))
 
-    def _update_room_user(self, room_obj, user_data) -> None:
-
+    def _update_room_user(self, room_obj, user_data: UserData) -> None:
         username = user_data.username
         room_obj.users.add(username)
         core.users.watch_user(username, context=f"chatrooms_{room_obj.name}", is_implicit=True)
@@ -281,9 +287,9 @@ class ChatRooms:
         if username in core.users.countries:
             user_data.country = core.users.countries[username]
 
-    def _update_private_room(self, room, owner=None, members=None, operators=None) -> None:
+    def _update_private_room(self, room: str, owner: str | None = None, members=None, operators=None) -> None:
 
-        private_room = self.private_rooms.get(room)
+        private_room: PrivateRoom | None = self.private_rooms.get(room)
 
         if private_room is None:
             private_room = self.private_rooms[room] = PrivateRoom(room)
@@ -506,7 +512,7 @@ class ChatRooms:
             self.update_completions()
             core.privatechat.update_completions()
 
-    def get_message_type(self, username, message) -> str:
+    def get_message_type(self, username: str, message: str) -> str:
 
         if message.startswith("/me "):
             return "action"
@@ -516,7 +522,7 @@ class ChatRooms:
 
         return "remote"
 
-    def get_mention_type(self, username, message):
+    def get_mention_type(self, username: str, message: str):
 
         message_lower = message.lower()
 
@@ -542,7 +548,7 @@ class ChatRooms:
 
         return None, None
 
-    def _say_chat_room(self, msg, is_global=False) -> None:
+    def _say_chat_room(self, msg, is_global: bool = False) -> None:
         """Server code 13."""
 
         room = msg.room

@@ -26,7 +26,7 @@ class WatchedUser:
 
     __slots__ = ("username", "upload_speed", "files", "folders", "contexts", "is_implicit")
 
-    def __init__(self, username):
+    def __init__(self, username: str):
 
         self.username = username
         self.upload_speed = None
@@ -75,7 +75,7 @@ class Users:
         ):
             events.connect(event_name, callback)
 
-    def log_in_as(self, username, password):
+    def log_in_as(self, username: str, password: str) -> None:
 
         config.sections["server"]["login"] = username
         config.sections["server"]["passw"] = password
@@ -89,7 +89,7 @@ class Users:
 
         core.connect()
 
-    def set_away_mode(self, is_away, save_state=False):
+    def set_away_mode(self, is_away: bool, save_state: bool = False) -> None:
 
         if save_state:
             config.sections["server"]["away"] = is_away
@@ -101,7 +101,7 @@ class Users:
         # disable away mode
         events.emit("user-status", GetUserStatus(self.login_username, self.login_status))
 
-    def open_privileges_url(self):
+    def open_privileges_url(self) -> None:
 
         default_server_hostname, _port = config.defaults["server"]["server"]
         default_server_domain = default_server_hostname.split(".", maxsplit=1)[-1]
@@ -115,18 +115,18 @@ class Users:
         login = urllib.parse.quote(self.login_username)
         open_uri(pynicotine.__privileges_url__ % login)
 
-    def request_change_password(self, password) -> None:
+    def request_change_password(self, password: str) -> None:
         core.send_message_to_server(ChangePassword(password))
 
-    def request_check_privileges(self, should_open_url=False) -> None:
+    def request_check_privileges(self, should_open_url: bool = False) -> None:
         self._should_open_privileges_url = should_open_url
         core.send_message_to_server(CheckPrivileges())
 
-    def request_give_privileges(self, username, days):
+    def request_give_privileges(self, username: str, days: int) -> None:
         if UINT32_LIMIT >= days > 0:
             core.send_message_to_server(GivePrivileges(username, days))
 
-    def request_ip_address(self, username, notify=False):
+    def request_ip_address(self, username: str, notify: bool = False) -> None:
 
         if username in self._ip_requested:
             return
@@ -137,10 +137,10 @@ class Users:
     def request_set_status(self, status) -> None:
         core.send_message_to_server(SetStatus(status))
 
-    def request_user_stats(self, username) -> None:
+    def request_user_stats(self, username: str) -> None:
         core.send_message_to_server(GetUserStats(username))
 
-    def watch_user(self, username, context=None, is_implicit=False) -> None:
+    def watch_user(self, username: str, context=None, is_implicit: bool = False) -> None:
         """Tells the server we want to be notified of status updates for a
         user.
 
@@ -177,7 +177,7 @@ class Users:
         log.add_conn("Watching user %s in context '%s'. Active contexts: %s",
                      (username, context, watched_user.contexts))
 
-    def unwatch_user(self, username, context) -> None:
+    def unwatch_user(self, username: str, context: str) -> None:
         """Tells the server we no longer wish to receive status updates for a
         user.
 
@@ -413,7 +413,7 @@ class Users:
         })
 
     @staticmethod
-    def _admin_message(msg):
+    def _admin_message(msg) -> None:
         """Server code 66."""
 
         log.add(msg.msg, title=_("Soulseek Announcement"))

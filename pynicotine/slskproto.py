@@ -17,6 +17,7 @@ from collections import defaultdict
 from os import strerror
 from queue import Empty, SimpleQueue
 from threading import Thread
+from typing import Literal
 
 from pynicotine.events import events
 from pynicotine.logfacility import log
@@ -285,7 +286,7 @@ class NetworkInterfaces:
         return cls._get_interface_addresses_posix()
 
     @classmethod
-    def get_interface_address(cls, interface_name):
+    def get_interface_address(cls, interface_name: str):
         """Returns the IP address of a specific network interface."""
 
         if not interface_name:
@@ -294,7 +295,7 @@ class NetworkInterfaces:
         return cls.get_interface_addresses().get(interface_name)
 
     @classmethod
-    def bind_to_interface(cls, sock, interface_name, address):
+    def bind_to_interface(cls, sock: socket.socket, interface_name: str, address) -> None:
         """Bind socket to the specified network interface name, if required on
         the current platform. Otherwise bind to the IP address of the network
         interface, retrieved from get_interface_addresses().
@@ -448,19 +449,19 @@ class NetworkThread(Thread):
         ):
             events.connect(event_name, callback)
 
-    def _enable_message_queue(self):
+    def _enable_message_queue(self) -> None:
         self._should_process_queue = True
 
-    def _queue_network_message(self, msg):
+    def _queue_network_message(self, msg) -> None:
         if self._should_process_queue:
             self._message_queue.put_nowait(msg)
 
-    def _schedule_quit(self):
+    def _schedule_quit(self) -> None:
         self._want_abort = True
 
     # Listening Socket #
 
-    def _create_listen_socket(self):
+    def _create_listen_socket(self) -> bool:
 
         self._listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._listen_socket.setblocking(False)
@@ -480,7 +481,7 @@ class NetworkThread(Thread):
         self._selector.register(self._listen_socket, selectors.EVENT_READ)
         return True
 
-    def _close_listen_socket(self):
+    def _close_listen_socket(self) -> None:
 
         if self._listen_socket is None:
             return
@@ -497,7 +498,7 @@ class NetworkThread(Thread):
         self._listen_port = None
         self._num_sockets -= 1
 
-    def _bind_listen_port(self):
+    def _bind_listen_port(self) -> bool:
 
         if not self._bind_socket_interface(self._listen_socket):
             self._set_server_timer(use_fixed_timeout=True)
@@ -529,7 +530,7 @@ class NetworkThread(Thread):
 
     # Connections #
 
-    def _set_tcp_buffer_size(self, sock, conn_type):
+    def _set_tcp_buffer_size(self, sock, conn_type) -> None:
         """Set a sane TCP buffer size limit for connections, to prevent boundless message
         flooding. The limit is smaller for distributed connections due to the larger attack
         surface and messages always remaining small. File connections use the OS limit,
@@ -545,7 +546,7 @@ class NetworkThread(Thread):
 
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.TCP_BUFFER_SIZE_MEDIUM)
 
-    def _indirect_request_error(self, init):
+    def _indirect_request_error(self, init) -> None:
 
         username = init.target_user
         conn_type = init.conn_type
@@ -565,7 +566,7 @@ class NetworkThread(Thread):
         init.outgoing_msgs.clear()
         self._username_init_msgs.pop(username + conn_type, None)
 
-    def _check_indirect_request_timeouts(self, current_time=None, expire_all=False):
+    def _check_indirect_request_timeouts(self, current_time=None, expire_all: bool = False) -> None:
 
         if not self._indirect_token_init_msgs:
             return
@@ -587,7 +588,7 @@ class NetworkThread(Thread):
 
         timed_out_requests.clear()
 
-    def _is_connection_still_active(self, conn):
+    def _is_connection_still_active(self, conn) -> bool:
 
         init = conn.init
 
@@ -598,7 +599,7 @@ class NetworkThread(Thread):
 
         return len(conn.out_buffer) > 0 or len(conn.in_buffer) > 0
 
-    def _bind_socket_interface(self, sock):
+    def _bind_socket_interface(self, sock: socket.socket) -> bool:
         """Attempt to bind socket to an IP address, if provided with the
         --bindip CLI argument. Otherwise retrieve the IP address of the
         requested interface name, cache it for later, and bind to it.
@@ -615,7 +616,7 @@ class NetworkThread(Thread):
 
         return False
 
-    def _find_local_ip_address(self):
+    def _find_local_ip_address(self) -> socket._RetAddress:
 
         # Create a UDP socket
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as local_socket:
@@ -629,7 +630,7 @@ class NetworkThread(Thread):
 
         return ip_address
 
-    def _add_init_message(self, init):
+    def _add_init_message(self, init) -> bool:
 
         conn_type = init.conn_type
 
@@ -717,7 +718,7 @@ class NetworkThread(Thread):
 
         return unpacked_msg
 
-    def _emit_network_message_event(self, msg):
+    def _emit_network_message_event(self, msg) -> None:
 
         if msg is None:
             return
@@ -729,13 +730,13 @@ class NetworkThread(Thread):
             event_name = NETWORK_MESSAGE_EVENTS[msg_class]
             events.emit_main_thread(event_name, msg)
 
-    def _modify_connection_events(self, conn, io_events):
+    def _modify_connection_events(self, conn, io_events) -> None:
 
         if conn.io_events != io_events:
             self._selector.modify(conn.sock, io_events)
             conn.io_events = io_events
 
-    def _process_conn_messages(self, init):
+    def _process_conn_messages(self, init) -> None:
         """A connection is established with the peer, time to queue up our peer
         messages for delivery."""
 
@@ -750,7 +751,7 @@ class NetworkThread(Thread):
         self._process_outgoing_messages(msgs)
         msgs.clear()
 
-    def _send_message_to_peer(self, username, msg):
+    def _send_message_to_peer(self, username: str, msg) -> None:
 
         init = None
         conn_type = msg.msg_type
@@ -784,7 +785,7 @@ class NetworkThread(Thread):
             # This is a new peer, initiate a connection
             self._initiate_connection_to_peer(username, conn_type, msg)
 
-    def _initiate_connection_to_peer(self, username, conn_type, msg=None, in_address=None):
+    def _initiate_connection_to_peer(self, username: str, conn_type, msg=None, in_address=None) -> None:
         """Prepare to initiate a connection with a peer."""
 
         indirect_token = self._indirect_token = increment_token(self._indirect_token)
@@ -832,7 +833,7 @@ class NetworkThread(Thread):
         else:
             self._connect_to_peer(username, addr, init)
 
-    def _connect_to_peer(self, username, addr, init, pierce_token=None):
+    def _connect_to_peer(self, username: str, addr, init, pierce_token=None) -> None:
         """Initiate a connection with a peer."""
 
         conn_type = init.conn_type
@@ -846,7 +847,7 @@ class NetworkThread(Thread):
                      (conn_type, username, addr))
         self._init_peer_connection(addr, init, pierce_token=pierce_token)
 
-    def _connect_error(self, error, conn):
+    def _connect_error(self, error, conn) -> None:
 
         if conn.__class__ is ServerConnection:
             server_address, port = conn.addr
@@ -874,7 +875,7 @@ class NetworkThread(Thread):
         log.add_conn("Direct connection of type %s to user %s failed: %s",
                      (conn_type, username, error))
 
-    def _establish_outgoing_peer_connection(self, conn):
+    def _establish_outgoing_peer_connection(self, conn) -> None:
 
         conn.is_established = True
         init = conn.init
@@ -897,7 +898,7 @@ class NetworkThread(Thread):
 
         self._process_conn_messages(init)
 
-    def _replace_existing_connection(self, init):
+    def _replace_existing_connection(self, init) -> None:
 
         username = init.target_user
         conn_type = init.conn_type
@@ -936,7 +937,7 @@ class NetworkThread(Thread):
         except OSError as error:
             log.add_conn("Failed to close socket %s: %s", (sock, error))
 
-    def _close_connection(self, conn):
+    def _close_connection(self, conn) -> None:
 
         if conn is None:
             return
@@ -1047,7 +1048,7 @@ class NetworkThread(Thread):
 
         del self._username_init_msgs[init_key]
 
-    def _is_connection_inactive(self, conn, current_time, num_sockets):
+    def _is_connection_inactive(self, conn, current_time, num_sockets) -> bool:
 
         if conn is self._server_conn:
             return False
@@ -1072,7 +1073,7 @@ class NetworkThread(Thread):
 
         return False
 
-    def _check_connections(self, current_time):
+    def _check_connections(self, current_time) -> None:
 
         num_sockets = self._num_sockets
         inactive_conns = set()
@@ -1126,7 +1127,7 @@ class NetworkThread(Thread):
 
     # Server Connection #
 
-    def _set_server_timer(self, use_fixed_timeout=False):
+    def _set_server_timer(self, use_fixed_timeout: bool = False) -> None:
 
         if use_fixed_timeout:
             self._server_timeout_value = 5
@@ -1145,7 +1146,7 @@ class NetworkThread(Thread):
                 {"duration": human_duration_approx(self._server_timeout_value)})
 
     @staticmethod
-    def _set_server_socket_keepalive(sock, idle=10, interval=2):
+    def _set_server_socket_keepalive(sock: socket.socket, idle: int = 10, interval: int = 2) -> None:
         """Ensure we are disconnected from the server in case of connectivity
         issues, by sending TCP keepalive pings.
 
@@ -1193,7 +1194,7 @@ class NetworkThread(Thread):
         if hasattr(socket, "TCP_USER_TIMEOUT"):
             sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_USER_TIMEOUT, timeout_seconds * 1000)
 
-    def _server_connect(self, msg):
+    def _server_connect(self, msg) -> None:
         """We're connecting to the server."""
 
         if self._server_conn is not None:
@@ -1221,7 +1222,7 @@ class NetworkThread(Thread):
 
         self._init_server_conn(msg)
 
-    def _init_server_conn(self, msg):
+    def _init_server_conn(self, msg) -> None:
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         io_events = selectors.EVENT_READ | selectors.EVENT_WRITE
@@ -1250,7 +1251,7 @@ class NetworkThread(Thread):
         self._selector.register(sock, io_events)
         self._num_sockets += 1
 
-    def _establish_outgoing_server_connection(self, conn):
+    def _establish_outgoing_server_connection(self, conn) -> None:
 
         conn.is_established = True
         server_hostname, server_port = conn.addr
@@ -1288,7 +1289,7 @@ class NetworkThread(Thread):
 
         self._send_message_to_server(SetWaitPort(self._listen_port))
 
-    def _process_server_message(self, msg_type, msg_size, msg_content):
+    def _process_server_message(self, msg_type, msg_size, msg_content) -> bool:
 
         msg_class = SERVER_MESSAGE_CLASSES[msg_type]
         msg = self._unpack_network_message(
@@ -1455,7 +1456,7 @@ class NetworkThread(Thread):
         self._emit_network_message_event(msg)
         return True
 
-    def _process_server_input(self, conn):
+    def _process_server_input(self, conn) -> None:
         """Reads messages from the input buffer of a server connection."""
 
         in_buffer = conn.in_buffer
@@ -1524,7 +1525,7 @@ class NetworkThread(Thread):
 
         self._modify_connection_events(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
-    def _server_disconnect(self):
+    def _server_disconnect(self) -> None:
         """We're disconnecting from the server, clean up."""
 
         self._server_conn = None
@@ -1596,7 +1597,7 @@ class NetworkThread(Thread):
             ServerDisconnect(manual_disconnect=self._manual_server_disconnect)
         )
 
-    def _send_message_to_server(self, msg):
+    def _send_message_to_server(self, msg) -> None:
         self._process_outgoing_messages([msg])
 
     # Peer Init #
@@ -1726,7 +1727,7 @@ class NetworkThread(Thread):
         self._accept_child_peer_connection(conn)
         return init
 
-    def _process_peer_init_output(self, conn, msg):
+    def _process_peer_init_output(self, conn, msg) -> None:
 
         # Pack peer init messages
         msg_content = self._pack_network_message(msg)
@@ -1744,7 +1745,7 @@ class NetworkThread(Thread):
 
     # Peer Connection #
 
-    def _accept_incoming_peer_connections(self):
+    def _accept_incoming_peer_connections(self) -> None:
 
         while self._num_sockets < self.MAX_SOCKETS:
             incoming_sock = None
@@ -1780,7 +1781,7 @@ class NetworkThread(Thread):
 
             log.add_conn("Incoming connection from address %s", (incoming_addr,))
 
-    def _init_peer_connection(self, addr, init, pierce_token=None):
+    def _init_peer_connection(self, addr, init, pierce_token=None) -> None:
 
         if self._num_sockets >= self.MAX_SOCKETS:
             # Connection limit reached, re-queue
@@ -1819,7 +1820,7 @@ class NetworkThread(Thread):
         self._selector.register(sock, io_events)
         self._num_sockets += 1
 
-    def _process_peer_input(self, conn):
+    def _process_peer_input(self, conn) -> None:
         """Reads messages from the input buffer of a 'P' connection."""
 
         in_buffer = conn.in_buffer
@@ -1901,7 +1902,7 @@ class NetworkThread(Thread):
 
             self._close_connection(conn)
 
-    def _process_peer_output(self, conn, msg):
+    def _process_peer_output(self, conn, msg) -> None:
 
         # Pack peer messages
         msg_content = self._pack_network_message(msg)
@@ -1920,7 +1921,7 @@ class NetworkThread(Thread):
 
     # File Connection #
 
-    def _calc_upload_limit(self, limit_disabled=False, limit_per_transfer=False):
+    def _calc_upload_limit(self, limit_disabled: bool = False, limit_per_transfer: bool = False) -> None:
 
         limit = self._upload_limit
         loop_limit = 1024  # 1 KB/s is the minimum upload speed per transfer
@@ -1940,7 +1941,7 @@ class NetworkThread(Thread):
     def _calc_upload_limit_none(self):
         return self._calc_upload_limit(limit_disabled=True)
 
-    def _calc_download_limit(self):
+    def _calc_download_limit(self) -> None:
 
         limit = self._download_limit
         loop_limit = 1024  # 1 KB/s is the minimum download speed per transfer
@@ -1955,7 +1956,7 @@ class NetworkThread(Thread):
 
         self._download_limit_split = int(limit)
 
-    def _process_file_init_message(self, conn, in_buffer):
+    def _process_file_init_message(self, conn, in_buffer) -> Literal[4]:
 
         msg_size = idx = 4
         msg = self._unpack_network_message(
@@ -2017,7 +2018,7 @@ class NetworkThread(Thread):
 
         return idx
 
-    def _write_download_file(self, file_download, data, data_len):
+    def _write_download_file(self, file_download: DownloadFile, data, data_len) -> None:
 
         if not data:
             return
@@ -2028,7 +2029,7 @@ class NetworkThread(Thread):
         file_download.file.write(data)
         file_download.leftbytes -= data_len
 
-    def _process_download(self, conn, data, data_len):
+    def _process_download(self, conn, data, data_len) -> bool:
 
         file_download = self._file_download_msgs[conn]
         idx = file_download.leftbytes
@@ -2057,7 +2058,7 @@ class NetworkThread(Thread):
 
         return True
 
-    def _process_upload(self, conn, num_sent_bytes, current_time):
+    def _process_upload(self, conn, num_sent_bytes, current_time) -> bool:
 
         file_upload = self._file_upload_msgs[conn]
 
@@ -2099,7 +2100,7 @@ class NetworkThread(Thread):
             )
         return True
 
-    def _process_file_input(self, conn):
+    def _process_file_input(self, conn) -> None:
         """Reads file messages from the input buffer of a 'F' connection."""
 
         in_buffer = conn.in_buffer
@@ -2115,7 +2116,7 @@ class NetworkThread(Thread):
             del in_buffer[:idx]
             conn.has_post_init_activity = True
 
-    def _process_file_output(self, conn, msg):
+    def _process_file_output(self, conn, msg) -> None:
 
         msg_class = msg.__class__
 
@@ -2144,7 +2145,7 @@ class NetworkThread(Thread):
 
     # Distributed Connection #
 
-    def _accept_child_peer_connection(self, conn):
+    def _accept_child_peer_connection(self, conn) -> None:
 
         if conn.init.conn_type != ConnectionType.DISTRIBUTED:
             return
@@ -2190,7 +2191,7 @@ class NetworkThread(Thread):
                          "no longer accepting new connections", self._max_distrib_children)
             self._send_message_to_server(AcceptChildren(False))
 
-    def _remove_child_peer_connection(self, username):
+    def _remove_child_peer_connection(self, username: str) -> None:
 
         self._child_peers.pop(username, None)
 
@@ -2203,7 +2204,7 @@ class NetworkThread(Thread):
 
         log.add_conn("Number of current child peers: %s", len(self._child_peers))
 
-    def _send_message_to_child_peers(self, msg, msg_content=None):
+    def _send_message_to_child_peers(self, msg, msg_content=None) -> None:
 
         if msg_content is None:
             msg_content = self._pack_network_message(msg)
@@ -2224,7 +2225,7 @@ class NetworkThread(Thread):
                      "Closing connection.", (msg_class, conn.init.target_user))
         return ParentStatus.REJECTED
 
-    def _send_have_no_parent(self):
+    def _send_have_no_parent(self) -> None:
         """Inform the server we have no parent.
 
         The server should either send us a PossibleParents message, or
@@ -2248,7 +2249,7 @@ class NetworkThread(Thread):
         self._send_message_to_server(BranchLevel(self._branch_level))
         self._send_message_to_server(AcceptChildren(False))
 
-    def _adopt_parent(self, username):
+    def _adopt_parent(self, username: str) -> None:
 
         if self._parent is not None:
             return
@@ -2291,7 +2292,7 @@ class NetworkThread(Thread):
         log.add_conn("Our branch root is user %s", self._branch_root)
         log.add_conn("Our branch level is %s", self._branch_level)
 
-    def _close_parent_candidate_connections(self):
+    def _close_parent_candidate_connections(self) -> None:
 
         for parent_candidate in self._potential_parents.values():
             conn = parent_candidate.conn
@@ -2305,7 +2306,7 @@ class NetworkThread(Thread):
             self._close_connection(conn)
             parent_candidate.conn = None
 
-    def _update_maximum_distributed_children(self):
+    def _update_maximum_distributed_children(self) -> None:
 
         prev_max_distrib_children = self._max_distrib_children
         num_child_peers = len(self._child_peers)
@@ -2324,7 +2325,7 @@ class NetworkThread(Thread):
                          "accepting new connections", num_child_peers)
             self._send_message_to_server(AcceptChildren(False))
 
-    def _process_distrib_message(self, conn, msg_type, msg_size, msg_content):
+    def _process_distrib_message(self, conn, msg_type, msg_size, msg_content) -> bool:
 
         msg_class = DISTRIBUTED_MESSAGE_CLASSES[msg_type]
         msg = self._unpack_network_message(
@@ -2445,7 +2446,7 @@ class NetworkThread(Thread):
 
         return True
 
-    def _process_distrib_input(self, conn):
+    def _process_distrib_input(self, conn) -> None:
         """Reads messages from the input buffer of a 'D' connection."""
 
         in_buffer = conn.in_buffer
@@ -2491,7 +2492,7 @@ class NetworkThread(Thread):
             del in_buffer[:idx]
             conn.has_post_init_activity = True
 
-    def _process_distrib_output(self, conn, msg, msg_content=None):
+    def _process_distrib_output(self, conn, msg, msg_content=None) -> None:
 
         # Pack distributed messages
         if msg_content is None:
@@ -2511,7 +2512,7 @@ class NetworkThread(Thread):
 
     # Internal Messages #
 
-    def _process_internal_messages(self, msg):
+    def _process_internal_messages(self, msg) -> None:
 
         msg_class = msg.__class__
 
@@ -2577,7 +2578,7 @@ class NetworkThread(Thread):
 
     # Input/Output #
 
-    def _process_ready_input_socket(self, sock, current_time):
+    def _process_ready_input_socket(self, sock, current_time) -> None:
 
         if sock in self._conns:
             conn = self._conns[sock]
@@ -2612,7 +2613,7 @@ class NetworkThread(Thread):
 
         self._close_connection(conn)
 
-    def _process_ready_output_socket(self, sock, current_time):
+    def _process_ready_output_socket(self, sock, current_time) -> None:
 
         if sock in self._conns:
             conn = self._conns[sock]
@@ -2645,7 +2646,7 @@ class NetworkThread(Thread):
 
         self._close_connection(conn)
 
-    def _process_ready_sockets(self, current_time):
+    def _process_ready_sockets(self, current_time) -> None:
 
         if self._listen_socket is None:
             # We can't call select() when no sockets are registered (WinError 10022)
@@ -2664,7 +2665,7 @@ class NetworkThread(Thread):
             if io_events & selectors.EVENT_WRITE:
                 self._process_ready_output_socket(sock, current_time)
 
-    def _process_conn_incoming_messages(self, conn):
+    def _process_conn_incoming_messages(self, conn) -> None:
 
         if not conn.in_buffer:
             return
@@ -2695,7 +2696,7 @@ class NetworkThread(Thread):
                          "promoting to primary connection", (init.conn_type, init.target_user))
             init.sock = conn.sock
 
-    def _process_outgoing_messages(self, msgs):
+    def _process_outgoing_messages(self, msgs) -> None:
 
         for msg in msgs:
             if not self._should_process_queue:
@@ -2753,7 +2754,7 @@ class NetworkThread(Thread):
             conn = self._conns[sock]
             process_func(conn, msg)
 
-    def _process_queue_messages(self):
+    def _process_queue_messages(self) -> None:
 
         if not self._message_queue:
             return
@@ -2768,7 +2769,7 @@ class NetworkThread(Thread):
 
         self._process_outgoing_messages(msgs)
 
-    def _read_data(self, conn, current_time):
+    def _read_data(self, conn, current_time) -> bool:
 
         sock = conn.sock
         current_recv_size = conn.recv_size
@@ -2808,7 +2809,7 @@ class NetworkThread(Thread):
         conn.last_active = current_time
         return True
 
-    def _write_data(self, conn, current_time):
+    def _write_data(self, conn, current_time) -> bool:
 
         sock = conn.sock
         out_buffer = conn.out_buffer
@@ -2840,7 +2841,7 @@ class NetworkThread(Thread):
 
     # Networking Loop #
 
-    def _loop(self):
+    def _loop(self) -> None:
 
         while not self._want_abort:
             current_time = time.monotonic()
@@ -2884,7 +2885,7 @@ class NetworkThread(Thread):
             # Don't exhaust the CPU
             time.sleep(self.SLEEP_MIN_IDLE)
 
-    def run(self):
+    def run(self) -> None:
 
         events.emit_main_thread("set-connection-stats")
 

@@ -70,7 +70,7 @@ class PrivateChat:
         self.away_message_users.clear()
         self.update_completions()
 
-    def add_user(self, username):
+    def add_user(self, username: str) -> None:
 
         if username in self.users:
             return
@@ -80,7 +80,7 @@ class PrivateChat:
         if username not in config.sections["privatechat"]["users"]:
             config.sections["privatechat"]["users"].insert(0, username)
 
-    def remove_user(self, username, is_permanent=True) -> None:
+    def remove_user(self, username: str, is_permanent: bool = True) -> None:
 
         if is_permanent and username in config.sections["privatechat"]["users"]:
             config.sections["privatechat"]["users"].remove(username)
@@ -89,17 +89,17 @@ class PrivateChat:
         core.users.unwatch_user(username, context="privatechat")
         events.emit("private-chat-remove-user", username)
 
-    def remove_all_users(self, is_permanent=True) -> None:
+    def remove_all_users(self, is_permanent: bool = True) -> None:
         for username in self.users.copy():
             self.remove_user(username, is_permanent)
 
-    def show_user(self, username, switch_page=True, remembered=False) -> None:
+    def show_user(self, username: str, switch_page: bool = True, remembered: bool = False) -> None:
 
         self.add_user(username)
         events.emit("private-chat-show-user", username, switch_page, remembered)
         core.users.watch_user(username, context="privatechat")
 
-    def clear_private_messages(self, username) -> None:
+    def clear_private_messages(self, username: str) -> None:
         events.emit("clear-private-messages", username)
 
     def private_message_queue_add(self, msg) -> None:
@@ -112,13 +112,13 @@ class PrivateChat:
         else:
             self.private_message_queue[username].append(msg)
 
-    def send_automatic_message(self, username, message) -> None:
+    def send_automatic_message(self, username: str, message: str) -> None:
         self.send_message(username, f"[Automatic Message] {message}")
 
-    def echo_message(self, username, message, message_type="local") -> None:
+    def echo_message(self, username: str, message: str, message_type: str = "local") -> None:
         events.emit("echo-private-message", username, message, message_type)
 
-    def send_message(self, username, message) -> None:
+    def send_message(self, username: str, message: str) -> None:
 
         user_text = core.pluginhandler.outgoing_private_chat_event(username, message)
         if user_text is None:
@@ -137,7 +137,7 @@ class PrivateChat:
 
         events.emit("message-user", MessageUser(username, message))
 
-    def send_message_users(self, target, message):
+    def send_message_users(self, target: str, message) -> None:
 
         if not message:
             return
@@ -211,7 +211,7 @@ class PrivateChat:
 
         return None, None
 
-    def _message_user(self, msg, queued_message=False) -> None:
+    def _message_user(self, msg: MessageUser, queued_message: bool = False) -> None:
         """Server code 22."""
 
         is_outgoing_message = (msg.message_id is None)

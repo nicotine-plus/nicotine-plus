@@ -56,7 +56,7 @@ class Transfer:
                  "legacy_attempt", "retry_attempt", "size_changed", "is_backslash_path",
                  "is_lowercase_path", "request_timer_id")
 
-    def __init__(self, username, virtual_path=None, folder_path=None, size=0, file_attributes=None,
+    def __init__(self, username: str, virtual_path=None, folder_path=None, size: int = 0, file_attributes=None,
                  status=None, current_byte_offset=None):
         self.username = username
         self.virtual_path = virtual_path
@@ -96,7 +96,7 @@ class Transfers:
                  "_allow_saving_transfers", "_online_users", "_user_queue_limits",
                  "_user_queue_sizes")
 
-    def __init__(self, name):
+    def __init__(self, name: str):
 
         self.transfers = {}
         self.queued_transfers = {}
@@ -259,7 +259,7 @@ class Transfers:
 
         return file_attributes
 
-    def _get_stored_transfers(self, transfers_file_path, load_func, load_only_finished=False):
+    def _get_stored_transfers(self, transfers_file_path, load_func, load_only_finished: bool = False):
 
         transfer_rows = load_file(transfers_file_path, load_func)
 
@@ -367,7 +367,7 @@ class Transfers:
 
     # User Actions #
 
-    def _unwatch_stale_user(self, username) -> None:
+    def _unwatch_stale_user(self, username: str) -> None:
         """Unwatches a user when status updates are no longer required, i.e.
         no transfers remain, or all remaining transfers are
         finished/filtered/paused.
@@ -497,7 +497,7 @@ class Transfers:
 
         return True
 
-    def _enqueue_limited_transfers(self, username) -> None:
+    def _enqueue_limited_transfers(self, username: str) -> None:
         # Optional method
         pass
 
@@ -525,7 +525,7 @@ class Transfers:
         transfer.queue_position = 0
         return True
 
-    def _activate_transfer(self, transfer, token) -> None:
+    def _activate_transfer(self, transfer, token: int) -> None:
 
         core.users.watch_user(transfer.username, context=self._name)
 

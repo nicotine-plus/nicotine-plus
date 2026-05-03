@@ -340,7 +340,7 @@ class NetworkFilter:
 
     # IP Filter List Management #
 
-    def _request_ip(self, username, action, request_list) -> None:
+    def _request_ip(self, username: str, action, request_list) -> None:
         """Ask for the IP address of an unknown user.
 
         Once a GetPeerAddress response arrives, either
@@ -391,7 +391,7 @@ class NetworkFilter:
     # IP List Lookup Functions #
 
     @staticmethod
-    def _get_previous_user_ip_addresses(username, ip_list):
+    def _get_previous_user_ip_addresses(username: str, ip_list):
         """Retrieve IP address of a user previously saved in an IP list."""
 
         ip_addresses = set()
@@ -406,7 +406,7 @@ class NetworkFilter:
 
         return ip_addresses
 
-    def _get_user_ip_addresses(self, username, ip_list, request_action):
+    def _get_user_ip_addresses(self, username: str, ip_list, request_action):
         """Returns the known IP addresses of a user, requests one otherwise."""
 
         ip_addresses = set()
@@ -463,7 +463,7 @@ class NetworkFilter:
         return country_code
 
     @staticmethod
-    def is_ip_address(ip_address, allow_zero=True, allow_wildcard=True):
+    def is_ip_address(ip_address: str, allow_zero: bool = True, allow_wildcard: bool = True) -> bool:
         """Check if the given value is an IPv4 address or not."""
 
         if not ip_address or ip_address is None or ip_address.count(".") != 3:
@@ -536,7 +536,7 @@ class NetworkFilter:
 
     # Callbacks #
 
-    def _update_saved_user_ip_addresses(self, ip_list, username, ip_address) -> None:
+    def _update_saved_user_ip_addresses(self, ip_list, username: str, ip_address) -> None:
         """Check if a user's IP address has changed and update the lists."""
 
         previous_ip_addresses = self._get_previous_user_ip_addresses(username, ip_list)
@@ -573,7 +573,7 @@ class NetworkFilter:
 
     # Banning #
 
-    def ban_user(self, username):
+    def ban_user(self, username: str) -> None:
 
         if not self.is_user_banned(username):
             self._banned_users.add(username)
@@ -582,7 +582,7 @@ class NetworkFilter:
 
         events.emit("ban-user", username)
 
-    def unban_user(self, username):
+    def unban_user(self, username: str) -> None:
 
         if self.is_user_banned(username):
             self._banned_users.remove(username)
@@ -608,7 +608,7 @@ class NetworkFilter:
         events.emit("unban-user-ip", username, ip_addresses)
         return ip_addresses
 
-    def _ban_unban_user_ip_callback(self, username, ip_address) -> None:
+    def _ban_unban_user_ip_callback(self, username: str, ip_address) -> None:
 
         request = self.ip_ban_requested.pop(username, None)
 
@@ -618,16 +618,16 @@ class NetworkFilter:
         elif request == "remove":
             self.unban_user_ip(username, ip_address)
 
-    def is_user_banned(self, username):
+    def is_user_banned(self, username: str) -> bool:
         return username in self._banned_users
 
-    def is_user_ip_banned(self, username=None, ip_address=None):
+    def is_user_ip_banned(self, username=None, ip_address=None) -> bool:
         return self._check_user_ip_filtered(
             config.sections["server"]["ipblocklist"], username, ip_address)
 
     # Ignoring #
 
-    def ignore_user(self, username):
+    def ignore_user(self, username: str) -> None:
 
         if not self.is_user_ignored(username):
             self._ignored_users.add(username)
@@ -636,7 +636,7 @@ class NetworkFilter:
 
         events.emit("ignore-user", username)
 
-    def unignore_user(self, username):
+    def unignore_user(self, username: str) -> None:
 
         if self.is_user_ignored(username):
             self._ignored_users.remove(username)
@@ -662,7 +662,7 @@ class NetworkFilter:
         events.emit("unignore-user-ip", username, ip_addresses)
         return ip_addresses
 
-    def _ignore_unignore_user_ip_callback(self, username, ip_address) -> None:
+    def _ignore_unignore_user_ip_callback(self, username: str, ip_address) -> None:
 
         request = self.ip_ignore_requested.pop(username, None)
 
@@ -672,9 +672,9 @@ class NetworkFilter:
         elif request == "remove":
             self.unignore_user_ip(username, ip_address)
 
-    def is_user_ignored(self, username):
+    def is_user_ignored(self, username: str) -> bool:
         return username in self._ignored_users
 
-    def is_user_ip_ignored(self, username=None, ip_address=None):
+    def is_user_ip_ignored(self, username=None, ip_address=None) -> bool:
         return self._check_user_ip_filtered(
             config.sections["server"]["ipignorelist"], username, ip_address)

@@ -3,6 +3,8 @@
 
 import time
 
+from typing import Literal
+
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -14,8 +16,8 @@ class Buddy:
     __slots__ = ("username", "note", "notify_status", "is_prioritized", "is_trusted", "last_seen",
                  "country", "status")
 
-    def __init__(self, username, note, notify_status, is_prioritized, is_trusted, last_seen,
-                 country, status):
+    def __init__(self, username: str, note: str, notify_status: bool, is_prioritized: bool,
+                 is_trusted: bool, last_seen: str, country: str, status: Literal[0, 1, 2]):
 
         self.username = username
         self.note = note
@@ -29,6 +31,9 @@ class Buddy:
 
 class Buddies:
     __slots__ = ("users", "_allow_saving_buddies")
+
+    users: dict[str, Buddy]
+    _allow_saving_buddies: bool
 
     def __init__(self):
 
@@ -133,7 +138,7 @@ class Buddies:
 
         self.save_buddy_list()
 
-    def add_buddy(self, username) -> None:
+    def add_buddy(self, username: str) -> None:
 
         if username in self.users:
             return
@@ -166,7 +171,7 @@ class Buddies:
         # Request user status, speed and number of shared files
         core.users.watch_user(username, context="buddies")
 
-    def remove_buddy(self, username) -> None:
+    def remove_buddy(self, username: str) -> None:
 
         if username in self.users:
             del self.users[username]
@@ -179,7 +184,7 @@ class Buddies:
         self.save_buddy_list()
         events.emit("remove-buddy", username)
 
-    def set_buddy_note(self, username, note) -> None:
+    def set_buddy_note(self, username: str, note: str) -> None:
 
         if username not in self.users:
             return
@@ -189,7 +194,7 @@ class Buddies:
 
         events.emit("buddy-note", username, note)
 
-    def set_buddy_notify(self, username, notify) -> None:
+    def set_buddy_notify(self, username: str, notify: bool) -> None:
 
         if username not in self.users:
             return
@@ -199,7 +204,7 @@ class Buddies:
 
         events.emit("buddy-notify", username, notify)
 
-    def set_buddy_prioritized(self, username, prioritized) -> None:
+    def set_buddy_prioritized(self, username: str, prioritized) -> None:
 
         if username not in self.users:
             return
@@ -209,7 +214,7 @@ class Buddies:
 
         events.emit("buddy-prioritized", username, prioritized)
 
-    def set_buddy_trusted(self, username, trusted) -> None:
+    def set_buddy_trusted(self, username: str, trusted: bool) -> None:
 
         if username not in self.users:
             return
@@ -219,7 +224,7 @@ class Buddies:
 
         events.emit("buddy-trusted", username, trusted)
 
-    def set_buddy_last_seen(self, username, is_online) -> None:
+    def set_buddy_last_seen(self, username: str, is_online: bool) -> None:
 
         if username not in self.users:
             return
@@ -237,7 +242,7 @@ class Buddies:
 
         events.emit("buddy-last-seen", username, is_online)
 
-    def _user_country(self, username, country_code) -> None:
+    def _user_country(self, username: str, country_code: str) -> None:
 
         if not country_code:
             return

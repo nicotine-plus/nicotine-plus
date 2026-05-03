@@ -284,7 +284,7 @@ class Events:
     def invoke_main_thread(self, callback, *args, **kwargs) -> None:
         self.emit_main_thread("thread-callback", callback, *args, **kwargs)
 
-    def schedule(self, delay, callback, callback_args=None, repeat=False):
+    def schedule(self, delay, callback, callback_args=None, repeat: bool = False):
 
         if delay <= 0:
             return None
