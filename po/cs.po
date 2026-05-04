@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-13 02:38+0200\n"
-"PO-Revision-Date: 2026-03-20 09:09+0000\n"
+"PO-Revision-Date: 2026-05-01 20:09+0000\n"
 "Last-Translator: slrslr <adm@prnet.info>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 5.17.1\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -59,7 +59,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:835
 #: pynicotine/gtkgui/ui/userbrowse.ui:153
 msgid "Search Files"
-msgstr "Hledat soubory"
+msgstr "Hledání souborů"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:34
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:50
@@ -80,7 +80,7 @@ msgstr "Stahování"
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:685
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:857
 msgid "Browse Shares"
-msgstr "Procházet sdílení"
+msgstr "Procházení sdílení"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:42
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:58
@@ -416,7 +416,7 @@ msgstr "_Opět skenovat sdílení"
 
 #: pynicotine/gtkgui/application.py:345 pynicotine/gtkgui/application.py:407
 msgid "Configure _Shares"
-msgstr "Nastavení _Sdílení"
+msgstr "Nastavit _sdílení"
 
 #: pynicotine/gtkgui/application.py:367
 msgid "_Keyboard Shortcuts"
