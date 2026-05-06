@@ -4,6 +4,7 @@
 # SPDX-FileCopyrightText: 2009-2011 quinox <quinox@users.sf.net>
 # SPDX-FileCopyrightText: 2009 daelstorm <daelstorm@gmail.com>
 # SPDX-License-Identifier: GPL-3.0-or-later
+from __future__ import annotations
 
 import gc
 import mmap
@@ -26,8 +27,7 @@ from pickle import Unpickler
 from pickle import UnpicklingError
 from struct import Struct
 from threading import Thread
-from typing import Literal
-from typing import NoReturn
+from typing import TYPE_CHECKING
 
 from pynicotine import rename_process
 from pynicotine.config import config
@@ -44,6 +44,14 @@ from pynicotine.utils import TRANSLATE_PUNCTUATION
 from pynicotine.utils import UINT32_LIMIT
 from pynicotine.utils import encode_path
 from pynicotine.utils import humanize
+
+if TYPE_CHECKING:
+    from multiprocessing.context import SpawnProcess
+    from pynicotine.slskmessages import FolderContentsRequest
+    from pynicotine.slskmessages import Login
+    from pynicotine.slskmessages import SharedFileListRequest
+    from typing import Literal
+    from typing import NoReturn
 
 
 class FileTypes:
@@ -258,7 +266,7 @@ class Scanner:
 
         self.writer = writer
         self.share_groups = share_groups
-        self.share_dbs = {}
+        self.share_dbs: dict[str, Database] = {}
         self.share_db_paths = share_db_paths
         self.init = init
         self.rescan = rescan
@@ -483,7 +491,7 @@ class Scanner:
                 if share_db is not None:
                     share_db.close()
 
-    def rescan_dirs(self, permission_level) -> None:
+    def rescan_dirs(self, permission_level: Literal["public", "buddy", "trusted", "banned"]) -> None:
 
         shared_public_folders, shared_buddy_folders, shared_trusted_folders = self.share_groups
 
@@ -532,7 +540,7 @@ class Scanner:
         gc.collect()
 
     @classmethod
-    def is_hidden(cls, folder, filename=None, entry=None) -> bool:
+    def is_hidden(cls, folder: str, filename=None, entry=None) -> bool:
         """Stop sharing any hidden folders/files."""
 
         # Check if file is marked as hidden on Windows
@@ -660,7 +668,7 @@ class Scanner:
 
             self.current_folder_count += 1
 
-    def get_audio_tag(self, file_path: str, size):
+    def get_audio_tag(self, file_path: str, size: int):
 
         parser_class = TinyTag._get_parser_for_filename(file_path)  # pylint: disable=protected-access
 
@@ -809,7 +817,7 @@ class Shares:
         self.close_shares(self.share_dbs)
         self.initialized = False
 
-    def _server_login(self, msg) -> None:
+    def _server_login(self, msg: Login) -> None:
         if msg.success:
             self.send_num_shared_folders_files()
 
@@ -1083,7 +1091,7 @@ class Shares:
         return False
 
     @staticmethod
-    def close_shares(share_dbs) -> None:
+    def close_shares(share_dbs: dict[str, Database]) -> None:
 
         for destination in share_dbs.copy():
             database = share_dbs.pop(destination, None)
@@ -1254,7 +1262,7 @@ class Shares:
         scanner = context.Process(target=scanner_obj.run, daemon=True)
         return scanner, reader, writer
 
-    def _process_scanner(self, process, reader, emit_event=None) -> bool:
+    def _process_scanner(self, process: SpawnProcess, reader, emit_event=None) -> bool:
 
         successful = False
         current_folder_count = None
@@ -1337,7 +1345,7 @@ class Shares:
 
     # Network Messages #
 
-    def _shared_file_list_request(self, msg) -> None:
+    def _shared_file_list_request(self, msg: SharedFileListRequest) -> None:
         """Peer code 4."""
 
         username = msg.username
@@ -1359,7 +1367,7 @@ class Shares:
 
         core.send_message_to_peer(username, shares_list)
 
-    def _folder_contents_request(self, msg) -> None:
+    def _folder_contents_request(self, msg: FolderContentsRequest) -> None:
         """Peer code 36."""
 
         ip_address, _port = msg.addr

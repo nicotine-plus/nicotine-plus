@@ -22,7 +22,7 @@ from pynicotine.utils import open_file_path
 class LogFile:
     __slots__ = ("path", "handle", "last_active")
 
-    def __init__(self, path, handle):
+    def __init__(self, path: str, handle):
         self.path = path
         self.handle = handle
         self.last_active = time.monotonic()
@@ -83,14 +83,14 @@ class Logger:
 
     # Log Levels #
 
-    def init_log_levels(self):
+    def init_log_levels(self) -> None:
 
         self._log_levels = {LogLevel.DEFAULT}
 
         for level in config.sections["logging"]["debugmodes"]:
             self._log_levels.add(level)
 
-    def add_log_level(self, log_level, is_permanent: bool = True):
+    def add_log_level(self, log_level: str, is_permanent: bool = True) -> None:
 
         self._log_levels.add(log_level)
 
@@ -102,7 +102,7 @@ class Logger:
         if log_level not in log_levels:
             log_levels.append(log_level)
 
-    def remove_log_level(self, log_level, is_permanent: bool = True):
+    def remove_log_level(self, log_level, is_permanent: bool = True) -> None:
 
         self._log_levels.discard(log_level)
 
@@ -142,7 +142,7 @@ class Logger:
 
         return log_file
 
-    def write_log_file(self, folder_path, basename: str, text: str, timestamp=None):
+    def write_log_file(self, folder_path, basename: str, text: str, timestamp=None) -> None:
 
         folder_path = os.path.normpath(folder_path)
 
@@ -196,14 +196,14 @@ class Logger:
     def _normalize_folder_path(self, folder_path):
         return os.path.normpath(os.path.expandvars(folder_path))
 
-    def update_folder_paths(self):
+    def update_folder_paths(self) -> None:
 
         self.debug_folder_path = self._normalize_folder_path(config.sections["logging"]["debuglogsdir"])
         self.transfer_folder_path = self._normalize_folder_path(config.sections["logging"]["transferslogsdir"])
         self.room_folder_path = self._normalize_folder_path(config.sections["logging"]["roomlogsdir"])
         self.private_chat_folder_path = self._normalize_folder_path(config.sections["logging"]["privatelogsdir"])
 
-    def open_log(self, folder_path, basename: str):
+    def open_log(self, folder_path, basename: str) -> None:
         self._log_file_operation(folder_path, basename, self.open_log_callback)
 
     def _get_log_lines(self, log_file, num_lines):
@@ -259,7 +259,7 @@ class Logger:
 
         return lines
 
-    def delete_log(self, folder_path, basename: str):
+    def delete_log(self, folder_path, basename: str) -> None:
         self._log_file_operation(folder_path, basename, self.delete_log_callback)
 
     def _log_file_operation(self, folder_path, basename: str, callback) -> None:
@@ -276,13 +276,13 @@ class Logger:
         except Exception as error:
             self._add(_("Cannot access log file %(path)s: %(error)s"), {"path": file_path, "error": error})
 
-    def open_log_callback(self, file_path):
+    def open_log_callback(self, file_path) -> None:
         open_file_path(file_path, create_file=True)
 
-    def delete_log_callback(self, file_path):
+    def delete_log_callback(self, file_path: str) -> None:
         os.remove(encode_path(file_path))
 
-    def log_transfer(self, basename: str, msg, msg_args=None):
+    def log_transfer(self, basename: str, msg, msg_args=None) -> None:
 
         if not config.sections["logging"]["transfers"]:
             return

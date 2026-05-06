@@ -1,5 +1,8 @@
 # SPDX-FileCopyrightText: 2021-2025 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -13,6 +16,9 @@ from pynicotine.slskmessages import Recommendations
 from pynicotine.slskmessages import RemoveThingILike
 from pynicotine.slskmessages import RemoveThingIHate
 from pynicotine.slskmessages import SimilarUsers
+
+if TYPE_CHECKING:
+    from pynicotine.slskmessages import Login
 
 
 class Interests:
@@ -35,7 +41,7 @@ class Interests:
     def _quit(self) -> None:
         self.similar_users.clear()
 
-    def _server_login(self, msg) -> None:
+    def _server_login(self, msg: Login) -> None:
 
         if not msg.success:
             return
@@ -133,7 +139,7 @@ class Interests:
     def request_similar_users(self) -> None:
         core.send_message_to_server(SimilarUsers())
 
-    def _similar_users(self, msg) -> None:
+    def _similar_users(self, msg: SimilarUsers) -> None:
         """Server code 110."""
 
         # Limit number of users to prevent excessive status requests
@@ -154,7 +160,7 @@ class Interests:
             # Request user status, speed and number of shared files
             core.users.watch_user(user.username, context="interests")
 
-    def _item_similar_users(self, msg) -> None:
+    def _item_similar_users(self, msg: ItemSimilarUsers) -> None:
         """Server code 112."""
 
         self._similar_users(msg)

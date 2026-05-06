@@ -51,7 +51,7 @@ class NATPMP(BaseImplementation):
     class PortmapResponse:
         __slots__ = ("message", "result")
 
-        def __init__(self, message):
+        def __init__(self, message: bytes):
 
             self.message = message
             (

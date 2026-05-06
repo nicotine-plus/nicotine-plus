@@ -5,7 +5,7 @@
 # SPDX-FileCopyrightText: 2006-2009 daelstorm <daelstorm@gmail.com>
 # SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
 # SPDX-License-Identifier: GPL-3.0-or-later
-
+from __future__ import annotations
 import json
 import os
 import time
@@ -13,6 +13,7 @@ import time
 from itertools import islice
 from operator import itemgetter
 from shlex import shlex
+from typing import TYPE_CHECKING
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -34,6 +35,12 @@ from pynicotine.utils import human_duration_approx
 from pynicotine.utils import humanize
 from pynicotine.utils import load_file
 from pynicotine.utils import write_file_and_backup
+
+if TYPE_CHECKING:
+    from pynicotine.slskmessages import DistribSearch
+    from pynicotine.slskmessages import ExcludedSearchPhrases
+    from pynicotine.slskmessages import Login
+    from pynicotine.slskmessages import WishlistInterval
 
 
 class ResultFilterMode:
@@ -121,7 +128,7 @@ class Search:
 
     def __init__(self):
 
-        self.searches = {}
+        self.searches: dict[int, SearchRequest] = {}
         self.excluded_phrases = []
         self.token = initial_token()
         self.wishlist = {}
@@ -158,7 +165,7 @@ class Search:
         self.remove_all_searches()
         self._allow_saving_wishlist = False
 
-    def _server_login(self, msg) -> None:
+    def _server_login(self, msg: Login) -> None:
 
         if not msg.success:
             return
@@ -178,7 +185,7 @@ class Search:
     # Load Wishlist #
 
     @staticmethod
-    def _load_wishlist_file(wishlist_file):
+    def _load_wishlist_file(wishlist_file: str):
 
         wishlist_file = encode_path(wishlist_file)
 
@@ -501,17 +508,17 @@ class Search:
 
         return search_term, room, users
 
-    def _send_global_search_request(self, search) -> None:
+    def _send_global_search_request(self, search: SearchRequest) -> None:
         core.send_message_to_server(FileSearch(search.token, search.term_transmitted))
 
-    def _send_rooms_search_request(self, search) -> None:
+    def _send_rooms_search_request(self, search: SearchRequest) -> None:
         core.send_message_to_server(RoomSearch(search.room, search.token, search.term_transmitted))
 
-    def _send_buddies_search_request(self, search) -> None:
+    def _send_buddies_search_request(self, search: SearchRequest) -> None:
         for username in core.buddies.users:
             core.send_message_to_server(UserSearch(username, search.token, search.term_transmitted))
 
-    def _send_peer_search_request(self, search) -> None:
+    def _send_peer_search_request(self, search: SearchRequest) -> None:
 
         for username in search.users:
             if username == core.users.login_username:
@@ -519,7 +526,7 @@ class Search:
 
             core.send_message_to_server(UserSearch(username, search.token, search.term_transmitted))
 
-    def _do_wishlist_search(self, search) -> None:
+    def _do_wishlist_search(self, search: SearchRequest) -> None:
 
         text, _room, _users = self._process_search_term(search.term_transmitted, mode="wishlist")
 
@@ -580,7 +587,7 @@ class Search:
         config.create_data_folder()
         write_file_and_backup(self.wishlist_file_path, self._save_wishlist_callback)
 
-    def _set_wishlist_interval(self, msg) -> None:
+    def _set_wishlist_interval(self, msg: WishlistInterval) -> None:
         """Server code 104."""
 
         self.wishlist_interval = msg.seconds
@@ -594,7 +601,7 @@ class Search:
             self._wishlist_timer_id = events.schedule(
                 delay=self.wishlist_interval, callback=self._do_next_wishlist_search, repeat=True)
 
-    def _excluded_search_phrases(self, msg) -> None:
+    def _excluded_search_phrases(self, msg: ExcludedSearchPhrases) -> None:
         """Server code 160."""
 
         if self.excluded_phrases and self.excluded_phrases != msg.phrases:
@@ -612,7 +619,7 @@ class Search:
             }
         )
 
-    def _file_search_response(self, msg) -> None:
+    def _file_search_response(self, msg: FileSearchResponse) -> None:
         """Peer code 9."""
 
         if msg.list is None:
@@ -640,13 +647,13 @@ class Search:
         if core.network_filter.is_user_ip_ignored(username, ip_address):
             msg.token = None
 
-    def _file_search_request_server(self, msg) -> None:
+    def _file_search_request_server(self, msg: FileSearch) -> None:
         """Server code 26."""
 
         self._process_search_request(msg.searchterm, msg.search_username, msg.token)
         core.pluginhandler.search_request_notification(msg.searchterm, msg.search_username, msg.token)
 
-    def _file_search_request_distributed(self, msg) -> None:
+    def _file_search_request_distributed(self, msg: DistribSearch) -> None:
         """Distrib code 3."""
 
         self._process_search_request(msg.searchterm, msg.search_username, msg.token)

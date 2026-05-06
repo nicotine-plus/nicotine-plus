@@ -4,6 +4,7 @@
 # SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
 # SPDX-FileCopyrightText: 2001-2003 Alexander Kanavin
 # SPDX-License-Identifier: GPL-3.0-or-later
+from __future__ import annotations
 
 import errno
 import random
@@ -18,6 +19,7 @@ from os import strerror
 from queue import Empty, SimpleQueue
 from threading import Thread
 from typing import Literal
+from typing import TYPE_CHECKING
 
 from pynicotine.events import events
 from pynicotine.logfacility import log
@@ -81,6 +83,9 @@ from pynicotine.slskmessages import increment_token
 from pynicotine.slskmessages import initial_token
 from pynicotine.utils import human_duration_approx
 from pynicotine.utils import human_speed
+
+if TYPE_CHECKING:
+    from pynicotine.slskmessages import InternalMessage
 
 
 class Connection:
@@ -423,7 +428,7 @@ class NetworkThread(Thread):
         self._num_sockets = 0
         self._last_cycle_time = 0
 
-        self._conns = {}
+        self._conns: dict[socket.socket, Connection] = {}
         self._indirect_token = initial_token()
 
         self._file_init_msgs = {}
@@ -452,7 +457,7 @@ class NetworkThread(Thread):
     def _enable_message_queue(self) -> None:
         self._should_process_queue = True
 
-    def _queue_network_message(self, msg) -> None:
+    def _queue_network_message(self, msg: InternalMessage) -> None:
         if self._should_process_queue:
             self._message_queue.put_nowait(msg)
 
@@ -530,7 +535,7 @@ class NetworkThread(Thread):
 
     # Connections #
 
-    def _set_tcp_buffer_size(self, sock, conn_type) -> None:
+    def _set_tcp_buffer_size(self, sock: socket.socket, conn_type) -> None:
         """Set a sane TCP buffer size limit for connections, to prevent boundless message
         flooding. The limit is smaller for distributed connections due to the larger attack
         surface and messages always remaining small. File connections use the OS limit,
@@ -546,7 +551,7 @@ class NetworkThread(Thread):
 
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.TCP_BUFFER_SIZE_MEDIUM)
 
-    def _indirect_request_error(self, init) -> None:
+    def _indirect_request_error(self, init: PeerInit) -> None:
 
         username = init.target_user
         conn_type = init.conn_type
@@ -630,8 +635,7 @@ class NetworkThread(Thread):
 
         return ip_address
 
-    def _add_init_message(self, init) -> bool:
-
+    def _add_init_message(self, init: PeerInit) -> bool:
         conn_type = init.conn_type
 
         if conn_type == ConnectionType.FILE:
@@ -730,13 +734,13 @@ class NetworkThread(Thread):
             event_name = NETWORK_MESSAGE_EVENTS[msg_class]
             events.emit_main_thread(event_name, msg)
 
-    def _modify_connection_events(self, conn, io_events) -> None:
+    def _modify_connection_events(self, conn: Connection, io_events) -> None:
 
         if conn.io_events != io_events:
             self._selector.modify(conn.sock, io_events)
             conn.io_events = io_events
 
-    def _process_conn_messages(self, init) -> None:
+    def _process_conn_messages(self, init: PeerInit) -> None:
         """A connection is established with the peer, time to queue up our peer
         messages for delivery."""
 
@@ -833,7 +837,7 @@ class NetworkThread(Thread):
         else:
             self._connect_to_peer(username, addr, init)
 
-    def _connect_to_peer(self, username: str, addr, init, pierce_token=None) -> None:
+    def _connect_to_peer(self, username: str, addr, init: PeerInit, pierce_token=None) -> None:
         """Initiate a connection with a peer."""
 
         conn_type = init.conn_type
@@ -898,7 +902,7 @@ class NetworkThread(Thread):
 
         self._process_conn_messages(init)
 
-    def _replace_existing_connection(self, init) -> None:
+    def _replace_existing_connection(self, init: PeerInit) -> None:
 
         username = init.target_user
         conn_type = init.conn_type
@@ -919,7 +923,7 @@ class NetworkThread(Thread):
         self._close_connection(self._conns[prev_init.sock])
 
     @staticmethod
-    def _close_socket(sock):
+    def _close_socket(sock: socket.socket):
 
         try:
             log.add_conn("Shutting down socket %s", sock)
@@ -1048,7 +1052,7 @@ class NetworkThread(Thread):
 
         del self._username_init_msgs[init_key]
 
-    def _is_connection_inactive(self, conn, current_time, num_sockets) -> bool:
+    def _is_connection_inactive(self, conn, current_time, num_sockets: int) -> bool:
 
         if conn is self._server_conn:
             return False
@@ -1073,7 +1077,7 @@ class NetworkThread(Thread):
 
         return False
 
-    def _check_connections(self, current_time) -> None:
+    def _check_connections(self, current_time: float) -> None:
 
         num_sockets = self._num_sockets
         inactive_conns = set()
@@ -1194,7 +1198,7 @@ class NetworkThread(Thread):
         if hasattr(socket, "TCP_USER_TIMEOUT"):
             sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_USER_TIMEOUT, timeout_seconds * 1000)
 
-    def _server_connect(self, msg) -> None:
+    def _server_connect(self, msg: ServerConnect) -> None:
         """We're connecting to the server."""
 
         if self._server_conn is not None:
@@ -1222,7 +1226,7 @@ class NetworkThread(Thread):
 
         self._init_server_conn(msg)
 
-    def _init_server_conn(self, msg) -> None:
+    def _init_server_conn(self, msg: ServerConnect) -> None:
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         io_events = selectors.EVENT_READ | selectors.EVENT_WRITE
@@ -1956,7 +1960,7 @@ class NetworkThread(Thread):
 
         self._download_limit_split = int(limit)
 
-    def _process_file_init_message(self, conn, in_buffer) -> Literal[4]:
+    def _process_file_init_message(self, conn: PeerConnection, in_buffer: bytearray) -> Literal[4]:
 
         msg_size = idx = 4
         msg = self._unpack_network_message(
@@ -1974,7 +1978,7 @@ class NetworkThread(Thread):
 
         return idx
 
-    def _process_file_offset_message(self, conn, in_buffer):
+    def _process_file_offset_message(self, conn: PeerConnection, in_buffer: bytearray):
 
         file_upload = self._file_upload_msgs[conn]
 
@@ -2100,7 +2104,7 @@ class NetworkThread(Thread):
             )
         return True
 
-    def _process_file_input(self, conn) -> None:
+    def _process_file_input(self, conn: PeerConnection) -> None:
         """Reads file messages from the input buffer of a 'F' connection."""
 
         in_buffer = conn.in_buffer
@@ -2578,7 +2582,7 @@ class NetworkThread(Thread):
 
     # Input/Output #
 
-    def _process_ready_input_socket(self, sock, current_time) -> None:
+    def _process_ready_input_socket(self, sock: socket.socket, current_time: float) -> None:
 
         if sock in self._conns:
             conn = self._conns[sock]
@@ -2613,7 +2617,7 @@ class NetworkThread(Thread):
 
         self._close_connection(conn)
 
-    def _process_ready_output_socket(self, sock, current_time) -> None:
+    def _process_ready_output_socket(self, sock: socket.socket, current_time: float) -> None:
 
         if sock in self._conns:
             conn = self._conns[sock]
@@ -2646,7 +2650,7 @@ class NetworkThread(Thread):
 
         self._close_connection(conn)
 
-    def _process_ready_sockets(self, current_time) -> None:
+    def _process_ready_sockets(self, current_time: float) -> None:
 
         if self._listen_socket is None:
             # We can't call select() when no sockets are registered (WinError 10022)
@@ -2769,7 +2773,7 @@ class NetworkThread(Thread):
 
         self._process_outgoing_messages(msgs)
 
-    def _read_data(self, conn, current_time) -> bool:
+    def _read_data(self, conn: Connection, current_time: float) -> bool:
 
         sock = conn.sock
         current_recv_size = conn.recv_size
@@ -2809,7 +2813,7 @@ class NetworkThread(Thread):
         conn.last_active = current_time
         return True
 
-    def _write_data(self, conn, current_time) -> bool:
+    def _write_data(self, conn: Connection, current_time: float) -> bool:
 
         sock = conn.sock
         out_buffer = conn.out_buffer

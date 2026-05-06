@@ -1,18 +1,22 @@
 # SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
-
+from __future__ import annotations
 import os
 
 from bisect import bisect_left
 from socket import inet_aton
 from struct import Struct
 from sys import intern
+from typing import TYPE_CHECKING
 
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 
 UINT32_UNPACK = Struct(">I").unpack_from
+
+if TYPE_CHECKING:
+    from pynicotine.slskmessages import GetPeerAddress
 
 
 class NetworkFilter:
@@ -553,7 +557,7 @@ class NetworkFilter:
         if ip_address not in previous_ip_addresses:
             self._add_user_ip_to_list(ip_list, username, ip_address)
 
-    def _get_peer_address(self, msg) -> None:
+    def _get_peer_address(self, msg: GetPeerAddress) -> None:
         """Server code 3."""
 
         username = msg.user

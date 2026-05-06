@@ -1,15 +1,21 @@
 # SPDX-FileCopyrightText: 2021-2025 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
-
+from __future__ import annotations
 import time
 
-from typing import Literal
+from typing import TYPE_CHECKING
 
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
+
+if TYPE_CHECKING:
+    from typing import Literal
+
+    from pynicotine.slskmessages import GetUserStatus
+    from pynicotine.slskmessages import Login
 
 
 class Buddy:
@@ -122,7 +128,7 @@ class Buddies:
         self.users.clear()
         self._allow_saving_buddies = False
 
-    def _server_login(self, msg) -> None:
+    def _server_login(self, msg: Login) -> None:
 
         if not msg.success:
             return
@@ -204,7 +210,7 @@ class Buddies:
 
         events.emit("buddy-notify", username, notify)
 
-    def set_buddy_prioritized(self, username: str, prioritized) -> None:
+    def set_buddy_prioritized(self, username: str, prioritized: bool) -> None:
 
         if username not in self.users:
             return
@@ -273,7 +279,7 @@ class Buddies:
         config.sections["server"]["userlist"] = user_rows
         config.write_configuration()
 
-    def _user_status(self, msg) -> None:
+    def _user_status(self, msg: GetUserStatus) -> None:
         """Server code 7."""
 
         username = msg.user

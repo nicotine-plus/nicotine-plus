@@ -50,7 +50,7 @@ class CLIInputProcessor(Thread):
                 # CLI input prompt is no longer available
                 return
 
-    def _handle_prompt_callback(self, user_input, callback) -> bool:
+    def _handle_prompt_callback(self, user_input: str, callback) -> bool:
 
         if not callback:
             return False

@@ -1,11 +1,13 @@
 # SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
+from __future__ import annotations
 
 import json
 import os
 
 from itertools import chain
 from threading import Thread
+from typing import TYPE_CHECKING
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -23,6 +25,9 @@ from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
 from pynicotine.utils import human_size
 from pynicotine.utils import humanize
+
+if TYPE_CHECKING:
+    from pynicotine.slskmessages import Login
 
 
 class BrowsedUser:
@@ -64,7 +69,7 @@ class UserBrowse:
     def _quit(self) -> None:
         self.remove_all_users()
 
-    def _server_login(self, msg) -> None:
+    def _server_login(self, msg: Login) -> None:
 
         if not msg.success:
             return
@@ -437,7 +442,7 @@ class UserBrowse:
                 core.send_message_to_network_thread(RemoveAllowedResponse(SharedFileListResponse, username))
                 break
 
-    def _shared_file_list_response(self, msg) -> None:
+    def _shared_file_list_response(self, msg: SharedFileListResponse) -> None:
 
         username = msg.username
         browsed_user = self.users.get(username)

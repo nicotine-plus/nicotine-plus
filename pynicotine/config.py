@@ -89,10 +89,10 @@ class Config:
 
         return config_folder_path, data_folder_path
 
-    def set_config_file(self, file_path) -> None:
+    def set_config_file(self, file_path: str) -> None:
         self.config_file_path = os.path.abspath(file_path)
 
-    def set_data_folder(self, folder_path) -> None:
+    def set_data_folder(self, folder_path: str) -> None:
         self.data_folder_path = os.environ["NICOTINE_DATA_HOME"] = os.path.abspath(folder_path)
 
     def create_config_folder(self) -> bool:
@@ -136,7 +136,7 @@ class Config:
             log.add(_("Cannot create folder %(path)s: %(error)s"),
                     {"path": self.data_folder_path, "error": error})
 
-    def load_config(self, isolated_mode: bool = False):
+    def load_config(self, isolated_mode: bool = False) -> None:
 
         if self.config_loaded:
             return

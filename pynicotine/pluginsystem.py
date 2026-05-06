@@ -224,7 +224,7 @@ class BasePlugin:
     # The following are functions to make your life easier,
     # you shouldn't override them.
 
-    def log(self, msg, msg_args=None) -> None:
+    def log(self, msg: str, msg_args=None) -> None:
         log.add(f"{self.human_name}: {msg}", msg_args)
 
     def send_public(self, room: str, text: str) -> None:

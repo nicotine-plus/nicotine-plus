@@ -284,7 +284,7 @@ class Events:
     def invoke_main_thread(self, callback, *args, **kwargs) -> None:
         self.emit_main_thread("thread-callback", callback, *args, **kwargs)
 
-    def schedule(self, delay, callback, callback_args=None, repeat: bool = False):
+    def schedule(self, delay: int, callback, callback_args=None, repeat: bool = False):
 
         if delay <= 0:
             return None
@@ -300,7 +300,7 @@ class Events:
         )
         return self._scheduler_event_id
 
-    def schedule_at(self, timestamp, callback, callback_args=None):
+    def schedule_at(self, timestamp: float, callback, callback_args=None):
         delay = (timestamp - time.time())
         return self.schedule(delay, callback, callback_args, repeat=False)
 

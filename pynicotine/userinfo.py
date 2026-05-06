@@ -1,8 +1,11 @@
 # SPDX-FileCopyrightText: 2021-2025 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
+from __future__ import annotations
 
 import os
 import time
+
+from typing import TYPE_CHECKING
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -17,6 +20,9 @@ from pynicotine.slskmessages import UserInfoResponse
 from pynicotine.slskmessages import UserInterests
 from pynicotine.utils import encode_path
 from pynicotine.utils import unescape
+
+if TYPE_CHECKING:
+    from pynicotine.slskmessages import Login
 
 
 class UserInfo:
@@ -41,7 +47,7 @@ class UserInfo:
     def _quit(self) -> None:
         self.remove_all_users()
 
-    def _server_login(self, msg) -> None:
+    def _server_login(self, msg: Login) -> None:
 
         if not msg.success:
             return
@@ -171,7 +177,7 @@ class UserInfo:
                 core.send_message_to_network_thread(RemoveAllowedResponse(UserInfoResponse, username))
                 break
 
-    def _user_info_request(self, msg) -> None:
+    def _user_info_request(self, msg: UserInfoRequest) -> None:
         """Peer code 15."""
 
         username = msg.username
@@ -189,5 +195,5 @@ class UserInfo:
         log.add(_("User %(user)s is viewing your profile"), {"user": username})
         core.send_message_to_peer(username, msg)
 
-    def _user_info_response(self, msg) -> None:
+    def _user_info_response(self, msg: UserInfoResponse) -> None:
         core.send_message_to_network_thread(RemoveAllowedResponse(UserInfoResponse, msg.username))

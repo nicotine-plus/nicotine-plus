@@ -1,5 +1,8 @@
 # SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 import pynicotine
 from pynicotine.config import config
@@ -14,6 +17,11 @@ from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import censor_text
 from pynicotine.utils import find_whole_word
 from pynicotine.utils import replace_text
+
+if TYPE_CHECKING:
+    from pynicotine.slskmessages import GetPeerAddress
+    from pynicotine.slskmessages import GetUserStatus
+    from pynicotine.slskmessages import Login
 
 
 class PrivateChat:
@@ -56,7 +64,7 @@ class PrivateChat:
         self.remove_all_users(is_permanent=False)
         self.completions.clear()
 
-    def _server_login(self, msg) -> None:
+    def _server_login(self, msg: Login) -> None:
 
         if not msg.success:
             return
@@ -102,7 +110,7 @@ class PrivateChat:
     def clear_private_messages(self, username: str) -> None:
         events.emit("clear-private-messages", username)
 
-    def private_message_queue_add(self, msg) -> None:
+    def private_message_queue_add(self, msg: MessageUser) -> None:
         """Queue a private message until we've received a user's IP address."""
 
         username = msg.user
@@ -153,7 +161,7 @@ class PrivateChat:
         if users:
             core.send_message_to_server(MessageUsers(users, message))
 
-    def _get_peer_address(self, msg) -> None:
+    def _get_peer_address(self, msg: GetPeerAddress) -> None:
         """Server code 3.
 
         Received a user's IP address, process any queued private
@@ -170,7 +178,7 @@ class PrivateChat:
             queued_msg.user = username
             events.emit("message-user", queued_msg, queued_message=True)
 
-    def _user_status(self, msg) -> None:
+    def _user_status(self, msg: GetUserStatus) -> None:
         """Server code 7."""
 
         if msg.user == core.users.login_username and msg.status != UserStatus.AWAY:
@@ -190,7 +198,7 @@ class PrivateChat:
 
         return "remote"
 
-    def get_mention_type(self, message):
+    def get_mention_type(self, message: str):
 
         message_lower = message.lower()
 

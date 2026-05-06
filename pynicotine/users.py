@@ -1,5 +1,7 @@
 # SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
+from __future__ import annotations
+from typing import TYPE_CHECKING
 
 import pynicotine
 from pynicotine.config import config
@@ -20,6 +22,15 @@ from pynicotine.slskmessages import WatchUser
 from pynicotine.utils import UINT32_LIMIT
 from pynicotine.utils import human_duration_approx
 from pynicotine.utils import open_uri
+
+if TYPE_CHECKING:
+    from typing import Literal
+
+    from pynicotine.slskmessages import AdminMessage
+    from pynicotine.slskmessages import ConnectToPeer
+    from pynicotine.slskmessages import Login
+    from pynicotine.slskmessages import PrivilegedUsers
+    from pynicotine.slskmessages import ServerDisconnect
 
 
 class WatchedUser:
@@ -210,7 +221,7 @@ class Users:
 
         del self.watched[username]
 
-    def _server_disconnect(self, msg) -> None:
+    def _server_disconnect(self, msg: ServerDisconnect) -> None:
 
         self.login_status = UserStatus.OFFLINE
 
@@ -233,7 +244,7 @@ class Users:
         self.privileges_left = None
         self._should_open_privileges_url = False
 
-    def _server_login(self, msg) -> None:
+    def _server_login(self, msg: Login) -> None:
         """Server code 1."""
 
         if msg.success:
@@ -268,7 +279,7 @@ class Users:
 
         log.add(_("Unable to connect to the server. Reason: %s"), msg.rejection_reason, title=_("Cannot Connect"))
 
-    def _get_peer_address(self, msg) -> None:
+    def _get_peer_address(self, msg: GetPeerAddress) -> None:
         """Server code 3."""
 
         username = msg.user
@@ -316,7 +327,7 @@ class Users:
             "country": country
         }, title=_("User IP Address"))
 
-    def _watch_user(self, msg) -> None:
+    def _watch_user(self, msg: WatchUser) -> None:
         """Server code 5."""
 
         if not msg.userexists:
@@ -326,7 +337,7 @@ class Users:
 
         events.emit("user-stats", msg)
 
-    def _user_status(self, msg) -> None:
+    def _user_status(self, msg: GetUserStatus) -> None:
         """Server code 7."""
 
         username = msg.user
@@ -374,7 +385,7 @@ class Users:
 
         core.pluginhandler.user_status_notification(username, status, msg.privileged)
 
-    def _connect_to_peer(self, msg) -> None:
+    def _connect_to_peer(self, msg: ConnectToPeer) -> None:
         """Server code 18."""
 
         username = msg.user
@@ -389,7 +400,7 @@ class Users:
         elif username in self.privileged:
             self.privileged.remove(username)
 
-    def _user_stats(self, msg) -> None:
+    def _user_stats(self, msg: GetUserStats) -> None:
         """Server code 36."""
 
         username = msg.user
@@ -413,18 +424,18 @@ class Users:
         })
 
     @staticmethod
-    def _admin_message(msg) -> None:
+    def _admin_message(msg: AdminMessage) -> None:
         """Server code 66."""
 
         log.add(msg.msg, title=_("Soulseek Announcement"))
 
-    def _privileged_users(self, msg) -> None:
+    def _privileged_users(self, msg: PrivilegedUsers) -> None:
         """Server code 69."""
 
         for username in msg.users:
             self.privileged.add(username)
 
-    def _check_privileges(self, msg) -> None:
+    def _check_privileges(self, msg: CheckPrivileges) -> None:
         """Server code 92."""
 
         seconds = msg.seconds
@@ -442,7 +453,7 @@ class Users:
         self._should_open_privileges_url = False
 
     @staticmethod
-    def _change_password(msg) -> None:
+    def _change_password(msg: ChangePassword) -> None:
         """Server code 142."""
 
         config.sections["server"]["passw"] = msg.password
