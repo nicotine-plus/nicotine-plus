@@ -621,7 +621,7 @@ class NetworkThread(Thread):
 
         return False
 
-    def _find_local_ip_address(self) -> socket._RetAddress:
+    def _find_local_ip_address(self):
 
         # Create a UDP socket
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as local_socket:
