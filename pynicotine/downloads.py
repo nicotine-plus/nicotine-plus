@@ -8,7 +8,7 @@
 # SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
 # SPDX-FileCopyrightText: 2001-2003 Alexander Kanavin
 # SPDX-License-Identifier: GPL-3.0-or-later
-
+from __future__ import annotations
 import os
 import re
 import shutil
@@ -21,6 +21,7 @@ except ImportError:
     from hashlib import md5
 
 from collections import defaultdict
+from typing import TYPE_CHECKING
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -54,6 +55,13 @@ from pynicotine.utils import encode_path
 from pynicotine.utils import REPLACEMENTCHAR
 from pynicotine.utils import safe_path_join
 from pynicotine.utils import truncate_string_byte
+
+if TYPE_CHECKING:
+    from pynicotine.slskmessages import GetUserStatus
+    from pynicotine.slskmessages import PlaceInQueueResponse
+    from pynicotine.slskmessages import TransferRequest
+    from pynicotine.slskmessages import UploadDenied
+    from pynicotine.slskmessages import UploadFailed
 
 
 class RequestedFolder:
@@ -330,10 +338,10 @@ class Downloads(Transfers):
 
     # Transfer Actions #
 
-    def _update_transfer(self, transfer, update_parent: bool = True) -> None:
+    def _update_transfer(self, transfer: Transfer, update_parent: bool = True) -> None:
         events.emit("update-download", transfer, update_parent)
 
-    def _enqueue_transfer(self, transfer, bypass_filter: bool = False) -> bool:
+    def _enqueue_transfer(self, transfer: Transfer, bypass_filter: bool = False) -> bool:
 
         username = transfer.username
         virtual_path = transfer.virtual_path
@@ -418,7 +426,7 @@ class Downloads(Transfers):
         # No more limited downloads
         del self._user_queue_limits[username]
 
-    def _dequeue_transfer(self, transfer) -> bool:
+    def _dequeue_transfer(self, transfer: Transfer) -> bool:
 
         if not super()._dequeue_transfer(transfer):
             return False
@@ -532,7 +540,7 @@ class Downloads(Transfers):
             }
         )
 
-    def _abort_transfer(self, transfer, status=None, denied_message=None, update_parent: bool = True) -> None:
+    def _abort_transfer(self, transfer: Transfer, status=None, denied_message=None, update_parent: bool = True) -> None:
 
         if transfer.file_handle is not None:
             log.add_download(
@@ -547,7 +555,7 @@ class Downloads(Transfers):
         if status:
             events.emit("abort-download", transfer, status, update_parent)
 
-    def _clear_transfer(self, transfer, denied_message=None, update_parent: bool = True) -> None:
+    def _clear_transfer(self, transfer: Transfer, denied_message=None, update_parent: bool = True) -> None:
 
         virtual_path = transfer.virtual_path
         username = transfer.username
@@ -717,7 +725,7 @@ class Downloads(Transfers):
 
         return max_bytes
 
-    def get_download_basename(self, virtual_path: str, download_folder_path: str, avoid_conflict: bool = False):
+    def get_download_basename(self, virtual_path: str, download_folder_path: str, avoid_conflict: bool = False) -> str:
         """Returns the download basename for a virtual file path."""
 
         max_bytes = self.get_basename_byte_limit(download_folder_path)
@@ -789,7 +797,7 @@ class Downloads(Transfers):
 
         return safe_path_join(incomplete_folder_path, prefix + basename_no_extension + extension)
 
-    def get_current_download_file_path(self, transfer):
+    def get_current_download_file_path(self, transfer: Transfer):
         """Returns the current file path of a download."""
 
         file_path, file_exists = self.get_complete_download_file_path(
@@ -860,7 +868,7 @@ class Downloads(Transfers):
         if paused or self._enqueue_transfer(transfer, bypass_filter=bypass_filter):
             self._update_transfer(transfer)
 
-    def retry_download(self, transfer, bypass_filter: bool = False) -> None:
+    def retry_download(self, transfer: Transfer, bypass_filter: bool = False) -> None:
 
         username = transfer.username
         active_downloads = self.active_users.get(username, {}).values()
@@ -875,7 +883,7 @@ class Downloads(Transfers):
         if self._enqueue_transfer(transfer, bypass_filter=bypass_filter):
             self._update_transfer(transfer)
 
-    def retry_downloads(self, downloads) -> None:
+    def retry_downloads(self, downloads: dict[Transfer, None]) -> None:
 
         num_downloads = len(downloads)
 
@@ -887,7 +895,7 @@ class Downloads(Transfers):
             bypass_filter = (num_downloads == 1 and download.status == TransferStatus.FILTERED)
             self.retry_download(download, bypass_filter)
 
-    def abort_downloads(self, downloads, status=TransferStatus.PAUSED):
+    def abort_downloads(self, downloads: dict[Transfer, None], status=TransferStatus.PAUSED) -> None:
 
         ignored_statuses = {status, TransferStatus.FINISHED}
 
@@ -935,7 +943,7 @@ class Downloads(Transfers):
 
         self._pending_queue_messages.clear()
 
-    def _user_status(self, msg) -> None:
+    def _user_status(self, msg: GetUserStatus) -> None:
         """Server code 7."""
 
         username = msg.username
@@ -1079,7 +1087,7 @@ class Downloads(Transfers):
 
         del self._requested_folders[username][folder_path]
 
-    def _transfer_request(self, msg) -> None:
+    def _transfer_request(self, msg: TransferRequest) -> None:
         """Peer code 40."""
 
         if msg.direction != TransferDirection.UPLOAD:
@@ -1094,7 +1102,7 @@ class Downloads(Transfers):
 
         core.send_message_to_peer(username, response)
 
-    def _transfer_request_downloads(self, msg) -> TransferResponse:
+    def _transfer_request_downloads(self, msg: TransferRequest) -> TransferResponse:
 
         username = msg.username
         virtual_path = msg.file_path
@@ -1163,7 +1171,7 @@ class Downloads(Transfers):
         log.add_transfer("Denied file request: user %s, message %s", (username, msg))
         return TransferResponse(allowed=False, reason=cancel_reason, token=token)
 
-    def _transfer_timeout(self, transfer) -> None:
+    def _transfer_timeout(self, transfer: Transfer) -> None:
 
         if transfer.request_timer_id is None:
             return
@@ -1237,7 +1245,7 @@ class Downloads(Transfers):
             # Must be emitted after the final update to prevent inconsistent state
             core.pluginhandler.download_started_notification(username, virtual_path, incomplete_file_path)
 
-    def _upload_denied(self, msg) -> None:
+    def _upload_denied(self, msg: UploadDenied) -> None:
         """Peer code 50."""
 
         username = msg.username
@@ -1280,7 +1288,7 @@ class Downloads(Transfers):
         log.add_transfer("Download request denied by user %s for file %s. Reason: %s",
                          (username, virtual_path, msg.reason))
 
-    def _upload_failed(self, msg) -> None:
+    def _upload_failed(self, msg: UploadFailed) -> None:
         """Peer code 46."""
 
         username = msg.username
@@ -1357,7 +1365,7 @@ class Downloads(Transfers):
 
         self._abort_transfer(download, status=status)
 
-    def _place_in_queue_response(self, msg) -> None:
+    def _place_in_queue_response(self, msg: PlaceInQueueResponse) -> None:
         """Peer code 44.
 
         The peer tells us our place in queue for a particular transfer
