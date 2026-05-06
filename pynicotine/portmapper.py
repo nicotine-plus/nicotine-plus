@@ -434,7 +434,9 @@ class UPnP(BaseImplementation):
 
         return service
 
-    def _request_port_mapping(self, public_port: int, private_ip, private_port: int, mapping_description, lease_duration: int):
+    def _request_port_mapping(
+        self, public_port: int, private_ip, private_port: int, mapping_description, lease_duration: int
+    ):
         """Function that adds a port mapping to the router.
 
         If a port mapping already exists, it is updated with a lease

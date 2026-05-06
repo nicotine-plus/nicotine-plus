@@ -377,8 +377,10 @@ class Search:
 
         return search
 
-    def _add_wish_search(self, token: int, search_term: str, auto_search: bool = True, filter_mode=ResultFilterMode.NONE,
-                         time_added=None, custom_filters=None, ignored_users=None) -> WishSearchRequest:
+    def _add_wish_search(
+        self, token: int, search_term: str, auto_search: bool = True, filter_mode=ResultFilterMode.NONE,
+        time_added=None, custom_filters=None, ignored_users=None
+    ) -> WishSearchRequest:
 
         term_sanitized, term_transmitted, included_words, excluded_words = self._sanitize_search_term(search_term)
 

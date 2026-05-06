@@ -147,7 +147,9 @@ class ChatRooms:
         self.private_rooms.clear()
         self.update_completions()
 
-    def show_room(self, room: str, is_private: bool = False, switch_page: bool = True, remembered: bool = False) -> None:
+    def show_room(
+        self, room: str, is_private: bool = False, switch_page: bool = True, remembered: bool = False
+    ) -> None:
 
         room_obj = self.joined_rooms.get(room)
 

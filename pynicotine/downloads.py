@@ -924,7 +924,9 @@ class Downloads(Transfers):
     def _set_connection_stats(self, download_bandwidth: int = 0, **_unused) -> None:
         self.total_bandwidth = download_bandwidth
 
-    def _peer_connection_error(self, username: str, conn_type, msgs, is_offline: bool = False, is_timeout: bool = True) -> None:
+    def _peer_connection_error(
+        self, username: str, conn_type, msgs, is_offline: bool = False, is_timeout: bool = True
+    ) -> None:
 
         if not msgs:
             return

@@ -112,7 +112,9 @@ class UserBrowse:
 
         events.emit_main_thread("shared-file-list-response", msg)
 
-    def browse_local_shares(self, path=None, permission_level=None, new_request: bool = False, switch_page: bool = True) -> None:
+    def browse_local_shares(
+        self, path=None, permission_level=None, new_request: bool = False, switch_page: bool = True
+    ) -> None:
         """Browse your own shares."""
 
         username = core.users.login_username or config.sections["server"]["login"]

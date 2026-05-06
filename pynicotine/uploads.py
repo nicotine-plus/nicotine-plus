@@ -874,7 +874,9 @@ class Uploads(Transfers):
         self.clear_uploads(uploads=removed_uploads, denied_message=status)
         self._check_upload_queue()
 
-    def _peer_connection_error(self, username: str, conn_type, msgs, is_offline: bool = False, is_timeout: bool = True) -> None:
+    def _peer_connection_error(
+        self, username: str, conn_type, msgs, is_offline: bool = False, is_timeout: bool = True
+    ) -> None:
 
         if not msgs:
             return
