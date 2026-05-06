@@ -29,7 +29,7 @@ class BaseImplementation:
         self.port = None
         self.local_ip_address = None
 
-    def set_port(self, port: int, local_ip_addres) -> None:
+    def set_port(self, port: int, local_ip_address) -> None:
         self.port = port
         self.local_ip_address = local_ip_address
 
