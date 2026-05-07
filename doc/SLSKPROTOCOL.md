@@ -225,14 +225,16 @@ missing if a file does not provide them.
 ## Major Versions
 
 Established clients have unique numbers to avoid impersonating each other.
+Obsolete clients cannot [Login](#server-code-1) to the server since 2/17/2005
+due to the `INVALIDVERSION` [Rejection Reason](#login-rejection-reasons).
 
 ### Reserved
 
 | Major Version | Client                                  |
 |---------------|-----------------------------------------|
+| `155` / `156` | [Soulseek®](#soulseek) *(2005 to 2008)* |
 | `157`         | [Soulseek NS and SoulseekQt](#soulseek) |
-| `158`         | *Reserved for SoulseekQt development*   |
-| `159`         | *Reserved for SoulseekQt development*   |
+| `158` / `159` | *Reserved for SoulseekQt development*   |
 | `160`         | [Nicotine+](#nicotine)                  |
 | `169`         | seeleseek                               |
 | `170`         | [Soulseek.NET](#soulseeknet) *(API)*    |
@@ -240,21 +242,22 @@ Established clients have unique numbers to avoid impersonating each other.
 
 ### Obsolete
 
-| Major Version | Client                     |
-|---------------|----------------------------|
-| `139`...`155` | Soulseek® *(2002 onwards)* |
-| `156`         | Soulseek® *(2008)*         |
-| `178`         | Museek+                    |
-| `180`         | PySoulSeek                 |
-| `181`         | Nicotine+ 1.2.0 to 1.2.11  |
-| `182`         | Museek+                    |
-| `198`         | Nicotine 1.0.6 to 1.0.8    |
-| `200`         | Nicotine 1.0.4 and below   |
+| Major Version | Client                    |
+|---------------|---------------------------|
+| `154` or less | Soulseek® *(up to 2004)*  |
+| `178`         | Museek+                   |
+| `180`         | PySoulSeek                |
+| `181`         | Nicotine+ 1.2.0 to 1.2.11 |
+| `182`         | Museek+                   |
+| `198`         | Nicotine 1.0.6 to 1.0.8   |
+| `200`         | Nicotine 1.0.4 and below  |
 
 
 ## Minor Versions
 
-Projects have their own rules for versioning. The number can be any **uint32**.
+Projects have their own rules for versioning. Any **uint32** number may be
+chosen, but if it is `0` (zero; or if nothing is sent) then the client cannot
+participate in the [distributed search network](#distributed-messages).
 
 ### Nicotine+
 
@@ -275,24 +278,26 @@ API library requires each downstream project to choose a unique `minorVersion`.
 
 #### Major Version `170`
 
-| Minor Version | Client                                    |
-|---------------|-------------------------------------------|
-| `100`         | *All legacy clients up to API 8.5.0*      |
-| `760`         | slskd *(Reference implementation of API)* |
-| `9999`        | *Experimental development and testing*    |
+| Minor Version | Client                                 |
+|---------------|----------------------------------------|
+| `100`         | *All legacy clients up to API 8.5.0*   |
+| `760`         | slskd *(API reference implementation)* |
+| `9999`        | *Experimental development and testing* |
 
 ### Soulseek®
 
-Official client minor version number is incremented for each release.
+Official client minor version number seems to be incremented for each release.
+Legacy clients (<=`156`) had no such concept of a minor version number.
 
 #### Major Version `157`
 
-| Minor Version | Release                    |
-|---------------|----------------------------|
-| `17` (`0x11`) | NS 13c                     |
-| `19` (`0x13`) | NS 13e                     |
-| ...           | Qt Public Build 1 *(2011)* |
-|               | Qt *(2012 onwards)*        |
+| Minor Version | Release                     |
+|---------------|-----------------------------|
+| `0` to `11`   | NS *(Obsolete test builds)* |
+| `17` (`0x11`) | NS 13c                      |
+| `19` (`0x13`) | NS 13e                      |
+| ...           | Qt Public Build 1 *(2011)*  |
+|               | Qt *(2012 onwards)*         |
 
 
 # Server Messages
