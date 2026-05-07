@@ -3355,6 +3355,12 @@ class SharedFileListResponse(PeerMessage):
         if not decompressor.unconsumed_tail:
             self._parse_network_message()
 
+    def parse_local_message(self):
+        self._message = memoryview(self.make_network_message())
+        self._offset = 0
+
+        self.parse_network_message()
+
     def _parse_result_list(self):
         ndir = self.unpack_uint32()
 
@@ -3951,7 +3957,7 @@ class UploadQueueNotification(PeerMessage):
     def make_network_message(self):
         return b""
 
-    def parse_network_message(self, _message):
+    def parse_network_message(self):
         return b""
 
 
