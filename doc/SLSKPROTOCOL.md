@@ -254,7 +254,7 @@ Established clients have unique numbers to avoid impersonating each other.
 
 ## Minor Versions
 
-Projects have thier own rules for versioning. The number can be any **uint32**.
+Projects have their own rules for versioning. The number can be any **uint32**.
 
 ### Nicotine+
 
