@@ -33,6 +33,7 @@ from pynicotine.utils import write_file_and_backup
 
 if TYPE_CHECKING:
     from pynicotine.slskmessages import Login
+    from pynicotine.slskmessages import ServerDisconnect
 
 
 class TransferStatus:
@@ -104,7 +105,7 @@ class Transfers:
     def __init__(self, name: str):
 
         self.transfers = {}
-        self.queued_transfers = {}
+        self.queued_transfers: dict[Transfer, None] = {}
         self.queued_users = defaultdict(dict)
         self.active_users = defaultdict(dict)
         self.failed_users = defaultdict(dict)
@@ -154,7 +155,7 @@ class Transfers:
 
         self.update_transfer_limits()
 
-    def _server_disconnect(self, _msg) -> None:
+    def _server_disconnect(self, _msg: ServerDisconnect) -> None:
 
         for users in (self.queued_users, self.active_users, self.failed_users):
             for transfers in users.copy().values():

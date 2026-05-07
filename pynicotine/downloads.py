@@ -57,8 +57,11 @@ from pynicotine.utils import safe_path_join
 from pynicotine.utils import truncate_string_byte
 
 if TYPE_CHECKING:
+    from pynicotine.slskmessages import FileTransferInit
     from pynicotine.slskmessages import GetUserStatus
+    from pynicotine.slskmessages import Login
     from pynicotine.slskmessages import PlaceInQueueResponse
+    from pynicotine.slskmessages import ServerDisconnect
     from pynicotine.slskmessages import TransferRequest
     from pynicotine.slskmessages import UploadDenied
     from pynicotine.slskmessages import UploadFailed
@@ -124,7 +127,7 @@ class Downloads(Transfers):
 
         self._folder_basename_byte_limits.clear()
 
-    def _server_login(self, msg) -> None:
+    def _server_login(self, msg: Login) -> None:
 
         if not msg.success:
             return
@@ -143,7 +146,7 @@ class Downloads(Transfers):
         self._retry_io_downloads_timer_id = events.schedule(
             delay=900, callback=self._retry_failed_io_downloads, repeat=True)
 
-    def _server_disconnect(self, msg) -> None:
+    def _server_disconnect(self, msg: ServerDisconnect) -> None:
 
         super()._server_disconnect(msg)
 
@@ -751,7 +754,7 @@ class Downloads(Transfers):
 
         return corrected_basename
 
-    def get_complete_download_file_path(self, username: str, virtual_path: str, size, download_folder_path=None):
+    def get_complete_download_file_path(self, username: str, virtual_path: str, size: int, download_folder_path=None):
         """Returns the download path of a complete download, if available."""
 
         if not download_folder_path:
@@ -797,7 +800,7 @@ class Downloads(Transfers):
 
         return safe_path_join(incomplete_folder_path, prefix + basename_no_extension + extension)
 
-    def get_current_download_file_path(self, transfer: Transfer):
+    def get_current_download_file_path(self, transfer: Transfer) -> str:
         """Returns the current file path of a download."""
 
         file_path, file_exists = self.get_complete_download_file_path(
@@ -1052,7 +1055,7 @@ class Downloads(Transfers):
         requested_folder.has_retried = True
         self.request_folder(username, folder_path)
 
-    def _folder_contents_response(self, msg) -> None:
+    def _folder_contents_response(self, msg: FolderContentsResponse) -> None:
         """Peer code 37."""
 
         if msg.list is None:
@@ -1194,7 +1197,7 @@ class Downloads(Transfers):
         self._abort_transfer(download, status=TransferStatus.LOCAL_FILE_ERROR)
         log.add(_("Download I/O error: %s"), error)
 
-    def _file_download_init(self, username, token, sock) -> None:
+    def _file_download_init(self, username: str, token: int, sock) -> None:
         """A peer is requesting to start uploading a file to us."""
 
         download = self.active_users.get(username, {}).get(token)

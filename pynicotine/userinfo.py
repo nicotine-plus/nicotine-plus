@@ -25,6 +25,7 @@ from pynicotine.utils import unescape
 
 if TYPE_CHECKING:
     from pynicotine.slskmessages import Login
+    from pynicotine.slskmessages import ServerDisconnect
 
 
 class UserInfo:
@@ -57,7 +58,7 @@ class UserInfo:
         for username in self.users:
             core.users.watch_user(username, context="userinfo")  # Get notified of user status
 
-    def _server_disconnect(self, _msg) -> None:
+    def _server_disconnect(self, _msg: ServerDisconnect) -> None:
         self._requested_info_times.clear()
 
     def _get_user_info_response(self, requesting_username=None, requesting_ip_address=None) -> UserInfoResponse:
@@ -170,11 +171,7 @@ class UserInfo:
                 "error": error
             })
 
-<<<<<<< HEAD
-    def _peer_connection_error(self, username, conn_type, msgs, is_offline=False):
-=======
-    def _peer_connection_error(self, username: str, conn_type, msgs, **_unused) -> None:
->>>>>>> 7f9916c0e (Add type annotations)
+    def _peer_connection_error(self, username: str, conn_type, msgs, is_offline=False) -> None:
 
         if not msgs:
             return

@@ -654,7 +654,7 @@ class PluginHandler:
 
         return instance
 
-    def enable_plugin(self, plugin_name: str):
+    def enable_plugin(self, plugin_name: str) -> bool:
 
         # Our config file doesn't play nicely with some characters
         if "=" in plugin_name:

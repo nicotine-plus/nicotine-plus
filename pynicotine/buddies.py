@@ -16,6 +16,7 @@ if TYPE_CHECKING:
 
     from pynicotine.slskmessages import GetUserStatus
     from pynicotine.slskmessages import Login
+    from pynicotine.slskmessages import ServerDisconnect
 
 
 class Buddy:
@@ -136,7 +137,7 @@ class Buddies:
         for username in self.users:
             core.users.watch_user(username, context="buddies")
 
-    def _server_disconnect(self, _msg) -> None:
+    def _server_disconnect(self, _msg: ServerDisconnect) -> None:
 
         for username, user_data in self.users.items():
             user_data.status = UserStatus.OFFLINE

@@ -17,6 +17,7 @@ UINT32_UNPACK = Struct(">I").unpack_from
 
 if TYPE_CHECKING:
     from pynicotine.slskmessages import GetPeerAddress
+    from pynicotine.slskmessages import ServerDisconnect
 
 
 class NetworkFilter:
@@ -329,7 +330,7 @@ class NetworkFilter:
 
         self._loaded_ip_country_data = True
 
-    def _server_disconnect(self, _msg) -> None:
+    def _server_disconnect(self, _msg: ServerDisconnect) -> None:
         self._ip_ban_requested.clear()
         self._ip_ignore_requested.clear()
 

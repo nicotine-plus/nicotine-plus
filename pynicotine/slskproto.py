@@ -928,7 +928,7 @@ class NetworkThread(Thread):
 
         log.add_conn("Requesting indirect connection to user %s with token %s", (username, init.indirect_token))
 
-    def _establish_outgoing_peer_connection(self, conn):
+    def _establish_outgoing_peer_connection(self, conn: PeerConnection):
 
         conn.is_established = True
         init = conn.init
@@ -972,7 +972,7 @@ class NetworkThread(Thread):
         self._close_connection(self._conns[prev_init.sock])
 
     @staticmethod
-    def _close_socket(sock: socket.socket):
+    def _close_socket(sock: socket.socket) -> None:
 
         try:
             log.add_conn("Shutting down socket %s", sock)
@@ -1129,8 +1129,8 @@ class NetworkThread(Thread):
     def _check_connections(self, current_time: float) -> None:
 
         num_sockets = self._num_sockets
-        init_timeout_conns = set()
-        inactive_conns = set()
+        init_timeout_conns: set[Connection] = set()
+        inactive_conns: set[Connection] = set()
 
         for conn in self._conns.values():
             if not conn.is_established:
