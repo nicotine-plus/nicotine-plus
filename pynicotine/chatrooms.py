@@ -42,6 +42,7 @@ if TYPE_CHECKING:
     from pynicotine.slskmessages import RoomTickers
     from pynicotine.slskmessages import RoomTickerAdded
     from pynicotine.slskmessages import RoomTickerRemoved
+    from pynicotine.slskmessages import ServerDisconnect
 
 
 class JoinedRoom:
@@ -137,7 +138,7 @@ class ChatRooms:
             else:
                 core.send_message_to_server(JoinRoom(room))
 
-    def _server_disconnect(self, _msg) -> None:
+    def _server_disconnect(self, _msg: ServerDisconnect) -> None:
 
         for room_obj in self.joined_rooms.values():
             room_obj.tickers.clear()

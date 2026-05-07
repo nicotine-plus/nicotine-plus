@@ -879,7 +879,7 @@ class NetworkThread(Thread):
         log.add_conn("Direct connection of type %s to user %s failed: %s",
                      (conn_type, username, error))
 
-    def _establish_outgoing_peer_connection(self, conn) -> None:
+    def _establish_outgoing_peer_connection(self, conn: PeerConnection) -> None:
 
         conn.is_established = True
         init = conn.init
@@ -923,7 +923,7 @@ class NetworkThread(Thread):
         self._close_connection(self._conns[prev_init.sock])
 
     @staticmethod
-    def _close_socket(sock: socket.socket):
+    def _close_socket(sock: socket.socket) -> None:
 
         try:
             log.add_conn("Shutting down socket %s", sock)
@@ -1080,8 +1080,8 @@ class NetworkThread(Thread):
     def _check_connections(self, current_time: float) -> None:
 
         num_sockets = self._num_sockets
-        inactive_conns = set()
-        stale_conns = set()
+        inactive_conns: set[Connection] = set()
+        stale_conns: set[Connection] = set()
 
         for conn in self._conns.values():
             if not conn.is_established:

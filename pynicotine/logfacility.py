@@ -237,7 +237,7 @@ class Logger:
         file_handle.seek(0, os.SEEK_END)
         return b''.join(blocks).splitlines()[-num_lines:]
 
-    def read_log(self, folder_path, basename: str, num_lines):
+    def read_log(self, folder_path, basename: str, num_lines: int):
 
         lines = None
         log_file = None

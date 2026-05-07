@@ -22,6 +22,7 @@ if TYPE_CHECKING:
     from pynicotine.slskmessages import GetPeerAddress
     from pynicotine.slskmessages import GetUserStatus
     from pynicotine.slskmessages import Login
+    from pynicotine.slskmessages import ServerDisconnect
 
 
 class PrivateChat:
@@ -72,7 +73,7 @@ class PrivateChat:
         for username in self.users:
             core.users.watch_user(username, context="privatechat")  # Get notified of user status
 
-    def _server_disconnect(self, _msg) -> None:
+    def _server_disconnect(self, _msg: ServerDisconnect) -> None:
 
         self.private_message_queue.clear()
         self.away_message_users.clear()

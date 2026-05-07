@@ -46,12 +46,14 @@ from pynicotine.utils import encode_path
 from pynicotine.utils import humanize
 
 if TYPE_CHECKING:
-    from multiprocessing.context import SpawnProcess
-    from pynicotine.slskmessages import FolderContentsRequest
-    from pynicotine.slskmessages import Login
-    from pynicotine.slskmessages import SharedFileListRequest
     from typing import Literal
     from typing import NoReturn
+
+    from pynicotine.slskmessages import FolderContentsRequest
+    from pynicotine.slskmessages import Login
+    from pynicotine.slskmessages import ServerDisconnect
+    from pynicotine.slskmessages import SharedFileListRequest
+    from multiprocessing.context import SpawnProcess
 
 
 class FileTypes:
@@ -821,7 +823,7 @@ class Shares:
         if msg.success:
             self.send_num_shared_folders_files()
 
-    def _server_disconnect(self, _msg) -> None:
+    def _server_disconnect(self, _msg: ServerDisconnect) -> None:
         self.requested_share_times.clear()
 
     # Shares-related Actions #

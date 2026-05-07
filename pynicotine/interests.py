@@ -64,7 +64,7 @@ class Interests:
             if item:
                 core.send_message_to_server(AddThingIHate(item))
 
-    def add_thing_i_like(self, item) -> None:
+    def add_thing_i_like(self, item: str) -> None:
 
         item = item.strip().lower()
 
@@ -80,7 +80,7 @@ class Interests:
 
         events.emit("add-interest", item)
 
-    def add_thing_i_hate(self, item) -> None:
+    def add_thing_i_hate(self, item: str) -> None:
 
         item = item.strip().lower()
 
@@ -96,7 +96,7 @@ class Interests:
 
         events.emit("add-dislike", item)
 
-    def remove_thing_i_like(self, item) -> None:
+    def remove_thing_i_like(self, item: str) -> None:
 
         if not item and not isinstance(item, str):
             return
@@ -110,7 +110,7 @@ class Interests:
 
         events.emit("remove-interest", item)
 
-    def remove_thing_i_hate(self, item):
+    def remove_thing_i_hate(self, item: str) -> None:
 
         if not item and not isinstance(item, str):
             return
@@ -139,7 +139,7 @@ class Interests:
     def request_similar_users(self) -> None:
         core.send_message_to_server(SimilarUsers())
 
-    def _similar_users(self, msg: SimilarUsers) -> None:
+    def _similar_users(self, msg: SimilarUsers | ItemSimilarUsers) -> None:
         """Server code 110."""
 
         # Limit number of users to prevent excessive status requests
@@ -160,7 +160,7 @@ class Interests:
             # Request user status, speed and number of shared files
             core.users.watch_user(user.username, context="interests")
 
-    def _item_similar_users(self, msg: ItemSimilarUsers) -> None:
+    def _item_similar_users(self, msg: SimilarUsers) -> None:
         """Server code 112."""
 
         self._similar_users(msg)

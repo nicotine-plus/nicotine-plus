@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
+from __future__ import annotations
 
 import re
 import socket
@@ -225,7 +226,7 @@ class UPnP(BaseImplementation):
     class Service:
         __slots__ = ("service_type", "control_url")
 
-        def __init__(self, service_type, control_url):
+        def __init__(self, service_type: str, control_url: str):
             self.service_type = service_type
             self.control_url = control_url
 
@@ -336,7 +337,7 @@ class UPnP(BaseImplementation):
             return service_type, control_url
 
         @staticmethod
-        def add_service(services, locations, ssdp_response) -> None:
+        def add_service(services, locations, ssdp_response: UPnP.SSDPResponse) -> None:
 
             response_headers = {k.upper(): v for k, v in ssdp_response.headers}
             log.add_debug("UPnP: Device search response: %s", bytes(ssdp_response))
