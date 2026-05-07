@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on April 20, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on May 7, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -225,8 +225,8 @@ missing if a file does not provide them.
 ## Major Versions
 
 Established clients have unique numbers to avoid impersonating each other.
-Obsolete clients cannot [Login](#server-code-1) to the server since 2/17/2005
-due to the `INVALIDVERSION` [Rejection Reason](#login-rejection-reasons).
+Obsolete clients cannot [Login](#server-code-1) to the server since Feb 17,
+2005 due to the `INVALIDVERSION` [Rejection Reason](#login-rejection-reasons).
 
 ### Reserved
 
@@ -237,7 +237,8 @@ due to the `INVALIDVERSION` [Rejection Reason](#login-rejection-reasons).
 | `158` / `159` | *Reserved for SoulseekQt development*   |
 | `160`         | [Nicotine+](#nicotine)                  |
 | `169`         | seeleseek                               |
-| `170`         | [Soulseek.NET](#soulseeknet) *(API)*    |
+| `170`         | [Soulseek.NET](#soulseeknet) *(C# API)* |
+| `175`         | aioslsk *(Python API)*                  |
 | `177`         | *Experimental development and testing*  |
 
 ### Obsolete
@@ -3341,6 +3342,7 @@ SoulseekQt in early 2026.
 This documentation exists thanks to efforts from the following projects:
 
  - Nicotine+ (Hyriand, daelstorm, mathiascode)
+ - aioslsk (JurgenR)
  - slskd (jpdillingham)
  - Museek+ (lbponey)
  - SoleSeek (BriEnigma)
