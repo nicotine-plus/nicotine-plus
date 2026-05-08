@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on May 7, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on May 10, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -225,14 +225,11 @@ missing if a file does not provide them.
 ## Major Versions
 
 Established clients have unique numbers to avoid impersonating each other.
-Obsolete clients cannot [Login](#server-code-1) to the server since Feb 17,
-2005 due to the `INVALIDVERSION` [Rejection Reason](#login-rejection-reasons).
 
 ### Reserved
 
 | Major Version | Client                                  |
 |---------------|-----------------------------------------|
-| `155` / `156` | [Soulseek®](#soulseek) *(2005 to 2008)* |
 | `157`         | [Soulseek NS and SoulseekQt](#soulseek) |
 | `158` / `159` | *Reserved for SoulseekQt development*   |
 | `160`         | [Nicotine+](#nicotine)                  |
@@ -245,7 +242,7 @@ Obsolete clients cannot [Login](#server-code-1) to the server since Feb 17,
 
 | Major Version | Client                    |
 |---------------|---------------------------|
-| `154` or less | Soulseek® *(up to 2004)*  |
+| `156` or less | Soulseek® *(pre-NS)*      |
 | `178`         | Museek+                   |
 | `180`         | PySoulSeek                |
 | `181`         | Nicotine+ 1.2.0 to 1.2.11 |
@@ -256,9 +253,8 @@ Obsolete clients cannot [Login](#server-code-1) to the server since Feb 17,
 
 ## Minor Versions
 
-Projects have their own rules for versioning. Any **uint32** number may be
-chosen, but if it is `0` (zero; or if nothing is sent) then the client cannot
-participate in the [distributed search network](#distributed-messages).
+Any non-zero **uint32** number may be chosen. These projects have made their
+own rules for versioning.
 
 ### Nicotine+
 
@@ -287,18 +283,27 @@ API library requires each downstream project to choose a unique `minorVersion`.
 
 ### Soulseek®
 
-Official client minor version number seems to be incremented for each release.
-Legacy clients (<=`156`) had no such concept of a minor version number.
+Official client minor version only increments occasionally. It may signify
+different server functionality.
 
 #### Major Version `157`
 
-| Minor Version | Release                     |
-|---------------|-----------------------------|
-| `0` to `11`   | NS *(Obsolete test builds)* |
-| `17` (`0x11`) | NS 13c                      |
-| `19` (`0x13`) | NS 13e                      |
-| ...           | Qt Public Build 1 *(2011)*  |
-|               | Qt *(2012 onwards)*         |
+| Minor Version | Release                                      |
+|---------------|----------------------------------------------|
+| `1` to `11`   | *"New Server Test"* <=12d (`INVALIDVERSION`) |
+| `17` (`0x11`) | NS 13c                                       |
+| `19` (`0x13`) | NS 13e                                       |
+| `19`          | Qt 2011-4-19 *"Public Build 1"*              |
+| `19`          | Qt 2011-5-08 *"Public Build 2"*              |
+| `100`         | Qt 2011-5-18 *"Public Build 3"*              |
+| `100`         | Qt 2011-6-14 *"Public Build 4"*              |
+| `100`         | Qt 2011-6-29 *"Public Build 5"*              |
+| `100`         | Qt 2011-7-20 *"Public Build 6"*              |
+| `100`         | Qt 2011-7-28                                 |
+| `100`         | Qt ...                                       |
+| `100`         | Qt 2023-1-15                                 |
+| `101`         | Qt 2024-2-01                                 |
+| `101`         | Qt 2026-4-30                                 |
 
 
 # Server Messages
