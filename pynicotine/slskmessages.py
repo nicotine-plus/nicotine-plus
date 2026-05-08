@@ -3957,7 +3957,7 @@ class UploadQueueNotification(PeerMessage):
     def make_network_message(self) -> bytes:
         return b""
 
-    def parse_network_message(self):
+    def parse_network_message(self) -> bytes:
         return b""
 
 
