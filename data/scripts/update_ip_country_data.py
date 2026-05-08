@@ -20,7 +20,7 @@ BASE_PATH = os.path.normpath(os.path.join(os.path.dirname(os.path.realpath(__fil
 DATA_PATH = os.path.join(BASE_PATH, "pynicotine", "external", "data")
 
 
-def parse_ip_country_data():
+def parse_ip_country_data() -> tuple[list[int], list[str], bytes]:
     """Download and parse country data."""
 
     file_path, headers = urllib.request.urlretrieve(COUNTRY_DATA_URL)
@@ -28,8 +28,8 @@ def parse_ip_country_data():
     if int(headers["Content-Length"]) > MAX_RESPONSE_BYTES:
         raise ValueError("Country data response too large")
 
-    ip_range_values = []
-    ip_range_countries = []
+    ip_range_values: list[int] = []
+    ip_range_countries: list[str] = []
     copyright_notice = None
 
     with zipfile.ZipFile(file_path, "r") as zip_file_handle:

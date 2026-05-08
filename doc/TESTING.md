@@ -71,6 +71,14 @@ the following:
 sudo snap install nicotine-plus --edge
 ```
 
+### AppImage
+
+The latest [AppImage](https://appimage.org/) packages are built after every
+commit.
+
+ - [Download 3.4.0.dev1 AppImage x64 Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/appimage-x86_64-package.zip)
+    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/appimage-x86_64-package)  
+
 ### Other
 
 See [All Platforms](#all-platforms) for installing the test build of Nicotine+
