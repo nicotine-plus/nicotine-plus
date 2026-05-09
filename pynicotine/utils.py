@@ -134,42 +134,33 @@ REPLACEMENTCHAR = "_"
 TRANSLATE_PUNCTUATION = str.maketrans(dict.fromkeys(PUNCTUATION, " "))
 
 
-def clean_file(basename: str) -> str:
+def clean_file(part: str) -> str:
+    """Sanitizes a file path component."""
 
     for char in ILLEGALFILECHARS:
-        if char in basename:
-            basename = basename.replace(char, REPLACEMENTCHAR)
+        if char in part:
+            part = part.replace(char, REPLACEMENTCHAR)
 
-    # Filename can never end with a period or space on Windows machines
-    basename = basename.rstrip(". ")
+    # Path component can never end with a period or space on Windows machines.
+    # Also remove . and .. path traversal components.
+    part_stripped = part.lstrip(" ").rstrip(". ")
 
-    if not basename:
-        basename = REPLACEMENTCHAR
+    if not part_stripped:
+        part_stripped = REPLACEMENTCHAR * len(part)
 
-    return basename
+    return part_stripped
 
 
-def clean_path(path: str) -> str:
+def safe_path_join(base_path: str, *parts) -> str:
+    """Safely joins a path, by removing illegal path characters and path
+    traversal components from provided parts."""
 
-    path = os.path.normpath(path)
+    base_path = os.path.abspath(base_path)
+    path = os.path.join(base_path, *(clean_file(part) for part in parts if part))
 
-    # Without hacks it is (up to Vista) not possible to have more
-    # than 26 drives mounted, so we can assume a '[a-zA-Z]:\' prefix
-    # for drives - we shouldn't escape that
-    drive = ""
-
-    if len(path) >= 3 and path[1] == ":" and path[2] == os.sep:
-        drive = path[:3]
-        path = path[3:]
-
-    for char in ILLEGALPATHCHARS:
-        if char in path:
-            path = path.replace(char, REPLACEMENTCHAR)
-
-    path = "".join([drive, path])
-
-    # Path can never end with a period or space on Windows machines
-    path = path.rstrip(". ")
+    # Final containment check, just in case.
+    if os.path.commonpath([base_path, path]) != base_path:
+        path = base_path
 
     return path
 

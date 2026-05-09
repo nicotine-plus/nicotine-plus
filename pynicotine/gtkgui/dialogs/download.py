@@ -24,6 +24,7 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.utils import human_size
 from pynicotine.utils import humanize
+from pynicotine.utils import safe_path_join
 
 
 class Download(Dialog):
@@ -336,7 +337,7 @@ class Download(Dialog):
                 download_folder_path = core.downloads.get_default_download_folder(username)
 
             destination_folder_name = self.folder_names[folder_path]
-            destination_folder_path = os.path.join(download_folder_path, destination_folder_name)
+            destination_folder_path = safe_path_join(download_folder_path, *destination_folder_name.split(os.sep))
 
             files.append((username, file_path, destination_folder_path, size, file_attributes))
 
