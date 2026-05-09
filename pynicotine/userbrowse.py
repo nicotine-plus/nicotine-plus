@@ -391,7 +391,7 @@ class UserBrowse:
     def upload_file(self, username: str, folder_path: str, file_data) -> None:
 
         _code, basename, *_unused = file_data
-        file_path = f"{folder_path}\\{basename}"
+        file_path = "\\".join([folder_path, basename])
 
         core.uploads.enqueue_upload(username, file_path)
 
@@ -404,7 +404,7 @@ class UserBrowse:
             requested_folder_path, browsed_user=local_browsed_user, recurse=recurse
         ):
             for _code, basename, *_unused in files:
-                file_path = f"{folder_path}\\{basename}"
+                file_path = "\\".join([folder_path, basename])
                 core.uploads.enqueue_upload(username, file_path)
 
     def show_user_statistics(self, username: str) -> None:
