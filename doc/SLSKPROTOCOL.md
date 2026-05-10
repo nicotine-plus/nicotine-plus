@@ -312,8 +312,9 @@ Server messages are used by clients to interface with the server over a
 connection (TCP). In Nicotine+, these messages are defined in slskmessages.py.
 
 If you want a Soulseek server, [Soulfind](https://github.com/soulfind-dev/soulfind)
-is open source (unrelated to the official proprietary Soulseek server). It handles
-the protocol well enough for development and testing of client implementations.
+is an open source implementation (unrelated to the official proprietary Soulseek
+server). It handles the protocol well enough for development and testing of client
+implementations.
 
 
 ## Server Message Format
