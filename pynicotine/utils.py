@@ -118,17 +118,20 @@ PUNCTUATION = [  # ASCII and Unicode punctuation
     "\U00016B44", "\U00016E97", "\U00016E98", "\U00016E99", "\U00016E9A", "\U00016FE2", "\U0001BC9F",
     "\U0001DA87", "\U0001DA88", "\U0001DA89", "\U0001DA8A", "\U0001DA8B", "\U0001E95E", "\U0001E95F"
 ]
-ILLEGALPATHCHARS = [
-    # ASCII printable characters
-    "?", ":", ">", "<", "|", "*", '"',
-
-    # ASCII control characters
+ILLEGALCTRLCHARS = frozenset({  # ASCII control characters
     "\u0000", "\u0001", "\u0002", "\u0003", "\u0004", "\u0005", "\u0006", "\u0007", "\u0008",
     "\u0009", "\u000A", "\u000B", "\u000C", "\u000D", "\u000E", "\u000F", "\u0010", "\u0011",
     "\u0012", "\u0013", "\u0014", "\u0015", "\u0016", "\u0017", "\u0018", "\u0019", "\u001A",
     "\u001B", "\u001C", "\u001D", "\u001E", "\u001F"
-]
-ILLEGALFILECHARS = ["\\", "/"] + ILLEGALPATHCHARS
+})
+ILLEGALPATHCHARS = frozenset(ILLEGALCTRLCHARS | {"?", ":", ">", "<", "|", "*", '"'})
+ILLEGALFILECHARS = frozenset(ILLEGALPATHCHARS | {"\\", "/"})
+ILLEGALFILENAMES = frozenset(ILLEGALFILECHARS | {".", "..", "~", ""})  # "" is split("\\")
+RESERVEFILESTEMS = frozenset({
+    "CON", "PRN", "AUX", "NUL", "COM¹", "COM²", "COM³", "LPT¹", "LPT²", "LPT³",
+    "COM0", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
+    "LPT0", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"
+})
 LONG_PATH_PREFIX = "\\\\?\\"
 REPLACEMENTCHAR = "_"
 TRANSLATE_PUNCTUATION = str.maketrans(dict.fromkeys(PUNCTUATION, " "))
@@ -172,6 +175,31 @@ def clean_path(path: str) -> str:
     path = path.rstrip(". ")
 
     return path
+
+
+def encode_name(name: str, too_long: int = 255, errors: str = "strict") -> bytes:
+    """Encode only if a valid Universal Disk Format path or file name entry."""
+
+    encoded_name = name.encode("utf-8")
+
+    if len(encoded_name) >= too_long:
+        raise OverflowError(f'too long {len(encoded_name)}B in virtual path name "{name[:31]}|~"')
+
+    if name.strip() in ILLEGALFILENAMES:
+        raise ValueError(f'forbidden relative path identifier as virtual path name >{name}<')
+
+    if name.partition(".")[0].strip().upper() in RESERVEFILESTEMS:
+        raise ValueError(f'forbidden reserved file identifier as virtual path name >{name}<')
+
+    for char in ILLEGALCTRLCHARS:
+        if char not in name:
+            continue
+        raise ValueError(f'illegal control character code {ord(char)} in virtual path name >{repr(name)}<')
+
+    if errors == "strict" and name[-1] in {".", " "}:
+        raise ValueError(f'illegal trailing space or dot path identifier after virtual path name >{name}<')
+
+    return encoded_name
 
 
 def encode_path(path: str, prefix: bool = True):

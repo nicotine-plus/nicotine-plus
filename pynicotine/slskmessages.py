@@ -21,6 +21,7 @@ from socket import inet_ntoa
 from struct import Struct
 
 from pynicotine.utils import UINT32_LIMIT
+from pynicotine.utils import encode_name
 from pynicotine.utils import human_length
 
 # This module contains message classes, that networking and UI thread
@@ -3205,6 +3206,55 @@ class PeerMessage(SlskMessage):
         self.addr = None
         self.allowed_responses = set()
 
+    @staticmethod
+    def parse_virtual_path(path, dir_n=0, file_n=0, errors="strict", name_too_long=255, path_too_long=4096,
+                           path_too_deep=512, too_many_dirs=4194304, too_many_files=65536):
+        """Validate shared directory entry compliance with Soulseek UNC paths
+        and UDF names (limits on Windows, Compact Discs, flash drives, etc).
+
+        errors="ignore" : Either return original name or invalidated sentinal to skip peer entry
+        errors="strict" : Either return original name or raise RuntimeError() to log scanner error
+        """
+
+        depth = 0
+        total = -1
+        try:
+            for depth, name in enumerate(path.split("\\")):
+                encoded_name = encode_name(name, too_long=name_too_long, errors=errors)
+                total += len(encoded_name) + 1
+
+                if total >= path_too_long or depth >= path_too_deep:
+                    raise OverflowError(f'total +{total}B too deep {depth} parents of path entry name "{name[:31]}|~"')
+
+                if file_n >= too_many_files or dir_n >= too_many_dirs:
+                    raise OverflowError(f'too many siblings already exist in directory aside path entry name >{name}<')
+
+                if dir_n and file_n and depth:
+                    raise ValueError(f'basename cannot be inside a subdirectory of itself in file entry name >{name}<')
+
+        except OverflowError as error:
+            trunc_path, ident = f"{repr(path[:31])}|~+{total}B~\\~|{repr(name[-31:])}", f"<D{dir_n}@{depth}:F{file_n}>"
+
+            if errors == "strict":
+                raise RuntimeError(f'Bad directory path entry name {trunc_path} {ident} {error}') from error
+
+            path = f"__INVALID_SHARE__{trunc_path}{ident}"
+
+        except ValueError as error:
+            ident = f"<D{dir_n}@{depth}:F{file_n}>"
+
+            if errors == "strict":
+                raise RuntimeError(f'Bad directory path entry name {repr(path)} {ident} {error}') from error
+
+            path = f"__INVALID_SHARE__{repr(path)}{ident}"
+
+        return path
+
+    def unpack_file_name(self, dir_n=0, file_n=0, errors="ignore"):
+        path = self.unpack_string()
+        return self.parse_virtual_path(path, dir_n=dir_n, file_n=file_n, errors=errors,
+                                       name_too_long=4096, path_too_long=32768, path_too_deep=1024)
+
     def unpack_file_size(self):
 
         if self._message[self._offset + 7] == 255:
@@ -3367,26 +3417,28 @@ class SharedFileListResponse(PeerMessage):
         ext = None
         shares = []
 
-        for _ in range(ndir):
-            directory = self.unpack_string().replace("/", "\\")
+        for dir_n in range(1, ndir + 1):
+            directory = self.unpack_file_name(dir_n=dir_n)
             nfiles = self.unpack_uint32()
 
             files = []
 
-            for _ in range(nfiles):
+            for file_n in range(1, nfiles + 1):
                 code = self.unpack_uint8()
-                name = self.unpack_string()
+                name = self.unpack_file_name(dir_n=dir_n, file_n=file_n)
                 size = self.unpack_file_size()
                 ext_len = self.unpack_uint32()  # Obsolete, ignore
                 self._offset += ext_len
                 attrs = self.unpack_file_attributes()
 
-                files.append((code, name, size, ext, attrs))
+                if file_n < 65536:  # code == 1 and not name.startswith("__INVALID_SHARE__")
+                    files.append((code, name, size, ext, attrs))
 
-            if nfiles > 1:
-                files.sort(key=itemgetter(1))
+            if dir_n < 4194304:  # not directory.startswith("__INVALID_SHARE__")
+                if nfiles > 1 and ndir < 65536:
+                    files.sort(key=itemgetter(1))
 
-            shares.append((directory, files))
+                shares.append((directory, files))
 
         if ndir > 1:
             shares.sort(key=itemgetter(0))
@@ -3517,15 +3569,16 @@ class FileSearchResponse(PeerMessage):
         ext = None
         results = []
 
-        for _ in range(nfiles):
+        for file_n in range(1, nfiles + 1):
             code = self.unpack_uint8()
-            name = self.unpack_string()
+            name = self.unpack_file_name(file_n=file_n)
             size = self.unpack_file_size()
             ext_len = self.unpack_uint32()  # Obsolete, ignore
             self._offset += ext_len
             attrs = self.unpack_file_attributes()
 
-            results.append((code, name.replace("/", "\\"), size, ext, attrs))
+            if file_n <= 25000:  # code == 1 and not name.startswith("__INVALID_SHARE__")
+                results.append((code, name, size, ext, attrs))
 
         if nfiles > 1:
             results.sort(key=itemgetter(1))
@@ -3658,9 +3711,9 @@ class FolderContentsResponse(PeerMessage):
 
         self._offset = 4  # Skip token
         self._message = memoryview(message_bytes + decompressor.decompress(decompressor.unconsumed_tail, dir_len))
-        self.dir = self.unpack_string()
+        self.dir = self.unpack_file_name(errors="strict")
 
-        if self.username + self.dir not in self.allowed_responses:
+        if self.username + self.dir not in self.allowed_responses:  # or self.dir.startswith("__INVALID_SHARE__")
             return
 
         # Optimization: only decompress the rest of the message when needed
@@ -3672,26 +3725,27 @@ class FolderContentsResponse(PeerMessage):
 
     def _parse_remaining_network_message(self):
         ndir = self.unpack_uint32()
+        ext = None
         folders = {}
 
-        for _ in range(ndir):
-            directory = self.unpack_string().replace("/", "\\")
+        for dir_n in range(1, min(ndir, 65536) + 1):
+            directory = self.unpack_file_name(dir_n=dir_n)
             nfiles = self.unpack_uint32()
 
-            ext = None
             folders[directory] = []
 
-            for _ in range(nfiles):
+            for file_n in range(1, nfiles + 1):
                 code = self.unpack_uint8()
-                name = self.unpack_string()
+                name = self.unpack_file_name(dir_n=dir_n, file_n=file_n)
                 size = self.unpack_file_size()
                 ext_len = self.unpack_uint32()  # Obsolete, ignore
                 self._offset += ext_len
                 attrs = self.unpack_file_attributes()
 
-                folders[directory].append((code, name, size, ext, attrs))
+                if file_n < 65536:  # code == 1 and not name.startswith("__INVALID_SHARE__")
+                    folders[directory].append((code, name, size, ext, attrs))
 
-            if nfiles > 1:
+            if nfiles > 1:  # and not directory.startswith("__INVALID_SHARE__")
                 folders[directory].sort(key=itemgetter(1))
 
         self.list = folders
@@ -3751,7 +3805,7 @@ class TransferRequest(PeerMessage):
     def parse_network_message(self):
         self.direction = self.unpack_uint32()
         self.token = self.unpack_uint32()
-        self.file = self.unpack_string()
+        self.file = self.unpack_string()  # TODO: path\file name parser
 
         if self.direction == TransferDirection.UPLOAD:
             self.filesize = self.unpack_uint64()
@@ -3822,7 +3876,7 @@ class PlaceholdUpload(PeerMessage):
         return self.pack_string(self.file)
 
     def parse_network_message(self):
-        self.file = self.unpack_string()
+        self.file = self.unpack_string()  # TODO: path\file name parser
 
 
 class QueueUpload(PeerMessage):
@@ -3844,7 +3898,7 @@ class QueueUpload(PeerMessage):
         return self.pack_string(self.file, is_legacy=self.legacy_client)
 
     def parse_network_message(self):
-        self.file = self.unpack_string()
+        self.file = self.unpack_string()  # TODO: path\file name parser
 
 
 class PlaceInQueueResponse(PeerMessage):
@@ -3869,7 +3923,7 @@ class PlaceInQueueResponse(PeerMessage):
         return msg
 
     def parse_network_message(self):
-        self.filename = self.unpack_string()
+        self.filename = self.unpack_string()  # TODO: path\file name parser
         self.place = self.unpack_uint32()
 
 
@@ -3892,7 +3946,7 @@ class UploadFailed(PeerMessage):
         return self.pack_string(self.file)
 
     def parse_network_message(self):
-        self.file = self.unpack_string()
+        self.file = self.unpack_string()  # TODO: path\file name parser
 
 
 class UploadDenied(PeerMessage):
@@ -3918,7 +3972,7 @@ class UploadDenied(PeerMessage):
         return msg
 
     def parse_network_message(self):
-        self.file = self.unpack_string()
+        self.file = self.unpack_string()  # TODO: path\file name parser
         self.reason = self.unpack_string()
 
 
@@ -3940,7 +3994,7 @@ class PlaceInQueueRequest(PeerMessage):
         return self.pack_string(self.file, is_legacy=self.legacy_client)
 
     def parse_network_message(self):
-        self.file = self.unpack_string()
+        self.file = self.unpack_string()  # TODO: path\file name parser
 
 
 class UploadQueueNotification(PeerMessage):

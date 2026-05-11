@@ -570,10 +570,14 @@ class Scanner:
 
             file_list = []
             has_filtered_files = False
+            has_parsed_folder = False
             virtual_folder_path_lower = virtual_folder_path.lower()
             virtual_folder_words = virtual_folder_path_lower.translate(TRANSLATE_PUNCTUATION).split()
 
             try:
+                SharedFileListResponse.parse_virtual_path(virtual_folder_path, dir_n=self.current_folder_count)
+                has_parsed_folder = True
+
                 with os.scandir(encode_path(folder_path, prefix=False)) as entries:
                     for entry in entries:
                         basename = basename_escaped = entry.name.decode("utf-8", "replace")
@@ -603,6 +607,9 @@ class Scanner:
                             if self.is_hidden(folder_path, basename, entry):
                                 continue
 
+                            SharedFileListResponse.parse_virtual_path(
+                                basename_escaped, dir_n=self.current_folder_count, file_n=len(file_list) + 1
+                            )
                             virtual_file_path = f"{virtual_folder_path}\\{basename_escaped}"
 
                             if (self.file_filter_regex
@@ -636,7 +643,7 @@ class Scanner:
 
                             self.current_file_index += 1
 
-                        except OSError as error:
+                        except (OSError, RuntimeError) as error:
                             self.writer.send(
                                 ScannerLogMessage(
                                     _("Error while scanning file %(path)s: %(error)s"),
@@ -644,7 +651,7 @@ class Scanner:
                                 )
                             )
 
-            except OSError as error:
+            except (OSError, RuntimeError) as error:
                 self.writer.send(
                     ScannerLogMessage(
                         _("Error while scanning folder %(path)s: %(error)s"),
@@ -652,7 +659,7 @@ class Scanner:
                     )
                 )
 
-            if not has_filtered_files or file_list:
+            if has_parsed_folder and (not has_filtered_files or file_list):
                 self.streams[virtual_folder_path] = self.get_folder_stream(file_list)
 
             self.current_folder_count += 1
