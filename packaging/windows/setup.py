@@ -192,7 +192,10 @@ def add_typelibs():
             "win32-"
         ]
     else:
-        required_typelibs.append("GioUnix-")
+        required_typelibs += [
+            "GioUnix-",
+            "GLibUnix-"
+        ]
 
     required_typelibs = tuple(required_typelibs)
 
