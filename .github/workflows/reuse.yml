@@ -16,12 +16,6 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up cache
-        uses: actions/cache@v5
-        with:
-          path: ~/.cache/pip
-          key: reuse
-
       - name: Install dependencies
         run: python -m pip install reuse
 
