@@ -17,7 +17,7 @@ permissions: {}
 jobs:
 
   python-dist:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     timeout-minutes: 15
     steps:
       - name: Checkout code
