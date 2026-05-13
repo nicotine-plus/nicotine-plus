@@ -5,19 +5,15 @@
 import hashlib
 import os
 
+BASE_PATH = os.path.normpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
+DIST_PATH = os.path.join(BASE_PATH, "dist")
+
 
 def generate_sha256_hashes():
-    """Generates SHA256 checksums for files placed in the same folder as
-    this script."""
+    """Generates SHA256 checksums for files placed in the dist folder."""
 
-    current_folder_path = os.path.dirname(os.path.realpath(__file__))
-    current_script_name = os.path.basename(os.path.realpath(__file__))
-
-    for entry in os.scandir(current_folder_path):
+    for entry in os.scandir(DIST_PATH):
         if not entry.is_file():
-            continue
-
-        if entry.name == current_script_name:
             continue
 
         if entry.name.endswith(".sha256"):

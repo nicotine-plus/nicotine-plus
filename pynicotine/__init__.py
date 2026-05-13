@@ -76,6 +76,12 @@ def check_arguments():
     # Disables critical error dialog; used for integration tests
     parser.add_argument("--ci-mode", action="store_true", help=argparse.SUPPRESS)
 
+    # Raw version used for CI builds
+    parser.add_argument(
+        "--ci-version", action="version", version=__version__,
+        help=argparse.SUPPRESS
+    )
+
     # Disables features that require external applications, useful for e.g. Docker containers
     parser.add_argument("--isolated", action="store_true", help=argparse.SUPPRESS)
 
