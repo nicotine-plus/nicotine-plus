@@ -1,8 +1,40 @@
 name: Packaging
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      create_release:
+        description: Create new release
+        type: boolean
+        required: false
 
-on: [push, pull_request]
+permissions: {}
 
 jobs:
+
+  python-dist:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install gettext python3-build
+
+      - name: Build package
+        run: python -m build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: python-dist
+          path: dist/
 
   debian:
     runs-on: ubuntu-latest
@@ -221,3 +253,203 @@ jobs:
         with:
           name: macos-${{ matrix.arch }}-installer
           path: packaging/macos/build/*.dmg
+
+  checksums:
+    needs: [python-dist, debian, flatpak, snap, windows, macos]
+    runs-on: ubuntu-slim
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Download artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          path: dist/
+          skip-decompress: true
+          merge-multiple: true
+
+      - name: Generate checksums
+        run: python data/scripts/generate_sha256_checksums.py
+
+      - name: Verify checksums
+        run: cd dist && sha256sum --check ./*.sha256
+
+      - name: Verify list of artifacts
+        run: |
+          cd dist
+          ls \
+            debian-package.zip \
+            debian-package.zip.sha256 \
+            flatpak-aarch64-package.zip \
+            flatpak-aarch64-package.zip.sha256 \
+            flatpak-x86_64-package.zip \
+            flatpak-x86_64-package.zip.sha256 \
+            macos-arm64-installer.zip \
+            macos-arm64-installer.zip.sha256 \
+            macos-x86_64-installer.zip \
+            macos-x86_64-installer.zip.sha256 \
+            python-dist.zip \
+            python-dist.zip.sha256 \
+            snap-arm64-package.zip \
+            snap-arm64-package.zip.sha256 \
+            snap-x86_64-package.zip \
+            snap-x86_64-package.zip.sha256 \
+            windows-arm64-installer.zip \
+            windows-arm64-installer.zip.sha256 \
+            windows-arm64-package.zip \
+            windows-arm64-package.zip.sha256 \
+            windows-x86_64-installer.zip \
+            windows-x86_64-installer.zip.sha256 \
+            windows-x86_64-package.zip \
+            windows-x86_64-package.zip.sha256
+
+      - name: Archive installer artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: checksums
+          path: dist/*.sha256
+
+  attestation:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    needs: checksums
+    runs-on: ubuntu-slim
+    timeout-minutes: 15
+    permissions:
+      id-token: write
+      attestations: write
+      artifact-metadata: write
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          path: dist/
+          skip-decompress: true
+          merge-multiple: true
+
+      - name: Extract checksums
+        run: cd dist && unzip checksums.zip
+
+      - name: Attest
+        uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4.1.0
+        with:
+          subject-path: dist/
+
+  metadata:
+    needs: checksums
+    runs-on: ubuntu-slim
+    timeout-minutes: 15
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      notes: ${{ steps.notes.outputs.notes }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Store version
+        id: version
+        run: |
+          VERSION="$(python -m pynicotine --ci-version)"
+          echo "::notice::Version: $VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Store notes
+        id: notes
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          NOTES="$(python data/scripts/extract_release_notes.py "$VERSION")"
+          echo "Release notes: $NOTES"
+          {
+            echo "notes<<EOF"
+            echo "$NOTES"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Validate version
+        if: inputs.create_release
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Version is invalid. Expected format is X.Y.Z."
+            exit 1
+          fi
+
+      - name: Validate notes
+        if: inputs.create_release
+        env:
+          NOTES: ${{ steps.notes.outputs.notes }}
+        run: |
+          if [[ -z "$NOTES" ]]; then
+            echo "::error::Notes cannot be empty."
+            exit 1
+          fi
+
+  pypi-publish:
+    if: |
+      github.repository == 'nicotine-plus/nicotine-plus' &&
+      github.event_name == 'workflow_dispatch' && inputs.create_release
+    needs: [attestation, metadata]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: pypi
+      url: https://pypi.org/p/nicotine-plus
+    permissions:
+      id-token: write
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: python-dist
+          path: dist/
+
+      - name: Publish package to PyPI
+        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # v1.14.0
+
+  github-release:
+    if: github.event_name == 'workflow_dispatch' && inputs.create_release
+    needs: [attestation, metadata]
+    runs-on: ubuntu-slim
+    timeout-minutes: 15
+    environment:
+      name: github-release
+    permissions:
+      contents: write
+      discussions: write
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      VERSION: ${{ needs.metadata.outputs.version }}
+      NOTES: ${{ needs.metadata.outputs.notes }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Download artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          path: dist/
+          skip-decompress: true
+          merge-multiple: true
+
+      - name: Prepare release assets
+        run: |
+          cd dist
+          unzip checksums.zip
+          rm checksums.zip python-dist.*
+          sha256sum --check ./*.sha256
+
+      - name: Create release
+        run: |
+          gh release create "$VERSION" \
+            --title "$VERSION" \
+            --notes "$NOTES" \
+            --discussion-category "Releases" \
+            dist/*
