@@ -39,16 +39,16 @@ jobs:
 
       - name: Add Pages
         run: |
-          mkdir -p $WEBSITE_ROOT/data/icons/
-          cp -r data/screenshots $WEBSITE_ROOT/data/
-          cp -r doc $WEBSITE_ROOT/
-          cp AUTHORS.md $WEBSITE_ROOT/
-          cp README.md $WEBSITE_ROOT/
-          cp NEWS.md $WEBSITE_ROOT/
-          cp data/icons/icon.svg $WEBSITE_ROOT/data/icons/
+          mkdir -p "$WEBSITE_ROOT"/data/icons/
+          cp -r data/screenshots "$WEBSITE_ROOT"/data/
+          cp -r doc "$WEBSITE_ROOT"/
+          cp AUTHORS.md "$WEBSITE_ROOT"/
+          cp README.md "$WEBSITE_ROOT"/
+          cp NEWS.md "$WEBSITE_ROOT"/
+          cp data/icons/icon.svg "$WEBSITE_ROOT"/data/icons/
 
       - name: Strip headers
-        run: find $WEBSITE_ROOT -name '*.md' -exec sed -i '/<!--/,/-->/d' {} +
+        run: find "$WEBSITE_ROOT" -name '*.md' -exec sed -i '/<!--/,/-->/d' {} +
 
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1

@@ -137,7 +137,7 @@ jobs:
       - name: Set up Miniforge
         run: |
           wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
-          bash Miniforge3-$(uname)-$(uname -m).sh -b -p $HOME/miniforge3
+          bash "Miniforge3-$(uname)-$(uname -m).sh" -b -p "$HOME/miniforge3"
           echo "$HOME/miniforge3/bin" >> "$GITHUB_PATH"
 
       - name: Set up environment
@@ -258,7 +258,7 @@ jobs:
       - name: Set up Miniforge
         run: |
           wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
-          bash Miniforge3-$(uname)-$(uname -m).sh -b -p $HOME/miniforge3
+          bash "Miniforge3-$(uname)-$(uname -m).sh" -b -p "$HOME/miniforge3"
           echo "$HOME/miniforge3/bin" >> "$GITHUB_PATH"
 
       - name: Set up environment
