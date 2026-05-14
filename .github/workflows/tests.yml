@@ -375,9 +375,6 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set system language
-        run: defaults write NSGlobalDomain AppleLanguages "(en-US)"
-
       - name: Set up Miniforge
         run: |
           wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
