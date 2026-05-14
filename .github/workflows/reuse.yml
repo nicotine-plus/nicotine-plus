@@ -6,7 +6,6 @@ on: [push, pull_request]
 permissions: {}
 
 jobs:
-
   check:
     runs-on: ubuntu-slim
     timeout-minutes: 15

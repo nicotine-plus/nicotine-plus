@@ -9,7 +9,6 @@ env:
   NICOTINE_NETWORK_TESTS: 1
 
 jobs:
-
   python:
     runs-on: ubuntu-24.04
     timeout-minutes: 15

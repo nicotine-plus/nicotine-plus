@@ -15,7 +15,6 @@ on:
 permissions: {}
 
 jobs:
-
   python-dist:
     runs-on: ubuntu-slim
     timeout-minutes: 15
