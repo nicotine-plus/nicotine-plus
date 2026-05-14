@@ -6,7 +6,6 @@ env:
   NICOTINE_NETWORK_TESTS: 1
 
 jobs:
-
   python:
     timeout-minutes: 15
     strategy:
