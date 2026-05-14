@@ -205,12 +205,12 @@ jobs:
         run: |
           mamba create --name nicotine-plus
           mamba activate nicotine-plus
-          python3 build-aux/macos/dependencies.py
+          python3 packaging/macos/dependencies.py
 
       - name: Freeze application
         run: |
           mamba activate nicotine-plus
-          python3 build-aux/macos/setup.py bdist_dmg
+          python3 packaging/macos/setup.py bdist_dmg
 
       - name: Test application startup
         shell: sh  # Exclude conda-forge dependencies

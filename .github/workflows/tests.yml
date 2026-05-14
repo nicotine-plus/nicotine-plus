@@ -212,7 +212,7 @@ jobs:
         run: |
           mamba create --name nicotine-plus
           mamba activate nicotine-plus
-          python3 build-aux/macos/dependencies.py
+          python3 packaging/macos/dependencies.py
 
       - name: Integration and unit tests
         run: |
