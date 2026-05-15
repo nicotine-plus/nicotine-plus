@@ -451,5 +451,6 @@ jobs:
           gh release create "$VERSION" \
             --title "$VERSION" \
             --notes "$NOTES" \
+            --target "$GITHUB_SHA" \
             --discussion-category "Releases" \
             dist/*
