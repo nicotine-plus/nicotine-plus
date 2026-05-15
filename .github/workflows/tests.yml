@@ -133,6 +133,34 @@ jobs:
       - name: Build without isolation
         run: python3.13 -m build --no-isolation
 
+  alpine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        container: ['alpine:edge']
+    container: ${{ matrix.container }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Install dependencies
+        run: |
+          apk update
+          apk add font-dejavu gettext gtk4.0 py3-build py3-gobject3 py3-setuptools py3-wheel
+
+      - name: Integration and unit tests
+        run: python3 -m unittest -v
+
+      - name: Build
+        run: python3 -m build
+
+      - name: Build without isolation
+        run: python3 -m build --no-isolation
+
   freebsd:
     runs-on: ubuntu-latest
     timeout-minutes: 15
