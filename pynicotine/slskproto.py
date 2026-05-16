@@ -1323,6 +1323,10 @@ class NetworkThread(Thread):
 
         self._send_message_to_server(SetWaitPort(self._listen_port))
 
+    def _is_outgoing_server_message_permitted(self, msg):
+        """Only permit sending login message when not authenticated."""
+        return self._server_address is not None or msg.__class__ is Login
+
     def _process_server_message(self, msg_type, msg_size, msg_content):
 
         msg_class = SERVER_MESSAGE_CLASSES[msg_type]
@@ -2763,6 +2767,13 @@ class NetworkThread(Thread):
                     continue
 
             elif msg_type == MessageType.SERVER:
+                if not self._is_outgoing_server_message_permitted(msg):
+                    # Messages from the main thread may arrive while we're connecting
+                    # to the server, before we've started the login process, e.g. when
+                    # finishing a share scan on startup. Drop such messages, since
+                    # they break the login flow.
+                    return
+
                 process_func = self._process_server_output
                 sock = self._server_conn.sock
 
