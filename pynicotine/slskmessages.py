@@ -4217,10 +4217,13 @@ class DistribEmbeddedMessage(DistribMessage):
         self.distrib_code = None
         self.distrib_message = None
 
-    def parse_network_message(self) -> None:
-        # Start from an offset, since the message type is actually uint32,
-        # but parsed as uint8 by the message handler.
-        self._offset += 3
+    def parse_network_message(self):
+        # Older SoulseekQt versions send the message type as uint32, while
+        # older Nicotine+ versions send it as uint8. Since the message handler
+        # in slskproto.py always reads the message type as uint8, skip the
+        # remainder in case a uint32 is sent.
+        if self._message[:3] == b"\x00\x00\x00":
+            self._offset += 3
         self.distrib_code = self.unpack_uint8()
         self.distrib_message = self._message[self._offset:]
 

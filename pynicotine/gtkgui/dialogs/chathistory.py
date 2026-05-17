@@ -99,12 +99,11 @@ class ChatHistory(Dialog):
         super().destroy()
 
     def server_login(self, msg):
-        if msg.success and self.is_visible():
+        if msg.success:
             self.update_user_statuses()
 
     def server_disconnect(self, *_args):
-        if self.is_visible():
-            self.update_user_statuses()
+        self.update_user_statuses()
 
     @staticmethod
     def load_user(file_path):
@@ -218,13 +217,15 @@ class ChatHistory(Dialog):
             int(timestamp)
         ], select_row=False)
 
-        if self.is_visible():
-            self.set_user_status_icon(username, iterator)
+        self.set_user_status_icon(username, iterator)
 
         if not self.list_container.get_visible():
             self.list_container.set_visible(True)
 
     def set_user_status_icon(self, username, iterator):
+
+        if not self.is_visible():
+            return
 
         # We don't watch all historic users for status updates due to
         # the amount of server traffic a large history would generate
@@ -237,6 +238,9 @@ class ChatHistory(Dialog):
             self.list_view.set_row_value(iterator, "status", status_icon_name)
 
     def update_user_statuses(self):
+
+        if not self.is_visible():
+            return
 
         for iterator in self.list_view.iterators.values():
             username = self.list_view.get_row_value(iterator, "user")

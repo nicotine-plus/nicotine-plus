@@ -454,15 +454,50 @@ class NetworkThread(Thread):
         ):
             events.connect(event_name, callback)
 
-    def _enable_message_queue(self) -> None:
+    def _schedule_quit(self):
+        self._want_abort = True
+
+    # Message Queue #
+
+    def _enable_message_queue(self):
+
+        if self._should_process_queue:
+            return
+
+        self._clear_message_queue()
         self._should_process_queue = True
 
-    def _queue_network_message(self, msg: InternalMessage) -> None:
+    def _disable_message_queue(self):
+
+        if not self._should_process_queue:
+            return
+
+        self._should_process_queue = False
+        self._clear_message_queue()
+
+    def _clear_message_queue(self):
+
+        while True:
+            try:
+                self._message_queue.get_nowait()
+            except Empty:
+                break
+
+    def _queue_network_message(self, msg):
         if self._should_process_queue:
             self._message_queue.put_nowait(msg)
 
-    def _schedule_quit(self) -> None:
-        self._want_abort = True
+    def _process_queue_messages(self):
+
+        msgs = []
+
+        while True:
+            try:
+                msgs.append(self._message_queue.get_nowait())
+            except Empty:
+                break
+
+        self._process_outgoing_messages(msgs)
 
     # Listening Socket #
 
@@ -1211,7 +1246,7 @@ class NetworkThread(Thread):
         self._listen_port = msg.listen_port
 
         if not self._create_listen_socket():
-            self._should_process_queue = False
+            self._disable_message_queue()
             events.emit_main_thread("set-connection-stats")  # Reset connection stats
             return
 
@@ -1293,7 +1328,11 @@ class NetworkThread(Thread):
 
         self._send_message_to_server(SetWaitPort(self._listen_port))
 
-    def _process_server_message(self, msg_type, msg_size, msg_content) -> bool:
+    def _is_outgoing_server_message_permitted(self, msg):
+        """Only permit sending login message when not authenticated."""
+        return self._server_address is not None or msg.__class__ is Login
+
+    def _process_server_message(self, msg_type, msg_size, msg_content):
 
         msg_class = SERVER_MESSAGE_CLASSES[msg_type]
         msg = self._unpack_network_message(
@@ -1532,8 +1571,9 @@ class NetworkThread(Thread):
     def _server_disconnect(self) -> None:
         """We're disconnecting from the server, clean up."""
 
+        self._disable_message_queue()
+
         self._server_conn = None
-        self._should_process_queue = False
         self._interface_name = self._interface_address = None
         self._local_ip_address = ""
 
@@ -1559,12 +1599,6 @@ class NetworkThread(Thread):
 
         for conn in self._conns.copy().values():
             self._close_connection(conn)
-
-        while True:
-            try:
-                self._message_queue.get_nowait()
-            except Empty:
-                break
 
         self._pending_peer_conns.clear()
         self._pending_init_msgs.clear()
@@ -2738,6 +2772,13 @@ class NetworkThread(Thread):
                     continue
 
             elif msg_type == MessageType.SERVER:
+                if not self._is_outgoing_server_message_permitted(msg):
+                    # Messages from the main thread may arrive while we're connecting
+                    # to the server, before we've started the login process, e.g. when
+                    # finishing a share scan on startup. Drop such messages, since
+                    # they break the login flow.
+                    return
+
                 process_func = self._process_server_output
                 sock = self._server_conn.sock
 
@@ -2758,22 +2799,7 @@ class NetworkThread(Thread):
             conn = self._conns[sock]
             process_func(conn, msg)
 
-    def _process_queue_messages(self) -> None:
-
-        if not self._message_queue:
-            return
-
-        msgs = []
-
-        while True:
-            try:
-                msgs.append(self._message_queue.get_nowait())
-            except Empty:
-                break
-
-        self._process_outgoing_messages(msgs)
-
-    def _read_data(self, conn: Connection, current_time: float) -> bool:
+    def _read_data(self, conn, current_time):
 
         sock = conn.sock
         current_recv_size = conn.recv_size

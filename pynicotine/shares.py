@@ -1039,6 +1039,11 @@ class Shares:
 
         # Remove slashes from share name to avoid path conflicts
         virtual_name = virtual_name.replace("/", "_").replace("\\", "_").strip(' "')
+
+        # Remove path traversal components, since clients can mishandle them
+        if virtual_name in {".", ".."}:
+            virtual_name = virtual_name.replace(".", "_")
+
         new_virtual_name = str(virtual_name)
 
         # Check if virtual share name is already in use
