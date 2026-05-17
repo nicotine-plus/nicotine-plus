@@ -3430,7 +3430,9 @@ class PluginsPage:
             ("#" + _("_Settings"), self.on_show_plugin_settings),
             ("", None),
             ("=" + _("Open in File _Manager"), self.on_open_file_manager),
-            ("=" + _("_Uninstall…"), self.on_uninstall_plugin)
+            ("", None),
+            ("#" + _("Reset Settings…"), self.on_reset_plugin_settings),
+            ("=" + _("Uninstall…"), self.on_uninstall_plugin)
         )
 
     def destroy(self):
@@ -3490,7 +3492,7 @@ class PluginsPage:
         menu.actions[_("Open in File _Manager")].set_enabled(
             not self.application.isolated_mode and not is_internal_plugin
         )
-        menu.actions[_("_Uninstall…")].set_enabled(not is_internal_plugin)
+        menu.actions[_("Uninstall…")].set_enabled(not is_internal_plugin)
 
     def on_select_plugin(self, list_view, iterator):
 
@@ -3581,6 +3583,26 @@ class PluginsPage:
             callback=self.on_install_plugin_selected
         ).present()
 
+    def on_reset_plugin_settings_response(self, _dialog, _response_id, selected_plugin):
+        core.pluginhandler.reset_plugin_settings(selected_plugin)
+
+    def on_reset_plugin_settings(self, *_args):
+
+        plugin_human_name = core.pluginhandler.get_plugin_human_name(self.selected_plugin)
+
+        OptionDialog(
+            application=self.application,
+            title=_("Reset Plugin Settings?"),
+            message=_("Do you really want to restore the default settings for plugin %s?") % plugin_human_name,
+            buttons=[
+                ("cancel", _("_Cancel")),
+                ("ok", _("Reset"))
+            ],
+            destructive_response_id="ok",
+            callback=self.on_reset_plugin_settings_response,
+            callback_data=self.selected_plugin
+        ).present()
+
     def on_uninstall_plugin_response(self, _dialog, _response_id, selected_plugin):
         core.pluginhandler.uninstall_plugin(selected_plugin)
         self.set_settings()
@@ -3590,17 +3612,13 @@ class PluginsPage:
         if core.pluginhandler.is_internal_plugin(self.selected_plugin):
             return
 
-        try:
-            info = core.pluginhandler.get_plugin_info(self.selected_plugin)
-            human_plugin_name = info.get("Name", self.selected_plugin)
-        except OSError:
-            human_plugin_name = self.selected_plugin
+        plugin_human_name = core.pluginhandler.get_plugin_human_name(self.selected_plugin)
 
         OptionDialog(
             application=self.application,
             title=_("Uninstall Plugin?"),
             message=_("Do you really want to uninstall plugin %s? "
-                      "This will remove any files the plugin has stored.") % human_plugin_name,
+                      "This will remove any files the plugin has stored.") % plugin_human_name,
             buttons=[
                 ("cancel", _("_Cancel")),
                 ("ok", _("Uninstall"))

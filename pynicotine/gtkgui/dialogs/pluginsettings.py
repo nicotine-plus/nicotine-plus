@@ -403,7 +403,7 @@ class PluginSettings(Dialog):
 
         self.plugin_name = plugin_name
         self.plugin_metasettings = plugin_metasettings
-        plugin_human_name = core.pluginhandler.get_plugin_info(plugin_name).get("Name", plugin_name)
+        plugin_human_name = core.pluginhandler.get_plugin_human_name(plugin_name)
 
         self.set_title(_("%s Settings") % plugin_human_name)
         self._add_options()

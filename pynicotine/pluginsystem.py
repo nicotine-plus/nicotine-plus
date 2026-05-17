@@ -510,13 +510,7 @@ class PluginHandler:
                     info.filename = "/".join((plugin_name, info.filename))
                     zip_file.extract(info, self.user_plugin_folder)
 
-                try:
-                    info = core.pluginhandler.get_plugin_info(plugin_name)
-                    plugin_human_name = info.get("Name", plugin_name)
-
-                except OSError:
-                    plugin_human_name = plugin_name
-
+                plugin_human_name = self.get_plugin_human_name(plugin_name)
                 log.add(_("Installed plugin %s"), plugin_human_name)
 
         except Exception as error:
@@ -537,13 +531,7 @@ class PluginHandler:
 
         self.disable_plugin(plugin_name)
 
-        try:
-            info = core.pluginhandler.get_plugin_info(plugin_name)
-            plugin_human_name = info.get("Name", plugin_name)
-
-        except OSError:
-            plugin_human_name = plugin_name
-
+        plugin_human_name = self.get_plugin_human_name(plugin_name)
         plugin_path = self.get_plugin_path(plugin_name)
 
         try:
@@ -556,6 +544,10 @@ class PluginHandler:
                 "error": error
             })
             return False
+
+        if plugin_name in config.sections["plugins"]:
+            del config.sections["plugins"][plugin_name]
+            config.write_configuration()
 
         log.add(_("Uninstalled plugin %s"), plugin_human_name)
         return True
@@ -633,7 +625,7 @@ class PluginHandler:
 
         # Set class attributes to make name available while initializing plugin
         BasePlugin.internal_name = plugin_name
-        BasePlugin.human_name = self.get_plugin_info(plugin_name).get("Name", plugin_name)
+        BasePlugin.human_name = self.get_plugin_human_name(plugin_name)
         BasePlugin.path = plugin_path
 
         instance = plugin.Plugin()
@@ -868,6 +860,17 @@ class PluginHandler:
 
         return plugin_info
 
+    def get_plugin_human_name(self, plugin_name):
+
+        try:
+            info = core.pluginhandler.get_plugin_info(plugin_name)
+            plugin_human_name = info.get("Name", plugin_name)
+
+        except OSError:
+            plugin_human_name = plugin_name
+
+        return plugin_human_name
+
     @staticmethod
     def show_plugin_error(plugin_name, error):
 
@@ -900,6 +903,19 @@ class PluginHandler:
 
         # Persist plugin settings in the config
         config.sections["plugins"][plugin_name] = plugin.settings
+
+    def reset_plugin_settings(self, plugin_name):
+
+        plugin_human_name = self.get_plugin_human_name(plugin_name)
+
+        if plugin_name in config.sections["plugins"]:
+            del config.sections["plugins"][plugin_name]
+            config.write_configuration()
+
+        if plugin_name in self.enabled_plugins:
+            self.reload_plugin(plugin_name)
+
+        log.add(_("Restored default settings for plugin %s"), plugin_human_name)
 
     def get_command_list(self, command_interface):
         """Returns a list of every command and alias available.
