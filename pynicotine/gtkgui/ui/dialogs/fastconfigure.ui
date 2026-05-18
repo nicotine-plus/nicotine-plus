@@ -346,7 +346,17 @@
                 <property name="label" translatable="yes">If necessary, choose a different listening port below. This can also be done later in the preferences.</property>
                 <property name="max-width-chars">60</property>
                 <property name="selectable">True</property>
-                <property name="visible">True</property>
+                <property name="visible" bind-source="listen_port_entry" bind-property="visible" bind-flags="bidirectional|sync-create"/>
+                <property name="wrap">True</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">The following listening port has been set by your environment:</property>
+                <property name="max-width-chars">60</property>
+                <property name="selectable">True</property>
+                <property name="visible" bind-source="listen_port_label" bind-property="visible" bind-flags="bidirectional|sync-create"/>
                 <property name="wrap">True</property>
                 <property name="xalign">0</property>
               </object>
@@ -360,6 +370,17 @@
             <property name="numeric">True</property>
             <property name="valign">center</property>
             <property name="visible">True</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="listen_port_label">
+            <property name="halign">center</property>
+            <property name="selectable">True</property>
+            <property name="visible" bind-source="listen_port_entry" bind-property="visible" bind-flags="bidirectional|invert-boolean|sync-create"/>
+            <property name="xalign">0</property>
+            <style>
+              <class name="bold"/>
+            </style>
           </object>
         </child>
       </object>

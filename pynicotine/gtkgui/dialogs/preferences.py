@@ -72,6 +72,8 @@ class NetworkPage:
             self.check_port_status_label,
             self.container,
             self.current_port_label,
+            self.listen_port_description_label,
+            self.listen_port_label,
             self.listen_port_spinner,
             self.network_interface_label,
             self.password_row_revealer,
@@ -177,6 +179,13 @@ class NetworkPage:
 
         server_hostname, server_port = config.sections["server"]["server"]
         self.soulseek_server_entry.set_text(f"{server_hostname}:{server_port}")
+
+        if core.cli_listen_port is not None:
+            self.listen_port_label.set_label(str(core.cli_listen_port))
+            self.listen_port_label.set_visible(True)
+            self.listen_port_description_label.set_mnemonic_widget(self.listen_port_label)
+        else:
+            self.listen_port_description_label.set_mnemonic_widget(self.listen_port_spinner)
 
         listen_port, _unused_port = config.sections["server"]["portrange"]
         self.listen_port_spinner.set_value(listen_port)

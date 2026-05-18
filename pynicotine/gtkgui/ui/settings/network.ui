@@ -185,10 +185,9 @@
             <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="listen_port_description_label">
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Listening port (TCP):</property>
-                <property name="mnemonic-widget">listen_port_spinner</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word</property>
@@ -201,6 +200,17 @@
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="listen_port_label">
+                <property name="height-request">24</property>
+                <property name="selectable">True</property>
+                <property name="visible" bind-source="listen_port_spinner" bind-property="visible" bind-flags="bidirectional|invert-boolean|sync-create"/>
+                <property name="xalign">0</property>
+                <style>
+                  <class name="bold"/>
+                </style>
               </object>
             </child>
           </object>
