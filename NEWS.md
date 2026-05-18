@@ -17,22 +17,30 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 ### Changes
 
  * Removed 'Everyone' permission for receiving files sent via manual upload
- * Added support for Haiku
- * Flatpak: Bumped runtime to Gnome 50
+ * Only show online status of chat history users with an open tab to reduce server traffic
+ * Added support for the Haiku operating system
  * macOS: Use new GTK renderer and prefer integrated GPU for improved power efficiency
  * macOS: Re-added support for macOS 11 Big Sur and above
 
 ### Corrections
 
- * Important: Fixed a crash arising from shares database corruption that could occur on non-UTF8 filesystems
- * Important: Enforce maximum sizes for uncompressed message to avoid OOM via TCP peer connection
- * Important: Some fixes for incorrect behavior in the distributed network embedded messages
- * Fixed a crash executing a file search in rooms mode with a empty room name
- * Fixed a crash that occurred when opening File Properties dialog
+ * Important: Fixed a crash arising from shares database corruption due to similar file names
+ * Important: Enforce maximum sizes for uncompressed network messages to avoid unbounded memory use
+ * Important: Prevent file uploads from going through to spoofed users
+ * Important: Fixed an issue where peers would sometimes be told our username is theirs
+ * Important: Some fixes for incorrect behavior in the distributed search network
+ * Fixed a crash when performing a file search in rooms mode with an empty room name
+ * Fixed a rare crash that occurred when opening File Properties dialog
+ * Fixed a rare crash when connecting to the server
+ * Fixed configuration files not being saved when restarting or logging out of the OS
+ * Fixed broken Add Buddy text entry in the buddies sidebar
+ * Fixed uploads not being removed when banning an IP address from the Preferences dialog
  * Fixed loading a saved shares file list from disk while offline
+ * Fixed an issue where the initial connection attempt to the server would sometimes fail
  * Fixed minor sizing issues with pages context menu on some systems
  * Fixed inaccurate stuck current folder count during rescan
- * Added handling of system shutdown when running Nicotine+ in headless mode in a terminal
+ * Fixed zero-byte downloads not finishing immediately
+ * Fixed incorrect names of downloaded files on DragonflyBSD
  * Removed workaround for old server bug related to watching offline user statuses
 
 ### Issues closed on GitHub
@@ -44,6 +52,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Private message something something ([#3351](https://github.com/nicotine-plus/nicotine-plus/issues/3351))
  * Incorrect file sorting in Nicotine+ ([#3358](https://github.com/nicotine-plus/nicotine-plus/issues/3358))
  * Upload and download list may be showing incomplete contents ([#3377](https://github.com/nicotine-plus/nicotine-plus/issues/3377))
+ * Nicotine doesn't save the config when closing from a general computer shutdown ([#3383](https://github.com/nicotine-plus/nicotine-plus/issues/3383))
  * Chat History sorts by number not by Date ([#3412](https://github.com/nicotine-plus/nicotine-plus/issues/3412))
  * Crash when stopping uwsm session ([#3443](https://github.com/nicotine-plus/nicotine-plus/issues/3443))
  * Critical Error searching empty room name ([#3469](https://github.com/nicotine-plus/nicotine-plus/issues/3469))
@@ -53,7 +62,10 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Critical Error ([#3609](https://github.com/nicotine-plus/nicotine-plus/issues/3609))
  * Heavy user interface input lagging affected by responding to searches option ([#3624](https://github.com/nicotine-plus/nicotine-plus/issues/3624))
  * Upload view update issue ([#3660](https://github.com/nicotine-plus/nicotine-plus/issues/3660))
- * Unable to pack message type <class 'pynicotine.slskmessages.SendUploadSpeed ([#3682](https://github.com/nicotine-plus/nicotine-plus/issues/3682))
+ * Unable to pack message type <class 'pynicotine.slskmessages.SendUploadSpeed> ([#3682](https://github.com/nicotine-plus/nicotine-plus/issues/3682))
+ * Nicotine+ fails on first attempt to auto-login, then succeeds on second ([#3722](https://github.com/nicotine-plus/nicotine-plus/issues/3722))
+ * 'NoneType' object has no attribute 'sock' ([#3740](https://github.com/nicotine-plus/nicotine-plus/issues/3740))
+ * Crash when searching empty room name ([#3747](https://github.com/nicotine-plus/nicotine-plus/issues/3747))
 
 
 ## Version 3.3.10 (March 10, 2025)
