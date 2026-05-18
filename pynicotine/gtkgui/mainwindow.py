@@ -97,7 +97,7 @@ class MainWindow(Window):
             self.header_bar,
             self.header_end,
             self.header_end_container,
-            self.header_menu,
+            self.header_menu_button,
             self.header_title,
             self.hide_window_button,
             self.horizontal_paned,
@@ -109,6 +109,7 @@ class MainWindow(Window):
             self.log_container,
             self.log_search_bar,
             self.log_view_container,
+            self.plugin_menu_button,
             self.private_content,
             self.private_end,
             self.private_entry,
@@ -238,6 +239,8 @@ class MainWindow(Window):
             ("quit", self.on_quit),
             ("server-login", self.update_user_status),
             ("server-disconnect", self.update_user_status),
+            ("enable-plugin", self.set_plugin_menu_visible),
+            ("disable-plugin", self.set_plugin_menu_visible),
             ("set-connection-stats", self.set_connection_stats),
             ("shares-ready", self.shares_ready),
             ("shares-scanning", self.shares_scanning),
@@ -279,6 +282,7 @@ class MainWindow(Window):
         # Actions and menu
         self.set_up_actions()
         self.set_up_menu()
+        self.set_up_plugin_menu()
 
         # Tab visibility/order
         self.append_main_tabs()
@@ -561,21 +565,28 @@ class MainWindow(Window):
     def set_up_menu(self):
 
         menu = self.application.create_hamburger_menu()
-        menu.set_menu_button(self.header_menu)
+        menu.set_menu_button(self.header_menu_button)
 
         if GTK_API_VERSION == 3:
             return
 
         # F10 shortcut to open menu
-        self.header_menu.set_primary(True)
+        self.header_menu_button.set_primary(True)
 
         # Ensure menu button always gets focus after closing menu (fixed in GTK 4.16)
         if (GTK_API_VERSION, GTK_MINOR_VERSION) < (4, 16):
-            popover = self.header_menu.get_popover()
-            popover.connect("closed", lambda *_args: self.header_menu.grab_focus())
+            popover = self.header_menu_button.get_popover()
+            popover.connect("closed", lambda *_args: self.header_menu_button.grab_focus())
+
+    def set_up_plugin_menu(self):
+        menu = self.application.create_plugin_menu()
+        menu.set_menu_button(self.plugin_menu_button)
+
+    def set_plugin_menu_visible(self, *_args):
+        self.plugin_menu_button.set_visible(bool(core.pluginhandler.actions))
 
     def on_menu(self, *_args):
-        self.header_menu.set_active(not self.header_menu.get_active())
+        self.header_menu_button.set_active(not self.header_menu_button.get_active())
 
     # Headerbar/Toolbar #
 
@@ -643,7 +654,7 @@ class MainWindow(Window):
 
         if not self.widget.get_show_menubar():
             self.widget.set_show_menubar(True)
-            self.header_menu.get_popover().set_visible(False)
+            self.header_menu_button.get_popover().set_visible(False)
 
             if GTK_API_VERSION == 3:
                 # Don't override builtin accelerator for menu bar

@@ -25,7 +25,6 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_MINOR_VERSION
-from pynicotine.gtkgui.dialogs.pluginsettings import PluginSettings
 from pynicotine.gtkgui.popovers.portchecker import PortChecker
 from pynicotine.gtkgui.popovers.searchfilterhelp import SearchFilterHelp
 from pynicotine.gtkgui.widgets import ui
@@ -3387,7 +3386,6 @@ class PluginsPage:
 
         self.application = application
         self.selected_plugin = None
-        self.plugin_settings_dialog = None
 
         self.options = {
             "plugins": {
@@ -3427,7 +3425,7 @@ class PluginsPage:
         self.plugin_popup_menu.add_items(
             ("=" + _("_Enable"), self.on_toggle_selected_plugin),
             ("=" + _("_Disable"), self.on_toggle_selected_plugin),
-            ("#" + _("_Settings"), self.on_show_plugin_settings),
+            ("#" + _("_Settings"), self.on_plugin_settings),
             ("", None),
             ("=" + _("Open in File _Manager"), self.on_open_file_manager),
             ("=" + _("_Uninstall…"), self.on_uninstall_plugin)
@@ -3439,9 +3437,6 @@ class PluginsPage:
         self.info_bar.destroy()
         self.plugin_description_view.destroy()
         self.plugin_list_view.destroy()
-
-        if self.plugin_settings_dialog is not None:
-            self.plugin_settings_dialog.destroy()
 
         self.__dict__.clear()
 
@@ -3618,25 +3613,12 @@ class PluginsPage:
         folder_path = core.pluginhandler.get_plugin_path(self.selected_plugin)
         open_folder_path(folder_path, create_folder=True)
 
-    def on_show_plugin_settings(self, *_args):
-
-        if self.selected_plugin is None:
-            return
-
-        metasettings = core.pluginhandler.get_plugin_metasettings(self.selected_plugin)
-
-        if not metasettings:
-            return
-
-        if self.plugin_settings_dialog is None:
-            self.plugin_settings_dialog = PluginSettings(self.application)
-
-        self.plugin_settings_dialog.load_options(self.selected_plugin, metasettings)
-        self.plugin_settings_dialog.present()
+    def on_plugin_settings(self, *_args):
+        self.application.on_plugin_settings(plugin_name=self.selected_plugin)
 
     def on_row_activated(self, _list_view, _iterator, column_id):
         if column_id == "human_name":
-            self.on_show_plugin_settings()
+            self.on_plugin_settings()
 
 
 class Preferences(Dialog):

@@ -1,0 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Nicotine+ Contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+Version = "2026-05-20r00"
+Authors = ["Nicotine+"]
+Name = "Sample Actions"
+Description = "Plugin to demonstrate the new action system in Nicotine+ 3.4.0 and above."

@@ -27,7 +27,22 @@
       </object>
     </child>
     <child>
-      <object class="GtkMenuButton" id="header_menu">
+      <object class="GtkMenuButton" id="plugin_menu_button">
+        <property name="tooltip-text" translatable="yes">Plugins</property>
+        <property name="visible">False</property>
+        <child>
+          <object class="GtkImage">
+            <property name="icon-name">application-x-addon-symbolic</property>
+            <property name="visible">True</property>
+          </object>
+        </child>
+        <style>
+          <class name="image-button"/>
+        </style>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuButton" id="header_menu_button">
         <property name="tooltip-text" translatable="yes">Main Menu</property>
         <property name="visible">True</property>
         <child>

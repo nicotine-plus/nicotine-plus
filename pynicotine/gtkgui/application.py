@@ -71,6 +71,8 @@ class Application:
         self.about = None
         self.fast_configure = None
         self.preferences = None
+        self.plugin_menu = None
+        self.plugin_settings = None
         self.chat_history = None
         self.room_list = None
         self.file_properties = None
@@ -97,6 +99,10 @@ class Application:
 
         for event_name, callback in (
             ("confirm-quit", self.on_confirm_quit),
+            ("disable-plugin", self.on_disable_plugin),
+            ("disable-plugin-action", self.on_enable_disable_plugin_action),
+            ("enable-plugin", self.on_enable_plugin),
+            ("enable-plugin-action", self.on_enable_disable_plugin_action),
             ("invalid-password", self.on_invalid_password),
             ("invalid-username", self.on_invalid_username),
             ("quit", self._instance.quit),
@@ -172,6 +178,7 @@ class Application:
             ("personal-profile", self.on_personal_profile, None, True),
             ("configure-shares", self.on_configure_shares, None, True),
             ("configure-ignored-users", self.on_configure_ignored_users, None, True),
+            ("configure-plugins", self.on_configure_plugins, None, True),
             ("preferences", self.on_preferences, None, True),
             ("confirm-quit", self.on_confirm_quit_request, None, True),
             ("force-quit", self.on_force_quit_request, None, True),
@@ -377,6 +384,77 @@ class Application:
 
         return menu
 
+    def create_plugin_menu(self, *_args):
+
+        from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+
+        if self.plugin_menu is None:
+            self.plugin_menu = PopupMenu(self)
+
+        has_actions = bool(core.pluginhandler.actions)
+        menu_button = self.plugin_menu.menu_button
+
+        if menu_button is not None:
+            self.plugin_menu.set_menu_button(None)
+
+        self.plugin_menu.clear()
+
+        if not has_actions:
+            self.plugin_menu.add_items(("#" + _("No Plugin Actions"), None))
+
+        for plugin_name, actions in sorted(core.pluginhandler.actions.items()):
+            submenu = PopupMenu(self)
+            has_settings = bool(core.pluginhandler.get_plugin_metasettings(plugin_name))
+
+            try:
+                info = core.pluginhandler.get_plugin_info(plugin_name)
+                human_plugin_name = info.get("Name", plugin_name)
+            except OSError:
+                human_plugin_name = plugin_name
+
+            for data in actions.values():
+                label = data["label"]
+                callback = data["callback"]
+
+                def on_callback(_action, _state, callback):
+                    callback()
+
+                submenu.add_items(("=" + label, on_callback, callback))
+
+            if has_settings:
+                def on_plugin_settings(_action, _state, plugin_name):
+                    self.on_plugin_settings(plugin_name=plugin_name)
+
+                submenu.add_items(
+                    ("", None),
+                    ("#" + _("Plugin _Settings"), on_plugin_settings, plugin_name)
+                )
+
+            submenu.update_model()
+
+            for data in actions.values():
+                label = data["label"]
+                enabled = data["enabled"]
+
+                submenu.actions[label].set_enabled(enabled)
+
+            self.plugin_menu.add_items((">" + human_plugin_name.replace("_", "__"), submenu))
+
+        self.plugin_menu.add_items(
+            ("", None),
+            ("#" + _("_Manage Plugins"), "app.configure-plugins")
+        )
+
+        self.plugin_menu.update_model()
+
+        if not has_actions:
+            self.plugin_menu.actions[_("No Plugin Actions")].set_enabled(False)
+
+        if menu_button is not None:
+            self.plugin_menu.set_menu_button(menu_button)
+
+        return self.plugin_menu
+
     def _create_help_menu(self):
 
         from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -408,6 +486,7 @@ class Application:
         menu.add_items(
             (">" + _("_File"), self._create_file_menu()),
             (">" + _("_Shares"), self._create_shares_menu()),
+            (">" + _("_Plugins"), self.create_plugin_menu()),
             (">" + _("_Help"), self._create_help_menu())
         )
 
@@ -597,6 +676,40 @@ class Application:
         if msg.user == core.users.login_username:
             self._update_user_status()
 
+    def on_enable_plugin(self, plugin_name):
+        if plugin_name in core.pluginhandler.actions:
+            self.create_plugin_menu()
+
+    def on_disable_plugin(self, _plugin_name):
+        self.create_plugin_menu()
+
+    def on_enable_disable_plugin_action(self, plugin_name, action_id):
+
+        if plugin_name not in core.pluginhandler.actions:
+            return
+
+        if action_id not in core.pluginhandler.actions[plugin_name]:
+            return
+
+        try:
+            info = core.pluginhandler.get_plugin_info(plugin_name)
+            human_plugin_name = info.get("Name", plugin_name)
+        except OSError:
+            human_plugin_name = plugin_name
+
+        human_plugin_name = human_plugin_name.replace("_", "__")
+
+        if human_plugin_name not in self.plugin_menu.items:
+            return
+
+        data = core.pluginhandler.actions[plugin_name][action_id]
+        label = data["label"]
+        enabled = data["enabled"]
+        submenu_model = self.plugin_menu.items[human_plugin_name].get_link("submenu")
+        submenu = next(menu for menu in self.plugin_menu.submenus if menu.model == submenu_model)
+
+        submenu.actions[label].set_enabled(enabled)
+
     # Actions #
 
     def on_connect(self, *_args):
@@ -637,6 +750,23 @@ class Application:
             self.preferences.set_active_page(page_id)
 
         self.preferences.present()
+
+    def on_plugin_settings(self, *_args, plugin_name=None):
+
+        if plugin_name is None:
+            return
+
+        metasettings = core.pluginhandler.get_plugin_metasettings(plugin_name)
+
+        if not metasettings:
+            return
+
+        if self.plugin_settings is None:
+            from pynicotine.gtkgui.dialogs.pluginsettings import PluginSettings
+            self.plugin_settings = PluginSettings(self)
+
+        self.plugin_settings.load_options(plugin_name, metasettings)
+        self.plugin_settings.present()
 
     def on_set_debug_level(self, action, state, level):
 
@@ -853,6 +983,9 @@ class Application:
     def on_configure_ignored_users(self, *_args):
         self.on_preferences(page_id="ignored-users")
 
+    def on_configure_plugins(self, *_args):
+        self.on_preferences(page_id="plugins")
+
     def on_window_hide_unhide(self, *_args):
 
         if self.window.is_visible():
@@ -1048,6 +1181,12 @@ class Application:
 
         if self.preferences is not None:
             self.preferences.destroy()
+
+        if self.plugin_menu is not None:
+            self.plugin_menu.destroy()
+
+        if self.plugin_settings is not None:
+            self.plugin_settings.destroy()
 
         if self.chat_history is not None:
             self.chat_history.destroy()

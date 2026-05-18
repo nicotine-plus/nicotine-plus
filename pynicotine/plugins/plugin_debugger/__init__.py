@@ -13,8 +13,25 @@ class Plugin(BasePlugin):
 
         super().__init__(*args, **kwargs)
 
-        self.settings = {}
-        self.metasettings = {}
+        self.settings = {
+            "log_events": False
+        }
+        self.metasettings = {
+            "log_events": {
+                "description": "Log plugin events",
+                "type": "bool"
+            }
+        }
+        self.actions = {
+            "start_logging_events": {
+                "label": "Start Logging Events",
+                "callback": self._start_logging_events
+            },
+            "stop_logging_events": {
+                "label": "Stop Logging Events",
+                "callback": self._stop_logging_events
+            }
+        }
 
         # These are too noisy, don't enable them by default
         verbose_events = {"public_room_message_notification", "distrib_search_notification"}
@@ -31,7 +48,32 @@ class Plugin(BasePlugin):
 
         self.log("__init__()")
 
+    def _start_logging_events(self):
+        self.settings["log_events"] = True
+        self._update_action_state()
+
+    def _stop_logging_events(self):
+        self.settings["log_events"] = False
+        self._update_action_state()
+
+    def _update_action_state(self):
+
+        if self.settings["log_events"]:
+            self.disable_action("start_logging_events")
+            self.enable_action("stop_logging_events")
+
+            self.log("Enabled plugin event logging")
+            return
+
+        self.enable_action("start_logging_events")
+        self.disable_action("stop_logging_events")
+
+        self.log("Disabled plugin event logging")
+
     def _trigger_log(self, parameter_arguments=""):
+
+        if not self.settings["log_events"]:
+            return
 
         function_name = currentframe().f_back.f_code.co_name
 
@@ -47,9 +89,14 @@ class Plugin(BasePlugin):
         self._trigger_log()
 
     def loaded_notification(self):
+        self._update_action_state()
         self._trigger_log()
 
     def unloaded_notification(self):
+        self._trigger_log()
+
+    def settings_changed_notification(self):
+        self._update_action_state()
         self._trigger_log()
 
     def shutdown_notification(self):
