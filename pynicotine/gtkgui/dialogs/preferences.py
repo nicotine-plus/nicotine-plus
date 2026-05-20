@@ -3516,7 +3516,7 @@ class PluginsPage:
 
         if iterator is not None and not core.pluginhandler.is_internal_plugin(self.selected_plugin):
             self.info_bar.show_warning_message(
-                _("This is not a built-in plugin. Use at your own risk.")
+                _("This is a third-party plugin. Safety is not guaranteed. Use at your own risk.")
             )
         else:
             self.info_bar.set_visible(False)
