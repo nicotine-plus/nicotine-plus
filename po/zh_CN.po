@@ -6,8 +6,9 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-13 02:38+0200\n"
-"PO-Revision-Date: 2026-02-13 07:09+0000\n"
-"Last-Translator: Poesty Li <poesty7450@gmail.com>\n"
+"PO-Revision-Date: 2026-05-20 17:11+0000\n"
+"Last-Translator: 大王叫我来巡山 "
+"<hamburger2048@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/nicotine-plus/nicotine-plus/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -15,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16-dev\n"
+"X-Generator: Weblate 2026.6.dev0\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -2350,16 +2351,14 @@ msgid "Public Files"
 msgstr "公开文件"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:61
-#, fuzzy
 msgid "Automatic Search"
-msgstr "启用自动搜索"
+msgstr "自动搜索"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:68
 msgid "Search Term"
 msgstr "搜索词"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:76
-#, fuzzy
 msgid "Custom Filters"
 msgstr "自定义过滤器"
 
@@ -2374,23 +2373,21 @@ msgid "_Search for Item"
 msgstr "_搜索条目"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:110
-#, fuzzy
 msgid "Set Custom _Filters…"
-msgstr "自定义过滤器"
+msgstr "设置自定义过滤器(&F)…"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:112
 msgid "Reset Seen Results"
 msgstr "重置已查看结果"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:113
-#, fuzzy
 msgid "Reset Filters"
-msgstr "结果过滤器"
+msgstr "重置过滤器"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:195
-#, fuzzy, python-format
+#, python-format
 msgid "Custom Filters Enabled (%(num)s Active)"
-msgstr "自定义筛选器已启用"
+msgstr "自定义筛选器已启用（%(num)s 个活跃）"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:215
 #, python-format
@@ -2421,9 +2418,9 @@ msgid "Default filters"
 msgstr "默认过滤器"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:310
-#, fuzzy, python-format
+#, python-format
 msgid "Custom filters (%(num)s active)"
-msgstr "自定义筛选器已启用"
+msgstr "自定义筛选器（%(num)s 个活跃）"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:314
 msgid "Edit Wish"
@@ -2693,9 +2690,8 @@ msgid "Stop Scanning"
 msgstr ""
 
 #: pynicotine/gtkgui/mainwindow.py:1268
-#, fuzzy
 msgid "Rescan Failed"
-msgstr "重新扫描共享"
+msgstr "重新扫描失败"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:53
 msgid "You are offline"
@@ -6372,7 +6368,6 @@ msgid "_Log In As"
 msgstr "以此身份登录(_L)"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:132
-#, fuzzy
 msgid "Account password:"
 msgstr "账号密码："
 
