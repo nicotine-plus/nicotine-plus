@@ -27,22 +27,27 @@ class Plugin(BasePlugin):
             "message": {
                 "description": ("Private chat message to send to leechers. Each line is sent as a separate message, "
                                 "too many message lines may get you temporarily banned for spam!"),
+                "group": "Automatic Message",
                 "type": "textview"
             },
             "open_private_chat": {
                 "description": "Open chat tabs when sending private messages to leechers",
+                "group": "Automatic Message",
                 "type": "bool"
             },
             "num_files": {
                 "description": "Require users to have a minimum number of shared files:",
+                "group": "Limits",
                 "type": "int", "minimum": 0
             },
             "num_folders": {
                 "description": "Require users to have a minimum number of shared folders:",
+                "group": "Limits",
                 "type": "int", "minimum": 1
             },
             "detected_leechers": {
                 "description": "Detected leechers",
+                "group": "Detected Leechers",
                 "type": "list string"
             }
         }

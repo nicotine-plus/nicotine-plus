@@ -19,14 +19,17 @@ class Plugin(BasePlugin):
         self.metasettings = {
             "file": {
                 "description": "Select a file",
+                "group": "File Locations",
                 "type": "file",
                 "chooser": "file"},
             "folder": {
                 "description": "Select a folder",
+                "group": "File Locations",
                 "type": "file",
                 "chooser": "folder"},
             "image": {
                 "description": "Select an image",
+                "group": "File Locations",
                 "type": "file",
                 "chooser": "image"},
         }
