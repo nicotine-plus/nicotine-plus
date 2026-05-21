@@ -33,6 +33,7 @@ class BasePlugin:
     # Attributes that can be modified, see examples in the pynicotine/plugins/ folder
     __publiccommands__ = []
     __privatecommands__ = []
+    actions = {}
     commands = {}
     settings = {}
     metasettings = {}
@@ -55,6 +56,10 @@ class BasePlugin:
 
     def loaded_notification(self):
         # The plugin has finished loaded, commands are registered
+        pass
+
+    def settings_changed_notification(self):
+        # Plugin settings were changed externally
         pass
 
     def disable(self):
@@ -300,6 +305,12 @@ class BasePlugin:
     def output(self, text):
         self.echo_message(text, message_type="command")
 
+    def enable_action(self, action_id):
+        self.parent.enable_action(self.internal_name, action_id)
+
+    def disable_action(self, action_id):
+        self.parent.disable_action(self.internal_name, action_id)
+
 
 class ResponseThrottle:
     """
@@ -393,13 +404,14 @@ class InstallException(Exception):
 
 
 class PluginHandler:
-    __slots__ = ("plugin_folders", "enabled_plugins", "command_source", "commands",
+    __slots__ = ("plugin_folders", "enabled_plugins", "actions", "command_source", "commands",
                  "internal_plugin_folder", "user_plugin_folder", "_load_now_playing_sender")
 
     def __init__(self, isolated_mode=False):
 
         self.plugin_folders = []
         self.enabled_plugins = {}
+        self.actions = defaultdict(dict)
         self.command_source = None
         self.commands = {
             "chatroom": {},
@@ -698,7 +710,29 @@ class PluginHandler:
                                 {"interface": command_interface, "name": plugin.human_name, "command": f"/{command}"})
                         continue
 
-                    command_list[command] = data
+                    command_list[command] = data.copy()
+
+            for action_id, data in plugin.actions.items():
+                for key, value_type in (
+                    ("label", str),
+                    ("callback", None)
+                ):
+                    if value_type is None and callable(data.get(key)):
+                        continue
+
+                    if isinstance(data.get(key), value_type):
+                        continue
+
+                    log.add(
+                        _("Action %(action)s in plugin %(name)s missing a valid '%(key)s' value"), {
+                            "action": action_id,
+                            "name": plugin.human_name,
+                            "key": key
+                        }
+                    )
+
+                self.actions[plugin_name][action_id] = data.copy()
+                self.actions[plugin_name][action_id]["enabled"] = True
 
             # Legacy commands
             for command_interface, attribute_name, plugin_commands in (
@@ -729,6 +763,7 @@ class PluginHandler:
                     {"module": plugin_name, "exc_trace": format_exc()})
             return False
 
+        events.emit("enable-plugin", plugin_name)
         return True
 
     def disable_plugin(self, plugin_name, is_permanent=True):
@@ -751,6 +786,8 @@ class PluginHandler:
                     # Remove only if data matches command as defined in this plugin
                     if data and data == command_list.get(command):
                         del command_list[command]
+
+            self.actions.pop(plugin_name, None)
 
             # Legacy commands
             for command_interface, plugin_commands in (
@@ -813,6 +850,7 @@ class PluginHandler:
             del self.enabled_plugins[plugin_name]
             del plugin
 
+        events.emit("disable-plugin", plugin_name)
         return True
 
     def toggle_plugin(self, plugin_name):
@@ -900,6 +938,28 @@ class PluginHandler:
 
         # Persist plugin settings in the config
         config.sections["plugins"][plugin_name] = plugin.settings
+
+    def enable_action(self, plugin_name, action_id):
+
+        if plugin_name not in self.actions:
+            return
+
+        if action_id not in self.actions[plugin_name]:
+            return
+
+        self.actions[plugin_name][action_id]["enabled"] = True
+        events.emit("enable-plugin-action", plugin_name, action_id)
+
+    def disable_action(self, plugin_name, action_id):
+
+        if plugin_name not in self.actions:
+            return
+
+        if action_id not in self.actions[plugin_name]:
+            return
+
+        self.actions[plugin_name][action_id]["enabled"] = False
+        events.emit("disable-plugin-action", plugin_name, action_id)
 
     def get_command_list(self, command_interface):
         """Returns a list of every command and alias available.

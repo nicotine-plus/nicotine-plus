@@ -25,6 +25,12 @@ EVENT_NAMES = {
     "start",
     "thread-callback",
 
+    # Plugins
+    "enable-plugin",
+    "enable-plugin-action",
+    "disable-plugin",
+    "disable-plugin-action",
+
     # Users
     "admin-message",
     "change-password",

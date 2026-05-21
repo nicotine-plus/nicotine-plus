@@ -14,6 +14,7 @@ from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import add_css_class
+from pynicotine.utils import unescape
 
 
 class PluginSettings(Dialog):
@@ -131,7 +132,7 @@ class PluginSettings(Dialog):
 
         label = self._generate_widget_container(description, group, button)
         label.set_mnemonic_widget(button)
-        self.application.preferences.set_widget(button, option_value)
+        self.set_widget(button, option_value)
 
     def _add_boolean_option(self, option_name, option_value, description, group):
 
@@ -142,7 +143,7 @@ class PluginSettings(Dialog):
         label = self._generate_widget_container(description, group, button)
         label.set_mnemonic_widget(button)
 
-        self.application.preferences.set_widget(button, option_value)
+        self.set_widget(button, option_value)
 
     def _add_radio_option(self, option_name, option_value, description, group, items):
 
@@ -172,7 +173,7 @@ class PluginSettings(Dialog):
 
         label.set_mnemonic_widget(self.option_widgets[option_name])
         self.option_widgets[option_name].group_radios = group_radios
-        self.application.preferences.set_widget(self.option_widgets[option_name], option_value)
+        self.set_widget(self.option_widgets[option_name], option_value)
 
     def _add_dropdown_option(self, option_name, option_value, description, group, items):
 
@@ -180,7 +181,7 @@ class PluginSettings(Dialog):
         self.option_widgets[option_name] = combobox = ComboBox(
             container=label.get_parent(), label=label, items=items
         )
-        self.application.preferences.set_widget(combobox, option_value)
+        self.set_widget(combobox, option_value)
 
     def _add_entry_option(self, option_name, option_value, description, group):
 
@@ -189,7 +190,7 @@ class PluginSettings(Dialog):
         label = self._generate_widget_container(description, group, entry, homogeneous=True)
         label.set_mnemonic_widget(entry)
 
-        self.application.preferences.set_widget(entry, option_value)
+        self.set_widget(entry, option_value)
 
     def _add_textview_option(self, option_name, option_value, description, group):
 
@@ -208,7 +209,7 @@ class PluginSettings(Dialog):
             description, group, frame_container, orientation=Gtk.Orientation.VERTICAL
         )
         label.set_mnemonic_widget(textview.widget)
-        self.application.preferences.set_widget(textview, option_value)
+        self.set_widget(textview, option_value)
 
     def _add_list_option(self, option_name, option_value, description, group):
 
@@ -243,7 +244,7 @@ class PluginSettings(Dialog):
         rows = [[item, index] for index, item in enumerate(option_value)]
         treeview.description = description
         treeview.row_id = len(rows)
-        self.application.preferences.set_widget(treeview, rows)
+        self.set_widget(treeview, rows)
 
         treeview.popup_menu = PopupMenu(self.application, treeview.widget)
         treeview.popup_menu.add_items(
@@ -302,7 +303,7 @@ class PluginSettings(Dialog):
             container, application=self.application, label=label, chooser_type=file_chooser_type,
             show_open_external_button=not self.application.isolated_mode
         )
-        self.application.preferences.set_widget(self.option_widgets[option_name], option_value)
+        self.set_widget(self.option_widgets[option_name], option_value)
 
     def _add_options(self):
 
@@ -399,6 +400,67 @@ class PluginSettings(Dialog):
 
         return None
 
+    @staticmethod
+    def set_widget(widget, value):
+
+        from pynicotine.gtkgui.widgets.treeview import TreeView
+
+        if isinstance(widget, Gtk.SpinButton):
+            try:
+                widget.set_value(value)
+
+            except TypeError:
+                # Not a numerical value
+                pass
+
+        elif isinstance(widget, Gtk.Entry):
+            if isinstance(value, (str, int)) and widget.get_text() != value:
+                widget.set_text(value)
+
+        elif isinstance(widget, TextView):
+            if isinstance(value, str):
+                widget.set_text(unescape(value))
+
+        elif isinstance(widget, Gtk.Switch):
+            widget.set_active(value)
+
+        elif isinstance(widget, Gtk.CheckButton):
+            try:
+                # Radio button
+                if isinstance(value, int) and value < len(widget.group_radios):
+                    widget.group_radios[value].set_active(True)
+
+            except (AttributeError, TypeError):
+                # Regular check button
+                widget.set_active(value)
+
+        elif isinstance(widget, ComboBox):
+            if widget.entry is not None:
+                widget.set_text(value)
+            else:
+                widget.set_selected_id(value)
+
+        elif isinstance(widget, TreeView):
+            widget.freeze()
+
+            if isinstance(value, list):
+                for item in value:
+                    if isinstance(item, list):
+                        row = item
+                    else:
+                        row = [item]
+
+                    widget.add_row(row, select_row=False)
+
+            elif isinstance(value, dict):
+                for item1, item2 in value.items():
+                    widget.add_row([str(item1), str(item2)], select_row=False)
+
+            widget.unfreeze()
+
+        elif isinstance(widget, FileChooserButton):
+            widget.set_path(value)
+
     def load_options(self, plugin_name, plugin_metasettings):
 
         self.plugin_name = plugin_name
@@ -492,6 +554,7 @@ class PluginSettings(Dialog):
             if new_value is not None:
                 plugin.settings[option_name] = new_value
 
+        plugin.settings_changed_notification()
         self.close()
 
     def on_close(self, *_args):
