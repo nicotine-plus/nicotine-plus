@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-13 02:38+0200\n"
-"PO-Revision-Date: 2026-03-12 10:09+0000\n"
-"Last-Translator: Lucas Vieites <lucas.vieites@gmail.com>\n"
+"PO-Revision-Date: 2026-05-22 15:11+0000\n"
+"Last-Translator: Billy Enrique Herculano Madrid <bbeehhmm@protonmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
 "Language: es_ES\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 2026.6.dev0\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -46,6 +46,10 @@ msgid ""
 "that focus on usability, while remaining fully compatible with other "
 "Soulseek clients."
 msgstr ""
+"Comparte archivos, chatea y encuentra gente con intereses similares. "
+"Nicotine+ es fácil de usar, rápido, gratuito y de código abierto. Ofrece "
+"mejoras en la facilidad de uso, sin dejar de ser compatible con otros "
+"clientes de Soulseek."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:30
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:46
@@ -187,44 +191,44 @@ msgid "Buddy Status"
 msgstr "Estado de los amigos"
 
 #: pynicotine/chatrooms.py:361
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been added to private room %(room)s"
-msgstr "Has sido añadido a una sala privada: %(room)s"
+msgstr "El usuario %(user)s ha sido añadido a la sala privada: %(room)s"
 
 #: pynicotine/chatrooms.py:380
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been removed from private room %(room)s"
-msgstr "Has sido añadido a una sala privada: %(room)s"
+msgstr "Usuario %(user)s ha sido eliminado de la sala privada: %(room)s"
 
 #: pynicotine/chatrooms.py:397
-#, fuzzy, python-format
+#, python-format
 msgid "You have been added to private room %(room)s"
 msgstr "Has sido añadido a una sala privada: %(room)s"
 
 #: pynicotine/chatrooms.py:412
-#, fuzzy, python-format
+#, python-format
 msgid "You have been removed from private room %(room)s"
-msgstr "Has sido añadido a una sala privada: %(room)s"
+msgstr "Has sido eliminado de la sala privada: %(room)s"
 
 #: pynicotine/chatrooms.py:433
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has been made an operator of room %(room)s"
-msgstr "Has sido añadido a una sala privada: %(room)s"
+msgstr "Usuario %(user)s ahora es operador de la sala privada: %(room)s"
 
 #: pynicotine/chatrooms.py:452
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is no longer an operator of room %(room)s"
-msgstr "El usuario %(user)s te mencionó en la sala %(room)s"
+msgstr "El usuario %(user)s ya no es un operador la sala %(room)s"
 
 #: pynicotine/chatrooms.py:468
-#, fuzzy, python-format
+#, python-format
 msgid "You have been made an operator of room %(room)s"
-msgstr "Has sido añadido a una sala privada: %(room)s"
+msgstr "Ahora eres un operador de la sala privada: %(room)s"
 
 #: pynicotine/chatrooms.py:481
-#, fuzzy, python-format
+#, python-format
 msgid "You are no longer an operator of room %(room)s"
-msgstr "Has sido añadido a una sala privada: %(room)s"
+msgstr "Ya no eres operador de la sala privada: %(room)s"
 
 #: pynicotine/chatrooms.py:556
 #, python-format
@@ -1209,6 +1213,8 @@ msgid ""
 "Username %s is invalid, please choose a different one. Usernames can only "
 "contain letters (A-Z), numbers and spaces."
 msgstr ""
+"El nombre de usuario %s no es válido; elige otro. Los nombres solo pueden "
+"contener letras (A-Z), números y espacios."
 
 #: pynicotine/gtkgui/dialogs/fileproperties.py:50
 #: pynicotine/gtkgui/dialogs/shortcuts.py:78
@@ -1285,40 +1291,39 @@ msgstr "<b>%(ip)s</b>, puerto %(port)s"
 #: pynicotine/gtkgui/dialogs/preferences.py:213
 #: pynicotine/gtkgui/ui/settings/network.ui:78
 msgid "No account added"
-msgstr ""
+msgstr "No se agrego ninguna cuenta"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:209
 msgid "Please enter a password, or leave the username empty to log out."
 msgstr ""
+"Introduce una contraseña o deja el nombre de usuario en blanco para cerrar "
+"la sesión."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:223
-#, fuzzy
 msgid ""
 "Enter a username and password to log in as. If the user does not exist, a "
 "new account will be registered."
 msgstr ""
-"Introduce el nombre de la sala a la que deseas unirte. Si la sala no existe, "
-"se creará."
+"Introduce un nombre de usuario y una contraseña para iniciar sesión. Si el "
+"usuario no existe, se creará una nueva cuenta."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:231
 #: pynicotine/gtkgui/ui/settings/network.ui:89
 msgid "Log In As"
-msgstr ""
+msgstr "Iniciar sesión como"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:237
-#, fuzzy
 msgid "_Log In"
-msgstr "_Registro"
+msgstr "_Inisio de sesión"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:246
-#, fuzzy
 msgid "Please enter a password."
-msgstr "Por favor ingrese el número de días."
+msgstr "Por favor ingrese una contraseña."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:261
-#, fuzzy, python-format
+#, python-format
 msgid "Enter a new password for your account %s:"
-msgstr "Introduce una nueva contraseña para tu cuenta de Soulseek:"
+msgstr "Introduce una nueva contraseña para tu cuenta %s:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:265
 #: pynicotine/gtkgui/ui/settings/network.ui:148
@@ -1327,7 +1332,6 @@ msgstr "Cambiar la contraseña"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:268
 #: pynicotine/gtkgui/widgets/popupmenu.py:611
-#, fuzzy
 msgid "Ch_ange"
 msgstr "_Cambiar"
 
@@ -1389,14 +1393,13 @@ msgid "Browse Folder"
 msgstr "Explorar carpeta"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:353
-#, fuzzy
 msgid ""
 "Syntax: Case-insensitive. If enabled, Python regular expressions can be "
 "used, otherwise only wildcard * matches are supported."
 msgstr ""
-"<b>Sintaxis</b>: Insensible a mayúsculas y minúsculas. Si está activada, se "
-"pueden utilizar expresiones regulares de Python; de lo contrario, sólo se "
-"admiten * coincidencias con comodines."
+"Sintaxis: No distingue entre mayúsculas y minúsculas. Si está habilitado, se "
+"pueden utilizar expresiones regulares de Python; de lo contrario, solo se "
+"admiten coincidencias con el comodín *."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:362
 #: pynicotine/gtkgui/dialogs/preferences.py:726
@@ -1462,7 +1465,7 @@ msgstr "Carpetas"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:691
 msgid "Readable"
-msgstr ""
+msgstr "Legible"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:703
 msgid "Accessible To"
