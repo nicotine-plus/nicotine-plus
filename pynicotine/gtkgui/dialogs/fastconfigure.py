@@ -34,6 +34,7 @@ class FastConfigure(Dialog):
             self.download_folder_container,
             self.invalid_username_password_label,
             self.listen_port_entry,
+            self.listen_port_label,
             self.main_icon,
             self.next_button,
             self.next_label,
@@ -276,8 +277,9 @@ class FastConfigure(Dialog):
             core.shares.rescan_shares()
 
         # port_page
-        listen_port = self.listen_port_entry.get_value_as_int()
-        config.sections["server"]["portrange"] = (listen_port, listen_port)
+        if core.cli_listen_port is not None:
+            listen_port = self.listen_port_entry.get_value_as_int()
+            config.sections["server"]["portrange"] = (listen_port, listen_port)
 
         # account_page
         if self.invalid_password or self.invalid_username or config.need_config():
@@ -324,8 +326,12 @@ class FastConfigure(Dialog):
         self.password_entry.set_text(config.sections["server"]["passw"])
 
         # port_page
-        listen_port, _unused_port = config.sections["server"]["portrange"]
-        self.listen_port_entry.set_value(listen_port)
+        if core.cli_listen_port is not None:
+            self.listen_port_label.set_label(str(core.cli_listen_port))
+            self.listen_port_label.set_visible(True)
+        else:
+            listen_port, _unused_port = config.sections["server"]["portrange"]
+            self.listen_port_entry.set_value(listen_port)
 
         # share_page
         self.download_folder_button.set_path(core.downloads.get_default_download_folder())
