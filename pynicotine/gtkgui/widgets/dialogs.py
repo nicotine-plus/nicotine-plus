@@ -259,7 +259,7 @@ class Dialog(Window):
         self.parent = self.application.window
 
         for active_dialog in reversed(Window.active_dialogs):
-            if isinstance(active_dialog, Dialog):
+            if isinstance(active_dialog, Dialog) and active_dialog != self:
                 self.parent = active_dialog
                 break
 
