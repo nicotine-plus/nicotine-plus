@@ -394,12 +394,12 @@ class FileChooserButton:
         if not path:
             return
 
-        self.path = path = os.path.normpath(path)
+        self.path = path = os.path.normpath(os.path.expandvars(path))
 
         # More lenient solution than os.path.basename() to avoid empty strings
         basename = path.rstrip(os.sep).rpartition(os.sep)[-1] or path
 
-        self.chooser_button.set_tooltip_text(os.path.expandvars(path))  # Show path without env variables
+        self.chooser_button.set_tooltip_text(path)
         self.label.set_label(basename)
         self.open_folder_button.set_visible(self.show_open_external_button)
 
