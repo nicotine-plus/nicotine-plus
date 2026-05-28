@@ -151,6 +151,14 @@ def clean_file(basename: str) -> str:
 
 def clean_path(path: str) -> str:
 
+    # Disallow path traversal
+    path = os.sep.join([
+        REPLACEMENTCHAR if part == "."
+        else REPLACEMENTCHAR * 2 if part == ".."
+        else part
+        for part in path.replace("/", os.sep).split(os.sep)
+    ])
+
     path = os.path.normpath(path)
 
     # Without hacks it is (up to Vista) not possible to have more
@@ -170,6 +178,9 @@ def clean_path(path: str) -> str:
 
     # Path can never end with a period or space on Windows machines
     path = path.rstrip(". ")
+
+    if path.endswith(os.sep):
+        path += REPLACEMENTCHAR
 
     return path
 
