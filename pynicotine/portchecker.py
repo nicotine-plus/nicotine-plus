@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2025 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import threading
+from threading import Thread
 
 import pynicotine
 from pynicotine.events import events
@@ -14,15 +14,15 @@ class PortChecker:
     def __init__(self):
         self._thread = None
 
-    def check_status(self, port):
+    def check_status(self, port: int) -> None:
 
         if self._thread is not None and self._thread.is_alive():
             return
 
-        self._thread = threading.Thread(target=self._check_status, args=(port,), name="PortChecker")
+        self._thread = Thread(target=self._check_status, args=(port,), name="PortChecker")
         self._thread.start()
 
-    def _check_status(self, port):
+    def _check_status(self, port: int) -> None:
 
         try:
             is_successful = self._retrieve_status(port)
@@ -33,7 +33,7 @@ class PortChecker:
 
         events.emit_main_thread("check-port-status", port, is_successful)
 
-    def _retrieve_status(self, port):
+    def _retrieve_status(self, port: int) -> bool:
 
         from urllib.request import urlopen
 
