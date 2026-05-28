@@ -171,7 +171,7 @@ jobs:
           persist-credentials: false
 
       - name: Tests
-        uses: cross-platform-actions/action@233156312992f3f169d8d0c633c21d12a5d30455 # v1.0.0
+        uses: cross-platform-actions/action@0c165ad7eb2d6a7e8552d6af5aad2bbedfc646b0 # v1.1.0
         with:
           operating_system: freebsd
           version: '15.0'
@@ -198,7 +198,7 @@ jobs:
           persist-credentials: false
 
       - name: Tests
-        uses: cross-platform-actions/action@233156312992f3f169d8d0c633c21d12a5d30455 # v1.0.0
+        uses: cross-platform-actions/action@0c165ad7eb2d6a7e8552d6af5aad2bbedfc646b0 # v1.1.0
         with:
           operating_system: openbsd
           version: '7.8'
@@ -222,7 +222,7 @@ jobs:
           persist-credentials: false
 
       - name: Tests
-        uses: cross-platform-actions/action@233156312992f3f169d8d0c633c21d12a5d30455 # v1.0.0
+        uses: cross-platform-actions/action@0c165ad7eb2d6a7e8552d6af5aad2bbedfc646b0 # v1.1.0
         with:
           operating_system: netbsd
           version: '10.1'
@@ -242,7 +242,7 @@ jobs:
           persist-credentials: false
 
       - name: Tests
-        uses: cross-platform-actions/action@13ec3be3fbdfe52a660fe21c83f332747ed878be
+        uses: cross-platform-actions/action@0c165ad7eb2d6a7e8552d6af5aad2bbedfc646b0 # v1.1.0
         with:
           operating_system: dragonflybsd
           version: '6.4.2'
@@ -264,7 +264,7 @@ jobs:
           persist-credentials: false
 
       - name: Tests
-        uses: cross-platform-actions/action@13ec3be3fbdfe52a660fe21c83f332747ed878be
+        uses: cross-platform-actions/action@0c165ad7eb2d6a7e8552d6af5aad2bbedfc646b0 # v1.1.0
         with:
           operating_system: midnightbsd
           version: '4.0.4'
@@ -287,7 +287,7 @@ jobs:
           persist-credentials: false
 
       - name: Tests
-        uses: cross-platform-actions/action@233156312992f3f169d8d0c633c21d12a5d30455 # v1.0.0
+        uses: cross-platform-actions/action@0c165ad7eb2d6a7e8552d6af5aad2bbedfc646b0 # v1.1.0
         with:
           operating_system: haiku
           version: 'r1beta5'
@@ -307,7 +307,7 @@ jobs:
           persist-credentials: false
 
       - name: Tests
-        uses: cross-platform-actions/action@233156312992f3f169d8d0c633c21d12a5d30455 # v1.0.0
+        uses: cross-platform-actions/action@0c165ad7eb2d6a7e8552d6af5aad2bbedfc646b0 # v1.1.0
         with:
           operating_system: omnios
           version: 'r151056'
