@@ -230,6 +230,15 @@ def add_typelibs() -> None:
     )
 
 
+def add_schemas() -> None:
+
+    schemas_path = os.path.join(SYS_BASE_PATH, "share/glib-2.0/schemas")
+    temp_file_compiled = os.path.join(TEMP_PATH, "gschemas.compiled")
+
+    subprocess.check_call(["glib-compile-schemas", schemas_path, f"--targetdir={TEMP_PATH}"])
+    add_file(file_path=temp_file_compiled, output_path="lib/schemas/gschemas.compiled")
+
+
 def add_gtk() -> None:
 
     # Typelibs
@@ -240,10 +249,7 @@ def add_gtk() -> None:
         add_file(file_path=os.path.join(LIB_PATH, "gdbus.exe"), output_path="lib/gdbus.exe")
 
     # Schemas
-    add_file(
-        file_path=os.path.join(SYS_BASE_PATH, "share/glib-2.0/schemas/gschemas.compiled"),
-        output_path="lib/schemas/gschemas.compiled"
-    )
+    add_schemas()
 
     # Pixbuf loaders
     add_pixbuf_loaders()
