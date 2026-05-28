@@ -244,7 +244,7 @@ jobs:
           persist-credentials: false
 
       - name: Tests
-        uses: cross-platform-actions/action@9812348fa8eaf5e660207fc33150aeb381c6d4fb
+        uses: cross-platform-actions/action@0c165ad7eb2d6a7e8552d6af5aad2bbedfc646b0 # v1.1.0
         with:
           operating_system: dragonflybsd
           version: '6.4.2'
@@ -266,7 +266,7 @@ jobs:
           persist-credentials: false
 
       - name: Tests
-        uses: cross-platform-actions/action@9812348fa8eaf5e660207fc33150aeb381c6d4fb
+        uses: cross-platform-actions/action@0c165ad7eb2d6a7e8552d6af5aad2bbedfc646b0 # v1.1.0
         with:
           operating_system: midnightbsd
           version: '4.0.4'
