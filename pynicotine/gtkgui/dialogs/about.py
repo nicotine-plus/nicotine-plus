@@ -417,7 +417,6 @@ class About(Dialog):
 
         icon_name = pynicotine.__application_id__
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
-        website_text = _('Website')
         gtk_version = f"{Gtk.get_major_version()}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
 
         self.main_icon.set_from_icon_name(icon_name, *icon_args)
@@ -426,11 +425,11 @@ class About(Dialog):
         for label_widget, text in (
             (self.application_version_label, f"{pynicotine.__application_name__} {pynicotine.__version__}"),
             (self.dependency_versions_label, (f"GTK {gtk_version}   •   Python {sys.version.split()[0]}")),
-            (self.website_label, (f"<a href='{pynicotine.__website_url__}' title='{pynicotine.__website_url__}'>"
-                                  f"{website_text}</a>")),
             (self.copyright_label, f"<small>{pynicotine.__copyright__}</small>")
         ):
             label_widget.set_markup(text)
+
+        self.update_website_label()
 
         for entries, container in (
             (self.AUTHORS, self.authors_container),
@@ -450,6 +449,20 @@ class About(Dialog):
 
         self.website_label.set_visible(not application.isolated_mode)
         events.connect("check-latest-version", self.on_check_latest_version)
+
+    def update_website_label(self):
+
+        # Make it more obvious that updates for our Windows, macOS and AppImage builds can be downloaded
+        # from our website. Since other packages have their own update systems, use the regular website
+        # label in those cases.
+        if self.is_version_outdated and getattr(sys, "frozen", False):
+            website_text = _("Download Release")
+        else:
+            website_text = _("Website")
+
+        self.website_label.set_markup(
+            f"<a href='{pynicotine.__website_url__}' title='{pynicotine.__website_url__}'>{website_text}</a>"
+        )
 
     def on_activate_link(self, _label, url):
         open_uri(url)
@@ -475,6 +488,7 @@ class About(Dialog):
         self.is_version_outdated = is_outdated
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
 
+        self.update_website_label()
         self.status_label.set_label(message)
 
         self.status_icon.set_from_icon_name(icon_name, *icon_args)
