@@ -249,14 +249,14 @@ jobs:
       - name: Freeze application
         run: python3 build-aux/windows/setup.py bdist_msi
 
+      - name: Test application startup
+        shell: cmd  # Exclude msys2 dependencies
+        run: python3 build-aux/windows/testrun.py
+
       - name: Make package portable
         run: |
           mkdir build-aux/windows/build/package/Nicotine+/portable/
           cp build-aux/windows/readme-portable.txt build-aux/windows/build/package/Nicotine+/portable/README.txt
-
-      - name: Test application startup
-        shell: cmd  # Exclude msys2 dependencies
-        run: python3 build-aux/windows/testrun.py
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
