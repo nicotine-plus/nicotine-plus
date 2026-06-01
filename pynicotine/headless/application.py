@@ -111,12 +111,12 @@ class Application:
     def on_shares_unavailable(self, shares):
 
         responses = "[Y/n/force] "
-        message = _("The following shares are unavailable:") + "\n\n"
+        shares_list_message = _("The following shares are unavailable:") + "\n\n"
 
         for virtual_name, folder_path in shares:
-            message += f'• "{virtual_name}" {folder_path}\n'
+            shares_list_message += f'• "{virtual_name}" {folder_path}\n'
 
-        message += "\n" + _("Verify that external disks are mounted and folder permissions are correct.")
-        message += "\n" + _("Retry rescan? %s") % responses
+        shares_list_message += "\n" + _("Verify that external disks are mounted and folder permissions are correct.")
 
-        cli.prompt(message, callback=self.on_shares_unavailable_response)
+        log.add(shares_list_message)
+        cli.prompt(_("Retry rescan? %s") % responses, callback=self.on_shares_unavailable_response)
