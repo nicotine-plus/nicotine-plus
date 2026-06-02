@@ -261,6 +261,9 @@ FILE_TYPE_ICON_LABELS = {
     "x-office-document-symbolic": _("Document"),
     "emblem-documents-symbolic": _("Text")
 }
+PLUGIN_ICON_LABELS = {
+    "dialog-warning-symbolic": _("Failed")
+}
 SHARED_FOLDER_ICON_LABELS = {
     "dialog-warning-symbolic": _("Unreadable Folder")
 }

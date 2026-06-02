@@ -3421,6 +3421,12 @@ class PluginsPage:
                     "toggle_callback": self.on_toggle_plugin,
                     "hide_header": True
                 },
+                "loaded": {
+                    "column_type": "icon",
+                    "title": _("Status"),
+                    "width": 20,
+                    "hide_header": True
+                },
                 "human_name": {
                     "column_type": "text",
                     "title": _("Plugin"),
@@ -3463,6 +3469,8 @@ class PluginsPage:
 
         self.application.preferences.set_widgets_data(self.options)
 
+        failed_icon = "dialog-warning-symbolic" if self.enable_plugins_toggle.get_active() else ""
+
         for plugin_name in core.pluginhandler.list_installed_plugins():
             try:
                 info = core.pluginhandler.get_plugin_info(plugin_name)
@@ -3471,7 +3479,9 @@ class PluginsPage:
 
             plugin_human_name = info.get("Name", plugin_name)
             enabled = (plugin_name in config.sections["plugins"]["enabled"])
-            self.plugin_list_view.add_row([enabled, plugin_human_name, plugin_name], select_row=False)
+            icon = failed_icon if enabled and plugin_name not in core.pluginhandler.enabled_plugins else ""
+
+            self.plugin_list_view.add_row([enabled, icon, plugin_human_name, plugin_name], select_row=False)
 
         self.plugin_list_view.unfreeze()
 
@@ -3537,9 +3547,13 @@ class PluginsPage:
     def on_toggle_plugin(self, list_view, iterator):
 
         plugin_name = list_view.get_row_value(iterator, "name_data")
+        was_loaded = (plugin_name in core.pluginhandler.enabled_plugins)
         enabled = core.pluginhandler.toggle_plugin(plugin_name)
+        icon = "dialog-warning-symbolic" if not was_loaded and not enabled else ""
 
         list_view.set_row_value(iterator, "enabled", enabled)
+        list_view.set_row_value(iterator, "loaded", icon)
+
         self.check_plugin_settings_button(plugin_name)
 
     def on_toggle_selected_plugin(self, *_args):
