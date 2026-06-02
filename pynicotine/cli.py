@@ -142,6 +142,10 @@ class CLI:
         if not self._has_tty:
             return
 
+        if "\n" in message:
+            self._print_log_message("CLI prompt failed (message cannot be multiple lines)")
+            return
+
         self._input_processor.prompt_message = message
         self._input_processor.prompt_callback = callback
         self._input_processor.prompt_silent = is_silent
