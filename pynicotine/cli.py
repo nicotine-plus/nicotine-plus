@@ -78,7 +78,7 @@ class CLIInputProcessor(Thread):
         input_func = getpass if self.prompt_silent else input
         self.has_custom_prompt = (callback is not None)
 
-        user_input = input_func(self.prompt_message)
+        user_input = input_func(f"\r{self.prompt_message}")
 
         self.has_custom_prompt = False
         self.prompt_message = ""
