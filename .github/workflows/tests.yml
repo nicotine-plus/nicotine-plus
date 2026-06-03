@@ -164,170 +164,242 @@ jobs:
   freebsd:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    defaults:
+      run:
+        shell: cpa.sh {0}
     steps:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
 
-      - name: Tests
+      - name: Set up FreeBSD
         uses: cross-platform-actions/action@be3d7e9ff5c8770b9c51b1a8c8c5446e1cad7cf9 # v1.2.0
         with:
           operating_system: freebsd
           version: '15.0'
-          run: |
-            sudo pkg install -y cage dejavu gettext gtk4 py311-build py311-pygobject \
-              py311-setuptools py311-wheel
 
-            export WLR_BACKENDS=headless
-            export XDG_RUNTIME_DIR=/tmp
-            export GDK_BACKEND=wayland
-            export DBUS_SESSION_BUS_ADDRESS=
+      - name: Install dependencies
+        run: |
+          sudo pkg install -y cage dejavu gettext gtk4 py311-build py311-pygobject \
+            py311-setuptools py311-wheel
 
-            cage python3.11 -m unittest -v
-            python3.11 -m build
-            python3.11 -m build --no-isolation
+      - name: Integration and unit tests
+        run: |
+          export WLR_BACKENDS=headless
+          export XDG_RUNTIME_DIR=/tmp
+          export GDK_BACKEND=wayland
+          export DBUS_SESSION_BUS_ADDRESS=
+
+          cage python3.11 -m unittest -v
+
+      - name: Build
+        run: python3.11 -m build
+
+      - name: Build without isolation
+        run: python3.11 -m build --no-isolation
 
   openbsd:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    defaults:
+      run:
+        shell: cpa.sh {0}
     steps:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
 
-      - name: Tests
+      - name: Set up OpenBSD
         uses: cross-platform-actions/action@be3d7e9ff5c8770b9c51b1a8c8c5446e1cad7cf9 # v1.2.0
         with:
           operating_system: openbsd
           version: '7.8'
-          run: |
-            sudo pkg_add gettext-tools gtk+4 py3-build py3-gobject3 py3-setuptools py3-wheel
 
-            export DISPLAY=:99
-            Xvfb :99 > /dev/null 2>&1 &
+      - name: Install dependencies
+        run: sudo pkg_add gettext-tools gtk+4 py3-build py3-gobject3 py3-setuptools py3-wheel
 
-            python3 -m unittest -v
-            python3 -m build
-            python3 -m build --no-isolation
+      - name: Integration and unit tests
+        run: |
+          export DISPLAY=:99
+          Xvfb :99 > /dev/null 2>&1 &
+          python3 -m unittest -v
+
+      - name: Build
+        run: python3 -m build
+
+      - name: Build without isolation
+        run: python3 -m build --no-isolation
 
   netbsd:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    defaults:
+      run:
+        shell: cpa.sh {0}
     steps:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
 
-      - name: Tests
+      - name: Set up NetBSD
         uses: cross-platform-actions/action@be3d7e9ff5c8770b9c51b1a8c8c5446e1cad7cf9 # v1.2.0
         with:
           operating_system: netbsd
           version: '10.1'
-          run: |
-            sudo pkgin -y install python314
 
-            export NICOTINE_GUI_TESTS=0
-            python3.14 -m unittest -v
+      - name: Install dependencies
+        run: sudo pkgin -y install python314
+
+      - name: Integration and unit tests
+        run: |
+          export NICOTINE_GUI_TESTS=0
+          python3.14 -m unittest -v
 
   dragonflybsd:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    defaults:
+      run:
+        shell: cpa.sh {0}
     steps:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
 
-      - name: Tests
+      - name: Set up DragonflyBSD
         uses: cross-platform-actions/action@be3d7e9ff5c8770b9c51b1a8c8c5446e1cad7cf9 # v1.2.0
         with:
           operating_system: dragonflybsd
           version: '6.4.2'
-          run: |
-            sudo pkg install -y dejavu gettext gtk4 python311 py311-build py311-pygobject \
-              py311-setuptools py311-wheel
 
-            python3.11 -m unittest -v
-            python3.11 -m build
-            python3.11 -m build --no-isolation
+      - name: Install dependencies
+        run: |
+          sudo pkg install -y dejavu gettext gtk4 python311 py311-build py311-pygobject \
+            py311-setuptools py311-wheel
+
+      - name: Integration and unit tests
+        run: python3.11 -m unittest -v
+
+      - name: Build
+        run: python3.11 -m build
+
+      - name: Build without isolation
+        run: python3.11 -m build --no-isolation
 
   midnightbsd:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    defaults:
+      run:
+        shell: cpa.sh {0}
     steps:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
 
-      - name: Tests
+      - name: Set up MidnightBSD
         uses: cross-platform-actions/action@be3d7e9ff5c8770b9c51b1a8c8c5446e1cad7cf9 # v1.2.0
         with:
           operating_system: midnightbsd
           version: '4.0.4'
-          run: |
-            sudo mport index
-            sudo mport install dejavu gettext gtk4 python311 py311-build py311-pygobject \
-              py311-setuptools py311-wheel || true
 
-            python3.11 -m unittest -v
-            python3.11 -m build
-            python3.11 -m build --no-isolation
+      - name: Install dependencies
+        run: |
+          sudo mport index
+          sudo mport install dejavu gettext gtk4 python311 py311-build py311-pygobject \
+            py311-setuptools py311-wheel || true
+
+      - name: Integration and unit tests
+        run: python3.11 -m unittest -v
+
+      - name: Build
+        run: python3.11 -m build
+
+      - name: Build without isolation
+        run: python3.11 -m build --no-isolation
 
   haiku:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    defaults:
+      run:
+        shell: cpa.sh {0}
     steps:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
 
-      - name: Tests
+      - name: Set up Haiku
         uses: cross-platform-actions/action@be3d7e9ff5c8770b9c51b1a8c8c5446e1cad7cf9 # v1.2.0
         with:
           operating_system: haiku
           version: 'r1beta5'
-          run: |
-            pkgman install -y harfbuzz_glib gettext gtk4 build_python310 pygobject_python310 \
-              setuptools_python310 wheel_python310
-            python3.10 -m unittest -v
-            python3.10 -m build --no-isolation
+
+      - name: Install dependencies
+        run: |
+          pkgman install -y harfbuzz_glib gettext gtk4 build_python310 pygobject_python310 \
+            setuptools_python310 wheel_python310
+
+      - name: Integration and unit tests
+        run: python3.10 -m unittest -v
+
+      - name: Build without isolation
+        run: python3.10 -m build --no-isolation
 
   illumos:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    defaults:
+      run:
+        shell: cpa.sh {0}
     steps:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
 
-      - name: Tests
+      - name: Set up illumos
         uses: cross-platform-actions/action@be3d7e9ff5c8770b9c51b1a8c8c5446e1cad7cf9 # v1.2.0
         with:
           operating_system: omnios
           version: 'r151058'
-          run: |
-            BOOTSTRAP_TAR="bootstrap-2025Q4-x86_64.tar.gz"
-            curl -O https://pkgsrc.smartos.org/packages/SmartOS/bootstrap/${BOOTSTRAP_TAR}
-            sudo tar -zxpf ${BOOTSTRAP_TAR} -C /
-            PATH=/opt/local/sbin:/opt/local/bin:$PATH
 
-            sudo pkgin -y update
-            sudo pkgin -y upgrade
-            sudo pkgin -y install gettext-tools gtk3+ modular-xorg-fonts modular-xorg-server py314-build \
-              py314-gobject3 py314-setuptools py314-wheel
+      - name: Set up package repository
+        run: |
+          BOOTSTRAP_TAR="bootstrap-2025Q4-x86_64.tar.gz"
+          curl -O https://pkgsrc.smartos.org/packages/SmartOS/bootstrap/${BOOTSTRAP_TAR}
+          sudo tar -zxpf ${BOOTSTRAP_TAR} -C /
 
-            export DISPLAY=:99
-            Xvfb :99 > /dev/null 2>&1 &
+      - name: Install dependencies
+        run: |
+          PATH=/opt/local/sbin:/opt/local/bin:$PATH
+          sudo pkgin -y update
+          sudo pkgin -y upgrade
+          sudo pkgin -y install gettext-tools gtk3+ modular-xorg-fonts modular-xorg-server py314-build \
+            py314-gobject3 py314-setuptools py314-wheel
 
-            python3.14 -m unittest -v
-            python3.14 -m build
-            python3.14 -m build --no-isolation
+      - name: Integration and unit tests
+        run: |
+          PATH=/opt/local/sbin:/opt/local/bin:$PATH
+          export DISPLAY=:99
+          Xvfb :99 > /dev/null 2>&1 &
+          python3.14 -m unittest -v
+
+      - name: Build
+        run: |
+          PATH=/opt/local/sbin:/opt/local/bin:$PATH
+          python3.14 -m build
+
+      - name: Build without isolation
+        run: |
+          PATH=/opt/local/sbin:/opt/local/bin:$PATH
+          python3.14 -m build --no-isolation
 
   windows:
     timeout-minutes: 15
