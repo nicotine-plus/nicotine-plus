@@ -31,6 +31,7 @@ class Window:
 
         if sys.platform == "win32":
             widget.connect("realize", self._on_realize_win32)
+            widget.connect("show", self._on_show_win32)
 
             # Use dark window controls on Windows when requested
             if LIBADWAITA_API_VERSION:
@@ -81,6 +82,9 @@ class Window:
             from gi.repository import Adw  # pylint: disable=no-name-in-module
             self._on_dark_mode_win32(Adw.StyleManager.get_default())
 
+    def _on_show_win32(self, *_args):
+        self._raise_to_foreground()
+
     def _on_dark_mode_win32(self, style_manager, *_args):
 
         surface = self.get_surface()
@@ -109,6 +113,17 @@ class Window:
 
     def _on_hide_broadway(self, *_args):
         self.widget.unrealize()
+
+    def _raise_to_foreground(self):
+
+        if sys.platform != "win32":
+            return
+
+        from ctypes import windll
+
+        # Workaround for missing call to raise window in GTK
+        h_wnd = self.get_surface().get_handle()
+        windll.user32.SetForegroundWindow(h_wnd)
 
     def get_surface(self):
 
@@ -160,11 +175,16 @@ class Window:
 
     def present(self):
 
+        is_visible = self.is_visible()
+
         if self.activation_token is not None:
             # Set XDG activation token if provided by tray icon
             self.widget.set_startup_id(self.activation_token)
 
         self.widget.present()
+
+        if is_visible:
+            self._raise_to_foreground()
 
     def hide(self):
         self.widget.set_visible(False)
