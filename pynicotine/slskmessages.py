@@ -661,6 +661,12 @@ class Login(ServerMessage):
 
     We send this to the server right after the connection has been
     established. Server responds with the greeting message.
+
+    The server uses the major and minor versions to differentiate between
+    clients. Numbers are chosen that avoid impersonating clients with reserved
+    major versions. Downstream projects have their own rules for minor
+    versions. Experimental scripts may use major version `177` and any minor
+    version number they choose for each project.
     """
 
     __slots__ = ("username", "passwd", "version", "minorversion", "success", "reason",
