@@ -312,7 +312,7 @@ jobs:
         uses: cross-platform-actions/action@0c165ad7eb2d6a7e8552d6af5aad2bbedfc646b0 # v1.1.0
         with:
           operating_system: omnios
-          version: 'r151056'
+          version: 'r151058'
           run: |
             BOOTSTRAP_TAR="bootstrap-2025Q4-x86_64.tar.gz"
             curl -O https://pkgsrc.smartos.org/packages/SmartOS/bootstrap/${BOOTSTRAP_TAR}
