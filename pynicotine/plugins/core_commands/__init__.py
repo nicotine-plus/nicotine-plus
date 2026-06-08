@@ -601,7 +601,15 @@ class Plugin(BasePlugin):
 
         action, plugin_name = args.split(maxsplit=1)
 
-        if action == "toggle":
+        if self.parent.get_plugin_path(plugin_name) is None:
+            self.output(_("Installed plugins:"))
+
+            for basename in sorted(self.parent.list_installed_plugins()):
+                self.output(f"{'‣' if basename in self.parent.enabled_plugins else '•'} {basename}")
+
+            self.output(_("No plugin with name \"%s\"") % plugin_name)
+
+        elif action == "toggle":
             self.parent.toggle_plugin(plugin_name)
 
         elif action == "reload":
