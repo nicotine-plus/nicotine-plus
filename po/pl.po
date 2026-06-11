@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-09 01:50+0300\n"
-"PO-Revision-Date: 2026-03-13 14:51+0000\n"
+"PO-Revision-Date: 2026-06-10 06:01+0000\n"
 "Last-Translator: Matthaiks <kitynska@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 2026.6\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -584,9 +584,8 @@ msgid "_Copy & Report Bug"
 msgstr "_Skopiuj i zgłoś błąd"
 
 #: pynicotine/gtkgui/application.py:1038
-#, fuzzy
 msgid "Saving configuration…"
-msgstr "Przetestuj _konfigurację"
+msgstr "Zapisywanie konfiguracji…"
 
 #: pynicotine/gtkgui/buddies.py:56 pynicotine/gtkgui/chatrooms.py:596
 #: pynicotine/gtkgui/dialogs/chathistory.py:52
@@ -748,7 +747,7 @@ msgstr "Utworzyć nowy pokój?"
 #: pynicotine/gtkgui/chatrooms.py:224
 #, python-format
 msgid "Do you really want to create a new room \"%s\"?"
-msgstr "Czy na pewno chcesz utworzyć nowy pokój „%s”?"
+msgstr "Czy na pewno chcesz utworzyć nowy pokój \"%s\"?"
 
 #: pynicotine/gtkgui/chatrooms.py:225 pynicotine/gtkgui/dialogs/roomlist.py:383
 msgid "Make room private"
@@ -972,9 +971,8 @@ msgid "About"
 msgstr "O alikacji"
 
 #: pynicotine/gtkgui/dialogs/about.py:459
-#, fuzzy
 msgid "Download Release"
-msgstr "Pobierz pliki"
+msgstr "Pobierz wydanie"
 
 #: pynicotine/gtkgui/dialogs/about.py:461
 msgid "Website"
@@ -1965,44 +1963,41 @@ msgid "_Settings"
 msgstr "U_stawienia"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3443
-#, fuzzy
 msgid "Reset Settings…"
-msgstr "_Zresetuj statystyki…"
+msgstr "Zresetuj ustawienia…"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3444
 #: pynicotine/gtkgui/dialogs/preferences.py:3504
-#, fuzzy
 msgid "Uninstall…"
-msgstr "_Odinstaluj…"
+msgstr "Odinstaluj…"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3509
 msgid "No Plugin Selected"
 msgstr "Nie wybrano wtyczki"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3530
-#, fuzzy
 msgid ""
 "This is a third-party plugin. Safety is not guaranteed. Use at your own risk."
-msgstr "To nie jest wbudowana wtyczka. Używaj na własne ryzyko."
+msgstr ""
+"To jest wtyczka zewnętrzna. Bezpieczeństwo nie jest gwarantowane. Używaj na "
+"własne ryzyko."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3591
 msgid "Select a Zip File"
 msgstr "Wybierz plik Zip"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3604
-#, fuzzy
 msgid "Reset Plugin Settings?"
-msgstr "Ustawienia %s"
+msgstr "Zresetować ustawienia wtyczki?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3605
-#, fuzzy, python-format
+#, python-format
 msgid "Do you really want to restore the default settings for plugin %s?"
-msgstr "Czy na pewno chcesz zresetować statystyki transferów?"
+msgstr "Czy na pewno chcesz przywrócić ustawienia domyślne wtyczki %s?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3608
-#, fuzzy
 msgid "Reset"
-msgstr "Zresetuj wszystko"
+msgstr "Zresetuj"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3628
 msgid "Uninstall Plugin?"
@@ -2512,7 +2507,7 @@ msgstr "Edytuj życzenie"
 #: pynicotine/gtkgui/dialogs/wishlist.py:315
 #, python-format
 msgid "Modify the search term '%s':"
-msgstr "Zmodyfikuj termin wyszukiwania „%s”:"
+msgstr "Zmodyfikuj termin wyszukiwania \"%s\":"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:380
 msgid "Clear Wishlist?"
@@ -3212,7 +3207,7 @@ msgstr "[PRYWATNY] %s"
 #: pynicotine/gtkgui/userbrowse.py:503
 #, python-format
 msgid "%s  ·"
-msgstr ""
+msgstr "%s  ·"
 
 #: pynicotine/gtkgui/userbrowse.py:594
 msgid ""
@@ -4993,7 +4988,7 @@ msgstr "%(num_listed)s udostępnione pliki (%(num_total)s skonfigurowane)"
 #: pynicotine/plugins/core_commands/__init__.py:563
 #, python-format
 msgid "Cannot share inaccessible folder \"%s\""
-msgstr "Nie można udostępnić niedostępnego folderu „%s”"
+msgstr "Nie można udostępnić niedostępnego folderu \"%s\""
 
 #: pynicotine/plugins/core_commands/__init__.py:566
 #, python-format
@@ -5010,17 +5005,16 @@ msgstr "Brak współdzielenia z \"%s\""
 #: pynicotine/plugins/core_commands/__init__.py:580
 #, python-format
 msgid "Removed share \"%s\" (rescan required)"
-msgstr "Usunięto udział „%s” (wymagane ponowne skanowanie)"
+msgstr "Usunięto udział \"%s\" (wymagane ponowne skanowanie)"
 
 #: pynicotine/plugins/core_commands/__init__.py:605
-#, fuzzy
 msgid "Installed plugins:"
-msgstr "Zainstalowano wtyczkę %s"
+msgstr "Zainstalowane wtyczki:"
 
 #: pynicotine/plugins/core_commands/__init__.py:610
-#, fuzzy, python-format
+#, python-format
 msgid "No plugin with name \"%s\""
-msgstr "Brak współdzielenia z \"%s\""
+msgstr "Brak wtyczki o nazwie \"%s\""
 
 #: pynicotine/pluginsystem.py:437
 msgid "Loading plugin system"
@@ -5100,7 +5094,7 @@ msgstr ""
 #: pynicotine/pluginsystem.py:918
 #, python-format
 msgid "Restored default settings for plugin %s"
-msgstr ""
+msgstr "Przywrócono ustawienia domyślne wtyczki %s"
 
 #: pynicotine/pluginsystem.py:950
 msgid "No description"
@@ -5634,7 +5628,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:356
 msgid "The following listening port has been set by your environment:"
-msgstr ""
+msgstr "W środowisku ustawiono następujący port nasłuchujący:"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:408
 msgid "Download Files to Folder"
