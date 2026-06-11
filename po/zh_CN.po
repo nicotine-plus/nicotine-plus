@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-09 01:50+0300\n"
-"PO-Revision-Date: 2026-05-20 17:11+0000\n"
-"Last-Translator: 大王叫我来巡山 "
+"PO-Revision-Date: 2026-06-10 06:01+0000\n"
+"Last-Translator: Hosted Weblate user 54392 "
 "<hamburger2048@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/nicotine-plus/nicotine-plus/zh_Hans/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.dev0\n"
+"X-Generator: Weblate 2026.6\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -566,9 +566,8 @@ msgid "_Copy & Report Bug"
 msgstr "_复制和报告bug"
 
 #: pynicotine/gtkgui/application.py:1038
-#, fuzzy
 msgid "Saving configuration…"
-msgstr "测试配置(_T)"
+msgstr "正在保存配置…"
 
 #: pynicotine/gtkgui/buddies.py:56 pynicotine/gtkgui/chatrooms.py:596
 #: pynicotine/gtkgui/dialogs/chathistory.py:52
@@ -950,9 +949,8 @@ msgid "About"
 msgstr "关于"
 
 #: pynicotine/gtkgui/dialogs/about.py:459
-#, fuzzy
 msgid "Download Release"
-msgstr "下载文件"
+msgstr "下载发行版"
 
 #: pynicotine/gtkgui/dialogs/about.py:461
 msgid "Website"
@@ -1919,44 +1917,39 @@ msgid "_Settings"
 msgstr "_设置"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3443
-#, fuzzy
 msgid "Reset Settings…"
-msgstr "%s 设置"
+msgstr "重置设置…"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3444
 #: pynicotine/gtkgui/dialogs/preferences.py:3504
-#, fuzzy
 msgid "Uninstall…"
-msgstr "卸载(_U)…"
+msgstr "卸载…"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3509
 msgid "No Plugin Selected"
 msgstr "未选择插件"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3530
-#, fuzzy
 msgid ""
 "This is a third-party plugin. Safety is not guaranteed. Use at your own risk."
-msgstr "这不是内置插件。使用风险自负。"
+msgstr "这是第三方插件。不保证安全性。使用风险自负。"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3591
 msgid "Select a Zip File"
 msgstr "选择 Zip 文件"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3604
-#, fuzzy
 msgid "Reset Plugin Settings?"
-msgstr "%s 设置"
+msgstr "重置插件设置？"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3605
-#, fuzzy, python-format
+#, python-format
 msgid "Do you really want to restore the default settings for plugin %s?"
-msgstr "您真的要重置传输统计信息吗？"
+msgstr "真的要恢复 %s 插件的默认设置吗？"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3608
-#, fuzzy
 msgid "Reset"
-msgstr "全部重置"
+msgstr "重置"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3628
 msgid "Uninstall Plugin?"
@@ -4920,14 +4913,13 @@ msgid "Removed share \"%s\" (rescan required)"
 msgstr "已移除共享“%s”（需要重新扫描）"
 
 #: pynicotine/plugins/core_commands/__init__.py:605
-#, fuzzy
 msgid "Installed plugins:"
-msgstr "已安装插件 %s"
+msgstr "已安装插件："
 
 #: pynicotine/plugins/core_commands/__init__.py:610
-#, fuzzy, python-format
+#, python-format
 msgid "No plugin with name \"%s\""
-msgstr "没有名为“%s”的共享"
+msgstr "没有名为“%s”的插件"
 
 #: pynicotine/pluginsystem.py:437
 msgid "Loading plugin system"
