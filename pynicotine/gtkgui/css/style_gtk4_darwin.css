@@ -3,7 +3,7 @@
 window {
   /* Remove GTK's window border, since macOS provides one */
   border: none;
-  border-radius: 0;
+  border-radius: 1px;
   box-shadow: none;
 }
 
