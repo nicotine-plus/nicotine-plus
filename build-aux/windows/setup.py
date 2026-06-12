@@ -254,20 +254,19 @@ def add_gtk() -> None:
     # Pixbuf loaders
     add_pixbuf_loaders()
 
-    if sys.platform in {"darwin", "win32"}:
-        return
-
     # Fontconfig
-    add_files(
-        folder_path=os.path.join(SYS_BASE_PATH, "etc/fonts"), output_path="share/fonts",
-        ends_with=".conf", recursive=True
-    )
+    if sys.platform != "darwin":
+        add_files(
+            folder_path=os.path.join(SYS_BASE_PATH, "etc/fonts"), output_path="share/fonts",
+            ends_with=".conf", recursive=True
+        )
 
     # xkb
-    add_files(
-        folder_path=os.path.join(SYS_BASE_PATH, "share/X11/xkb"), output_path="share/xkb",
-        recursive=True
-    )
+    if sys.platform not in {"darwin", "win32"}:
+        add_files(
+            folder_path=os.path.join(SYS_BASE_PATH, "share/X11/xkb"), output_path="share/xkb",
+            recursive=True
+        )
 
 
 def add_translations() -> None:

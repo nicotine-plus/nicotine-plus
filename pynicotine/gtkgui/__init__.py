@@ -174,6 +174,9 @@ def run(hidden, ci_mode, isolated_mode, multi_instance):
         loaders_file_handle.close()
 
     if sys.platform == "win32":
+        # Use 'fontconfig' backend for now due to issues with font fallbacks in the default backend.
+        os.environ["PANGOCAIRO_BACKEND"] = "fontconfig"
+
         # Use Cairo software rendering due to flickering issues in the GPU renderer (#2859).
         # Reevaluate when the new GPU renderers are stable:
         # https://blog.gtk.org/2024/01/28/new-renderers-for-gtk/
