@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-09 01:50+0300\n"
-"PO-Revision-Date: 2026-03-13 14:51+0000\n"
+"PO-Revision-Date: 2026-06-12 13:01+0000\n"
 "Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 2026.7.dev0\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -581,9 +581,8 @@ msgid "_Copy & Report Bug"
 msgstr "_Copiar & Relatar Bug"
 
 #: pynicotine/gtkgui/application.py:1038
-#, fuzzy
 msgid "Saving configuration…"
-msgstr "_Testar Configuração"
+msgstr "Salvando configuração…"
 
 #: pynicotine/gtkgui/buddies.py:56 pynicotine/gtkgui/chatrooms.py:596
 #: pynicotine/gtkgui/dialogs/chathistory.py:52
@@ -968,9 +967,8 @@ msgid "About"
 msgstr "Sobre"
 
 #: pynicotine/gtkgui/dialogs/about.py:459
-#, fuzzy
 msgid "Download Release"
-msgstr "Transferir Arquivos"
+msgstr "Baixar Versão"
 
 #: pynicotine/gtkgui/dialogs/about.py:461
 msgid "Website"
@@ -1961,44 +1959,41 @@ msgid "_Settings"
 msgstr "_Configurações"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3443
-#, fuzzy
 msgid "Reset Settings…"
-msgstr "%s Configurações"
+msgstr "Redefinir configurações…"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3444
 #: pynicotine/gtkgui/dialogs/preferences.py:3504
-#, fuzzy
 msgid "Uninstall…"
-msgstr "_Desinstalar…"
+msgstr "Desinstalar…"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3509
 msgid "No Plugin Selected"
 msgstr "Nenhum Plugin Selecionado"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3530
-#, fuzzy
 msgid ""
 "This is a third-party plugin. Safety is not guaranteed. Use at your own risk."
-msgstr "Este não é um plugin embutido. Use por sua própria conta e risco."
+msgstr ""
+"Este é um plugin de terceiros. A segurança não é garantida. Use por sua "
+"conta e risco."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3591
 msgid "Select a Zip File"
 msgstr "Selecionar um Arquivo Zip"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3604
-#, fuzzy
 msgid "Reset Plugin Settings?"
-msgstr "%s Configurações"
+msgstr "Redefinir configurações do plugin?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3605
-#, fuzzy, python-format
+#, python-format
 msgid "Do you really want to restore the default settings for plugin %s?"
-msgstr "Você realmente quer redefinir as estatísticas de transferência?"
+msgstr "Deseja realmente restaurar as configurações padrão do plugin %s?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3608
-#, fuzzy
 msgid "Reset"
-msgstr "Redefinir Tudo"
+msgstr "Redefinir"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3628
 msgid "Uninstall Plugin?"
@@ -3204,7 +3199,7 @@ msgstr "[PRIVADO]  %s"
 #: pynicotine/gtkgui/userbrowse.py:503
 #, python-format
 msgid "%s  ·"
-msgstr ""
+msgstr "%s  ·"
 
 #: pynicotine/gtkgui/userbrowse.py:594
 msgid ""
@@ -5003,14 +4998,13 @@ msgid "Removed share \"%s\" (rescan required)"
 msgstr "Removido do compartilhamento \"%s\" (é necessária nova verificação)"
 
 #: pynicotine/plugins/core_commands/__init__.py:605
-#, fuzzy
 msgid "Installed plugins:"
-msgstr "Plugin instalado %s"
+msgstr "Plugins instalados:"
 
 #: pynicotine/plugins/core_commands/__init__.py:610
-#, fuzzy, python-format
+#, python-format
 msgid "No plugin with name \"%s\""
-msgstr "Não compartilhar com nome \"%s\""
+msgstr "Nenhum plugin com o nome \"%s\""
 
 #: pynicotine/pluginsystem.py:437
 msgid "Loading plugin system"
@@ -5090,7 +5084,7 @@ msgstr ""
 #: pynicotine/pluginsystem.py:918
 #, python-format
 msgid "Restored default settings for plugin %s"
-msgstr ""
+msgstr "Configurações padrão restauradas para o plugin %s"
 
 #: pynicotine/pluginsystem.py:950
 msgid "No description"
@@ -5626,7 +5620,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:356
 msgid "The following listening port has been set by your environment:"
-msgstr ""
+msgstr "A seguinte porta de escuta foi definida pelo seu ambiente:"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:408
 msgid "Download Files to Folder"
