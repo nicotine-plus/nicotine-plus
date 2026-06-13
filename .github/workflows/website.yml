@@ -38,8 +38,10 @@ jobs:
           cp -r data/screenshots "$WEBSITE_ROOT"/data/
           cp -r doc "$WEBSITE_ROOT"/
           cp AUTHORS.md "$WEBSITE_ROOT"/
+          cp CONTRIBUTING.md "$WEBSITE_ROOT"/
           cp README.md "$WEBSITE_ROOT"/
           cp NEWS.md "$WEBSITE_ROOT"/
+          cp SECURITY.md "$WEBSITE_ROOT"/
           cp data/icons/icon.svg "$WEBSITE_ROOT"/data/icons/
 
       - name: Strip headers
