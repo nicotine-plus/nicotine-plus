@@ -56,6 +56,8 @@ involved:
  - [IRC Channel](https://web.libera.chat/?channel=#nicotine+)
      – Chat in the #nicotine+ IRC channel on [Libera.Chat](https://libera.chat/)
 
+Every participant must follow the rules in [CONTRIBUTING.md](CONTRIBUTING.md).
+
 
 ## Where did the name Nicotine come from?
 

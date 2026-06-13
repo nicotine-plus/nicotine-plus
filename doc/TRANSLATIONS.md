@@ -9,13 +9,13 @@
 
 You can help improving our translations at
 [Hosted Weblate](https://hosted.weblate.org/engage/nicotine-plus). You don't
-even need an account.
+even need an account. Look around in the Weblate interface, there are quite a
+few very practical options.
 
 We regularly import the improved translations into the Nicotine+ GitHub
 repository, especially before a new Nicotine+ release.
 
-Look around in the Weblate interface, there are quite a few very practical
-options.
+Every participant must follow the rules in [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ### Automatic Translations
 
