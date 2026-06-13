@@ -4,6 +4,8 @@
 title: Nicotine+
 tagline: Graphical client for Soulseek
 logo: /data/icons/icon.svg
+include:
+  - CONTRIBUTING.md
 github:
   # Disable footer
   private: true
