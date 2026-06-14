@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-09 01:50+0300\n"
-"PO-Revision-Date: 2026-03-21 17:09+0000\n"
+"PO-Revision-Date: 2026-06-14 20:01+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 2026.7.dev0\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -580,9 +580,8 @@ msgid "_Copy & Report Bug"
 msgstr "_Másolja és jelentse a hibát"
 
 #: pynicotine/gtkgui/application.py:1038
-#, fuzzy
 msgid "Saving configuration…"
-msgstr "Beállítások _tesztelése"
+msgstr "Beállítások mentése…"
 
 #: pynicotine/gtkgui/buddies.py:56 pynicotine/gtkgui/chatrooms.py:596
 #: pynicotine/gtkgui/dialogs/chathistory.py:52
@@ -971,9 +970,8 @@ msgid "About"
 msgstr "Névjegy"
 
 #: pynicotine/gtkgui/dialogs/about.py:459
-#, fuzzy
 msgid "Download Release"
-msgstr "Fájlok letöltése"
+msgstr "Verzió letöltése"
 
 #: pynicotine/gtkgui/dialogs/about.py:461
 msgid "Website"
@@ -995,7 +993,7 @@ msgstr "Frissített"
 
 #: pynicotine/gtkgui/dialogs/about.py:516
 msgid "Checking latest version…"
-msgstr "Legújabb verzió ellenőrzése…"
+msgstr "Legújabb kiadás ellenőrzése…"
 
 #: pynicotine/gtkgui/dialogs/chathistory.py:41
 msgid "Chat History"
@@ -1965,44 +1963,43 @@ msgid "_Settings"
 msgstr "_Beállítások"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3443
-#, fuzzy
 msgid "Reset Settings…"
-msgstr "Statisztikák visszaállítása…"
+msgstr "Beállítások visszaállítása…"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3444
 #: pynicotine/gtkgui/dialogs/preferences.py:3504
-#, fuzzy
 msgid "Uninstall…"
-msgstr "_Eltávolítás…"
+msgstr "Eltávolítás…"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3509
 msgid "No Plugin Selected"
 msgstr "Nincs kiválasztva bővítmény"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3530
-#, fuzzy
 msgid ""
 "This is a third-party plugin. Safety is not guaranteed. Use at your own risk."
-msgstr "Ez nem egy beépített plugin. A saját felelősségére használja."
+msgstr ""
+"Ez egy harmadik féltől származó bővítmény. Nem garantált, hogy biztonságos. "
+"A saját felelősségére használja."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3591
 msgid "Select a Zip File"
 msgstr "Válasszon ki egy ZIP fájlt"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3604
-#, fuzzy
 msgid "Reset Plugin Settings?"
-msgstr "%s Beállítások"
+msgstr "Visszaállítja a bővítmény beállításait?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3605
-#, fuzzy, python-format
+#, python-format
 msgid "Do you really want to restore the default settings for plugin %s?"
-msgstr "Valóban vissza szeretné állítani az átviteli statisztikákat?"
+msgstr ""
+"Valóban vissza szeretné állítani a bővítmény (%s) alapértelmezett "
+"beállításait?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3608
-#, fuzzy
 msgid "Reset"
-msgstr "Az összes visszaállítása"
+msgstr "Visszaállítás"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3628
 msgid "Uninstall Plugin?"
@@ -3211,7 +3208,7 @@ msgstr "[PRIVÁT]  %s"
 #: pynicotine/gtkgui/userbrowse.py:503
 #, python-format
 msgid "%s  ·"
-msgstr ""
+msgstr "%s  ·"
 
 #: pynicotine/gtkgui/userbrowse.py:594
 msgid ""
@@ -5009,14 +5006,13 @@ msgid "Removed share \"%s\" (rescan required)"
 msgstr "„%s” megosztás eltávolítva (újrakeresés szükséges)"
 
 #: pynicotine/plugins/core_commands/__init__.py:605
-#, fuzzy
 msgid "Installed plugins:"
-msgstr "%s telepített bővítmény"
+msgstr "Telepített bővítmények:"
 
 #: pynicotine/plugins/core_commands/__init__.py:610
-#, fuzzy, python-format
+#, python-format
 msgid "No plugin with name \"%s\""
-msgstr "Nincs „%s” nevű megosztás"
+msgstr "Nincs „%s” nevű bővítmény"
 
 #: pynicotine/pluginsystem.py:437
 msgid "Loading plugin system"
@@ -5097,7 +5093,7 @@ msgstr ""
 #: pynicotine/pluginsystem.py:918
 #, python-format
 msgid "Restored default settings for plugin %s"
-msgstr ""
+msgstr "Vissza lettek állítva a bővítmény (%s) alapértelmezett beállításai"
 
 #: pynicotine/pluginsystem.py:950
 msgid "No description"
@@ -5639,7 +5635,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:356
 msgid "The following listening port has been set by your environment:"
-msgstr ""
+msgstr "A következő figyelőport lett beállítva:"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:408
 msgid "Download Files to Folder"
