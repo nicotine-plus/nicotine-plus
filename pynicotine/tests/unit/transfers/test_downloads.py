@@ -205,6 +205,7 @@ class DownloadsTest(TestCase):
     def test_download_folder_destination(self):
         """Verify that the correct download destination is used."""
 
+        base = os.path.abspath(".")
         username = "newuser"
         folder_path = "Hello\\Path"
         config.sections["transfers"]["usernamesubfolders"] = False
@@ -223,7 +224,7 @@ class DownloadsTest(TestCase):
         destination_depth = core.downloads.get_folder_destination(username, folder_path)
 
         self.assertEqual(destination_default, os.path.join(config.data_folder_path, "Path"))
-        self.assertEqual(destination_custom, os.path.join("Hello Test Path 2", "Path"))
+        self.assertEqual(destination_custom, os.path.join(base, "Hello Test Path 2", "Path"))
         self.assertEqual(destination_user, os.path.join(config.data_folder_path, "newuser", "Path"))
         self.assertEqual(destination_root, os.path.join(config.data_folder_path, "newuser", "Hello"))
         self.assertEqual(destination_depth, os.path.join(config.data_folder_path, "newuser", "Hello Depth Test Path"))
@@ -231,6 +232,7 @@ class DownloadsTest(TestCase):
     def test_download_subfolders(self):
         """Verify that subfolders are downloaded to the correct location."""
 
+        base = os.path.abspath(".")
         username = "random"
         browsed_user = core.userbrowse.users[username] = BrowsedUser(username)
         browsed_user.public_folders = dict([
@@ -272,17 +274,17 @@ class DownloadsTest(TestCase):
         transfers = list(core.downloads.transfers.values())
         self.assertEqual(len(transfers), 11)
 
-        self.assertEqual(transfers[10].folder_path, os.path.join("test", "share", "SoulseekSecond"))
-        self.assertEqual(transfers[9].folder_path, os.path.join("test", "share", "SoulseekSecond"))
-        self.assertEqual(transfers[8].folder_path, os.path.join("test", "share", "Soulseek", "folder2", "sub2"))
-        self.assertEqual(transfers[7].folder_path, os.path.join("test", "share", "Soulseek", "folder2"))
-        self.assertEqual(transfers[6].folder_path, os.path.join("test", "share", "Soulseek", "folder1", "sub1"))
-        self.assertEqual(transfers[5].folder_path, os.path.join("test", "share", "Soulseek", "folder1"))
-        self.assertEqual(transfers[4].folder_path, os.path.join("test", "share", "Soulseek"))
-        self.assertEqual(transfers[3].folder_path, os.path.join("test", "share", "Soulseek"))
-        self.assertEqual(transfers[2].folder_path, os.path.join("test", "share", "Music"))
-        self.assertEqual(transfers[1].folder_path, os.path.join("test", "share", "Music"))
-        self.assertEqual(transfers[0].folder_path, os.path.join("test", "share"))
+        self.assertEqual(transfers[10].folder_path, os.path.join(base, "test", "share", "SoulseekSecond"))
+        self.assertEqual(transfers[9].folder_path, os.path.join(base, "test", "share", "SoulseekSecond"))
+        self.assertEqual(transfers[8].folder_path, os.path.join(base, "test", "share", "Soulseek", "folder2", "sub2"))
+        self.assertEqual(transfers[7].folder_path, os.path.join(base, "test", "share", "Soulseek", "folder2"))
+        self.assertEqual(transfers[6].folder_path, os.path.join(base, "test", "share", "Soulseek", "folder1", "sub1"))
+        self.assertEqual(transfers[5].folder_path, os.path.join(base, "test", "share", "Soulseek", "folder1"))
+        self.assertEqual(transfers[4].folder_path, os.path.join(base, "test", "share", "Soulseek"))
+        self.assertEqual(transfers[3].folder_path, os.path.join(base, "test", "share", "Soulseek"))
+        self.assertEqual(transfers[2].folder_path, os.path.join(base, "test", "share", "Music"))
+        self.assertEqual(transfers[1].folder_path, os.path.join(base, "test", "share", "Music"))
+        self.assertEqual(transfers[0].folder_path, os.path.join(base, "test", "share"))
 
         # Share subfolder
         target_folder_path = "share\\Soulseek"
@@ -293,12 +295,12 @@ class DownloadsTest(TestCase):
         transfers = list(core.downloads.transfers.values())
         self.assertEqual(len(transfers), 6)
 
-        self.assertEqual(transfers[5].folder_path, os.path.join("test2", "Soulseek", "folder2", "sub2"))
-        self.assertEqual(transfers[4].folder_path, os.path.join("test2", "Soulseek", "folder2"))
-        self.assertEqual(transfers[3].folder_path, os.path.join("test2", "Soulseek", "folder1", "sub1"))
-        self.assertEqual(transfers[2].folder_path, os.path.join("test2", "Soulseek", "folder1"))
-        self.assertEqual(transfers[1].folder_path, os.path.join("test2", "Soulseek"))
-        self.assertEqual(transfers[0].folder_path, os.path.join("test2", "Soulseek"))
+        self.assertEqual(transfers[5].folder_path, os.path.join(base, "test2", "Soulseek", "folder2", "sub2"))
+        self.assertEqual(transfers[4].folder_path, os.path.join(base, "test2", "Soulseek", "folder2"))
+        self.assertEqual(transfers[3].folder_path, os.path.join(base, "test2", "Soulseek", "folder1", "sub1"))
+        self.assertEqual(transfers[2].folder_path, os.path.join(base, "test2", "Soulseek", "folder1"))
+        self.assertEqual(transfers[1].folder_path, os.path.join(base, "test2", "Soulseek"))
+        self.assertEqual(transfers[0].folder_path, os.path.join(base, "test2", "Soulseek"))
 
     def test_delete_stale_incomplete_downloads(self):
         """Verify that only files matching the pattern for incomplete downloads are deleted."""

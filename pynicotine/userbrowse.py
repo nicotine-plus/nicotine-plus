@@ -19,10 +19,10 @@ from pynicotine.slskmessages import RemoveAllowedResponse
 from pynicotine.slskmessages import SharedFileListRequest
 from pynicotine.slskmessages import SharedFileListResponse
 from pynicotine.slskmessages import UploadQueueNotification
-from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
 from pynicotine.utils import human_size
 from pynicotine.utils import humanize
+from pynicotine.utils import safe_path_join
 
 
 class BrowsedUser:
@@ -298,7 +298,7 @@ class UserBrowse:
             return
 
         try:
-            file_path = os.path.join(folder_path, clean_file(username))
+            file_path = safe_path_join(folder_path, username)
             browsed_user = self.users[username]
 
             with open(encode_path(file_path), "w", encoding="utf-8") as file_handle:

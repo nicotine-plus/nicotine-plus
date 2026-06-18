@@ -48,8 +48,8 @@ from pynicotine.transfers import Transfers
 from pynicotine.transfers import TransferStatus
 from pynicotine.utils import execute_command
 from pynicotine.utils import clean_file
-from pynicotine.utils import clean_path
 from pynicotine.utils import encode_path
+from pynicotine.utils import safe_path_join
 from pynicotine.utils import truncate_string_byte
 
 
@@ -417,7 +417,7 @@ class Downloads(Transfers):
         download_folder_path_encoded = encode_path(download_folder_path)
 
         download_basename = self.get_download_basename(transfer.virtual_path, download_folder_path, avoid_conflict=True)
-        download_file_path = os.path.join(download_folder_path, download_basename)
+        download_file_path = safe_path_join(download_folder_path, download_basename)
 
         try:
             if not os.path.isdir(download_folder_path_encoded):
@@ -624,14 +624,14 @@ class Downloads(Transfers):
         # Remove parent folders of the requested folder from path
         parent_folder_path = root_folder_path if root_folder_path else folder_path
         removed_parent_folders = parent_folder_path.rpartition("\\")[0]
-        target_folders = folder_path.replace(removed_parent_folders, "", 1).lstrip("\\").replace("\\", os.sep)
+        target_folders = folder_path.replace(removed_parent_folders, "", 1).split("\\")
 
         # Check if a custom download location was specified
         if not download_folder_path:
             download_folder_path = self.get_default_download_folder(username)
 
         # Merge download path with target folder name
-        return os.path.join(download_folder_path, target_folders)
+        return safe_path_join(download_folder_path, *target_folders)
 
     def get_default_download_folder(self, username=None):
 
@@ -639,7 +639,7 @@ class Downloads(Transfers):
 
         # Check if username subfolders should be created for downloads
         if username and config.sections["transfers"]["usernamesubfolders"]:
-            download_folder_path = os.path.join(download_folder_path, clean_file(username))
+            download_folder_path = safe_path_join(download_folder_path, username)
 
         return download_folder_path
 
@@ -685,7 +685,7 @@ class Downloads(Transfers):
 
         counter = 1
 
-        while os.path.exists(encode_path(os.path.join(download_folder_path, corrected_basename))):
+        while os.path.exists(encode_path(safe_path_join(download_folder_path, corrected_basename))):
             corrected_basename = f"{basename_no_extension} ({counter}){extension}"
             counter += 1
 
@@ -699,7 +699,7 @@ class Downloads(Transfers):
 
         basename = self.get_download_basename(virtual_path, download_folder_path)
         basename_no_extension, extension = os.path.splitext(basename)
-        download_file_path = os.path.join(download_folder_path, basename)
+        download_file_path = safe_path_join(download_folder_path, basename)
         file_exists = False
         counter = 1
 
@@ -710,7 +710,7 @@ class Downloads(Transfers):
                 break
 
             basename = f"{basename_no_extension} ({counter}){extension}"
-            download_file_path = os.path.join(download_folder_path, basename)
+            download_file_path = safe_path_join(download_folder_path, basename)
             counter += 1
 
         return download_file_path, file_exists
@@ -735,7 +735,7 @@ class Downloads(Transfers):
         if basename_limit < 0:
             extension = truncate_string_byte(extension, max_bytes - len(prefix))
 
-        return os.path.join(incomplete_folder_path, prefix + basename_no_extension + extension)
+        return safe_path_join(incomplete_folder_path, prefix + basename_no_extension + extension)
 
     def get_current_download_file_path(self, transfer):
         """Returns the current file path of a download."""
@@ -783,9 +783,7 @@ class Downloads(Transfers):
 
         transfer = self.transfers.get(username + virtual_path)
 
-        if folder_path:
-            folder_path = clean_path(folder_path)
-        else:
+        if not folder_path:
             folder_path = self.get_default_download_folder(username)
 
         if transfer is not None and transfer.folder_path != folder_path and transfer.status == TransferStatus.FINISHED:
@@ -1097,7 +1095,7 @@ class Downloads(Transfers):
                 # a remotely initiated download and someone is manually uploading to you
                 parent_folder_path = virtual_path.replace("/", "\\").split("\\")[-2]
                 received_folder_path = os.path.normpath(os.path.expandvars(config.sections["transfers"]["uploaddir"]))
-                folder_path = os.path.join(received_folder_path, username, parent_folder_path)
+                folder_path = safe_path_join(received_folder_path, username, parent_folder_path)
 
                 transfer = Transfer(username, virtual_path, folder_path, size)
 
