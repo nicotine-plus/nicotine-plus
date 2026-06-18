@@ -146,19 +146,21 @@ REPLACEMENTCHAR = "_"
 TRANSLATE_PUNCTUATION = str.maketrans(dict.fromkeys(PUNCTUATION, " "))
 
 
-def clean_file(basename):
+def clean_file(part):
+    """Sanitizes a file path component."""
 
     for char in ILLEGALFILECHARS:
-        if char in basename:
-            basename = basename.replace(char, REPLACEMENTCHAR)
+        if char in part:
+            part = part.replace(char, REPLACEMENTCHAR)
 
-    # Filename can never end with a period or space on Windows machines
-    basename = basename.rstrip(". ")
+    # Path component can never end with a period or space on Windows machines.
+    # Also remove . and .. path traversal components.
+    part_stripped = part.lstrip(" ").rstrip(". ")
 
-    if not basename:
-        basename = REPLACEMENTCHAR
+    if not part_stripped:
+        part_stripped = REPLACEMENTCHAR * len(part)
 
-    return basename
+    return part_stripped
 
 
 def clean_path(path):
@@ -182,6 +184,20 @@ def clean_path(path):
 
     # Path can never end with a period or space on Windows machines
     path = path.rstrip(". ")
+
+    return path
+
+
+def safe_path_join(base_path, *parts):
+    """Safely joins a path, by removing illegal path characters and path
+    traversal components from provided parts."""
+
+    base_path = os.path.abspath(base_path)
+    path = os.path.join(base_path, *(clean_file(part) for part in parts if part))
+
+    # Final containment check, just in case.
+    if os.path.commonpath([base_path, path]) != base_path:
+        path = base_path
 
     return path
 
