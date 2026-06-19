@@ -103,7 +103,14 @@ class Application:
         Gtk.Widget.set_default_direction(Gtk.TextDirection.LTR)
 
         self._instance.connect("activate", self.on_activate)
-        self._instance.connect("query-end", self.on_query_end)
+
+        try:
+            self._instance.connect("query-end", self.on_query_end)
+
+        except TypeError:
+            # GTK <3.24.8
+            pass
+
         self._instance.connect("shutdown", self.on_shutdown)
 
         for event_name, callback in (
