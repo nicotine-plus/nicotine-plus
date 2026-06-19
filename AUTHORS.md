@@ -69,7 +69,7 @@
  - New and updated /alias
 
 ### INMCM
- - Nicotine+ topic maintainer on [ubuntuforums.org](https://ubuntuforums.org/showthread.php?t=196835)
+ - Nicotine+ topic maintainer on ubuntuforums.org
 
 ### suser-guru
  - Suse Linux packager
