@@ -34,8 +34,8 @@ Downloads are available for:
  - [Windows](doc/DOWNLOADS.md#windows)
  - [macOS](doc/DOWNLOADS.md#macos)
 
-For interested testers, please help test the 3.3.11 release candidate. See
-[TESTING.md](doc/TESTING.md) for download links.
+For interested testers, please help test the second 3.3.11 release candidate
+(June 2026). See [TESTING.md](doc/TESTING.md) for download links.
 
 
 ## Get Involved
