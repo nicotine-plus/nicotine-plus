@@ -2226,7 +2226,7 @@ class UserInterfacePage:
             self.icon_theme_label,
             self.icon_view,
             self.language_label,
-            self.minimize_tray_startup_toggle,
+            self.minimize_window_startup_toggle,
             self.notification_chatroom_mention_toggle,
             self.notification_chatroom_toggle,
             self.notification_download_file_toggle,
@@ -2255,8 +2255,7 @@ class UserInterfacePage:
             self.tab_visible_uploads_toggle,
             self.tab_visible_userinfo_toggle,
             self.tab_visible_userlist_toggle,
-            self.tray_icon_toggle,
-            self.tray_options_container
+            self.tray_icon_toggle
         ) = self.widgets = ui.load(scope=self, path="settings/userinterface.ui")
 
         self.application = application
@@ -2494,7 +2493,7 @@ class UserInterfacePage:
                 "dark_mode": self.dark_mode_toggle,
                 "exitdialog": self.close_action_combobox,
                 "trayicon": self.tray_icon_toggle,
-                "startup_hidden": self.minimize_tray_startup_toggle,
+                "startup_hidden": self.minimize_window_startup_toggle,
                 "language": self.language_combobox,
                 "reverse_file_paths": self.reverse_file_paths_toggle,
                 "file_size_unit": self.exact_file_sizes_toggle,
@@ -2547,7 +2546,7 @@ class UserInterfacePage:
         self.application.preferences.set_widgets_data(self.options)
 
         self.close_action_label.get_parent().set_visible(not self.application.isolated_mode)
-        self.tray_options_container.set_visible(self.application.tray_icon.available)
+        self.tray_icon_toggle.get_parent().set_visible(self.application.tray_icon.available)
 
         for page_id, enabled in config.sections["ui"]["modes_visible"].items():
             widget = self.tab_visible_toggles.get(page_id)
@@ -2579,7 +2578,7 @@ class UserInterfacePage:
                 "dark_mode": self.dark_mode_toggle.get_active(),
                 "exitdialog": self.close_action_combobox.get_selected_id(),
                 "trayicon": self.tray_icon_toggle.get_active(),
-                "startup_hidden": self.minimize_tray_startup_toggle.get_active(),
+                "startup_hidden": self.minimize_window_startup_toggle.get_active(),
                 "language": self.language_combobox.get_selected_id(),
                 "globalfont": self.get_font(self.font_global_button),
                 "listfont": self.get_font(self.font_list_button),

@@ -1013,12 +1013,16 @@ class Application:
             core.connect()
 
         # Check command line option and config option
-        start_hidden = (self.start_hidden or (self.tray_icon.available
-                                              and config.sections["ui"]["trayicon"]
-                                              and config.sections["ui"]["startup_hidden"]))
+        start_hidden = self.start_hidden or config.sections["ui"]["startup_hidden"]
+        is_tray_icon_enabled = self.tray_icon.available and config.sections["ui"]["trayicon"]
 
-        if not start_hidden:
-            self.window.present()
+        if start_hidden and is_tray_icon_enabled:
+            return
+
+        self.window.present()
+
+        if start_hidden:
+            self.window.minimize()
 
     def on_confirm_quit_request(self, *_args):
         core.confirm_quit()

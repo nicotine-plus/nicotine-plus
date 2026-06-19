@@ -173,6 +173,14 @@ class Window:
     def unmaximize(self):
         self.widget.unmaximize()
 
+    def minimize(self):
+
+        if GTK_API_VERSION >= 4:
+            self.widget.minimize()
+            return
+
+        self.widget.iconify()
+
     def present(self):
 
         is_visible = self.is_visible()
