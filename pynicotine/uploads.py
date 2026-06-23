@@ -46,9 +46,9 @@ from pynicotine.utils import human_size
 
 class Uploads(Transfers):
     __slots__ = ("pending_shutdown", "upload_speed", "token", "_queue_positions",
-                 "_queue_position_users", "_privileged_position_requested", "_pending_network_msgs",
-                 "_queue_notification_users", "_user_update_counter", "_user_update_counters",
-                 "_queue_notification_timer_id", "_upload_queue_timer_id", "_retry_failed_uploads_timer_id")
+                 "_queue_position_users", "_privileged_position_requested", "_upload_start_limit_reached",
+                 "_pending_network_msgs", "_queue_notification_users", "_user_update_counter",
+                 "_user_update_counters", "_queue_notification_timer_id", "_retry_failed_uploads_timer_id")
 
     def __init__(self):
 
@@ -62,12 +62,12 @@ class Uploads(Transfers):
         self._queue_position_users = defaultdict(dict)
         self._queue_notification_users = defaultdict(list)
         self._privileged_position_requested = False
+        self._upload_start_limit_reached = False
         self._pending_network_msgs = []
         self._user_update_counter = 0
         self._user_update_counters = {}
 
         self._queue_notification_timer_id = None
-        self._upload_queue_timer_id = None
         self._retry_failed_uploads_timer_id = None
 
         for event_name, callback in (
@@ -108,9 +108,6 @@ class Uploads(Transfers):
         self._queue_notification_timer_id = events.schedule(
             delay=10, callback=self._show_queued_upload_notifications, repeat=True)
 
-        # Check if queued uploads can be started every 10 seconds
-        self._upload_queue_timer_id = events.schedule(delay=10, callback=self._check_upload_queue, repeat=True)
-
         # Re-queue timed out uploads every 3 minutes
         self._retry_failed_uploads_timer_id = events.schedule(
             delay=180, callback=self._retry_failed_uploads, repeat=True)
@@ -121,7 +118,6 @@ class Uploads(Transfers):
 
         for timer_id in (
             self._queue_notification_timer_id,
-            self._upload_queue_timer_id,
             self._retry_failed_uploads_timer_id
         ):
             events.cancel_scheduled(timer_id)
@@ -132,6 +128,7 @@ class Uploads(Transfers):
         self._pending_network_msgs.clear()
         self._user_update_counters.clear()
         self._user_update_counter = 0
+        self._upload_start_limit_reached = False
 
         # Quit in case we were waiting for uploads to finish
         self._check_upload_queue()
@@ -256,6 +253,9 @@ class Uploads(Transfers):
         if not enforce_limits:
             return True
 
+        if self._upload_start_limit_reached:
+            return False
+
         if config.sections["transfers"]["useupslots"]:
             # Limit by upload slots
             if self.is_slot_limit_reached():
@@ -349,8 +349,13 @@ class Uploads(Transfers):
         return True
 
     def _activate_transfer(self, transfer, token):
+
         super()._activate_transfer(transfer, token)
         self._user_update_counters.pop(transfer.username, None)
+
+        # Don't activate another upload until the next bandwidth update (once per second),
+        # to prevent too many slots from being allocated simultaneously.
+        self._upload_start_limit_reached = True
 
     def _update_transfer(self, transfer, update_parent=True):
 
@@ -834,7 +839,12 @@ class Uploads(Transfers):
         log.add_transfer("%s privileged users", len(core.users.privileged))
 
     def _set_connection_stats(self, upload_bandwidth=0, **_unused):
+        """Bandwidth update and queue candidate check once per second."""
+
         self.total_bandwidth = upload_bandwidth
+        self._upload_start_limit_reached = False
+
+        self._check_upload_queue()
 
     def _ban_user(self, username, _ip_address=None):
         """Ban a user, cancel all the user's uploads, send a 'Banned' message
