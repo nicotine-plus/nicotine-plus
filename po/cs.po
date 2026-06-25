@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-09 01:50+0300\n"
-"PO-Revision-Date: 2026-05-01 20:09+0000\n"
+"PO-Revision-Date: 2026-06-25 17:18+0000\n"
 "Last-Translator: slrslr <adm@prnet.info>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17.1\n"
+"X-Generator: Weblate 2026.7.dev0\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -575,9 +575,8 @@ msgid "_Copy & Report Bug"
 msgstr "_Kopírovat a nahlásit chybu"
 
 #: pynicotine/gtkgui/application.py:1038
-#, fuzzy
 msgid "Saving configuration…"
-msgstr "_Test nastavení"
+msgstr "Ukládání nastavení…"
 
 #: pynicotine/gtkgui/buddies.py:56 pynicotine/gtkgui/chatrooms.py:596
 #: pynicotine/gtkgui/dialogs/chathistory.py:52
@@ -962,9 +961,8 @@ msgid "About"
 msgstr "O"
 
 #: pynicotine/gtkgui/dialogs/about.py:459
-#, fuzzy
 msgid "Download Release"
-msgstr "Stáhnout soubory"
+msgstr "Stáhnout vydání"
 
 #: pynicotine/gtkgui/dialogs/about.py:461
 msgid "Website"
@@ -1954,44 +1952,41 @@ msgid "_Settings"
 msgstr "_Nastavení"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3443
-#, fuzzy
 msgid "Reset Settings…"
-msgstr "Nastavení %s"
+msgstr "Resetovat Nastavení…"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3444
 #: pynicotine/gtkgui/dialogs/preferences.py:3504
-#, fuzzy
 msgid "Uninstall…"
-msgstr "_Odinstalovat…"
+msgstr "Odinstalovat…"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3509
 msgid "No Plugin Selected"
 msgstr "Nebyl vybrán žádný plugin"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3530
-#, fuzzy
 msgid ""
 "This is a third-party plugin. Safety is not guaranteed. Use at your own risk."
-msgstr "Toto není vestavěný plugin. Použijte na vlastní nebezpečí."
+msgstr ""
+"Toto není vestavěný plugin. Bezpečnost není zaručena. Použijte na vlastní "
+"nebezpečí."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3591
 msgid "Select a Zip File"
 msgstr "Vybrat Zip soubor"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3604
-#, fuzzy
 msgid "Reset Plugin Settings?"
-msgstr "Nastavení %s"
+msgstr "Resetovat Nastavení Pluginu?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3605
-#, fuzzy, python-format
+#, python-format
 msgid "Do you really want to restore the default settings for plugin %s?"
-msgstr "Opravdu chcete vynulovat statistiky přenosu?"
+msgstr "Opravdu chcete obnovit výchozí nastavení pluginu %s?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3608
-#, fuzzy
 msgid "Reset"
-msgstr "Resetovat vše"
+msgstr "Resetovat"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3628
 msgid "Uninstall Plugin?"
@@ -3201,7 +3196,7 @@ msgstr "[SOUKROMÉ]  %s"
 #: pynicotine/gtkgui/userbrowse.py:503
 #, python-format
 msgid "%s  ·"
-msgstr ""
+msgstr "%s  ·"
 
 #: pynicotine/gtkgui/userbrowse.py:594
 msgid ""
@@ -4996,14 +4991,13 @@ msgid "Removed share \"%s\" (rescan required)"
 msgstr "Odebráno \"%s\" sdílení (je vyžadováno opětovné skenování)"
 
 #: pynicotine/plugins/core_commands/__init__.py:605
-#, fuzzy
 msgid "Installed plugins:"
-msgstr "Nainstalován plugin %s"
+msgstr "Nainstalované pluginy:"
 
 #: pynicotine/plugins/core_commands/__init__.py:610
-#, fuzzy, python-format
+#, python-format
 msgid "No plugin with name \"%s\""
-msgstr "Žádné sdílení s názvem \"%s\""
+msgstr "Žádný plugin s názvem \"%s\""
 
 #: pynicotine/pluginsystem.py:437
 msgid "Loading plugin system"
@@ -5083,7 +5077,7 @@ msgstr ""
 #: pynicotine/pluginsystem.py:918
 #, python-format
 msgid "Restored default settings for plugin %s"
-msgstr ""
+msgstr "Obnovena výchozí nastavení pluginu %s"
 
 #: pynicotine/pluginsystem.py:950
 msgid "No description"
@@ -5614,7 +5608,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:356
 msgid "The following listening port has been set by your environment:"
-msgstr ""
+msgstr "Následující port naslouchání byl nastaven vaším prostředím:"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:408
 msgid "Download Files to Folder"
