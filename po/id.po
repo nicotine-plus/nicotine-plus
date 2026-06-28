@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-09 01:50+0300\n"
-"PO-Revision-Date: 2026-06-25 17:18+0000\n"
+"PO-Revision-Date: 2026-06-26 23:01+0000\n"
 "Last-Translator: rizkiv1 <rizki.irianto.smp@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/id/>\n"
@@ -1786,7 +1786,7 @@ msgstr "Kanan"
 #: pynicotine/gtkgui/widgets/theme.py:269
 #: pynicotine/gtkgui/widgets/trayicon.py:84
 msgid "Away"
-msgstr "Tidak di Tempat"
+msgstr "Pergi"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2444
 #: pynicotine/gtkgui/mainwindow.py:1017
@@ -1814,7 +1814,7 @@ msgstr "Daring (Tray)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2453
 msgid "Away (Tray)"
-msgstr "Tidak di Tempat (Tray)"
+msgstr "Pergi (Tray)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2454
 msgid "Offline (Tray)"
