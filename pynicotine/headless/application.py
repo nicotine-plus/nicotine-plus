@@ -4,6 +4,9 @@
 import sys
 import time
 
+from collections.abc import Sequence
+from types import TracebackType
+
 from pynicotine.cli import cli
 from pynicotine.config import config
 from pynicotine.core import core
@@ -29,7 +32,7 @@ class Application:
         ):
             events.connect(event_name, callback)
 
-    def run(self):
+    def run(self) -> int:
 
         core.start()
 
@@ -46,7 +49,8 @@ class Application:
         config.write_configuration()
         return 0
 
-    def on_critical_error(self, _exc_type, exc_value, _exc_traceback):
+    def on_critical_error(self, _exc_type: type[BaseException], exc_value: BaseException,
+                          _exc_traceback: TracebackType | None):
 
         sys.excepthook = None
 
@@ -55,7 +59,7 @@ class Application:
 
         raise exc_value
 
-    def on_confirm_quit_response(self, user_input):
+    def on_confirm_quit_response(self, user_input: str):
         if user_input.lower().startswith("y"):
             core.quit()
 
@@ -63,7 +67,7 @@ class Application:
         responses = "[y/N] "
         cli.prompt(_("Do you really want to exit? %s") % responses, callback=self.on_confirm_quit_response)
 
-    def on_invalid_password(self, *_args):
+    def on_invalid_password(self, *_args: object):
 
         log.add(_("User %s already exists, and the password you entered is invalid."),
                 config.sections["server"]["login"])
@@ -71,7 +75,7 @@ class Application:
 
         config.sections["server"]["passw"] = ""
 
-    def on_invalid_username(self, *_args):
+    def on_invalid_username(self, *_args: object):
 
         log.add(_("Username %s is invalid, please choose a different one. Usernames can only "
                   "contain letters (A-Z), numbers and spaces."), config.sections["server"]["login"])
@@ -79,14 +83,14 @@ class Application:
 
         config.sections["server"]["passw"] = ""
 
-    def on_setup_password_response(self, user_input):
+    def on_setup_password_response(self, user_input: str):
 
         config.sections["server"]["passw"] = user_input
         config.write_configuration()
 
         core.connect()
 
-    def on_setup_username_response(self, user_input):
+    def on_setup_username_response(self, user_input: str):
 
         if user_input:
             config.sections["server"]["login"] = user_input
@@ -98,7 +102,7 @@ class Application:
                   "already have an account, fill in your existing login details."))
         cli.prompt(_("Username: "), callback=self.on_setup_username_response)
 
-    def on_shares_unavailable_response(self, user_input):
+    def on_shares_unavailable_response(self, user_input: str):
 
         user_input = user_input.lower()
 
@@ -108,7 +112,7 @@ class Application:
         elif user_input.startswith("f"):
             core.shares.rescan_shares(force=True)
 
-    def on_shares_unavailable(self, shares):
+    def on_shares_unavailable(self, shares: Sequence[tuple[str, str]]):
 
         responses = "[Y/n/force] "
         shares_list_message = _("The following shares are unavailable:") + "\n\n"
