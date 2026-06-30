@@ -174,7 +174,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up FreeBSD
-        uses: cross-platform-actions/action@be3d7e9ff5c8770b9c51b1a8c8c5446e1cad7cf9 # v1.2.0
+        uses: cross-platform-actions/action@5ea7e8e4677bd726033a10b094ba1c5762b15dee # v1.3.0
         with:
           operating_system: freebsd
           version: '15.0'
@@ -212,7 +212,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up OpenBSD
-        uses: cross-platform-actions/action@be3d7e9ff5c8770b9c51b1a8c8c5446e1cad7cf9 # v1.2.0
+        uses: cross-platform-actions/action@5ea7e8e4677bd726033a10b094ba1c5762b15dee # v1.3.0
         with:
           operating_system: openbsd
           version: '7.9'
@@ -245,7 +245,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up NetBSD
-        uses: cross-platform-actions/action@be3d7e9ff5c8770b9c51b1a8c8c5446e1cad7cf9 # v1.2.0
+        uses: cross-platform-actions/action@5ea7e8e4677bd726033a10b094ba1c5762b15dee # v1.3.0
         with:
           operating_system: netbsd
           version: '10.1'
@@ -271,7 +271,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up DragonflyBSD
-        uses: cross-platform-actions/action@be3d7e9ff5c8770b9c51b1a8c8c5446e1cad7cf9 # v1.2.0
+        uses: cross-platform-actions/action@5ea7e8e4677bd726033a10b094ba1c5762b15dee # v1.3.0
         with:
           operating_system: dragonflybsd
           version: '6.4.2'
@@ -303,7 +303,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up MidnightBSD
-        uses: cross-platform-actions/action@be3d7e9ff5c8770b9c51b1a8c8c5446e1cad7cf9 # v1.2.0
+        uses: cross-platform-actions/action@5ea7e8e4677bd726033a10b094ba1c5762b15dee # v1.3.0
         with:
           operating_system: midnightbsd
           version: '4.0.4'
@@ -336,7 +336,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up Haiku
-        uses: cross-platform-actions/action@be3d7e9ff5c8770b9c51b1a8c8c5446e1cad7cf9 # v1.2.0
+        uses: cross-platform-actions/action@5ea7e8e4677bd726033a10b094ba1c5762b15dee # v1.3.0
         with:
           operating_system: haiku
           version: 'r1beta5'
@@ -365,7 +365,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up illumos
-        uses: cross-platform-actions/action@be3d7e9ff5c8770b9c51b1a8c8c5446e1cad7cf9 # v1.2.0
+        uses: cross-platform-actions/action@5ea7e8e4677bd726033a10b094ba1c5762b15dee # v1.3.0
         with:
           operating_system: omnios
           version: 'r151058'
