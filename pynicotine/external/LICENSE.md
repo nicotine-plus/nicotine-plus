@@ -5,7 +5,7 @@
 
 ## License
 
-Copyright (c) 2001-2024 Hexasoft Development Sdn. Bhd.
+Copyright (c) 2001-2025 Hexasoft Development Sdn. Bhd.
 
 Attribution-ShareAlike 4.0 International
 
