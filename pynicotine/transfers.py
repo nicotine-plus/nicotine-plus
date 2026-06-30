@@ -9,13 +9,18 @@
 # SPDX-FileCopyrightText: 2001-2003 Alexander Kanavin
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+__all__ = ["TransferStatus", "Transfer", "Transfers", "Statistics"]
+
 import json
 import os
 import time
 
 from ast import literal_eval
 from collections import defaultdict
+from dataclasses import dataclass, field
+from io import BufferedRandom
 from os.path import normpath
+from socket import socket
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -45,48 +50,40 @@ class TransferStatus:
     LOCAL_FILE_ERROR = "Local file error"
 
 
+@dataclass(slots=True, eq=False)
 class Transfer:
     """This class holds information about a single transfer."""
 
-    __slots__ = ("sock", "username", "virtual_path",
-                 "folder_path", "token", "size", "file_handle", "start_time",
-                 "current_byte_offset", "last_byte_offset", "transferred_bytes_total",
-                 "speed", "avg_speed", "time_elapsed", "time_left", "modifier",
-                 "queue_position", "file_attributes", "iterator", "status",
-                 "legacy_attempt", "retry_attempt", "size_changed", "is_backslash_path",
-                 "is_lowercase_path", "request_timer_id")
+    username: str
+    virtual_path: str | None = None
+    folder_path: str | None = None
+    size: int = 0
+    file_attributes: FileAttributes | None = None
+    status: str | None = None
+    current_byte_offset: int | None = None
 
-    def __init__(self, username, virtual_path=None, folder_path=None, size=0, file_attributes=None,
-                 status=None, current_byte_offset=None):
-        self.username = username
-        self.virtual_path = virtual_path
-        self.folder_path = folder_path
-        self.size = size
-        self.status = status
-        self.current_byte_offset = current_byte_offset
-        self.file_attributes = file_attributes
+    sock: socket | None = field(default=None, init=False)
+    file_handle: BufferedRandom | None = field(default=None, init=False)
+    token: int | None = field(default=None, init=False)
+    queue_position: int = field(default=0, init=False)
+    modifier: None = field(default=None, init=False)
+    request_timer_id: int | None = field(default=None, init=False)
+    start_time: float | None = field(default=None, init=False)
+    last_byte_offset: int | None = field(default=None, init=False)
+    transferred_bytes_total: int = field(default=0, init=False)
+    speed: float = field(default=0, init=False)
+    avg_speed: int = field(default=0, init=False)
+    time_elapsed: float = field(default=0, init=False)
+    time_left: int = field(default=0, init=False)
+    iterator: int | None = field(default=None, init=False)
+    legacy_attempt: bool = field(default=False, init=False)
+    retry_attempt: bool = field(default=False, init=False)
+    size_changed: bool = field(default=False, init=False)
+    is_backslash_path: bool = field(default=False, init=False)
+    is_lowercase_path: bool = field(default=False, init=False)
 
-        self.sock = None
-        self.file_handle = None
-        self.token = None
-        self.queue_position = 0
-        self.modifier = None
-        self.request_timer_id = None
-        self.start_time = None
-        self.last_byte_offset = None
-        self.transferred_bytes_total = 0
-        self.speed = 0
-        self.avg_speed = 0
-        self.time_elapsed = 0
-        self.time_left = 0
-        self.iterator = None
-        self.legacy_attempt = False
-        self.retry_attempt = False
-        self.size_changed = False
-        self.is_backslash_path = False
-        self.is_lowercase_path = False
-
-        if file_attributes is None:
+    def __post_init__(self):
+        if self.file_attributes is None:
             self.file_attributes = FileAttributes()
 
 
