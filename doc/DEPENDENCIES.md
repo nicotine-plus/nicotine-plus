@@ -58,7 +58,7 @@
  - On SUSE-based distributions:
 
    ```sh
-   sudo zypper install typelib-1_0-Gspell-1 typelib-1_0-Gtk-4_0 typelib-1_0-Adw-1 python313-gobject python313-gobject-cairo python313-gobject-Gdk
+   sudo zypper install typelib-1_0-Gspell-1 typelib-1_0-Gtk-4_0 typelib-1_0-Adw-1 python314-gobject python314-gobject-cairo python314-gobject-Gdk
    ```
 
  - On Alpine-based distributions:
@@ -84,7 +84,7 @@
  - On SUSE-based distributions:
 
    ```sh
-   sudo zypper install gettext-tools python313-build python313-setuptools python313-wheel
+   sudo zypper install gettext-tools python314-build python314-setuptools python314-wheel
    ```
 
  - On Alpine-based distributions:
@@ -110,7 +110,7 @@
  - On SUSE-based distributions:
 
    ```sh
-   sudo zypper install python313-pylint python313-pycodestyle
+   sudo zypper install python314-pylint python314-pycodestyle
    ```
 
  - On Alpine-based distributions:

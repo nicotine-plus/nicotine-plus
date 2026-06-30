@@ -121,17 +121,17 @@ jobs:
       - name: Install dependencies
         run: |
           zypper refresh
-          zypper -n install dejavu-fonts gettext-tools python313-build python313-gobject \
-            python313-gobject-Gdk python313-setuptools python313-wheel typelib-1_0-Gtk-4_0
+          zypper -n install dejavu-fonts gettext-tools python314-build python314-gobject \
+            python314-gobject-Gdk python314-setuptools python314-wheel typelib-1_0-Gtk-4_0
 
       - name: Integration and unit tests
-        run: python3.13 -m unittest -v
+        run: python3.14 -m unittest -v
 
       - name: Build
-        run: python3.13 -m build
+        run: python3.14 -m build
 
       - name: Build without isolation
-        run: python3.13 -m build --no-isolation
+        run: python3.14 -m build --no-isolation
 
   alpine:
     runs-on: ubuntu-latest
