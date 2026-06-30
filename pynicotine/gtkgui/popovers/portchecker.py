@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2025-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from gi.repository import Gtk

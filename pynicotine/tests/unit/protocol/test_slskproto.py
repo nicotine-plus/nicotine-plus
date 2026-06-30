@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2020-2026 Nicotine+ Contributors
 # SPDX-FileCopyrightText: 2020 Lene Preuss <lene.preuss@gmail.com>
 # SPDX-License-Identifier: GPL-3.0-or-later
 

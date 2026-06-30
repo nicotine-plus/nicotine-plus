@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2020-2026 Nicotine+ Contributors
 # SPDX-FileCopyrightText: 2020 Lene Preuss <lene.preuss@gmail.com>
 # SPDX-FileCopyrightText: 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # SPDX-FileCopyrightText: 2007 daelstorm <daelstorm@gmail.com>

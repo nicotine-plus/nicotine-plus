@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2020-2026 Nicotine+ Contributors
 # SPDX-FileCopyrightText: 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # SPDX-FileCopyrightText: 2008-2009 quinox <quinox@users.sf.net>
 # SPDX-FileCopyrightText: 2006-2009 daelstorm <daelstorm@gmail.com>

@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2022-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2022-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from pynicotine.pluginsystem import BasePlugin

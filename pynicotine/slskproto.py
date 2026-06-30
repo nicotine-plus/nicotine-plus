@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2020-2026 Nicotine+ Contributors
 # SPDX-FileCopyrightText: 2008-2012 quinox <quinox@users.sf.net>
 # SPDX-FileCopyrightText: 2007-2009 daelstorm <daelstorm@gmail.com>
 # SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
