@@ -33,15 +33,25 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Fixed a rare crash that occurred when opening File Properties dialog
  * Fixed a rare crash when connecting to the server
  * Fixed configuration files not being saved when restarting or logging out of the OS
+ * Fixed transfer list UI sometimes not updating fully until switching to another tab
  * Fixed broken Add Buddy text entry in the buddies sidebar
  * Fixed uploads not being removed when banning an IP address from the Preferences dialog
  * Fixed loading a saved shares file list from disk while offline
  * Fixed an issue where the initial connection attempt to the server would sometimes fail
- * Fixed minor sizing issues with pages context menu on some systems
- * Fixed inaccurate stuck current folder count during rescan
+ * Fixed occasional performance issues when responding to search requests
+ * Fixed incorrect average transfer speed when uploading the same file many times
  * Fixed zero-byte downloads not finishing immediately
- * Fixed incorrect names of downloaded files on DragonflyBSD
- * Removed workaround for old server bug related to watching offline user statuses
+ * Fixed users not being sorted by date in Chat History popover
+ * Fixed inaccurate stuck current folder count during rescan
+ * Fixed room list order sometimes changing after restarting
+ * Fixed long usernames not being ellipsized in private chat tabs
+ * Fixed minor sizing issues with pages context menu on some systems
+ * Fixed cosmetic issue with missing or invalid folder paths in folder chooser button
+ * Windows: Fixed incorrect sort order in file lists with some system locales
+ * Windows: Fixed main window not always being raised to the top when restored
+ * Windows: Fixed main window jumping around when changing to another virtual desktop
+ * macOS: Fixed main window sometimes being unminimized on its own
+ * DragonflyBSD: Fixed incorrect names of downloaded files
 
 ### Issues closed on GitHub
 
@@ -66,6 +76,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Nicotine+ fails on first attempt to auto-login, then succeeds on second ([#3722](https://github.com/nicotine-plus/nicotine-plus/issues/3722))
  * 'NoneType' object has no attribute 'sock' ([#3740](https://github.com/nicotine-plus/nicotine-plus/issues/3740))
  * Crash when searching empty room name ([#3747](https://github.com/nicotine-plus/nicotine-plus/issues/3747))
+ * Allow only one instance (optionally) ([#3762](https://github.com/nicotine-plus/nicotine-plus/issues/3762))
 
 
 ## Version 3.3.10 (March 10, 2025)
