@@ -1,11 +1,11 @@
-# SPDX-FileCopyrightText: 2023-2025 Nicotine+ Contributors
+# SPDX-FileCopyrightText: 2023-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 name: nicotine-plus
 adopt-info: nicotine-plus
 license: GPL-3.0-or-later
 
-base: core24
+base: core26
 confinement: strict
 compression: lzo
 grade: stable
@@ -22,18 +22,18 @@ apps:
     desktop: share/applications/org.nicotine_plus.Nicotine.desktop
     extensions: [gnome]
     plugs:
-      - desktop-legacy
       - home
       - network
       - network-bind
       - removable-media
-      - unity7
 
 parts:
   nicotine-plus:
     plugin: python
     source: .
     python-packages: []
+    stage-packages:
+      - python3-minimal
     parse-info: [share/metainfo/org.nicotine_plus.Nicotine.metainfo.xml]
     override-pull: |
       craftctl default
