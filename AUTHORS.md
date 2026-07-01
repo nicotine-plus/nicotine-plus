@@ -528,5 +528,5 @@ The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
 **IP2Location country data licensed under the [CC-BY-SA-4.0 License](https://creativecommons.org/licenses/by-sa/4.0/).**  
-Copyright (c) 2001–2024 Hexasoft Development Sdn. Bhd.  
+Copyright (c) 2001–2025 Hexasoft Development Sdn. Bhd.  
 Nicotine+ uses the IP2Location LITE database for [IP geolocation](https://lite.ip2location.com).
