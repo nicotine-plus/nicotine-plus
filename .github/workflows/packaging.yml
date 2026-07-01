@@ -76,9 +76,9 @@ jobs:
       matrix:
         include:
           - arch: x86_64
-            platform: ubuntu-latest
+            platform: ubuntu-26.04
           - arch: aarch64
-            platform: ubuntu-24.04-arm
+            platform: ubuntu-26.04-arm
     runs-on: ${{ matrix.platform }}
     container:
       image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-50
@@ -121,9 +121,9 @@ jobs:
       matrix:
         include:
           - arch: x86_64
-            platform: ubuntu-latest
+            platform: ubuntu-26.04
           - arch: arm64
-            platform: ubuntu-24.04-arm
+            platform: ubuntu-26.04-arm
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout code
