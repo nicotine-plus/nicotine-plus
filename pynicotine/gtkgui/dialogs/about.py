@@ -379,7 +379,7 @@ class About(Dialog):
 
         ("<b>IP2Location country data licensed under the "
          "<a href='https://creativecommons.org/licenses/by-sa/4.0/'>CC-BY-SA-4.0 License</a>.</b>"
-         "\nCopyright (c) 2001–2024 Hexasoft Development Sdn. Bhd."
+         "\nCopyright (c) 2001–2025 Hexasoft Development Sdn. Bhd."
          "\nNicotine+ uses the IP2Location LITE database for "
          "<a href='https://lite.ip2location.com'>IP geolocation</a>.")]
 
