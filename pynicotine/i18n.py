@@ -36,7 +36,7 @@ LANGUAGES: tuple[tuple[str, str], ...] = (
 )
 
 
-def _set_system_language(language=None):
+def _set_system_language(language=None) -> None:
     """Extracts the default system locale/language and applies it on systems that
     don't set the 'LC_ALL/LANGUAGE' environment variables by default (Windows,
     macOS)"""
@@ -86,7 +86,7 @@ def _set_system_language(language=None):
         os.environ["LANGUAGE"] = language
 
 
-def apply_translations(language=None):
+def apply_translations(language=None) -> None:
 
     # Use the same language as the rest of the system
     _set_system_language(language)

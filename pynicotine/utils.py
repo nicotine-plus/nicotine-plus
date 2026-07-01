@@ -12,6 +12,7 @@ import sys
 from collections.abc import Iterable
 from typing import Literal
 
+
 UINT32_LIMIT = 4294967295
 UINT64_LIMIT = 18446744073709551615
 FILE_SIZE_SUFFIXES = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"]
@@ -165,7 +166,7 @@ def safe_path_join(base_path: str, *parts) -> str:
     return path
 
 
-def encode_path(path: str, prefix: bool = True):
+def encode_path(path: str, prefix: bool = True) -> bytes:
     """Converts a file path to bytes for processing by the system.
 
     On Windows, also append prefix to enable extended-length path.
@@ -240,11 +241,11 @@ def _human_speed_or_size(number: int, unit: Literal["B"] | None = None) -> str:
     return str(number)
 
 
-def human_speed(speed: int):
+def human_speed(speed: int) -> str:
     return _human_speed_or_size(speed) + "/s"
 
 
-def human_size(filesize: int, unit: Literal["B"] | None = None):
+def human_size(filesize: int, unit: Literal["B"] | None = None) -> str:
     return _human_speed_or_size(filesize, unit)
 
 
@@ -349,7 +350,7 @@ def find_whole_word(word: str, text: str) -> int:
     return start if whole else -1
 
 
-def censor_text(text: str, censored_patterns: Iterable[str], filler: str = "*"):
+def censor_text(text: str, censored_patterns: Iterable[str], filler: str = "*") -> str:
 
     for word in censored_patterns:
         word = str(word).strip().lower()
@@ -374,8 +375,8 @@ def replace_text(text: str, replacements: dict[str, str]) -> str:
     return text
 
 
-def execute_command(command, replacement=None, background=True, returnoutput=False,
-                    hidden=False, placeholder="$"):
+def execute_command(command: str, replacement: str | None = None, background: bool = True,
+                    returnoutput: bool = False, hidden: bool = False, placeholder: str = "$") -> bytes | Literal[True]:
     """Executes a string with commands, with partial support for bash-style
     quoting and pipes.
 
@@ -432,7 +433,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
             background = True
 
     unparsed = command
-    arguments = []
+    arguments: list[str] = []
 
     while unparsed.count('"') > 1:
 
@@ -447,8 +448,8 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
         arguments += unparsed.split(" ")
 
     # arguments is now: ['C:\Program Files\WinAmp\WinAmp.exe', '--xforce', '--title=My Title', '$', '|', 'flite', '-t']
-    subcommands = []
-    current = []
+    subcommands: list[list[str]] = []
+    current: list[str] = []
 
     for argument in arguments:
         if argument == "|":
@@ -469,7 +470,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     if returnoutput:
         finalstdout = PIPE
 
-    procs = []
+    procs: list[Popen[bytes]] = []
 
     try:
         if len(subcommands) == 1:  # no need to fool around with pipes
@@ -488,11 +489,11 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
             procs[-1].wait()
 
     except Exception as error:
-        command = subcommands[len(procs)]
+        subcommand = subcommands[len(procs)]
         command_no = len(procs) + 1
         num_commands = len(subcommands)
         raise RuntimeError(
-            f"Problem while executing command {command} ({command_no} of "
+            f"Problem while executing command {subcommand} ({command_no} of "
             f"{num_commands}): {error}") from error
 
     if not returnoutput:
@@ -501,7 +502,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     return procs[-1].communicate()[0]
 
 
-def _try_open_uri(uri):
+def _try_open_uri(uri: str) -> None:
 
     if sys.platform not in {"darwin", "win32"}:
         try:
@@ -519,7 +520,7 @@ def _try_open_uri(uri):
         raise webbrowser.Error("No known URI provider available")
 
 
-def _open_path(path, is_folder=False, create_folder=False, create_file=False):
+def _open_path(path, is_folder: bool = False, create_folder: bool = False, create_file: bool = False) -> bool:
     """Currently used to either open a folder or play an audio file.
 
     Tries to run a user-specified command first, and falls back to the system
@@ -602,15 +603,15 @@ def _open_path(path, is_folder=False, create_folder=False, create_file=False):
     return True
 
 
-def open_file_path(file_path, create_file=False):
+def open_file_path(file_path: str, create_file: bool = False) -> bool:
     return _open_path(path=file_path, create_file=create_file)
 
 
-def open_folder_path(folder_path, create_folder=False):
+def open_folder_path(folder_path: str, create_folder: bool = False) -> bool:
     return _open_path(path=folder_path, is_folder=True, create_folder=create_folder)
 
 
-def open_uri(uri):
+def open_uri(uri: str) -> bool:
     """Open a URI in an external (web) browser."""
 
     from pynicotine.config import config
@@ -647,7 +648,7 @@ def open_uri(uri):
     return False
 
 
-def load_file(file_path, load_func, use_old_file=False):
+def load_file(file_path: str, load_func, use_old_file: bool = False):
 
     try:
         if use_old_file:
@@ -678,7 +679,7 @@ def load_file(file_path, load_func, use_old_file=False):
     return None
 
 
-def write_file_and_backup(path, callback, protect=False):
+def write_file_and_backup(path: str, callback, protect: bool = False) -> None:
 
     from pynicotine.logfacility import log
 
@@ -738,7 +739,7 @@ def write_file_and_backup(path, callback, protect=False):
 # Debugging #
 
 
-def debug(*args):
+def debug(*args) -> None:
     """Prints debugging info."""
 
     from pynicotine.logfacility import log
@@ -757,7 +758,7 @@ def strace(function):
         name = function.__name__
         log.add(f"{name}({', '.join(repr(x) for x in chain(args, list(kwargs.values())))})")
         retvalue = function(*args, **kwargs)
-        log.add(f"{name}({', '.join(repr(x) for x in chain(args, list(kwargs.values())))}): {repr(retvalue)}")
+        log.add(f"{name}({', '.join(repr(x) for x in chain(args, list(kwargs.values())))}): {retvalue!r}")
         return retvalue
 
     return newfunc

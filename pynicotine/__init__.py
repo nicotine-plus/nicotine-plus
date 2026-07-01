@@ -119,7 +119,7 @@ You should install Python %(min_version)s or newer.""") % {
     return None
 
 
-def set_up_python():
+def set_up_python() -> None:
 
     is_frozen = getattr(sys, "frozen", False)
 
@@ -134,7 +134,7 @@ def set_up_python():
         ctypes.windll.kernel32.SetDllDirectoryW(os.path.join(executable_folder, "lib"))
 
 
-def rename_process(new_name, debug_info=False):
+def rename_process(new_name: bytes, debug_info: bool = False) -> None:
 
     errors = []
 

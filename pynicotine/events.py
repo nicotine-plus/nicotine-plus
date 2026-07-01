@@ -209,7 +209,7 @@ class ThreadEvent:
 
     __slots__ = ("event_name", "args", "kwargs")
 
-    def __init__(self, event_name, args, kwargs):
+    def __init__(self, event_name: str, args, kwargs):
 
         self.event_name = event_name
         self.args = args
@@ -232,7 +232,7 @@ class Events:
         self._scheduler_thread = None
         self._is_active = False
 
-    def enable(self):
+    def enable(self) -> None:
 
         if self._is_active:
             return
@@ -246,7 +246,7 @@ class Events:
         ):
             self.connect(event_name, callback)
 
-    def connect(self, event_name, function):
+    def connect(self, event_name: str, function) -> None:
 
         if event_name not in EVENT_NAMES:
             raise ValueError(f"Unknown event {event_name}")
@@ -258,10 +258,10 @@ class Events:
 
         self._callbacks[event_name].append(function)
 
-    def disconnect(self, event_name, function):
+    def disconnect(self, event_name: str, function) -> None:
         self._callbacks[event_name].remove(function)
 
-    def emit(self, event_name, *args, **kwargs):
+    def emit(self, event_name: str, *args, **kwargs) -> None:
 
         for function in self._callbacks[event_name]:
             try:
@@ -278,13 +278,13 @@ class Events:
                 # Exception occurred in a plugin, log a message and continue
                 core.pluginhandler.show_plugin_error(module_name, error)
 
-    def emit_main_thread(self, event_name, *args, **kwargs):
+    def emit_main_thread(self, event_name: str, *args, **kwargs) -> None:
         self._thread_events.put_nowait(ThreadEvent(event_name, args, kwargs))
 
-    def invoke_main_thread(self, callback, *args, **kwargs):
+    def invoke_main_thread(self, callback, *args, **kwargs) -> None:
         self.emit_main_thread("thread-callback", callback, *args, **kwargs)
 
-    def schedule(self, delay, callback, callback_args=None, repeat=False):
+    def schedule(self, delay: int, callback, callback_args=None, repeat: bool = False):
 
         if delay <= 0:
             return None
@@ -300,14 +300,14 @@ class Events:
         )
         return self._scheduler_event_id
 
-    def schedule_at(self, timestamp, callback, callback_args=None):
+    def schedule_at(self, timestamp: float, callback, callback_args=None):
         delay = (timestamp - time.time())
         return self.schedule(delay, callback, callback_args, repeat=False)
 
-    def cancel_scheduled(self, event_id):
+    def cancel_scheduled(self, event_id) -> None:
         self._pending_scheduler_events.put_nowait(SchedulerEvent(event_id, next_time=None))
 
-    def process_thread_events(self):
+    def process_thread_events(self) -> bool:
         """Called by the main loop 10 times per second to emit thread events in
         the main thread.
 
@@ -334,7 +334,7 @@ class Events:
 
         return True
 
-    def _run_scheduler(self):
+    def _run_scheduler(self) -> None:
 
         while self._is_active:
             # Scheduled events additions/removals from other threads
@@ -373,7 +373,7 @@ class Events:
 
             self._scheduler_events.pop(event.event_id, None)
 
-    def _start(self):
+    def _start(self) -> None:
 
         if self._scheduler_thread is not None and self._scheduler_thread.is_alive():
             return
@@ -381,10 +381,10 @@ class Events:
         self._scheduler_thread = Thread(target=self._run_scheduler, name="SchedulerThread")
         self._scheduler_thread.start()
 
-    def _thread_callback(self, callback, *args, **kwargs):
+    def _thread_callback(self, callback, *args, **kwargs) -> None:
         callback(*args, **kwargs)
 
-    def _quit(self):
+    def _quit(self) -> None:
 
         # Ensure any remaining events are processed
         self.process_thread_events()
