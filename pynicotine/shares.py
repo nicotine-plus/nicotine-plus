@@ -1189,6 +1189,11 @@ class Shares:
 
     def stop_scanner(self):
 
+        if self._scanner_process is not None:
+            self._scanner_process.terminate()
+            self._scanner_process.join()
+            self._scanner_process = None
+
         if self._scanner_reader is not None:
             try:
                 self._scanner_reader.close()
@@ -1197,10 +1202,6 @@ class Shares:
                 pass
 
             self._scanner_reader = None
-
-        if self._scanner_process is not None:
-            self._scanner_process.terminate()
-            self._scanner_process = None
 
     def check_shares_available(self):
 
@@ -1292,13 +1293,13 @@ class Shares:
                 current_folder_count = None
                 last_count_update = current_time
 
+        process.join()
+
         try:
             reader.close()
         except OSError:
             # Already closed in the main thread
             pass
-
-        process.join()
 
         if emit_event is not None:
             emit_event("shares-ready", successful)
