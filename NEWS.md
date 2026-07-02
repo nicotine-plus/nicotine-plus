@@ -1,10 +1,3 @@
-<!--
-  SPDX-FileCopyrightText: 2004-2026 Nicotine+ Contributors
-  SPDX-FileCopyrightText: 2003-2004 Nicotine Contributors
-  SPDX-FileCopyrightText: 2002-2003 PySoulSeek Contributors
-  SPDX-License-Identifier: GPL-3.0-or-later
--->
-
 # Release Notes
 
 The current stable version of Nicotine+ is available at [DOWNLOADS.md](doc/DOWNLOADS.md).
