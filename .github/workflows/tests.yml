@@ -166,7 +166,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        shell: cpa.sh {0}
+        shell: cpa.sh {0} --environment-variables NICOTINE_NETWORK_TESTS
     steps:
       - name: Checkout code
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -204,7 +204,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        shell: cpa.sh {0}
+        shell: cpa.sh {0} --environment-variables NICOTINE_NETWORK_TESTS
     steps:
       - name: Checkout code
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -237,7 +237,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        shell: cpa.sh {0}
+        shell: cpa.sh {0} --environment-variables NICOTINE_NETWORK_TESTS
     steps:
       - name: Checkout code
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -263,7 +263,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        shell: cpa.sh {0}
+        shell: cpa.sh {0} --environment-variables NICOTINE_NETWORK_TESTS
     steps:
       - name: Checkout code
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -295,7 +295,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        shell: cpa.sh {0}
+        shell: cpa.sh {0} --environment-variables NICOTINE_NETWORK_TESTS
     steps:
       - name: Checkout code
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -328,7 +328,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        shell: cpa.sh {0}
+        shell: cpa.sh {0} --environment-variables NICOTINE_NETWORK_TESTS
     steps:
       - name: Checkout code
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -357,7 +357,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        shell: cpa.sh {0}
+        shell: cpa.sh {0} --environment-variables NICOTINE_NETWORK_TESTS
     steps:
       - name: Checkout code
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
