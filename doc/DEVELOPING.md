@@ -29,7 +29,7 @@ Every participant must follow the rules in [CONTRIBUTING.md](../CONTRIBUTING.md)
 
 ### Python
 
-Nicotine+ is Python application, originally based on backend code from the
+Nicotine+ is a Python application, originally based on backend code from the
 PySoulSeek project started in 2001. We only use Python in our codebase, as this
 allows for running Nicotine+ on almost any system without compiling anything.
 Developing in a single language is also easier for everyone involved in the
@@ -83,9 +83,10 @@ without thinking about the bigger picture. Nicotine+ is feature-rich, but
 attempts to provide well-designed, well-integrated features that work out of
 the box.
 
-The same principle applies when writing code. Try to simplify code as much as
-possible. Avoid overengineering. We want to write code that is maintainable
-and readable by humans.
+The same principle applies when writing code. Spend some additional time
+refining your code after it works, and try to avoid needless complexity and
+overengineering. We want to write code that is maintainable and readable by
+humans.
 
 
 ## Performance
