@@ -166,7 +166,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        shell: cpa.sh {0} --environment-variables NICOTINE_NETWORK_TESTS
+        shell: cpa.sh {0}
     steps:
       - name: Checkout code
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -178,6 +178,7 @@ jobs:
         with:
           operating_system: freebsd
           version: '15.1'
+          environment_variables: NICOTINE_NETWORK_TESTS
 
       - name: Install dependencies
         run: |
@@ -204,7 +205,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        shell: cpa.sh {0} --environment-variables NICOTINE_NETWORK_TESTS
+        shell: cpa.sh {0}
     steps:
       - name: Checkout code
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -216,6 +217,7 @@ jobs:
         with:
           operating_system: openbsd
           version: '7.9'
+          environment_variables: NICOTINE_NETWORK_TESTS
 
       - name: Install dependencies
         run: sudo pkg_add gettext-tools gtk+4 py3-build py3-gobject3 py3-setuptools py3-wheel
@@ -237,7 +239,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        shell: cpa.sh {0} --environment-variables NICOTINE_NETWORK_TESTS
+        shell: cpa.sh {0}
     steps:
       - name: Checkout code
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -249,6 +251,7 @@ jobs:
         with:
           operating_system: netbsd
           version: '10.1'
+          environment_variables: NICOTINE_NETWORK_TESTS
 
       - name: Install dependencies
         run: sudo pkgin -y install python314
@@ -263,7 +266,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        shell: cpa.sh {0} --environment-variables NICOTINE_NETWORK_TESTS
+        shell: cpa.sh {0}
     steps:
       - name: Checkout code
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -275,6 +278,7 @@ jobs:
         with:
           operating_system: dragonflybsd
           version: '6.4.2'
+          environment_variables: NICOTINE_NETWORK_TESTS
 
       - name: Install dependencies
         run: |
@@ -295,7 +299,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        shell: cpa.sh {0} --environment-variables NICOTINE_NETWORK_TESTS
+        shell: cpa.sh {0}
     steps:
       - name: Checkout code
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -307,6 +311,7 @@ jobs:
         with:
           operating_system: midnightbsd
           version: '4.0.4'
+          environment_variables: NICOTINE_NETWORK_TESTS
 
       - name: Install dependencies
         run: |
@@ -328,7 +333,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        shell: cpa.sh {0} --environment-variables NICOTINE_NETWORK_TESTS
+        shell: cpa.sh {0}
     steps:
       - name: Checkout code
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -340,6 +345,7 @@ jobs:
         with:
           operating_system: haiku
           version: 'r1beta5'
+          environment_variables: NICOTINE_NETWORK_TESTS
 
       - name: Install dependencies
         run: |
@@ -361,7 +367,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        shell: cpa.sh {0} --environment-variables NICOTINE_NETWORK_TESTS
+        shell: cpa.sh {0}
     steps:
       - name: Checkout code
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -373,6 +379,7 @@ jobs:
         with:
           operating_system: omnios
           version: 'r151058'
+          environment_variables: NICOTINE_NETWORK_TESTS
 
       - name: Set up package repository
         run: |
