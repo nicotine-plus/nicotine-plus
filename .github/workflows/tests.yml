@@ -343,8 +343,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pkgman install -y harfbuzz_glib gettext gtk4 build_python310 pygobject_python310 \
-            setuptools_python310 wheel_python310
+          # Retry due to occasional error: "Failed to download package x: Interrupted system call"
+          for i in 1 2 3; do
+            pkgman install -y harfbuzz_glib gettext gtk4 build_python310 pygobject_python310 \
+              setuptools_python310 wheel_python310 && break
+            status=$?; [ "$i" -eq 3 ] && exit "$status"
+          done
 
       - name: Integration and unit tests
         run: python3.10 -m unittest -v
