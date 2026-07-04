@@ -347,16 +347,16 @@ jobs:
         run: |
           # Retry due to occasional error: "Failed to download package x: Interrupted system call"
           for i in 1 2 3; do
-            pkgman install -y harfbuzz_glib gettext gtk4 build_python310 pygobject_python310 \
-              setuptools_python310 wheel_python310 && break
+            pkgman install -y harfbuzz_glib gettext gtk4 build_python314 pygobject_python314 \
+              setuptools_python314 wheel_python314 && break
             status=$?; [ "$i" -eq 3 ] && exit "$status"
           done
 
       - name: Integration and unit tests
-        run: python3.10 -m unittest -v
+        run: python3.14 -m unittest -v
 
       - name: Build without isolation
-        run: python3.10 -m build --no-isolation
+        run: python3.14 -m build --no-isolation
 
   illumos:
     runs-on: ubuntu-latest
