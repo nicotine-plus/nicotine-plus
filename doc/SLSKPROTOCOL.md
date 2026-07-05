@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on May 10, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on July 5, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -2619,9 +2619,39 @@ A peer responds with a list of shared files after we've sent a
 ### Data Order
 
   - Send
-    1.  Iterate through shares database
-        1.  **data**
-    2. zlib compress
+    1.  **uint32** *number of directories*
+    2.  Iterate *number of directories*
+        1.  **string** *directory*
+        2.  **uint32** *number of files*
+        3.  Iterate *number of files*
+            1.  **uint8** *code*  
+                Value is always `1`
+            2.  **string** *filename*
+            3.  **uint64** *file size*
+            4.  **string** *file extension*
+            5.  **uint32** *number of attributes*
+            6.  Iterate for *number of attributes*
+                1.  **uint32** *attribute code*  
+                    See [File Attribute Types](#file-attribute-types)
+                2.  **uint32** *attribute value*
+    3.  **uint32** *unknown*  
+        Official clients always send a value of `0`
+    4.  **uint32** *number of private directories*
+    5.  Iterate *number of private directories*
+        1.  **string** *directory*
+        2.  **uint32** *number of files*
+        3.  Iterate *number of files*
+            1.  **uint8** *code*  
+                Value is always `1`
+            2.  **string** *filename*
+            3.  **uint64** *file size*
+            4.  **string** *file extension*
+            5.  **uint32** *number of attributes*
+            6.  Iterate for *number of attributes*
+                1.  **uint32** *attribute code*  
+                    See [File Attribute Types](#file-attribute-types)
+                2.  **uint32** *attribute value*
+    6. zlib compress
   - Receive
     1.  zlib decompress
     2.  **uint32** *number of directories*
