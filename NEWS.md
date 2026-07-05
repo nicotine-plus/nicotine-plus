@@ -25,6 +25,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Fixed a crash when performing a file search in rooms mode with an empty room name
  * Fixed a rare crash that occurred when opening File Properties dialog
  * Fixed a rare crash when connecting to the server
+ * Fixed folder downloads incorrectly including files from users with identical folder paths
  * Fixed configuration files not being saved when restarting or logging out of the OS
  * Fixed transfer list UI sometimes not updating fully until switching to another tab
  * Fixed broken Add Buddy text entry in the buddies sidebar
@@ -70,6 +71,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * 'NoneType' object has no attribute 'sock' ([#3740](https://github.com/nicotine-plus/nicotine-plus/issues/3740))
  * Crash when searching empty room name ([#3747](https://github.com/nicotine-plus/nicotine-plus/issues/3747))
  * Allow only one instance (optionally) ([#3762](https://github.com/nicotine-plus/nicotine-plus/issues/3762))
+ * "Download Folder" incorrectly adds files from other users with identical folder paths ([#3802](https://github.com/nicotine-plus/nicotine-plus/issues/3802))
 
 
 ## Version 3.3.10 (March 10, 2025)
