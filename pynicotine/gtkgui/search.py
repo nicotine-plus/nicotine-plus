@@ -1619,15 +1619,15 @@ class Search:
 
             visible_files = []
             for row in self.all_data:
+                row_user = row[0]
+                row_file_data = row[16]
+
                 # Find the wanted folder
-                if folder_path != row[16].path.rpartition("\\")[0]:
+                if user != row_user or folder_path != row_file_data.path.rpartition("\\")[0]:
                     continue
 
-                (_unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused,
-                    _unused, _unused, _unused, size, _unused, _unused, _unused, file_data,
-                    _unused) = row
-
-                visible_files.append((file_data.path, size, file_data.attributes))
+                row_size = row[12]
+                visible_files.append((row_file_data.path, row_size, row_file_data.attributes))
 
             core.search.request_folder_download(
                 user, folder_path, visible_files, download_folder_path=download_folder_path
