@@ -31,6 +31,7 @@ import pynicotine
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_FOLDER_PATH
+from pynicotine.gtkgui.application import GTK_MINOR_VERSION
 from pynicotine.gtkgui.application import LIBADWAITA_API_VERSION
 from pynicotine.logfacility import log
 from pynicotine.shares import FileTypes
@@ -124,6 +125,13 @@ def set_dark_mode(enabled):
 
         if color_scheme is not None:
             enabled = (color_scheme == ColorScheme.PREFER_DARK)
+
+    if (GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 20):
+        if enabled:
+            GTK_SETTINGS.props.gtk_interface_color_scheme = Gtk.InterfaceColorScheme.DARK
+        else:
+            GTK_SETTINGS.reset_property("gtk_interface_color_scheme")
+        return
 
     GTK_SETTINGS.props.gtk_application_prefer_dark_theme = enabled
 
