@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-[Last updated on July 5, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on July 8, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -3195,7 +3195,9 @@ consequence, the client sends an invalid file offset of -1.
     for handling failed transfers.  
     We can use the filesize stored previously to check how much data we expect
     to receive.
-11. Once the transfer is complete, we are free to persist the file to disk.
+11. Once we have received all expected file data, we close the `F` connection.
+    It is always the downloader's responsibility to close the connection to
+    indicate a completed transfer. The uploader must not close it.
 
 
 # Distributed Messages
