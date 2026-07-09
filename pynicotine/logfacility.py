@@ -22,7 +22,7 @@ from pynicotine.utils import safe_path_join
 class LogFile:
     __slots__ = ("path", "handle", "last_active")
 
-    def __init__(self, path, handle):
+    def __init__(self, path: str, handle):
         self.path = path
         self.handle = handle
         self.last_active = time.monotonic()
@@ -83,14 +83,14 @@ class Logger:
 
     # Log Levels #
 
-    def init_log_levels(self):
+    def init_log_levels(self) -> None:
 
         self._log_levels = {LogLevel.DEFAULT}
 
         for level in config.sections["logging"]["debugmodes"]:
             self._log_levels.add(level)
 
-    def add_log_level(self, log_level, is_permanent=True):
+    def add_log_level(self, log_level: str, is_permanent: bool = True) -> None:
 
         self._log_levels.add(log_level)
 
@@ -102,7 +102,7 @@ class Logger:
         if log_level not in log_levels:
             log_levels.append(log_level)
 
-    def remove_log_level(self, log_level, is_permanent=True):
+    def remove_log_level(self, log_level, is_permanent: bool = True) -> None:
 
         self._log_levels.discard(log_level)
 
@@ -116,7 +116,7 @@ class Logger:
 
     # Log Files #
 
-    def _get_log_file(self, folder_path, basename, should_create_file=True):
+    def _get_log_file(self, folder_path, basename: str, should_create_file: bool = True):
 
         file_path = safe_path_join(folder_path, f"{basename}.log")
         log_file = self._log_files.get(file_path)
@@ -142,7 +142,7 @@ class Logger:
 
         return log_file
 
-    def write_log_file(self, folder_path, basename, text, timestamp=None):
+    def write_log_file(self, folder_path, basename: str, text: str, timestamp=None) -> None:
 
         folder_path = os.path.normpath(folder_path)
 
@@ -168,7 +168,7 @@ class Logger:
                 "error": error
             }, should_log_file=should_log_file)
 
-    def _close_log_file(self, log_file):
+    def _close_log_file(self, log_file) -> None:
 
         try:
             log_file.handle.close()
@@ -181,11 +181,11 @@ class Logger:
 
         del self._log_files[log_file.path]
 
-    def _close_log_files(self):
+    def _close_log_files(self) -> None:
         for log_file in self._log_files.copy().values():
             self._close_log_file(log_file)
 
-    def _close_inactive_log_files(self):
+    def _close_inactive_log_files(self) -> None:
 
         current_time = time.monotonic()
 
@@ -196,14 +196,14 @@ class Logger:
     def _normalize_folder_path(self, folder_path):
         return os.path.normpath(os.path.expandvars(folder_path))
 
-    def update_folder_paths(self):
+    def update_folder_paths(self) -> None:
 
         self.debug_folder_path = self._normalize_folder_path(config.sections["logging"]["debuglogsdir"])
         self.transfer_folder_path = self._normalize_folder_path(config.sections["logging"]["transferslogsdir"])
         self.room_folder_path = self._normalize_folder_path(config.sections["logging"]["roomlogsdir"])
         self.private_chat_folder_path = self._normalize_folder_path(config.sections["logging"]["privatelogsdir"])
 
-    def open_log(self, folder_path, basename):
+    def open_log(self, folder_path, basename: str) -> None:
         self._log_file_operation(folder_path, basename, self.open_log_callback)
 
     def _get_log_lines(self, log_file, num_lines):
@@ -237,7 +237,7 @@ class Logger:
         file_handle.seek(0, os.SEEK_END)
         return b''.join(blocks).splitlines()[-num_lines:]
 
-    def read_log(self, folder_path, basename, num_lines):
+    def read_log(self, folder_path, basename: str, num_lines: int):
 
         lines = None
         log_file = None
@@ -259,10 +259,10 @@ class Logger:
 
         return lines
 
-    def delete_log(self, folder_path, basename):
+    def delete_log(self, folder_path, basename: str) -> None:
         self._log_file_operation(folder_path, basename, self.delete_log_callback)
 
-    def _log_file_operation(self, folder_path, basename, callback):
+    def _log_file_operation(self, folder_path, basename: str, callback) -> None:
 
         folder_path_encoded = encode_path(folder_path)
         file_path = safe_path_join(folder_path, f"{basename}.log")
@@ -276,13 +276,13 @@ class Logger:
         except Exception as error:
             self._add(_("Cannot access log file %(path)s: %(error)s"), {"path": file_path, "error": error})
 
-    def open_log_callback(self, file_path):
+    def open_log_callback(self, file_path) -> None:
         open_file_path(file_path, create_file=True)
 
-    def delete_log_callback(self, file_path):
+    def delete_log_callback(self, file_path: str) -> None:
         os.remove(encode_path(file_path))
 
-    def log_transfer(self, basename, msg, msg_args=None):
+    def log_transfer(self, basename: str, msg, msg_args=None) -> None:
 
         if not config.sections["logging"]["transfers"]:
             return
@@ -306,7 +306,7 @@ class Logger:
 
         return msg
 
-    def _add(self, msg, msg_args=None, title=None, level=LogLevel.DEFAULT, should_log_file=True):
+    def _add(self, msg, msg_args=None, title=None, level=LogLevel.DEFAULT, should_log_file: bool = True) -> None:
 
         msg = self._format_log_message(level, msg, msg_args)
 
@@ -369,7 +369,7 @@ class Logger:
         if level in self._log_levels:
             self._add(msg, msg_args, level=level)
 
-    def add_msg_contents(self, msg, is_outgoing=False):
+    def add_msg_contents(self, msg, is_outgoing: bool = False):
 
         level = LogLevel.MESSAGE
 

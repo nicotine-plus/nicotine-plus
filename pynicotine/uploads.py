@@ -8,12 +8,14 @@
 # SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
 # SPDX-FileCopyrightText: 2001-2003 Alexander Kanavin
 # SPDX-License-Identifier: GPL-3.0-or-later
+from __future__ import annotations
 
 import os
 import sys
 import time
 
 from collections import defaultdict
+from typing import TYPE_CHECKING
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -42,6 +44,15 @@ from pynicotine.transfers import Transfers
 from pynicotine.transfers import TransferStatus
 from pynicotine.utils import encode_path
 from pynicotine.utils import human_size
+
+if TYPE_CHECKING:
+    from pynicotine.slskmessages import Login
+    from pynicotine.slskmessages import ServerDisconnect
+    from pynicotine.slskmessages import QueueUpload
+    from pynicotine.slskmessages import PlaceInQueueRequest
+    from pynicotine.slskmessages import GetUserStats
+    from pynicotine.slskmessages import GetUserStatus
+    from pynicotine.slskmessages import PrivilegedUsers
 
 
 class Uploads(Transfers):
@@ -91,13 +102,13 @@ class Uploads(Transfers):
         ):
             events.connect(event_name, callback)
 
-    def _quit(self):
+    def _quit(self) -> None:
 
         super()._quit()
 
         self.upload_speed = 0
 
-    def _server_login(self, msg):
+    def _server_login(self, msg: Login) -> None:
 
         if not msg.success:
             return
@@ -115,7 +126,7 @@ class Uploads(Transfers):
         self._retry_failed_uploads_timer_id = events.schedule(
             delay=180, callback=self._retry_failed_uploads, repeat=True)
 
-    def _server_disconnect(self, msg):
+    def _server_disconnect(self, msg: ServerDisconnect) -> None:
 
         super()._server_disconnect(msg)
 
@@ -138,7 +149,7 @@ class Uploads(Transfers):
 
     # Load Transfers #
 
-    def _load_transfers(self):
+    def _load_transfers(self) -> None:
 
         for transfer in self._get_stored_transfers(
                 self.transfers_file_path, self._load_transfers_file, load_only_finished=True):
@@ -146,7 +157,7 @@ class Uploads(Transfers):
 
     # Privileges #
 
-    def is_privileged(self, username):
+    def is_privileged(self, username: str) -> bool:
 
         if not username:
             return False
@@ -156,7 +167,7 @@ class Uploads(Transfers):
 
         return self.is_buddy_prioritized(username)
 
-    def is_buddy_prioritized(self, username):
+    def is_buddy_prioritized(self, username: str) -> bool:
 
         if not username:
             return False
@@ -176,7 +187,7 @@ class Uploads(Transfers):
     # Stats/Limits #
 
     @staticmethod
-    def _get_current_file_size(file_path):
+    def _get_current_file_size(file_path: str):
 
         try:
             new_size = os.path.getsize(encode_path(file_path))
@@ -204,7 +215,7 @@ class Uploads(Transfers):
 
         return upload_slots
 
-    def get_upload_queue_size(self, username):
+    def get_upload_queue_size(self, username: str) -> int:
 
         if self.is_privileged(username):
             return sum(
@@ -214,10 +225,10 @@ class Uploads(Transfers):
 
         return len(self.queued_transfers)
 
-    def has_active_uploads(self):
+    def has_active_uploads(self) -> bool:
         return bool(self.active_users or self.queued_users)
 
-    def is_queue_limit_reached(self, username):
+    def is_queue_limit_reached(self, username: str):
 
         file_limit = config.sections["transfers"]["filelimit"]
         queue_size_limit = config.sections["transfers"]["queuelimit"] * 1024 * 1024
@@ -230,7 +241,7 @@ class Uploads(Transfers):
 
         return False, None
 
-    def is_slot_limit_reached(self):
+    def is_slot_limit_reached(self) -> bool:
 
         upload_slot_limit = config.sections["transfers"]["uploadslots"]
 
@@ -239,7 +250,7 @@ class Uploads(Transfers):
 
         return len(self.active_users) >= upload_slot_limit
 
-    def is_bandwidth_limit_reached(self):
+    def is_bandwidth_limit_reached(self) -> bool:
 
         bandwidth_limit = config.sections["transfers"]["uploadbandwidth"] * 1024
 
@@ -248,7 +259,7 @@ class Uploads(Transfers):
 
         return self.total_bandwidth >= bandwidth_limit
 
-    def is_new_upload_accepted(self, enforce_limits=True):
+    def is_new_upload_accepted(self, enforce_limits: bool = True) -> bool:
 
         if core.shares is None or core.shares.rescanning:
             return False
@@ -269,7 +280,7 @@ class Uploads(Transfers):
         return True
 
     @staticmethod
-    def is_file_readable(virtual_path, real_path):
+    def is_file_readable(virtual_path: str, real_path: str) -> bool:
 
         try:
             if os.access(encode_path(real_path), os.R_OK):
@@ -284,14 +295,14 @@ class Uploads(Transfers):
 
         return False
 
-    def is_upload_queued(self, username, virtual_path):
+    def is_upload_queued(self, username: str, virtual_path: str) -> bool:
 
         if virtual_path in self.queued_users.get(username, {}):
             return True
 
         return any(upload.virtual_path == virtual_path for upload in self.active_users.get(username, {}).values())
 
-    def update_transfer_limits(self):
+    def update_transfer_limits(self) -> None:
 
         events.emit("update-upload-limits")
 
@@ -312,7 +323,7 @@ class Uploads(Transfers):
 
     # Transfer Actions #
 
-    def _enqueue_transfer(self, transfer, show_notification=False):
+    def _enqueue_transfer(self, transfer: Transfer, show_notification: bool = False) -> bool:
 
         username = transfer.username
 
@@ -330,7 +341,7 @@ class Uploads(Transfers):
 
         return True
 
-    def _dequeue_transfer(self, transfer):
+    def _dequeue_transfer(self, transfer: Transfer) -> bool:
 
         username = transfer.username
 
@@ -348,11 +359,11 @@ class Uploads(Transfers):
 
         return True
 
-    def _activate_transfer(self, transfer, token):
+    def _activate_transfer(self, transfer: Transfer, token: int) -> None:
         super()._activate_transfer(transfer, token)
         self._user_update_counters.pop(transfer.username, None)
 
-    def _update_transfer(self, transfer, update_parent=True):
+    def _update_transfer(self, transfer: Transfer, update_parent: bool = True) -> None:
 
         username = transfer.username
 
@@ -364,7 +375,7 @@ class Uploads(Transfers):
 
         events.emit("update-upload", transfer, update_parent)
 
-    def _finish_transfer(self, transfer, already_exists=False):
+    def _finish_transfer(self, transfer: Transfer, already_exists: bool = False) -> None:
 
         username = transfer.username
         virtual_path = transfer.virtual_path
@@ -394,7 +405,7 @@ class Uploads(Transfers):
 
         self._check_upload_queue()
 
-    def _abort_transfer(self, transfer, status=None, denied_message=None, update_parent=True):
+    def _abort_transfer(self, transfer: Transfer, status=None, denied_message=None, update_parent: bool = True) -> None:
 
         if transfer.file_handle is not None:
             log.add_upload(
@@ -410,7 +421,7 @@ class Uploads(Transfers):
         if status:
             events.emit("abort-upload", transfer, status, update_parent)
 
-    def _clear_transfer(self, transfer, denied_message=None, update_parent=True):
+    def _clear_transfer(self, transfer: Transfer, denied_message=None, update_parent: bool = True) -> None:
 
         virtual_path = transfer.virtual_path
         username = transfer.username
@@ -420,7 +431,7 @@ class Uploads(Transfers):
 
         events.emit("clear-upload", transfer, update_parent)
 
-    def _retry_failed_uploads(self):
+    def _retry_failed_uploads(self) -> None:
 
         for failed_uploads in self.failed_users.copy().values():
             for upload in failed_uploads.copy().values():
@@ -431,7 +442,7 @@ class Uploads(Transfers):
                 self._enqueue_transfer(upload)
                 self._update_transfer(upload)
 
-    def _check_queue_upload_allowed(self, username, addr, virtual_path, msg):
+    def _check_queue_upload_allowed(self, username: str, addr, virtual_path: str, msg: QueueUpload):
 
         # Is user allowed to download?
         ip_address, _port = addr
@@ -481,7 +492,7 @@ class Uploads(Transfers):
 
         return True, None, real_path, size
 
-    def _check_backslash_path_exists(self, username, virtual_path):
+    def _check_backslash_path_exists(self, username: str, virtual_path):
         """Replace a backslash sentinel with an actual backslash in a file path, and check
         if a file for the resulting path exists and is shared."""
 
@@ -546,7 +557,7 @@ class Uploads(Transfers):
 
         return upload_candidate, has_active_uploads
 
-    def _update_user_counter(self, username):
+    def _update_user_counter(self, username: str) -> None:
         """Called when an upload associated with a user has changed.
 
         The user update counter is used by the Round Robin queue system
@@ -558,7 +569,7 @@ class Uploads(Transfers):
             self._user_update_counter += 1
             self._user_update_counters[username] = self._user_update_counter
 
-    def _check_upload_queue(self, upload_candidate=None):
+    def _check_upload_queue(self, upload_candidate=None) -> None:
         """Find next file to upload."""
 
         final_upload_candidate = None
@@ -634,7 +645,7 @@ class Uploads(Transfers):
 
         self._update_transfer(final_upload_candidate)
 
-    def _show_queued_upload_notifications(self):
+    def _show_queued_upload_notifications(self) -> None:
 
         if not config.sections["notifications"]["notification_popup_queued_upload"]:
             self._queue_notification_users.clear()
@@ -642,7 +653,7 @@ class Uploads(Transfers):
 
         for username, queued_uploads in self._queue_notification_users.copy().items():
             num_files = len(queued_uploads)
-            num_folders = len(set(transfer.folder_path for transfer in queued_uploads))
+            num_folders = len({transfer.folder_path for transfer in queued_uploads})
             total_size = human_size(sum(transfer.size for transfer in queued_uploads))
 
             if num_files == 1:
@@ -672,7 +683,7 @@ class Uploads(Transfers):
 
         self._queue_notification_users.clear()
 
-    def enqueue_upload(self, username, virtual_path):
+    def enqueue_upload(self, username: str, virtual_path: str) -> None:
 
         transfer = self.transfers.get(username + virtual_path)
         real_path = core.shares.virtual2real(virtual_path)
@@ -708,7 +719,7 @@ class Uploads(Transfers):
         self._update_transfer(transfer)
         self._check_upload_queue()
 
-    def retry_upload(self, transfer):
+    def retry_upload(self, transfer: Transfer) -> None:
 
         username = transfer.username
         active_uploads = self.active_users.get(username, {}).values()
@@ -726,7 +737,7 @@ class Uploads(Transfers):
             # No active upload, transfer a queued upload immediately
             self._check_upload_queue(transfer)
 
-    def retry_uploads(self, uploads):
+    def retry_uploads(self, uploads) -> None:
         for upload in uploads:
             self.retry_upload(upload)
 
@@ -741,7 +752,7 @@ class Uploads(Transfers):
 
         events.emit("abort-uploads", uploads, status)
 
-    def clear_uploads(self, uploads=None, statuses=None, denied_message=None):
+    def clear_uploads(self, uploads=None, statuses=None, denied_message=None) -> None:
 
         if uploads is None:
             # Clear all uploads
@@ -757,7 +768,7 @@ class Uploads(Transfers):
 
         events.emit("clear-uploads", uploads, statuses)
 
-    def request_shutdown(self):
+    def request_shutdown(self) -> None:
         """Schedule a shutdown after all queued uploads have finished."""
 
         if self.pending_shutdown:
@@ -768,7 +779,7 @@ class Uploads(Transfers):
 
         events.emit("uploads-shutdown-request")
 
-    def cancel_shutdown(self):
+    def cancel_shutdown(self) -> None:
 
         if not self.pending_shutdown:
             return
@@ -778,7 +789,7 @@ class Uploads(Transfers):
 
     # Events #
 
-    def _shares_ready(self, _successful):
+    def _shares_ready(self, _successful) -> None:
         """Process any file transfer queue requests that arrived while
         scanning shares.
         """
@@ -787,7 +798,7 @@ class Uploads(Transfers):
             core.send_message_to_network_thread(EmitNetworkMessageEvents(self._pending_network_msgs[:]))
             self._pending_network_msgs.clear()
 
-    def _user_status(self, msg):
+    def _user_status(self, msg: GetUserStatus) -> None:
         """Server code 7."""
 
         username = msg.user
@@ -822,21 +833,21 @@ class Uploads(Transfers):
 
         self._online_users.add(username)
 
-    def _user_stats(self, msg):
+    def _user_stats(self, msg: GetUserStats) -> None:
         """Server code 36."""
 
         if msg.user == core.users.login_username:
             self.upload_speed = msg.avgspeed
 
-    def _privileged_users(self, _msg):
+    def _privileged_users(self, _msg: PrivilegedUsers) -> None:
         """Server code 69."""
 
         log.add_transfer("%s privileged users", len(core.users.privileged))
 
-    def _set_connection_stats(self, upload_bandwidth=0, **_unused):
+    def _set_connection_stats(self, upload_bandwidth: int = 0, **_unused) -> None:
         self.total_bandwidth = upload_bandwidth
 
-    def _ban_user(self, username, _ip_address=None):
+    def _ban_user(self, username: str, _ip_address=None) -> None:
         """Ban a user, cancel all the user's uploads, send a 'Banned' message
         via the transfers, and clear the transfers from the uploads list."""
 
@@ -863,7 +874,9 @@ class Uploads(Transfers):
         self.clear_uploads(uploads=removed_uploads, denied_message=status)
         self._check_upload_queue()
 
-    def _peer_connection_error(self, username, conn_type, msgs, is_offline=False, is_timeout=True):
+    def _peer_connection_error(
+        self, username: str, conn_type, msgs, is_offline: bool = False, is_timeout: bool = True
+    ) -> None:
 
         if not msgs:
             return
@@ -877,10 +890,10 @@ class Uploads(Transfers):
             if msg.__class__ in failed_msg_types:
                 self._cant_connect_upload(username, msg.token, is_offline, is_timeout)
 
-    def _peer_connection_closed(self, username, conn_type, msgs):
+    def _peer_connection_closed(self, username: str, conn_type, msgs) -> None:
         self._peer_connection_error(username, conn_type, msgs, is_timeout=False)
 
-    def _cant_connect_upload(self, username, token, is_offline, is_timeout):
+    def _cant_connect_upload(self, username: str, token: int, is_offline: bool, is_timeout: bool) -> None:
         """We can't connect to the user, either way (TransferRequest,
         FileTransferInit)."""
 
@@ -908,7 +921,7 @@ class Uploads(Transfers):
 
         self._check_upload_queue()
 
-    def _queue_upload(self, msg):
+    def _queue_upload(self, msg: QueueUpload) -> None:
         """Peer code 43.
 
         Peer remotely queued a download (upload here). This is the
@@ -981,7 +994,7 @@ class Uploads(Transfers):
 
         self._check_upload_queue()
 
-    def _transfer_request(self, msg):
+    def _transfer_request(self, msg: TransferRequest) -> None:
         """Peer code 40."""
 
         username = msg.username
@@ -1003,7 +1016,7 @@ class Uploads(Transfers):
         if response.reason == TransferRejectReason.QUEUED:
             self._check_upload_queue()
 
-    def _transfer_request_uploads(self, msg):
+    def _transfer_request_uploads(self, msg: TransferRequest):
         """Remote peer is requesting to download a file through your upload
         queue.
 
@@ -1065,7 +1078,7 @@ class Uploads(Transfers):
 
         return TransferResponse(allowed=False, reason=TransferRejectReason.QUEUED, token=token)
 
-    def _transfer_response(self, msg):
+    def _transfer_response(self, msg: TransferResponse) -> None:
         """Peer code 41.
 
         Received a response to the file request from the peer
@@ -1108,7 +1121,7 @@ class Uploads(Transfers):
         core.send_message_to_peer(upload.username, FileTransferInit(token=token, is_outgoing=True))
         self._check_upload_queue()
 
-    def _transfer_timeout(self, transfer):
+    def _transfer_timeout(self, transfer: Transfer) -> None:
 
         if transfer.request_timer_id is None:
             return
@@ -1119,7 +1132,7 @@ class Uploads(Transfers):
         super()._transfer_timeout(transfer)
         self._check_upload_queue()
 
-    def _upload_file_error(self, username, token, error):
+    def _upload_file_error(self, username: str, token: int, error) -> None:
         """Networking thread encountered a local file error for upload."""
 
         upload = self.active_users.get(username, {}).get(token)
@@ -1138,7 +1151,7 @@ class Uploads(Transfers):
         log.add(_("Upload I/O error: %s"), error)
         self._check_upload_queue()
 
-    def _file_transfer_init(self, msg):
+    def _file_transfer_init(self, msg: FileTransferInit) -> None:
         """We are requesting to start uploading a file to a peer."""
 
         if not msg.is_outgoing:
@@ -1209,7 +1222,7 @@ class Uploads(Transfers):
             # Must be be emitted after the final update to prevent inconsistent state
             core.pluginhandler.upload_started_notification(username, virtual_path, real_path)
 
-    def _file_upload_progress(self, username, token, offset, bytes_sent, speed=None):
+    def _file_upload_progress(self, username: str, token: int, offset, bytes_sent, speed=None) -> None:
         """A file upload is in progress."""
 
         upload = self.active_users.get(username, {}).get(token)
@@ -1231,7 +1244,7 @@ class Uploads(Transfers):
         )
         self._update_transfer(upload)
 
-    def _file_connection_closed(self, username, token, sock, timed_out):
+    def _file_connection_closed(self, username: str, token: int, sock, timed_out) -> None:
         """A file upload connection has closed for any reason."""
 
         upload = self.active_users.get(username, {}).get(token)
@@ -1269,7 +1282,7 @@ class Uploads(Transfers):
 
         self._check_upload_queue()
 
-    def _place_in_queue_request(self, msg):
+    def _place_in_queue_request(self, msg: PlaceInQueueRequest) -> None:
         """Peer code 51."""
 
         username = msg.username
