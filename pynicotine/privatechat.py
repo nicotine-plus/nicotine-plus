@@ -125,8 +125,9 @@ class PrivateChat:
             return
 
         username, message = user_text
+        is_ctcp_query = message.startswith("\x01") and message.endswith("\x01")
 
-        if config.sections["words"]["replacewords"] and not message.startswith("\x01"):
+        if config.sections["words"]["replacewords"] and not is_ctcp_query:
             message = replace_text(message, config.sections["words"]["autoreplaced"])
 
         # Server rejects messages containing newlines, filter them
@@ -279,12 +280,13 @@ class PrivateChat:
 
         msg.message_type = self.get_message_type(message, is_outgoing_message)
         is_action_message = (msg.message_type == "action")
+        is_ctcp_query = message.startswith("\x01") and message.endswith("\x01")
         ctcp_query = ""
 
         if msg.message_type != "local":
             msg.mention_type, msg.mention_keyword = self.get_mention_type(message)
 
-        if message.startswith("\x01") and message.endswith("\x01"):
+        if is_ctcp_query:
             ctcp_query = msg.message[1:-1].strip()
             msg.message = message = f"CTCP {ctcp_query}"
 
