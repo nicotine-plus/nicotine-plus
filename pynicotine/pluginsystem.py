@@ -1132,11 +1132,7 @@ class PluginHandler:
         self._trigger_event("public_room_message_notification", (room, user, line))
 
     def incoming_private_chat_event(self, user, line):
-        if user != core.users.login_username:
-            # dont trigger the scripts on our own talking - we've got "Outgoing" for that
-            return self._trigger_event("incoming_private_chat_event", (user, line))
-
-        return user, line
+        return self._trigger_event("incoming_private_chat_event", (user, line))
 
     def incoming_private_chat_notification(self, user, line):
         self._trigger_event("incoming_private_chat_notification", (user, line))
@@ -1148,11 +1144,7 @@ class PluginHandler:
         self._trigger_event("incoming_public_chat_notification", (room, user, line))
 
     def outgoing_private_chat_event(self, user, line):
-        if line is not None:
-            # if line is None nobody actually said anything
-            return self._trigger_event("outgoing_private_chat_event", (user, line))
-
-        return user, line
+        return self._trigger_event("outgoing_private_chat_event", (user, line))
 
     def outgoing_private_chat_notification(self, user, line):
         self._trigger_event("outgoing_private_chat_notification", (user, line))
