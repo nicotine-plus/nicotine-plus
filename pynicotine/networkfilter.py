@@ -18,7 +18,7 @@ UINT32_UNPACK = Struct(">I").unpack_from
 class NetworkFilter:
     """Functions related to banning and ignoring users."""
 
-    __slots__ = ("ip_ban_requested", "ip_ignore_requested", "_banned_users", "_ignored_users",
+    __slots__ = ("_banned_users", "_ignored_users", "_ip_ban_requested", "_ip_ignore_requested",
                  "_ip_range_values", "_ip_range_countries", "_loaded_ip_country_data")
 
     COUNTRIES = {
@@ -276,11 +276,10 @@ class NetworkFilter:
 
     def __init__(self):
 
-        self.ip_ban_requested = {}
-        self.ip_ignore_requested = {}
-
         self._banned_users = set()
         self._ignored_users = set()
+        self._ip_ban_requested = {}
+        self._ip_ignore_requested = {}
         self._ip_range_values = ()
         self._ip_range_countries = ()
         self._loaded_ip_country_data = False
@@ -327,8 +326,8 @@ class NetworkFilter:
         self._loaded_ip_country_data = True
 
     def _server_disconnect(self, _msg):
-        self.ip_ban_requested.clear()
-        self.ip_ignore_requested.clear()
+        self._ip_ban_requested.clear()
+        self._ip_ignore_requested.clear()
 
     def _quit(self):
 
@@ -428,9 +427,9 @@ class NetworkFilter:
 
         # User's IP address is unknown, request it from the server
         if ip_list == config.sections["server"]["ipblocklist"]:
-            request_list = self.ip_ban_requested
+            request_list = self._ip_ban_requested
         else:
-            request_list = self.ip_ignore_requested
+            request_list = self._ip_ignore_requested
 
         self._request_ip(username, request_action, request_list)
         return ip_addresses
@@ -610,7 +609,7 @@ class NetworkFilter:
 
     def _ban_unban_user_ip_callback(self, username, ip_address):
 
-        request = self.ip_ban_requested.pop(username, None)
+        request = self._ip_ban_requested.pop(username, None)
 
         if request == "add":
             self.ban_user_ip(username, ip_address)
@@ -664,7 +663,7 @@ class NetworkFilter:
 
     def _ignore_unignore_user_ip_callback(self, username, ip_address):
 
-        request = self.ip_ignore_requested.pop(username, None)
+        request = self._ip_ignore_requested.pop(username, None)
 
         if request == "add":
             self.ignore_user_ip(username, ip_address)
