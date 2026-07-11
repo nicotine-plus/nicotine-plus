@@ -10,11 +10,9 @@ try:
     except Exception as curses_error:
         raise ImportError from curses_error
 
-    READLINE_ENABLED = True
-
 except ImportError:
     # Readline is not available on this OS
-    READLINE_ENABLED = False
+    readline = None
 
 import sys
 import time
@@ -96,7 +94,7 @@ class CLIInputProcessor(Thread):
 
     def get_prompt_line(self):
 
-        if not READLINE_ENABLED or not self.is_alive():
+        if readline is None or not self.is_alive():
             return ""
 
         return f"{self.prompt_message}{readline.get_line_buffer()}"  # pylint: disable=no-member
@@ -176,7 +174,7 @@ class CLI:
         else:
             log_message = msg
 
-        if self._input_processor.has_custom_prompt and not READLINE_ENABLED:
+        if self._input_processor.has_custom_prompt and readline is None:
             # Unless there's a way to avoid overwriting the prompt and user
             # input, don't print log messages while custom prompt is active
             self._log_message_queue.append(log_message)

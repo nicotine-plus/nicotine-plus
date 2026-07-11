@@ -562,6 +562,8 @@ class Uploads(Transfers):
         """Find next file to upload."""
 
         final_upload_candidate = None
+        username = None
+        virtual_path = None
 
         while final_upload_candidate is None:
             # If a candidate is provided, we want to upload it immediately

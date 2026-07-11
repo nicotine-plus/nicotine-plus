@@ -332,6 +332,7 @@ class ResponseThrottle:
         self.request = request
 
         willing_to_respond = True
+        reason = None
         current_time = time.monotonic()
 
         if room not in self.plugin_usage:

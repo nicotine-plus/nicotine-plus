@@ -212,6 +212,7 @@ class NetworkInterfaces:
         from ctypes import POINTER, byref, cast, create_string_buffer, windll, wintypes
 
         interface_addresses = {}
+        p_adapter_addresses = None
         adapter_addresses_size = wintypes.ULONG()
         return_value = cls.ERROR_BUFFER_OVERFLOW
 
@@ -1649,9 +1650,10 @@ class NetworkThread(Thread):
             conn_type="peer init",
             sock=conn.sock
         )
+        init = None
 
         if msg is None:
-            return None
+            return init
 
         if msg_class is PierceFireWall:
             pierce_token = msg.token
@@ -2741,6 +2743,7 @@ class NetworkThread(Thread):
 
             msg_type = msg.msg_type
             process_func = None
+            sock = None
 
             if msg_type == MessageType.INIT:
                 process_func = self._process_peer_init_output
@@ -2748,7 +2751,6 @@ class NetworkThread(Thread):
 
             elif msg_type == MessageType.INTERNAL:
                 process_func = self._process_internal_messages
-                sock = None
 
             elif msg_type == MessageType.PEER:
                 process_func = self._process_peer_output
