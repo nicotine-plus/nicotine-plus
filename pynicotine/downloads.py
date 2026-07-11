@@ -459,6 +459,7 @@ class Downloads(Transfers):
 
         username = transfer.username
         virtual_path = transfer.virtual_path
+        download_file_path = None
         already_exists = transfer.file_handle is None
         incomplete_file_path = transfer.file_handle.name if not already_exists else None
 
@@ -1175,6 +1176,7 @@ class Downloads(Transfers):
 
         virtual_path = download.virtual_path
         incomplete_folder_path = self.get_incomplete_download_folder()
+        incomplete_file_path = None
         sock = download.sock = msg.sock
         need_update = True
         download_started = False

@@ -693,8 +693,7 @@ def write_file_and_backup(path, callback, protect=False):
         return
 
     # Save new file
-    if protect:
-        oldumask = os.umask(0o077)
+    oldumask = os.umask(0o077) if protect else None
 
     try:
         with open(path_encoded, "w", encoding="utf-8") as file_handle:
@@ -723,7 +722,7 @@ def write_file_and_backup(path, callback, protect=False):
                 "error": second_error
             })
 
-    if protect:
+    if oldumask is not None:
         os.umask(oldumask)
 
 
