@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import time
+
 import pynicotine
 from pynicotine.config import config
 from pynicotine.core import core
@@ -31,7 +33,8 @@ from pynicotine.utils import find_whole_word
 
 
 class PrivateChat:
-    __slots__ = ("completions", "private_message_queue", "away_message_users", "users")
+    __slots__ = ("completions", "private_message_queue", "away_message_users", "users",
+                 "_ctcp_query_times")
 
     CTCP_VERSION = "\x01VERSION\x01"
 
@@ -41,6 +44,7 @@ class PrivateChat:
         self.private_message_queue = {}
         self.away_message_users = set()
         self.users = set()
+        self._ctcp_query_times = {}
 
         for event_name, callback in (
             ("message-user", self._message_user),
@@ -82,6 +86,8 @@ class PrivateChat:
 
         self.private_message_queue.clear()
         self.away_message_users.clear()
+        self._ctcp_query_times.clear()
+
         self.update_completions()
 
     def add_user(self, username):
@@ -164,6 +170,21 @@ class PrivateChat:
 
         if users:
             core.send_message_to_server(MessageUsers(users, message))
+
+    def _process_ctcp_query(self, username):
+
+        if config.sections["server"]["ctcpmsgs"]:
+            return
+
+        request_time = time.monotonic()
+
+        if username in self._ctcp_query_times and request_time < self._ctcp_query_times[username] + 1:
+            # Ignoring request, because it's less than a second since the last
+            # one by this user
+            return
+
+        self._ctcp_query_times[username] = request_time
+        self.send_message(username, f"{pynicotine.__application_name__} {pynicotine.__version__}")
 
     def _get_peer_address(self, msg):
         """Server code 3.
@@ -295,11 +316,12 @@ class PrivateChat:
 
         core.pluginhandler.incoming_private_chat_notification(username, msg.message)
 
-        if is_ctcp_version and not config.sections["server"]["ctcpmsgs"]:
-            self.send_message(username, f"{pynicotine.__application_name__} {pynicotine.__version__}")
-
         if not msg.is_new_message:
-            # Message was sent while offline, don't auto-reply
+            # Message was sent while offline, don't process CTCP queries or auto-reply
+            return
+
+        if is_ctcp_version:
+            self._process_ctcp_query(username)
             return
 
         autoreply = config.sections["server"]["autoreply"]
