@@ -107,8 +107,8 @@ class WishSearchRequest(SearchRequest):
 
 
 class Search:
-    __slots__ = ("searches", "excluded_phrases", "token", "wishlist", "wishlist_file_path", "wishlist_interval",
-                 "_own_tokens", "_allow_saving_wishlist", "_wishlist_timer_id")
+    __slots__ = ("searches", "excluded_phrases", "wishlist", "wishlist_file_path", "wishlist_interval",
+                 "_token", "_own_tokens", "_allow_saving_wishlist", "_wishlist_timer_id")
 
     SEARCH_HISTORY_LIMIT = 200
     RESULT_FILTER_HISTORY_LIMIT = 50
@@ -123,10 +123,11 @@ class Search:
 
         self.searches = {}
         self.excluded_phrases = []
-        self.token = initial_token()
         self.wishlist = {}
         self.wishlist_file_path = os.path.join(config.data_folder_path, "wishlist.json")
         self.wishlist_interval = 0
+
+        self._token = initial_token()
         self._own_tokens = set()
         self._allow_saving_wishlist = False
         self._wishlist_timer_id = None
@@ -204,18 +205,18 @@ class Search:
             time_added = int(item.get("time_added", current_time))
             custom_filters = list(item.get("custom_filters", []))
             ignored_users = set(item.get("ignored_users", []))
-            self.token = increment_token(self.token)
+            self._token = increment_token(self._token)
 
             self._add_wish_search(
-                self.token, term, auto_search=auto_search, filter_mode=filter_mode,
+                self._token, term, auto_search=auto_search, filter_mode=filter_mode,
                 time_added=time_added, custom_filters=custom_filters, ignored_users=ignored_users)
 
         for term in reversed(config.sections["server"]["autosearch"]):
             if not isinstance(term, str) or term in self.wishlist:
                 continue
 
-            self.token = increment_token(self.token)
-            self._add_wish_search(self.token, term)
+            self._token = increment_token(self._token)
+            self._add_wish_search(self._token, term)
 
     # Outgoing Search Requests #
 
@@ -235,8 +236,8 @@ class Search:
         search_term, room, users = self._process_search_term(search_term, mode, room, users)
 
         # Get a new search token
-        self.token = increment_token(self.token)
-        search = self._add_search(self.token, search_term, mode, room, users)
+        self._token = increment_token(self._token)
+        search = self._add_search(self._token, search_term, mode, room, users)
 
         if config.sections["searches"]["enable_history"]:
             items = config.sections["searches"]["history"]
@@ -303,8 +304,8 @@ class Search:
 
         if wish not in self.wishlist:
             # Get a new search token
-            self.token = increment_token(self.token)
-            self._add_wish_search(self.token, wish, auto_search=auto_search)
+            self._token = increment_token(self._token)
+            self._add_wish_search(self._token, wish, auto_search=auto_search)
 
         events.emit("add-wish", wish)
 
@@ -515,7 +516,7 @@ class Search:
 
         for username in search.users:
             if username == core.users.login_username:
-                self._own_tokens.add(self.token)
+                self._own_tokens.add(search.token)
 
             core.send_message_to_server(UserSearch(username, search.token, search.term_transmitted))
 

@@ -45,7 +45,7 @@ from pynicotine.utils import human_size
 
 
 class Uploads(Transfers):
-    __slots__ = ("pending_shutdown", "upload_speed", "token", "_queue_positions",
+    __slots__ = ("pending_shutdown", "upload_speed", "_token", "_queue_positions",
                  "_queue_position_users", "_privileged_position_requested", "_pending_network_msgs",
                  "_queue_notification_users", "_user_update_counter", "_user_update_counters",
                  "_queue_notification_timer_id", "_upload_queue_timer_id", "_retry_failed_uploads_timer_id")
@@ -56,8 +56,8 @@ class Uploads(Transfers):
 
         self.pending_shutdown = False
         self.upload_speed = 0
-        self.token = initial_token()
 
+        self._token = initial_token()
         self._queue_positions = {}
         self._queue_position_users = defaultdict(dict)
         self._queue_notification_users = defaultdict(list)
@@ -618,18 +618,18 @@ class Uploads(Transfers):
 
             final_upload_candidate = upload_candidate
 
-        self.token = increment_token(self.token)
+        self._token = increment_token(self._token)
 
         log.add_transfer("Checked upload queue, requesting to upload file %s with "
-                         "token %s to user %s", (virtual_path, self.token, username))
+                         "token %s to user %s", (virtual_path, self._token, username))
 
         self._dequeue_transfer(final_upload_candidate)
         self._unfail_transfer(final_upload_candidate)
-        self._activate_transfer(final_upload_candidate, self.token)
+        self._activate_transfer(final_upload_candidate, self._token)
 
         core.send_message_to_peer(
             username, TransferRequest(
-                direction=TransferDirection.UPLOAD, token=self.token, file=virtual_path,
+                direction=TransferDirection.UPLOAD, token=self._token, file=virtual_path,
                 filesize=final_upload_candidate.size))
 
         self._update_transfer(final_upload_candidate)

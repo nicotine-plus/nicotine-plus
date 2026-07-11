@@ -50,11 +50,11 @@ class SearchTest(TestCase):
         """Test the do_search function, including the outgoing search term and
         search history."""
 
-        old_token = core.search.token
+        old_token = core.search._token
         core.search.do_search(SEARCH_TEXT, SEARCH_MODE)
-        search = core.search.searches[core.search.token]
+        search = core.search.searches[core.search._token]
 
-        self.assertEqual(core.search.token, old_token + 1)
+        self.assertEqual(core.search._token, old_token + 1)
         self.assertEqual(search.term, SEARCH_TEXT)
         self.assertEqual(
             search.term_sanitized, '70 Gwen "test" -mp3 "what\'s up" don t -nothanks a b c d *ello auto -No yes'
@@ -74,10 +74,10 @@ class SearchTest(TestCase):
     def test_search_token_increment(self):
         """Test that search token increments work properly."""
 
-        old_token = core.search.token
+        old_token = core.search._token
 
-        core.search.token = increment_token(core.search.token)
-        self.assertEqual(old_token, core.search.token - 1)
+        core.search._token = increment_token(core.search._token)
+        self.assertEqual(old_token, core.search._token - 1)
 
     def test_load_wishlist(self):
         """Test loading a wishlist.json file."""
@@ -121,19 +121,19 @@ class SearchTest(TestCase):
         """Test that items are added to the wishlist properly."""
 
         core.search.wishlist.clear()
-        old_token = core.search.token
+        old_token = core.search._token
 
         # First item
 
         core.search.add_wish(SEARCH_TEXT)
         core.search._save_wishlist()
-        search = core.search.searches[core.search.token]
+        search = core.search.searches[core.search._token]
         wish = core.search.wishlist[SEARCH_TEXT]
 
         self.assertEqual(search, wish)
         self.assertEqual(config.sections["server"]["autosearch"][0], SEARCH_TEXT)
-        self.assertEqual(core.search.token, old_token + 1)
-        self.assertEqual(core.search.token, core.search.token)
+        self.assertEqual(core.search._token, old_token + 1)
+        self.assertEqual(search.token, core.search._token)
         self.assertEqual(search.term, SEARCH_TEXT)
         self.assertEqual(search.mode, "wishlist")
         self.assertTrue(search.is_ignored)
@@ -161,7 +161,7 @@ class SearchTest(TestCase):
         )
         core.search._save_wishlist()
 
-        search = core.search.searches[core.search.token]
+        search = core.search.searches[core.search._token]
         wish = core.search.wishlist[new_item]
 
         self.assertEqual(search, wish)
