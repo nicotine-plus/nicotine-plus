@@ -2613,9 +2613,6 @@ class ResetDistributed(ServerMessage):
 
     __slots__ = ()
 
-    def __init__(self):
-        ServerMessage.__init__(self)
-
     def parse_network_message(self):
         # Empty message
         pass
