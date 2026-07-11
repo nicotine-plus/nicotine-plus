@@ -173,7 +173,6 @@ class Config:
                 "autoreply": "",
                 "portrange": (2234, 2234),
                 "upnp": True,
-                "upnp_interval": 4,
                 "auto_connect_startup": True,
                 "userlist": [],
                 "banlist": [],
@@ -463,7 +462,8 @@ class Config:
                 "roomencoding",
                 "userencoding",
                 "firewalled",
-                "command_aliases"
+                "command_aliases",
+                "upnp_interval"
             ),
             "ui": (
                 "enabletrans",
