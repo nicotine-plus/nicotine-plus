@@ -17,16 +17,16 @@ from pynicotine.utils import replace_text
 
 
 class PrivateChat:
-    __slots__ = ("completions", "private_message_queue", "away_message_users", "users")
+    __slots__ = ("completions", "away_message_users", "users", "_private_message_queue")
 
     SERVER_USERNAME = "server"
 
     def __init__(self):
 
         self.completions = set()
-        self.private_message_queue = {}
         self.away_message_users = set()
         self.users = set()
+        self._private_message_queue = {}
 
         for event_name, callback in (
             ("message-user", self._message_user),
@@ -66,8 +66,8 @@ class PrivateChat:
 
     def _server_disconnect(self, _msg):
 
-        self.private_message_queue.clear()
         self.away_message_users.clear()
+        self._private_message_queue.clear()
         self.update_completions()
 
     def add_user(self, username):
@@ -101,16 +101,6 @@ class PrivateChat:
 
     def clear_private_messages(self, username):
         events.emit("clear-private-messages", username)
-
-    def private_message_queue_add(self, msg):
-        """Queue a private message until we've received a user's IP address."""
-
-        username = msg.user
-
-        if username not in self.private_message_queue:
-            self.private_message_queue[username] = [msg]
-        else:
-            self.private_message_queue[username].append(msg)
 
     def send_automatic_message(self, username, message):
         self.send_message(username, f"[Automatic Message] {message}")
@@ -154,6 +144,16 @@ class PrivateChat:
         if users:
             core.send_message_to_server(MessageUsers(users, message))
 
+    def _private_message_queue_add(self, msg):
+        """Queue a private message until we've received a user's IP address."""
+
+        username = msg.user
+
+        if username not in self._private_message_queue:
+            self._private_message_queue[username] = [msg]
+        else:
+            self._private_message_queue[username].append(msg)
+
     def _get_peer_address(self, msg):
         """Server code 3.
 
@@ -163,11 +163,11 @@ class PrivateChat:
 
         username = msg.user
 
-        if username not in self.private_message_queue:
+        if username not in self._private_message_queue:
             return
 
-        for queued_msg in self.private_message_queue[username][:]:
-            self.private_message_queue[username].remove(queued_msg)
+        for queued_msg in self._private_message_queue[username][:]:
+            self._private_message_queue[username].remove(queued_msg)
             queued_msg.user = username
             events.emit("message-user", queued_msg, queued_message=True)
 
@@ -179,7 +179,7 @@ class PrivateChat:
             self.away_message_users.clear()
 
         if msg.status == UserStatus.OFFLINE:
-            self.private_message_queue.pop(msg.user, None)
+            self._private_message_queue.pop(msg.user, None)
 
     def get_message_type(self, text, is_outgoing_message):
 
@@ -261,10 +261,10 @@ class PrivateChat:
 
                 elif not queued_message:
                     # Ask for user's IP address and queue the private message until we receive the address
-                    if username not in self.private_message_queue:
+                    if username not in self._private_message_queue:
                         core.users.request_ip_address(username)
 
-                    self.private_message_queue_add(msg)
+                    self._private_message_queue_add(msg)
                     msg.user = None
                     return
 
