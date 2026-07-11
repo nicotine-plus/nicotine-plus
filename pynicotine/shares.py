@@ -741,16 +741,15 @@ class Scanner:
 
 
 class Shares:
-    __slots__ = ("share_dbs", "requested_share_times", "initialized", "compressed_shares",
-                 "share_db_paths", "file_path_index", "_scanner_process", "_scanner_reader",
-                 "_rescan_daily_timer_id")
+    __slots__ = ("share_dbs", "initialized", "compressed_shares", "share_db_paths",
+                 "file_path_index", "_scanner_process", "_scanner_reader", "_rescan_daily_timer_id",
+                 "_requested_share_times")
 
     BACKSLASH_SENTINEL = "@@BACKSLASH@@"
 
     def __init__(self):
 
         self.share_dbs = {}
-        self.requested_share_times = {}
         self.initialized = False
         self.compressed_shares = {
             PermissionLevel.PUBLIC: SharedFileListResponse(permission_level=PermissionLevel.PUBLIC),
@@ -776,6 +775,7 @@ class Shares:
         self._scanner_process = None
         self._scanner_reader = None
         self._rescan_daily_timer_id = None
+        self._requested_share_times = {}
 
         for event_name, callback in (
             ("folder-contents-request", self._folder_contents_request),
@@ -811,7 +811,7 @@ class Shares:
             self.send_num_shared_folders_files()
 
     def _server_disconnect(self, _msg):
-        self.requested_share_times.clear()
+        self._requested_share_times.clear()
 
     # Shares-related Actions #
 
@@ -1343,12 +1343,12 @@ class Shares:
         username = msg.username
         request_time = time.monotonic()
 
-        if username in self.requested_share_times and request_time < self.requested_share_times[username] + 0.4:
+        if username in self._requested_share_times and request_time < self._requested_share_times[username] + 0.4:
             # Ignoring request, because it's less than half a second since the
             # last one by this user
             return
 
-        self.requested_share_times[username] = request_time
+        self._requested_share_times[username] = request_time
 
         log.add(_("User %(user)s is browsing your list of shared files"), {"user": username})
 

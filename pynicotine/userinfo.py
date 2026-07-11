@@ -20,12 +20,12 @@ from pynicotine.utils import unescape
 
 
 class UserInfo:
-    __slots__ = ("users", "requested_info_times")
+    __slots__ = ("users", "_requested_info_times")
 
     def __init__(self):
 
         self.users = set()
-        self.requested_info_times = {}
+        self._requested_info_times = {}
 
         for event_name, callback in (
             ("peer-connection-closed", self._peer_connection_error),
@@ -50,7 +50,7 @@ class UserInfo:
             core.users.watch_user(username, context="userinfo")  # Get notified of user status
 
     def _server_disconnect(self, _msg):
-        self.requested_info_times.clear()
+        self._requested_info_times.clear()
 
     def _get_user_info_response(self, requesting_username=None, requesting_ip_address=None):
 
@@ -178,12 +178,12 @@ class UserInfo:
         ip_address, _port = msg.addr
         request_time = time.monotonic()
 
-        if username in self.requested_info_times and request_time < self.requested_info_times[username] + 0.4:
+        if username in self._requested_info_times and request_time < self._requested_info_times[username] + 0.4:
             # Ignoring request, because it's less than half a second since the
             # last one by this user
             return
 
-        self.requested_info_times[username] = request_time
+        self._requested_info_times[username] = request_time
         msg = self._get_user_info_response(username, ip_address)
 
         log.add(_("User %(user)s is viewing your profile"), {"user": username})
