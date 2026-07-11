@@ -2318,7 +2318,7 @@ class SearchesPage:
             self.max_displayed_results_spinner,
             self.max_sent_results_spinner,
             self.min_search_term_length_spinner,
-            self.repond_search_requests_toggle,
+            self.respond_search_requests_toggle,
             self.show_private_results_toggle
         ) = self.widgets = ui.load(scope=self, path="settings/search.ui")
 
@@ -2332,7 +2332,7 @@ class SearchesPage:
                 "maxresults": self.max_sent_results_spinner,
                 "enablefilters": self.enable_default_filters_toggle,
                 "defilter": None,
-                "search_results": self.repond_search_requests_toggle,
+                "search_results": self.respond_search_requests_toggle,
                 "max_displayed_results": self.max_displayed_results_spinner,
                 "min_search_chars": self.min_search_term_length_spinner,
                 "enable_history": self.enable_search_history_toggle,
@@ -2395,7 +2395,7 @@ class SearchesPage:
                     self.filter_file_type_entry.get_text().strip(),
                     self.filter_length_entry.get_text().strip()
                 ],
-                "search_results": self.repond_search_requests_toggle.get_active(),
+                "search_results": self.respond_search_requests_toggle.get_active(),
                 "max_displayed_results": self.max_displayed_results_spinner.get_value_as_int(),
                 "min_search_chars": self.min_search_term_length_spinner.get_value_as_int(),
                 "enable_history": self.enable_search_history_toggle.get_active(),
