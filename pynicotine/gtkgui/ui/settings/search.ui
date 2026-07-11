@@ -488,7 +488,7 @@
                     <property name="height-request">24</property>
                     <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Respond to search requests from other users</property>
-                    <property name="mnemonic-widget">repond_search_requests_toggle</property>
+                    <property name="mnemonic-widget">respond_search_requests_toggle</property>
                     <property name="visible">True</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
@@ -496,7 +496,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkSwitch" id="repond_search_requests_toggle">
+                  <object class="GtkSwitch" id="respond_search_requests_toggle">
                     <property name="valign">center</property>
                     <property name="visible">True</property>
                   </object>
@@ -505,7 +505,7 @@
             </child>
             <child>
               <object class="GtkRevealer">
-                <property name="reveal-child" bind-source="repond_search_requests_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
+                <property name="reveal-child" bind-source="respond_search_requests_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
                 <property name="transition-type">slide-down</property>
                 <property name="visible">True</property>
                 <child>
