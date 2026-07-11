@@ -17,15 +17,15 @@ from pynicotine.utils import replace_text
 
 
 class PrivateChat:
-    __slots__ = ("completions", "away_message_users", "users", "_private_message_queue")
+    __slots__ = ("completions", "users", "_away_message_users", "_private_message_queue")
 
     SERVER_USERNAME = "server"
 
     def __init__(self):
 
         self.completions = set()
-        self.away_message_users = set()
         self.users = set()
+        self._away_message_users = set()
         self._private_message_queue = {}
 
         for event_name, callback in (
@@ -66,7 +66,7 @@ class PrivateChat:
 
     def _server_disconnect(self, _msg):
 
-        self.away_message_users.clear()
+        self._away_message_users.clear()
         self._private_message_queue.clear()
         self.update_completions()
 
@@ -176,7 +176,7 @@ class PrivateChat:
 
         if msg.user == core.users.login_username and msg.status != UserStatus.AWAY:
             # Reset list of users we've sent away messages to when the away session ends
-            self.away_message_users.clear()
+            self._away_message_users.clear()
 
         if msg.status == UserStatus.OFFLINE:
             self._private_message_queue.pop(msg.user, None)
@@ -327,9 +327,9 @@ class PrivateChat:
         autoreply = config.sections["server"]["autoreply"]
 
         if (autoreply and core.users.login_status == UserStatus.AWAY
-                and username not in self.away_message_users):
+                and username not in self._away_message_users):
             self.send_automatic_message(username, autoreply)
-            self.away_message_users.add(username)
+            self._away_message_users.add(username)
 
     def update_completions(self):
 
