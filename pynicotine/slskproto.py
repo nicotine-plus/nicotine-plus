@@ -696,6 +696,8 @@ class NetworkThread(Thread):
     def _unpack_network_message(msg_class, msg_content, msg_size, conn_type, sock=None, addr=None, username=None,
                                 allowed_responses=None):
 
+        msg = None
+
         try:
             msg = msg_class(msg_content=msg_content)
 
@@ -719,7 +721,8 @@ class NetworkThread(Thread):
                           (conn_type, msg_class, msg_size, msg_content, error))
 
         finally:
-            msg.finish_parsing()
+            if msg is not None:
+                msg.finish_parsing()
 
         return None
 
