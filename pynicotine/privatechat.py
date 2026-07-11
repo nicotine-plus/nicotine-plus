@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2020-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import time
+
 import pynicotine
 from pynicotine.config import config
 from pynicotine.core import core
@@ -17,7 +19,8 @@ from pynicotine.utils import replace_text
 
 
 class PrivateChat:
-    __slots__ = ("completions", "users", "_away_message_users", "_private_message_queue")
+    __slots__ = ("completions", "users", "_away_message_users", "_private_message_queue",
+                 "_ctcp_query_times")
 
     SERVER_USERNAME = "server"
 
@@ -27,6 +30,7 @@ class PrivateChat:
         self.users = set()
         self._away_message_users = set()
         self._private_message_queue = {}
+        self._ctcp_query_times = {}
 
         for event_name, callback in (
             ("message-user", self._message_user),
@@ -68,6 +72,8 @@ class PrivateChat:
 
         self._away_message_users.clear()
         self._private_message_queue.clear()
+        self._ctcp_query_times.clear()
+
         self.update_completions()
 
     def add_user(self, username):
@@ -153,6 +159,27 @@ class PrivateChat:
             self._private_message_queue[username] = [msg]
         else:
             self._private_message_queue[username].append(msg)
+
+    def _process_ctcp_query(self, username, query):
+
+        if config.sections["server"]["ctcpmsgs"]:
+            return
+
+        request_time = time.monotonic()
+
+        if username in self._ctcp_query_times and request_time < self._ctcp_query_times[username] + 1:
+            # Ignoring request, because it's less than a second since the last
+            # one by this user
+            return
+
+        self._ctcp_query_times[username] = request_time
+
+        if query == "VERSION":
+            reply = f"{query}: {pynicotine.__application_name__} {pynicotine.__version__}"
+        else:
+            reply = f"ERRMSG {query}: Unknown query, available CTCP keywords are VERSION"
+
+        self.send_message(username, reply)
 
     def _get_peer_address(self, msg):
         """Server code 3.
@@ -312,16 +339,12 @@ class PrivateChat:
 
         core.pluginhandler.incoming_private_chat_notification(username, msg.message)
 
-        if ctcp_query and not config.sections["server"]["ctcpmsgs"]:
-            if ctcp_query == "VERSION":
-                ctcp_reply = f"{ctcp_query}: {pynicotine.__application_name__} {pynicotine.__version__}"
-            else:
-                ctcp_reply = f"ERRMSG {ctcp_query}: Unknown query, available CTCP keywords are VERSION"
-
-            self.send_message(username, ctcp_reply)
-
         if not msg.is_new_message:
-            # Message was sent while offline, don't auto-reply
+            # Message was sent while offline, don't process CTCP queries or auto-reply
+            return
+
+        if ctcp_query:
+            self._process_ctcp_query(username, ctcp_query)
             return
 
         autoreply = config.sections["server"]["autoreply"]
