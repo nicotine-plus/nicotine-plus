@@ -227,7 +227,6 @@ class Config:
                 "rescan_shares_daily": True,
                 "rescan_shares_hour": 0,
                 "enablefilters": False,
-                "downloadregexp": "",
                 "downloadfilters": [
                     ["*.DS_Store", 1],
                     ["*.exe", 1],
@@ -464,7 +463,8 @@ class Config:
                 "lock",
                 "buddysharestrustedonly",
                 "downloadsexpanded",
-                "uploadsexpanded"
+                "uploadsexpanded",
+                "downloadregexp"
             ),
             "server": (
                 "lastportstatuscheck",
