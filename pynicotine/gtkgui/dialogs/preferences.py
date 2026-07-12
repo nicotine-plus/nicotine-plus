@@ -448,7 +448,11 @@ class DownloadsPage:
 
     def on_add_filter_response(self, dialog, _response_id, _data):
 
-        dfilter = dialog.get_entry_value()
+        dfilter = dialog.get_entry_value().strip()
+
+        if not dfilter:
+            return
+
         enable_regex = dialog.get_option_value()
 
         iterator = self.filter_list_view.iterators.get(dfilter)
@@ -475,7 +479,11 @@ class DownloadsPage:
 
     def on_edit_filter_response(self, dialog, _response_id, iterator):
 
-        new_dfilter = dialog.get_entry_value()
+        new_dfilter = dialog.get_entry_value().strip()
+
+        if not new_dfilter:
+            return
+
         enable_regex = dialog.get_option_value()
 
         dfilter = self.filter_list_view.get_row_value(iterator, "filter")
