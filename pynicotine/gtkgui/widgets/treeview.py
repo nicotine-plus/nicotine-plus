@@ -37,6 +37,7 @@ class TreeView:
 
         self.window = window
         self.widget = Gtk.TreeView(fixed_height_mode=True, has_tooltip=True, visible=True)
+        self.widget.x_pos = None
         self.model = None
         self.multi_select = multi_select
         self.iterators = {}
@@ -430,6 +431,23 @@ class TreeView:
         self._columns_changed_handler = self.widget.connect("columns-changed", self._update_column_properties)
         self.widget.emit("columns-changed")
 
+    def _get_selected_column_id(self):
+
+        if self.widget.x_pos is None:
+            return None
+
+        for column in self.widget.get_columns():
+            if not column.get_visible():
+                continue
+
+            offset = column.get_x_offset()
+            width = column.get_width()
+
+            if offset <= self.widget.x_pos < offset + width:
+                return column.id
+
+        return None
+
     def _get_sorted_visible_columns(self):
 
         sorted_columns = sorted(
@@ -797,6 +815,36 @@ class TreeView:
         self.model.set_sort_column_id(self._sort_column, self._sort_type)
         self.save_columns()
 
+    def on_move_column_left(self, _action, _state, column_id):
+
+        previous_column = None
+
+        for column in self.widget.get_columns():
+            if not column.get_visible():
+                continue
+
+            if column.id == column_id:
+                if previous_column:
+                    self.widget.move_column_after(previous_column, column)
+                break
+
+            previous_column = column
+
+    def on_move_column_right(self, _action, _state, column_id):
+
+        previous_column = None
+
+        for column in self.widget.get_columns():
+            if not column.get_visible():
+                continue
+
+            if previous_column:
+                self.widget.move_column_after(previous_column, column)
+                break
+
+            if column.id == column_id:
+                previous_column = column
+
     def on_reset_sort_column(self, *_args):
 
         self._sort_column = self._default_sort_column
@@ -848,6 +896,8 @@ class TreeView:
 
         columns = self.widget.get_columns()
         visible_columns = [column for column in columns if column.get_visible()]
+        selected_column_id = self._get_selected_column_id()
+        move_column_menu = None
         menu.clear()
 
         reset_menu = PopupMenu(self.window.application)
@@ -856,6 +906,22 @@ class TreeView:
             ("#" + _("Column Widths"), self.on_reset_column_widths),
             ("#" + _("Everything"), self.on_reset_columns)
         )
+
+        if selected_column_id is not None:
+            move_column_menu = PopupMenu(self.window.application)
+            move_column_menu.add_items(
+                ("#" + _("_Left"), self.on_move_column_left, selected_column_id),
+                ("#" + _("_Right"), self.on_move_column_right, selected_column_id)
+            )
+            move_column_menu.update_model()
+
+            for index, column in enumerate(visible_columns):
+                if column.id != selected_column_id:
+                    continue
+
+                move_column_menu.actions[_("_Left")].set_enabled(bool(index))
+                move_column_menu.actions[_("_Right")].set_enabled(index < len(visible_columns) - 1)
+                break
 
         for column_num, column in enumerate(columns, start=1):
             title = column.get_title()
@@ -877,9 +943,13 @@ class TreeView:
         sort_label = _("_Sort Ascending") if self._sort_type == Gtk.SortType.DESCENDING else _("_Sort Descending")
         menu.add_items(
             ("", None),
-            ("#" + sort_label, self.on_invert_sort_order),
-            (">" + _("Reset"), reset_menu)
+            ("#" + sort_label, self.on_invert_sort_order)
         )
+
+        if move_column_menu is not None:
+            menu.add_items((">" + _("Move Column"), move_column_menu))
+
+        menu.add_items((">" + _("Reset"), reset_menu))
         menu.update_model()
 
     def on_column_position_changed(self, column, _param):

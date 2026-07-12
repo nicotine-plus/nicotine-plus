@@ -317,6 +317,7 @@ class PopupMenu:
                 if not self.parent.get_path_at_pos(bin_x, bin_y):
                     # Special case for column header menu
 
+                    self.parent.x_pos = bin_x
                     menu_model = self.parent.column_menu
                     menu = menu_model.create_context_menu(menu_model.parent)
                     callback = menu_model.callback
