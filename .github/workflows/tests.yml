@@ -184,8 +184,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo pkg install -y cage dejavu gettext gtk4 py311-build py311-pygobject \
-            py311-setuptools py311-wheel
+          sudo pkg install -y cage dejavu gettext gtk4 py312-build py312-pygobject \
+            py312-setuptools py312-wheel
 
       - name: Integration and unit tests
         run: |
@@ -194,13 +194,13 @@ jobs:
           export GDK_BACKEND=wayland
           export DBUS_SESSION_BUS_ADDRESS=
 
-          cage python3.11 -m unittest -v
+          cage python3.12 -m unittest -v
 
       - name: Build
-        run: python3.11 -m build
+        run: python3.12 -m build
 
       - name: Build without isolation
-        run: python3.11 -m build --no-isolation
+        run: python3.12 -m build --no-isolation
 
   openbsd:
     runs-on: ubuntu-latest
