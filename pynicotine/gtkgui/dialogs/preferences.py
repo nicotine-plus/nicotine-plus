@@ -3626,7 +3626,7 @@ class PluginsPage:
             application=self.application,
             title=_("Uninstall Plugin?"),
             message=_("Do you really want to uninstall plugin %s? "
-                      "This will remove any files the plugin has stored.") % plugin_human_name,
+                      "This will delete all settings and data stored by the plugin.") % plugin_human_name,
             buttons=[
                 ("cancel", _("_Cancel")),
                 ("ok", _("Uninstall"))
