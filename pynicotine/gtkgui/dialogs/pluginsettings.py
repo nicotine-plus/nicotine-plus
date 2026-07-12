@@ -484,7 +484,7 @@ class PluginSettings(Dialog):
 
     def on_ok(self, *_args):
 
-        plugin = core.pluginhandler.enabled_plugins[self.plugin_name]
+        plugin = core.pluginhandler.loaded_plugins[self.plugin_name]
 
         for option_name in self.plugin_metasettings:
             new_value = self._get_widget_data(self.option_widgets[option_name])
