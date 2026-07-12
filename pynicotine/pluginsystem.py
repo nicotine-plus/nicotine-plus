@@ -668,6 +668,10 @@ class PluginHandler:
             plugin = self._import_plugin_instance(plugin_name)
 
             if plugin is None:
+                # Plugin does not exist
+                if plugin_name in config.sections["plugins"]["enabled"]:
+                    config.sections["plugins"]["enabled"].remove(plugin_name)
+
                 return False
 
             plugin.init()
