@@ -582,54 +582,6 @@
             </child>
           </object>
         </child>
-        <child>
-          <object class="GtkBox">
-            <property name="margin-top">6</property>
-            <property name="sensitive" bind-source="enable_filters_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
-            <property name="spacing">12</property>
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkButton" id="_verify_filters_button">
-                <property name="valign">center</property>
-                <property name="visible">True</property>
-                <signal name="clicked" handler="on_verify_filter"/>
-                <child>
-                  <object class="GtkBox">
-                    <property name="spacing">6</property>
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="icon-name">object-select-symbolic</property>
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="label" translatable="yes">_Verify Filters</property>
-                        <property name="mnemonic-widget">_verify_filters_button</property>
-                        <property name="use-underline">True</property>
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel" id="filter_status_label">
-                <property name="label" translatable="yes">Unverified</property>
-                <property name="hexpand">True</property>
-                <property name="selectable">True</property>
-                <property name="visible">True</property>
-                <property name="wrap">True</property>
-                <property name="xalign">0</property>
-                <style>
-                  <class name="bold"/>
-                </style>
-              </object>
-            </child>
-          </object>
-        </child>
       </object>
     </child>
   </object>
