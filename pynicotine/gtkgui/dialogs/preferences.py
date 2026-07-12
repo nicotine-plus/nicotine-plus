@@ -545,6 +545,10 @@ class DownloadsPage:
     def on_add_filter_response(self, dialog, _response_id, _data):
 
         dfilter = dialog.get_entry_value().strip()
+
+        if not dfilter:
+            return
+
         enable_regex = dialog.get_option_value()
         error = self.validate_filter(dfilter, enable_regex)
         icon_name = "dialog-warning-symbolic" if error else ""
@@ -573,6 +577,10 @@ class DownloadsPage:
     def on_edit_filter_response(self, dialog, _response_id, iterator):
 
         new_dfilter = dialog.get_entry_value().strip()
+
+        if not new_dfilter:
+            return
+
         enable_regex = dialog.get_option_value()
         error = self.validate_filter(new_dfilter, enable_regex)
         icon_name = "dialog-warning-symbolic" if error else ""
