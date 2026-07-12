@@ -605,7 +605,7 @@ class Plugin(BasePlugin):
             self.output(_("Installed plugins:"))
 
             for basename in sorted(self.parent.list_installed_plugins()):
-                self.output(f"{'‣' if basename in self.parent.enabled_plugins else '•'} {basename}")
+                self.output(f"{'‣' if self.parent.is_plugin_loaded(basename) else '•'} {basename}")
 
             self.output(_("No plugin with name \"%s\"") % plugin_name)
 
