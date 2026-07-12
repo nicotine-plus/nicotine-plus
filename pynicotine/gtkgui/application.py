@@ -934,7 +934,7 @@ class Application:
             while traceback.tb_next:
                 file_path = traceback.tb_frame.f_code.co_filename
 
-                for plugin_name in core.pluginhandler.enabled_plugins:
+                for plugin_name in core.pluginhandler.loaded_plugins:
                     plugin_path = core.pluginhandler.get_plugin_path(plugin_name)
 
                     if file_path.startswith(plugin_path):

@@ -394,13 +394,13 @@ class InstallException(Exception):
 
 
 class PluginHandler:
-    __slots__ = ("plugin_folders", "enabled_plugins", "command_source", "commands",
+    __slots__ = ("plugin_folders", "loaded_plugins", "command_source", "commands",
                  "internal_plugin_folder", "user_plugin_folder", "_load_now_playing_sender")
 
     def __init__(self, isolated_mode=False):
 
         self.plugin_folders = []
-        self.enabled_plugins = {}
+        self.loaded_plugins = {}
         self.command_source = None
         self.commands = {
             "chatroom": {},
@@ -520,7 +520,7 @@ class PluginHandler:
                 "error": error
             })
 
-        if plugin_name in self.enabled_plugins:
+        if self.is_plugin_loaded(plugin_name):
             self.reload_plugin(plugin_name)
 
         return plugin_name
@@ -655,14 +655,17 @@ class PluginHandler:
         # Our config file doesn't play nicely with some characters
         if "=" in plugin_name:
             log.add(
-                _("Unable to load plugin %(name)s. Plugin folder name contains invalid characters: %(characters)s"), {
+                _("Cannot enable plugin %(name)s. Plugin folder name contains invalid characters: %(characters)s"), {
                     "name": plugin_name,
                     "characters": "="
                 })
             return False
 
-        if plugin_name in self.enabled_plugins:
+        if self.is_plugin_loaded(plugin_name):
             return False
+
+        if plugin_name not in config.sections["plugins"]["enabled"]:
+            config.sections["plugins"]["enabled"].append(plugin_name)
 
         try:
             plugin = self._import_plugin_instance(plugin_name)
@@ -712,19 +715,15 @@ class PluginHandler:
 
             self.update_completions(plugin)
 
-            if plugin_name not in config.sections["plugins"]["enabled"]:
-                config.sections["plugins"]["enabled"].append(plugin_name)
-
-            self.enabled_plugins[plugin_name] = plugin
+            self.loaded_plugins[plugin_name] = plugin
             plugin.loaded_notification()
 
             log.add(_("Loaded plugin %s"), plugin.human_name)
 
         except Exception:
             from traceback import format_exc
-            log.add(_("Unable to load plugin %(module)s\n%(exc_trace)s"),
+            log.add(_("Failed to load plugin %(module)s\n%(exc_trace)s"),
                     {"module": plugin_name, "exc_trace": format_exc()})
-            return False
 
         return True
 
@@ -733,10 +732,13 @@ class PluginHandler:
         if plugin_name == "core_commands":
             return False
 
-        if plugin_name not in self.enabled_plugins:
+        if is_permanent and plugin_name in config.sections["plugins"]["enabled"]:
+            config.sections["plugins"]["enabled"].remove(plugin_name)
+
+        if not self.is_plugin_loaded(plugin_name):
             return False
 
-        plugin = self.enabled_plugins[plugin_name]
+        plugin = self.loaded_plugins[plugin_name]
         plugin_path = None
 
         try:
@@ -766,9 +768,8 @@ class PluginHandler:
 
         except Exception:
             from traceback import format_exc
-            log.add(_("Unable to unload plugin %(module)s\n%(exc_trace)s"),
+            log.add(_("Failed to unload plugin %(module)s\n%(exc_trace)s"),
                     {"module": plugin_name, "exc_trace": format_exc()})
-            return False
 
         finally:
             if not plugin_path:
@@ -804,20 +805,17 @@ class PluginHandler:
                 if function.__module__ is not None and function.__module__.split(".", 1)[0] == plugin_name:
                     events.cancel_scheduled(event_id)
 
-            if is_permanent and plugin_name in config.sections["plugins"]["enabled"]:
-                config.sections["plugins"]["enabled"].remove(plugin_name)
-
-            del self.enabled_plugins[plugin_name]
+            del self.loaded_plugins[plugin_name]
             del plugin
 
         return True
 
     def toggle_plugin(self, plugin_name):
 
-        enabled = plugin_name in self.enabled_plugins
+        enabled = self.is_plugin_loaded(plugin_name)
 
         if enabled:
-            # Return False is plugin is unloaded
+            # Return False if plugin is unloaded
             return not self.disable_plugin(plugin_name)
 
         return self.enable_plugin(plugin_name)
@@ -826,10 +824,23 @@ class PluginHandler:
         self.disable_plugin(plugin_name)
         self.enable_plugin(plugin_name)
 
+    def is_plugin_loaded(self, plugin_name):
+        return plugin_name in self.loaded_plugins
+
+    def is_plugin_failed(self, plugin_name):
+
+        if not config.sections["plugins"]["enable"]:
+            return False
+
+        return (
+            plugin_name in config.sections["plugins"]["enabled"]
+            and not self.is_plugin_loaded(plugin_name)
+        )
+
     def get_plugin_metasettings(self, plugin_name):
 
-        if plugin_name in self.enabled_plugins:
-            plugin = self.enabled_plugins[plugin_name]
+        if self.is_plugin_loaded(plugin_name):
+            plugin = self.loaded_plugins[plugin_name]
 
             if plugin.metasettings:
                 return plugin.metasettings
@@ -917,7 +928,7 @@ class PluginHandler:
             del config.sections["plugins"][plugin_name]
             config.write_configuration()
 
-        if plugin_name in self.enabled_plugins:
+        if self.is_plugin_loaded(plugin_name):
             self.reload_plugin(plugin_name)
 
         log.add(_("Restored default settings for plugin %s"), plugin_human_name)
@@ -988,7 +999,7 @@ class PluginHandler:
         command_found = False
         is_successful = False
 
-        for module, plugin in self.enabled_plugins.items():
+        for module, plugin in self.loaded_plugins.items():
             if plugin is None:
                 continue
 
@@ -1097,7 +1108,7 @@ class PluginHandler:
         how n+ responds to them, both can be triggered by this function.
         """
 
-        for module, plugin in self.enabled_plugins.items():
+        for module, plugin in self.loaded_plugins.items():
             try:
                 return_value = getattr(plugin, function_name)(*args)
 
