@@ -566,7 +566,8 @@ class Scanner:
                             self.mtimes[path] = file_mtime = file_stat.st_mtime
                             virtual_file_path = f"{virtual_folder_path}\\{basename}"
 
-                            if not self.rebuild and file_mtime == old_mtimes.get(path) and path in old_files:
+                            if (not self.rebuild and old_mtimes and old_files
+                                    and file_mtime == old_mtimes.get(path) and path in old_files):
                                 full_path_file_data = old_files[path]
                                 full_path_file_data[0] = virtual_file_path  # Virtual name might have changed
                             else:
