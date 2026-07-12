@@ -805,7 +805,7 @@ class TreeView:
         self.model.set_sort_column_id(self._sort_column, self._sort_type)
         self.save_columns()
 
-    def on_reset_sizing(self, *_args):
+    def on_reset_column_widths(self, *_args):
 
         for column, column_data in self._get_sorted_visible_columns():
             if not column.get_visible():
@@ -850,12 +850,11 @@ class TreeView:
         visible_columns = [column for column in columns if column.get_visible()]
         menu.clear()
 
-        sort_label = _("A_scending") if self._sort_type == Gtk.SortType.DESCENDING else _("De_scending")
-        sort_menu = PopupMenu(self.window.application)
-        sort_menu.add_items(
-            ("#" + sort_label, self.on_invert_sort_order),
-            ("", None),
-            ("#" + _("_Reset Sort Column"), self.on_reset_sort_column)
+        reset_menu = PopupMenu(self.window.application)
+        reset_menu.add_items(
+            ("#" + _("Sorted Column"), self.on_reset_sort_column),
+            ("#" + _("Column Widths"), self.on_reset_column_widths),
+            ("#" + _("Everything"), self.on_reset_columns)
         )
 
         for column_num, column in enumerate(columns, start=1):
@@ -875,11 +874,11 @@ class TreeView:
 
             menu.actions[title].connect("activate", self.on_column_header_toggled, column)
 
+        sort_label = _("_Sort Ascending") if self._sort_type == Gtk.SortType.DESCENDING else _("_Sort Descending")
         menu.add_items(
             ("", None),
-            (">" + _("_Sort Order"), sort_menu),
-            ("#" + _("Reset Sizing"), self.on_reset_sizing),
-            ("#" + _("Reset Columns"), self.on_reset_columns)
+            ("#" + sort_label, self.on_invert_sort_order),
+            (">" + _("Reset"), reset_menu)
         )
         menu.update_model()
 
