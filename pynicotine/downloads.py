@@ -190,6 +190,83 @@ class Downloads(Transfers):
                 # Mark transfer as failed in order to resume it when connected
                 self._fail_transfer(transfer)
 
+    # File Actions #
+
+    def _open_incomplete_transfer(self, transfer):
+
+        username = transfer.username
+        virtual_path = transfer.virtual_path
+        incomplete_folder_path = self.get_incomplete_download_folder()
+        offset = 0
+
+        try:
+            incomplete_folder_path_encoded = encode_path(incomplete_folder_path)
+
+            if not os.path.isdir(incomplete_folder_path_encoded):
+                os.makedirs(incomplete_folder_path_encoded)
+
+            incomplete_file_path = self.get_incomplete_download_file_path(username, virtual_path)
+            transfer.file_handle = open(encode_path(incomplete_file_path), "ab+")  # pylint: disable=consider-using-with
+
+            try:
+                import fcntl
+                try:
+                    fcntl.lockf(transfer.file_handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                except OSError as error:
+                    log.add(_("Can't get an exclusive lock on file - I/O error: %s"), error)
+            except ImportError:
+                pass
+
+            if transfer.size_changed:
+                # Remote user sent a different file size than we originally requested,
+                # wipe any existing data in the incomplete file to avoid corruption
+                transfer.file_handle.truncate(0)
+
+            # Seek to the end of the file for resuming the download
+            offset = transfer.file_handle.seek(0, os.SEEK_END)
+
+        except OSError as error:
+            log.add(_("Cannot save file in %(folder_path)s: %(error)s"), {
+                "folder_path": incomplete_folder_path,
+                "error": error
+            })
+            incomplete_file_path = None
+            self._abort_transfer(transfer, status=TransferStatus.DOWNLOAD_FOLDER_ERROR)
+            core.notifications.show_download_notification(
+                str(error), title=_("Download Folder Error"), high_priority=True)
+
+        return incomplete_file_path, offset
+
+    def _move_finished_transfer(self, transfer, incomplete_file_path):
+
+        download_folder_path = transfer.folder_path or self.get_default_download_folder(transfer.username)
+        download_folder_path_encoded = encode_path(download_folder_path)
+
+        download_basename = self.get_download_basename(transfer.virtual_path, download_folder_path, avoid_conflict=True)
+        download_file_path = safe_path_join(download_folder_path, download_basename)
+
+        try:
+            if not os.path.isdir(download_folder_path_encoded):
+                os.makedirs(download_folder_path_encoded)
+
+            shutil.move(incomplete_file_path, encode_path(download_file_path))
+
+        except OSError as error:
+            log.add(
+                _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"), {
+                    "tempfile": incomplete_file_path.decode("utf-8", "replace"),
+                    "file": download_file_path,
+                    "error": error
+                }
+            )
+            self._abort_transfer(transfer, status=TransferStatus.DOWNLOAD_FOLDER_ERROR)
+            core.notifications.show_download_notification(
+                str(error), title=_("Download Folder Error"), high_priority=True
+            )
+            return None
+
+        return download_file_path
+
     # Filters/Limits #
 
     def update_download_filters(self):
@@ -268,6 +345,22 @@ class Downloads(Transfers):
         virtual_path = transfer.virtual_path
         size = transfer.size
 
+        if (transfer.status != TransferStatus.FINISHED
+                and transfer.current_byte_offset is not None and transfer.current_byte_offset >= transfer.size):
+            incomplete_file_path, offset = self._open_incomplete_transfer(transfer)
+
+            if not incomplete_file_path:
+                # File I/O error in incomplete download folder
+                return False
+
+            if offset >= transfer.size:
+                # File was already downloaded previously, but not successfully moved to the final download
+                # destination. Attempt to move it again.
+                self._finish_transfer(transfer)
+                return False
+
+            self._close_file(transfer)
+
         if not bypass_filter and config.sections["transfers"]["enablefilters"]:
             try:
                 downloadregexp = re.compile(config.sections["transfers"]["downloadregexp"], flags=re.IGNORECASE)
@@ -283,19 +376,20 @@ class Downloads(Transfers):
             except re.error:
                 pass
 
+        _file_path, file_exists = self.get_complete_download_file_path(
+            username, virtual_path, size, transfer.folder_path)
+
+        if file_exists:
+            # File was already downloaded previously, mark as finished
+            self._finish_transfer(transfer)
+            return False
+
         if UserStatus.OFFLINE in (core.users.login_status, core.users.statuses.get(username)):
             # Either we are offline or the user we want to download from is
             self._abort_transfer(transfer, status=TransferStatus.USER_LOGGED_OFF)
             return False
 
         log.add_transfer("Adding file %s from user %s to download queue", (virtual_path, username))
-
-        _file_path, file_exists = self.get_complete_download_file_path(
-            username, virtual_path, size, transfer.folder_path)
-
-        if file_exists:
-            self._finish_transfer(transfer)
-            return False
 
         super()._enqueue_transfer(transfer)
 
@@ -410,36 +504,6 @@ class Downloads(Transfers):
                     "command": command,
                     "error": error
                 })
-
-    def _move_finished_transfer(self, transfer, incomplete_file_path):
-
-        download_folder_path = transfer.folder_path or self.get_default_download_folder(transfer.username)
-        download_folder_path_encoded = encode_path(download_folder_path)
-
-        download_basename = self.get_download_basename(transfer.virtual_path, download_folder_path, avoid_conflict=True)
-        download_file_path = safe_path_join(download_folder_path, download_basename)
-
-        try:
-            if not os.path.isdir(download_folder_path_encoded):
-                os.makedirs(download_folder_path_encoded)
-
-            shutil.move(incomplete_file_path, encode_path(download_file_path))
-
-        except OSError as error:
-            log.add(
-                _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"), {
-                    "tempfile": incomplete_file_path.decode("utf-8", "replace"),
-                    "file": download_file_path,
-                    "error": error
-                }
-            )
-            self._abort_transfer(transfer, status=TransferStatus.DOWNLOAD_FOLDER_ERROR)
-            core.notifications.show_download_notification(
-                str(error), title=_("Download Folder Error"), high_priority=True
-            )
-            return None
-
-        return download_file_path
 
     def _finish_transfer(self, transfer):
 
@@ -889,7 +953,8 @@ class Downloads(Transfers):
         if msg.status == UserStatus.OFFLINE:
             for users in (self.queued_users, self.failed_users):
                 for download in users.get(username, {}).copy().values():
-                    self._abort_transfer(download, status=TransferStatus.USER_LOGGED_OFF)
+                    if download.status != TransferStatus.DOWNLOAD_FOLDER_ERROR:
+                        self._abort_transfer(download, status=TransferStatus.USER_LOGGED_OFF)
 
             for download in self.active_users.get(username, {}).copy().values():
                 if download.status != TransferStatus.TRANSFERRING:
@@ -1146,83 +1211,43 @@ class Downloads(Transfers):
             return
 
         virtual_path = download.virtual_path
-        incomplete_folder_path = self.get_incomplete_download_folder()
-        incomplete_file_path = None
-        sock = download.sock = msg.sock
-        need_update = True
-        download_started = False
 
         log.add_transfer("Received file download init with token %s for file %s from user %s",
                          (token, virtual_path, username))
 
-        try:
-            incomplete_folder_path_encoded = encode_path(incomplete_folder_path)
+        incomplete_file_path, offset = self._open_incomplete_transfer(download)
+        need_update = False
 
-            if not os.path.isdir(incomplete_folder_path_encoded):
-                os.makedirs(incomplete_folder_path_encoded)
-
-            incomplete_file_path = self.get_incomplete_download_file_path(username, virtual_path)
-            file_handle = open(encode_path(incomplete_file_path), "ab+")  # pylint: disable=consider-using-with
-
-            try:
-                import fcntl
-                try:
-                    fcntl.lockf(file_handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                except OSError as error:
-                    log.add(_("Can't get an exclusive lock on file - I/O error: %s"), error)
-            except ImportError:
-                pass
-
-            if download.size_changed:
-                # Remote user sent a different file size than we originally requested,
-                # wipe any existing data in the incomplete file to avoid corruption
-                file_handle.truncate(0)
-
-            # Seek to the end of the file for resuming the download
-            offset = file_handle.seek(0, os.SEEK_END)
-
-        except OSError as error:
-            log.add(_("Cannot save file in %(folder_path)s: %(error)s"), {
-                "folder_path": incomplete_folder_path,
-                "error": error
-            })
-            self._abort_transfer(download, status=TransferStatus.DOWNLOAD_FOLDER_ERROR)
-            core.notifications.show_download_notification(
-                str(error), title=_("Download Folder Error"), high_priority=True)
-            need_update = False
-
-        else:
-            download.file_handle = file_handle
+        if incomplete_file_path:
+            download.sock = sock = msg.sock
             download.last_byte_offset = offset
             download.start_time = time.monotonic() - download.time_elapsed
             download.retry_attempt = False
 
             core.statistics.append_stat_value("started_downloads", 1)
-            download_started = True
 
             log.add_download(
                 _("Download started: user %(user)s, file %(file)s"), {
                     "user": username,
-                    "file": file_handle.name.decode("utf-8", "replace")
+                    "file": incomplete_file_path
                 }
             )
 
             if download.size > offset:
                 download.status = TransferStatus.TRANSFERRING
                 core.send_message_to_network_thread(DownloadFile(
-                    sock=sock, token=token, file=file_handle, leftbytes=(download.size - offset)
+                    sock=sock, token=token, file=download.file_handle, leftbytes=(download.size - offset)
                 ))
                 core.send_message_to_peer(username, FileOffset(sock, offset))
-
+                need_update = True
             else:
                 core.send_message_to_network_thread(CloseConnection(sock))
                 self._finish_transfer(download)
-                need_update = False
 
         if need_update:
             self._update_transfer(download)
 
-        if download_started:
+        if incomplete_file_path:
             # Must be emitted after the final update to prevent inconsistent state
             core.pluginhandler.download_started_notification(username, virtual_path, incomplete_file_path)
 
