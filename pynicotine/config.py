@@ -159,7 +159,6 @@ class Config:
                 "login": "",
                 "passw": "",
                 "interface": "",
-                "ctcpmsgs": False,
                 "autosearch": [],
                 "autoreply": "",
                 "portrange": (2234, 2234),
@@ -433,6 +432,9 @@ class Config:
                 "enable": True,
                 "enabled": []
             },
+            "ctcp": {
+                "enable": True
+            },
             "statistics": {
                 "since_timestamp": 0,
                 "started_downloads": 0,
@@ -475,7 +477,8 @@ class Config:
                 "userencoding",
                 "firewalled",
                 "command_aliases",
-                "upnp_interval"
+                "upnp_interval",
+                "ctcpmsgs"
             ),
             "ui": (
                 "enabletrans",
@@ -689,6 +692,12 @@ class Config:
 
         if expand_searches is not None:
             self.sections["searches"]["expand_results"] = "all" if expand_searches else "none"
+
+        # Migrate accidentally inverted CTCP option (3.4.0)
+        enable_ctcp = self.sections["server"].get("ctcpmsgs", None)
+
+        if enable_ctcp is not None:
+            self.sections["ctcp"]["enable"] = not enable_ctcp
 
     def _set_config(self):
         """Set config values parsed from file earlier."""
