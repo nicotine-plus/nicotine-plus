@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-09 01:50+0300\n"
+"POT-Creation-Date: 2026-07-13 07:23+0300\n"
 "PO-Revision-Date: 2023-07-25 18:31+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -56,8 +56,8 @@ msgstr ""
 #: pynicotine/gtkgui/mainwindow.py:776
 #: pynicotine/plugins/core_commands/__init__.py:14
 #: pynicotine/gtkgui/ui/mainwindow.ui:205
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:648
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:834
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:634
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:820
 #: pynicotine/gtkgui/ui/userbrowse.ui:153
 #, fuzzy
 msgid "Search Files"
@@ -65,12 +65,12 @@ msgstr "Bilatu Fitxategiak"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:34
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:50
-#: pynicotine/gtkgui/dialogs/preferences.py:3708
+#: pynicotine/gtkgui/dialogs/preferences.py:3715
 #: pynicotine/gtkgui/mainwindow.py:777 pynicotine/gtkgui/mainwindow.py:1129
 #: pynicotine/gtkgui/widgets/trayicon.py:73
 #: pynicotine/gtkgui/ui/mainwindow.ui:430
 #: pynicotine/gtkgui/ui/settings/downloads.ui:73
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:660
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:646
 msgid "Downloads"
 msgstr "Deskargak"
 
@@ -79,8 +79,8 @@ msgstr "Deskargak"
 #: pynicotine/gtkgui/dialogs/shortcuts.py:76
 #: pynicotine/gtkgui/dialogs/shortcuts.py:105
 #: pynicotine/gtkgui/mainwindow.py:779 pynicotine/gtkgui/ui/mainwindow.ui:802
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:684
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:856
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:670
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:842
 #, fuzzy
 msgid "Browse Shares"
 msgstr "Arakatu akzioak"
@@ -90,8 +90,8 @@ msgstr "Arakatu akzioak"
 #: pynicotine/gtkgui/mainwindow.py:781 pynicotine/gtkgui/widgets/trayicon.py:78
 #: pynicotine/plugins/core_commands/__init__.py:12
 #: pynicotine/gtkgui/ui/mainwindow.ui:1100
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:708
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:900
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:694
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:886
 #, fuzzy
 msgid "Private Chat"
 msgstr "Txata pribatua"
@@ -307,91 +307,87 @@ msgid "You need to specify a username and password before connecting…"
 msgstr ""
 "Erabiltzaile izena eta pasahitza zehaztu behar dituzu konektatu aurretik …"
 
-#: pynicotine/downloads.py:226
-#, python-format
-msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
-msgstr ""
-"Errorea: Deskarga Iragazkiak huts egin du! Egiaztatu iragazkiak. Arrazoia: %s"
-
-#: pynicotine/downloads.py:241
-#, python-format
-msgid "Error: %(num)d Download filters failed! %(error)s "
-msgstr "Deskarga amaituta: %(num)d erabiltzailea, %(error)s fitxategia "
-
-#: pynicotine/downloads.py:353
-#, fuzzy, python-format
-msgid "%(file)s downloaded from %(user)s"
-msgstr "%(file)s deskargatuta %(user)s"
-
-#: pynicotine/downloads.py:357
-#, fuzzy
-msgid "File Downloaded"
-msgstr "Deskargatutako fitxategia"
-
-#: pynicotine/downloads.py:365
-#, python-format
-msgid "Executed: %s"
-msgstr "Exekutatuta: %s"
-
-#: pynicotine/downloads.py:368 pynicotine/downloads.py:409
-#: pynicotine/nowplaying.py:339
-#, fuzzy, python-format
-msgid "Executing '%(command)s' failed: %(error)s"
-msgstr "Ezin izan da '%(command)s' exekutatzean: %(error)s"
-
-#: pynicotine/downloads.py:394
-#, fuzzy, python-format
-msgid "%(folder)s downloaded from %(user)s"
-msgstr "%(folder)s deskargatu da %(user)s"
-
-#: pynicotine/downloads.py:398
-#, fuzzy
-msgid "Folder Downloaded"
-msgstr "Deskargatutako karpeta"
-
-#: pynicotine/downloads.py:406
-#, python-format
-msgid "Executed on folder: %s"
-msgstr "Karpeta honetan exekutatuta: %s"
-
-#: pynicotine/downloads.py:430
-#, fuzzy, python-format
-msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
-msgstr "Ezin izan da '%(tempfile)s' '%(file)s' ra eraman: %(error)s"
-
-#: pynicotine/downloads.py:438 pynicotine/downloads.py:1192
-#, fuzzy
-msgid "Download Folder Error"
-msgstr "Deskargatu karpetaren errorea"
-
-#: pynicotine/downloads.py:476
-#, python-format
-msgid "Download finished: user %(user)s, file %(file)s"
-msgstr "Deskarga amaituta: %(user)s erabiltzailea, %(file)s fitxategia"
-
-#: pynicotine/downloads.py:486
-#, python-format
-msgid "Download aborted, user %(user)s file %(file)s"
-msgstr ""
-"Deskarga bertan behera utzi da, %(user)s erabiltzailea, %(file)s fitxategia"
-
-#: pynicotine/downloads.py:1132
-#, fuzzy, python-format
-msgid "Download I/O error: %s"
-msgstr "Deskargatu I / O errorea: %s"
-
-#: pynicotine/downloads.py:1173
+#: pynicotine/downloads.py:216
 #, python-format
 msgid "Can't get an exclusive lock on file - I/O error: %s"
 msgstr ""
 "Ezin da blokeo esklusiboa lortu fitxategiaren gainean - S/I errorea: %s"
 
-#: pynicotine/downloads.py:1186
+#: pynicotine/downloads.py:229
 #, fuzzy, python-format
 msgid "Cannot save file in %(folder_path)s: %(error)s"
 msgstr "Ezin da gorde %(path)s fitxategia: %(error)s"
 
-#: pynicotine/downloads.py:1205
+#: pynicotine/downloads.py:236 pynicotine/downloads.py:264
+#, fuzzy
+msgid "Download Folder Error"
+msgstr "Deskargatu karpetaren errorea"
+
+#: pynicotine/downloads.py:256
+#, fuzzy, python-format
+msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
+msgstr "Ezin izan da '%(tempfile)s' '%(file)s' ra eraman: %(error)s"
+
+#: pynicotine/downloads.py:301
+#, python-format
+msgid "%(num)s download filter contains an invalid regular expression"
+msgid_plural "%(num)s download filters contain invalid regular expressions"
+msgstr[0] ""
+msgstr[1] ""
+
+#: pynicotine/downloads.py:428
+#, fuzzy, python-format
+msgid "%(file)s downloaded from %(user)s"
+msgstr "%(file)s deskargatuta %(user)s"
+
+#: pynicotine/downloads.py:432
+#, fuzzy
+msgid "File Downloaded"
+msgstr "Deskargatutako fitxategia"
+
+#: pynicotine/downloads.py:440
+#, python-format
+msgid "Executed: %s"
+msgstr "Exekutatuta: %s"
+
+#: pynicotine/downloads.py:443 pynicotine/downloads.py:484
+#: pynicotine/nowplaying.py:339
+#, fuzzy, python-format
+msgid "Executing '%(command)s' failed: %(error)s"
+msgstr "Ezin izan da '%(command)s' exekutatzean: %(error)s"
+
+#: pynicotine/downloads.py:469
+#, fuzzy, python-format
+msgid "%(folder)s downloaded from %(user)s"
+msgstr "%(folder)s deskargatu da %(user)s"
+
+#: pynicotine/downloads.py:473
+#, fuzzy
+msgid "Folder Downloaded"
+msgstr "Deskargatutako karpeta"
+
+#: pynicotine/downloads.py:481
+#, python-format
+msgid "Executed on folder: %s"
+msgstr "Karpeta honetan exekutatuta: %s"
+
+#: pynicotine/downloads.py:522
+#, python-format
+msgid "Download finished: user %(user)s, file %(file)s"
+msgstr "Deskarga amaituta: %(user)s erabiltzailea, %(file)s fitxategia"
+
+#: pynicotine/downloads.py:532
+#, python-format
+msgid "Download aborted, user %(user)s file %(file)s"
+msgstr ""
+"Deskarga bertan behera utzi da, %(user)s erabiltzailea, %(file)s fitxategia"
+
+#: pynicotine/downloads.py:1176
+#, fuzzy, python-format
+msgid "Download I/O error: %s"
+msgstr "Deskargatu I / O errorea: %s"
+
+#: pynicotine/downloads.py:1211
 #, python-format
 msgid "Download started: user %(user)s, file %(file)s"
 msgstr "Deskarga abiarazita: %(user)s erabiltzailea, %(file)s fitxategia"
@@ -401,7 +397,7 @@ msgstr "Deskarga abiarazita: %(user)s erabiltzailea, %(file)s fitxategia"
 msgid "Cannot find %s, please install it."
 msgstr "Ezin da aurkitu %s, instalatu mesedez."
 
-#: pynicotine/gtkgui/__init__.py:192
+#: pynicotine/gtkgui/__init__.py:195
 #, fuzzy
 msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr ""
@@ -538,7 +534,7 @@ msgid "_Run in Background"
 msgstr "Exekutatu atzeko planoan"
 
 #: pynicotine/gtkgui/application.py:557
-#: pynicotine/gtkgui/dialogs/preferences.py:2278
+#: pynicotine/gtkgui/dialogs/preferences.py:2270
 #: pynicotine/plugins/core_commands/__init__.py:53
 #, fuzzy
 msgid "Quit Nicotine+"
@@ -562,8 +558,8 @@ msgstr ""
 #: pynicotine/gtkgui/dialogs/chathistory.py:303
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:134
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:28
-#: pynicotine/gtkgui/dialogs/preferences.py:3607
-#: pynicotine/gtkgui/dialogs/preferences.py:3632
+#: pynicotine/gtkgui/dialogs/preferences.py:3614
+#: pynicotine/gtkgui/dialogs/preferences.py:3639
 #: pynicotine/gtkgui/dialogs/roomlist.py:327
 #: pynicotine/gtkgui/dialogs/statistics.py:112
 #: pynicotine/gtkgui/dialogs/wishlist.py:383 pynicotine/gtkgui/downloads.py:129
@@ -572,7 +568,7 @@ msgstr ""
 #: pynicotine/gtkgui/uploads.py:164 pynicotine/gtkgui/widgets/dialogs.py:137
 #: pynicotine/gtkgui/widgets/dialogs.py:530
 #: pynicotine/gtkgui/widgets/iconnotebook.py:453
-#: pynicotine/gtkgui/widgets/popupmenu.py:610
+#: pynicotine/gtkgui/widgets/popupmenu.py:611
 #: pynicotine/gtkgui/ui/dialogs/download.ui:9
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:9
 #, fuzzy
@@ -643,7 +639,7 @@ msgstr "Utzi Nicotine+"
 msgid "_Copy & Report Bug"
 msgstr "Kopiatu eta jakinarazi akatsa"
 
-#: pynicotine/gtkgui/application.py:1038
+#: pynicotine/gtkgui/application.py:1042
 #, fuzzy
 msgid "Saving configuration…"
 msgstr "Probaren konfigurazioa"
@@ -664,8 +660,8 @@ msgstr "Herrialdea"
 
 #: pynicotine/gtkgui/buddies.py:68 pynicotine/gtkgui/chatrooms.py:608
 #: pynicotine/gtkgui/dialogs/chathistory.py:58
-#: pynicotine/gtkgui/dialogs/preferences.py:1351
-#: pynicotine/gtkgui/dialogs/preferences.py:1559
+#: pynicotine/gtkgui/dialogs/preferences.py:1344
+#: pynicotine/gtkgui/dialogs/preferences.py:1552
 #: pynicotine/gtkgui/interests.py:127 pynicotine/gtkgui/search.py:516
 #: pynicotine/gtkgui/transfers.py:132
 msgid "User"
@@ -677,17 +673,17 @@ msgid "Speed"
 msgstr "Abiadura"
 
 #: pynicotine/gtkgui/buddies.py:81 pynicotine/gtkgui/chatrooms.py:620
-#: pynicotine/gtkgui/dialogs/preferences.py:651
-#: pynicotine/gtkgui/dialogs/preferences.py:829
-#: pynicotine/gtkgui/dialogs/preferences.py:1120
+#: pynicotine/gtkgui/dialogs/preferences.py:644
+#: pynicotine/gtkgui/dialogs/preferences.py:822
+#: pynicotine/gtkgui/dialogs/preferences.py:1113
 #: pynicotine/gtkgui/interests.py:141 pynicotine/gtkgui/ui/mainwindow.ui:323
 #: pynicotine/gtkgui/ui/mainwindow.ui:548
 msgid "Files"
 msgstr "Fitxategiak"
 
-#: pynicotine/gtkgui/buddies.py:88 pynicotine/gtkgui/dialogs/preferences.py:826
-#: pynicotine/gtkgui/dialogs/preferences.py:959
-#: pynicotine/gtkgui/dialogs/preferences.py:996
+#: pynicotine/gtkgui/buddies.py:88 pynicotine/gtkgui/dialogs/preferences.py:819
+#: pynicotine/gtkgui/dialogs/preferences.py:952
+#: pynicotine/gtkgui/dialogs/preferences.py:989
 msgid "Trusted"
 msgstr "Konfiantzazkoa"
 
@@ -720,19 +716,19 @@ msgstr "Gehitu erabiltzailea _oharra…"
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:108
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:252
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:261
-#: pynicotine/gtkgui/dialogs/preferences.py:347
-#: pynicotine/gtkgui/dialogs/preferences.py:399
-#: pynicotine/gtkgui/dialogs/preferences.py:733
-#: pynicotine/gtkgui/dialogs/preferences.py:762
-#: pynicotine/gtkgui/dialogs/preferences.py:1164
-#: pynicotine/gtkgui/dialogs/preferences.py:1334
-#: pynicotine/gtkgui/dialogs/preferences.py:1360
-#: pynicotine/gtkgui/dialogs/preferences.py:1542
-#: pynicotine/gtkgui/dialogs/preferences.py:1568
-#: pynicotine/gtkgui/dialogs/preferences.py:1793
-#: pynicotine/gtkgui/dialogs/preferences.py:1814
-#: pynicotine/gtkgui/dialogs/preferences.py:1842
-#: pynicotine/gtkgui/dialogs/preferences.py:3051
+#: pynicotine/gtkgui/dialogs/preferences.py:346
+#: pynicotine/gtkgui/dialogs/preferences.py:405
+#: pynicotine/gtkgui/dialogs/preferences.py:726
+#: pynicotine/gtkgui/dialogs/preferences.py:755
+#: pynicotine/gtkgui/dialogs/preferences.py:1157
+#: pynicotine/gtkgui/dialogs/preferences.py:1327
+#: pynicotine/gtkgui/dialogs/preferences.py:1353
+#: pynicotine/gtkgui/dialogs/preferences.py:1535
+#: pynicotine/gtkgui/dialogs/preferences.py:1561
+#: pynicotine/gtkgui/dialogs/preferences.py:1786
+#: pynicotine/gtkgui/dialogs/preferences.py:1807
+#: pynicotine/gtkgui/dialogs/preferences.py:1835
+#: pynicotine/gtkgui/dialogs/preferences.py:3043
 #: pynicotine/gtkgui/dialogs/wishlist.py:115 pynicotine/gtkgui/interests.py:189
 #: pynicotine/gtkgui/interests.py:198 pynicotine/gtkgui/transfers.py:276
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:538
@@ -795,16 +791,16 @@ msgstr "Gehitu %s erabiltzaileari buruzko ohar bat:"
 #: pynicotine/gtkgui/buddies.py:536 pynicotine/gtkgui/chatrooms.py:1354
 #: pynicotine/gtkgui/dialogs/chathistory.py:284
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:429
-#: pynicotine/gtkgui/dialogs/preferences.py:532
-#: pynicotine/gtkgui/dialogs/preferences.py:1061
-#: pynicotine/gtkgui/dialogs/preferences.py:1433
-#: pynicotine/gtkgui/dialogs/preferences.py:1483
-#: pynicotine/gtkgui/dialogs/preferences.py:1660
-#: pynicotine/gtkgui/dialogs/preferences.py:1710
-#: pynicotine/gtkgui/dialogs/preferences.py:1987
-#: pynicotine/gtkgui/dialogs/preferences.py:2054
-#: pynicotine/gtkgui/dialogs/preferences.py:2117
-#: pynicotine/gtkgui/dialogs/preferences.py:3118
+#: pynicotine/gtkgui/dialogs/preferences.py:570
+#: pynicotine/gtkgui/dialogs/preferences.py:1054
+#: pynicotine/gtkgui/dialogs/preferences.py:1426
+#: pynicotine/gtkgui/dialogs/preferences.py:1476
+#: pynicotine/gtkgui/dialogs/preferences.py:1653
+#: pynicotine/gtkgui/dialogs/preferences.py:1703
+#: pynicotine/gtkgui/dialogs/preferences.py:1980
+#: pynicotine/gtkgui/dialogs/preferences.py:2047
+#: pynicotine/gtkgui/dialogs/preferences.py:2110
+#: pynicotine/gtkgui/dialogs/preferences.py:3110
 #: pynicotine/gtkgui/dialogs/wishlist.py:260
 #, fuzzy
 msgid "_Add"
@@ -964,10 +960,10 @@ msgid "Members"
 msgstr ""
 
 #: pynicotine/gtkgui/chatrooms.py:1267
-#: pynicotine/gtkgui/dialogs/preferences.py:2442
+#: pynicotine/gtkgui/dialogs/preferences.py:2434
 #: pynicotine/gtkgui/mainwindow.py:1013
 #: pynicotine/gtkgui/widgets/iconnotebook.py:626
-#: pynicotine/gtkgui/widgets/theme.py:268 pynicotine/gtkgui/ui/chatrooms.ui:170
+#: pynicotine/gtkgui/widgets/theme.py:276 pynicotine/gtkgui/ui/chatrooms.ui:170
 msgid "Online"
 msgstr "Linean"
 
@@ -983,7 +979,7 @@ msgstr "Kargak: %(speed)s"
 #: pynicotine/gtkgui/chatrooms.py:1316
 #: pynicotine/gtkgui/dialogs/preferences.py:133
 #: pynicotine/gtkgui/userinfo.py:687 pynicotine/gtkgui/userinfo.py:705
-#: pynicotine/gtkgui/userinfo.py:846 pynicotine/gtkgui/widgets/treeview.py:705
+#: pynicotine/gtkgui/userinfo.py:846 pynicotine/gtkgui/widgets/treeview.py:723
 #: pynicotine/users.py:307 pynicotine/gtkgui/ui/settings/network.ui:264
 #: pynicotine/gtkgui/ui/userinfo.ui:186 pynicotine/gtkgui/ui/userinfo.ui:216
 #: pynicotine/gtkgui/ui/userinfo.ui:246 pynicotine/gtkgui/ui/userinfo.ui:276
@@ -1131,53 +1127,53 @@ msgstr ""
 "Ziur zaude erabiltzaile honentzako erregistratutako mezu guztiak behin "
 "betiko ezabatu nahi dituzula?"
 
-#: pynicotine/gtkgui/dialogs/download.py:58
+#: pynicotine/gtkgui/dialogs/download.py:59
 #, fuzzy
 msgid "Download Files"
 msgstr "Deskargatu iragazkiak"
 
-#: pynicotine/gtkgui/dialogs/download.py:91
+#: pynicotine/gtkgui/dialogs/download.py:92
 #, fuzzy
 msgid "Folder / File"
 msgstr "Karpeta"
 
-#: pynicotine/gtkgui/dialogs/download.py:98
+#: pynicotine/gtkgui/dialogs/download.py:99
 #, fuzzy
 msgid "Incomplete"
 msgstr "Deskargak amaituta"
 
-#: pynicotine/gtkgui/dialogs/download.py:105 pynicotine/gtkgui/search.py:580
+#: pynicotine/gtkgui/dialogs/download.py:106 pynicotine/gtkgui/search.py:580
 #: pynicotine/gtkgui/transfers.py:181 pynicotine/gtkgui/userbrowse.py:333
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:96
 msgid "Size"
 msgstr "Tamaina"
 
-#: pynicotine/gtkgui/dialogs/download.py:111
+#: pynicotine/gtkgui/dialogs/download.py:112
 #, fuzzy
 msgid "Selected"
 msgstr "Hautatu guztiak"
 
-#: pynicotine/gtkgui/dialogs/download.py:133
-#: pynicotine/gtkgui/dialogs/download.py:534
+#: pynicotine/gtkgui/dialogs/download.py:134
+#: pynicotine/gtkgui/dialogs/download.py:535
 #: pynicotine/gtkgui/widgets/filechooser.py:171
 #, fuzzy
 msgid "_Select"
 msgstr "Hautatu guztiak"
 
-#: pynicotine/gtkgui/dialogs/download.py:134
-#: pynicotine/gtkgui/dialogs/download.py:535
+#: pynicotine/gtkgui/dialogs/download.py:135
+#: pynicotine/gtkgui/dialogs/download.py:536
 #, fuzzy
 msgid "_Deselect"
 msgstr "Hautatu guztiak"
 
-#: pynicotine/gtkgui/dialogs/download.py:136
-#: pynicotine/gtkgui/dialogs/download.py:536
+#: pynicotine/gtkgui/dialogs/download.py:137
+#: pynicotine/gtkgui/dialogs/download.py:537
 #: pynicotine/gtkgui/ui/dialogs/download.ui:155
 #, fuzzy
 msgid "_Rename…"
 msgstr "Erabiltzaile izena…"
 
-#: pynicotine/gtkgui/dialogs/download.py:137 pynicotine/gtkgui/search.py:635
+#: pynicotine/gtkgui/dialogs/download.py:138 pynicotine/gtkgui/search.py:635
 #: pynicotine/gtkgui/transfers.py:272 pynicotine/gtkgui/userbrowse.py:291
 #: pynicotine/gtkgui/userbrowse.py:303 pynicotine/gtkgui/userbrowse.py:374
 #: pynicotine/gtkgui/userbrowse.py:386
@@ -1185,52 +1181,52 @@ msgstr "Erabiltzaile izena…"
 msgid "F_ile Properties"
 msgstr "F_ileen propietateak"
 
-#: pynicotine/gtkgui/dialogs/download.py:302
+#: pynicotine/gtkgui/dialogs/download.py:303
 #, fuzzy, python-format
 msgid "Download %(num_files)s file  /  %(total_size)s"
 msgid_plural "Download %(num_files)s files  /  %(total_size)s"
 msgstr[0] "%(num)i fitxategiak deskargatu nahi dituzu?"
 msgstr[1] "%(num)i fitxategiak deskargatu nahi dituzu?"
 
-#: pynicotine/gtkgui/dialogs/download.py:400
+#: pynicotine/gtkgui/dialogs/download.py:401
 #, fuzzy, python-format
 msgid "Unable to request folder contents from user %(user)s"
 msgstr "Ezin da aurreko fitxategia berreskuratu %(path)s: %(error)s"
 
-#: pynicotine/gtkgui/dialogs/download.py:403
+#: pynicotine/gtkgui/dialogs/download.py:404
 #, python-format
 msgid "Unable to request folder contents from %(num)s user"
 msgid_plural "Unable to request folder contents from %(num)s users"
 msgstr[0] ""
 msgstr[1] ""
 
-#: pynicotine/gtkgui/dialogs/download.py:516
+#: pynicotine/gtkgui/dialogs/download.py:517
 #, python-format
 msgid "Incomplete Folder Contents (%(user)s)"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/download.py:573
+#: pynicotine/gtkgui/dialogs/download.py:574
 #, fuzzy
 msgid "Rename Folder"
 msgstr "Partekatu karpetak"
 
-#: pynicotine/gtkgui/dialogs/download.py:574
+#: pynicotine/gtkgui/dialogs/download.py:575
 #, fuzzy, python-format
 msgid "Enter new folder name for '%s':"
 msgstr "Idatzi '%(dir)s' ren izen birtual berria:"
 
-#: pynicotine/gtkgui/dialogs/download.py:576
+#: pynicotine/gtkgui/dialogs/download.py:577
 #, fuzzy
 msgid "_Rename"
 msgstr "Fitxategi-izena"
 
-#: pynicotine/gtkgui/dialogs/download.py:721 pynicotine/gtkgui/search.py:1882
+#: pynicotine/gtkgui/dialogs/download.py:722 pynicotine/gtkgui/search.py:1882
 #: pynicotine/gtkgui/transfers.py:1036 pynicotine/gtkgui/userbrowse.py:1472
 #, fuzzy
 msgid "Collapse All"
 msgstr "Zabaldu / Tolestu dena"
 
-#: pynicotine/gtkgui/dialogs/download.py:725
+#: pynicotine/gtkgui/dialogs/download.py:726
 #: pynicotine/gtkgui/dialogs/shortcuts.py:84 pynicotine/gtkgui/search.py:1889
 #: pynicotine/gtkgui/search.py:1897 pynicotine/gtkgui/transfers.py:1043
 #: pynicotine/gtkgui/transfers.py:1051 pynicotine/gtkgui/userbrowse.py:1476
@@ -1248,13 +1244,13 @@ msgid "Setup Assistant"
 msgstr "_Konfigurazio laguntzailea"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:90
-#: pynicotine/gtkgui/dialogs/preferences.py:703
+#: pynicotine/gtkgui/dialogs/preferences.py:696
 #, fuzzy
 msgid "Virtual Folder"
 msgstr "Karpeta birtuala"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:97
-#: pynicotine/gtkgui/dialogs/preferences.py:716 pynicotine/gtkgui/search.py:550
+#: pynicotine/gtkgui/dialogs/preferences.py:709 pynicotine/gtkgui/search.py:550
 #: pynicotine/gtkgui/transfers.py:140 pynicotine/gtkgui/userbrowse.py:256
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:128
 #, fuzzy
@@ -1264,13 +1260,13 @@ msgstr "Karpeta"
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:106
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:250
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:260
-#: pynicotine/gtkgui/dialogs/preferences.py:397
-#: pynicotine/gtkgui/dialogs/preferences.py:730
-#: pynicotine/gtkgui/dialogs/preferences.py:760
-#: pynicotine/gtkgui/dialogs/preferences.py:1791
-#: pynicotine/gtkgui/dialogs/preferences.py:1812
-#: pynicotine/gtkgui/dialogs/preferences.py:1840
-#: pynicotine/gtkgui/dialogs/preferences.py:3049
+#: pynicotine/gtkgui/dialogs/preferences.py:403
+#: pynicotine/gtkgui/dialogs/preferences.py:723
+#: pynicotine/gtkgui/dialogs/preferences.py:753
+#: pynicotine/gtkgui/dialogs/preferences.py:1784
+#: pynicotine/gtkgui/dialogs/preferences.py:1805
+#: pynicotine/gtkgui/dialogs/preferences.py:1833
+#: pynicotine/gtkgui/dialogs/preferences.py:3041
 #: pynicotine/gtkgui/dialogs/wishlist.py:109
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:523
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:112
@@ -1302,32 +1298,32 @@ msgid "_Next"
 msgstr "_Hurrengoa"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:181
-#: pynicotine/gtkgui/dialogs/preferences.py:950
+#: pynicotine/gtkgui/dialogs/preferences.py:943
 #, fuzzy
 msgid "Add a Shared Folder"
 msgstr "Gehitu karpeta partekatua"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:214
-#: pynicotine/gtkgui/dialogs/preferences.py:993
+#: pynicotine/gtkgui/dialogs/preferences.py:986
 #, fuzzy
 msgid "Edit Shared Folder"
 msgstr "Karpeta partekatuak"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:215
-#: pynicotine/gtkgui/dialogs/preferences.py:994
+#: pynicotine/gtkgui/dialogs/preferences.py:987
 #, fuzzy, python-format
 msgid "Enter new virtual name for '%(dir)s':"
 msgstr "Idatzi '%(dir)s' ren izen birtual berria:"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:217
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:459
-#: pynicotine/gtkgui/dialogs/preferences.py:562
-#: pynicotine/gtkgui/dialogs/preferences.py:1000
-#: pynicotine/gtkgui/dialogs/preferences.py:1095
-#: pynicotine/gtkgui/dialogs/preferences.py:2018
-#: pynicotine/gtkgui/dialogs/preferences.py:2084
-#: pynicotine/gtkgui/dialogs/preferences.py:2149
-#: pynicotine/gtkgui/dialogs/preferences.py:3147
+#: pynicotine/gtkgui/dialogs/preferences.py:604
+#: pynicotine/gtkgui/dialogs/preferences.py:993
+#: pynicotine/gtkgui/dialogs/preferences.py:1088
+#: pynicotine/gtkgui/dialogs/preferences.py:2011
+#: pynicotine/gtkgui/dialogs/preferences.py:2077
+#: pynicotine/gtkgui/dialogs/preferences.py:2142
+#: pynicotine/gtkgui/dialogs/preferences.py:3139
 #: pynicotine/gtkgui/dialogs/wishlist.py:321
 #, fuzzy
 msgid "_Edit"
@@ -1469,76 +1465,76 @@ msgid "Change Password"
 msgstr "Aldatu pasahitza"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:287
-#: pynicotine/gtkgui/widgets/popupmenu.py:611
+#: pynicotine/gtkgui/widgets/popupmenu.py:612
 #, fuzzy
 msgid "Ch_ange"
 msgstr "Pasahitz aldaketa ukatu da"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:330
+#: pynicotine/gtkgui/dialogs/preferences.py:329
 msgid "No one"
 msgstr "Inori"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:331
-#: pynicotine/gtkgui/dialogs/preferences.py:647
-#: pynicotine/gtkgui/dialogs/preferences.py:821
+#: pynicotine/gtkgui/dialogs/preferences.py:330
+#: pynicotine/gtkgui/dialogs/preferences.py:640
+#: pynicotine/gtkgui/dialogs/preferences.py:814
 #: pynicotine/gtkgui/mainwindow.py:782 pynicotine/gtkgui/search.py:281
 #: pynicotine/gtkgui/ui/buddies.ui:22 pynicotine/gtkgui/ui/mainwindow.ui:1248
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:720
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:706
 msgid "Buddies"
 msgstr "Lagunak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:332
-#: pynicotine/gtkgui/dialogs/preferences.py:648
-#: pynicotine/gtkgui/dialogs/preferences.py:959
-#: pynicotine/gtkgui/dialogs/preferences.py:996
+#: pynicotine/gtkgui/dialogs/preferences.py:331
+#: pynicotine/gtkgui/dialogs/preferences.py:641
+#: pynicotine/gtkgui/dialogs/preferences.py:952
+#: pynicotine/gtkgui/dialogs/preferences.py:989
 #, fuzzy
 msgid "Trusted buddies"
 msgstr "Lagun fidagarriak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:337
-#: pynicotine/gtkgui/dialogs/preferences.py:1154
+#: pynicotine/gtkgui/dialogs/preferences.py:336
+#: pynicotine/gtkgui/dialogs/preferences.py:1147
 #, fuzzy
 msgid "Nothing"
 msgstr "Ezer ez"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:341
-#: pynicotine/gtkgui/dialogs/preferences.py:1158
+#: pynicotine/gtkgui/dialogs/preferences.py:340
+#: pynicotine/gtkgui/dialogs/preferences.py:1151
 #, fuzzy
 msgid "Open File"
 msgstr "Hurrengo fitxategia"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:342
-#: pynicotine/gtkgui/dialogs/preferences.py:1159
+#: pynicotine/gtkgui/dialogs/preferences.py:341
+#: pynicotine/gtkgui/dialogs/preferences.py:1152
 #: pynicotine/gtkgui/widgets/filechooser.py:287
 #, fuzzy
 msgid "Open in File Manager"
 msgstr "_Ireki Fitxategi-kudeatzailean"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:345
-#: pynicotine/gtkgui/dialogs/preferences.py:1162
+#: pynicotine/gtkgui/dialogs/preferences.py:344
+#: pynicotine/gtkgui/dialogs/preferences.py:1155
 #: pynicotine/gtkgui/mainwindow.py:1131
 msgid "Search"
 msgstr "Bilatu"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:346
+#: pynicotine/gtkgui/dialogs/preferences.py:345
 #: pynicotine/gtkgui/ui/downloads.ui:76
 #, fuzzy
 msgid "Pause"
 msgstr "Pausa"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:348
+#: pynicotine/gtkgui/dialogs/preferences.py:347
 #: pynicotine/gtkgui/ui/downloads.ui:45
 #, fuzzy
 msgid "Resume"
 msgstr "Jarraitu"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:349
-#: pynicotine/gtkgui/dialogs/preferences.py:1166
+#: pynicotine/gtkgui/dialogs/preferences.py:348
+#: pynicotine/gtkgui/dialogs/preferences.py:1159
 #, fuzzy
 msgid "Browse Folder"
 msgstr "_Arakatu karpetak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:372
+#: pynicotine/gtkgui/dialogs/preferences.py:371
 #, fuzzy
 msgid ""
 "Syntax: Case-insensitive. If enabled, Python regular expressions can be "
@@ -1548,94 +1544,93 @@ msgstr ""
 "Python-en adierazpen erregularrak erabil daitezke, bestela komodin * bat-"
 "etortzeak soilik onartzen dira."
 
-#: pynicotine/gtkgui/dialogs/preferences.py:381
-#: pynicotine/gtkgui/dialogs/preferences.py:745
+#: pynicotine/gtkgui/dialogs/preferences.py:380
+#: pynicotine/gtkgui/dialogs/preferences.py:738
 msgid "Filter"
 msgstr "Iragazkia"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:388
+#: pynicotine/gtkgui/dialogs/preferences.py:387
+msgid "Validity"
+msgstr ""
+
+#: pynicotine/gtkgui/dialogs/preferences.py:394
 #, fuzzy
 msgid "Regex"
 msgstr "Regex"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:530
+#: pynicotine/gtkgui/dialogs/preferences.py:531
+#, fuzzy, python-format
+msgid "Invalid Regular Expression: %s"
+msgstr "Gaitu adierazpen erregularrak"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:568
 #, fuzzy
 msgid "Add Download Filter"
 msgstr "Gehitu deskarga-iragazkia"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:531
+#: pynicotine/gtkgui/dialogs/preferences.py:569
 msgid "Enter a new download filter:"
 msgstr "Deskarga iragazki berria idatzi:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:535
-#: pynicotine/gtkgui/dialogs/preferences.py:567
+#: pynicotine/gtkgui/dialogs/preferences.py:573
+#: pynicotine/gtkgui/dialogs/preferences.py:609
 #, fuzzy
 msgid "Enable regular expressions"
 msgstr "Gaitu adierazpen erregularrak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:560
+#: pynicotine/gtkgui/dialogs/preferences.py:602
 #, fuzzy
 msgid "Edit Download Filter"
 msgstr "Editatu deskarga-iragazkia"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:561
+#: pynicotine/gtkgui/dialogs/preferences.py:603
 #, fuzzy
 msgid "Modify the following download filter:"
 msgstr "Aldatu ondorengo deskarga-iragazkia:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:633
-#, python-format
-msgid "%(num)d Failed! %(error)s "
-msgstr "%(num)d-ek huts egin du! %(error)s "
-
-#: pynicotine/gtkgui/dialogs/preferences.py:640
-#, fuzzy
-msgid "Filters Successful"
-msgstr "Iragazkiak arrakastatsuak dira"
-
-#: pynicotine/gtkgui/dialogs/preferences.py:646
-#: pynicotine/gtkgui/dialogs/preferences.py:816
-#: pynicotine/gtkgui/dialogs/preferences.py:932
+#: pynicotine/gtkgui/dialogs/preferences.py:639
+#: pynicotine/gtkgui/dialogs/preferences.py:809
+#: pynicotine/gtkgui/dialogs/preferences.py:925
 msgid "Public"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:651
+#: pynicotine/gtkgui/dialogs/preferences.py:644
 msgid "Applies to files"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:652
+#: pynicotine/gtkgui/dialogs/preferences.py:645
 #, fuzzy
 msgid "Applies to folders"
 msgstr "Deskargatu fitxategiak karpetara"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:652
-#: pynicotine/gtkgui/dialogs/preferences.py:829
-#: pynicotine/gtkgui/dialogs/preferences.py:1031
-#: pynicotine/gtkgui/dialogs/preferences.py:1120
+#: pynicotine/gtkgui/dialogs/preferences.py:645
+#: pynicotine/gtkgui/dialogs/preferences.py:822
+#: pynicotine/gtkgui/dialogs/preferences.py:1024
+#: pynicotine/gtkgui/dialogs/preferences.py:1113
 #: pynicotine/gtkgui/ui/settings/downloads.ui:250
 #: pynicotine/gtkgui/ui/userbrowse.ui:50
 #, fuzzy
 msgid "Folders"
 msgstr "Karpetak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:710
+#: pynicotine/gtkgui/dialogs/preferences.py:703
 msgid "Readable"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:722
+#: pynicotine/gtkgui/dialogs/preferences.py:715
 msgid "Accessible To"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:731
-#: pynicotine/gtkgui/dialogs/preferences.py:3441
-#: pynicotine/gtkgui/dialogs/preferences.py:3501
+#: pynicotine/gtkgui/dialogs/preferences.py:724
+#: pynicotine/gtkgui/dialogs/preferences.py:3436
+#: pynicotine/gtkgui/dialogs/preferences.py:3504
 #: pynicotine/gtkgui/transfers.py:269 pynicotine/gtkgui/userbrowse.py:288
 #: pynicotine/gtkgui/userbrowse.py:371
 #, fuzzy
 msgid "Open in File _Manager"
 msgstr "Ireki Fitxategi_kudeatzailean"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:736
+#: pynicotine/gtkgui/dialogs/preferences.py:729
 #, fuzzy
 msgid ""
 "Syntax: Case-insensitive. Virtual paths containing separators \\ are "
@@ -1645,51 +1640,51 @@ msgstr ""
 "Python-en adierazpen erregularrak erabil daitezke, bestela komodin * bat-"
 "etortzeak soilik onartzen dira."
 
-#: pynicotine/gtkgui/dialogs/preferences.py:752
+#: pynicotine/gtkgui/dialogs/preferences.py:745
 msgid "Applies To"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:770
+#: pynicotine/gtkgui/dialogs/preferences.py:763
 #: pynicotine/gtkgui/ui/userinfo.ui:205
 #, fuzzy
 msgid "Shared Folders"
 msgstr "Karpeta partekatuak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:771
+#: pynicotine/gtkgui/dialogs/preferences.py:764
 #, fuzzy
 msgid "Filters"
 msgstr "Iragazkia"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:861
-#: pynicotine/gtkgui/dialogs/preferences.py:882
-#: pynicotine/gtkgui/dialogs/preferences.py:909
+#: pynicotine/gtkgui/dialogs/preferences.py:854
+#: pynicotine/gtkgui/dialogs/preferences.py:875
+#: pynicotine/gtkgui/dialogs/preferences.py:902
 msgid "Only buddies can view shares"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:865
-#: pynicotine/gtkgui/dialogs/preferences.py:885
-#: pynicotine/gtkgui/dialogs/preferences.py:910
+#: pynicotine/gtkgui/dialogs/preferences.py:858
+#: pynicotine/gtkgui/dialogs/preferences.py:878
+#: pynicotine/gtkgui/dialogs/preferences.py:903
 msgid "Everyone can view buddy shares"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:869
-#: pynicotine/gtkgui/dialogs/preferences.py:888
-#: pynicotine/gtkgui/dialogs/preferences.py:911
+#: pynicotine/gtkgui/dialogs/preferences.py:862
+#: pynicotine/gtkgui/dialogs/preferences.py:881
+#: pynicotine/gtkgui/dialogs/preferences.py:904
 msgid "Everyone can view trusted shares"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:873
-#: pynicotine/gtkgui/dialogs/preferences.py:891
-#: pynicotine/gtkgui/dialogs/preferences.py:912
+#: pynicotine/gtkgui/dialogs/preferences.py:866
+#: pynicotine/gtkgui/dialogs/preferences.py:884
+#: pynicotine/gtkgui/dialogs/preferences.py:905
 msgid "Everyone can view buddy & trusted shares"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:895
+#: pynicotine/gtkgui/dialogs/preferences.py:888
 #, fuzzy
 msgid "Buddy Share Visibility"
 msgstr "Lagunen Zerrenda"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:897
+#: pynicotine/gtkgui/dialogs/preferences.py:890
 msgid ""
 "Make buddy/trusted shares visible to everyone, but require users to request "
 "access by messaging you. Such files are displayed with an indicator next to "
@@ -1697,7 +1692,7 @@ msgid ""
 "their search results."
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:902
+#: pynicotine/gtkgui/dialogs/preferences.py:895
 msgid ""
 "This option is not recommended in most cases. It is a last resort when "
 "providing unrestricted access is impractical, but you want to indicate that "
@@ -1705,37 +1700,37 @@ msgid ""
 "your user profile is recommended."
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:915
+#: pynicotine/gtkgui/dialogs/preferences.py:908
 #, fuzzy
 msgid "_Change"
 msgstr "Pasahitz aldaketa ukatu da"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1056
+#: pynicotine/gtkgui/dialogs/preferences.py:1049
 #, fuzzy
 msgid "Add Share Filter"
 msgstr "Gehitu karpeta partekatua"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1057
+#: pynicotine/gtkgui/dialogs/preferences.py:1050
 #, fuzzy
 msgid "Enter a new share filter:"
 msgstr "Deskarga iragazki berria idatzi:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1089
+#: pynicotine/gtkgui/dialogs/preferences.py:1082
 #, fuzzy
 msgid "Edit Share Filter"
 msgstr "Karpeta partekatuak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1090
+#: pynicotine/gtkgui/dialogs/preferences.py:1083
 #, fuzzy
 msgid "Modify the following share filter:"
 msgstr "Aldatu ondorengo deskarga-iragazkia:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1163
+#: pynicotine/gtkgui/dialogs/preferences.py:1156
 #: pynicotine/gtkgui/ui/uploads.ui:45
 msgid "Abort"
 msgstr "Abortatu"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1165
+#: pynicotine/gtkgui/dialogs/preferences.py:1158
 #: pynicotine/gtkgui/mainwindow.py:1284
 #: pynicotine/gtkgui/ui/dialogs/download.ui:55
 #: pynicotine/gtkgui/ui/search.ui:10 pynicotine/gtkgui/ui/userbrowse.ui:10
@@ -1743,327 +1738,327 @@ msgstr "Abortatu"
 msgid "Retry"
 msgstr "Saiatu berriro"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1176
+#: pynicotine/gtkgui/dialogs/preferences.py:1169
 msgid "Round Robin"
 msgstr "Round Robin"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1177
+#: pynicotine/gtkgui/dialogs/preferences.py:1170
 msgid "First In, First Out"
 msgstr "Lehena Sartzen, Lehena Ateratzen (FIFO)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1326
-#: pynicotine/gtkgui/dialogs/preferences.py:1534
+#: pynicotine/gtkgui/dialogs/preferences.py:1319
+#: pynicotine/gtkgui/dialogs/preferences.py:1527
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:252
 msgid "Username"
 msgstr "Erabiltzaile izena"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1344
-#: pynicotine/gtkgui/dialogs/preferences.py:1552
+#: pynicotine/gtkgui/dialogs/preferences.py:1337
+#: pynicotine/gtkgui/dialogs/preferences.py:1545
 #, fuzzy
 msgid "IP Address"
 msgstr "Blokeatu IP helbidea"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1431
+#: pynicotine/gtkgui/dialogs/preferences.py:1424
 #, fuzzy
 msgid "Ignore Users"
 msgstr "Ez ikusitako erabiltzaileak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1432
+#: pynicotine/gtkgui/dialogs/preferences.py:1425
 #, fuzzy
 msgid "Enter a list of usernames you want to ignore:"
 msgstr "Idatzi baztertu nahi duzun erabiltzailearen izena:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1481
+#: pynicotine/gtkgui/dialogs/preferences.py:1474
 #, fuzzy
 msgid "Ignore IP Addresses"
 msgstr "Ez ikusi IP helbidea"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1482
+#: pynicotine/gtkgui/dialogs/preferences.py:1475
 #, fuzzy
 msgid "Enter a list of IP addresses you want to ignore:"
 msgstr "Sartu alde batera utzi nahi duzun IP helbide bat:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1482
-#: pynicotine/gtkgui/dialogs/preferences.py:1709
+#: pynicotine/gtkgui/dialogs/preferences.py:1475
+#: pynicotine/gtkgui/dialogs/preferences.py:1702
 #, fuzzy
 msgid "* is a wildcard"
 msgstr "* komodina da"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1658
+#: pynicotine/gtkgui/dialogs/preferences.py:1651
 #, fuzzy
 msgid "Ban Users"
 msgstr "Debekatu erabiltzailea"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1659
+#: pynicotine/gtkgui/dialogs/preferences.py:1652
 #, fuzzy
 msgid "Enter a list of usernames you want to ban:"
 msgstr "Sartu debekatu nahi duzun erabiltzailearen izena:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1708
+#: pynicotine/gtkgui/dialogs/preferences.py:1701
 #, fuzzy
 msgid "Ban IP Addresses"
 msgstr "Blokeatu IP helbidea"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1709
+#: pynicotine/gtkgui/dialogs/preferences.py:1702
 #, fuzzy
 msgid "Enter a list of IP addresses you want to ban:"
 msgstr "Sartu blokeatu nahi duzun IP helbidea:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1769
-#: pynicotine/gtkgui/dialogs/preferences.py:2738
+#: pynicotine/gtkgui/dialogs/preferences.py:1762
+#: pynicotine/gtkgui/dialogs/preferences.py:2730
 msgid "Format codes"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1783
+#: pynicotine/gtkgui/dialogs/preferences.py:1776
 msgid "Keyword"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1804
-#: pynicotine/gtkgui/dialogs/preferences.py:1825
+#: pynicotine/gtkgui/dialogs/preferences.py:1797
+#: pynicotine/gtkgui/dialogs/preferences.py:1818
 #, fuzzy
 msgid "Pattern"
 msgstr "Eredua"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1832
+#: pynicotine/gtkgui/dialogs/preferences.py:1825
 #, fuzzy
 msgid "Replacement"
 msgstr "Ordezkapena"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1850
+#: pynicotine/gtkgui/dialogs/preferences.py:1843
 #, fuzzy
 msgid "Mentions"
 msgstr "Konexioak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1851
+#: pynicotine/gtkgui/dialogs/preferences.py:1844
 #, fuzzy
 msgid "Auto-Replace"
 msgstr "Auto-Ordeztu"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1852
+#: pynicotine/gtkgui/dialogs/preferences.py:1845
 #, fuzzy
 msgid "Censor"
 msgstr "Zentsorea"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1984
+#: pynicotine/gtkgui/dialogs/preferences.py:1977
 msgid "Add Keyword"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1985
+#: pynicotine/gtkgui/dialogs/preferences.py:1978
 msgid ""
 "Enter a list of keywords or usernames you want to watch for. Chat messages "
 "containing the keywords will be highlighted."
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2015
+#: pynicotine/gtkgui/dialogs/preferences.py:2008
 msgid "Edit Keyword"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2016
+#: pynicotine/gtkgui/dialogs/preferences.py:2009
 msgid ""
 "Enter a keyword or username you want to watch for. Chat messages containing "
 "the keyword will be highlighted."
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2052
+#: pynicotine/gtkgui/dialogs/preferences.py:2045
 #, fuzzy
 msgid "Censor Patterns"
 msgstr "Zentsore eredua"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2053
+#: pynicotine/gtkgui/dialogs/preferences.py:2046
 #, fuzzy
 msgid "Enter a list of patterns you want to censor:"
 msgstr "Idatzi baztertu nahi duzun erabiltzailearen izena:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2082
+#: pynicotine/gtkgui/dialogs/preferences.py:2075
 #, fuzzy
 msgid "Edit Censored Pattern"
 msgstr "Zentsuratutako ereduak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2083
+#: pynicotine/gtkgui/dialogs/preferences.py:2076
 #, fuzzy
 msgid "Enter a pattern you want to censor:"
 msgstr "Idatzi baztertu nahi duzun erabiltzailearen izena:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2115
+#: pynicotine/gtkgui/dialogs/preferences.py:2108
 #, fuzzy
 msgid "Add Replacement"
 msgstr "Ordezkapena"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2116
-#: pynicotine/gtkgui/dialogs/preferences.py:2148
+#: pynicotine/gtkgui/dialogs/preferences.py:2109
+#: pynicotine/gtkgui/dialogs/preferences.py:2141
 #, fuzzy
 msgid "Enter a text pattern and what to replace it with:"
 msgstr "Sartu testu-eredua eta ordezkoa, hurrenez hurren:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2147
+#: pynicotine/gtkgui/dialogs/preferences.py:2140
 #, fuzzy
 msgid "Edit Replacement"
 msgstr "Ordezkapena"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2265
+#: pynicotine/gtkgui/dialogs/preferences.py:2257
 #, fuzzy
 msgid "System default"
 msgstr "Lehenetsia"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2279
+#: pynicotine/gtkgui/dialogs/preferences.py:2271
 #, fuzzy
 msgid "Show confirmation dialog"
 msgstr "Erakutsi berrespen-koadroa"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2280
+#: pynicotine/gtkgui/dialogs/preferences.py:2272
 #, fuzzy
 msgid "Run in the background"
 msgstr "Korrika bigarren planoan"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2288
+#: pynicotine/gtkgui/dialogs/preferences.py:2280
 #, fuzzy
 msgid "bold"
 msgstr "ausarta"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2289
+#: pynicotine/gtkgui/dialogs/preferences.py:2281
 #, fuzzy
 msgid "italic"
 msgstr "etzana"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2290
+#: pynicotine/gtkgui/dialogs/preferences.py:2282
 #, fuzzy
 msgid "underline"
 msgstr "azpimarratu"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2291
+#: pynicotine/gtkgui/dialogs/preferences.py:2283
 #, fuzzy
 msgid "normal"
 msgstr "normala"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2299
+#: pynicotine/gtkgui/dialogs/preferences.py:2291
 #, fuzzy
 msgid "Separate Buddies tab"
 msgstr "Mezuak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2300
+#: pynicotine/gtkgui/dialogs/preferences.py:2292
 #, fuzzy
 msgid "Sidebar in Chat Rooms tab"
 msgstr "Lagunen zerrenda txat geletan"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2301
+#: pynicotine/gtkgui/dialogs/preferences.py:2293
 msgid "Always visible sidebar"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2306
+#: pynicotine/gtkgui/dialogs/preferences.py:2298
 #, fuzzy
 msgid "Top"
 msgstr "Gora"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2307
+#: pynicotine/gtkgui/dialogs/preferences.py:2299
 #, fuzzy
 msgid "Bottom"
 msgstr "Behean"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2308
+#: pynicotine/gtkgui/dialogs/preferences.py:2300
 #, fuzzy
 msgid "Left"
 msgstr "Ezkerra"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2309
+#: pynicotine/gtkgui/dialogs/preferences.py:2301
 #, fuzzy
 msgid "Right"
 msgstr "Eskubidea"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2443
+#: pynicotine/gtkgui/dialogs/preferences.py:2435
 #: pynicotine/gtkgui/dialogs/shortcuts.py:37
 #: pynicotine/gtkgui/mainwindow.py:1010
 #: pynicotine/gtkgui/widgets/iconnotebook.py:623
-#: pynicotine/gtkgui/widgets/theme.py:269
+#: pynicotine/gtkgui/widgets/theme.py:277
 #: pynicotine/gtkgui/widgets/trayicon.py:84
 msgid "Away"
 msgstr "Kanpoan"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2444
+#: pynicotine/gtkgui/dialogs/preferences.py:2436
 #: pynicotine/gtkgui/mainwindow.py:1017
 #: pynicotine/gtkgui/widgets/iconnotebook.py:629
-#: pynicotine/gtkgui/widgets/theme.py:270
+#: pynicotine/gtkgui/widgets/theme.py:278
 #: pynicotine/gtkgui/ui/mainwindow.ui:1736
 msgid "Offline"
 msgstr "Lineaz kanpo"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2446
+#: pynicotine/gtkgui/dialogs/preferences.py:2438
 #, fuzzy
 msgid "Tab Changed"
 msgstr "Pasahitz aldaketa ukatu da"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2447
+#: pynicotine/gtkgui/dialogs/preferences.py:2439
 #, fuzzy
 msgid "Tab Highlight"
 msgstr "Nabarmendu"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2448
+#: pynicotine/gtkgui/dialogs/preferences.py:2440
 #, fuzzy
 msgid "Window"
 msgstr "Leihoa"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2452
+#: pynicotine/gtkgui/dialogs/preferences.py:2444
 #, fuzzy
 msgid "Online (Tray)"
 msgstr "Konektatuta (erretilua)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2453
+#: pynicotine/gtkgui/dialogs/preferences.py:2445
 #, fuzzy
 msgid "Away (Tray)"
 msgstr "Kanpoan (erretilua)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2454
+#: pynicotine/gtkgui/dialogs/preferences.py:2446
 #, fuzzy
 msgid "Offline (Tray)"
 msgstr "Lineaz kanpo"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2455
+#: pynicotine/gtkgui/dialogs/preferences.py:2447
 #, fuzzy
 msgid "Message (Tray)"
 msgstr "Mezua (erretilua)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3033
+#: pynicotine/gtkgui/dialogs/preferences.py:3025
 msgid "Protocol"
 msgstr "Protokoloa"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3041
+#: pynicotine/gtkgui/dialogs/preferences.py:3033
 #, fuzzy
 msgid "Command"
 msgstr "Agindua:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3116
+#: pynicotine/gtkgui/dialogs/preferences.py:3108
 #, fuzzy
 msgid "Add URL Handler"
 msgstr "URL kudeatzaileak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3117
+#: pynicotine/gtkgui/dialogs/preferences.py:3109
 #, fuzzy
 msgid "Enter the protocol and the command for the URL handler:"
 msgstr "Sartu URL eskudatzailearen protokoloa eta komandoa, hurrenez hurren:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3145
+#: pynicotine/gtkgui/dialogs/preferences.py:3137
 #, fuzzy
 msgid "Edit Command"
 msgstr "Iruzkinak editatu"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3146
+#: pynicotine/gtkgui/dialogs/preferences.py:3138
 #, fuzzy, python-format
 msgid "Enter a new command for protocol %s:"
 msgstr "Idatzi '%(dir)s' ren izen birtual berria:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3308
+#: pynicotine/gtkgui/dialogs/preferences.py:3300
 #, fuzzy
 msgid "Username;APIKEY"
 msgstr "Erabiltzaile izena;APIKEY:"
 
+#: pynicotine/gtkgui/dialogs/preferences.py:3304
 #: pynicotine/gtkgui/dialogs/preferences.py:3312
-#: pynicotine/gtkgui/dialogs/preferences.py:3320
 #: pynicotine/headless/application.py:99
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:237
 #, fuzzy
 msgid "Username: "
 msgstr "Erabiltzaile izena:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3316
+#: pynicotine/gtkgui/dialogs/preferences.py:3308
 #, fuzzy
 msgid ""
 "Music player (e.g. amarok, audacious, exaile); leave empty to autodetect:"
@@ -2071,29 +2066,29 @@ msgstr ""
 "Bezeroaren izena (adibidez, amarok, ausarta, exaile) edo hutsik dago "
 "automatikoki:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3324
+#: pynicotine/gtkgui/dialogs/preferences.py:3316
 #, fuzzy
 msgid "Command:"
 msgstr "Agindua:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3332
-#: pynicotine/gtkgui/dialogs/preferences.py:3335
+#: pynicotine/gtkgui/dialogs/preferences.py:3324
+#: pynicotine/gtkgui/dialogs/preferences.py:3327
 #, fuzzy
 msgid "Title"
 msgstr "Izenburua"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3334
+#: pynicotine/gtkgui/dialogs/preferences.py:3326
 #, fuzzy, python-format
 msgid "Now Playing (typically \"%(artist)s - %(title)s\")"
 msgstr "Orain erreproduzitzen (normalean \"%(artist)s - %(title)s\")"
 
+#: pynicotine/gtkgui/dialogs/preferences.py:3327
 #: pynicotine/gtkgui/dialogs/preferences.py:3335
-#: pynicotine/gtkgui/dialogs/preferences.py:3343
 #, fuzzy
 msgid "Artist"
 msgstr "Artista"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3337
+#: pynicotine/gtkgui/dialogs/preferences.py:3329
 #: pynicotine/gtkgui/search.py:595 pynicotine/gtkgui/userbrowse.py:346
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:186
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:327
@@ -2101,214 +2096,221 @@ msgstr "Artista"
 msgid "Duration"
 msgstr "Iraupena"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3339
+#: pynicotine/gtkgui/dialogs/preferences.py:3331
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:278
 msgid "Bitrate"
 msgstr "Bitrate-a"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3341
+#: pynicotine/gtkgui/dialogs/preferences.py:3333
 #, fuzzy
 msgid "Comment"
 msgstr "Iruzkina"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3345
+#: pynicotine/gtkgui/dialogs/preferences.py:3337
 #, fuzzy
 msgid "Album"
 msgstr "Albuma"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3347
+#: pynicotine/gtkgui/dialogs/preferences.py:3339
 #, fuzzy
 msgid "Track Number"
 msgstr "Track zenbakia"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3349
+#: pynicotine/gtkgui/dialogs/preferences.py:3341
 #, fuzzy
 msgid "Year"
 msgstr "Urtea"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3351
+#: pynicotine/gtkgui/dialogs/preferences.py:3343
 #, fuzzy
 msgid "Filename (URI)"
 msgstr "Fitxategi izena (URI)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3353
+#: pynicotine/gtkgui/dialogs/preferences.py:3345
 #, fuzzy
 msgid "Program"
 msgstr "Programa"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3419
+#: pynicotine/gtkgui/dialogs/preferences.py:3411
 #, fuzzy
 msgid "Enabled"
 msgstr "Gaituta"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3426
+#: pynicotine/gtkgui/dialogs/preferences.py:3420
 #, fuzzy
 msgid "Plugin"
 msgstr "Pluginak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3437
-#: pynicotine/gtkgui/dialogs/preferences.py:3496
+#: pynicotine/gtkgui/dialogs/preferences.py:3432
+#: pynicotine/gtkgui/dialogs/preferences.py:3499
 #, fuzzy
 msgid "_Enable"
 msgstr "Gaituta"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3438
-#: pynicotine/gtkgui/dialogs/preferences.py:3497
+#: pynicotine/gtkgui/dialogs/preferences.py:3433
+#: pynicotine/gtkgui/dialogs/preferences.py:3500
 msgid "_Disable"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3439
-#: pynicotine/gtkgui/dialogs/preferences.py:3500
+#: pynicotine/gtkgui/dialogs/preferences.py:3434
+#: pynicotine/gtkgui/dialogs/preferences.py:3503
 #: pynicotine/gtkgui/ui/settings/plugin.ui:152
 #, fuzzy
 msgid "_Settings"
 msgstr "Ezarpenak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3443
+#: pynicotine/gtkgui/dialogs/preferences.py:3438
 #, fuzzy
 msgid "Reset Settings…"
 msgstr "Ezarpenak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3444
-#: pynicotine/gtkgui/dialogs/preferences.py:3504
+#: pynicotine/gtkgui/dialogs/preferences.py:3439
+#: pynicotine/gtkgui/dialogs/preferences.py:3507
 #, fuzzy
 msgid "Uninstall…"
 msgstr "Deskargatu gabeko plugina %s"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3509
+#: pynicotine/gtkgui/dialogs/preferences.py:3490
+#: pynicotine/gtkgui/uploads.py:62
+#, fuzzy
+msgid "Failed"
+msgstr "Huts egin du"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:3512
 #, fuzzy
 msgid "No Plugin Selected"
 msgstr "Ez da Plugin hautatu"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3530
+#: pynicotine/gtkgui/dialogs/preferences.py:3533
 msgid ""
 "This is a third-party plugin. Safety is not guaranteed. Use at your own risk."
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3591
+#: pynicotine/gtkgui/dialogs/preferences.py:3598
 #, fuzzy
 msgid "Select a Zip File"
 msgstr "Hautatu Fitxategi bat"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3604
+#: pynicotine/gtkgui/dialogs/preferences.py:3611
 #, fuzzy
 msgid "Reset Plugin Settings?"
 msgstr "Ezarpenak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3605
+#: pynicotine/gtkgui/dialogs/preferences.py:3612
 #, fuzzy, python-format
 msgid "Do you really want to restore the default settings for plugin %s?"
 msgstr "Benetan transferentzia estatistikak berrezarri nahi dituzu?"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3608
+#: pynicotine/gtkgui/dialogs/preferences.py:3615
+#: pynicotine/gtkgui/widgets/treeview.py:952
 #, fuzzy
 msgid "Reset"
 msgstr "Hautatu guztiak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3628
+#: pynicotine/gtkgui/dialogs/preferences.py:3635
 msgid "Uninstall Plugin?"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3629
+#: pynicotine/gtkgui/dialogs/preferences.py:3636
 #, python-format
 msgid ""
-"Do you really want to uninstall plugin %s? This will remove any files the "
-"plugin has stored."
+"Do you really want to uninstall plugin %s? This will delete all settings and "
+"data stored by the plugin."
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3633
+#: pynicotine/gtkgui/dialogs/preferences.py:3640
 #, fuzzy
 msgid "Uninstall"
 msgstr "Deskargatu gabeko plugina %s"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3692
+#: pynicotine/gtkgui/dialogs/preferences.py:3699
 #: pynicotine/gtkgui/dialogs/shortcuts.py:40
 #: pynicotine/gtkgui/widgets/trayicon.py:90
 #, fuzzy
 msgid "Preferences"
 msgstr "Lehentasunak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3705
+#: pynicotine/gtkgui/dialogs/preferences.py:3712
 #: pynicotine/gtkgui/ui/settings/network.ui:32
 #, fuzzy
 msgid "Network"
 msgstr "Sarea"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3706
+#: pynicotine/gtkgui/dialogs/preferences.py:3713
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:35
 #, fuzzy
 msgid "User Interface"
 msgstr "Erabiltzaile Interfazea"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3707
+#: pynicotine/gtkgui/dialogs/preferences.py:3714
 #: pynicotine/plugins/core_commands/__init__.py:15
 #: pynicotine/gtkgui/ui/settings/shares.ui:354
 msgid "Shares"
 msgstr "Partekatutakoak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3709
+#: pynicotine/gtkgui/dialogs/preferences.py:3716
 #: pynicotine/gtkgui/mainwindow.py:778 pynicotine/gtkgui/mainwindow.py:1130
 #: pynicotine/gtkgui/widgets/trayicon.py:74
 #: pynicotine/gtkgui/ui/mainwindow.ui:655
 #: pynicotine/gtkgui/ui/settings/uploads.ui:52
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:672
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:658
 msgid "Uploads"
 msgstr "Igoerak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3710
+#: pynicotine/gtkgui/dialogs/preferences.py:3717
 #: pynicotine/gtkgui/widgets/trayicon.py:80
 #: pynicotine/gtkgui/ui/settings/search.ui:38
 msgid "Searches"
 msgstr "Bilaketak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3711
+#: pynicotine/gtkgui/dialogs/preferences.py:3718
 #, fuzzy
 msgid "User Profile"
 msgstr "_Arakatu Erabiltzailea"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3712
+#: pynicotine/gtkgui/dialogs/preferences.py:3719
 #: pynicotine/gtkgui/ui/settings/chats.ui:507
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1061
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1047
 #, fuzzy
 msgid "Chats"
 msgstr "Txatak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3713
+#: pynicotine/gtkgui/dialogs/preferences.py:3720
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:20
 #, fuzzy
 msgid "Now Playing"
 msgstr "Orain jolasten"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3714
+#: pynicotine/gtkgui/dialogs/preferences.py:3721
 #: pynicotine/gtkgui/ui/settings/log.ui:77
 msgid "Logging"
 msgstr "Erregistroak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3715
+#: pynicotine/gtkgui/dialogs/preferences.py:3722
 #: pynicotine/gtkgui/ui/settings/ban.ui:21
 #, fuzzy
 msgid "Banned Users"
 msgstr "Erabiltzaile debekatuak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3716
+#: pynicotine/gtkgui/dialogs/preferences.py:3723
 #: pynicotine/gtkgui/ui/settings/ignore.ui:21
 #, fuzzy
 msgid "Ignored Users"
 msgstr "Ez ikusitako erabiltzaileak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3717
+#: pynicotine/gtkgui/dialogs/preferences.py:3724
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:16
 #, fuzzy
 msgid "URL Handlers"
 msgstr "URL kudeatzaileak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3718
+#: pynicotine/gtkgui/dialogs/preferences.py:3725
 #: pynicotine/gtkgui/ui/settings/plugin.ui:33
 #, fuzzy
 msgid "Plugins"
 msgstr "Pluginak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:4123
+#: pynicotine/gtkgui/dialogs/preferences.py:4130
 #, fuzzy
 msgid "Pick a File Name for Config Backup"
 msgstr "Aukeratu fitxategi izena konfiguratzeko babeskopia egiteko"
@@ -2502,7 +2504,7 @@ msgstr "_Itxi fitxa"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:60
 #: pynicotine/gtkgui/dialogs/shortcuts.py:102
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:952
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:938
 #, fuzzy
 msgid "Lists"
 msgstr "Zerrendak"
@@ -2993,8 +2995,8 @@ msgid "Wishlist Results Found"
 msgstr "Desioen zerrendako emaitzak aurkitu dira"
 
 #: pynicotine/gtkgui/mainwindow.py:780 pynicotine/gtkgui/ui/mainwindow.ui:948
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:696
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:878
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:682
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:864
 #, fuzzy
 msgid "User Profiles"
 msgstr "_Arakatu Erabiltzailea"
@@ -3002,14 +3004,14 @@ msgstr "_Arakatu Erabiltzailea"
 #: pynicotine/gtkgui/mainwindow.py:783 pynicotine/gtkgui/widgets/trayicon.py:79
 #: pynicotine/plugins/core_commands/__init__.py:11
 #: pynicotine/gtkgui/ui/mainwindow.ui:1403
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:733
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:922
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:719
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:908
 #, fuzzy
 msgid "Chat Rooms"
 msgstr "Txat gelak"
 
 #: pynicotine/gtkgui/mainwindow.py:784 pynicotine/gtkgui/ui/mainwindow.ui:1459
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:745
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:731
 #: pynicotine/gtkgui/ui/userinfo.ui:381
 msgid "Interests"
 msgstr "Zaletasunak"
@@ -3222,7 +3224,7 @@ msgstr "Nahia"
 msgid "In Queue"
 msgstr "Ilaran"
 
-#: pynicotine/gtkgui/search.py:542 pynicotine/gtkgui/widgets/theme.py:251
+#: pynicotine/gtkgui/search.py:542 pynicotine/gtkgui/widgets/theme.py:259
 #, fuzzy
 msgid "Private"
 msgstr "Txata pribatua"
@@ -3238,7 +3240,7 @@ msgstr "Fitxategi mota"
 msgid "Filename"
 msgstr "Fitxategi-izena"
 
-#: pynicotine/gtkgui/search.py:573 pynicotine/gtkgui/widgets/theme.py:252
+#: pynicotine/gtkgui/search.py:573 pynicotine/gtkgui/widgets/theme.py:260
 #, fuzzy
 msgid "Downloading"
 msgstr "Deskargak"
@@ -3265,7 +3267,7 @@ msgid "Copy Folder URL"
 msgstr "Kopiatu karpeta U_RL"
 
 #: pynicotine/gtkgui/search.py:637 pynicotine/gtkgui/transfers.py:278
-#: pynicotine/gtkgui/widgets/popupmenu.py:465
+#: pynicotine/gtkgui/widgets/popupmenu.py:466
 #, fuzzy
 msgid "View User _Profile"
 msgstr "Ikusi Erabiltzailearen _profila"
@@ -3520,11 +3522,6 @@ msgstr "Amaitu / Abortatu / Huts egin"
 msgid "Finished / Cancelled"
 msgstr "Amaitu / Iragazita"
 
-#: pynicotine/gtkgui/uploads.py:62
-#, fuzzy
-msgid "Failed"
-msgstr "Huts egin du"
-
 #: pynicotine/gtkgui/uploads.py:63
 #, fuzzy
 msgid "User Logged Off"
@@ -3765,8 +3762,8 @@ msgstr "Gehitu laguna…"
 msgid "Unban User"
 msgstr "Debekatu erabiltzailea"
 
-#: pynicotine/gtkgui/userinfo.py:625 pynicotine/gtkgui/widgets/popupmenu.py:478
-#: pynicotine/gtkgui/widgets/popupmenu.py:514
+#: pynicotine/gtkgui/userinfo.py:625 pynicotine/gtkgui/widgets/popupmenu.py:479
+#: pynicotine/gtkgui/widgets/popupmenu.py:515
 #, fuzzy
 msgid "Ban User"
 msgstr "Debekatu erabiltzailea"
@@ -3776,8 +3773,8 @@ msgstr "Debekatu erabiltzailea"
 msgid "Unignore User"
 msgstr "Ez ikusi egin Erabiltzaileari"
 
-#: pynicotine/gtkgui/userinfo.py:629 pynicotine/gtkgui/widgets/popupmenu.py:479
-#: pynicotine/gtkgui/widgets/popupmenu.py:515
+#: pynicotine/gtkgui/userinfo.py:629 pynicotine/gtkgui/widgets/popupmenu.py:480
+#: pynicotine/gtkgui/widgets/popupmenu.py:516
 #, fuzzy
 msgid "Ignore User"
 msgstr "Ez ikusi egin Erabiltzaileari"
@@ -3906,85 +3903,85 @@ msgstr "Fitxa guztiak itxi nahi dituzu?"
 msgid "Re_open Closed Tab"
 msgstr "_Itxi fitxa"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:435
+#: pynicotine/gtkgui/widgets/popupmenu.py:436
 #, fuzzy, python-format
 msgid "%(num)s File Selected"
 msgid_plural "%(num)s Files Selected"
 msgstr[0] "%s Hautatutako fitxategia"
 msgstr[1] "%s Hautatutako fitxategia"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:468
+#: pynicotine/gtkgui/widgets/popupmenu.py:469
 #: pynicotine/gtkgui/ui/userinfo.ui:504
 #, fuzzy
 msgid "_Send Message"
 msgstr "Bidali Mezua"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:471
+#: pynicotine/gtkgui/widgets/popupmenu.py:472
 #: pynicotine/gtkgui/ui/userinfo.ui:538
 #, fuzzy
 msgid "_Browse Files"
 msgstr "_Fitxategiak arakatu"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:474
-#: pynicotine/gtkgui/widgets/popupmenu.py:508
+#: pynicotine/gtkgui/widgets/popupmenu.py:475
+#: pynicotine/gtkgui/widgets/popupmenu.py:509
 #, fuzzy
 msgid "_Add Buddy"
 msgstr "Gehitu laguna…"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:481
-#: pynicotine/gtkgui/widgets/popupmenu.py:516
+#: pynicotine/gtkgui/widgets/popupmenu.py:482
+#: pynicotine/gtkgui/widgets/popupmenu.py:517
 #, fuzzy
 msgid "Ban IP Address"
 msgstr "Blokeatu IP helbidea"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:482
-#: pynicotine/gtkgui/widgets/popupmenu.py:517
+#: pynicotine/gtkgui/widgets/popupmenu.py:483
+#: pynicotine/gtkgui/widgets/popupmenu.py:518
 #, fuzzy
 msgid "Ignore IP Address"
 msgstr "Ez ikusi IP helbidea"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:483
+#: pynicotine/gtkgui/widgets/popupmenu.py:484
 #, fuzzy
 msgid "Show IP A_ddress"
 msgstr "Erakutsi IP A_helbidea"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:485
-#: pynicotine/gtkgui/widgets/popupmenu.py:526
+#: pynicotine/gtkgui/widgets/popupmenu.py:486
+#: pynicotine/gtkgui/widgets/popupmenu.py:527
 #, fuzzy
 msgid "Private Rooms"
 msgstr "Gela pribatuak"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:533
+#: pynicotine/gtkgui/widgets/popupmenu.py:534
 #, python-format
 msgid "Make Owner of %s"
 msgstr ""
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:551
+#: pynicotine/gtkgui/widgets/popupmenu.py:552
 #, fuzzy, python-format
 msgid "Remove from Private Room %s"
 msgstr "Kendu gela pribatutik %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:554
+#: pynicotine/gtkgui/widgets/popupmenu.py:555
 #, fuzzy, python-format
 msgid "Add to Private Room %s"
 msgstr "Gehitu gela pribatura %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:561
+#: pynicotine/gtkgui/widgets/popupmenu.py:562
 #, fuzzy, python-format
 msgid "Remove as Operator of %s"
 msgstr "Kendu %s -ren operadore gisa"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:565
+#: pynicotine/gtkgui/widgets/popupmenu.py:566
 #, fuzzy, python-format
 msgid "Add as Operator of %s"
 msgstr "Gehitu operadore gisa %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:604
+#: pynicotine/gtkgui/widgets/popupmenu.py:605
 #, fuzzy
 msgid "Change Room Owner?"
 msgstr "Gelak"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:605
+#: pynicotine/gtkgui/widgets/popupmenu.py:606
 #, fuzzy, python-format
 msgid ""
 "Do you really want to make %(user)s the new owner of your private room "
@@ -4013,51 +4010,51 @@ msgstr "Bilatu hurrengo partida"
 msgid "--- old messages above ---"
 msgstr "--- goiko mezu zaharrak ---"
 
-#: pynicotine/gtkgui/widgets/theme.py:255
+#: pynicotine/gtkgui/widgets/theme.py:263
 #, fuzzy
 msgid "Executable"
 msgstr "Exekutatuta: %s"
 
-#: pynicotine/gtkgui/widgets/theme.py:256
+#: pynicotine/gtkgui/widgets/theme.py:264
 #, fuzzy
 msgid "Audio"
 msgstr "Audioa"
 
-#: pynicotine/gtkgui/widgets/theme.py:257
+#: pynicotine/gtkgui/widgets/theme.py:265
 #, fuzzy
 msgid "Image"
 msgstr "Irudia:"
 
-#: pynicotine/gtkgui/widgets/theme.py:258
+#: pynicotine/gtkgui/widgets/theme.py:266
 #, fuzzy
 msgid "Archive"
 msgstr "Artxiboa"
 
-#: pynicotine/gtkgui/widgets/theme.py:259 pynicotine/pluginsystem.py:951
+#: pynicotine/gtkgui/widgets/theme.py:267 pynicotine/pluginsystem.py:956
 #, fuzzy
 msgid "Miscellaneous"
 msgstr "Denetarik"
 
-#: pynicotine/gtkgui/widgets/theme.py:260
+#: pynicotine/gtkgui/widgets/theme.py:268
 #, fuzzy
 msgid "Video"
 msgstr "Bideoa"
 
-#: pynicotine/gtkgui/widgets/theme.py:261
+#: pynicotine/gtkgui/widgets/theme.py:269
 #, fuzzy
 msgid "Document"
 msgstr "Dokumentua/Testua"
 
-#: pynicotine/gtkgui/widgets/theme.py:262
+#: pynicotine/gtkgui/widgets/theme.py:270
 msgid "Text"
 msgstr ""
 
-#: pynicotine/gtkgui/widgets/theme.py:265
+#: pynicotine/gtkgui/widgets/theme.py:273
 #, fuzzy
 msgid "Unreadable Folder"
 msgstr "Partekatu karpetak"
 
-#: pynicotine/gtkgui/widgets/theme.py:372
+#: pynicotine/gtkgui/widgets/theme.py:380
 #, fuzzy, python-format
 msgid "Error loading custom icon %(path)s: %(error)s"
 msgstr "Errorea ikono pertsonalizatua %(path)s kargatzean: %(error)s"
@@ -4072,46 +4069,60 @@ msgstr "Ezkutatu Nicotine+"
 msgid "Show Nicotine+"
 msgstr "Erakutsi Nicotine+"
 
-#: pynicotine/gtkgui/widgets/treeview.py:853
-msgid "A_scending"
+#: pynicotine/gtkgui/widgets/treeview.py:905
+msgid "Sorted Column"
 msgstr ""
 
-#: pynicotine/gtkgui/widgets/treeview.py:853
-msgid "De_scending"
-msgstr ""
+#: pynicotine/gtkgui/widgets/treeview.py:906
+#, fuzzy
+msgid "Column Widths"
+msgstr "Zutabe # %i"
 
-#: pynicotine/gtkgui/widgets/treeview.py:858
-msgid "_Reset Sort Column"
-msgstr ""
+#: pynicotine/gtkgui/widgets/treeview.py:907
+#, fuzzy
+msgid "Everything"
+msgstr "Dena…"
 
-#: pynicotine/gtkgui/widgets/treeview.py:865
+#: pynicotine/gtkgui/widgets/treeview.py:913
+#: pynicotine/gtkgui/widgets/treeview.py:922
+#, fuzzy
+msgid "_Left"
+msgstr "Ezkerra"
+
+#: pynicotine/gtkgui/widgets/treeview.py:914
+#: pynicotine/gtkgui/widgets/treeview.py:923
+#, fuzzy
+msgid "_Right"
+msgstr "Eskubidea"
+
+#: pynicotine/gtkgui/widgets/treeview.py:930
 #, fuzzy, python-format
 msgid "Column #%i"
 msgstr "Zutabe # %i"
 
-#: pynicotine/gtkgui/widgets/treeview.py:880
-msgid "_Sort Order"
+#: pynicotine/gtkgui/widgets/treeview.py:943
+msgid "_Sort Ascending"
 msgstr ""
 
-#: pynicotine/gtkgui/widgets/treeview.py:881
-msgid "Reset Sizing"
+#: pynicotine/gtkgui/widgets/treeview.py:943
+msgid "_Sort Descending"
 msgstr ""
 
-#: pynicotine/gtkgui/widgets/treeview.py:882
-msgid "Reset Columns"
+#: pynicotine/gtkgui/widgets/treeview.py:950
+msgid "Move Column"
 msgstr ""
 
-#: pynicotine/gtkgui/widgets/treeview.py:1052
+#: pynicotine/gtkgui/widgets/treeview.py:1121
 #, fuzzy
 msgid "Ungrouped"
 msgstr "Taldekatu gabea"
 
-#: pynicotine/gtkgui/widgets/treeview.py:1055
+#: pynicotine/gtkgui/widgets/treeview.py:1124
 #, fuzzy
 msgid "Group by Folder"
 msgstr "Taldeka Karpeta"
 
-#: pynicotine/gtkgui/widgets/treeview.py:1058
+#: pynicotine/gtkgui/widgets/treeview.py:1127
 #, fuzzy
 msgid "Group by User"
 msgstr "Erabiltzaile taldeka"
@@ -5768,32 +5779,32 @@ msgstr "Deskargatu gabeko plugina %s"
 msgid "No plugin with name \"%s\""
 msgstr ""
 
-#: pynicotine/pluginsystem.py:437
+#: pynicotine/pluginsystem.py:438
 #, fuzzy
 msgid "Loading plugin system"
 msgstr "Kargatutako plugin-a %s"
 
-#: pynicotine/pluginsystem.py:514
+#: pynicotine/pluginsystem.py:515
 #, fuzzy, python-format
 msgid "Installed plugin %s"
 msgstr "Deskargatu gabeko plugina %s"
 
-#: pynicotine/pluginsystem.py:517
+#: pynicotine/pluginsystem.py:518
 #, fuzzy, python-format
 msgid "Failed to install plugin %(name)s: %(error)s"
 msgstr "Ezin da gorde %(path)s fitxategia: %(error)s"
 
-#: pynicotine/pluginsystem.py:542
+#: pynicotine/pluginsystem.py:543
 #, fuzzy, python-format
 msgid "Failed to uninstall plugin %(name)s: %(error)s"
 msgstr "Ezin da gorde %(path)s fitxategia: %(error)s"
 
-#: pynicotine/pluginsystem.py:552
+#: pynicotine/pluginsystem.py:553
 #, fuzzy, python-format
 msgid "Uninstalled plugin %s"
 msgstr "Deskargatu gabeko plugina %s"
 
-#: pynicotine/pluginsystem.py:657
+#: pynicotine/pluginsystem.py:658
 #, fuzzy, python-format
 msgid ""
 "Unable to load plugin %(name)s. Plugin folder name contains invalid "
@@ -5802,17 +5813,17 @@ msgstr ""
 "Ezin da kargatu %(name)s plugina. Plugin karpetaren izenak karaktere "
 "baliogabeak ditu: %(characters)s"
 
-#: pynicotine/pluginsystem.py:689
+#: pynicotine/pluginsystem.py:694
 #, fuzzy, python-format
 msgid "Conflicting %(interface)s command in plugin %(name)s: %(command)s"
 msgstr "%(interface)s komando gatazkatsua %(name)s pluginan: %(command)s"
 
-#: pynicotine/pluginsystem.py:716
+#: pynicotine/pluginsystem.py:721
 #, fuzzy, python-format
 msgid "Loaded plugin %s"
 msgstr "Kargatutako plugin-a %s"
 
-#: pynicotine/pluginsystem.py:720
+#: pynicotine/pluginsystem.py:725
 #, fuzzy, python-format
 msgid ""
 "Unable to load plugin %(module)s\n"
@@ -5821,12 +5832,12 @@ msgstr ""
 "Ezin da kargatu %(module)s plugina\n"
 "%(exc_trace)s"
 
-#: pynicotine/pluginsystem.py:760
+#: pynicotine/pluginsystem.py:765
 #, fuzzy, python-format
 msgid "Unloaded plugin %s"
 msgstr "Deskargatu gabeko plugina %s"
 
-#: pynicotine/pluginsystem.py:764
+#: pynicotine/pluginsystem.py:769
 #, fuzzy, python-format
 msgid ""
 "Unable to unload plugin %(module)s\n"
@@ -5835,7 +5846,7 @@ msgstr ""
 "Ezin da deskargatu %(module)s plugina\n"
 "%(exc_trace)s"
 
-#: pynicotine/pluginsystem.py:879
+#: pynicotine/pluginsystem.py:884
 #, fuzzy, python-format
 msgid ""
 "Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
@@ -5844,32 +5855,32 @@ msgstr ""
 "%(module)s pluginak huts egin du %(errortype)s errorearekin: %(error)s.\n"
 "Aztarna: %(trace)s"
 
-#: pynicotine/pluginsystem.py:918
+#: pynicotine/pluginsystem.py:923
 #, python-format
 msgid "Restored default settings for plugin %s"
 msgstr ""
 
-#: pynicotine/pluginsystem.py:950
+#: pynicotine/pluginsystem.py:955
 #, fuzzy
 msgid "No description"
 msgstr "Norbere deskribapena:"
 
-#: pynicotine/pluginsystem.py:1027
+#: pynicotine/pluginsystem.py:1032
 #, fuzzy, python-format
 msgid "Missing %s argument"
 msgstr "%s argumentua falta da"
 
-#: pynicotine/pluginsystem.py:1036
+#: pynicotine/pluginsystem.py:1041
 #, fuzzy, python-format
 msgid "Invalid argument, possible choices: %s"
 msgstr "Soulseek URL baliogabea: %s"
 
-#: pynicotine/pluginsystem.py:1041
+#: pynicotine/pluginsystem.py:1046
 #, fuzzy, python-format
 msgid "Usage: %(command)s %(parameters)s"
 msgstr "Erabilera: %(command)s %(args)s"
 
-#: pynicotine/pluginsystem.py:1080
+#: pynicotine/pluginsystem.py:1085
 #, fuzzy, python-format
 msgid ""
 "Unknown command: %(command)s. Type %(help_command)s to list available "
@@ -5899,22 +5910,22 @@ msgstr ""
 "UPnP: Kanpoko ataka %(external_port)s IP helbide lokalera %(ip_address)s "
 "ataka %(local_port)s behar bezala birbidali da"
 
-#: pynicotine/privatechat.py:226
+#: pynicotine/privatechat.py:254
 #, fuzzy, python-format
 msgid "Private message from user '%(user)s': %(message)s"
 msgstr "Mezu Pribatua %(user)s-(e)k bidalia"
 
-#: pynicotine/search.py:529
+#: pynicotine/search.py:530
 #, fuzzy, python-format
 msgid "Searching for wishlist item \"%s\""
 msgstr "\"%s\" nahien zerrendako elementua bilatzen"
 
-#: pynicotine/search.py:590
+#: pynicotine/search.py:591
 #, fuzzy, python-format
 msgid "Wishlist wait period set to %(duration)s"
 msgstr "Desioen zerrendaren itxaronaldia %s segundotan ezarri da"
 
-#: pynicotine/search.py:606
+#: pynicotine/search.py:607
 #, python-format
 msgid "Server provided %(num_phrases)s excluded search phrase: %(phrases)s"
 msgid_plural ""
@@ -5922,7 +5933,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: pynicotine/search.py:927
+#: pynicotine/search.py:928
 #, fuzzy, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)s result"
 msgid_plural ""
@@ -5962,45 +5973,45 @@ msgstr ""
 "badu, ezabatu %(dir)s / *. Db eta saiatu berriro. Horrek laguntzen ez badu, "
 "bidali akatsen txostena pilatutako traza honekin: %(trace)s"
 
-#: pynicotine/shares.py:642
+#: pynicotine/shares.py:643
 #, fuzzy, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "Errorea %(path)s fitxategia eskaneatzean: %(error)s"
 
-#: pynicotine/shares.py:650
+#: pynicotine/shares.py:651
 #, fuzzy, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "Errorea %(path)s karpeta eskaneatzean: %(error)s"
 
-#: pynicotine/shares.py:691
+#: pynicotine/shares.py:692
 #, fuzzy, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr "Errorea %(path)s fitxategiaren metadatuak eskaneatzean: %(error)s"
 
-#: pynicotine/shares.py:1148
+#: pynicotine/shares.py:1149
 #, fuzzy, python-format
 msgid "Rescan aborted due to unavailable shares: %s"
 msgstr "Berriro eskaneatzea bertan behera utzi da partekatzerik ez dagoelako"
 
-#: pynicotine/shares.py:1352
+#: pynicotine/shares.py:1354
 #, fuzzy, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr ""
 "%(user)s erabiltzailea partekatutako fitxategien zerrendan arakatzen ari da"
 
-#: pynicotine/slskmessages.py:3310
+#: pynicotine/slskmessages.py:3307
 #, fuzzy, python-format
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr ""
 "Ezin da partekatutako datu basea irakurri. Mesedez berriro eskaneatu zure "
 "akzioak. Errorea: %s"
 
-#: pynicotine/slskproto.py:539
+#: pynicotine/slskproto.py:540
 #, fuzzy, python-format
 msgid "Specified network interface '%s' is not available"
 msgstr "Zehaztutako sare-interfazea '%s' ez dago"
 
-#: pynicotine/slskproto.py:550
+#: pynicotine/slskproto.py:551
 #, fuzzy, python-format
 msgid ""
 "Cannot listen on port %(port)s. Ensure no other application uses it, or "
@@ -6009,37 +6020,37 @@ msgstr ""
 "Ezin da entzun %(port)s atakan. Ziurtatu beste aplikaziorik ez duela "
 "erabiltzen edo aukeratu beste ataka bat. Errorea: %(error)s"
 
-#: pynicotine/slskproto.py:562
+#: pynicotine/slskproto.py:563
 #, fuzzy, python-format
 msgid "Listening on port: %i"
 msgstr "%i ataka entzuten"
 
-#: pynicotine/slskproto.py:890
+#: pynicotine/slskproto.py:894
 #, fuzzy, python-format
 msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Ezin da %(host)s zerbitzarira konektatu:%(port)s: %(error)s"
 
-#: pynicotine/slskproto.py:1179
+#: pynicotine/slskproto.py:1183
 #, fuzzy, python-format
 msgid "Reconnecting to server in %(duration)s"
 msgstr "Konektatu automatikoki zerbitzaria abiaraztean"
 
-#: pynicotine/slskproto.py:1255
+#: pynicotine/slskproto.py:1259
 #, python-format
 msgid "Connecting to %(host)s:%(port)s"
 msgstr "%(host)s:%(port)s-(e)ra konektatzen"
 
-#: pynicotine/slskproto.py:1294
+#: pynicotine/slskproto.py:1298
 #, fuzzy, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in…"
 msgstr "%(host)s zerbitzariarekin konektatuta:%(port)s, saioa hasten…"
 
-#: pynicotine/slskproto.py:1614
+#: pynicotine/slskproto.py:1618
 #, python-format
 msgid "Disconnected from server %(host)s:%(port)s"
 msgstr "%(host)s:%(port)s zerbitzaritik deskonektatuta"
 
-#: pynicotine/slskproto.py:1620
+#: pynicotine/slskproto.py:1624
 #, fuzzy
 msgid "Someone logged in to your Soulseek account elsewhere"
 msgstr "Norbaitek beste nonbait saioa hasi du zure Soulseek kontuan"
@@ -6057,14 +6068,14 @@ msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr ""
 "Igoera bertan behera utzi da, %(user)s erabiltzailea, %(file)s fitxategia"
 
-#: pynicotine/uploads.py:650
+#: pynicotine/uploads.py:652
 #, fuzzy, python-format
 msgid "%(user)s is downloading file %(file)s (%(size)s) from folder %(folder)s"
 msgstr ""
 "Benetan al duzu %(num)i fitxategiak %(user)s karpetako %(folder)s deskargatu "
 "nahi dituzula?"
 
-#: pynicotine/uploads.py:657
+#: pynicotine/uploads.py:659
 #, fuzzy, python-format
 msgid ""
 "%(user)s is downloading %(files)s files (%(size)s) from folder %(folder)s"
@@ -6072,23 +6083,23 @@ msgstr ""
 "Benetan al duzu %(num)i fitxategiak %(user)s karpetako %(folder)s deskargatu "
 "nahi dituzula?"
 
-#: pynicotine/uploads.py:664
+#: pynicotine/uploads.py:666
 #, python-format
 msgid ""
 "%(user)s is downloading %(files)s files (%(size)s) from %(folders)s folders"
 msgstr ""
 
-#: pynicotine/uploads.py:671 pynicotine/gtkgui/ui/userinfo.ui:322
+#: pynicotine/uploads.py:673 pynicotine/gtkgui/ui/userinfo.ui:322
 #, fuzzy
 msgid "Queued Uploads"
 msgstr "Ilaran dauden kargak"
 
-#: pynicotine/uploads.py:1138 pynicotine/uploads.py:1176
+#: pynicotine/uploads.py:1140 pynicotine/uploads.py:1178
 #, fuzzy, python-format
 msgid "Upload I/O error: %s"
 msgstr "I / O errorea kargatzean: %s"
 
-#: pynicotine/uploads.py:1188
+#: pynicotine/uploads.py:1190
 #, fuzzy, python-format
 msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr ""
@@ -6197,65 +6208,65 @@ msgstr "Zure pasahitza aldatu da. Pasahitza %s da"
 msgid "Password Changed"
 msgstr "Pasahitz aldaketa ukatu da"
 
-#: pynicotine/utils.py:201
+#: pynicotine/utils.py:192
 #, python-format
 msgid "%(num)s second"
 msgid_plural "%(num)s seconds"
 msgstr[0] ""
 msgstr[1] ""
 
-#: pynicotine/utils.py:206
+#: pynicotine/utils.py:197
 #, python-format
 msgid "%(num)s minute"
 msgid_plural "%(num)s minutes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: pynicotine/utils.py:211
+#: pynicotine/utils.py:202
 #, python-format
 msgid "%(num)s hour"
 msgid_plural "%(num)s hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: pynicotine/utils.py:215
+#: pynicotine/utils.py:206
 #, python-format
 msgid "%(num)s day"
 msgid_plural "%(num)s days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: pynicotine/utils.py:608
+#: pynicotine/utils.py:599
 #, fuzzy, python-format
 msgid "Cannot open file path %(path)s: %(error)s"
 msgstr "Ezin da gorde %(path)s fitxategia: %(error)s"
 
-#: pynicotine/utils.py:654
+#: pynicotine/utils.py:645
 #, fuzzy, python-format
 msgid "Cannot open URL %(url)s: %(error)s"
 msgstr "Ezin da %(filename)s gorde: %(error)s"
 
-#: pynicotine/utils.py:679
+#: pynicotine/utils.py:670
 #, fuzzy, python-format
 msgid "Something went wrong while reading file %(filename)s: %(error)s"
 msgstr "Arazoren bat izan da %(filename)s fitxategia irakurtzean: %(error)s"
 
-#: pynicotine/utils.py:684
+#: pynicotine/utils.py:675
 #, fuzzy, python-format
 msgid "Attempting to load backup of file %s"
 msgstr "%s fitxategiaren segurtasun kopia kargatzen saiatzen"
 
-#: pynicotine/utils.py:706
+#: pynicotine/utils.py:697
 #, fuzzy, python-format
 msgid "Unable to back up file %(path)s: %(error)s"
 msgstr "Ezin da %(path)s fitxategiaren babeskopia egin: %(error)s"
 
-#: pynicotine/utils.py:727
+#: pynicotine/utils.py:717
 #, fuzzy, python-format
 msgid "Unable to save file %(path)s: %(error)s"
 msgstr "Ezin da gorde %(path)s fitxategia: %(error)s"
 
-#: pynicotine/utils.py:738
+#: pynicotine/utils.py:728
 #, fuzzy, python-format
 msgid "Unable to restore previous file %(path)s: %(error)s"
 msgstr "Ezin da aurreko fitxategia berreskuratu %(path)s: %(error)s"
@@ -6321,21 +6332,21 @@ msgstr "Deskargak: %(speed)s"
 #: pynicotine/gtkgui/ui/settings/log.ui:52
 #: pynicotine/gtkgui/ui/settings/log.ui:202
 #: pynicotine/gtkgui/ui/settings/network.ui:437
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:498
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:538
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:578
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1042
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1144
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1184
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1224
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1264
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1304
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1344
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1404
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1444
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1484
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1544
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1584
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:484
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:524
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:564
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1028
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1130
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1170
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1210
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1250
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1290
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1330
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1390
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1430
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1470
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1530
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1570
 msgid "Default"
 msgstr "Lehenetsia"
 
@@ -6668,13 +6679,13 @@ msgstr "Bilaketa terminoa…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:67
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:10
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1641
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1689
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1737
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1785
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1833
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1881
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1929
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1627
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1675
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1723
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1771
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1819
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1867
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1915
 msgid "Clear"
 msgstr "Garbitu"
 
@@ -7474,16 +7485,6 @@ msgstr "Gaitu deskarga-iragazkiak"
 msgid "Load Defaults"
 msgstr "Lehenespenak Kargatu"
 
-#: pynicotine/gtkgui/ui/settings/downloads.ui:608
-#, fuzzy
-msgid "_Verify Filters"
-msgstr "Iragazkiak Egiaztatu"
-
-#: pynicotine/gtkgui/ui/settings/downloads.ui:620
-#, fuzzy
-msgid "Unverified"
-msgstr "Egiaztatu gabe"
-
 #: pynicotine/gtkgui/ui/settings/ignore.ui:33
 #, fuzzy
 msgid ""
@@ -7927,273 +7928,273 @@ msgstr "Modu iluna hobetsi"
 msgid "Use header bar"
 msgstr "Erabili _Header Bar"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:105
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:101
 #, fuzzy
 msgid "Display tray icon"
 msgstr "Bistaratu erretiluaren ikonoa"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:135
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:125
 #, fuzzy
-msgid "Minimize to tray on startup"
+msgid "Minimize window on startup"
 msgstr "Minimizatu erretilura abiaraztean"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:163
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:149
 #, fuzzy
 msgid "Language (requires a restart):"
 msgstr "Entzumen ataka barrutia (berrabiaraztea eskatzen du):"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:179
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:165
 #, fuzzy
 msgid "When closing window:"
 msgstr "Nicotine+ ixterakoan:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:198
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:184
 #, fuzzy
 msgid "Notifications"
 msgstr "Jakinarazpenak"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:216
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:202
 #, fuzzy
 msgid "Enable sound for popup notifications"
 msgstr "Gaitu soinua jakinarazpen laster-leihoetarako"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:240
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:226
 #, fuzzy
 msgid "Show window notification for private messages and mentions"
 msgstr ""
 "Erakutsi berriketen eta aipamen pribatuen jakinarazpena leihoaren izenburuan"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:272
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:258
 #, fuzzy
 msgid "Show popup notifications for:"
 msgstr "Erakutsi jakinarazpenen ikonoak fitxetan"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:299
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:285
 #, fuzzy
 msgid "Finished file downloads"
 msgstr "Deskargatutako fitxategia"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:311
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:297
 #, fuzzy
 msgid "Finished folder downloads"
 msgstr "Deskargatutako karpeta"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:323
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:309
 #, fuzzy
 msgid "Queued uploads"
 msgstr "Ilaran dauden kargak"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:335
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:321
 #, fuzzy
 msgid "Wishlist results found"
 msgstr "Desioen zerrendako emaitzak aurkitu dira"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:347
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:333
 #, fuzzy
 msgid "Private messages"
 msgstr "%s -ren mezu pribatua"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:359
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:345
 #, fuzzy
 msgid "Private message mentions"
 msgstr "%s -ren mezu pribatua"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:371
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:357
 #, fuzzy
 msgid "Chat room messages"
 msgstr "Txat gelaren mezua:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:383
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:369
 #, fuzzy
 msgid "Chat room mentions"
 msgstr "Osaketa"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:408
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:394
 #, fuzzy
 msgid "Tabs"
 msgstr "Fitxak"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:426
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:412
 #, fuzzy
 msgid "Restore the previously active main tab at startup"
 msgstr "Berrezarri aurrez irekitako txata pribatuak abiaraztean"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:450
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:436
 #, fuzzy
 msgid "Close-buttons on secondary tabs"
 msgstr "Itxi botoiak bigarren mailako fitxetan"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:474
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:460
 #, fuzzy
 msgid "Regular tab label color:"
 msgstr "Fitxa arruntaren etiketaren kolorea:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:514
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:500
 #, fuzzy
 msgid "Changed tab label color:"
 msgstr "Fitxa etiketaren kolorea aldatu da:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:554
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:540
 #, fuzzy
 msgid "Highlighted tab label color:"
 msgstr "Nabarmendutako fitxa etiketaren kolorea:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:595
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:581
 msgid "Buddy list position:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:621
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:607
 #, fuzzy
 msgid "Visible main tabs:"
 msgstr "Ikusgai dauden fitxa nagusiak:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:777
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:763
 #, fuzzy
 msgid "Tab bar positions:"
 msgstr "Fitxa barraren kokapena:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:812
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:798
 #, fuzzy
 msgid "Main tabs"
 msgstr "Fitxa nagusiak"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:970
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:956
 #, fuzzy
 msgid "Show reverse file paths (requires a restart)"
 msgstr ""
 "Erakutsi alderantzizko fitxategien bideak bilaketan eta transferitu "
 "ikuspegietan (berrabiarazi behar da)"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:994
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:980
 #, fuzzy
 msgid "Show exact file sizes (requires a restart)"
 msgstr "Sare interfazea (berrabiaraztea eskatzen du):"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1018
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1004
 #, fuzzy
 msgid "List text color:"
 msgstr "Zerrendaren testuaren kolorea:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1079
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1065
 #, fuzzy
 msgid "Enable colored usernames"
 msgstr "Txat gelaren mezua:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1103
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1089
 #, fuzzy
 msgid "Chat username appearance:"
 msgstr "Txataren erabiltzaile izenaren itxura:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1120
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1106
 #, fuzzy
 msgid "Remote text color:"
 msgstr "Urruneko testuaren kolorea:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1160
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1146
 #, fuzzy
 msgid "Local text color:"
 msgstr "Tokiko testuaren kolorea:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1200
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1186
 #, fuzzy
 msgid "Command output text color:"
 msgstr "Urruneko testuaren kolorea:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1240
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1226
 #, fuzzy
 msgid "/me action text color:"
 msgstr "/ me ekintzaren testuaren kolorea:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1280
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1266
 #, fuzzy
 msgid "Highlighted text color:"
 msgstr "Testu kolorea nabarmenduta:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1320
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1306
 #, fuzzy
 msgid "URL link text color:"
 msgstr "URL estekaren testuaren kolorea:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1363
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1349
 #, fuzzy
 msgid "User Statuses"
 msgstr "Ameriketako Estatu Batuak"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1380
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1366
 #, fuzzy
 msgid "Online color:"
 msgstr "Lineako testuaren kolorea:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1420
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1406
 #, fuzzy
 msgid "Away color:"
 msgstr "Testuaren kolorea kanpoan:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1460
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1446
 #, fuzzy
 msgid "Offline color:"
 msgstr "Lineaz kanpoko testuaren kolorea:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1503
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1489
 #, fuzzy
 msgid "Text Entries"
 msgstr "Testu sarrerak"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1520
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1506
 #, fuzzy
 msgid "Text entry background color:"
 msgstr "Testuaren sarrerako atzeko kolorea:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1560
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1546
 #, fuzzy
 msgid "Text entry text color:"
 msgstr "Testuaren sarrerako testuaren kolorea:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1603
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1589
 #, fuzzy
 msgid "Fonts"
 msgstr "Letra tipoak"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1620
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1606
 #, fuzzy
 msgid "Global font:"
 msgstr "Letra-tipo globala:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1668
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1654
 #, fuzzy
 msgid "List font:"
 msgstr "Zerrendako letra-tipoa:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1716
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1702
 #, fuzzy
 msgid "Text view font:"
 msgstr "Testu-ikuspegiaren letra-tipoa:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1764
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1750
 #, fuzzy
 msgid "Chat font:"
 msgstr "Txat letra-tipoa:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1812
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1798
 #, fuzzy
 msgid "Transfers font:"
 msgstr "Letra-tipoa transferitzen da:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1860
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1846
 #, fuzzy
 msgid "Search font:"
 msgstr "Bilatu letra-tipoa:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1908
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1894
 #, fuzzy
 msgid "Browse font:"
 msgstr "Arakatu letra-tipoa:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1960
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1946
 msgid "Icons"
 msgstr "Ikonoak"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1977
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1963
 #, fuzzy
 msgid "Icon theme folder:"
 msgstr "Fitxategiaren karpeta osatu gabea:"
@@ -8273,6 +8274,32 @@ msgstr "Freskatu fitxategiak"
 #, fuzzy
 msgid "Nicotine+ Commands"
 msgstr "Nicotine+ Taldea"
+
+#, python-format
+#~ msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
+#~ msgstr ""
+#~ "Errorea: Deskarga Iragazkiak huts egin du! Egiaztatu iragazkiak. "
+#~ "Arrazoia: %s"
+
+#, python-format
+#~ msgid "Error: %(num)d Download filters failed! %(error)s "
+#~ msgstr "Deskarga amaituta: %(num)d erabiltzailea, %(error)s fitxategia "
+
+#, python-format
+#~ msgid "%(num)d Failed! %(error)s "
+#~ msgstr "%(num)d-ek huts egin du! %(error)s "
+
+#, fuzzy
+#~ msgid "Filters Successful"
+#~ msgstr "Iragazkiak arrakastatsuak dira"
+
+#, fuzzy
+#~ msgid "_Verify Filters"
+#~ msgstr "Iragazkiak Egiaztatu"
+
+#, fuzzy
+#~ msgid "Unverified"
+#~ msgstr "Egiaztatu gabe"
 
 #, fuzzy
 #~ msgid ""
