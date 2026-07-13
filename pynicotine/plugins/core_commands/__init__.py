@@ -116,7 +116,7 @@ class Plugin(BasePlugin):
             "ctcp": {
                 "callback": self.ctcp_command,
                 "callback_chatroom": self.ctcp_chatroom_command,
-                "description": _("Send client-to-client protocol query"),
+                "description": _("Request client information from user"),
                 "disable": ["cli"],
                 "group": _CommandGroup.CHAT,
                 "parameters": ["<user>", "<query>"],
