@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-13 07:23+0300\n"
-"PO-Revision-Date: 2026-06-10 06:01+0000\n"
+"PO-Revision-Date: 2026-07-14 06:01+0000\n"
 "Last-Translator: Felix Hansen <gore-snagged-happy@duck.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6\n"
+"X-Generator: Weblate 2026.8.dev0\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -310,8 +310,8 @@ msgstr ""
 #, python-format
 msgid "%(num)s download filter contains an invalid regular expression"
 msgid_plural "%(num)s download filters contain invalid regular expressions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(num)s Download‑Filter enthält einen ungültigen regulären Ausdruck"
+msgstr[1] "%(num)s Download‑Filter enthalten ungültige reguläre Ausdrücke"
 
 #: pynicotine/downloads.py:428
 #, python-format
@@ -1419,16 +1419,16 @@ msgstr "Filter"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:387
 msgid "Validity"
-msgstr ""
+msgstr "Gültigkeit"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:394
 msgid "Regex"
 msgstr "Regex (regulärer Ausdruck)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:531
-#, fuzzy, python-format
+#, python-format
 msgid "Invalid Regular Expression: %s"
-msgstr "Reguläre Ausdrücke aktivieren"
+msgstr "Ungültiger regulärer Ausdruck: %s"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:568
 msgid "Add Download Filter"
@@ -2012,13 +2012,13 @@ msgid "Uninstall Plugin?"
 msgstr "Plugin deinstallieren?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3636
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Do you really want to uninstall plugin %s? This will delete all settings and "
 "data stored by the plugin."
 msgstr ""
-"Möchtest du das Plugin %s deinstallieren? Dadurch werden alle vom Plugin "
-"gespeicherten Dateien entfernt."
+"Möchten du das Plugin %s wirklich deinstallieren? Dadurch werden alle vom "
+"Plugin gespeicherten Einstellungen und Daten gelöscht."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3640
 msgid "Uninstall"
@@ -3613,31 +3613,26 @@ msgid "Show Nicotine+"
 msgstr "Nicotine+ anzeigen"
 
 #: pynicotine/gtkgui/widgets/treeview.py:905
-#, fuzzy
 msgid "Sorted Column"
-msgstr "_Sortierung der Spalte zurücksetzen"
+msgstr "Sortierte Spalte"
 
 #: pynicotine/gtkgui/widgets/treeview.py:906
-#, fuzzy
 msgid "Column Widths"
-msgstr "Spalte #%i"
+msgstr "Spaltenbreiten"
 
 #: pynicotine/gtkgui/widgets/treeview.py:907
-#, fuzzy
 msgid "Everything"
-msgstr "Alles …"
+msgstr "Alles"
 
 #: pynicotine/gtkgui/widgets/treeview.py:913
 #: pynicotine/gtkgui/widgets/treeview.py:922
-#, fuzzy
 msgid "_Left"
-msgstr "Links"
+msgstr "_Links"
 
 #: pynicotine/gtkgui/widgets/treeview.py:914
 #: pynicotine/gtkgui/widgets/treeview.py:923
-#, fuzzy
 msgid "_Right"
-msgstr "Rechts"
+msgstr "_Rechts"
 
 #: pynicotine/gtkgui/widgets/treeview.py:930
 #, python-format
@@ -3645,19 +3640,16 @@ msgid "Column #%i"
 msgstr "Spalte #%i"
 
 #: pynicotine/gtkgui/widgets/treeview.py:943
-#, fuzzy
 msgid "_Sort Ascending"
-msgstr "A_ufsteigend"
+msgstr "_Aufsteigend sortieren"
 
 #: pynicotine/gtkgui/widgets/treeview.py:943
-#, fuzzy
 msgid "_Sort Descending"
-msgstr "A_bsteigend"
+msgstr "_Absteigend sortieren"
 
 #: pynicotine/gtkgui/widgets/treeview.py:950
-#, fuzzy
 msgid "Move Column"
-msgstr "Spalten zurücksetzen"
+msgstr "Spalte verschieben"
 
 #: pynicotine/gtkgui/widgets/treeview.py:1121
 msgid "Ungrouped"
@@ -6983,9 +6975,8 @@ msgid "Display tray icon"
 msgstr "Symbol im Infobereich anzeigen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:125
-#, fuzzy
 msgid "Minimize window on startup"
-msgstr "Beim Start in den Infobereich minimieren"
+msgstr "Fenster beim Start minimieren"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:149
 msgid "Language (requires a restart):"
