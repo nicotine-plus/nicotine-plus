@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-13 07:23+0300\n"
-"PO-Revision-Date: 2026-06-10 06:01+0000\n"
+"PO-Revision-Date: 2026-07-14 06:01+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6\n"
+"X-Generator: Weblate 2026.8.dev0\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -308,8 +308,8 @@ msgstr "'%(tempfile)s', '%(file)s' konumuna taşınamadı: %(error)s"
 #, python-format
 msgid "%(num)s download filter contains an invalid regular expression"
 msgid_plural "%(num)s download filters contain invalid regular expressions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(num)s indirme filtresinde geçersiz bir düzenli ifade var"
+msgstr[1] "%(num)s indirme filtresinde geçersiz bir düzenli ifade var"
 
 #: pynicotine/downloads.py:428
 #, python-format
@@ -1414,16 +1414,16 @@ msgstr "Filtre"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:387
 msgid "Validity"
-msgstr ""
+msgstr "Geçerlilik"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:394
 msgid "Regex"
 msgstr "Düzenli ifade"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:531
-#, fuzzy, python-format
+#, python-format
 msgid "Invalid Regular Expression: %s"
-msgstr "Düzenli ifadeleri etkinleştir"
+msgstr "Geçersiz Düzenli İfade: %s"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:568
 msgid "Add Download Filter"
@@ -2004,13 +2004,13 @@ msgid "Uninstall Plugin?"
 msgstr "Eklenti Kaldırılsın Mı?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3636
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Do you really want to uninstall plugin %s? This will delete all settings and "
 "data stored by the plugin."
 msgstr ""
-"%s eklentisini gerçekten kaldırmak istiyor musunuz? Bu işlem, eklentinin "
-"depoladığı tüm dosyaları silecektir."
+"%s eklentisini gerçekten kaldırmak istiyor musunuz? Bu, eklenti tarafından "
+"kaydedilen tüm ayarları ve verileri silecektir."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3640
 msgid "Uninstall"
@@ -3603,31 +3603,26 @@ msgid "Show Nicotine+"
 msgstr "Nicotine+'ı Göster"
 
 #: pynicotine/gtkgui/widgets/treeview.py:905
-#, fuzzy
 msgid "Sorted Column"
-msgstr "Sıralama Sütununu _Sıfırla"
+msgstr "Sıralanan Sütun"
 
 #: pynicotine/gtkgui/widgets/treeview.py:906
-#, fuzzy
 msgid "Column Widths"
-msgstr "Sütun #%i"
+msgstr "Sütun Genişlikleri"
 
 #: pynicotine/gtkgui/widgets/treeview.py:907
-#, fuzzy
 msgid "Everything"
-msgstr "Her şey…"
+msgstr "Her şey"
 
 #: pynicotine/gtkgui/widgets/treeview.py:913
 #: pynicotine/gtkgui/widgets/treeview.py:922
-#, fuzzy
 msgid "_Left"
-msgstr "Sol"
+msgstr "S_ol"
 
 #: pynicotine/gtkgui/widgets/treeview.py:914
 #: pynicotine/gtkgui/widgets/treeview.py:923
-#, fuzzy
 msgid "_Right"
-msgstr "Sağ"
+msgstr "S_ağ"
 
 #: pynicotine/gtkgui/widgets/treeview.py:930
 #, python-format
@@ -3635,19 +3630,16 @@ msgid "Column #%i"
 msgstr "Sütun #%i"
 
 #: pynicotine/gtkgui/widgets/treeview.py:943
-#, fuzzy
 msgid "_Sort Ascending"
-msgstr "A_rtan"
+msgstr "Artan _Sırayla"
 
 #: pynicotine/gtkgui/widgets/treeview.py:943
-#, fuzzy
 msgid "_Sort Descending"
-msgstr "A_zalan"
+msgstr "Azalan _Sırayla"
 
 #: pynicotine/gtkgui/widgets/treeview.py:950
-#, fuzzy
 msgid "Move Column"
-msgstr "Sütunları Sıfırla"
+msgstr "Sütunu Taşı"
 
 #: pynicotine/gtkgui/widgets/treeview.py:1121
 msgid "Ungrouped"
@@ -6925,9 +6917,8 @@ msgid "Display tray icon"
 msgstr "Tepsi simgesini görüntüle"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:125
-#, fuzzy
 msgid "Minimize window on startup"
-msgstr "Başlangıçta tepsi simgesine küçült"
+msgstr "Başlangıçta pencereyi simge durumuna küçült"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:149
 msgid "Language (requires a restart):"
