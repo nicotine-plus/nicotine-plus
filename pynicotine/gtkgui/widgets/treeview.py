@@ -897,7 +897,7 @@ class TreeView:
         columns = self.widget.get_columns()
         visible_columns = [column for column in columns if column.get_visible()]
         selected_column_id = self._get_selected_column_id()
-        move_column_menu = None
+        column_position_menu = None
         menu.clear()
 
         reset_menu = PopupMenu(self.window.application)
@@ -908,19 +908,19 @@ class TreeView:
         )
 
         if selected_column_id is not None:
-            move_column_menu = PopupMenu(self.window.application)
-            move_column_menu.add_items(
-                ("#" + _("_Left"), self.on_move_column_left, selected_column_id),
-                ("#" + _("_Right"), self.on_move_column_right, selected_column_id)
+            column_position_menu = PopupMenu(self.window.application)
+            column_position_menu.add_items(
+                ("#" + _("Move _Left"), self.on_move_column_left, selected_column_id),
+                ("#" + _("Move _Right"), self.on_move_column_right, selected_column_id)
             )
-            move_column_menu.update_model()
+            column_position_menu.update_model()
 
             for index, column in enumerate(visible_columns):
                 if column.id != selected_column_id:
                     continue
 
-                move_column_menu.actions[_("_Left")].set_enabled(bool(index))
-                move_column_menu.actions[_("_Right")].set_enabled(index < len(visible_columns) - 1)
+                column_position_menu.actions[_("Move _Left")].set_enabled(bool(index))
+                column_position_menu.actions[_("Move _Right")].set_enabled(index < len(visible_columns) - 1)
                 break
 
         for column_num, column in enumerate(columns, start=1):
@@ -946,8 +946,8 @@ class TreeView:
             ("#" + sort_label, self.on_invert_sort_order)
         )
 
-        if move_column_menu is not None:
-            menu.add_items((">" + _("Move Column"), move_column_menu))
+        if column_position_menu is not None:
+            menu.add_items((">" + _("Column _Position"), column_position_menu))
 
         menu.add_items((">" + _("Reset"), reset_menu))
         menu.update_model()
