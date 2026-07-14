@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-13 07:23+0300\n"
-"PO-Revision-Date: 2026-06-25 17:18+0000\n"
+"PO-Revision-Date: 2026-07-14 06:01+0000\n"
 "Last-Translator: slrslr <adm@prnet.info>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.7.dev0\n"
+"X-Generator: Weblate 2026.8.dev0\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -306,9 +306,9 @@ msgstr "Nelze přesunout '%(tempfile)s' do '%(file)s': %(error)s"
 #, python-format
 msgid "%(num)s download filter contains an invalid regular expression"
 msgid_plural "%(num)s download filters contain invalid regular expressions"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%(num)s filtr stahování obsahuje neplatný regulární výraz"
+msgstr[1] "%(num)s filtry stahování obsahují neplatné regulární výrazy"
+msgstr[2] "%(num)s filtrů stahování obsahuje neplatné regulární výrazy"
 
 #: pynicotine/downloads.py:428
 #, python-format
@@ -1409,16 +1409,16 @@ msgstr "Filtr"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:387
 msgid "Validity"
-msgstr ""
+msgstr "Platnost"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:394
 msgid "Regex"
 msgstr "Regex"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:531
-#, fuzzy, python-format
+#, python-format
 msgid "Invalid Regular Expression: %s"
-msgstr "Povolit regulární výrazy"
+msgstr "Neplatný regulární výraz: %s"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:568
 msgid "Add Download Filter"
@@ -1997,13 +1997,13 @@ msgid "Uninstall Plugin?"
 msgstr "Odinstalovat plugin?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3636
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Do you really want to uninstall plugin %s? This will delete all settings and "
 "data stored by the plugin."
 msgstr ""
-"Opravdu chcete odinstalovat plugin %s? To odstraní všechny soubory, které "
-"plugin uložil."
+"Opravdu chcete odinstalovat plugin %s? Tím dojde ke smazání všech nastavení "
+"a dat uchovávaných pluginem."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3640
 msgid "Uninstall"
@@ -3599,31 +3599,26 @@ msgid "Show Nicotine+"
 msgstr "Zobrazit Nicotine+"
 
 #: pynicotine/gtkgui/widgets/treeview.py:905
-#, fuzzy
 msgid "Sorted Column"
-msgstr "_Resetovat kolonku řazení"
+msgstr "Seřazený sloupec"
 
 #: pynicotine/gtkgui/widgets/treeview.py:906
-#, fuzzy
 msgid "Column Widths"
-msgstr "Sloupec #%i"
+msgstr "Šířky sloupců"
 
 #: pynicotine/gtkgui/widgets/treeview.py:907
-#, fuzzy
 msgid "Everything"
-msgstr "Vše…"
+msgstr "Vše"
 
 #: pynicotine/gtkgui/widgets/treeview.py:913
 #: pynicotine/gtkgui/widgets/treeview.py:922
-#, fuzzy
 msgid "_Left"
-msgstr "Vlevo"
+msgstr "V_levo"
 
 #: pynicotine/gtkgui/widgets/treeview.py:914
 #: pynicotine/gtkgui/widgets/treeview.py:923
-#, fuzzy
 msgid "_Right"
-msgstr "Vpravo"
+msgstr "V_pravo"
 
 #: pynicotine/gtkgui/widgets/treeview.py:930
 #, python-format
@@ -3631,19 +3626,16 @@ msgid "Column #%i"
 msgstr "Sloupec #%i"
 
 #: pynicotine/gtkgui/widgets/treeview.py:943
-#, fuzzy
 msgid "_Sort Ascending"
-msgstr "V_zestupně"
+msgstr "Řadit _vzestupně"
 
 #: pynicotine/gtkgui/widgets/treeview.py:943
-#, fuzzy
 msgid "_Sort Descending"
-msgstr "Se_stupně"
+msgstr "Řadit _sestupně"
 
 #: pynicotine/gtkgui/widgets/treeview.py:950
-#, fuzzy
 msgid "Move Column"
-msgstr "Resetovat kolonky"
+msgstr "Přesunout sloupec"
 
 #: pynicotine/gtkgui/widgets/treeview.py:1121
 msgid "Ungrouped"
@@ -6918,9 +6910,8 @@ msgid "Display tray icon"
 msgstr "Zobrazit ikonu v liště tray"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:125
-#, fuzzy
 msgid "Minimize window on startup"
-msgstr "Minimalizovat po spuštění do lišty tray"
+msgstr "Minimalizovat okno při spuštění"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:149
 msgid "Language (requires a restart):"
