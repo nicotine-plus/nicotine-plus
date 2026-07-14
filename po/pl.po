@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-13 07:23+0300\n"
-"PO-Revision-Date: 2026-06-10 06:01+0000\n"
+"PO-Revision-Date: 2026-07-14 06:01+0000\n"
 "Last-Translator: Matthaiks <kitynska@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.6\n"
+"X-Generator: Weblate 2026.8.dev0\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -309,9 +309,9 @@ msgstr "Nie można przenieść '%(tempfile)s' do '%(file)s': %(error)s"
 #, python-format
 msgid "%(num)s download filter contains an invalid regular expression"
 msgid_plural "%(num)s download filters contain invalid regular expressions"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%(num)s filtr pobierania zawiera nieprawidłowe wyrażenie regularne"
+msgstr[1] "%(num)s filtry pobierania zawierają nieprawidłowe wyrażenia regularne"
+msgstr[2] "%(num)s filtrów pobierania zawiera nieprawidłowe wyrażenia regularne"
 
 #: pynicotine/downloads.py:428
 #, python-format
@@ -1417,16 +1417,16 @@ msgstr "Filtr"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:387
 msgid "Validity"
-msgstr ""
+msgstr "Ważność"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:394
 msgid "Regex"
 msgstr "Wyrażenie regularne"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:531
-#, fuzzy, python-format
+#, python-format
 msgid "Invalid Regular Expression: %s"
-msgstr "Włącz wyrażenia regularne"
+msgstr "Nieprawidłowe wyrażenie regularne: %s"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:568
 msgid "Add Download Filter"
@@ -2006,13 +2006,13 @@ msgid "Uninstall Plugin?"
 msgstr "Odinstalować wtyczkę?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3636
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Do you really want to uninstall plugin %s? This will delete all settings and "
 "data stored by the plugin."
 msgstr ""
 "Czy na pewno chcesz odinstalować wtyczkę %s? Spowoduje to usunięcie "
-"wszystkich plików zapisanych przez wtyczkę."
+"wszystkich ustawień i danych zapisanych przez wtyczkę."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3640
 msgid "Uninstall"
@@ -3609,31 +3609,26 @@ msgid "Show Nicotine+"
 msgstr "Pokaż Nicotine+"
 
 #: pynicotine/gtkgui/widgets/treeview.py:905
-#, fuzzy
 msgid "Sorted Column"
-msgstr "_Resetuj kolumnę sortowania"
+msgstr "Posortowana kolumna"
 
 #: pynicotine/gtkgui/widgets/treeview.py:906
-#, fuzzy
 msgid "Column Widths"
-msgstr "Kolumna #%i"
+msgstr "Szerokości kolumn"
 
 #: pynicotine/gtkgui/widgets/treeview.py:907
-#, fuzzy
 msgid "Everything"
-msgstr "Wszystko…"
+msgstr "Wszystko"
 
 #: pynicotine/gtkgui/widgets/treeview.py:913
 #: pynicotine/gtkgui/widgets/treeview.py:922
-#, fuzzy
 msgid "_Left"
-msgstr "Lewa"
+msgstr "_Lewa"
 
 #: pynicotine/gtkgui/widgets/treeview.py:914
 #: pynicotine/gtkgui/widgets/treeview.py:923
-#, fuzzy
 msgid "_Right"
-msgstr "Prawa"
+msgstr "_Prawa"
 
 #: pynicotine/gtkgui/widgets/treeview.py:930
 #, python-format
@@ -3641,19 +3636,16 @@ msgid "Column #%i"
 msgstr "Kolumna #%i"
 
 #: pynicotine/gtkgui/widgets/treeview.py:943
-#, fuzzy
 msgid "_Sort Ascending"
-msgstr "Ro_snąco"
+msgstr "_Sortuj rosnąco"
 
 #: pynicotine/gtkgui/widgets/treeview.py:943
-#, fuzzy
 msgid "_Sort Descending"
-msgstr "Ma_lejąco"
+msgstr "_Sortuj malejąco"
 
 #: pynicotine/gtkgui/widgets/treeview.py:950
-#, fuzzy
 msgid "Move Column"
-msgstr "Resetuj kolumny"
+msgstr "Przenieś kolumnę"
 
 #: pynicotine/gtkgui/widgets/treeview.py:1121
 msgid "Ungrouped"
@@ -6938,9 +6930,8 @@ msgid "Display tray icon"
 msgstr "Pokaż ikonę w zasobniku"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:125
-#, fuzzy
 msgid "Minimize window on startup"
-msgstr "Minimalizuj do zasobnika podczas startu"
+msgstr "Minimalizuj okno podczas uruchamiania"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:149
 msgid "Language (requires a restart):"
