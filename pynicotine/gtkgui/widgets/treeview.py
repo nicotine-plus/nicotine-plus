@@ -852,8 +852,8 @@ class TreeView:
             if column.id != selected_column_id:
                 continue
 
-            move_column_menu.actions[_("_Left")].set_enabled(bool(index))
-            move_column_menu.actions[_("_Right")].set_enabled(index < len(visible_columns) - 1)
+            menu.actions[_("Left")].set_enabled(bool(index))
+            menu.actions[_("Right")].set_enabled(index < len(visible_columns) - 1)
             break
 
     def on_column_position_changed(self, column, _param):
