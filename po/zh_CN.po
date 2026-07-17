@@ -6,9 +6,9 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-13 07:23+0300\n"
-"PO-Revision-Date: 2026-06-28 05:01+0000\n"
-"Last-Translator: reducedradius "
-"<137701630+flytothehighest@users.noreply.github.com>\n"
+"PO-Revision-Date: 2026-07-17 03:05+0000\n"
+"Last-Translator: Hosted Weblate user 54392 "
+"<hamburger2048@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/nicotine-plus/nicotine-plus/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.7.dev0\n"
+"X-Generator: Weblate 2026.8.dev0\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -1390,9 +1390,9 @@ msgid "Regex"
 msgstr "正则表达式"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:531
-#, fuzzy, python-format
+#, python-format
 msgid "Invalid Regular Expression: %s"
-msgstr "启用正则表达式"
+msgstr "无效的正则表达式：%s"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:568
 msgid "Add Download Filter"
@@ -1958,11 +1958,11 @@ msgid "Uninstall Plugin?"
 msgstr "卸载插件？"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3636
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Do you really want to uninstall plugin %s? This will delete all settings and "
 "data stored by the plugin."
-msgstr "您确定要卸载插件 %s 吗？这将删除该插件存储的所有文件。"
+msgstr "您确定要卸载插件 %s 吗？这将删除该插件存储的所有设置和数据。"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3640
 msgid "Uninstall"
@@ -3526,31 +3526,26 @@ msgid "Show Nicotine+"
 msgstr "显示 Nicotine+"
 
 #: pynicotine/gtkgui/widgets/treeview.py:905
-#, fuzzy
 msgid "Sorted Column"
-msgstr "重置排序列(_R)"
+msgstr "已排序列"
 
 #: pynicotine/gtkgui/widgets/treeview.py:906
-#, fuzzy
 msgid "Column Widths"
-msgstr "列 #%i"
+msgstr "列宽"
 
 #: pynicotine/gtkgui/widgets/treeview.py:907
-#, fuzzy
 msgid "Everything"
-msgstr "全部……"
+msgstr "所有"
 
 #: pynicotine/gtkgui/widgets/treeview.py:913
 #: pynicotine/gtkgui/widgets/treeview.py:922
-#, fuzzy
 msgid "_Left"
-msgstr "左侧"
+msgstr "左侧(_L)"
 
 #: pynicotine/gtkgui/widgets/treeview.py:914
 #: pynicotine/gtkgui/widgets/treeview.py:923
-#, fuzzy
 msgid "_Right"
-msgstr "右侧"
+msgstr "右侧(_R)"
 
 #: pynicotine/gtkgui/widgets/treeview.py:930
 #, python-format
@@ -3558,19 +3553,16 @@ msgid "Column #%i"
 msgstr "列 #%i"
 
 #: pynicotine/gtkgui/widgets/treeview.py:943
-#, fuzzy
 msgid "_Sort Ascending"
-msgstr "升序(_A)"
+msgstr "升序排列(_S)"
 
 #: pynicotine/gtkgui/widgets/treeview.py:943
-#, fuzzy
 msgid "_Sort Descending"
-msgstr "降序(_D)"
+msgstr "降序排列(_S)"
 
 #: pynicotine/gtkgui/widgets/treeview.py:950
-#, fuzzy
 msgid "Move Column"
-msgstr "重置列"
+msgstr "移动列"
 
 #: pynicotine/gtkgui/widgets/treeview.py:1121
 msgid "Ungrouped"
@@ -6730,9 +6722,8 @@ msgid "Display tray icon"
 msgstr "显示托盘图标"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:125
-#, fuzzy
 msgid "Minimize window on startup"
-msgstr "启动时最小化到托盘"
+msgstr "启动时最小化窗口"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:149
 msgid "Language (requires a restart):"
