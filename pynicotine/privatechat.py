@@ -160,6 +160,25 @@ class PrivateChat:
         else:
             self._private_message_queue[username].append(msg)
 
+    def _redirect_server_message(self, message):
+        """Redirect specific server messages to a chat room."""
+
+        first_paragraph = message.split("\n", 1)[0]
+
+        for start_str, end_str in (
+            ("The room you are trying to enter (", ") is registered as private."),
+            ("The room you are trying to enter (", (") is moderated. Please contact one of these moderators "
+                                                    "if you are interested in being added to the room's "
+                                                    "member list:")),
+            ("Room (", ") is registered as public.")
+        ):
+            if first_paragraph.startswith(start_str) and first_paragraph.endswith(end_str):
+                room = first_paragraph[len(start_str):first_paragraph.rfind(end_str)]
+                events.emit("say-chat-room", SayChatroom(room=room, message=message, user=self.SERVER_USERNAME))
+                return True
+
+        return False
+
     def _process_ctcp_query(self, username, query):
 
         if config.sections["server"]["ctcpmsgs"]:
@@ -258,22 +277,7 @@ class PrivateChat:
 
                 core.send_message_to_server(MessageAcked(msg.message_id))
 
-            if username == self.SERVER_USERNAME:
-                # Redirect the following messages to chat room tab:
-                first_paragraph = message.split("\n", 1)[0]
-                for start_str, end_str in (
-                    ("The room you are trying to enter (", ") is registered as private."),
-                    ("The room you are trying to enter (", (") is moderated. Please contact one of these moderators "
-                                                            "if you are interested in being added to the room's "
-                                                            "member list:")),
-                    ("Room (", ") is registered as public.")
-                ):
-                    if first_paragraph.startswith(start_str) and first_paragraph.endswith(end_str):
-                        msg.user = None
-                        room = first_paragraph[len(start_str):first_paragraph.rfind(end_str)]
-                        events.emit("say-chat-room", SayChatroom(room=room, message=message, user=username))
-                        return
-            else:
+            if username != self.SERVER_USERNAME:
                 # Check ignore status for all other users except "server"
                 if core.network_filter.is_user_ignored(username):
                     msg.user = None
@@ -294,6 +298,10 @@ class PrivateChat:
                     self._private_message_queue_add(msg)
                     msg.user = None
                     return
+
+            elif self._redirect_server_message(message):
+                msg.user = None
+                return
 
             user_text = core.pluginhandler.incoming_private_chat_event(username, message)
             if user_text is None:
