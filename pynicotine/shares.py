@@ -563,7 +563,9 @@ class Scanner:
                 # Sharing a folder twice, no go
                 continue
 
-            if self.folder_filter_regex and self.folder_filter_regex.search(f"\\{virtual_folder_path}\\") is not None:
+            # Skip root folder when applying filters
+            if (self.folder_filter_regex and folder_path != shared_folder_path
+                    and self.folder_filter_regex.search(f"\\{virtual_folder_path}\\") is not None):
                 continue
 
             self.writer.send(self.current_folder_count)
