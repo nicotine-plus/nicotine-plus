@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-13 07:23+0300\n"
-"PO-Revision-Date: 2026-03-14 17:09+0000\n"
+"PO-Revision-Date: 2026-07-18 14:26+0000\n"
 "Last-Translator: Han <han@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 2026.8.dev0\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -306,8 +306,8 @@ msgstr "Kon '%(tempfile)s' niet naar '%(file)s' verplaatsen: %(error)s"
 #, python-format
 msgid "%(num)s download filter contains an invalid regular expression"
 msgid_plural "%(num)s download filters contain invalid regular expressions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(num)s downloadfilter bevat een ongeldige reguliere expressie"
+msgstr[1] "%(num)s downloadfilters bevatten een ongeldige reguliere expressie"
 
 #: pynicotine/downloads.py:428
 #, python-format
@@ -574,9 +574,8 @@ msgid "_Copy & Report Bug"
 msgstr "_Kopiëren & bug rapporteren"
 
 #: pynicotine/gtkgui/application.py:1042
-#, fuzzy
 msgid "Saving configuration…"
-msgstr "_Test configuratie"
+msgstr "Instellingen opslaan…"
 
 #: pynicotine/gtkgui/buddies.py:56 pynicotine/gtkgui/chatrooms.py:596
 #: pynicotine/gtkgui/dialogs/chathistory.py:52
@@ -961,9 +960,8 @@ msgid "About"
 msgstr "Over"
 
 #: pynicotine/gtkgui/dialogs/about.py:459
-#, fuzzy
 msgid "Download Release"
-msgstr "Download bestanden"
+msgstr "Download versie"
 
 #: pynicotine/gtkgui/dialogs/about.py:461
 msgid "Website"
@@ -1411,16 +1409,16 @@ msgstr "Filter"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:387
 msgid "Validity"
-msgstr ""
+msgstr "Geldigheid"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:394
 msgid "Regex"
 msgstr "Regex"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:531
-#, fuzzy, python-format
+#, python-format
 msgid "Invalid Regular Expression: %s"
-msgstr "Reguliere expressies inschakelen"
+msgstr "Ongeldige reguliere expressies: %s"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:568
 msgid "Add Download Filter"
@@ -1951,15 +1949,13 @@ msgid "_Settings"
 msgstr "_Instellingen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3438
-#, fuzzy
 msgid "Reset Settings…"
-msgstr "_Statistiek wissen…"
+msgstr "Instellingen wissen…"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3439
 #: pynicotine/gtkgui/dialogs/preferences.py:3507
-#, fuzzy
 msgid "Uninstall…"
-msgstr "Verwijder…"
+msgstr "Deinstalleer…"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3490
 #: pynicotine/gtkgui/uploads.py:62
@@ -1971,43 +1967,42 @@ msgid "No Plugin Selected"
 msgstr "Geen plugin geselecteerd"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3533
-#, fuzzy
 msgid ""
 "This is a third-party plugin. Safety is not guaranteed. Use at your own risk."
-msgstr "Dit is geen ingebouwde plugin. Gebruik op eigen risico."
+msgstr ""
+"Dit is een externe plugin. Veiligheid is niet gegarandeerd. Gebruik op eigen "
+"risico."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3598
 msgid "Select a Zip File"
 msgstr "Kies een zip-bestand"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3611
-#, fuzzy
 msgid "Reset Plugin Settings?"
-msgstr "%s instellingen"
+msgstr "Plugin instellingen terugzetten?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3612
-#, fuzzy, python-format
+#, python-format
 msgid "Do you really want to restore the default settings for plugin %s?"
-msgstr "Wil je echt de overdrachtstatistieken resetten?"
+msgstr "Wil je echt de instellingen voor plugin %s terugzetten?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3615
 #: pynicotine/gtkgui/widgets/treeview.py:952
-#, fuzzy
 msgid "Reset"
-msgstr "Alles resetten"
+msgstr "Terugzetten"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3635
 msgid "Uninstall Plugin?"
 msgstr "Plugin verwijderen?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3636
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Do you really want to uninstall plugin %s? This will delete all settings and "
 "data stored by the plugin."
 msgstr ""
-"Wil je echt de plugin %s verwijderen? Hiermee verwijder je alle bestanden "
-"die de plugin heeft opgeslagen."
+"Wil je echt de plugin %s verwijderen? Hiermee verwijder je alle bestanden en "
+"instellingen van de plugin."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3640
 msgid "Uninstall"
@@ -3193,7 +3188,7 @@ msgstr "[PRIVÉ] %s"
 #: pynicotine/gtkgui/userbrowse.py:503
 #, python-format
 msgid "%s  ·"
-msgstr ""
+msgstr "%s  ·"
 
 #: pynicotine/gtkgui/userbrowse.py:594
 msgid ""
@@ -3593,31 +3588,26 @@ msgid "Show Nicotine+"
 msgstr "Nicotine+ weergeven"
 
 #: pynicotine/gtkgui/widgets/treeview.py:905
-#, fuzzy
 msgid "Sorted Column"
-msgstr "_Reset Sorteerkolom"
+msgstr "Gesorteerde kolom"
 
 #: pynicotine/gtkgui/widgets/treeview.py:906
-#, fuzzy
 msgid "Column Widths"
-msgstr "Kolom #%i"
+msgstr "Kolom breedte"
 
 #: pynicotine/gtkgui/widgets/treeview.py:907
-#, fuzzy
 msgid "Everything"
-msgstr "Alles…"
+msgstr "Alles"
 
 #: pynicotine/gtkgui/widgets/treeview.py:913
 #: pynicotine/gtkgui/widgets/treeview.py:922
-#, fuzzy
 msgid "_Left"
-msgstr "Links"
+msgstr "_Links"
 
 #: pynicotine/gtkgui/widgets/treeview.py:914
 #: pynicotine/gtkgui/widgets/treeview.py:923
-#, fuzzy
 msgid "_Right"
-msgstr "Rechts"
+msgstr "_Rechts"
 
 #: pynicotine/gtkgui/widgets/treeview.py:930
 #, python-format
@@ -3625,19 +3615,16 @@ msgid "Column #%i"
 msgstr "Kolom #%i"
 
 #: pynicotine/gtkgui/widgets/treeview.py:943
-#, fuzzy
 msgid "_Sort Ascending"
-msgstr "A_flopend"
+msgstr "_Oplopend sorteren"
 
 #: pynicotine/gtkgui/widgets/treeview.py:943
-#, fuzzy
 msgid "_Sort Descending"
-msgstr "Op_lopend"
+msgstr "_Aflopend Sorteren"
 
 #: pynicotine/gtkgui/widgets/treeview.py:950
-#, fuzzy
 msgid "Move Column"
-msgstr "Reset Kolommen"
+msgstr "Kolom verplaatsen"
 
 #: pynicotine/gtkgui/widgets/treeview.py:1121
 msgid "Ungrouped"
@@ -5004,14 +4991,13 @@ msgid "Removed share \"%s\" (rescan required)"
 msgstr "Share \"%s\" verwijderd (opnieuw scannen vereist)"
 
 #: pynicotine/plugins/core_commands/__init__.py:605
-#, fuzzy
 msgid "Installed plugins:"
-msgstr "Plugin %s geïnstalleerd"
+msgstr "Geïnstalleerde plugins:"
 
 #: pynicotine/plugins/core_commands/__init__.py:610
-#, fuzzy, python-format
+#, python-format
 msgid "No plugin with name \"%s\""
-msgstr "Geen share met de naam \"%s\""
+msgstr "Geen plugin met de naam \"%s\""
 
 #: pynicotine/pluginsystem.py:438
 msgid "Loading plugin system"
@@ -5091,7 +5077,7 @@ msgstr ""
 #: pynicotine/pluginsystem.py:923
 #, python-format
 msgid "Restored default settings for plugin %s"
-msgstr ""
+msgstr "Standaard instellingen voor plugin %s herstelt"
 
 #: pynicotine/pluginsystem.py:955
 msgid "No description"
@@ -5612,7 +5598,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:356
 msgid "The following listening port has been set by your environment:"
-msgstr ""
+msgstr "De volgende luisterpoort is door jouw omgeving ingesteld:"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:408
 msgid "Download Files to Folder"
@@ -6918,9 +6904,8 @@ msgid "Display tray icon"
 msgstr "Pictogram weergeven in taakbalk"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:125
-#, fuzzy
 msgid "Minimize window on startup"
-msgstr "Minimaliseer naar taakbalk bij opstarten"
+msgstr "Minimaliseer venster tijdens opstarten"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:149
 msgid "Language (requires a restart):"
