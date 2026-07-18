@@ -43,6 +43,13 @@
     padding-right: 10px;
 }
 
+button.narrow,
+menubutton.narrow > button {
+    min-width: 0;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
 /* Headings */
 
 .title-1 {

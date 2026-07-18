@@ -712,44 +712,42 @@ class UserBrowse:
                 ellipsize = Pango.EllipsizeMode.NONE
 
             button_label = Gtk.Label(label=folder, ellipsize=ellipsize, width_chars=width_chars, visible=True)
-
-            if index == len(folder_path_split) - 1:
-                button = Gtk.MenuButton(visible=True)
-                self.folder_popup_menu.set_menu_button(button)
-                add_css_class(button_label, "heading")
-
-                if GTK_API_VERSION >= 4:
-                    button.set_child(button_label)                              # pylint: disable=no-member
-                    button.set_always_show_arrow(True)                          # pylint: disable=no-member
-                    button.set_has_frame(False)                                 # pylint: disable=no-member
-                    button.set_create_popup_func(self.on_folder_popup_menu)     # pylint: disable=no-member
-
-                    inner_button = next(iter(button))
-                    button_label.set_mnemonic_widget(inner_button)
-                else:
-                    box = Gtk.Box(spacing=6, visible=True)
-                    arrow_icon = Gtk.Image(icon_name="pan-down-symbolic", visible=True)
-                    box.add(button_label)                                       # pylint: disable=no-member
-                    box.add(arrow_icon)                                         # pylint: disable=no-member
-
-                    button.add(box)                                             # pylint: disable=no-member
-                    button.connect("clicked", self.on_folder_popup_menu)
-
-                    button_label.set_mnemonic_widget(button)
-            else:
-                button = Gtk.Button(child=button_label, visible=True)
-                button.connect("clicked", self.on_path_bar_clicked, i_folder_path)
-                add_css_class(button_label, "normal")
-
-                button_label.set_mnemonic_widget(button)
+            button = Gtk.Button(child=button_label, visible=True)
+            button.connect("clicked", self.on_path_bar_clicked, i_folder_path)
+            button_label.set_mnemonic_widget(button)
 
             add_css_class(button, "flat")
             remove_css_class(button, "text-button")
 
-            if GTK_API_VERSION >= 4:
-                self.path_bar.append(button)  # pylint: disable=no-member
+            if index == len(folder_path_split) - 1:
+                container = Gtk.Box(visible=True)
+                menu_button = Gtk.MenuButton(tooltip_text=_("Folder Actions"), visible=True)
+                self.folder_popup_menu.set_menu_button(menu_button)
+
+                add_css_class(button_label, "heading")
+                add_css_class(menu_button, "narrow")
+
+                if GTK_API_VERSION >= 4:
+                    menu_button.set_has_frame(False)                                 # pylint: disable=no-member
+                    menu_button.set_create_popup_func(self.on_folder_popup_menu)     # pylint: disable=no-member
+
+                    container.append(button)                                         # pylint: disable=no-member
+                    container.append(menu_button)                                    # pylint: disable=no-member
+                    self.path_bar.append(container)                                  # pylint: disable=no-member
+                else:
+                    add_css_class(menu_button, "flat")
+                    menu_button.connect("clicked", self.on_folder_popup_menu)
+
+                    container.add(button)                                            # pylint: disable=no-member
+                    container.add(menu_button)                                       # pylint: disable=no-member
+                    self.path_bar.add(container)                                     # pylint: disable=no-member
             else:
-                self.path_bar.add(button)     # pylint: disable=no-member
+                add_css_class(button_label, "normal")
+
+                if GTK_API_VERSION >= 4:
+                    self.path_bar.append(button)  # pylint: disable=no-member
+                else:
+                    self.path_bar.add(button)     # pylint: disable=no-member
 
     def set_active_folder(self, folder_path):
 
