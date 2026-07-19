@@ -371,7 +371,7 @@ class SlskMessage:
 
     def unpack_uint16(self):
         result, = UINT16_UNPACK(self._message, self._offset)
-        self._offset += 4
+        self._offset += 2
         return result
 
     def unpack_int32(self):
