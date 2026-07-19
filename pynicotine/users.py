@@ -69,6 +69,7 @@ class Users:
             ("privileged-users", self._privileged_users),
             ("server-disconnect", self._server_disconnect),
             ("server-login", self._server_login),
+            ("user-login-required", self._user_login_required),
             ("user-stats", self._user_stats),
             ("user-status", self._user_status),
             ("watch-user", self._watch_user)
@@ -300,7 +301,10 @@ class Users:
         core.pluginhandler.user_resolve_notification(username, ip_address, msg.port, country_code)
 
         if user_offline:
-            log.add(_("Cannot retrieve the IP of user %s, since this user is offline"), username)
+            log.add(
+                _("Cannot retrieve the IP of user %s, since this user is offline"),
+                username, title=_("User IP Address")
+            )
             return
 
         if country_code:
@@ -449,3 +453,6 @@ class Users:
         config.write_configuration()
 
         log.add(_("Your password has been changed"), title=_("Password Changed"))
+
+    def _user_login_required(self, username):
+        log.add(_("User %s must be logged in first"), username, title=_("User Is Offline"))

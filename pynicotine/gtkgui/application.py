@@ -99,6 +99,7 @@ class Application:
             ("confirm-quit", self.on_confirm_quit),
             ("invalid-password", self.on_invalid_password),
             ("invalid-username", self.on_invalid_username),
+            ("room-invitation-rejected", self.on_room_invitation_rejected),
             ("quit", self._instance.quit),
             ("server-login", self._update_user_status),
             ("server-disconnect", self._update_user_status),
@@ -592,6 +593,26 @@ class Application:
 
     def on_invalid_username(self, *_args):
         self.on_fast_configure(invalid_username=True)
+
+    def on_room_invitation_rejected_response(self, _dialog, _response_id, username):
+        core.privatechat.show_user(username)
+
+    def on_room_invitation_rejected(self, username):
+
+        from pynicotine.gtkgui.widgets.dialogs import OptionDialog
+
+        OptionDialog(
+            application=self,
+            title=_("Room Invitation Rejected"),
+            message=_("User %s has not enabled private room invitations. Message them and ask "
+                      "them to do so before inviting them again.") % username,
+            buttons=[
+                ("cancel", _("_Cancel")),
+                ("open_chat", _("Open _Private Chat"))
+            ],
+            callback=self.on_room_invitation_rejected_response,
+            callback_data=username
+        ).present()
 
     def on_user_status(self, msg):
         if msg.user == core.users.login_username:
