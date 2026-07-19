@@ -333,7 +333,7 @@ class SlskMessage:
     @staticmethod
     def unpack_uint16(message, start=0):
         result, = UINT16_UNPACK(message, start)
-        return start + 4, result
+        return start + 2, result
 
     @staticmethod
     def unpack_int32(message, start=0):
