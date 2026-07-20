@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-13 07:23+0300\n"
-"PO-Revision-Date: 2026-06-14 20:01+0000\n"
+"PO-Revision-Date: 2026-07-20 01:01+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.7.dev0\n"
+"X-Generator: Weblate 2026.8.dev0\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -308,8 +308,8 @@ msgstr "'%(tempfile)s', nem lehetett ide mozgatni '%(file)s': %(error)s"
 #, python-format
 msgid "%(num)s download filter contains an invalid regular expression"
 msgid_plural "%(num)s download filters contain invalid regular expressions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(num)s letöltésszűrő érvénytelen kifejezést tartalmaz"
+msgstr[1] "%(num)s letöltésszűrő hibás, érvénytelen kifejezést tartalmaz"
 
 #: pynicotine/downloads.py:428
 #, python-format
@@ -373,7 +373,7 @@ msgstr "A(z) %s nem található, kérem telepítse."
 #: pynicotine/gtkgui/__init__.py:195
 msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr ""
-"Nem áll rendelkezésre grafikus környezet, fej nélküli mód (nincs GUI) lesz "
+"Nem áll rendelkezésre grafikus környezet, fej nélküli mód (GUI nélküli) lesz "
 "használva"
 
 #: pynicotine/gtkgui/application.py:321
@@ -1418,16 +1418,16 @@ msgstr "Szűrő"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:387
 msgid "Validity"
-msgstr ""
+msgstr "Érvényesség"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:394
 msgid "Regex"
 msgstr "Szabályos kifejezések"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:531
-#, fuzzy, python-format
+#, python-format
 msgid "Invalid Regular Expression: %s"
-msgstr "Szabályos kifejezések engedélyezése"
+msgstr "A következő szabályos kifejezés érvénytelen: %s"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:568
 msgid "Add Download Filter"
@@ -2009,13 +2009,13 @@ msgid "Uninstall Plugin?"
 msgstr "Eltávolítja a bővítményt?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3636
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Do you really want to uninstall plugin %s? This will delete all settings and "
 "data stored by the plugin."
 msgstr ""
-"%s bővítményt valóban eltávolítja? Ez a bővítmény által tárolt összes fájlt "
-"is törli."
+"%s bővítményt valóban eltávolítja? Ez a bővítmény összes adatát és a "
+"beállítását is törli."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3640
 msgid "Uninstall"
@@ -3609,31 +3609,26 @@ msgid "Show Nicotine+"
 msgstr "A Nicotine+ mutatása"
 
 #: pynicotine/gtkgui/widgets/treeview.py:905
-#, fuzzy
 msgid "Sorted Column"
-msgstr "Oszloprendezés _visszaállítása"
+msgstr "Rendezett oszlop"
 
 #: pynicotine/gtkgui/widgets/treeview.py:906
-#, fuzzy
 msgid "Column Widths"
-msgstr "#%i oszlop"
+msgstr "Oszlopszélesség"
 
 #: pynicotine/gtkgui/widgets/treeview.py:907
-#, fuzzy
 msgid "Everything"
-msgstr "Minden…"
+msgstr "Minden"
 
 #: pynicotine/gtkgui/widgets/treeview.py:913
 #: pynicotine/gtkgui/widgets/treeview.py:922
-#, fuzzy
 msgid "_Left"
-msgstr "Balra"
+msgstr "_Balra"
 
 #: pynicotine/gtkgui/widgets/treeview.py:914
 #: pynicotine/gtkgui/widgets/treeview.py:923
-#, fuzzy
 msgid "_Right"
-msgstr "Jobbra"
+msgstr "_Jobbra"
 
 #: pynicotine/gtkgui/widgets/treeview.py:930
 #, python-format
@@ -3641,19 +3636,16 @@ msgid "Column #%i"
 msgstr "#%i oszlop"
 
 #: pynicotine/gtkgui/widgets/treeview.py:943
-#, fuzzy
 msgid "_Sort Ascending"
-msgstr "_Emelkedő"
+msgstr "_Növekvő sorrendbe rendezés"
 
 #: pynicotine/gtkgui/widgets/treeview.py:943
-#, fuzzy
 msgid "_Sort Descending"
-msgstr "Csö_kkenő"
+msgstr "_Csökkenő sorrendbe rendezés"
 
 #: pynicotine/gtkgui/widgets/treeview.py:950
-#, fuzzy
 msgid "Move Column"
-msgstr "Oszlopok visszaállítása"
+msgstr "Oszlop mozgatása"
 
 #: pynicotine/gtkgui/widgets/treeview.py:1121
 msgid "Ungrouped"
@@ -6962,9 +6954,8 @@ msgid "Display tray icon"
 msgstr "Tálca ikon megjelenítése"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:125
-#, fuzzy
 msgid "Minimize window on startup"
-msgstr "Indításkor minimalizálja a tálcára"
+msgstr "Indításkor minimalizálja az ablakot"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:149
 msgid "Language (requires a restart):"
