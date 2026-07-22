@@ -14,7 +14,6 @@ import sys
 import time
 
 from collections import defaultdict
-from os import strerror
 from queue import Empty, SimpleQueue
 from threading import Thread
 
@@ -124,6 +123,14 @@ class UserAddress:
     def __init__(self, addr):
         self.addr = addr
         self.last_update = time.monotonic()
+
+
+class ConnectionInitTimeoutError(Exception):
+    pass
+
+
+class ConnectionInitClosedError(Exception):
+    pass
 
 
 class NetworkInterfaces:
@@ -330,7 +337,7 @@ class NetworkThread(Thread):
     data.
     """
 
-    IN_PROGRESS_STALE_AFTER = 2
+    CONNECTION_INIT_TIMEOUT = 2
     INDIRECT_REQUEST_TIMEOUT = 20
     CONNECTION_MAX_IDLE = 60
     CONNECTION_MAX_IDLE_GHOST = 10
@@ -346,8 +353,6 @@ class NetworkThread(Thread):
         ConnectionType.FILE,
         ConnectionType.DISTRIBUTED
     }
-    ERROR_NOT_CONNECTED = OSError(errno.ENOTCONN, strerror(errno.ENOTCONN))
-    ERROR_TIMED_OUT = OSError(errno.ETIMEDOUT, strerror(errno.ETIMEDOUT))
 
     # Looping max ~240 times per second (SLEEP_MIN_IDLE) on high activity
     # ~20 (SLEEP_MAX_IDLE + SLEEP_MIN_IDLE) by default
@@ -1114,13 +1119,13 @@ class NetworkThread(Thread):
     def _check_connections(self, current_time):
 
         num_sockets = self._num_sockets
+        init_timeout_conns = set()
         inactive_conns = set()
-        stale_conns = set()
 
         for conn in self._conns.values():
             if not conn.is_established:
-                if (current_time - conn.last_active) > self.IN_PROGRESS_STALE_AFTER:
-                    stale_conns.add(conn)
+                if (current_time - conn.last_active) > self.CONNECTION_INIT_TIMEOUT:
+                    init_timeout_conns.add(conn)
 
             elif self._is_connection_inactive(conn, current_time, num_sockets):
                 inactive_conns.add(conn)
@@ -1152,12 +1157,14 @@ class NetworkThread(Thread):
 
             inactive_conns.clear()
 
-        if stale_conns:
-            for conn in stale_conns:
-                self._connect_error(self.ERROR_TIMED_OUT, conn)
+        if init_timeout_conns:
+            conn_error = ConnectionInitTimeoutError("Connection attempt timed out")
+
+            for conn in init_timeout_conns:
+                self._connect_error(conn_error, conn)
                 self._close_connection(conn)
 
-            stale_conns.clear()
+            init_timeout_conns.clear()
 
         if self._pending_peer_conns:
             for init, (addr, pierce_token) in self._pending_peer_conns.copy().items():
@@ -2644,9 +2651,8 @@ class NetworkThread(Thread):
 
         if not conn.is_established:
             if conn_error is None:
-                # No error when connection shuts down gracefully (recv() returns
-                # 0 bytes), but we need to display one anyway. Is this is the best fit?
-                conn_error = self.ERROR_NOT_CONNECTED
+                # Connection shut down gracefully (recv() returned 0 bytes)
+                conn_error = ConnectionInitClosedError("Connection closed during handshake")
 
             self._connect_error(conn_error, conn)
 
