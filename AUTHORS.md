@@ -5,6 +5,7 @@
 ### Mat (mathiascode)
  - Maintainer (2020–present)
  - Developer
+ - Designer
 
 ### Adam Cécile (eLvErDe)
  - Maintainer (2013–2016)
