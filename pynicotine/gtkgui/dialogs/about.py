@@ -23,7 +23,7 @@ class About(Dialog):
 
         ("<b>Mat (mathiascode)</b>"
          "\n •  Maintainer (2020–present)"
-         "\n •  Developer",
+         "\n •  Developer"
          "\n •  Designer"),
 
         ("<b>Adam Cécile (eLvErDe)</b>"
