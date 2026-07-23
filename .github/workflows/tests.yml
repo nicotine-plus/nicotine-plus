@@ -331,6 +331,7 @@ jobs:
         run: python3.11 -m build --no-isolation
 
   haiku:
+    if: false  # Temporarily disabled due to broken packages
     runs-on: ubuntu-latest
     timeout-minutes: 15
     defaults:
