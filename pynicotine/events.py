@@ -271,7 +271,7 @@ class Events:
                 from pynicotine import core
                 module_name = function.__module__.split(".", 1)[0]
 
-                if core.pluginhandler is None or module_name not in core.pluginhandler.enabled_plugins:
+                if core.pluginhandler is None or not core.pluginhandler.is_plugin_loaded(module_name):
                     core.quit()
                     raise error
 
