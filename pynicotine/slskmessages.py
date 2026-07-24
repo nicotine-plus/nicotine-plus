@@ -5,7 +5,6 @@
 # SPDX-FileCopyrightText: 2001-2003 Alexander Kanavin
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import time
 import zlib
 
 try:
@@ -3161,17 +3160,17 @@ class PeerInit(PeerInitMessage):
     verification.
     """
 
-    __slots__ = ("sock", "init_user", "target_user", "conn_type", "indirect_token", "created_time", "outgoing_msgs")
+    __slots__ = ("sock", "init_user", "target_user", "conn_type", "indirect_token", "indirect_request_time",
+                 "outgoing_msgs")
 
-    def __init__(self, sock=None, init_user=None, target_user=None, conn_type=None, indirect_token=None,
-                 *, msg_content=None):
+    def __init__(self, sock=None, init_user=None, target_user=None, conn_type=None, *, msg_content=None):
         PeerInitMessage.__init__(self, msg_content)
         self.sock = sock
         self.init_user = init_user      # our own username
         self.target_user = target_user  # username of peer we're connected to
         self.conn_type = conn_type
-        self.indirect_token = indirect_token
-        self.created_time = time.monotonic()
+        self.indirect_token = None
+        self.indirect_request_time = None
         self.outgoing_msgs = []
 
     def make_network_message(self):
