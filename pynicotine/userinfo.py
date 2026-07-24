@@ -15,6 +15,7 @@ from pynicotine.slskmessages import RemoveAllowedResponse
 from pynicotine.slskmessages import UserInfoRequest
 from pynicotine.slskmessages import UserInfoResponse
 from pynicotine.slskmessages import UserInterests
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 from pynicotine.utils import unescape
 
@@ -31,8 +32,8 @@ class UserInfo:
             ("peer-connection-closed", self._peer_connection_error),
             ("peer-connection-error", self._peer_connection_error),
             ("quit", self._quit),
-            ("server-login", self._server_login),
             ("server-disconnect", self._server_disconnect),
+            ("server-login", self._server_login),
             ("user-info-request", self._user_info_request),
             ("user-info-response", self._user_info_response)
         ):
@@ -125,10 +126,15 @@ class UserInfo:
         if username == local_username:
             msg = self._get_user_info_response()
             events.emit("user-info-response", msg)
-        else:
-            # Request user description, picture and queue information
-            core.send_message_to_network_thread(AddAllowedResponse(UserInfoResponse, username))
-            core.send_message_to_peer(username, UserInfoRequest())
+            return
+
+        if core.users.login_status == UserStatus.OFFLINE:
+            events.emit("user-info-failed", username, is_offline=True)
+            return
+
+        # Request user description, picture and queue information
+        core.send_message_to_network_thread(AddAllowedResponse(UserInfoResponse, username))
+        core.send_message_to_peer(username, UserInfoRequest())
 
     def remove_user(self, username):
 
@@ -156,7 +162,7 @@ class UserInfo:
                 "error": error
             })
 
-    def _peer_connection_error(self, username, conn_type, msgs, **_unused):
+    def _peer_connection_error(self, username, conn_type, msgs, is_offline=False):
 
         if not msgs:
             return
@@ -169,6 +175,7 @@ class UserInfo:
         for msg in msgs:
             if msg.__class__ in failed_msg_types:
                 core.send_message_to_network_thread(RemoveAllowedResponse(UserInfoResponse, username))
+                events.emit("user-info-failed", username, is_offline)
                 break
 
     def _user_info_request(self, msg):

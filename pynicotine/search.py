@@ -27,6 +27,7 @@ from pynicotine.slskmessages import initial_token
 from pynicotine.slskmessages import RemoveAllowedResponse
 from pynicotine.slskmessages import RoomSearch
 from pynicotine.slskmessages import UserSearch
+from pynicotine.slskmessages import UserStatus
 from pynicotine.slskmessages import WishlistSearch
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 from pynicotine.utils import encode_path
@@ -251,14 +252,18 @@ class Search:
             del items[self.SEARCH_HISTORY_LIMIT:]
             config.write_configuration()
 
-        self.send_search_request(search.token)
         events.emit("add-search", search.token, search, switch_page)
+        self.send_search_request(search.token)
 
     def send_search_request(self, token):
 
         search = self.searches.get(token)
 
         if search is None:
+            return
+
+        if core.users.login_status == UserStatus.OFFLINE:
+            events.emit("search-failed", token, is_offline=True)
             return
 
         self.add_allowed_token(token)

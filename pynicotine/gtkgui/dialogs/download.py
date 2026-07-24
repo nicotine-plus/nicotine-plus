@@ -22,6 +22,7 @@ from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import human_size
 from pynicotine.utils import humanize
 from pynicotine.utils import safe_path_join
@@ -144,8 +145,7 @@ class Download(Dialog):
 
         for event_name, callback in (
             ("folder-contents-response", self.folder_contents_response),
-            ("folder-contents-timeout", self.folder_contents_timeout),
-            ("server-disconnect", self.server_disconnect),
+            ("folder-contents-failed", self.folder_contents_failed)
         ):
             events.connect(event_name, callback)
 
@@ -188,6 +188,12 @@ class Download(Dialog):
         )
         self.download_callback = download_callback
 
+        if not partial_files:
+            self.reset_selection_button.set_visible(False)
+
+        elif core.users.login_status != UserStatus.OFFLINE:
+            self.set_in_progress()
+
         for username, file_path, size, file_attributes, selected, root_folder_path in reversed(sorted(
             data, key=lambda x: len(x[0])
         )):
@@ -214,14 +220,6 @@ class Download(Dialog):
             expand_parent = False
 
             if parent_iterator_data is None:
-                if partial_files:
-                    core.downloads.request_folder(username, folder_path)
-
-                    if username not in self.pending_folders:
-                        self.pending_folders[username] = set()
-
-                    self.pending_folders[username].add(folder_path)
-
                 if username not in self.num_files:
                     self.num_files[username] = {}
                     self.num_selected_files[username] = {}
@@ -247,6 +245,13 @@ class Download(Dialog):
                 expand_parent = True
 
                 self.parent_iterators[username + folder_path] = (parent_iterator, deque())
+
+                if partial_files:
+                    if username not in self.pending_folders:
+                        self.pending_folders[username] = set()
+
+                    self.pending_folders[username].add(folder_path)
+                    core.downloads.request_folder(username, folder_path)
 
             parent_iterator, child_iterators = self.parent_iterators[username + folder_path]
             iterator = self.tree_view.add_row(
@@ -281,12 +286,6 @@ class Download(Dialog):
                 self.tree_view.expand_row(parent_iterator)
 
         self.update_title()
-
-        if partial_files:
-            self.set_in_progress()
-        else:
-            self.reset_selection_button.set_visible(False)
-
         self.unselect_all_button.set_visible(True)
         self.tree_view.unfreeze()
 
@@ -386,25 +385,28 @@ class Download(Dialog):
 
         self.info_bar.set_visible(False)
 
-    def set_failed(self, username, folder_path):
+    def set_failed(self, username, folder_path, is_offline=False):
 
         self.failed_usernames.add(username)
-        num_users = len(self.failed_usernames)
+
+        num_failed_users = len(self.failed_usernames)
+        num_pending_users = len(self.pending_folders)
+        icon_name = "network-offline-symbolic" if is_offline else "dialog-warning-symbolic"
 
         parent_iterator, _child_iterators = self.parent_iterators[username + folder_path]
-        self.tree_view.set_row_value(parent_iterator, "incomplete", "dialog-warning-symbolic")
+        self.tree_view.set_row_value(parent_iterator, "incomplete", icon_name)
 
-        if len(self.pending_folders) == num_users:
+        if num_pending_users == num_failed_users:
             self.set_finished()
 
-        if num_users == 1:
+        if num_failed_users == 1:
             message = _("Unable to request folder contents from user %(user)s") % {"user": username}
         else:
             message = ngettext(
                 "Unable to request folder contents from %(num)s user",
                 "Unable to request folder contents from %(num)s users",
-                num_users
-            ) % {"num": num_users}
+                num_failed_users
+            ) % {"num": num_failed_users}
 
         self.info_bar.show_error_message(message)
         self.info_bar.set_visible(True)
@@ -492,7 +494,7 @@ class Download(Dialog):
 
         self.tree_view.unfreeze()
 
-    def folder_contents_timeout(self, username, folder_path):
+    def folder_contents_failed(self, username, folder_path, is_offline=False):
 
         if username not in self.pending_folders:
             return
@@ -500,20 +502,16 @@ class Download(Dialog):
         if folder_path not in self.pending_folders[username]:
             return
 
-        self.failed_usernames.add(username)
-        self.set_failed(username, folder_path)
-
-    def server_disconnect(self, *_args):
-
-        if not self.indeterminate_progress:
-            return
-
-        for username, folders in self.pending_folders.items():
-            for folder_path in folders:
-                self.set_failed(username, folder_path)
+        self.set_failed(username, folder_path, is_offline)
 
     def on_incomplete_tooltip(self, treeview, iterator):
+
         username = treeview.get_row_value(iterator, "user_data")
+        icon_name = treeview.get_row_value(iterator, "incomplete")
+
+        if icon_name == "network-offline-symbolic":
+            return _("User Offline (%(user)s)") % {"user": username}
+
         return _("Incomplete Folder Contents (%(user)s)") % {"user": username}
 
     def on_popup_menu(self, menu, _widget):
@@ -540,14 +538,15 @@ class Download(Dialog):
 
         self.set_in_progress()
 
+        failed_usernames = self.failed_usernames.copy()
+        self.failed_usernames.clear()
+
         for username, folders in self.pending_folders.items():
-            if username not in self.failed_usernames:
+            if username not in failed_usernames:
                 continue
 
             for folder_path in folders:
                 core.downloads.request_folder(username, folder_path)
-
-        self.failed_usernames.clear()
 
     def on_rename_response(self, dialog, _response_id, iterator):
 

@@ -43,7 +43,6 @@ from pynicotine.logfacility import log
 from pynicotine.search import ResultFilterMode
 from pynicotine.shares import FileTypes
 from pynicotine.slskmessages import FileListMessage
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import factorize
 from pynicotine.utils import humanize
 from pynicotine.utils import human_size
@@ -126,6 +125,7 @@ class Searches(IconNotebook):
             ("quit", self.quit),
             ("remove-search", self.remove_search),
             ("remove-wish", self.update_wish_button),
+            ("search-failed", self.search_failed),
             ("show-search", self.show_search),
             ("update-wish-filters", self.update_wish_filters)
         ):
@@ -280,12 +280,11 @@ class Searches(IconNotebook):
         elif mode == "buddies":
             mode_label = _("Buddies")
 
-        page = self.create_page(token, search.term_sanitized, mode, mode_label, room=room, users=users)
+        self.create_page(token, search.term_sanitized, mode, mode_label, room=room, users=users)
 
         if switch_page:
             self.show_search(token)
 
-        page.show_error_message()
         self.add_search_history_item(search.term_sanitized)
 
     def show_search(self, token):
@@ -312,6 +311,13 @@ class Searches(IconNotebook):
 
         del self.pages[token]
         page.destroy()
+
+    def search_failed(self, token, is_offline=False):
+
+        page = self.pages.get(token)
+
+        if page is not None:
+            page.search_failed(is_offline)
 
     def clear_search_history(self):
 
@@ -717,10 +723,6 @@ class Search:
         # Wishlist
         self.update_wish_button()
 
-    def show_error_message(self):
-        if core.users.statuses.get(core.users.login_username, UserStatus.OFFLINE) == UserStatus.OFFLINE:
-            self.info_bar.show_error_message(_("Cannot search for files shared by other users, since you are offline."))
-
     def clear(self):
         self.clear_model(stored_results=True)
 
@@ -832,6 +834,10 @@ class Search:
     def update_wish_filters(self):
         self.populate_default_filters()
         self.store_filters_button.set_sensitive(False)
+
+    def search_failed(self, is_offline=False):
+        if is_offline:
+            self.info_bar.show_error_message(_("Cannot search for files shared by other users, since you are offline."))
 
     def add_result_list(self, result_list, user, country_code, inqueue, ulspeed, h_speed,
                         h_queue, is_private=False):
@@ -1958,10 +1964,8 @@ class Search:
         self.window.search_entry.grab_focus_without_selecting()
 
     def on_search_again(self, *_args):
-
         self.info_bar.set_visible(False)
         core.search.send_search_request(self.token)
-        self.show_error_message()
 
     def on_refilter(self, *_args):
 

@@ -32,7 +32,6 @@ from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import ConnectionType
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
@@ -66,14 +65,13 @@ class UserInfos(IconNotebook):
             ("ban-user", self.ban_unban_user),
             ("check-privileges", self.check_privileges),
             ("ignore-user", self.ignore_unignore_user),
-            ("peer-connection-closed", self.peer_connection_error),
-            ("peer-connection-error", self.peer_connection_error),
             ("quit", self.quit),
             ("remove-buddy", self.add_remove_buddy),
             ("server-disconnect", self.server_disconnect),
             ("unban-user", self.ban_unban_user),
             ("unignore-user", self.ignore_unignore_user),
             ("user-country", self.user_country),
+            ("user-info-failed", self.user_info_failed),
             ("user-info-progress", self.user_info_progress),
             ("user-info-remove-user", self.remove_user),
             ("user-info-response", self.user_info_response),
@@ -177,16 +175,6 @@ class UserInfos(IconNotebook):
         if page is not None:
             page.update_buddy_button_state()
 
-    def peer_connection_error(self, username, conn_type, **_unused):
-
-        page = self.pages.get(username)
-
-        if page is None:
-            return
-
-        if conn_type == ConnectionType.PEER:
-            page.peer_connection_error()
-
     def user_stats(self, msg):
 
         page = self.pages.get(msg.user)
@@ -215,6 +203,13 @@ class UserInfos(IconNotebook):
 
         if page is not None:
             page.user_interests(msg)
+
+    def user_info_failed(self, username, is_offline=False):
+
+        page = self.pages.get(username)
+
+        if page is not None:
+            page.user_info_failed(is_offline)
 
     def user_info_progress(self, user, _sock, position, total):
 
@@ -536,12 +531,9 @@ class UserInfo:
 
         remove_css_class(self.interests_container, "border-end")
 
-    def peer_connection_error(self):
+    def user_info_failed(self, is_offline=False):
 
-        if not self.refreshing:
-            return
-
-        if core.users.statuses.get(self.user, UserStatus.OFFLINE) == UserStatus.OFFLINE:
+        if is_offline:
             error_message = _("Cannot request information from the user, since they are offline.")
         else:
             error_message = _("Cannot request information from the user, possibly due to "
@@ -559,9 +551,6 @@ class UserInfo:
         return repeat
 
     def user_info_progress(self, position, total):
-
-        if not self.refreshing:
-            return
 
         self.indeterminate_progress = False
 
@@ -583,10 +572,6 @@ class UserInfo:
 
         self.indeterminate_progress = self.refreshing = True
         self.info_bar.set_visible(False)
-
-        if core.users.login_status == UserStatus.OFFLINE and self.user != config.sections["server"]["login"]:
-            self.peer_connection_error()
-            return
 
         self.progress_bar.get_parent().set_reveal_child(True)
         self.progress_bar.pulse()
@@ -643,9 +628,6 @@ class UserInfo:
     # Network Messages #
 
     def user_info_response(self, msg):
-
-        if not self.refreshing:
-            return
 
         if msg is None:
             return
@@ -925,7 +907,8 @@ class UserInfo:
         self.show_picture()
 
     def on_refresh(self, *_args):
-        core.userinfo.show_user(self.user, refresh=True)
+        if not self.refreshing:
+            core.userinfo.show_user(self.user, refresh=True)
 
     def on_focus(self, *_args):
         self.userinfos.grab_focus()
