@@ -61,28 +61,29 @@ class ChatRooms:
         self.private_rooms = {}
 
         for event_name, callback in (
+            ("add-room-operator", self._add_room_operator),
+            ("add-room-member", self._add_room_member),
             ("enable-room-invitations", self._enable_room_invitations),
             ("global-room-message", self._global_room_message),
             ("join-room", self._join_room),
             ("leave-room", self._leave_room),
-            ("add-room-operator", self._add_room_operator),
-            ("add-room-member", self._add_room_member),
+            ("quit", self._quit),
+            ("remove-room-member", self._remove_room_member),
+            ("remove-room-operator", self._remove_room_operator),
+            ("room-invitation-rejected", self._room_invitation_rejected),
+            ("room-members", self._room_members),
             ("room-membership-granted", self._room_membership_granted),
+            ("room-membership-revoked", self._room_membership_revoked),
+            ("room-operators", self._room_operators),
             ("room-operatorship-granted", self._room_operatorship_granted),
             ("room-operatorship-revoked", self._room_operatorship_revoked),
-            ("room-operators", self._room_operators),
-            ("remove-room-operator", self._remove_room_operator),
-            ("remove-room-member", self._remove_room_member),
-            ("room-membership-revoked", self._room_membership_revoked),
-            ("room-members", self._room_members),
-            ("quit", self._quit),
             ("room-list", self._room_list),
             ("room-ticker-added", self._room_ticker_added),
             ("room-ticker-removed", self._room_ticker_removed),
             ("room-tickers", self._room_tickers),
             ("say-chat-room", self._say_chat_room),
-            ("server-login", self._server_login),
             ("server-disconnect", self._server_disconnect),
+            ("server-login", self._server_login),
             ("start", self._start),
             ("user-joined-room", self._user_joined_room),
             ("user-left-room", self._user_left_room)
@@ -307,6 +308,9 @@ class ChatRooms:
 
         self.server_rooms.add(room)
 
+    def _room_invitation_rejected(self, username):
+        log.add(_("User %s has not enabled private room invitations"), username)
+
     def _join_room(self, msg):
         """Server code 14."""
 
@@ -432,7 +436,7 @@ class ChatRooms:
         core.pluginhandler.private_room_operator_added_notification(room, username)
 
         if username != core.users.login_username:
-            log.add(_("User %(user)s has been made an operator of room %(room)s"), {
+            log.add(_("User %(user)s is now an operator of room %(room)s"), {
                 "user": username,
                 "room": room
             })
@@ -467,7 +471,7 @@ class ChatRooms:
         private_room.operators.add(core.users.login_username)
         core.pluginhandler.private_room_operatorship_granted_notification(msg.room)
 
-        log.add(_("You have been made an operator of room %(room)s"), {"room": msg.room})
+        log.add(_("You are now an operator of room %(room)s"), {"room": msg.room})
 
     def _room_operatorship_revoked(self, msg):
         """Server code 146."""
