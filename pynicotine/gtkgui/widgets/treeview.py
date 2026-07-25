@@ -534,8 +534,7 @@ class TreeView:
         included_values = []
 
         for index, value in enumerate(values):
-            if not value and index is not self._sort_column:
-                # Skip empty values if not active sort column to avoid unnecessary work
+            if value is None:
                 continue
 
             if index in self._column_gvalues:
