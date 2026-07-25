@@ -45,7 +45,11 @@ class TextView:
             left_margin=horizontal_margin, right_margin=horizontal_margin,
             top_margin=vertical_margin, bottom_margin=vertical_margin,
             pixels_above_lines=pixels_above_lines, pixels_below_lines=pixels_below_lines,
-            wrap_mode=Gtk.WrapMode.WORD_CHAR, visible=True
+            visible=True,
+
+            # Faster line wrap mode (WORD instead of WORD_CHAR) to prevent freezing when
+            # long lines are added (e.g. log or user description views).
+            wrap_mode=Gtk.WrapMode.WORD
         )
 
         if GTK_API_VERSION >= 4:
@@ -379,6 +383,10 @@ class ChatView(TextView):
             "action": self.create_tag("chatme"),
             "hilite": self.create_tag("chathilite")
         }
+
+        # Prevent long lines from adding a horizontal scroll bar. WORD_CHAR wrapping
+        # is slower than WORD, but it's good enough for our chat views.
+        self.widget.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
 
         Accelerator("Down", self.widget, self.on_page_down_accelerator)
         Accelerator("Page_Down", self.widget, self.on_page_down_accelerator)
