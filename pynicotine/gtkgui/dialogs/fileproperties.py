@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2020-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from gi.repository import Pango
+
 from pynicotine.core import core
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import Dialog
@@ -75,11 +77,21 @@ class FileProperties(Dialog):
         for button in (self.previous_button, self.next_button):
             button.set_visible(len(self.properties) > 1)
 
+        basename = properties["basename"]
+        folder_path = properties["virtual_folder_path"]
         size = properties["size"]
         h_size = human_size(size)
+        wrap_char_limit = 512
 
-        self.name_value_label.set_text(properties["basename"])
-        self.folder_value_label.set_text(properties["virtual_folder_path"])
+        self.name_value_label.set_ellipsize(
+            Pango.EllipsizeMode.MIDDLE if len(basename) > wrap_char_limit else Pango.EllipsizeMode.NONE
+        )
+        self.folder_value_label.set_ellipsize(
+            Pango.EllipsizeMode.MIDDLE if len(folder_path) > wrap_char_limit else Pango.EllipsizeMode.NONE
+        )
+
+        self.name_value_label.set_text(basename)
+        self.folder_value_label.set_text(folder_path)
         self.size_value_label.set_text(f"{h_size} ({size} B)")  # Don't humanize exact size for easier use in filter
         self.username_value_label.set_text(properties["user"])
 
