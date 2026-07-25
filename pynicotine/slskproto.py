@@ -1706,12 +1706,18 @@ class NetworkThread(Thread):
             conn_type = msg.conn_type
             addr = conn.addr
 
-            log.add_conn("Received incoming direct connection of type %s from user "
-                         "%s, address %s", (conn_type, username, addr))
+            if not username or len(username) > 255 or username == "server" or not username.isprintable():
+                log.add_conn("Rejected incoming direct connection from address %s "
+                             "due to invalid username: %s", (addr, repr(username)))
+                return None
 
             if conn_type not in self.ALLOWED_PEER_CONN_TYPES:
-                log.add_conn("Unknown connection type %s", conn_type)
+                log.add_conn("Rejected incoming direct connection from address %s due to "
+                             "unknown connection type: %s", (addr, repr(conn_type)))
                 return None
+
+            log.add_conn("Received incoming direct connection of type %s from user "
+                         "%s, address %s", (conn_type, username, addr))
 
             self._set_tcp_buffer_size(conn.sock, conn_type)
 
