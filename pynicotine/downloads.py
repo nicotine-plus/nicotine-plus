@@ -795,6 +795,10 @@ class Downloads(Transfers):
 
     def request_folder(self, username, folder_path):
 
+        if core.users.login_status == UserStatus.OFFLINE:
+            events.emit("folder-contents-failed", username, folder_path, is_offline=True)
+            return
+
         requested_folder = self._requested_folders.get(username, {}).get(folder_path)
 
         if requested_folder is None:
@@ -978,10 +982,10 @@ class Downloads(Transfers):
                 requested_folder = self._requested_folders.get(username, {}).get(msg.dir)
 
                 if requested_folder is not None:
-                    self._requested_folder_timeout(requested_folder)
+                    self._requested_folder_timeout(requested_folder, is_offline)
 
-    def _peer_connection_closed(self, username, conn_type, msgs=None):
-        self._peer_connection_error(username, conn_type, msgs, is_timeout=False)
+    def _peer_connection_closed(self, username, conn_type, msgs, is_offline=False):
+        self._peer_connection_error(username, conn_type, msgs, is_offline, is_timeout=False)
 
     def _cant_connect_queue_file(self, username, virtual_path, is_offline, is_timeout):
         """We can't connect to the user, either way (QueueUpload, PlaceInQueueRequest)."""
@@ -1004,7 +1008,7 @@ class Downloads(Transfers):
                          (virtual_path, username, status))
         self._abort_transfer(download, status=status)
 
-    def _requested_folder_timeout(self, requested_folder):
+    def _requested_folder_timeout(self, requested_folder, is_offline=False):
 
         username = requested_folder.username
         folder_path = requested_folder.folder_path
@@ -1022,7 +1026,7 @@ class Downloads(Transfers):
             log.add_transfer("Folder content request for folder %s from user %s timed out, "
                              "giving up", (folder_path, username))
             del self._requested_folders[username][folder_path]
-            events.emit("folder-contents-timeout", username, folder_path)
+            events.emit("folder-contents-failed", username, folder_path, is_offline)
             return
 
         log.add_transfer("Folder content request for folder %s from user %s timed out, "

@@ -126,6 +126,7 @@ EVENT_NAMES = {
     "file-search-response",
     "remove-search",
     "remove-wish",
+    "search-failed",
     "set-wishlist-interval",
     "show-search",
     "update-wish-filters",
@@ -135,6 +136,7 @@ EVENT_NAMES = {
 
     # Shares
     "folder-contents-request",
+    "shared-file-list-failed",
     "shared-file-list-progress",
     "shared-file-list-request",
     "shared-file-list-response",
@@ -161,7 +163,7 @@ EVENT_NAMES = {
     "file-transfer-init",
     "file-upload-progress",
     "folder-contents-response",
-    "folder-contents-timeout",
+    "folder-contents-failed",
     "folder-download-finished",
     "peer-connection-closed",
     "peer-connection-error",
@@ -181,6 +183,7 @@ EVENT_NAMES = {
     "uploads-shutdown-cancel",
 
     # User info
+    "user-info-failed",
     "user-info-progress",
     "user-info-remove-user",
     "user-info-request",

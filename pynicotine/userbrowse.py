@@ -19,6 +19,7 @@ from pynicotine.slskmessages import RemoveAllowedResponse
 from pynicotine.slskmessages import SharedFileListRequest
 from pynicotine.slskmessages import SharedFileListResponse
 from pynicotine.slskmessages import UploadQueueNotification
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 from pynicotine.utils import human_size
 from pynicotine.utils import humanize
@@ -137,6 +138,11 @@ class UserBrowse:
         core.users.watch_user(username, context="userbrowse")
 
     def request_user_shares(self, username):
+
+        if core.users.login_status == UserStatus.OFFLINE:
+            events.emit("shared-file-list-failed", username, is_offline=True)
+            return
+
         core.send_message_to_network_thread(AddAllowedResponse(SharedFileListResponse, username))
         core.send_message_to_peer(username, SharedFileListRequest())
 
@@ -426,7 +432,7 @@ class UserBrowse:
 
         self.browse_user(username, path=file_path)
 
-    def _peer_connection_error(self, username, conn_type, msgs, **_unused):
+    def _peer_connection_error(self, username, conn_type, msgs, is_offline=False):
 
         if not msgs:
             return
@@ -439,6 +445,7 @@ class UserBrowse:
         for msg in msgs:
             if msg.__class__ in failed_msg_types:
                 core.send_message_to_network_thread(RemoveAllowedResponse(SharedFileListResponse, username))
+                events.emit("shared-file-list-failed", username, is_offline)
                 break
 
     def _shared_file_list_response(self, msg):

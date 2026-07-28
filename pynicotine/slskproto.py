@@ -601,7 +601,7 @@ class NetworkThread(Thread):
         # No direct connection was established, give up
         events.emit_main_thread(
             "peer-connection-error", username=username, conn_type=conn_type,
-            msgs=init.outgoing_msgs[:]
+            msgs=init.outgoing_msgs[:], is_offline=False
         )
         init.outgoing_msgs.clear()
         self._username_init_msgs.pop(username + conn_type, None)
@@ -1091,7 +1091,9 @@ class NetworkThread(Thread):
 
         event_name = "peer-connection-closed" if conn.is_established else "peer-connection-error"
         events.emit_main_thread(
-            event_name, username=username, conn_type=conn_type, msgs=init.outgoing_msgs[:])
+            event_name, username=username, conn_type=conn_type, msgs=init.outgoing_msgs[:],
+            is_offline=(self._server_conn is None)
+        )
 
         del self._username_init_msgs[init_key]
 

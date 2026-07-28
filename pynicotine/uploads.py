@@ -879,8 +879,8 @@ class Uploads(Transfers):
             if msg.__class__ in failed_msg_types:
                 self._cant_connect_upload(username, msg.token, is_offline, is_timeout)
 
-    def _peer_connection_closed(self, username, conn_type, msgs):
-        self._peer_connection_error(username, conn_type, msgs, is_timeout=False)
+    def _peer_connection_closed(self, username, conn_type, msgs, is_offline=False):
+        self._peer_connection_error(username, conn_type, msgs, is_offline, is_timeout=False)
 
     def _cant_connect_upload(self, username, token, is_offline, is_timeout):
         """We can't connect to the user, either way (TransferRequest,

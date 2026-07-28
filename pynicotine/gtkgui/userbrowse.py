@@ -34,7 +34,6 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import get_file_type_icon_name
 from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.slskmessages import ConnectionType
 from pynicotine.slskmessages import FileListMessage
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import human_size
@@ -70,10 +69,9 @@ class UserBrowses(IconNotebook):
 
         # Events
         for event_name, callback in (
-            ("peer-connection-closed", self.peer_connection_error),
-            ("peer-connection-error", self.peer_connection_error),
             ("quit", self.quit),
             ("server-disconnect", self.server_disconnect),
+            ("shared-file-list-failed", self.shared_file_list_failed),
             ("shared-file-list-progress", self.shared_file_list_progress),
             ("shared-file-list-response", self.shared_file_list),
             ("user-browse-remove-user", self.remove_user),
@@ -166,22 +164,19 @@ class UserBrowses(IconNotebook):
         del self.pages[user]
         page.destroy()
 
-    def peer_connection_error(self, username, conn_type, **_unused):
-
-        page = self.pages.get(username)
-
-        if page is None:
-            return
-
-        if conn_type == ConnectionType.PEER:
-            page.peer_connection_error()
-
     def user_status(self, msg):
 
         page = self.pages.get(msg.user)
 
         if page is not None:
             self.set_user_status(page.container, msg.user, msg.status)
+
+    def shared_file_list_failed(self, username, is_offline=False):
+
+        page = self.pages.get(username)
+
+        if page is not None:
+            page.shared_file_list_failed(is_offline)
 
     def shared_file_list_progress(self, user, _sock, position, total):
 
@@ -578,11 +573,6 @@ class UserBrowse:
 
     def shared_file_list(self, msg):
 
-        # Always accept file list loaded from disk, but not unsolicited file list messages from
-        # online users
-        if not self.refreshing and msg.sock is not None:
-            return
-
         is_empty = (not msg.list and not msg.privatelist)
         self.local_permission_level = msg.permission_level
 
@@ -600,12 +590,9 @@ class UserBrowse:
 
         self.set_finished()
 
-    def peer_connection_error(self):
+    def shared_file_list_failed(self, is_offline=False):
 
-        if not self.refreshing:
-            return
-
-        if core.users.statuses.get(self.user, UserStatus.OFFLINE) == UserStatus.OFFLINE:
+        if is_offline:
             error_message = _("Cannot request information from the user, since they are offline.")
         else:
             error_message = _("Cannot request information from the user, possibly due to "
@@ -624,9 +611,6 @@ class UserBrowse:
         return repeat
 
     def shared_file_list_progress(self, position, total):
-
-        if not self.refreshing:
-            return
 
         self.indeterminate_progress = False
 
@@ -649,10 +633,6 @@ class UserBrowse:
 
         self.indeterminate_progress = self.refreshing = True
         self.info_bar.set_visible(False)
-
-        if core.users.login_status == UserStatus.OFFLINE and self.user != config.sections["server"]["login"]:
-            self.peer_connection_error()
-            return
 
         self.progress_bar.get_parent().set_reveal_child(True)
         self.progress_bar.pulse()
