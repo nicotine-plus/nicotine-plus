@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on July 8, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on July 28, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -438,12 +438,17 @@ implementations.
 ### Login
 
 We send this to the server right after the connection has been established.
-Server responds with the greeting message.
+Server responds with the greeting message or a [Login Rejection Reason](#login-rejection-reasons).
+
+There is no mechanism to reset a forgotten password, so account credentials
+should be validated and must be remembered locally. It is unacceptable to
+use randomly generated usernames, as such automated scripting is disallowed
+by the [official server rules](https://www.slsknet.org/news/node/681).
 
 The server uses the major and minor versions to differentiate between
 clients. Numbers are chosen that avoid impersonating clients with reserved
 [Major Versions](#major-versions). Downstream projects have their own rules
-for [Minor Versions](#minor-versions). Experimental scripts may use major
+for [Minor Versions](#minor-versions). Experimental clients may use major
 version `177` and any minor version number they choose for each project.
 
 ### Sending Login Example
@@ -472,8 +477,7 @@ version `177` and any minor version number they choose for each project.
 ### Data Order
   - Send
     1.  **string** *username*
-    2.  **string** *password*  
-        A non-empty string is required
+    2.  **string** *password*
     3.  **uint32** *major version*  
         See [Major Versions](#major-versions)
     4.  **string** *hash*  
