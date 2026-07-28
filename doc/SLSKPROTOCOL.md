@@ -236,6 +236,7 @@ Established clients have unique numbers to avoid impersonating each other.
 | `169`         | seeleseek                               |
 | `170`         | [Soulseek.NET](#soulseeknet) *(C# API)* |
 | `175`         | aioslsk *(Python API)*                  |
+| `176`         | soulseek-rs *(Rust API)*                |
 | `177`         | *Experimental development and testing*  |
 
 ### Obsolete
