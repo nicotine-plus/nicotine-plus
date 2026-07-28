@@ -837,7 +837,7 @@ class Search:
 
     def search_failed(self, is_offline=False):
         if is_offline:
-            self.info_bar.show_error_message(_("Cannot search for files shared by other users, since you are offline."))
+            self.info_bar.show_error_message(_("Cannot search for files shared by other users, since you are offline"))
 
     def add_result_list(self, result_list, user, country_code, inqueue, ulspeed, h_speed,
                         h_queue, is_private=False):

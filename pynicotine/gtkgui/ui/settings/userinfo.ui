@@ -55,7 +55,7 @@
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="label" translatable="yes">Add things you want everyone to see, such as a short description, helpful tips, or guidelines for downloading your shares.</property>
+        <property name="label" translatable="yes">Add things you want everyone to see, such as a short description, helpful tips, or guidelines for downloading your shares</property>
         <property name="selectable">True</property>
         <property name="visible">True</property>
         <property name="wrap">True</property>

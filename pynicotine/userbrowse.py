@@ -230,10 +230,10 @@ class UserBrowse:
                 # Sanitization
                 for file_info in files:
                     if not isinstance(file_info[1], str):
-                        raise TypeError("Invalid file name")
+                        raise TypeError(_("Invalid file name in shares"))
 
                     if not isinstance(file_info[2], int):
-                        raise TypeError("Invalid file size")
+                        raise TypeError(_("Invalid file size in shares"))
 
                     attributes = file_info[4]
 
@@ -279,7 +279,7 @@ class UserBrowse:
                     file_info[4] = FileAttributes(bitrate, length, vbr, sample_rate, bit_depth)
 
         except Exception as error:
-            log.add(_("Loading Shares from disk failed: %(error)s"), {"error": error})
+            log.add(_("Loading shares from disk failed: %(error)s"), {"error": error})
             return
 
         username = os.path.basename(file_path)
@@ -408,7 +408,7 @@ class UserBrowse:
             return
 
         log.add(_("User %(user)s is sharing %(num_files)s files totaling %(shared_size)s across "
-                  "%(num_folders)s folders."), {
+                  "%(num_folders)s folders"), {
             "user": username,
             "num_files": humanize(browsed_user.num_files or 0),
             "shared_size": human_size(browsed_user.shared_size or 0),

@@ -70,7 +70,7 @@ def check_gtk_version(gtk_api_version, is_fallback=False):
         if not is_fallback and gtk_api_version_fallback:
             return check_gtk_version(gtk_api_version=gtk_api_version_fallback, is_fallback=True)
 
-        return _("Cannot find %s, please install it.") % ("PyGObject >=" + ".".join(str(x) for x in pygobject_version))
+        return _("Cannot find %s, please install it") % ("PyGObject >=" + ".".join(str(x) for x in pygobject_version))
 
     try:
         gi.require_version("Gtk", f"{gtk_api_version}.0")
@@ -79,7 +79,7 @@ def check_gtk_version(gtk_api_version, is_fallback=False):
         if not is_fallback and gtk_api_version_fallback:
             return check_gtk_version(gtk_api_version=gtk_api_version_fallback, is_fallback=True)
 
-        return _("Cannot find %s, please install it.") % f"GTK >={gtk_api_version}"
+        return _("Cannot find %s, please install it") % f"GTK >={gtk_api_version}"
 
     from gi.repository import Gtk  # pylint:disable=unused-import
 
