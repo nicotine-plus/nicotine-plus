@@ -644,12 +644,17 @@ class Login(ServerMessage):
     """Server code 1.
 
     We send this to the server right after the connection has been
-    established. Server responds with the greeting message.
+    established. Server responds with the greeting message or a rejection.
+
+    There is no mechanism to reset a forgotten password, so account credentials
+    should be validated and must be remembered locally. It is unacceptable to
+    use randomly generated usernames, as such automated scripting is disallowed
+    by the official server rules (https://www.slsknet.org/news/node/681).
 
     The server uses the major and minor versions to differentiate between
     clients. Numbers are chosen that avoid impersonating clients with reserved
     major versions. Downstream projects have their own rules for minor
-    versions. Experimental scripts may use major version `177` and any minor
+    versions. Experimental clients may use major version `177` and any minor
     version number they choose for each project.
     """
 
