@@ -3475,12 +3475,7 @@ class PluginsPage:
         self.plugin_list_view.unfreeze()
 
     def get_settings(self):
-
-        return {
-            "plugins": {
-                "enable": self.enable_plugins_toggle.get_active()
-            }
-        }
+        return {}
 
     def check_plugin_settings_button(self, plugin_name):
         self.plugin_settings_button.set_sensitive(bool(core.pluginhandler.get_plugin_metasettings(plugin_name)))
@@ -3557,9 +3552,12 @@ class PluginsPage:
 
     def on_toggle_enable_plugins(self, *_args):
 
+        enable = self.enable_plugins_toggle.get_active()
         plugins_enabled = config.sections["plugins"]["enabled"].copy()
 
-        if self.enable_plugins_toggle.get_active():
+        config.sections["plugins"]["enable"] = enable
+
+        if enable:
             # Enable all selected plugins
             for plugin_name in plugins_enabled:
                 core.pluginhandler.enable_plugin(plugin_name)
