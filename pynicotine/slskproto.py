@@ -1166,7 +1166,7 @@ class NetworkThread(Thread):
             inactive_conns.clear()
 
         if init_timeout_conns:
-            conn_error = ConnectionInitTimeoutError("Connection attempt timed out")
+            conn_error = ConnectionInitTimeoutError(_("Connection attempt timed out"))
 
             for conn in init_timeout_conns:
                 self._connect_error(conn_error, conn)

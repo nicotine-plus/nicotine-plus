@@ -419,7 +419,7 @@
                     </child>
                     <child>
                       <object class="GtkSwitch" id="filter_free_slot_toggle">
-                        <property name="tooltip-text" translatable="yes">Only show results from users with an available upload slot.</property>
+                        <property name="tooltip-text" translatable="yes">Only show results from users with an available upload slot</property>
                         <property name="valign">center</property>
                         <property name="visible">True</property>
                       </object>
@@ -444,7 +444,7 @@
                     </child>
                     <child>
                       <object class="GtkSwitch" id="filter_public_files_toggle">
-                        <property name="tooltip-text" translatable="yes">Only show files that are shared publicly.</property>
+                        <property name="tooltip-text" translatable="yes">Only show files that are shared publicly</property>
                         <property name="valign">center</property>
                         <property name="visible">True</property>
                       </object>

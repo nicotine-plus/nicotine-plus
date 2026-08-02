@@ -51,13 +51,13 @@ class PortChecker(Popover):
 
             self.status_icon.set_from_icon_name("dialog-error-symbolic", *icon_args)
             self.status_label.set_label(_("You are offline"))
-            self.description_label.set_label(_("Connect to the server to check port status."))
+            self.description_label.set_label(_("Connect to the server to check port status"))
 
             add_css_class(self.status_container, "error")
             return
 
         self.status_label.set_label(_("Checking connection status…"))
-        self.description_label.set_label(_("Waiting for response from port checker."))
+        self.description_label.set_label(_("Waiting for response from port checker"))
 
         self.status_spinner.set_visible(True)
         self.status_spinner.start()
@@ -73,13 +73,13 @@ class PortChecker(Popover):
             icon_name = "dialog-question-symbolic"
             css_class = None
             status = _("Port %i (TCP) status unknown") % port
-            description = _("Cannot check connection status.")
+            description = _("Cannot check connection status")
 
         elif is_successful:
             icon_name = "object-select-symbolic"
             css_class = "success"
             status = _("Port %i (TCP) is open") % port
-            description = _("Most users can connect to you.")
+            description = _("Most users can connect to you")
 
         else:
             icon_name = "dialog-warning-symbolic"

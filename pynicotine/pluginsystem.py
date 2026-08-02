@@ -389,7 +389,7 @@ class ResponseThrottle:
             "last_time": time.monotonic(), "last_request": self.request, "last_nick": self.nick}
 
 
-class InstallException(Exception):
+class PluginInstallError(Exception):
     pass
 
 
@@ -484,7 +484,7 @@ class PluginHandler:
                     total_size += info.file_size
 
                     if total_size > max_uncompressed_size:
-                        raise InstallException("Uncompressed size too large")
+                        raise PluginInstallError(_("Uncompressed size too large"))
 
                     if plugin_name is not None or os.path.basename(info.filename) != "PLUGININFO":
                         continue
@@ -496,10 +496,12 @@ class PluginHandler:
                         plugin_name = os.path.basename(os.path.splitext(file_path)[0])
 
                 if not plugin_name:
-                    raise InstallException("No plugin found in zip file")
+                    raise PluginInstallError(_("No plugin found in zip file"))
 
                 if self.is_internal_plugin(plugin_name):
-                    raise InstallException(f"Plugin name {plugin_name} conflicts with built-in plugin")
+                    raise PluginInstallError(_("Plugin name %(name)s conflicts with built-in plugin") % {
+                        "name": plugin_name
+                    })
 
                 for info in zip_file.infolist():
                     if plugin_folder_path:
@@ -512,7 +514,7 @@ class PluginHandler:
                     zip_file.extract(info, self.user_plugin_folder)
 
                 plugin_human_name = self.get_plugin_human_name(plugin_name)
-                log.add(_("Installed plugin %s"), plugin_human_name)
+                log.add(_("Installed plugin %(name)s"), {"name": plugin_human_name})
 
         except Exception as error:
             log.add(_("Failed to install plugin %(name)s: %(error)s"), {
@@ -550,7 +552,7 @@ class PluginHandler:
             del config.sections["plugins"][plugin_name]
             config.write_configuration()
 
-        log.add(_("Uninstalled plugin %s"), plugin_human_name)
+        log.add(_("Uninstalled plugin %(name)s"), {"name": plugin_human_name})
         return True
 
     def list_installed_plugins(self):
@@ -718,7 +720,7 @@ class PluginHandler:
             self.enabled_plugins[plugin_name] = plugin
             plugin.loaded_notification()
 
-            log.add(_("Loaded plugin %s"), plugin.human_name)
+            log.add(_("Loaded plugin %(name)s"), {"name": plugin.human_name})
 
         except Exception:
             from traceback import format_exc
@@ -762,7 +764,7 @@ class PluginHandler:
 
             self.update_completions(plugin)
             plugin.unloaded_notification()
-            log.add(_("Unloaded plugin %s"), plugin.human_name)
+            log.add(_("Unloaded plugin %(name)s"), {"name": plugin.human_name})
 
         except Exception:
             from traceback import format_exc
@@ -920,7 +922,7 @@ class PluginHandler:
         if plugin_name in self.enabled_plugins:
             self.reload_plugin(plugin_name)
 
-        log.add(_("Restored default settings for plugin %s"), plugin_human_name)
+        log.add(_("Restored default settings for plugin %(name)s"), {"name": plugin_human_name})
 
     def get_command_list(self, command_interface):
         """Returns a list of every command and alias available.

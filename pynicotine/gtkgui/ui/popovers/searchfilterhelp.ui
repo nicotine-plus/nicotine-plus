@@ -106,7 +106,7 @@
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="label" translatable="yes">Use | (or pipes) to seperate several exact phrases. Example:
+                <property name="label" translatable="yes">Use | (or pipes) to separate several exact phrases. Example:
     Remix|Dub Mix|Instrumental</property>
                 <property name="margin-start">12</property>
                 <property name="selectable">True</property>

@@ -461,7 +461,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
 
     # subcommands is now: [['C:\Program Files\WinAmp\WinAmp.exe', '--xforce', '--title=My Title', '$'], ['flite', '-t']]
     if replacement:
-        for i, _ in enumerate(subcommands):
+        for i, _subcommand in enumerate(subcommands):
             subcommands[i] = [x.replace(placeholder, replacement) for x in subcommands[i]]
 
     # Chaining commands...
@@ -491,9 +491,13 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
         command = subcommands[len(procs)]
         command_no = len(procs) + 1
         num_commands = len(subcommands)
-        raise RuntimeError(
-            f"Problem while executing command {command} ({command_no} of "
-            f"{num_commands}): {error}") from error
+        raise RuntimeError(_("Error while executing command %(command)s (%(command_no)s of "
+                             "%(num_commands)s: %(error)s") % {
+            "command": command,
+            "command_no": command_no,
+            "num_commands": num_commands,
+            "error": error
+        }) from error
 
     if not returnoutput:
         return True
@@ -516,7 +520,7 @@ def _try_open_uri(uri):
     import webbrowser
 
     if not webbrowser.open(uri):
-        raise webbrowser.Error("No known URI provider available")
+        raise webbrowser.Error(_("No known URI provider available"))
 
 
 def _open_path(path, is_folder=False, create_folder=False, create_file=False):
@@ -577,7 +581,7 @@ def _open_path(path, is_folder=False, create_folder=False, create_file=False):
                     # Create empty file
                     pass
             else:
-                raise FileNotFoundError("File path does not exist")
+                raise FileNotFoundError(_("File path does not exist"))
 
         if is_folder and "$" in file_manager_command:
             execute_command(file_manager_command, path)
@@ -657,11 +661,11 @@ def load_file(file_path, load_func, use_old_file=False):
             file_path_encoded = encode_path(file_path)
 
             if not os.path.isfile(file_path_encoded):
-                raise OSError("*.old file is present but main file is missing")
+                raise OSError(_("*.old file is present but main file is missing"))
 
             if os.path.getsize(file_path_encoded) <= 0:
                 # Empty files should be considered broken/corrupted
-                raise OSError("*.old file is present but main file is empty")
+                raise OSError(_("*.old file is present but main file is empty"))
 
         return load_func(file_path)
 

@@ -30,7 +30,7 @@
         </child>
         <child>
           <object class="GtkLabel">
-            <property name="label" translatable="yes">Prohibit users from accessing your shared files, based on username, IP address or country.</property>
+            <property name="label" translatable="yes">Prohibit users from accessing your shared files, based on username, IP address or country</property>
             <property name="margin-bottom">6</property>
             <property name="selectable">True</property>
             <property name="visible">True</property>
@@ -53,7 +53,7 @@
               <object class="GtkEntry" id="geo_block_country_entry">
                 <property name="input-hints">no-emoji</property>
                 <property name="sensitive" bind-source="geo_block_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
-                <property name="tooltip-text" translatable="yes">Codes must be in ISO 3166-2 format.</property>
+                <property name="tooltip-text" translatable="yes">Codes must be in ISO 3166-2 format</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
                 <property name="width-chars">8</property>

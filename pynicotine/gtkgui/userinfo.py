@@ -534,10 +534,10 @@ class UserInfo:
     def user_info_failed(self, is_offline=False):
 
         if is_offline:
-            error_message = _("Cannot request information from the user, since they are offline.")
+            error_message = _("Cannot request information from the user, since they are offline")
         else:
             error_message = _("Cannot request information from the user, possibly due to "
-                              "a closed listening port or temporary connectivity issue.")
+                              "a closed listening port or temporary connectivity issue")
 
         self.info_bar.show_error_message(error_message)
         self.set_finished()
