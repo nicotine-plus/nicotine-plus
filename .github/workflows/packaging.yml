@@ -26,8 +26,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt update
-          sudo apt install gettext python3-build
+          sudo apt-get update
+          sudo apt-get install gettext python3-build
 
       - name: Build package
         run: python -m build
@@ -49,9 +49,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt update
-          sudo apt install python3-build
-          sudo apt build-dep .
+          sudo apt-get update
+          sudo apt-get install python3-build
+          sudo apt-get build-dep .
 
       - name: Build Debian package
         run: |
@@ -173,8 +173,8 @@ jobs:
 
       - name: Set up environment
         run: |
-          sudo apt update
-          sudo apt install --no-install-recommends cage file fuse
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends cage file fuse
 
           mamba create -n nicotine-plus
           mamba create -n startup-test

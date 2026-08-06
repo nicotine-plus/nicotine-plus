@@ -32,8 +32,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt update
-          sudo apt install gettext gir1.2-gtk-4.0 libcairo2-dev \
+          sudo apt-get update
+          sudo apt-get install gettext gir1.2-gtk-4.0 libcairo2-dev \
             libgirepository-2.0-dev libgtk-4-bin
           python -m pip install build setuptools wheel .[tests]
 
@@ -69,8 +69,8 @@ jobs:
 
       - name: Install autopkgtest dependencies
         run: |
-          apt update
-          apt -y install autopkgtest
+          apt-get update
+          apt-get -y install autopkgtest
 
       - name: Run autopkgtest
         run: autopkgtest . -- null
