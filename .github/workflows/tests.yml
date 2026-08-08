@@ -33,7 +33,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install gettext gir1.2-gtk-${{ matrix.gtk }}.0 libcairo2-dev \
             libgirepository1.0-dev libgirepository-2.0-dev libgtk-${{ matrix.gtk }}-bin
-          python -m pip install build setuptools wheel .[tests]
+          python -m pip install .[dev]
 
       - name: PEP 8 style checks
         run: python -m pycodestyle
