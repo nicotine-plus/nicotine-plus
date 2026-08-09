@@ -34,6 +34,7 @@ jobs:
         with:
           name: python-dist
           path: dist/
+          if-no-files-found: error
 
   debian:
     runs-on: ubuntu-latest
@@ -66,6 +67,7 @@ jobs:
         with:
           name: debian-package
           path: build/package/
+          if-no-files-found: error
 
   flatpak:
     timeout-minutes: 15
@@ -111,6 +113,7 @@ jobs:
         with:
           name: flatpak-${{ matrix.arch }}-package
           path: org.nicotine_plus.Nicotine-${{ matrix.arch }}.flatpak
+          if-no-files-found: error
 
   snap:
     timeout-minutes: 15
@@ -147,6 +150,7 @@ jobs:
         with:
           name: snap-${{ matrix.arch }}-package
           path: nicotine-plus_*.snap
+          if-no-files-found: error
 
   windows:
     timeout-minutes: 15
@@ -202,12 +206,14 @@ jobs:
         with:
           name: windows-${{ matrix.arch }}-installer
           path: build-aux/windows/build/*.msi
+          if-no-files-found: error
 
       - name: Archive package artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: windows-${{ matrix.arch }}-package
           path: build-aux/windows/build/package
+          if-no-files-found: error
 
       - name: Test application startup
         shell: cmd  # Exclude msys2 dependencies
@@ -249,6 +255,7 @@ jobs:
         with:
           name: macos-${{ matrix.arch }}-installer
           path: build-aux/macos/build/*.dmg
+          if-no-files-found: error
 
       - name: Test application startup
         run: mamba run -n startup-test python3 build-aux/macos/testrun.py
@@ -274,38 +281,24 @@ jobs:
         run: python data/scripts/generate_sha256_checksums.py
 
       - name: Verify checksums
-        run: cd dist && sha256sum --check ./*.sha256
-
-      - name: Verify list of artifacts
         run: |
           cd dist
           ls \
-            debian-package.zip \
             debian-package.zip.sha256 \
-            flatpak-aarch64-package.zip \
             flatpak-aarch64-package.zip.sha256 \
-            flatpak-x86_64-package.zip \
             flatpak-x86_64-package.zip.sha256 \
-            macos-arm64-installer.zip \
             macos-arm64-installer.zip.sha256 \
-            macos-x86_64-installer.zip \
             macos-x86_64-installer.zip.sha256 \
-            python-dist.zip \
             python-dist.zip.sha256 \
-            snap-arm64-package.zip \
             snap-arm64-package.zip.sha256 \
-            snap-x86_64-package.zip \
             snap-x86_64-package.zip.sha256 \
-            windows-arm64-installer.zip \
             windows-arm64-installer.zip.sha256 \
-            windows-arm64-package.zip \
             windows-arm64-package.zip.sha256 \
-            windows-x86_64-installer.zip \
             windows-x86_64-installer.zip.sha256 \
-            windows-x86_64-package.zip \
             windows-x86_64-package.zip.sha256
+          sha256sum --check ./*.sha256
 
-      - name: Archive installer artifacts
+      - name: Upload checksums
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: checksums
