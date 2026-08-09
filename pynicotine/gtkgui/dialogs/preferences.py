@@ -3458,8 +3458,6 @@ class PluginsPage:
 
         self.application.preferences.set_widgets_data(self.options)
 
-        plugins_active = self.enable_plugins_toggle.get_active()
-
         for plugin_name in core.pluginhandler.list_installed_plugins():
             try:
                 info = core.pluginhandler.get_plugin_info(plugin_name)
@@ -3467,8 +3465,8 @@ class PluginsPage:
                 continue
 
             plugin_human_name = info.get("Name", plugin_name)
-            enabled = (plugin_name in config.sections["plugins"]["enabled"])
-            failed = (plugins_active and enabled and plugin_name not in core.pluginhandler.enabled_plugins)
+            enabled = plugin_name in config.sections["plugins"]["enabled"]
+            failed = core.pluginhandler.is_plugin_failed(plugin_name)
 
             self.plugin_list_view.add_row([enabled, plugin_human_name, plugin_name, failed], select_row=False)
 
@@ -3480,9 +3478,18 @@ class PluginsPage:
     def check_plugin_settings_button(self, plugin_name):
         self.plugin_settings_button.set_sensitive(bool(core.pluginhandler.get_plugin_metasettings(plugin_name)))
 
+    def update_failed_plugin_states(self):
+
+        for plugin_name, iterator in self.plugin_list_view.iterators.items():
+            failed = core.pluginhandler.is_plugin_failed(plugin_name)
+            self.plugin_list_view.set_row_value(iterator, "inconsistent_data", failed)
+
     def on_failed_tooltip(self, treeview, iterator):
+
+        plugin_name = treeview.get_row_value(iterator, "name_data")
         failed = treeview.get_row_value(iterator, "inconsistent_data")
-        return _("Failed") if failed else ""
+
+        return _("Error Loading Plugin %(name)s") % {"name": plugin_name} if failed else ""
 
     def on_plugin_popup_menu(self, menu, _widget):
 
@@ -3535,9 +3542,14 @@ class PluginsPage:
     def on_toggle_plugin(self, list_view, iterator):
 
         plugin_name = list_view.get_row_value(iterator, "name_data")
-        was_loaded = (plugin_name in core.pluginhandler.enabled_plugins)
-        enabled = core.pluginhandler.toggle_plugin(plugin_name)
-        failed = (not was_loaded and not enabled)
+
+        if list_view.get_row_value(iterator, "enabled"):
+            core.pluginhandler.disable_plugin(plugin_name)
+        else:
+            core.pluginhandler.enable_plugin(plugin_name)
+
+        enabled = plugin_name in config.sections["plugins"]["enabled"]
+        failed = core.pluginhandler.is_plugin_failed(plugin_name)
 
         list_view.set_row_value(iterator, "enabled", enabled)
         list_view.set_row_value(iterator, "inconsistent_data", failed)
@@ -3563,14 +3575,16 @@ class PluginsPage:
                 core.pluginhandler.enable_plugin(plugin_name)
 
             self.check_plugin_settings_button(self.selected_plugin)
+            self.update_failed_plugin_states()
             return
 
         # Disable all plugins
-        for plugin_name in core.pluginhandler.enabled_plugins.copy():
+        for plugin_name in core.pluginhandler.loaded_plugins.copy():
             core.pluginhandler.disable_plugin(plugin_name)
 
         config.sections["plugins"]["enabled"] = plugins_enabled
         self.plugin_settings_button.set_sensitive(False)
+        self.update_failed_plugin_states()
 
     def on_install_plugin_selected(self, selected_file_paths, _data):
 
