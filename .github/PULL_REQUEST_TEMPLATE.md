@@ -14,5 +14,5 @@
    You may only use AI assistants or tooling for learning purposes, including
    guided research of the codebase and exploring concepts. Your contribution
    must not include any content produced by generative AI (code, text snippets,
-   images nor other media).
+   images nor other media)..
 -->
