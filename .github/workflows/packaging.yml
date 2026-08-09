@@ -183,6 +183,12 @@ jobs:
       - name: Freeze application
         run: mamba run -n nicotine-plus python3 build-aux/appimage/setup.py bdist_appimage
 
+      - name: Archive installer artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: appimage-${{ matrix.arch }}-package
+          path: build-aux/appimage/build/*.AppImage
+
       - name: Test application startup
         run: |
           export WLR_BACKENDS=headless
@@ -191,12 +197,6 @@ jobs:
           export DBUS_SESSION_BUS_ADDRESS=
 
           mamba run -n startup-test cage python3 build-aux/appimage/testrun.py
-
-      - name: Archive installer artifacts
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: appimage-${{ matrix.arch }}-package
-          path: build-aux/appimage/build/*.AppImage
 
   windows:
     timeout-minutes: 15
@@ -249,10 +249,6 @@ jobs:
       - name: Freeze application
         run: python3 build-aux/windows/setup.py bdist_msi
 
-      - name: Test application startup
-        shell: cmd  # Exclude msys2 dependencies
-        run: python3 build-aux/windows/testrun.py
-
       - name: Make package portable
         run: |
           mkdir build-aux/windows/build/package/Nicotine+/portable/
@@ -269,6 +265,10 @@ jobs:
         with:
           name: windows-${{ matrix.arch }}-portable
           path: build-aux/windows/build/package
+
+      - name: Test application startup
+        shell: cmd  # Exclude msys2 dependencies
+        run: python3 build-aux/windows/testrun.py
 
   macos:
     timeout-minutes: 15
@@ -301,14 +301,14 @@ jobs:
       - name: Freeze application
         run: mamba run -n nicotine-plus python3 build-aux/macos/setup.py bdist_dmg
 
-      - name: Test application startup
-        run: mamba run -n startup-test python3 build-aux/macos/testrun.py
-
       - name: Archive installer artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: macos-${{ matrix.arch }}-installer
           path: build-aux/macos/build/*.dmg
+
+      - name: Test application startup
+        run: mamba run -n startup-test python3 build-aux/macos/testrun.py
 
   checksums:
     needs: [python-dist, debian, flatpak, snap, appimage, windows, macos]
