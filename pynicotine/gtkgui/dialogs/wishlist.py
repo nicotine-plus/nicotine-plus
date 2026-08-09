@@ -212,10 +212,10 @@ class WishList(Dialog):
             if isinstance(value, bool):
                 value = ""
 
-            tooltip_text += _("• %(filter)s %(value)s") % {
-                "filter": label,
+            tooltip_text += _("• %(item)s") % {"item": _("%(field)s %(value)s") % {
+                "field": label,
                 "value": value
-            }
+            }}
 
         return tooltip_text
 
