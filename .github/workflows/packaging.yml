@@ -16,7 +16,7 @@ permissions: {}
 
 jobs:
   python-dist:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     steps:
       - name: Checkout code
@@ -24,13 +24,17 @@ jobs:
         with:
           persist-credentials: false
 
+      # Setuptools doesn't support SOURCE_DATE_EPOCH for sdists, so this is only used for wheels for now
+      - name: Set reproducible timestamp
+        run: echo "SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)" >> $GITHUB_ENV
+
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install gettext python3-build
+          sudo apt-get install gettext python3-build twine
 
       - name: Build package
-        run: python -m build
+        run: python -m build --no-isolation
 
       - name: Upload artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -38,6 +42,9 @@ jobs:
           name: python-dist
           path: dist/
           if-no-files-found: error
+
+      - name: Verify package
+        run: python -m twine check --strict dist/*
 
   debian:
     runs-on: ubuntu-latest
