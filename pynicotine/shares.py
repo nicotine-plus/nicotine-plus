@@ -30,7 +30,7 @@ from pynicotine import rename_process
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
-from pynicotine.external.tinytag import TinyTag
+from pynicotine.external.tinytag import TinyTag, UnsupportedFormatError
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import FileListMessage
 from pynicotine.slskmessages import FolderContentsResponse
@@ -656,18 +656,15 @@ class Scanner:
             self.streams[virtual_folder_path] = self.get_folder_stream(file_list)
             self.current_folder_count += 1
 
-    def get_audio_tag(self, file_path, size):
+    def get_audio_tag(self, file_path):
 
-        parser_class = TinyTag._get_parser_for_filename(file_path)  # pylint: disable=protected-access
-
-        if parser_class is None:
-            return None
-
-        with open(encode_path(file_path), "rb") as file_handle:
-            tag = parser_class()
-            tag._filehandler = file_handle                          # pylint: disable=protected-access
-            tag.filesize = size
-            tag._load(tags=False, duration=True, image=False)       # pylint: disable=protected-access
+        try:
+            tag = TinyTag.get(
+                encode_path(file_path), tags=False, duration=True, image=False,
+                check_magic_bytes=False
+            )
+        except UnsupportedFormatError:
+            tag = None
 
         return tag
 
@@ -682,7 +679,7 @@ class Scanner:
         # We skip metadata scanning of files without meaningful content
         if size > 128:
             try:
-                tag = self.get_audio_tag(file_path, size)
+                tag = self.get_audio_tag(file_path)
 
             except Exception as error:
                 self.writer.send(
