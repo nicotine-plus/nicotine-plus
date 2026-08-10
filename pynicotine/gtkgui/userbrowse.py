@@ -662,7 +662,9 @@ class UserBrowse:
 
     def populate_path_bar(self, folder_path=""):
 
-        for widget in list(self.path_bar):
+        old_widgets = list(self.path_bar)
+
+        for widget in old_widgets:
             self.path_bar.remove(widget)
 
         if not folder_path:

@@ -194,9 +194,9 @@ class Download(Dialog):
         elif core.users.login_status != UserStatus.OFFLINE:
             self.set_in_progress()
 
-        for username, file_path, size, file_attributes, selected, root_folder_path in reversed(sorted(
-            data, key=lambda x: len(x[0])
-        )):
+        for username, file_path, size, file_attributes, selected, root_folder_path in sorted(
+            data, key=lambda x: len(x[0]), reverse=True
+        ):
             if username + file_path in self.tree_view.iterators:
                 continue
 

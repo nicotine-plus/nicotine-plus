@@ -39,7 +39,7 @@ class RoomWall(Popover):
 
         self.message_view.clear()
 
-        for username, message in list(tickers.items()):
+        for username, message in tickers.items():
             self.message_view.add_line(f"> [{username}] {' '.join(message.splitlines())}", prepend=True)
 
         self.message_view.place_cursor_at_line(0)

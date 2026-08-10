@@ -69,7 +69,7 @@ def load(scope, path):
 
     widgets = builder.get_objects()
 
-    for obj in list(widgets):
+    for obj in widgets[:]:
         try:
             obj_name = Gtk.Buildable.get_name(obj)
             if not obj_name.startswith("_"):

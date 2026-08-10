@@ -152,10 +152,9 @@ class Searches(IconNotebook):
 
     def on_focus(self, *_args):
 
-        if self.window.current_page_id != self.window.search_page.id:
-            return True
+        if self.window.current_page_id == self.window.search_page.id:
+            self.window.search_entry.grab_focus()
 
-        self.window.search_entry.grab_focus()
         return True
 
     def on_restore_removed_page(self, page_args):

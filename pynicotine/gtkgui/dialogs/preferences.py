@@ -869,8 +869,6 @@ class SharesPage:
 
     def on_visibility_to(self, *_args):
 
-        default = ""
-
         if not self.reveal_buddy_shares and not self.reveal_trusted_shares:
             default = _("Only buddies can view shares")
 
@@ -880,7 +878,7 @@ class SharesPage:
         elif not self.reveal_buddy_shares and self.reveal_trusted_shares:
             default = _("Everyone can view trusted shares")
 
-        elif self.reveal_buddy_shares and self.reveal_trusted_shares:
+        else:
             default = _("Everyone can view buddy & trusted shares")
 
         EntryDialog(
@@ -3299,17 +3297,13 @@ class NowPlayingPage:
             self.player_replacers = ["$n", "$t", "$a", "$b"]
             self.command_label.set_text(_("Username;APIKEY"))
 
-        if self.librefm_radio.get_active():
+        if self.librefm_radio.get_active() or self.listenbrainz_radio.get_active():
             self.player_replacers = ["$n", "$t", "$a", "$b"]
             self.command_label.set_text(_("Username: "))
 
         elif self.mpris_radio.get_active():
             self.player_replacers = ["$n", "$p", "$a", "$b", "$t", "$y", "$c", "$r", "$k", "$l", "$f"]
             self.command_label.set_text(_("Music player (e.g. amarok, audacious, exaile); leave empty to autodetect:"))
-
-        elif self.listenbrainz_radio.get_active():
-            self.player_replacers = ["$n", "$t", "$a", "$b"]
-            self.command_label.set_text(_("Username: "))
 
         elif self.other_radio.get_active():
             self.player_replacers = ["$n"]

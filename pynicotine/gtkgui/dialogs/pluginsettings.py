@@ -309,7 +309,9 @@ class PluginSettings(Dialog):
         self.option_widgets.clear()
         self.group_containers.clear()
 
-        for child in list(self.primary_container):
+        old_children = list(self.primary_container)
+
+        for child in old_children:
             self.primary_container.remove(child)
 
         for option_name, data in self.plugin_metasettings.items():
