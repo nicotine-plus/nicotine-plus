@@ -18,6 +18,7 @@ from gi.repository import Pango
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.application import GTK_MINOR_VERSION
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -400,7 +401,11 @@ class TreeView:
             if isinstance(width, int) and width > 0:
                 column.set_fixed_width(width)
 
-            column.set_reorderable(True)
+            # Drag-and-drop reordering is broken in GTK >=4.22
+            # https://gitlab.gnome.org/GNOME/gtk/-/issues/8027
+            if (GTK_API_VERSION, GTK_MINOR_VERSION) < (4, 22):
+                column.set_reorderable(True)
+
             column.set_min_width(24)
 
             if xalign == 1 and GTK_API_VERSION >= 4:
