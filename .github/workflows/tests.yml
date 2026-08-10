@@ -387,7 +387,7 @@ jobs:
       - name: Set up package repository
         run: |
           BOOTSTRAP_TAR="bootstrap-2025Q4-x86_64.tar.gz"
-          curl -O https://pkgsrc.smartos.org/packages/SmartOS/bootstrap/${BOOTSTRAP_TAR}
+          curl --proto "=https" -fLO https://pkgsrc.smartos.org/packages/SmartOS/bootstrap/${BOOTSTRAP_TAR}
           sudo tar -zxpf ${BOOTSTRAP_TAR} -C /
 
       - name: Install dependencies
