@@ -93,24 +93,24 @@ class SharesTest(TestCase):
         trusted_files = core.shares.share_dbs["trusted_files"]
 
         self.assertEqual(
-            ["Shares\\dummy_file", 0, None, None],
-            public_files[os.path.join(SHARES_FOLDER_PATH, "dummy_file")]
+            public_files[os.path.join(SHARES_FOLDER_PATH, "dummy_file")],
+            ["Shares\\dummy_file", 0, None, None]
         )
         self.assertEqual(
-            ["Shares\\audiofile.wav", 100044, (706, 0, 44100, 16), 1],
-            public_files[os.path.join(SHARES_FOLDER_PATH, "audiofile.wav")]
+            public_files[os.path.join(SHARES_FOLDER_PATH, "audiofile.wav")],
+            ["Shares\\audiofile.wav", 100044, (706, 0, 44100, 16), 1]
         )
         self.assertEqual(
-            ["Secrets\\audiofile2.wav", 300044, (706, 0, 44100, 16), 3],
-            buddy_files[os.path.join(BUDDY_SHARES_FOLDER_PATH, "audiofile2.wav")]
+            buddy_files[os.path.join(BUDDY_SHARES_FOLDER_PATH, "audiofile2.wav")],
+            ["Secrets\\audiofile2.wav", 300044, (706, 0, 44100, 16), 3]
         )
         self.assertEqual(
-            ["Secrets\\something2\\nothing2", 0, None, None],
-            buddy_files[os.path.join(BUDDY_SHARES_FOLDER_PATH, "something2", "nothing2")]
+            buddy_files[os.path.join(BUDDY_SHARES_FOLDER_PATH, "something2", "nothing2")],
+            ["Secrets\\something2\\nothing2", 0, None, None]
         )
         self.assertEqual(
-            ["Trusted\\audiofile3.wav", 400044, (706, 0, 44100, 16), 4],
-            trusted_files[os.path.join(TRUSTED_SHARES_FOLDER_PATH, "audiofile3.wav")]
+            trusted_files[os.path.join(TRUSTED_SHARES_FOLDER_PATH, "audiofile3.wav")],
+            ["Trusted\\audiofile3.wav", 400044, (706, 0, 44100, 16), 4]
         )
 
         # Verify that expected folders are empty

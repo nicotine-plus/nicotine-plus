@@ -42,13 +42,13 @@ class SlskMessageTest(TestCase):
         str_message = obj.pack_string("teststring")
 
         # Assert
-        self.assertEqual(b"\x01", boolean_message)
-        self.assertEqual(b"\x7B", unsigned_int8_message)
-        self.assertEqual(b"\x7B\x00\x00\x00", unsigned_int32_message)
-        self.assertEqual(b"\x7B\x00\x00\x00", signed_int32_message)
-        self.assertEqual(b"\x7B\x00\x00\x00\x00\x00\x00\x00", unsigned_int64_message)
-        self.assertEqual(b"\t\x00\x00\x00testbytes", bytes_message)
-        self.assertEqual(b"\n\x00\x00\x00teststring", str_message)
+        self.assertEqual(boolean_message, b"\x01")
+        self.assertEqual(unsigned_int8_message, b"\x7B")
+        self.assertEqual(unsigned_int32_message, b"\x7B\x00\x00\x00")
+        self.assertEqual(signed_int32_message, b"\x7B\x00\x00\x00")
+        self.assertEqual(unsigned_int64_message, b"\x7B\x00\x00\x00\x00\x00\x00\x00")
+        self.assertEqual(bytes_message, b"\t\x00\x00\x00testbytes")
+        self.assertEqual(str_message, b"\n\x00\x00\x00teststring")
 
 
 class LoginMessageTest(TestCase):
@@ -62,9 +62,10 @@ class LoginMessageTest(TestCase):
 
         # Assert
         self.assertEqual(
+            message,
             bytearray(b"\x04\x00\x00\x00test\x07\x00\x00\x00s33cr3t\x9d\x00\x00\x00 "
-                      b"\x00\x00\x00dbc93f24d8f3f109deed23c3e2f8b74c\x13\x00\x00\x00"),
-            message)
+                      b"\x00\x00\x00dbc93f24d8f3f109deed23c3e2f8b74c\x13\x00\x00\x00")
+        )
 
 
 class ChangePasswordMessageTest(TestCase):
@@ -77,9 +78,7 @@ class ChangePasswordMessageTest(TestCase):
         message = obj.make_network_message()
 
         # Assert
-        self.assertEqual(
-            b"\x07\x00\x00\x00s33cr3t",
-            message)
+        self.assertEqual(message, b"\x07\x00\x00\x00s33cr3t")
 
 
 class SetWaitPortMessageTest(TestCase):
@@ -92,9 +91,7 @@ class SetWaitPortMessageTest(TestCase):
         message = obj.make_network_message()
 
         # Assert
-        self.assertEqual(
-            b"9\x05\x00\x00",
-            message)
+        self.assertEqual(message, b"9\x05\x00\x00")
 
 
 class GetPeerAddressMessageTest(TestCase):
@@ -107,9 +104,7 @@ class GetPeerAddressMessageTest(TestCase):
         message = obj.make_network_message()
 
         # Assert
-        self.assertEqual(
-            b"\x05\x00\x00\x00user1",
-            message)
+        self.assertEqual(message, b"\x05\x00\x00\x00user1")
 
 
 class WatchUserMessageTest(TestCase):
@@ -122,9 +117,7 @@ class WatchUserMessageTest(TestCase):
         message = obj.make_network_message()
 
         # Assert
-        self.assertEqual(
-            b"\x05\x00\x00\x00user2",
-            message)
+        self.assertEqual(message, b"\x05\x00\x00\x00user2")
 
 
 class UnwatchUserMessageTest(TestCase):
@@ -137,9 +130,7 @@ class UnwatchUserMessageTest(TestCase):
         message = obj.make_network_message()
 
         # Assert
-        self.assertEqual(
-            b"\x05\x00\x00\x00user3",
-            message)
+        self.assertEqual(message, b"\x05\x00\x00\x00user3")
 
 
 class GetUserStatusMessageTest(TestCase):
@@ -152,9 +143,7 @@ class GetUserStatusMessageTest(TestCase):
         message = obj.make_network_message()
 
         # Assert
-        self.assertEqual(
-            b"\x05\x00\x00\x00user4",
-            message)
+        self.assertEqual(message, b"\x05\x00\x00\x00user4")
 
 
 class FileSearchTest(TestCase):
@@ -167,9 +156,7 @@ class FileSearchTest(TestCase):
         message = obj.make_network_message()
 
         # Assert
-        self.assertEqual(
-            b"\xaaIF\x1f\x0c\x00\x00\x0070 gwen auto",
-            message)
+        self.assertEqual(message, b"\xaaIF\x1f\x0c\x00\x00\x0070 gwen auto")
 
 
 class SetStatusMessageTest(TestCase):
@@ -182,9 +169,7 @@ class SetStatusMessageTest(TestCase):
         message = obj.make_network_message()
 
         # Assert
-        self.assertEqual(
-            b"\x01\x00\x00\x00",
-            message)
+        self.assertEqual(message, b"\x01\x00\x00\x00")
 
 
 class NotifyPrivilegesMessageTest(TestCase):
@@ -197,9 +182,7 @@ class NotifyPrivilegesMessageTest(TestCase):
         message = obj.make_network_message()
 
         # Assert
-        self.assertEqual(
-            b"@\xe2\x01\x00\x05\x00\x00\x00user5",
-            message)
+        self.assertEqual(message, b"@\xe2\x01\x00\x05\x00\x00\x00user5")
 
 
 class AckNotifyPrivilegesMessageTest(TestCase):
@@ -212,9 +195,7 @@ class AckNotifyPrivilegesMessageTest(TestCase):
         message = obj.make_network_message()
 
         # Assert
-        self.assertEqual(
-            b"@\xe2\x01\x00",
-            message)
+        self.assertEqual(message, b"@\xe2\x01\x00")
 
 
 class JoinGlobalRoomMessageTest(TestCase):
@@ -227,9 +208,7 @@ class JoinGlobalRoomMessageTest(TestCase):
         message = obj.make_network_message()
 
         # Assert
-        self.assertEqual(
-            b"",
-            message)
+        self.assertEqual(message, b"")
 
 
 class LeaveGlobalRoomMessageTest(TestCase):
@@ -242,9 +221,7 @@ class LeaveGlobalRoomMessageTest(TestCase):
         message = obj.make_network_message()
 
         # Assert
-        self.assertEqual(
-            b"",
-            message)
+        self.assertEqual(message, b"")
 
 
 class SayChatroomMessageTest(TestCase):
@@ -257,9 +234,7 @@ class SayChatroomMessageTest(TestCase):
         message = obj.make_network_message()
 
         # Assert
-        self.assertEqual(
-            b"\x05\x00\x00\x00room1\x07\x00\x00\x00Wassup?",
-            message)
+        self.assertEqual(message, b"\x05\x00\x00\x00room1\x07\x00\x00\x00Wassup?")
 
 
 class JoinRoomMessageTest(TestCase):
@@ -274,12 +249,8 @@ class JoinRoomMessageTest(TestCase):
         message_private = obj_private.make_network_message()
 
         # Assert
-        self.assertEqual(
-            b"\x05\x00\x00\x00room2\x00\x00\x00\x00",
-            message)
-        self.assertEqual(
-            b"\x05\x00\x00\x00room2\x01\x00\x00\x00",
-            message_private)
+        self.assertEqual(message, b"\x05\x00\x00\x00room2\x00\x00\x00\x00")
+        self.assertEqual(message_private, b"\x05\x00\x00\x00room2\x01\x00\x00\x00")
 
 
 class AddRoomMemberMessageTest(TestCase):
@@ -292,9 +263,7 @@ class AddRoomMemberMessageTest(TestCase):
         message = obj.make_network_message()
 
         # Assert
-        self.assertEqual(
-            b"\x05\x00\x00\x00room3\x05\x00\x00\x00admin",
-            message)
+        self.assertEqual(message, b"\x05\x00\x00\x00room3\x05\x00\x00\x00admin")
 
 
 class CancelRoomMembershipMessageTest(TestCase):
@@ -307,9 +276,7 @@ class CancelRoomMembershipMessageTest(TestCase):
         message = obj.make_network_message()
 
         # Assert
-        self.assertEqual(
-            b"\x05\x00\x00\x00room4",
-            message)
+        self.assertEqual(message, b"\x05\x00\x00\x00room4")
 
 
 class CancelRoomOwnershipMessageTest(TestCase):
@@ -322,9 +289,7 @@ class CancelRoomOwnershipMessageTest(TestCase):
         message = obj.make_network_message()
 
         # Assert
-        self.assertEqual(
-            b"\x05\x00\x00\x00room5",
-            message)
+        self.assertEqual(message, b"\x05\x00\x00\x00room5")
 
 
 class RoomSomethingMessageTest(TestCase):
@@ -337,9 +302,7 @@ class RoomSomethingMessageTest(TestCase):
         message = obj.make_network_message()
 
         # Assert
-        self.assertEqual(
-            b"\x05\x00\x00\x00room6",
-            message)
+        self.assertEqual(message, b"\x05\x00\x00\x00room6")
 
 
 class RemoveRoomMemberMessageTest(TestCase):
@@ -352,9 +315,7 @@ class RemoveRoomMemberMessageTest(TestCase):
         message = obj.make_network_message()
 
         # Assert
-        self.assertEqual(
-            b"\x05\x00\x00\x00room7\x05\x00\x00\x00admin",
-            message)
+        self.assertEqual(message, b"\x05\x00\x00\x00room7\x05\x00\x00\x00admin")
 
     def test_parse_network_message(self):
         # Arrange
@@ -365,5 +326,5 @@ class RemoveRoomMemberMessageTest(TestCase):
         obj.parse_network_message()
 
         # Assert
-        self.assertEqual("room7", obj.room)
-        self.assertEqual("admin", obj.user)
+        self.assertEqual(obj.room, "room7")
+        self.assertEqual(obj.user, "admin")
