@@ -8,7 +8,6 @@ recursive-include doc *
 recursive-include po *
 recursive-include pynicotine *
 
-exclude 404.md
 recursive-exclude * *.appdata.xml
 recursive-exclude * *.dbn
 recursive-exclude * *.desktop
