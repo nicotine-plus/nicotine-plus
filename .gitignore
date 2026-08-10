@@ -4,6 +4,7 @@
 # Auto-generated files
 *.desktop
 *.appdata.xml
+*.metainfo.xml
 
 # Python byte code files
 *.pyc

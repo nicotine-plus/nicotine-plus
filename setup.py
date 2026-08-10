@@ -33,14 +33,14 @@ def build_translations():
 
         subprocess.check_call(["msgfmt", "--check", po_file_path, "-o", mo_file_path])
 
-    # Merge translations into .desktop and appdata files
+    # Merge translations into .desktop and metainfo files
     with os.scandir(os.path.join(base_path, "data")) as entries:
         for entry in entries:
             if entry.name.endswith(".desktop.in"):
                 subprocess.check_call(["msgfmt", "--desktop", f"--template={entry.path}", "-d", "po",
                                        "-o", entry.path[:-3]])
 
-            elif entry.name.endswith(".appdata.xml.in"):
+            elif entry.name.endswith(".metainfo.xml.in"):
                 subprocess.check_call(["msgfmt", "--xml", f"--template={entry.path}", "-d", "po",
                                        "-o", entry.path[:-3]])
 

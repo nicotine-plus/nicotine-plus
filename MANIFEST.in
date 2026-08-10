@@ -11,9 +11,9 @@ recursive-include doc *
 recursive-include po *
 recursive-include pynicotine *
 
-recursive-exclude * *.appdata.xml
 recursive-exclude * *.dbn
 recursive-exclude * *.desktop
+recursive-exclude * *.metainfo.xml
 recursive-exclude * *.mo
 recursive-exclude * *.old
 recursive-exclude * *.pyc

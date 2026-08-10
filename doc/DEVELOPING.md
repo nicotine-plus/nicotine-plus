@@ -303,7 +303,7 @@ should do when releasing a new version of Nicotine+.
     The following files need to be modified:
     - [NEWS.md](https://github.com/nicotine-plus/nicotine-plus/blob/HEAD/NEWS.md)
     - [README.md](https://github.com/nicotine-plus/nicotine-plus/blob/HEAD/README.md)
-    - [data/org.nicotine_plus.Nicotine.appdata.xml.in](https://github.com/nicotine-plus/nicotine-plus/blob/HEAD/data/org.nicotine_plus.Nicotine.appdata.xml.in)
+    - [data/org.nicotine_plus.Nicotine.metainfo.xml.in](https://github.com/nicotine-plus/nicotine-plus/blob/HEAD/data/org.nicotine_plus.Nicotine.metainfo.xml.in)
     - [debian/changelog](https://github.com/nicotine-plus/nicotine-plus/blob/HEAD/debian/changelog)
     - [pynicotine/\_\_init\_\_.py](https://github.com/nicotine-plus/nicotine-plus/blob/HEAD/pynicotine/__init__.py)
 

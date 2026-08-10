@@ -34,7 +34,7 @@ parts:
     plugin: python
     source: .
     python-packages: []
-    parse-info: [share/metainfo/org.nicotine_plus.Nicotine.appdata.xml]
+    parse-info: [share/metainfo/org.nicotine_plus.Nicotine.metainfo.xml]
     override-pull: |
       craftctl default
       sed -E 's|Icon=.*|Icon=snap.$CRAFT_PROJECT_NAME.org.nicotine_plus.Nicotine|' -i data/org.nicotine_plus.Nicotine.desktop.in

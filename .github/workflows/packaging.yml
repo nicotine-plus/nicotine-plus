@@ -102,7 +102,7 @@ jobs:
         run: flatpak-builder-lint --exceptions manifest build-aux/flatpak/org.nicotine_plus.Nicotine.json
 
       - name: Validate appstream
-        run: flatpak-builder-lint appstream data/org.nicotine_plus.Nicotine.appdata.xml.in
+        run: flatpak-builder-lint appstream data/org.nicotine_plus.Nicotine.metainfo.xml.in
 
       - name: Build Flatpak package
         run: |
