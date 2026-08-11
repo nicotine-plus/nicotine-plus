@@ -16,41 +16,45 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 
 ### Changes
 
- * Removed 'Everyone' permission for receiving files sent via manual upload
- * Only show online status of chat history users with an open tab to reduce server traffic
+ * Added menu items for moving column headers due to broken drag-and-drop in GTK
  * Added support for the Haiku operating system
- * macOS: Use new GTK renderer and prefer integrated GPU for improved power efficiency
+ * Enabled fixed number of upload slots by default
+ * Only show online status of open chat history users to reduce server traffic
+ * Removed 'Everyone' permission for receiving files sent via manual upload
+ * macOS: Prefer integrated GPU for improved power efficiency
  * macOS: Re-added support for macOS 11 Big Sur and above
 
 ### Corrections
 
- * Important: Fixed a crash arising from shares database corruption due to similar file names
- * Important: Enforce maximum sizes for uncompressed network messages to avoid unbounded memory use
+ * Important: Prevent unbounded memory use for large uncompressed network messages
  * Important: Prevent file uploads from going through to spoofed users
- * Important: Fixed an issue where peers would sometimes be told our username is theirs
- * Important: Some fixes for incorrect behavior in the distributed search network
- * Fixed a crash when performing a file search in rooms mode with an empty room name
- * Fixed a rare crash that occurred when opening File Properties dialog
+ * Important: Added rate limits for CTCP messages
+ * Important: Fixed a rare shares database corruption due to similar file names
+ * Important: Fixed an issue where peers would sometimes receive the wrong username
+ * Important: Fixed some incorrect behavior in the distributed search network
+ * Fixed a crash when searching for room files with no chatroom specified
  * Fixed a rare crash when connecting to the server
- * Fixed folder downloads incorrectly including files from users with identical folder paths
- * Fixed configuration files not being saved when restarting or logging out of the OS
- * Fixed transfer list UI sometimes not updating fully until switching to another tab
+ * Fixed a rare crash that occurred when opening File Properties dialog
  * Fixed broken Add Buddy text entry in the buddies sidebar
- * Fixed uploads not being removed when banning an IP address from the Preferences dialog
+ * Fixed configuration files not being saved when restarting or logging out
+ * Fixed removing uploads when banning an IP address from the Preferences dialog
  * Fixed loading a saved shares file list from disk while offline
- * Fixed an issue where the initial connection attempt to the server would sometimes fail
- * Fixed occasional performance issues when responding to search requests
+ * Fixed folder downloads adding files from other users with identical folder paths
+ * Fixed stuck transfers with download folder error when user is offline
  * Fixed incorrect average transfer speed when uploading the same file many times
+ * Fixed transfer list not always updating fully until switching to another tab
  * Fixed zero-byte downloads not finishing immediately
+ * Fixed an issue where the first connection to the server could fail
+ * Fixed occasional performance issues when responding to search requests
  * Fixed users not being sorted by date in Chat History popover
  * Fixed inaccurate stuck current folder count during rescan
  * Fixed room list order sometimes changing after restarting
  * Fixed long usernames not being ellipsized in private chat tabs
  * Fixed minor sizing issues with pages context menu on some systems
- * Fixed cosmetic issue with missing or invalid folder paths in folder chooser button
+ * Fixed cosmetic issue with invalid folder paths in folder chooser button
  * Windows: Fixed incorrect sort order in file lists with some system locales
  * Windows: Fixed main window not always being raised to the top when restored
- * Windows: Fixed main window jumping around when changing to another virtual desktop
+ * Windows: Fixed main window jumping around when changing virtual desktop
  * macOS: Fixed main window sometimes being unminimized on its own
  * DragonflyBSD: Fixed incorrect names of downloaded files
 
