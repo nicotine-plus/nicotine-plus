@@ -1,8 +1,8 @@
-nicotine (3.3.11-rc2) resolute; urgency=medium
+nicotine (3.3.11-1) resolute; urgency=medium
 
-  * Release candidate 2.
+  * Latest upstream.
 
- -- Mat <mail@mathias.is>  Fri, 19 Jun 2026 06:59:12 +0300
+ -- Mat <mail@mathias.is>  Tue, 11 Aug 2026 12:17:46 +0300
 
 nicotine (3.3.10-1) oracular; urgency=medium
 
