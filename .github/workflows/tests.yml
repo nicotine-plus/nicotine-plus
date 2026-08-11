@@ -458,7 +458,7 @@ jobs:
             ${{ matrix.prefix }}-webp-pixbuf-loader
 
       - name: Install additional dependencies
-        run: python3 packaging/windows/dependencies.py
+        run: python3 build-aux/windows/dependencies.py
 
       - name: Integration and unit tests
         run: python3 -m unittest -v
@@ -495,7 +495,7 @@ jobs:
       - name: Set up environment
         run: |
           mamba create -n nicotine-plus
-          mamba run -n nicotine-plus python3 packaging/macos/dependencies.py
+          mamba run -n nicotine-plus python3 build-aux/macos/dependencies.py
 
       - name: Integration and unit tests
         run: mamba run -n nicotine-plus python3 -m unittest -v
