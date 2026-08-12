@@ -317,6 +317,8 @@ jobs:
 
       - name: Install dependencies
         run: |
+          # Use a more reliable mirror
+          sudo mport config set mirror_region uk
           sudo mport index
           sudo mport install dejavu gettext gtk4 python311 py311-build py311-pygobject \
             py311-setuptools py311-wheel || true
