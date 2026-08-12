@@ -53,8 +53,8 @@ def check_arguments():
         help=_("start the program without showing window")
     )
     parser.add_argument(
-        "-b", "--bindip", metavar=_("ip"),
-        help=_("bind sockets to the given IP (useful for VPN)")
+        "-b", "--bindip", metavar=_("address"),
+        help=_("bind connections to the given IP address")
     )
     parser.add_argument(
         "-l", "--port", metavar=_("port"), type=int,
