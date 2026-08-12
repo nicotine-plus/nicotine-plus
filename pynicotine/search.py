@@ -246,7 +246,7 @@ class Search:
 
             search_term_words_transmitted.append(word)
 
-        sanitized_search_term_transmitted = " ".join(x for x in search_term_words_transmitted).strip()
+        sanitized_search_term_transmitted = " ".join(search_term_words_transmitted).strip()
 
         # Only modify search term if string also contains non-special characters
         if sanitized_search_term_transmitted:
@@ -719,12 +719,10 @@ class Search:
                 first_char = word[0]
 
                 if first_char == excluded_char:
-                    for subword in word.translate(TRANSLATE_PUNCTUATION).split():
-                        excluded_words.add(subword)
+                    excluded_words.update(word.translate(TRANSLATE_PUNCTUATION).split())
 
                 elif first_char == partial_char:
-                    for subword in word.translate(TRANSLATE_PUNCTUATION).split():
-                        partial_words.add(subword)
+                    partial_words.update(word.translate(TRANSLATE_PUNCTUATION).split())
 
         # Strip punctuation
         search_term = search_term.translate(TRANSLATE_PUNCTUATION).strip()
