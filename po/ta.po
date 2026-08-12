@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 15:45+0300\n"
+"POT-Creation-Date: 2026-08-12 14:11+0300\n"
 "PO-Revision-Date: 2025-02-25 02:41+0000\n"
 "Last-Translator: தமிழ்நேரம் <anishprabu.t@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -126,12 +126,14 @@ msgid "start the program without showing window"
 msgstr "சாளரத்தைக் காட்டாமல் நிரலைத் தொடங்கவும்"
 
 #: pynicotine/__init__.py:56
-msgid "ip"
-msgstr "ஐபி"
+#, fuzzy
+msgid "address"
+msgstr "ஐபி முகவரி"
 
 #: pynicotine/__init__.py:57
-msgid "bind sockets to the given IP (useful for VPN)"
-msgstr "கொடுக்கப்பட்ட ஐபிக்கு சாக்கெட்டுகளை பிணைக்கவும் (VPN க்கு பயனுள்ளதாக இருக்கும்)"
+#, fuzzy
+msgid "bind connections to the given IP address"
+msgstr "பயனர் அல்லது ஐபி முகவரியிலிருந்து இணைப்புகளைத் தடுக்கவும்"
 
 #: pynicotine/__init__.py:60
 msgid "port"
@@ -511,7 +513,7 @@ msgstr ""
 #: pynicotine/gtkgui/dialogs/preferences.py:3645
 #: pynicotine/gtkgui/dialogs/roomlist.py:327
 #: pynicotine/gtkgui/dialogs/statistics.py:112
-#: pynicotine/gtkgui/dialogs/wishlist.py:383 pynicotine/gtkgui/downloads.py:129
+#: pynicotine/gtkgui/dialogs/wishlist.py:385 pynicotine/gtkgui/downloads.py:129
 #: pynicotine/gtkgui/downloads.py:146 pynicotine/gtkgui/downloads.py:176
 #: pynicotine/gtkgui/privatechat.py:477 pynicotine/gtkgui/uploads.py:147
 #: pynicotine/gtkgui/uploads.py:164 pynicotine/gtkgui/widgets/dialogs.py:137
@@ -676,12 +678,12 @@ msgstr "பயனரைச் சேர்க்கவும் _ குறி�
 #: pynicotine/gtkgui/dialogs/preferences.py:1805
 #: pynicotine/gtkgui/dialogs/preferences.py:1833
 #: pynicotine/gtkgui/dialogs/preferences.py:3041
-#: pynicotine/gtkgui/dialogs/wishlist.py:115 pynicotine/gtkgui/interests.py:189
+#: pynicotine/gtkgui/dialogs/wishlist.py:117 pynicotine/gtkgui/interests.py:189
 #: pynicotine/gtkgui/interests.py:198 pynicotine/gtkgui/transfers.py:276
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:538
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:554
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:127
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:143
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:126
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:142
 #: pynicotine/gtkgui/ui/downloads.ui:107 pynicotine/gtkgui/ui/downloads.ui:123
 #: pynicotine/gtkgui/ui/settings/ban.ui:199
 #: pynicotine/gtkgui/ui/settings/ban.ui:215
@@ -746,7 +748,7 @@ msgstr "பயனர் %s பற்றிய குறிப்பைச் ச
 #: pynicotine/gtkgui/dialogs/preferences.py:2045
 #: pynicotine/gtkgui/dialogs/preferences.py:2108
 #: pynicotine/gtkgui/dialogs/preferences.py:3108
-#: pynicotine/gtkgui/dialogs/wishlist.py:260
+#: pynicotine/gtkgui/dialogs/wishlist.py:262
 msgid "_Add"
 msgstr "_ADD"
 
@@ -1186,9 +1188,9 @@ msgstr "கோப்புறை"
 #: pynicotine/gtkgui/dialogs/preferences.py:1803
 #: pynicotine/gtkgui/dialogs/preferences.py:1831
 #: pynicotine/gtkgui/dialogs/preferences.py:3039
-#: pynicotine/gtkgui/dialogs/wishlist.py:109
+#: pynicotine/gtkgui/dialogs/wishlist.py:111
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:523
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:112
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:111
 #: pynicotine/gtkgui/ui/settings/chats.ui:132
 #: pynicotine/gtkgui/ui/settings/chats.ui:289
 #: pynicotine/gtkgui/ui/settings/chats.ui:429
@@ -1238,7 +1240,7 @@ msgstr "'%(dir)s' க்கு புதிய மெய்நிகர் ப�
 #: pynicotine/gtkgui/dialogs/preferences.py:2075
 #: pynicotine/gtkgui/dialogs/preferences.py:2140
 #: pynicotine/gtkgui/dialogs/preferences.py:3137
-#: pynicotine/gtkgui/dialogs/wishlist.py:321
+#: pynicotine/gtkgui/dialogs/wishlist.py:323
 msgid "_Edit"
 msgstr "தொகு (_E)"
 
@@ -1282,7 +1284,7 @@ msgstr "_Aplay"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:259
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:492
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:81
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:80
 #: pynicotine/gtkgui/ui/settings/ban.ui:184
 #: pynicotine/gtkgui/ui/settings/ban.ui:305
 #: pynicotine/gtkgui/ui/settings/chats.ui:101
@@ -1301,7 +1303,7 @@ msgstr "சேர்க்கவும்…"
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:260
 #: pynicotine/gtkgui/search.py:651
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:507
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:96
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:95
 #: pynicotine/gtkgui/ui/settings/chats.ui:116
 #: pynicotine/gtkgui/ui/settings/chats.ui:273
 #: pynicotine/gtkgui/ui/settings/chats.ui:445
@@ -2395,7 +2397,7 @@ msgid "Result Filters"
 msgstr "முடிவு வடிப்பான்கள்"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:89
-#: pynicotine/gtkgui/dialogs/wishlist.py:49
+#: pynicotine/gtkgui/dialogs/wishlist.py:51
 msgid "Wishlist"
 msgstr "விருப்பப்பட்டியல்"
 
@@ -2441,42 +2443,42 @@ msgstr "பரிமாற்ற புள்ளிவிவரங்களை �
 msgid "Reset All"
 msgstr "அனைத்தையும் தெரிவுசெய்"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:25
+#: pynicotine/gtkgui/dialogs/wishlist.py:26
 #: pynicotine/gtkgui/ui/settings/search.ui:212
 msgid "Include:"
 msgstr "அடங்கும்:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:26
+#: pynicotine/gtkgui/dialogs/wishlist.py:27
 #: pynicotine/gtkgui/ui/settings/search.ui:237
 msgid "Exclude:"
 msgstr "விலக்கு:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:27
+#: pynicotine/gtkgui/dialogs/wishlist.py:28
 #: pynicotine/gtkgui/ui/settings/search.ui:262
 msgid "File Type:"
 msgstr "கோப்பு வகை:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:28
+#: pynicotine/gtkgui/dialogs/wishlist.py:29
 #: pynicotine/gtkgui/ui/settings/search.ui:290
 msgid "Size:"
 msgstr "அளவு:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:29
+#: pynicotine/gtkgui/dialogs/wishlist.py:30
 #: pynicotine/gtkgui/ui/settings/search.ui:321
 msgid "Bitrate:"
 msgstr "பிட்ரேட்:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:30
+#: pynicotine/gtkgui/dialogs/wishlist.py:31
 #: pynicotine/gtkgui/ui/settings/search.ui:352
 msgid "Duration:"
 msgstr "காலம்:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:31
+#: pynicotine/gtkgui/dialogs/wishlist.py:32
 #: pynicotine/gtkgui/ui/settings/search.ui:383
 msgid "Country Code:"
 msgstr "நாட்டின் குறியீடு:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:32
+#: pynicotine/gtkgui/dialogs/wishlist.py:33
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:424
 #: pynicotine/gtkgui/ui/search.ui:392
 #: pynicotine/gtkgui/ui/settings/search.ui:412
@@ -2485,7 +2487,7 @@ msgstr "நாட்டின் குறியீடு:"
 msgid "Upload Slot Available"
 msgstr "பங்குகள் கிடைக்கவில்லை"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:33
+#: pynicotine/gtkgui/dialogs/wishlist.py:34
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:445
 #: pynicotine/gtkgui/ui/search.ui:408
 #: pynicotine/gtkgui/ui/settings/search.ui:437
@@ -2493,110 +2495,118 @@ msgstr "பங்குகள் கிடைக்கவில்லை"
 msgid "Public Files"
 msgstr "பொது"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:61
+#: pynicotine/gtkgui/dialogs/wishlist.py:63
 #, fuzzy
 msgid "Automatic Search"
 msgstr "சொற்களை தானாக மாற்றுவதை இயக்கவும்"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:68
+#: pynicotine/gtkgui/dialogs/wishlist.py:70
 #, fuzzy
 msgid "Search Term"
 msgstr "தேடல் காலத்தை நகலெடுக்கவும்"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:76
+#: pynicotine/gtkgui/dialogs/wishlist.py:78
 #, fuzzy
 msgid "Custom Filters"
 msgstr "வடிப்பான்களை மீட்டமை"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:85
+#: pynicotine/gtkgui/dialogs/wishlist.py:87
 msgid "Added"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:107 pynicotine/gtkgui/interests.py:187
+#: pynicotine/gtkgui/dialogs/wishlist.py:109 pynicotine/gtkgui/interests.py:187
 #: pynicotine/gtkgui/interests.py:196 pynicotine/gtkgui/interests.py:208
 #: pynicotine/gtkgui/userinfo.py:350
 msgid "_Search for Item"
 msgstr "உருப்படிக்கு தேடல்"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:110
+#: pynicotine/gtkgui/dialogs/wishlist.py:112
 #, fuzzy
 msgid "Set Custom _Filters…"
 msgstr "வடிப்பான்களை மீட்டமை"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:112
+#: pynicotine/gtkgui/dialogs/wishlist.py:114
 #, fuzzy
 msgid "Reset Seen Results"
 msgstr "பயனரின் முடிவுகளைத் தேர்ந்தெடுக்கவும்"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:113
+#: pynicotine/gtkgui/dialogs/wishlist.py:115
 #, fuzzy
 msgid "Reset Filters"
 msgstr "முடிவு வடிப்பான்கள்"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:195
+#: pynicotine/gtkgui/dialogs/wishlist.py:197
 #, fuzzy, python-format
 msgid "Custom Filters Enabled (%(num)s Active)"
 msgstr "வடிப்பான்களை மீட்டமை"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:215
+#: pynicotine/gtkgui/dialogs/wishlist.py:217
 #, python-format
 msgid "• %(filter)s %(value)s"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:257
+#: pynicotine/gtkgui/dialogs/wishlist.py:259
 #, fuzzy
 msgid "Add Wishes"
 msgstr "Wi_sh ஐச் சேர்க்கவும்"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:258
+#: pynicotine/gtkgui/dialogs/wishlist.py:260
 msgid "Enter a list of search terms to add to the wishlist:"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:262
-#: pynicotine/gtkgui/dialogs/wishlist.py:323
-#, fuzzy
-msgid "Enable automatic search"
-msgstr "சொற்களை தானாக மாற்றுவதை இயக்கவும்"
+#: pynicotine/gtkgui/dialogs/wishlist.py:264
+#: pynicotine/gtkgui/dialogs/wishlist.py:325
+msgid "Search automatically"
+msgstr ""
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:270
-#: pynicotine/gtkgui/dialogs/wishlist.py:309
+#: pynicotine/gtkgui/dialogs/wishlist.py:272
+#: pynicotine/gtkgui/dialogs/wishlist.py:311
 #, fuzzy
 msgid "No filters"
 msgstr "பிணையம் வடிப்பான்கள்"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:270
-#: pynicotine/gtkgui/dialogs/wishlist.py:309
+#: pynicotine/gtkgui/dialogs/wishlist.py:272
+#: pynicotine/gtkgui/dialogs/wishlist.py:311
 #, fuzzy
 msgid "Default filters"
 msgstr "முடிவு வடிப்பான்கள்"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:310
+#: pynicotine/gtkgui/dialogs/wishlist.py:312
 #, fuzzy, python-format
 msgid "Custom filters (%(num)s active)"
 msgstr "வடிப்பான்களை மீட்டமை"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:314
+#: pynicotine/gtkgui/dialogs/wishlist.py:316
 msgid "Edit Wish"
 msgstr "ஆசை திருத்து"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:315
+#: pynicotine/gtkgui/dialogs/wishlist.py:317
 #, fuzzy, python-format
 msgid "Modify the search term '%s':"
 msgstr "பின்வரும் பதிவிறக்க வடிப்பானை மாற்றவும்:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:380
+#: pynicotine/gtkgui/dialogs/wishlist.py:382
 msgid "Clear Wishlist?"
 msgstr "விருப்பப்பட்டியலை அழிக்கவா?"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:381
+#: pynicotine/gtkgui/dialogs/wishlist.py:383
 msgid "Do you really want to clear your wishlist?"
 msgstr "உங்கள் விருப்பப்பட்டியலை அழிக்க விரும்புகிறீர்களா?"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:384 pynicotine/gtkgui/downloads.py:130
+#: pynicotine/gtkgui/dialogs/wishlist.py:386 pynicotine/gtkgui/downloads.py:130
 #: pynicotine/gtkgui/downloads.py:147 pynicotine/gtkgui/transfers.py:282
 #: pynicotine/gtkgui/uploads.py:148 pynicotine/gtkgui/uploads.py:165
 msgid "Clear All"
 msgstr "அனைத்தையும் அழிக்கவும்"
+
+#: pynicotine/gtkgui/dialogs/wishlist.py:427
+#, fuzzy, python-format
+msgid ""
+"Items are searched individually every %(interval)s, useful for finding rare "
+"files"
+msgstr ""
+"அசாதாரண கோப்புகளைக் கண்டுபிடிப்பதற்காக, விருப்பப்பட்டியல் உருப்படிகள் தானாகவே "
+"தேடப்படுகின்றன."
 
 #: pynicotine/gtkgui/downloads.py:31
 msgid "_Resume"
@@ -5900,7 +5910,7 @@ msgstr ""
 "மறுசீரமைப்பதன் மூலமும் ஆன்மாதேடு நெட்வொர்க்கிற்கு பங்களிக்கவும்."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:476
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:65
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:64
 #: pynicotine/gtkgui/ui/settings/ban.ui:168
 #: pynicotine/gtkgui/ui/settings/ban.ui:289
 #: pynicotine/gtkgui/ui/settings/chats.ui:85
@@ -6020,22 +6030,13 @@ msgstr "மொத்தம்"
 msgid "_Reset…"
 msgstr "_ ரெசெட்…"
 
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:19
-#, fuzzy
-msgid ""
-"Wishlist items are searched at regular intervals, useful for finding rare "
-"files"
-msgstr ""
-"அசாதாரண கோப்புகளைக் கண்டுபிடிப்பதற்காக, விருப்பப்பட்டியல் உருப்படிகள் தானாகவே "
-"தேடப்படுகின்றன."
-
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:31
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:30
 #, fuzzy
 msgid "Search wish terms…"
 msgstr "தேடல் சொல்…"
 
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:162
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:178
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:161
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:177
 msgid "Clear All…"
 msgstr "அனைத்தையும் அழிக்கவும்…"
 
@@ -7464,6 +7465,16 @@ msgstr "_Refresh சுயவிவரம்"
 #: pynicotine/plugins/core_commands/PLUGININFO:6
 msgid "Nicotine+ Commands"
 msgstr "நிகோடின்+ கட்டளைகள்"
+
+#~ msgid "ip"
+#~ msgstr "ஐபி"
+
+#~ msgid "bind sockets to the given IP (useful for VPN)"
+#~ msgstr "கொடுக்கப்பட்ட ஐபிக்கு சாக்கெட்டுகளை பிணைக்கவும் (VPN க்கு பயனுள்ளதாக இருக்கும்)"
+
+#, fuzzy
+#~ msgid "Enable automatic search"
+#~ msgstr "சொற்களை தானாக மாற்றுவதை இயக்கவும்"
 
 #, fuzzy, python-format
 #~ msgid "You have been made an operator of room %(room)s"

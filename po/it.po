@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 15:45+0300\n"
+"POT-Creation-Date: 2026-08-12 14:11+0300\n"
 "PO-Revision-Date: 2024-08-07 19:33+0000\n"
 "Last-Translator: Mat <mail@mathias.is>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -126,12 +126,14 @@ msgid "start the program without showing window"
 msgstr "avvia il programma senza mostrare la finestra"
 
 #: pynicotine/__init__.py:56
-msgid "ip"
-msgstr "ip"
+#, fuzzy
+msgid "address"
+msgstr "Indirizzi"
 
 #: pynicotine/__init__.py:57
-msgid "bind sockets to the given IP (useful for VPN)"
-msgstr "associa socket all'IP assegnato (comodo per le VPN)"
+#, fuzzy
+msgid "bind connections to the given IP address"
+msgstr "Blocca connessioni dall'utente o dall'indirizzo IP"
 
 #: pynicotine/__init__.py:60
 msgid "port"
@@ -513,7 +515,7 @@ msgstr ""
 #: pynicotine/gtkgui/dialogs/preferences.py:3645
 #: pynicotine/gtkgui/dialogs/roomlist.py:327
 #: pynicotine/gtkgui/dialogs/statistics.py:112
-#: pynicotine/gtkgui/dialogs/wishlist.py:383 pynicotine/gtkgui/downloads.py:129
+#: pynicotine/gtkgui/dialogs/wishlist.py:385 pynicotine/gtkgui/downloads.py:129
 #: pynicotine/gtkgui/downloads.py:146 pynicotine/gtkgui/downloads.py:176
 #: pynicotine/gtkgui/privatechat.py:477 pynicotine/gtkgui/uploads.py:147
 #: pynicotine/gtkgui/uploads.py:164 pynicotine/gtkgui/widgets/dialogs.py:137
@@ -679,12 +681,12 @@ msgstr "Aggiungi _Nota Utente…"
 #: pynicotine/gtkgui/dialogs/preferences.py:1805
 #: pynicotine/gtkgui/dialogs/preferences.py:1833
 #: pynicotine/gtkgui/dialogs/preferences.py:3041
-#: pynicotine/gtkgui/dialogs/wishlist.py:115 pynicotine/gtkgui/interests.py:189
+#: pynicotine/gtkgui/dialogs/wishlist.py:117 pynicotine/gtkgui/interests.py:189
 #: pynicotine/gtkgui/interests.py:198 pynicotine/gtkgui/transfers.py:276
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:538
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:554
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:127
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:143
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:126
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:142
 #: pynicotine/gtkgui/ui/downloads.ui:107 pynicotine/gtkgui/ui/downloads.ui:123
 #: pynicotine/gtkgui/ui/settings/ban.ui:199
 #: pynicotine/gtkgui/ui/settings/ban.ui:215
@@ -749,7 +751,7 @@ msgstr "Aggiungi nota associata all'utente %s:"
 #: pynicotine/gtkgui/dialogs/preferences.py:2045
 #: pynicotine/gtkgui/dialogs/preferences.py:2108
 #: pynicotine/gtkgui/dialogs/preferences.py:3108
-#: pynicotine/gtkgui/dialogs/wishlist.py:260
+#: pynicotine/gtkgui/dialogs/wishlist.py:262
 msgid "_Add"
 msgstr "_Aggiungi"
 
@@ -1191,9 +1193,9 @@ msgstr "Cartella"
 #: pynicotine/gtkgui/dialogs/preferences.py:1803
 #: pynicotine/gtkgui/dialogs/preferences.py:1831
 #: pynicotine/gtkgui/dialogs/preferences.py:3039
-#: pynicotine/gtkgui/dialogs/wishlist.py:109
+#: pynicotine/gtkgui/dialogs/wishlist.py:111
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:523
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:112
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:111
 #: pynicotine/gtkgui/ui/settings/chats.ui:132
 #: pynicotine/gtkgui/ui/settings/chats.ui:289
 #: pynicotine/gtkgui/ui/settings/chats.ui:429
@@ -1243,7 +1245,7 @@ msgstr "Inserisci nuovo nome per virtuale per '%(dir)s':"
 #: pynicotine/gtkgui/dialogs/preferences.py:2075
 #: pynicotine/gtkgui/dialogs/preferences.py:2140
 #: pynicotine/gtkgui/dialogs/preferences.py:3137
-#: pynicotine/gtkgui/dialogs/wishlist.py:321
+#: pynicotine/gtkgui/dialogs/wishlist.py:323
 msgid "_Edit"
 msgstr "_Modifica"
 
@@ -1287,7 +1289,7 @@ msgstr "_Applica"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:259
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:492
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:81
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:80
 #: pynicotine/gtkgui/ui/settings/ban.ui:184
 #: pynicotine/gtkgui/ui/settings/ban.ui:305
 #: pynicotine/gtkgui/ui/settings/chats.ui:101
@@ -1306,7 +1308,7 @@ msgstr "Aggiungi…"
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:260
 #: pynicotine/gtkgui/search.py:651
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:507
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:96
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:95
 #: pynicotine/gtkgui/ui/settings/chats.ui:116
 #: pynicotine/gtkgui/ui/settings/chats.ui:273
 #: pynicotine/gtkgui/ui/settings/chats.ui:445
@@ -2408,7 +2410,7 @@ msgid "Result Filters"
 msgstr "Filtri _Risultato"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:89
-#: pynicotine/gtkgui/dialogs/wishlist.py:49
+#: pynicotine/gtkgui/dialogs/wishlist.py:51
 msgid "Wishlist"
 msgstr "Lista desideri"
 
@@ -2454,42 +2456,42 @@ msgstr "Sei sicuro di voler azzerare le statistiche di trasferimento?"
 msgid "Reset All"
 msgstr "Seleziona Tutto"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:25
+#: pynicotine/gtkgui/dialogs/wishlist.py:26
 #: pynicotine/gtkgui/ui/settings/search.ui:212
 msgid "Include:"
 msgstr "Includi:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:26
+#: pynicotine/gtkgui/dialogs/wishlist.py:27
 #: pynicotine/gtkgui/ui/settings/search.ui:237
 msgid "Exclude:"
 msgstr "Escludi:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:27
+#: pynicotine/gtkgui/dialogs/wishlist.py:28
 #: pynicotine/gtkgui/ui/settings/search.ui:262
 msgid "File Type:"
 msgstr "Tipo di File:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:28
+#: pynicotine/gtkgui/dialogs/wishlist.py:29
 #: pynicotine/gtkgui/ui/settings/search.ui:290
 msgid "Size:"
 msgstr "Dimensione:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:29
+#: pynicotine/gtkgui/dialogs/wishlist.py:30
 #: pynicotine/gtkgui/ui/settings/search.ui:321
 msgid "Bitrate:"
 msgstr "Bitrate:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:30
+#: pynicotine/gtkgui/dialogs/wishlist.py:31
 #: pynicotine/gtkgui/ui/settings/search.ui:352
 msgid "Duration:"
 msgstr "Durata:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:31
+#: pynicotine/gtkgui/dialogs/wishlist.py:32
 #: pynicotine/gtkgui/ui/settings/search.ui:383
 msgid "Country Code:"
 msgstr "Codice Paese:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:32
+#: pynicotine/gtkgui/dialogs/wishlist.py:33
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:424
 #: pynicotine/gtkgui/ui/search.ui:392
 #: pynicotine/gtkgui/ui/settings/search.ui:412
@@ -2498,7 +2500,7 @@ msgstr "Codice Paese:"
 msgid "Upload Slot Available"
 msgstr "Condivisioni Non Disponibili"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:33
+#: pynicotine/gtkgui/dialogs/wishlist.py:34
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:445
 #: pynicotine/gtkgui/ui/search.ui:408
 #: pynicotine/gtkgui/ui/settings/search.ui:437
@@ -2506,110 +2508,118 @@ msgstr "Condivisioni Non Disponibili"
 msgid "Public Files"
 msgstr "Pubblica"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:61
+#: pynicotine/gtkgui/dialogs/wishlist.py:63
 #, fuzzy
 msgid "Automatic Search"
 msgstr "Abilita sostituzione automatica delle parole"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:68
+#: pynicotine/gtkgui/dialogs/wishlist.py:70
 #, fuzzy
 msgid "Search Term"
 msgstr "Copia Termine di Ricerca"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:76
+#: pynicotine/gtkgui/dialogs/wishlist.py:78
 #, fuzzy
 msgid "Custom Filters"
 msgstr "Ripristina Filtri"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:85
+#: pynicotine/gtkgui/dialogs/wishlist.py:87
 msgid "Added"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:107 pynicotine/gtkgui/interests.py:187
+#: pynicotine/gtkgui/dialogs/wishlist.py:109 pynicotine/gtkgui/interests.py:187
 #: pynicotine/gtkgui/interests.py:196 pynicotine/gtkgui/interests.py:208
 #: pynicotine/gtkgui/userinfo.py:350
 msgid "_Search for Item"
 msgstr "Cerca Elemento"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:110
+#: pynicotine/gtkgui/dialogs/wishlist.py:112
 #, fuzzy
 msgid "Set Custom _Filters…"
 msgstr "Ripristina Filtri"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:112
+#: pynicotine/gtkgui/dialogs/wishlist.py:114
 #, fuzzy
 msgid "Reset Seen Results"
 msgstr "Seleziona Risultati Utente"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:113
+#: pynicotine/gtkgui/dialogs/wishlist.py:115
 #, fuzzy
 msgid "Reset Filters"
 msgstr "Filtri _Risultato"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:195
+#: pynicotine/gtkgui/dialogs/wishlist.py:197
 #, fuzzy, python-format
 msgid "Custom Filters Enabled (%(num)s Active)"
 msgstr "Ripristina Filtri"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:215
+#: pynicotine/gtkgui/dialogs/wishlist.py:217
 #, python-format
 msgid "• %(filter)s %(value)s"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:257
+#: pynicotine/gtkgui/dialogs/wishlist.py:259
 #, fuzzy
 msgid "Add Wishes"
 msgstr "Aggiungi De_siderio"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:258
+#: pynicotine/gtkgui/dialogs/wishlist.py:260
 msgid "Enter a list of search terms to add to the wishlist:"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:262
-#: pynicotine/gtkgui/dialogs/wishlist.py:323
-#, fuzzy
-msgid "Enable automatic search"
-msgstr "Abilita sostituzione automatica delle parole"
+#: pynicotine/gtkgui/dialogs/wishlist.py:264
+#: pynicotine/gtkgui/dialogs/wishlist.py:325
+msgid "Search automatically"
+msgstr ""
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:270
-#: pynicotine/gtkgui/dialogs/wishlist.py:309
+#: pynicotine/gtkgui/dialogs/wishlist.py:272
+#: pynicotine/gtkgui/dialogs/wishlist.py:311
 #, fuzzy
 msgid "No filters"
 msgstr "Filtri di Rete"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:270
-#: pynicotine/gtkgui/dialogs/wishlist.py:309
+#: pynicotine/gtkgui/dialogs/wishlist.py:272
+#: pynicotine/gtkgui/dialogs/wishlist.py:311
 #, fuzzy
 msgid "Default filters"
 msgstr "Filtri _Risultato"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:310
+#: pynicotine/gtkgui/dialogs/wishlist.py:312
 #, fuzzy, python-format
 msgid "Custom filters (%(num)s active)"
 msgstr "Ripristina Filtri"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:314
+#: pynicotine/gtkgui/dialogs/wishlist.py:316
 msgid "Edit Wish"
 msgstr "Modifica Desiderio"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:315
+#: pynicotine/gtkgui/dialogs/wishlist.py:317
 #, fuzzy, python-format
 msgid "Modify the search term '%s':"
 msgstr "Modifica il seguente filtro download:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:380
+#: pynicotine/gtkgui/dialogs/wishlist.py:382
 msgid "Clear Wishlist?"
 msgstr "Pulire la Lista dei Desideri?"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:381
+#: pynicotine/gtkgui/dialogs/wishlist.py:383
 msgid "Do you really want to clear your wishlist?"
 msgstr "Sei sicuro di voler pulire la tua lista dei desideri?"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:384 pynicotine/gtkgui/downloads.py:130
+#: pynicotine/gtkgui/dialogs/wishlist.py:386 pynicotine/gtkgui/downloads.py:130
 #: pynicotine/gtkgui/downloads.py:147 pynicotine/gtkgui/transfers.py:282
 #: pynicotine/gtkgui/uploads.py:148 pynicotine/gtkgui/uploads.py:165
 msgid "Clear All"
 msgstr "Pulisci Tutto"
+
+#: pynicotine/gtkgui/dialogs/wishlist.py:427
+#, fuzzy, python-format
+msgid ""
+"Items are searched individually every %(interval)s, useful for finding rare "
+"files"
+msgstr ""
+"Gli elementi della lista dei desideri vengono ricercati automaticamente "
+"periodicamente, utile per scoprire file non comuni."
 
 #: pynicotine/gtkgui/downloads.py:31
 msgid "_Resume"
@@ -5931,7 +5941,7 @@ msgstr ""
 "scaricato da altri utenti."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:476
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:65
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:64
 #: pynicotine/gtkgui/ui/settings/ban.ui:168
 #: pynicotine/gtkgui/ui/settings/ban.ui:289
 #: pynicotine/gtkgui/ui/settings/chats.ui:85
@@ -6053,22 +6063,13 @@ msgstr "Totale"
 msgid "_Reset…"
 msgstr "Azze_ra…"
 
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:19
-#, fuzzy
-msgid ""
-"Wishlist items are searched at regular intervals, useful for finding rare "
-"files"
-msgstr ""
-"Gli elementi della lista dei desideri vengono ricercati automaticamente "
-"periodicamente, utile per scoprire file non comuni."
-
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:31
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:30
 #, fuzzy
 msgid "Search wish terms…"
 msgstr "Termine di ricerca…"
 
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:162
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:178
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:161
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:177
 msgid "Clear All…"
 msgstr "Pulisci Tutto…"
 
@@ -7514,6 +7515,16 @@ msgstr "_Aggiorna Profilo"
 #: pynicotine/plugins/core_commands/PLUGININFO:6
 msgid "Nicotine+ Commands"
 msgstr "Comandi di Nicotine+"
+
+#~ msgid "ip"
+#~ msgstr "ip"
+
+#~ msgid "bind sockets to the given IP (useful for VPN)"
+#~ msgstr "associa socket all'IP assegnato (comodo per le VPN)"
+
+#, fuzzy
+#~ msgid "Enable automatic search"
+#~ msgstr "Abilita sostituzione automatica delle parole"
 
 #, fuzzy, python-format
 #~ msgid "You have been made an operator of room %(room)s"
@@ -9079,9 +9090,6 @@ msgstr "Comandi di Nicotine+"
 
 #~ msgid "Show _Log Pane"
 #~ msgstr "Mostra Pannello Registro"
-
-#~ msgid "Addresses"
-#~ msgstr "Indirizzi"
 
 #~ msgid "Handler"
 #~ msgstr "Gestore"

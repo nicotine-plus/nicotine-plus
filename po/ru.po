@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 15:45+0300\n"
+"POT-Creation-Date: 2026-08-12 14:11+0300\n"
 "PO-Revision-Date: 2026-03-08 07:09+0000\n"
 "Last-Translator: Kira Toshi <wannabeananimal@proton.me>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -130,12 +130,14 @@ msgid "start the program without showing window"
 msgstr "запускать Nicotine+ свёрнутым"
 
 #: pynicotine/__init__.py:56
-msgid "ip"
+#, fuzzy
+msgid "address"
 msgstr "IP-адрес"
 
 #: pynicotine/__init__.py:57
-msgid "bind sockets to the given IP (useful for VPN)"
-msgstr "привязать сокеты к заданному IP-адресу (полезно для VPN)"
+#, fuzzy
+msgid "bind connections to the given IP address"
+msgstr "Блокировать подключения от пользователя или IP-адреса"
 
 #: pynicotine/__init__.py:60
 msgid "port"
@@ -516,7 +518,7 @@ msgstr "Убедитесь, что внешние диски смонтиров�
 #: pynicotine/gtkgui/dialogs/preferences.py:3645
 #: pynicotine/gtkgui/dialogs/roomlist.py:327
 #: pynicotine/gtkgui/dialogs/statistics.py:112
-#: pynicotine/gtkgui/dialogs/wishlist.py:383 pynicotine/gtkgui/downloads.py:129
+#: pynicotine/gtkgui/dialogs/wishlist.py:385 pynicotine/gtkgui/downloads.py:129
 #: pynicotine/gtkgui/downloads.py:146 pynicotine/gtkgui/downloads.py:176
 #: pynicotine/gtkgui/privatechat.py:477 pynicotine/gtkgui/uploads.py:147
 #: pynicotine/gtkgui/uploads.py:164 pynicotine/gtkgui/widgets/dialogs.py:137
@@ -682,12 +684,12 @@ msgstr "Добавить _заметку…"
 #: pynicotine/gtkgui/dialogs/preferences.py:1805
 #: pynicotine/gtkgui/dialogs/preferences.py:1833
 #: pynicotine/gtkgui/dialogs/preferences.py:3041
-#: pynicotine/gtkgui/dialogs/wishlist.py:115 pynicotine/gtkgui/interests.py:189
+#: pynicotine/gtkgui/dialogs/wishlist.py:117 pynicotine/gtkgui/interests.py:189
 #: pynicotine/gtkgui/interests.py:198 pynicotine/gtkgui/transfers.py:276
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:538
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:554
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:127
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:143
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:126
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:142
 #: pynicotine/gtkgui/ui/downloads.ui:107 pynicotine/gtkgui/ui/downloads.ui:123
 #: pynicotine/gtkgui/ui/settings/ban.ui:199
 #: pynicotine/gtkgui/ui/settings/ban.ui:215
@@ -752,7 +754,7 @@ msgstr "Добавить заметку о пользователе %s:"
 #: pynicotine/gtkgui/dialogs/preferences.py:2045
 #: pynicotine/gtkgui/dialogs/preferences.py:2108
 #: pynicotine/gtkgui/dialogs/preferences.py:3108
-#: pynicotine/gtkgui/dialogs/wishlist.py:260
+#: pynicotine/gtkgui/dialogs/wishlist.py:262
 msgid "_Add"
 msgstr "Добавить"
 
@@ -1195,9 +1197,9 @@ msgstr "Каталог"
 #: pynicotine/gtkgui/dialogs/preferences.py:1803
 #: pynicotine/gtkgui/dialogs/preferences.py:1831
 #: pynicotine/gtkgui/dialogs/preferences.py:3039
-#: pynicotine/gtkgui/dialogs/wishlist.py:109
+#: pynicotine/gtkgui/dialogs/wishlist.py:111
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:523
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:112
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:111
 #: pynicotine/gtkgui/ui/settings/chats.ui:132
 #: pynicotine/gtkgui/ui/settings/chats.ui:289
 #: pynicotine/gtkgui/ui/settings/chats.ui:429
@@ -1247,7 +1249,7 @@ msgstr "Введите новое виртуальное имя для '%(dir)s'
 #: pynicotine/gtkgui/dialogs/preferences.py:2075
 #: pynicotine/gtkgui/dialogs/preferences.py:2140
 #: pynicotine/gtkgui/dialogs/preferences.py:3137
-#: pynicotine/gtkgui/dialogs/wishlist.py:321
+#: pynicotine/gtkgui/dialogs/wishlist.py:323
 msgid "_Edit"
 msgstr "Редактировать"
 
@@ -1291,7 +1293,7 @@ msgstr "Применить"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:259
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:492
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:81
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:80
 #: pynicotine/gtkgui/ui/settings/ban.ui:184
 #: pynicotine/gtkgui/ui/settings/ban.ui:305
 #: pynicotine/gtkgui/ui/settings/chats.ui:101
@@ -1310,7 +1312,7 @@ msgstr "Добавить…"
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:260
 #: pynicotine/gtkgui/search.py:651
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:507
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:96
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:95
 #: pynicotine/gtkgui/ui/settings/chats.ui:116
 #: pynicotine/gtkgui/ui/settings/chats.ui:273
 #: pynicotine/gtkgui/ui/settings/chats.ui:445
@@ -2405,7 +2407,7 @@ msgid "Result Filters"
 msgstr "Фильтры"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:89
-#: pynicotine/gtkgui/dialogs/wishlist.py:49
+#: pynicotine/gtkgui/dialogs/wishlist.py:51
 msgid "Wishlist"
 msgstr "Список желаемого"
 
@@ -2451,42 +2453,42 @@ msgstr "Вы действительно хотите сбросить стати
 msgid "Reset All"
 msgstr "Выделить всё"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:25
+#: pynicotine/gtkgui/dialogs/wishlist.py:26
 #: pynicotine/gtkgui/ui/settings/search.ui:212
 msgid "Include:"
 msgstr "Содержит:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:26
+#: pynicotine/gtkgui/dialogs/wishlist.py:27
 #: pynicotine/gtkgui/ui/settings/search.ui:237
 msgid "Exclude:"
 msgstr "Исключить:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:27
+#: pynicotine/gtkgui/dialogs/wishlist.py:28
 #: pynicotine/gtkgui/ui/settings/search.ui:262
 msgid "File Type:"
 msgstr "Тип файла:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:28
+#: pynicotine/gtkgui/dialogs/wishlist.py:29
 #: pynicotine/gtkgui/ui/settings/search.ui:290
 msgid "Size:"
 msgstr "Размер:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:29
+#: pynicotine/gtkgui/dialogs/wishlist.py:30
 #: pynicotine/gtkgui/ui/settings/search.ui:321
 msgid "Bitrate:"
 msgstr "Битрейт:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:30
+#: pynicotine/gtkgui/dialogs/wishlist.py:31
 #: pynicotine/gtkgui/ui/settings/search.ui:352
 msgid "Duration:"
 msgstr "Продолжительность:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:31
+#: pynicotine/gtkgui/dialogs/wishlist.py:32
 #: pynicotine/gtkgui/ui/settings/search.ui:383
 msgid "Country Code:"
 msgstr "Код страны:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:32
+#: pynicotine/gtkgui/dialogs/wishlist.py:33
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:424
 #: pynicotine/gtkgui/ui/search.ui:392
 #: pynicotine/gtkgui/ui/settings/search.ui:412
@@ -2495,7 +2497,7 @@ msgstr "Код страны:"
 msgid "Upload Slot Available"
 msgstr "Общие каталоги не найдены"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:33
+#: pynicotine/gtkgui/dialogs/wishlist.py:34
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:445
 #: pynicotine/gtkgui/ui/search.ui:408
 #: pynicotine/gtkgui/ui/settings/search.ui:437
@@ -2503,110 +2505,118 @@ msgstr "Общие каталоги не найдены"
 msgid "Public Files"
 msgstr "Публичный"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:61
+#: pynicotine/gtkgui/dialogs/wishlist.py:63
 #, fuzzy
 msgid "Automatic Search"
 msgstr "Включить автоматическую замену слов"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:68
+#: pynicotine/gtkgui/dialogs/wishlist.py:70
 #, fuzzy
 msgid "Search Term"
 msgstr "Скопировать поисковый запрос"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:76
+#: pynicotine/gtkgui/dialogs/wishlist.py:78
 #, fuzzy
 msgid "Custom Filters"
 msgstr "Восстановить фильтры"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:85
+#: pynicotine/gtkgui/dialogs/wishlist.py:87
 msgid "Added"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:107 pynicotine/gtkgui/interests.py:187
+#: pynicotine/gtkgui/dialogs/wishlist.py:109 pynicotine/gtkgui/interests.py:187
 #: pynicotine/gtkgui/interests.py:196 pynicotine/gtkgui/interests.py:208
 #: pynicotine/gtkgui/userinfo.py:350
 msgid "_Search for Item"
 msgstr "_Поиск по метке"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:110
+#: pynicotine/gtkgui/dialogs/wishlist.py:112
 #, fuzzy
 msgid "Set Custom _Filters…"
 msgstr "Восстановить фильтры"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:112
+#: pynicotine/gtkgui/dialogs/wishlist.py:114
 #, fuzzy
 msgid "Reset Seen Results"
 msgstr "Выбрать результаты пользователя"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:113
+#: pynicotine/gtkgui/dialogs/wishlist.py:115
 #, fuzzy
 msgid "Reset Filters"
 msgstr "Фильтры"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:195
+#: pynicotine/gtkgui/dialogs/wishlist.py:197
 #, fuzzy, python-format
 msgid "Custom Filters Enabled (%(num)s Active)"
 msgstr "Восстановить фильтры"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:215
+#: pynicotine/gtkgui/dialogs/wishlist.py:217
 #, python-format
 msgid "• %(filter)s %(value)s"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:257
+#: pynicotine/gtkgui/dialogs/wishlist.py:259
 #, fuzzy
 msgid "Add Wishes"
 msgstr "Добавить в желаемое"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:258
+#: pynicotine/gtkgui/dialogs/wishlist.py:260
 msgid "Enter a list of search terms to add to the wishlist:"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:262
-#: pynicotine/gtkgui/dialogs/wishlist.py:323
-#, fuzzy
-msgid "Enable automatic search"
-msgstr "Включить автоматическую замену слов"
+#: pynicotine/gtkgui/dialogs/wishlist.py:264
+#: pynicotine/gtkgui/dialogs/wishlist.py:325
+msgid "Search automatically"
+msgstr ""
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:270
-#: pynicotine/gtkgui/dialogs/wishlist.py:309
+#: pynicotine/gtkgui/dialogs/wishlist.py:272
+#: pynicotine/gtkgui/dialogs/wishlist.py:311
 #, fuzzy
 msgid "No filters"
 msgstr "Сетевые фильтры"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:270
-#: pynicotine/gtkgui/dialogs/wishlist.py:309
+#: pynicotine/gtkgui/dialogs/wishlist.py:272
+#: pynicotine/gtkgui/dialogs/wishlist.py:311
 #, fuzzy
 msgid "Default filters"
 msgstr "Фильтры"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:310
+#: pynicotine/gtkgui/dialogs/wishlist.py:312
 #, fuzzy, python-format
 msgid "Custom filters (%(num)s active)"
 msgstr "Восстановить фильтры"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:314
+#: pynicotine/gtkgui/dialogs/wishlist.py:316
 msgid "Edit Wish"
 msgstr "Изменить список желаемого"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:315
+#: pynicotine/gtkgui/dialogs/wishlist.py:317
 #, fuzzy, python-format
 msgid "Modify the search term '%s':"
 msgstr "Измените следующий фильтр загрузки:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:380
+#: pynicotine/gtkgui/dialogs/wishlist.py:382
 msgid "Clear Wishlist?"
 msgstr "Очистить список желаемого?"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:381
+#: pynicotine/gtkgui/dialogs/wishlist.py:383
 msgid "Do you really want to clear your wishlist?"
 msgstr "Вы действительно хотите очистить свой список желаемого?"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:384 pynicotine/gtkgui/downloads.py:130
+#: pynicotine/gtkgui/dialogs/wishlist.py:386 pynicotine/gtkgui/downloads.py:130
 #: pynicotine/gtkgui/downloads.py:147 pynicotine/gtkgui/transfers.py:282
 #: pynicotine/gtkgui/uploads.py:148 pynicotine/gtkgui/uploads.py:165
 msgid "Clear All"
 msgstr "Очистить всё"
+
+#: pynicotine/gtkgui/dialogs/wishlist.py:427
+#, fuzzy, python-format
+msgid ""
+"Items are searched individually every %(interval)s, useful for finding rare "
+"files"
+msgstr ""
+"Список желаемого автоматически просматривается через регулярные промежутки "
+"времени для обнаружения файлов."
 
 #: pynicotine/gtkgui/downloads.py:31
 msgid "_Resume"
@@ -5941,7 +5951,7 @@ msgstr ""
 "пользователей."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:476
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:65
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:64
 #: pynicotine/gtkgui/ui/settings/ban.ui:168
 #: pynicotine/gtkgui/ui/settings/ban.ui:289
 #: pynicotine/gtkgui/ui/settings/chats.ui:85
@@ -6063,22 +6073,13 @@ msgstr "Всего"
 msgid "_Reset…"
 msgstr "Сброс…"
 
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:19
-#, fuzzy
-msgid ""
-"Wishlist items are searched at regular intervals, useful for finding rare "
-"files"
-msgstr ""
-"Список желаемого автоматически просматривается через регулярные промежутки "
-"времени для обнаружения файлов."
-
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:31
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:30
 #, fuzzy
 msgid "Search wish terms…"
 msgstr "Условие поиска…"
 
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:162
-#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:178
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:161
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:177
 msgid "Clear All…"
 msgstr "Очистить всё…"
 
@@ -7522,6 +7523,16 @@ msgstr "Обновить профиль"
 #: pynicotine/plugins/core_commands/PLUGININFO:6
 msgid "Nicotine+ Commands"
 msgstr "Команда Nicotine+"
+
+#~ msgid "ip"
+#~ msgstr "IP-адрес"
+
+#~ msgid "bind sockets to the given IP (useful for VPN)"
+#~ msgstr "привязать сокеты к заданному IP-адресу (полезно для VPN)"
+
+#, fuzzy
+#~ msgid "Enable automatic search"
+#~ msgstr "Включить автоматическую замену слов"
 
 #, python-format
 #~ msgid "You have been made an operator of room %(room)s"
