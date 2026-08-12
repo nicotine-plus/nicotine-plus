@@ -15,11 +15,10 @@
     <property name="visible">True</property>
     <property name="width-request">360</property>
     <child>
-      <object class="GtkLabel">
-        <property name="label" translatable="yes">Wishlist items are searched at regular intervals, useful for finding rare files</property>
+      <object class="GtkLabel" id="description_label">
         <property name="max-width-chars">55</property>
         <property name="mnemonic-widget">list_container</property>
-        <property name="visible">True</property>
+        <property name="visible">False</property>
         <property name="wrap">True</property>
         <property name="xalign">0</property>
       </object>

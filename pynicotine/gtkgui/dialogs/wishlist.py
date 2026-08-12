@@ -16,6 +16,7 @@ from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.search import ResultFilterMode
+from pynicotine.utils import human_duration_approx
 
 
 class WishList(Dialog):
@@ -37,6 +38,7 @@ class WishList(Dialog):
 
         (
             self.container,
+            self.description_label,
             self.list_container,
             self.search_entry
         ) = ui.load(scope=self, path="dialogs/wishlist.ui")
@@ -259,7 +261,7 @@ class WishList(Dialog):
             default=self.default_text,
             action_button_label=_("_Add"),
             option_value=True,
-            option_label=_("Enable automatic search"),
+            option_label=_("Search automatically"),
             multiline=True,
             callback=self.on_add_wish_response
         ).present()
@@ -320,7 +322,7 @@ class WishList(Dialog):
                 second_entry_editable=False,
                 action_button_label=_("_Edit"),
                 option_value=old_enabled,
-                option_label=_("Enable automatic search"),
+                option_label=_("Search automatically"),
                 callback=self.on_edit_wish_response,
                 callback_data=old_wish
             ).present()
@@ -421,6 +423,12 @@ class WishList(Dialog):
 
     def on_show(self, *_args):
 
+        self.description_label.set_label(
+            _("Items are searched individually every %(interval)s, useful for finding rare files") % {
+                "interval": human_duration_approx(core.search.wishlist_interval)
+            }
+        )
+        self.description_label.set_visible(bool(core.search.wishlist_interval))
         self.search_entry.grab_focus()
 
         page = self.application.window.search.get_current_page()
