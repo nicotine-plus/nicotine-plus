@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-12 14:11+0300\n"
-"PO-Revision-Date: 2026-08-12 10:23+0000\n"
+"PO-Revision-Date: 2026-08-13 12:51+0000\n"
 "Last-Translator: Felix Hansen <gore-snagged-happy@duck.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -128,14 +128,12 @@ msgid "start the program without showing window"
 msgstr "Starte das Programm, ohne das Fenster anzuzeigen"
 
 #: pynicotine/__init__.py:56
-#, fuzzy
 msgid "address"
-msgstr "Adressen"
+msgstr "Adresse"
 
 #: pynicotine/__init__.py:57
-#, fuzzy
 msgid "bind connections to the given IP address"
-msgstr "Verbindungen von Benutzer oder IP‑Adresse blockieren"
+msgstr "Verbindungen an die angegebene IP-Adresse binden"
 
 #: pynicotine/__init__.py:60
 msgid "port"
@@ -2522,7 +2520,7 @@ msgstr ""
 #: pynicotine/gtkgui/dialogs/wishlist.py:264
 #: pynicotine/gtkgui/dialogs/wishlist.py:325
 msgid "Search automatically"
-msgstr ""
+msgstr "Automatisch suchen"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:272
 #: pynicotine/gtkgui/dialogs/wishlist.py:311
@@ -2563,13 +2561,13 @@ msgid "Clear All"
 msgstr "Alles löschen"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:427
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Items are searched individually every %(interval)s, useful for finding rare "
 "files"
 msgstr ""
-"Einträge der Wunschliste werden in regelmäßigen Abständen durchsucht, was "
-"nützlich zum Auffinden seltener Dateien ist"
+"Einträge werden alle %(interval)s einzeln durchsucht, nützlich zum Auffinden "
+"seltener Dateien"
 
 #: pynicotine/gtkgui/downloads.py:31
 msgid "_Resume"
