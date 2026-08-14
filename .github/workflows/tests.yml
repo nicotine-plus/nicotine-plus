@@ -263,12 +263,25 @@ jobs:
           environment_variables: NICOTINE_NETWORK_TESTS
 
       - name: Install dependencies
-        run: sudo pkgin -y install python314
+        run: |
+          sudo pkgin -y install gettext-tools python314 py314-build py314-gobject3 \
+            py314-setuptools
 
       - name: Integration and unit tests
         run: |
+          PATH=/usr/pkg/sbin:/usr/pkg/bin:$PATH
           export NICOTINE_GUI_TESTS=0
           python3.14 -m unittest -v
+
+      - name: Build
+        run: |
+          PATH=/usr/pkg/sbin:/usr/pkg/bin:$PATH
+          python3.14 -m build
+
+      - name: Build without isolation
+        run: |
+          PATH=/usr/pkg/sbin:/usr/pkg/bin:$PATH
+          python3.14 -m build --no-isolation
 
   dragonflybsd:
     runs-on: ubuntu-latest
