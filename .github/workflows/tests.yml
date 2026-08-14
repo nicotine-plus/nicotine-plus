@@ -295,6 +295,11 @@ jobs:
           version: '6.4.2'
           environment_variables: NICOTINE_NETWORK_TESTS
 
+      # Use dhcpcd instead of dhclient for reliable networking
+      # https://bugs.dragonflybsd.org/issues/3317
+      - name: Enable dhcpcd
+        run: sudo service dhcpcd onestart
+
       - name: Install dependencies
         run: |
           sudo pkg install -y dejavu gettext gtk4 python311 py311-build py311-pygobject \
