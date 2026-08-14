@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-12 14:11+0300\n"
-"PO-Revision-Date: 2026-08-12 10:23+0000\n"
+"PO-Revision-Date: 2026-08-13 12:51+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -129,14 +129,12 @@ msgid "start the program without showing window"
 msgstr "programı pencereyi göstermeden başlat"
 
 #: pynicotine/__init__.py:56
-#, fuzzy
 msgid "address"
-msgstr "Adresler"
+msgstr "adres"
 
 #: pynicotine/__init__.py:57
-#, fuzzy
 msgid "bind connections to the given IP address"
-msgstr "Kullanıcıdan veya IP adresinden gelen bağlantıları engelle"
+msgstr "bağlantıları verilen IP adresine bağla"
 
 #: pynicotine/__init__.py:60
 msgid "port"
@@ -2511,7 +2509,7 @@ msgstr "Dilek listesine eklemek için arama terimlerinin listesini girin:"
 #: pynicotine/gtkgui/dialogs/wishlist.py:264
 #: pynicotine/gtkgui/dialogs/wishlist.py:325
 msgid "Search automatically"
-msgstr ""
+msgstr "Otomatik olarak ara"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:272
 #: pynicotine/gtkgui/dialogs/wishlist.py:311
@@ -2552,13 +2550,13 @@ msgid "Clear All"
 msgstr "Tümünü Temizle"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:427
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Items are searched individually every %(interval)s, useful for finding rare "
 "files"
 msgstr ""
-"Dilek listesi ögeleri, olağan dışı dosyaları keşfetmek için düzenli "
-"aralıklarla otomatik olarak aranır"
+"Ögeler her %(interval)s içinde tek tek aranır, bu olağan dışı dosyaları "
+"bulmak için kullanışlıdır"
 
 #: pynicotine/gtkgui/downloads.py:31
 msgid "_Resume"
