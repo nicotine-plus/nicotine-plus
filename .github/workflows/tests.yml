@@ -191,8 +191,10 @@ jobs:
         run: |
           export WLR_BACKENDS=headless
           export XDG_RUNTIME_DIR=/tmp
-          export GDK_BACKEND=wayland
           export DBUS_SESSION_BUS_ADDRESS=
+          export GTK_A11Y=none
+          export GDK_BACKEND=wayland
+          export GSK_RENDERER=cairo
 
           cage python3.12 -m unittest -v
 
@@ -222,13 +224,18 @@ jobs:
           environment_variables: NICOTINE_NETWORK_TESTS
 
       - name: Install dependencies
-        run: sudo pkg_add gettext-tools gtk+4 py3-build py3-gobject3 py3-setuptools py3-wheel
+        run: sudo pkg_add cage gettext-tools gtk+4 py3-build py3-gobject3 py3-setuptools py3-wheel
 
       - name: Integration and unit tests
         run: |
-          export DISPLAY=:99
-          Xvfb :99 > /dev/null 2>&1 &
-          python3 -m unittest -v
+          export WLR_BACKENDS=headless
+          export XDG_RUNTIME_DIR=/tmp
+          export DBUS_SESSION_BUS_ADDRESS=
+          export GTK_A11Y=none
+          export GDK_BACKEND=wayland
+          export GSK_RENDERER=cairo
+
+          cage python3 -m unittest -v
 
       - name: Build
         run: python3 -m build
