@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-12 14:11+0300\n"
-"PO-Revision-Date: 2026-07-17 03:05+0000\n"
+"PO-Revision-Date: 2026-08-15 14:35+0000\n"
 "Last-Translator: Hosted Weblate user 54392 "
 "<hamburger2048@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.8.dev0\n"
+"X-Generator: Weblate 2026.9.dev0\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -124,14 +124,12 @@ msgid "start the program without showing window"
 msgstr "启动程序时不显示窗口"
 
 #: pynicotine/__init__.py:56
-#, fuzzy
 msgid "address"
-msgstr "IP地址"
+msgstr "地址"
 
 #: pynicotine/__init__.py:57
-#, fuzzy
 msgid "bind connections to the given IP address"
-msgstr "阻止此用户或 IP 地址的连接"
+msgstr "绑定连接到给定的 IP 地址"
 
 #: pynicotine/__init__.py:60
 msgid "port"
@@ -187,54 +185,54 @@ msgid "Buddy Status"
 msgstr "好友状态"
 
 #: pynicotine/chatrooms.py:312
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has not enabled private room invitations"
-msgstr "用户 %(user)s 已被添加到私密房间 %(room)s"
+msgstr "用户 %(user)s 尚未启用私密聊天室邀请"
 
 #: pynicotine/chatrooms.py:367
 #, python-format
 msgid "User %(user)s has been added to private room %(room)s"
-msgstr "用户 %(user)s 已被添加到私密房间 %(room)s"
+msgstr "用户 %(user)s 已被添加到私密聊天室 %(room)s"
 
 #: pynicotine/chatrooms.py:386
 #, python-format
 msgid "User %(user)s has been removed from private room %(room)s"
-msgstr "用户 %(user)s 已从私密房间 %(room)s 中移除"
+msgstr "用户 %(user)s 已从私密聊天室 %(room)s 中移除"
 
 #: pynicotine/chatrooms.py:403
 #, python-format
 msgid "You have been added to private room %(room)s"
-msgstr "您已被添加到私密房间 %(room)s"
+msgstr "您已被添加到私密聊天室 %(room)s"
 
 #: pynicotine/chatrooms.py:418
 #, python-format
 msgid "You have been removed from private room %(room)s"
-msgstr "您已从私密房间 %(room)s 中移除"
+msgstr "您已从私密聊天室 %(room)s 中移除"
 
 #: pynicotine/chatrooms.py:439 pynicotine/privatechat.py:261
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is now an operator of room %(room)s"
-msgstr "用户 %(user)s 不再是房间 %(room)s 的管理员"
+msgstr "用户 %(user)s 现在是聊天室 %(room)s 的运营者"
 
 #: pynicotine/chatrooms.py:458 pynicotine/privatechat.py:265
 #, python-format
 msgid "User %(user)s is no longer an operator of room %(room)s"
-msgstr "用户 %(user)s 不再是房间 %(room)s 的管理员"
+msgstr "用户 %(user)s 不再是聊天室 %(room)s 的管理员"
 
 #: pynicotine/chatrooms.py:474
-#, fuzzy, python-format
+#, python-format
 msgid "You are now an operator of room %(room)s"
-msgstr "您不再是房间 %(room)s 的管理员"
+msgstr "您现在是聊天室 %(room)s 的运营者"
 
 #: pynicotine/chatrooms.py:487
 #, python-format
 msgid "You are no longer an operator of room %(room)s"
-msgstr "您不再是房间 %(room)s 的管理员"
+msgstr "您不再是聊天室 %(room)s 的管理员"
 
 #: pynicotine/chatrooms.py:562
 #, python-format
 msgid "Chat message from user '%(user)s' in room '%(room)s': %(message)s"
-msgstr "来自房间“%(room)s”中用户“%(user)s”的聊天消息：%(message)s"
+msgstr "来自聊天室“%(room)s”中用户“%(user)s”的聊天消息：%(message)s"
 
 #: pynicotine/config.py:117 pynicotine/config.py:136
 #: pynicotine/userbrowse.py:184
@@ -364,9 +362,9 @@ msgid "Download started: user %(user)s, file %(file)s"
 msgstr "下载开始：用户 %(user)s，文件 %(file)s"
 
 #: pynicotine/gtkgui/__init__.py:73 pynicotine/gtkgui/__init__.py:82
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot find %s, please install it"
-msgstr "找不到 %s，请安装。"
+msgstr "找不到 %s，请安装它"
 
 #: pynicotine/gtkgui/__init__.py:195
 msgid "No graphical environment available, using headless (no GUI) mode"
@@ -537,9 +535,8 @@ msgid ""
 msgstr ""
 
 #: pynicotine/gtkgui/application.py:611
-#, fuzzy
 msgid "Open _Private Chat"
-msgstr "打开私聊"
+msgstr "打开私聊(_P)"
 
 #: pynicotine/gtkgui/application.py:815
 msgid "Message Downloading Users"
@@ -791,7 +788,7 @@ msgstr "清除活动视图"
 #: pynicotine/gtkgui/chatrooms.py:682 pynicotine/gtkgui/dialogs/roomlist.py:79
 #: pynicotine/gtkgui/dialogs/roomlist.py:292
 msgid "_Leave Room"
-msgstr "_离开房间"
+msgstr "_离开聊天室"
 
 #: pynicotine/gtkgui/chatrooms.py:665 pynicotine/gtkgui/chatrooms.py:870
 #: pynicotine/gtkgui/privatechat.py:364 pynicotine/gtkgui/privatechat.py:435
@@ -800,11 +797,11 @@ msgstr "复制链接"
 
 #: pynicotine/gtkgui/chatrooms.py:671
 msgid "View Room Log"
-msgstr "查看房间日志"
+msgstr "查看聊天室日志"
 
 #: pynicotine/gtkgui/chatrooms.py:674
 msgid "Delete Room Log…"
-msgstr "删除房间日志……"
+msgstr "删除聊天室日志……"
 
 #: pynicotine/gtkgui/chatrooms.py:676 pynicotine/gtkgui/privatechat.py:375
 msgid "Clear Message View"
@@ -817,56 +814,56 @@ msgstr "%(username)s (%(role)s)"
 
 #: pynicotine/gtkgui/chatrooms.py:845 pynicotine/gtkgui/dialogs/roomlist.py:266
 msgid "Room Owner"
-msgstr "房间所有者"
+msgstr "聊天室所有者"
 
 #: pynicotine/gtkgui/chatrooms.py:850
 msgid "Room Operator"
-msgstr "房间管理员"
+msgstr "聊天室管理员"
 
 #: pynicotine/gtkgui/chatrooms.py:893
 #, python-format
 msgid "%(user)s mentioned you in room %(room)s"
-msgstr "%(user)s 在 %(room)s 房间里提到了你"
+msgstr "%(user)s 在 %(room)s 聊天室里提到了你"
 
 #: pynicotine/gtkgui/chatrooms.py:896
 #, python-format
 msgid "Keyword %(keyword)s mentioned by %(user)s in room %(room)s"
-msgstr "用户 %(user)s 在房间 %(room)s 中提到了关键词 %(keyword)s"
+msgstr "用户 %(user)s 在聊天室 %(room)s 中提到了关键词 %(keyword)s"
 
 #: pynicotine/gtkgui/chatrooms.py:903
 #, python-format
 msgid "Message by watched user %(user)s in room %(room)s"
-msgstr "被关注用户 %(user)s 在房间 %(room)s 中发送的消息"
+msgstr "被关注用户 %(user)s 在聊天室 %(room)s 中发送的消息"
 
 #: pynicotine/gtkgui/chatrooms.py:921 pynicotine/gtkgui/mainwindow.py:429
 #, python-format
 msgid "Mentioned by %(user)s in Room %(room)s"
-msgstr "%(user)s 在房间 %(room)s 提到了您"
+msgstr "%(user)s 在聊天室 %(room)s 提到了您"
 
 #: pynicotine/gtkgui/chatrooms.py:929 pynicotine/gtkgui/mainwindow.py:432
 #, python-format
 msgid "Keyword %(keyword)s Mentioned by %(user)s in Room %(room)s"
-msgstr "用户 %(user)s 在房间 %(room)s 中提到了关键词 %(keyword)s"
+msgstr "用户 %(user)s 在聊天室 %(room)s 中提到了关键词 %(keyword)s"
 
 #: pynicotine/gtkgui/chatrooms.py:941 pynicotine/gtkgui/mainwindow.py:439
 #, python-format
 msgid "Message by Watched User %(user)s in Room %(room)s"
-msgstr "被关注用户 %(user)s 在房间 %(room)s 中发送的消息"
+msgstr "被关注用户 %(user)s 在聊天室 %(room)s 中发送的消息"
 
 #: pynicotine/gtkgui/chatrooms.py:953
 #, python-format
 msgid "Message by %(user)s in Room %(room)s"
-msgstr "来自房间 %(room)s %(user)s的消息"
+msgstr "来自聊天室 %(room)s %(user)s的消息"
 
 #: pynicotine/gtkgui/chatrooms.py:1008 pynicotine/gtkgui/chatrooms.py:1276
 #, python-format
 msgid "%s joined the room"
-msgstr "%s 加入了房间"
+msgstr "%s 加入了聊天室"
 
 #: pynicotine/gtkgui/chatrooms.py:1032 pynicotine/gtkgui/chatrooms.py:1294
 #, python-format
 msgid "%s left the room"
-msgstr "%s 离开了房间"
+msgstr "%s 离开了聊天室"
 
 #: pynicotine/gtkgui/chatrooms.py:1211
 #, python-format
@@ -912,11 +909,11 @@ msgstr "未知"
 
 #: pynicotine/gtkgui/chatrooms.py:1352 pynicotine/gtkgui/ui/chatrooms.ui:192
 msgid "Add Room Member"
-msgstr "添加房间成员"
+msgstr "添加聊天室成员"
 
 #: pynicotine/gtkgui/chatrooms.py:1353
 msgid "Enter the name of the user you want to add to the private room:"
-msgstr "输入您想要添加到私密房间的用户名："
+msgstr "输入您想要添加到私密聊天室的用户名："
 
 #: pynicotine/gtkgui/chatrooms.py:1386
 #: pynicotine/gtkgui/dialogs/chathistory.py:300
@@ -927,7 +924,7 @@ msgstr "删除消息记录？"
 #: pynicotine/gtkgui/chatrooms.py:1387
 msgid ""
 "Do you really want to permanently delete all logged messages for this room?"
-msgstr "您确定要永久删除此房间的所有消息记录吗？"
+msgstr "您确定要永久删除此聊天室的所有消息记录吗？"
 
 #: pynicotine/gtkgui/chatrooms.py:1390
 #: pynicotine/gtkgui/dialogs/chathistory.py:304
@@ -938,16 +935,16 @@ msgstr "删除"
 
 #: pynicotine/gtkgui/chatrooms.py:1403
 msgid "Hide Room Users"
-msgstr "隐藏房间用户"
+msgstr "隐藏聊天室用户"
 
 #: pynicotine/gtkgui/chatrooms.py:1403 pynicotine/gtkgui/ui/chatrooms.ui:106
 msgid "Show Room Users"
-msgstr "显示房间用户"
+msgstr "显示聊天室用户"
 
 #: pynicotine/gtkgui/chatrooms.py:1421
 #, python-format
 msgid "R_oom Wall [%d]"
-msgstr "房间墙(_O) [%d]"
+msgstr "聊天室墙(_O) [%d]"
 
 #: pynicotine/gtkgui/chatrooms.py:1422
 #, python-format
@@ -1089,9 +1086,9 @@ msgid_plural "Unable to request folder contents from %(num)s users"
 msgstr[0] "无法从 %(num)s 个用户请求文件夹内容"
 
 #: pynicotine/gtkgui/dialogs/download.py:513
-#, fuzzy, python-format
+#, python-format
 msgid "User Offline (%(user)s)"
-msgstr "喜欢 %(item)s 的用户"
+msgstr "用户离线（%(user)s）"
 
 #: pynicotine/gtkgui/dialogs/download.py:515
 #, python-format
@@ -1949,9 +1946,9 @@ msgid "Uninstall…"
 msgstr "卸载…"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3486
-#, fuzzy, python-format
+#, python-format
 msgid "Error Loading Plugin %(name)s"
-msgstr "加载自定义图标时出错 %(path)s：%(error)s"
+msgstr "加载 %(name)s 插件出错"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3508
 msgid "No Plugin Selected"
@@ -2078,11 +2075,11 @@ msgstr "为配置备份选择一个文件名"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:40
 msgid "All Rooms"
-msgstr "所有房间"
+msgstr "所有聊天室"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:53
 msgid "Room"
-msgstr "房间"
+msgstr "聊天室"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:62
 #: pynicotine/plugins/core_commands/__init__.py:16
@@ -2096,12 +2093,12 @@ msgstr "用户"
 #: pynicotine/gtkgui/dialogs/roomlist.py:78
 #: pynicotine/gtkgui/dialogs/roomlist.py:291
 msgid "_Join Room"
-msgstr "加入房间(_J)"
+msgstr "加入聊天室(_J)"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:81
 #: pynicotine/gtkgui/dialogs/roomlist.py:294
 msgid "Delete Private Room…"
-msgstr "删除私人房间…"
+msgstr "删除私人聊天室…"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:82
 #: pynicotine/gtkgui/dialogs/roomlist.py:295
@@ -2116,27 +2113,27 @@ msgstr "%(room)s (%(role)s)"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:271
 msgid "Room Member"
-msgstr "房间成员"
+msgstr "聊天室成员"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:324
 msgid "Delete Private Room?"
-msgstr "删除私人房间？"
+msgstr "删除私人聊天室？"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:325
 #, python-format
 msgid "Do you really want to permanently delete your private room %s?"
-msgstr "您确定要永久删除您的私人房间 %s 吗？"
+msgstr "您确定要永久删除您的私人聊天室 %s 吗？"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:352
 msgid ""
 "Room names can only contain letters (A-Z), numbers, and a single space "
 "between characters."
-msgstr "房间名称只能包含字母（A-Z）、数字以及字符之间的单个空格。"
+msgstr "聊天室名称只能包含字母（A-Z）、数字以及字符之间的单个空格。"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:360
 #, python-format
 msgid "Room %s is already registered as public."
-msgstr "房间 %s 已注册为公共房间。"
+msgstr "聊天室 %s 已注册为公共聊天室。"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:374
 msgid "Enter the name of the chat room you want to create:"
@@ -2145,7 +2142,7 @@ msgstr "输入您想要创建的聊天室名称："
 #: pynicotine/gtkgui/dialogs/roomlist.py:378
 #: pynicotine/gtkgui/ui/dialogs/roomlist.ui:37
 msgid "Create New Room"
-msgstr "创建新房间"
+msgstr "创建新聊天室"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:27
 #: pynicotine/gtkgui/dialogs/shortcuts.py:39
@@ -2501,11 +2498,11 @@ msgid "Clear All"
 msgstr "全部清除"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:427
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Items are searched individually every %(interval)s, useful for finding rare "
 "files"
-msgstr "心愿单条目会定期自动搜索，以发现稀有文件。"
+msgstr "每隔 %(interval)s 会单独搜索项目，有助寻找罕见文件"
 
 #: pynicotine/gtkgui/downloads.py:31
 msgid "_Resume"
@@ -2760,18 +2757,16 @@ msgid "You are offline"
 msgstr "您处于离线状态"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:54
-#, fuzzy
 msgid "Connect to the server to check port status"
-msgstr "连接到服务器来检查端口状态。"
+msgstr "连接到服务器来检查端口状态"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:59
 msgid "Checking connection status…"
 msgstr "检查连接情况……"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:60
-#, fuzzy
 msgid "Waiting for response from port checker"
-msgstr "正在等待端口检查器的回应。"
+msgstr "正在等待端口检查器的响应"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:75
 #, python-format
@@ -2779,9 +2774,8 @@ msgid "Port %i (TCP) status unknown"
 msgstr "端口 %i (TCP) 状态未知"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:76
-#, fuzzy
 msgid "Cannot check connection status"
-msgstr "无法检查连接状态。"
+msgstr "无法检查连接状态"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:81
 #, python-format
@@ -2789,9 +2783,8 @@ msgid "Port %i (TCP) is open"
 msgstr "端口 %i (TCP) 开放"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:82
-#, fuzzy
 msgid "Most users can connect to you"
-msgstr "大部分用户可以连接到您。"
+msgstr "大部分用户可以连上你"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:87
 #, python-format
@@ -2926,9 +2919,8 @@ msgid "Restore Filters"
 msgstr "恢复过滤器"
 
 #: pynicotine/gtkgui/search.py:839
-#, fuzzy
 msgid "Cannot search for files shared by other users, since you are offline"
-msgstr "您处于离线状态，无法搜索其他用户共享的文件。"
+msgstr "您处于离线状态，无法搜索其他用户共享的文件"
 
 #: pynicotine/gtkgui/search.py:1335
 #, python-format
@@ -3189,21 +3181,18 @@ msgid ""
 msgstr "用户的共享文件列表为空。用户没有共享任何内容，或者共享文件均为私密。"
 
 #: pynicotine/gtkgui/userbrowse.py:596 pynicotine/gtkgui/userinfo.py:537
-#, fuzzy
 msgid "Cannot request information from the user, since they are offline"
-msgstr "该用户处于离线状态，无法请求其信息。"
+msgstr "该用户处于离线状态，无法请求其信息"
 
 #: pynicotine/gtkgui/userbrowse.py:598 pynicotine/gtkgui/userinfo.py:539
-#, fuzzy
 msgid ""
 "Cannot request information from the user, possibly due to a closed listening "
 "port or temporary connectivity issue"
-msgstr "无法从该用户请求信息，可能是由于监听端口关闭或临时连接问题。"
+msgstr "无法从该用户请求信息，可能是由于监听端口关闭或临时连接问题"
 
 #: pynicotine/gtkgui/userbrowse.py:706
-#, fuzzy
 msgid "Folder Actions"
-msgstr "文件夹位置"
+msgstr "文件夹操作"
 
 #: pynicotine/gtkgui/userbrowse.py:910
 msgid "Upload _Folder…"
@@ -3501,14 +3490,14 @@ msgstr "设 %s 为管理员"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:605
 msgid "Change Room Owner?"
-msgstr "更改房间所有者？"
+msgstr "更改聊天室所有者？"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:606
 #, python-format
 msgid ""
 "Do you really want to make %(user)s the new owner of your private room "
 "%(room)s?"
-msgstr "您确定要将 %(user)s 设为您私人房间 %(room)s 的新所有者吗？"
+msgstr "您确定要将 %(user)s 设为您私人聊天室 %(room)s 的新所有者吗？"
 
 #: pynicotine/gtkgui/widgets/textentry.py:22
 msgid "Send message…"
@@ -3589,15 +3578,13 @@ msgstr "所有"
 
 #: pynicotine/gtkgui/widgets/treeview.py:917
 #: pynicotine/gtkgui/widgets/treeview.py:926
-#, fuzzy
 msgid "Move _Left"
-msgstr "左侧(_L)"
+msgstr "左移(_L)"
 
 #: pynicotine/gtkgui/widgets/treeview.py:918
 #: pynicotine/gtkgui/widgets/treeview.py:927
-#, fuzzy
 msgid "Move _Right"
-msgstr "右侧(_R)"
+msgstr "右移(_R)"
 
 #: pynicotine/gtkgui/widgets/treeview.py:934
 #, python-format
@@ -3613,9 +3600,8 @@ msgid "_Sort Descending"
 msgstr "降序排列(_S)"
 
 #: pynicotine/gtkgui/widgets/treeview.py:954
-#, fuzzy
 msgid "Column _Position"
-msgstr "列宽"
+msgstr "列位置(_P)"
 
 #: pynicotine/gtkgui/widgets/treeview.py:1125
 msgid "Ungrouped"
@@ -4815,9 +4801,8 @@ msgid "Close private chat"
 msgstr "关闭私聊"
 
 #: pynicotine/plugins/core_commands/__init__.py:119
-#, fuzzy
 msgid "Request client information from user"
-msgstr "请求'user'的资料"
+msgstr "从用户请求客户端信息"
 
 #: pynicotine/plugins/core_commands/__init__.py:128
 msgid "Send private message to user"
@@ -4917,7 +4902,7 @@ msgstr "键入 %(command)s 列出可用命令"
 #: pynicotine/plugins/core_commands/__init__.py:381
 #, python-format
 msgid "Not joined in room %s"
-msgstr "未加入房间 %s"
+msgstr "未加入聊天室 %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:398
 #, python-format
@@ -5001,9 +4986,9 @@ msgid "Plugin name %(name)s conflicts with built-in plugin"
 msgstr ""
 
 #: pynicotine/pluginsystem.py:517
-#, fuzzy, python-format
+#, python-format
 msgid "Installed plugin %(name)s"
-msgstr "已安装插件 %s"
+msgstr "已安装插件 %(name)s"
 
 #: pynicotine/pluginsystem.py:520
 #, python-format
@@ -5016,19 +5001,19 @@ msgid "Failed to uninstall plugin %(name)s: %(error)s"
 msgstr "卸载插件 %(name)s 失败：%(error)s"
 
 #: pynicotine/pluginsystem.py:555
-#, fuzzy, python-format
+#, python-format
 msgid "Uninstalled plugin %(name)s"
-msgstr "已卸载插件 %s"
+msgstr "已卸载插件 %(name)s"
 
 #: pynicotine/pluginsystem.py:660
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot enable plugin %(name)s: %(error)s"
-msgstr "安装插件 %(name)s 失败：%(error)s"
+msgstr "无法启用插件 %(name)s: %(error)s"
 
 #: pynicotine/pluginsystem.py:662
-#, fuzzy, python-format
+#, python-format
 msgid "Plugin folder name contains invalid character '%(char)s'"
-msgstr "无法加载插件 %(name)s。插件文件夹名称包含无效字符：%(characters)s"
+msgstr "插件文件夹名称包含无效字符：'%(char)s'"
 
 #: pynicotine/pluginsystem.py:699
 #, python-format
@@ -5036,36 +5021,34 @@ msgid "Conflicting %(interface)s command in plugin %(name)s: %(command)s"
 msgstr "插件 %(name)s 中含有冲突 %(interface)s 命令：%(command)s"
 
 #: pynicotine/pluginsystem.py:723
-#, fuzzy, python-format
+#, python-format
 msgid "Loaded plugin %(name)s"
-msgstr "已加载插件 %s"
+msgstr "已加载插件 %(name)s"
 
 #: pynicotine/pluginsystem.py:727
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to load plugin %(name)s"
-msgstr "安装插件 %(name)s 失败：%(error)s"
+msgstr "加载插件 %(name)s 失败"
 
 #: pynicotine/pluginsystem.py:767
-#, fuzzy, python-format
+#, python-format
 msgid "Unloaded plugin %(name)s"
-msgstr "已卸载的插件 %s"
+msgstr "已卸下插件 %(name)s"
 
 #: pynicotine/pluginsystem.py:771
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to unload plugin %(name)s"
-msgstr "卸载插件 %(name)s 失败：%(error)s"
+msgstr "未能卸下插件 %(name)s"
 
 #: pynicotine/pluginsystem.py:893
-#, fuzzy, python-format
+#, python-format
 msgid "Plugin %(name)s failed with error %(errortype)s: %(error)s"
-msgstr ""
-"插件 %(module)s 失败，出现错误 %(errortype)s: %(error)s。\n"
-"调试轨迹：%(trace)s"
+msgstr "插件 %(name)s 失败，出现错误 %(errortype)s: %(error)s"
 
 #: pynicotine/pluginsystem.py:931
-#, fuzzy, python-format
+#, python-format
 msgid "Restored default settings for plugin %(name)s"
-msgstr "为插件%s还原默认设置"
+msgstr "还原了插件 %(name)s 的默认设置"
 
 #: pynicotine/pluginsystem.py:963
 msgid "No description"
@@ -5118,9 +5101,8 @@ msgid "Could not create room. Reason: %s"
 msgstr ""
 
 #: pynicotine/privatechat.py:177
-#, fuzzy
 msgid "Room name empty."
-msgstr "聊天室名称"
+msgstr "聊天室名为空。"
 
 #: pynicotine/privatechat.py:182
 #, python-format
@@ -5156,26 +5138,26 @@ msgid ""
 msgstr ""
 
 #: pynicotine/privatechat.py:240
-#, fuzzy, python-format
+#, python-format
 msgid "Room (%(room)s) is registered as public."
-msgstr "房间 %s 已注册为公共房间。"
+msgstr "聊天室（%(room)s）已注册为公共聊天室。"
 
 #: pynicotine/privatechat.py:253
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is now a member of room %(room)s"
-msgstr "用户 %(user)s 不再是房间 %(room)s 的管理员"
+msgstr "用户 %(user)s 现在是聊天室 %(room)s 的成员"
 
 #: pynicotine/privatechat.py:257
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is no longer a member of room %(room)s"
-msgstr "用户 %(user)s 不再是房间 %(room)s 的管理员"
+msgstr "用户 %(user)s 不再是聊天室 %(room)s 的成员"
 
 #: pynicotine/privatechat.py:281
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "User [%(user)s] was added as a member of room [%(room)s] by operator "
 "[%(operator)s]"
-msgstr "用户 %(user)s 已被设为房间 %(room)s 的管理员"
+msgstr "用户[ %(user)s] 已被添加为聊天室[ %(room)s] 的运营者 [%(operator)s]"
 
 #: pynicotine/privatechat.py:398
 #, python-format
@@ -5285,9 +5267,8 @@ msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "无法连接到服务器 %(host)s:%(port)s：%(error)s"
 
 #: pynicotine/slskproto.py:1169
-#, fuzzy
 msgid "Connection attempt timed out"
-msgstr "连接超时"
+msgstr "连接尝试超时"
 
 #: pynicotine/slskproto.py:1198
 #, python-format
@@ -5363,7 +5344,7 @@ msgid "Invalid file size in shares"
 msgstr ""
 
 #: pynicotine/userbrowse.py:282
-#, fuzzy, python-format
+#, python-format
 msgid "Loading shares from disk failed: %(error)s"
 msgstr "从磁盘加载共享失败：%(error)s"
 
@@ -5378,13 +5359,13 @@ msgid "Cannot save shares for user %(user)s: %(error)s"
 msgstr "无法为用户 %(user)s 保存共享：%(error)s"
 
 #: pynicotine/userbrowse.py:410
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "User %(user)s is sharing %(num_files)s files totaling %(shared_size)s across "
 "%(num_folders)s folders"
 msgstr ""
-"用户 %(user)s 正在共享 %(num_files)s 个文件，总计 %(shared_size)s，分布在 "
-"%(num_folders)s 个文件夹中。"
+"用户 %(user)s 正在共享 %(num_files)s 个文件，总大小 %(shared_size)s，分布在 %"
+"(num_folders)s 个文件夹中"
 
 #: pynicotine/userbrowse.py:416
 msgid "User Statistics"
@@ -5415,9 +5396,9 @@ msgid "Cannot Connect"
 msgstr "无法连接"
 
 #: pynicotine/users.py:305
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot retrieve the IP of user %(user)s, since this user is offline"
-msgstr "该用户已经离线，无法检索用户 %s 的 IP"
+msgstr "用户 %(user)s 已经离线，无法取得用户的 IP"
 
 #: pynicotine/users.py:306 pynicotine/users.py:321
 msgid "User IP Address"
@@ -5457,9 +5438,8 @@ msgid "User %(user)s needs to be logged in first"
 msgstr ""
 
 #: pynicotine/users.py:461
-#, fuzzy
 msgid "User Offline"
-msgstr "离线"
+msgstr "用户离线"
 
 #: pynicotine/utils.py:192
 #, python-format
@@ -5970,13 +5950,13 @@ msgstr "加入或创建聊天室…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1340
 msgid "All _Rooms"
-msgstr "所有房间(_R)"
+msgstr "所有聊天室(_R)"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1414
 msgid ""
 "Join a room to chat with other online users, or create a private room with "
 "restricted access"
-msgstr "加入房间与其他在线用户聊天，或创建具有受限访问权限的私人房间"
+msgstr "加入聊天室与其他在线用户聊天，或创建具有受限访问权限的私人聊天室"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1620
 #: pynicotine/gtkgui/ui/settings/network.ui:383
@@ -6015,8 +5995,7 @@ msgstr "使用备用下载速度限制 （KiB/s）："
 msgid ""
 "Write a single message that other room users can read later. Recent messages "
 "are shown at the top."
-msgstr ""
-"编写一条消息，聊天室里的其他用户都将看到此消息。新增加的消息将在顶部显示。"
+msgstr "编写一条消息，聊天室里的其他用户都将看到此消息。新增加的消息将在顶部显示。"
 
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:54
 msgid "Set wall message…"
@@ -6074,13 +6053,12 @@ msgstr ""
 "Instrumental”的结果"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:109
-#, fuzzy
 msgid ""
 "Use | (or pipes) to separate several exact phrases. Example:\n"
 "    Remix|Dub Mix|Instrumental"
 msgstr ""
-"使用 | （“或”管道符）来分隔短语。示例：\n"
-"    Remix|Dub Mix|伴奏"
+"使用 | （或管道符）来分隔短语。示例：\n"
+"    Remix|Dub Mix|instrumental"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:122
 msgid "Exclude Text"
@@ -6357,20 +6335,18 @@ msgid "Store Wishlist Filters"
 msgstr "存储愿望清单过滤器"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:33
-#, fuzzy
 msgid ""
 "Prohibit users from accessing your shared files, based on username, IP "
 "address or country"
-msgstr "根据用户名、IP 地址或国家/地区，禁止用户访问您的共享文件。"
+msgstr "根据用户名、IP 地址或国家/地区，禁止用户访问您的共享文件"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:48
 msgid "Country codes to block (comma separated):"
 msgstr "要阻止的国家/地区代码（逗号分隔）："
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:56
-#, fuzzy
 msgid "Codes must be in ISO 3166-2 format"
-msgstr "编码必须是ISO 3166-2格式。"
+msgstr "编码必须是ISO 3166-2格式"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:71
 msgid "Use custom geo block message:"
@@ -6407,12 +6383,11 @@ msgstr "启用拼写检查"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:573
 msgid "Accept private room invitations"
-msgstr "接受私人房间邀请"
+msgstr "接受私人聊天室邀请"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:597
-#, fuzzy
 msgid "Respond to client information requests from other users (CTCP)"
-msgstr "响应其他用户的搜索请求"
+msgstr "响应来自其他用户的客户端请求（CTCP)"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:621
 msgid "Number of recent private chat messages to show:"
@@ -6526,11 +6501,10 @@ msgid "Load Defaults"
 msgstr "载入默认值"
 
 #: pynicotine/gtkgui/ui/settings/ignore.ui:33
-#, fuzzy
 msgid ""
 "Ignore chat messages and search results from users, based on username or IP "
 "address"
-msgstr "根据用户名或IP地址，忽略来自用户的聊天消息和搜索结果。"
+msgstr "根据用户名或IP地址，忽略来自用户的聊天消息和搜索结果"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:95
 msgid "Log chatrooms by default"
@@ -6646,11 +6620,10 @@ msgid "Network interface:"
 msgstr "网络接口："
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:32
-#, fuzzy
 msgid ""
 "Now Playing allows you to display what your media player is playing by using "
 "the /now command in chat"
-msgstr "允许您在聊天中使用 /now 命令显示媒体播放器正在播放的内容。"
+msgstr "“正在播放”允许您在聊天中使用 /now 命令显示媒体播放器正在播放的内容"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:73
 msgid "Other"
@@ -6722,14 +6695,12 @@ msgid "Enable search result filters by default"
 msgstr "默认启用搜索结果筛选器"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:422
-#, fuzzy
 msgid "Only show results from users with an available upload slot"
-msgstr "仅显示具有可用上传槽位的用户的结果。"
+msgstr "仅显示有可用上传槽位的用户的结果"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:447
-#, fuzzy
 msgid "Only show files that are shared publicly"
-msgstr "仅显示公开共享的文件。"
+msgstr "仅显示公开分享的文件"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:468
 msgid "Network Searches"
@@ -6873,11 +6844,10 @@ msgid "Self Description"
 msgstr "自我描述"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:58
-#, fuzzy
 msgid ""
 "Add things you want everyone to see, such as a short description, helpful "
 "tips, or guidelines for downloading your shares"
-msgstr "增加所有人可见的文本，如简介、提示、下载您分享文件时需要遵守的准则。"
+msgstr "增加所有人可见的东西，如简介、有帮助的提示或下载您分享文件时需要遵守的准则"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:94
 msgid "Picture:"
