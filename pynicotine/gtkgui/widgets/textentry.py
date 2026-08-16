@@ -172,6 +172,10 @@ class ChatEntry:
         self.widget.set_position(position)
 
     def set_sensitive(self, sensitive):
+
+        if not sensitive and self.chat_view is not None and self.container.get_focus_child():
+            self.chat_view.grab_focus()
+
         self.widget.set_sensitive(sensitive)
 
     def set_text(self, text):
