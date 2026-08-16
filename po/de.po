@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-12 14:11+0300\n"
-"PO-Revision-Date: 2026-08-13 12:51+0000\n"
-"Last-Translator: Felix Hansen <gore-snagged-happy@duck.com>\n"
+"PO-Revision-Date: 2026-08-16 07:20+0000\n"
+"Last-Translator: Han <han@users.noreply.hosted.weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -985,7 +985,7 @@ msgstr "R_aum Pinnwand"
 
 #: pynicotine/gtkgui/chatrooms.py:1427 pynicotine/gtkgui/ui/chatrooms.ui:211
 msgid "Room Wall"
-msgstr "Raum Pinnwand"
+msgstr "Raum‑Pinnwand"
 
 #: pynicotine/gtkgui/dialogs/about.py:410
 msgid "About"
@@ -2080,7 +2080,7 @@ msgstr "Freigaben"
 #: pynicotine/gtkgui/ui/settings/uploads.ui:52
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:658
 msgid "Uploads"
-msgstr "Datei-Uploads"
+msgstr "Uploads"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3723
 #: pynicotine/gtkgui/widgets/trayicon.py:80
@@ -2147,7 +2147,7 @@ msgstr "Raum"
 #: pynicotine/gtkgui/ui/settings/ban.ui:129
 #: pynicotine/gtkgui/ui/settings/ignore.ui:64
 msgid "Users"
-msgstr "Personen"
+msgstr "Users"
 
 #: pynicotine/gtkgui/dialogs/roomlist.py:78
 #: pynicotine/gtkgui/dialogs/roomlist.py:291
@@ -3170,7 +3170,7 @@ msgstr "%(username)s (%(status)s)"
 
 #: pynicotine/gtkgui/transfers.py:1128
 msgid "Buddy"
-msgstr "_Freund"
+msgstr "Freund"
 
 #: pynicotine/gtkgui/uploads.py:33
 msgid "_Abort"
@@ -5593,7 +5593,7 @@ msgstr "Der Benutzer %(user)s muss sich zuerst anmelden"
 
 #: pynicotine/users.py:461
 msgid "User Offline"
-msgstr "Benutzer nicht erreichbar"
+msgstr "Benutzer offline"
 
 #: pynicotine/utils.py:192
 #, python-format
