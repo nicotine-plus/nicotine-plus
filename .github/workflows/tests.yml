@@ -300,7 +300,9 @@ jobs:
       # Use dhcpcd instead of dhclient for reliable networking
       # https://bugs.dragonflybsd.org/issues/3317
       - name: Enable dhcpcd
-        run: sudo service dhcpcd onestart
+        run: |
+          echo 'dhcp_client="dhcpcd"' | sudo tee -a /etc/rc.conf
+          sudo service netif restart
 
       - name: Install dependencies
         run: |
