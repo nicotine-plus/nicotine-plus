@@ -128,14 +128,12 @@ msgid "start the program without showing window"
 msgstr "start het programma zonder venster weer te geven"
 
 #: pynicotine/__init__.py:56
-#, fuzzy
 msgid "address"
-msgstr "Adressen"
+msgstr "adres"
 
 #: pynicotine/__init__.py:57
-#, fuzzy
 msgid "bind connections to the given IP address"
-msgstr "Verbindingen blokkeren van gebruiker of IP-adres"
+msgstr "verbindingen binden aan het opgegeven IP-adres"
 
 #: pynicotine/__init__.py:60
 msgid "port"
@@ -193,9 +191,9 @@ msgid "Buddy Status"
 msgstr "Vriendstatus"
 
 #: pynicotine/chatrooms.py:312
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has not enabled private room invitations"
-msgstr "Gebruiker %(user)s is toegevoegd aan privékamer %(room)s"
+msgstr "Gebruiker %(user)s heeft uitnodigingen voor privékamers niet ingeschakeld"
 
 #: pynicotine/chatrooms.py:367
 #, python-format
@@ -218,9 +216,9 @@ msgid "You have been removed from private room %(room)s"
 msgstr "Je bent verwijderd uit privékamer %(room)s"
 
 #: pynicotine/chatrooms.py:439 pynicotine/privatechat.py:261
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is now an operator of room %(room)s"
-msgstr "Gebruiker %(user)s is geen operator meer van kamer %(room)s"
+msgstr "Gebruiker %(user)s is nu operator van kamer %(room)s"
 
 #: pynicotine/chatrooms.py:458 pynicotine/privatechat.py:265
 #, python-format
@@ -228,9 +226,9 @@ msgid "User %(user)s is no longer an operator of room %(room)s"
 msgstr "Gebruiker %(user)s is geen operator meer van kamer %(room)s"
 
 #: pynicotine/chatrooms.py:474
-#, fuzzy, python-format
+#, python-format
 msgid "You are now an operator of room %(room)s"
-msgstr "Je bent niet langer de operator van kamer %(room)s"
+msgstr "Je bent nu operator van kamer %(room)s"
 
 #: pynicotine/chatrooms.py:487
 #, python-format
@@ -371,9 +369,9 @@ msgid "Download started: user %(user)s, file %(file)s"
 msgstr "Download gestart: gebruiker %(user)s, bestand %(file)s"
 
 #: pynicotine/gtkgui/__init__.py:73 pynicotine/gtkgui/__init__.py:82
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot find %s, please install it"
-msgstr "Kan %s niet vinden, installeer het alsjeblieft."
+msgstr "Kan %s niet vinden, installeer het alsjeblieft"
 
 #: pynicotine/gtkgui/__init__.py:195
 msgid "No graphical environment available, using headless (no GUI) mode"
@@ -537,19 +535,18 @@ msgstr "_Forceer opnieuw scannen"
 
 #: pynicotine/gtkgui/application.py:606
 msgid "Room Invitation Rejected"
-msgstr ""
+msgstr "Kameruitnodiging geweigerd"
 
 #: pynicotine/gtkgui/application.py:607
 #, python-format
 msgid ""
 "User %(user)s has not enabled private room invitations. Message them and ask "
 "them to do so before inviting them again."
-msgstr ""
+msgstr "Gebruiker %(user)s heeft uitnodigingen voor privékamers niet ingeschakeld. Stuur een bericht en vraag diegene dit te doen voordat je opnieuw uitnodigt."
 
 #: pynicotine/gtkgui/application.py:611
-#, fuzzy
 msgid "Open _Private Chat"
-msgstr "Privéchat openen"
+msgstr "_Privéchat openen"
 
 #: pynicotine/gtkgui/application.py:815
 msgid "Message Downloading Users"
@@ -755,7 +752,7 @@ msgstr "_Toevoegen"
 
 #: pynicotine/gtkgui/chatrooms.py:223
 msgid "Create New Room?"
-msgstr "Nieuwe ruimte creëren?"
+msgstr "Nieuwe kamer aanmaken?"
 
 #: pynicotine/gtkgui/chatrooms.py:224
 #, python-format
@@ -816,7 +813,7 @@ msgstr "Kamerlog bekijken"
 
 #: pynicotine/gtkgui/chatrooms.py:674
 msgid "Delete Room Log…"
-msgstr "Vamerlog verwijderen…"
+msgstr "Kamerlog verwijderen…"
 
 #: pynicotine/gtkgui/chatrooms.py:676 pynicotine/gtkgui/privatechat.py:375
 msgid "Clear Message View"
@@ -1107,9 +1104,9 @@ msgstr[0] "Kan geen mapinhoud opvragen bij %(num)s gebruiker"
 msgstr[1] "Kan geen mapinhoud opvragen bij %(num)s gebruikers"
 
 #: pynicotine/gtkgui/dialogs/download.py:513
-#, fuzzy, python-format
+#, python-format
 msgid "User Offline (%(user)s)"
-msgstr "Gebruikers die %(item)s leuk vinden"
+msgstr "Gebruiker offline (%(user)s)"
 
 #: pynicotine/gtkgui/dialogs/download.py:515
 #, python-format
@@ -1985,9 +1982,9 @@ msgid "Uninstall…"
 msgstr "Deinstalleer…"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3486
-#, fuzzy, python-format
+#, python-format
 msgid "Error Loading Plugin %(name)s"
-msgstr "Fout bij het laden van aangepast pictogram %(path)s: %(error)s"
+msgstr "Fout bij het laden van plugin %(name)s"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3508
 msgid "No Plugin Selected"
@@ -2502,7 +2499,7 @@ msgstr "Voer een lijst met zoektermen in om toe te voegen aan je Verlanglijst:"
 #: pynicotine/gtkgui/dialogs/wishlist.py:264
 #: pynicotine/gtkgui/dialogs/wishlist.py:325
 msgid "Search automatically"
-msgstr ""
+msgstr "Automatisch zoeken"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:272
 #: pynicotine/gtkgui/dialogs/wishlist.py:311
@@ -2543,13 +2540,11 @@ msgid "Clear All"
 msgstr "Alles wissen"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:427
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Items are searched individually every %(interval)s, useful for finding rare "
 "files"
-msgstr ""
-"Verlanglijst-items worden automatisch met regelmatige tussenpozen gezocht om "
-"ongebruikelijke bestanden te ontdekken."
+msgstr "Items worden afzonderlijk elke %(interval)s doorzocht, handig om zeldzame bestanden te vinden"
 
 #: pynicotine/gtkgui/downloads.py:31
 msgid "_Resume"
@@ -2805,21 +2800,19 @@ msgstr "Opnieuw scannen mislukt"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:53
 msgid "You are offline"
-msgstr "U bent offline"
+msgstr "Je bent offline"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:54
-#, fuzzy
 msgid "Connect to the server to check port status"
-msgstr "Met server verbinden om poortstatus te controleren."
+msgstr "Verbind met de server om de poortstatus te controleren"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:59
 msgid "Checking connection status…"
 msgstr "Verbindingsstatus controleren…"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:60
-#, fuzzy
 msgid "Waiting for response from port checker"
-msgstr "Wacht op antwoord van de poortcontroleur."
+msgstr "Wachten op antwoord van de poortcontroleur"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:75
 #, python-format
@@ -2827,9 +2820,8 @@ msgid "Port %i (TCP) status unknown"
 msgstr "Poort %i (TCP) status onbekend"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:76
-#, fuzzy
 msgid "Cannot check connection status"
-msgstr "Kan de verbindingsstatus niet controleren."
+msgstr "Kan verbindingsstatus niet controleren"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:81
 #, python-format
@@ -2837,9 +2829,8 @@ msgid "Port %i (TCP) is open"
 msgstr "Poort %i (TCP) is open"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:82
-#, fuzzy
 msgid "Most users can connect to you"
-msgstr "De meeste gebruikers kunnen met jou verbinden."
+msgstr "De meeste gebruikers kunnen met je verbinden"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:87
 #, python-format
@@ -2976,11 +2967,8 @@ msgid "Restore Filters"
 msgstr "Filters herstellen"
 
 #: pynicotine/gtkgui/search.py:839
-#, fuzzy
 msgid "Cannot search for files shared by other users, since you are offline"
-msgstr ""
-"Kan geen bestanden zoeken die door andere gebruikers zijn gedeeld, omdat je "
-"offline bent."
+msgstr "Kan niet zoeken naar bestanden die door andere gebruikers zijn gedeeld, omdat je offline bent"
 
 #: pynicotine/gtkgui/search.py:1335
 #, python-format
@@ -3244,23 +3232,18 @@ msgstr ""
 "deelt niets, of ze delen bestanden privé."
 
 #: pynicotine/gtkgui/userbrowse.py:596 pynicotine/gtkgui/userinfo.py:537
-#, fuzzy
 msgid "Cannot request information from the user, since they are offline"
-msgstr "Kan geen informatie opvragen bij de gebruiker, omdat deze offline is."
+msgstr "Kan geen informatie opvragen bij de gebruiker, omdat deze offline is"
 
 #: pynicotine/gtkgui/userbrowse.py:598 pynicotine/gtkgui/userinfo.py:539
-#, fuzzy
 msgid ""
 "Cannot request information from the user, possibly due to a closed listening "
 "port or temporary connectivity issue"
-msgstr ""
-"Kan geen informatie van gebruiker opvragen. Misschien een gesloten "
-"luisterpoort of een tijdelijk verbindingsprobleem."
+msgstr "Kan geen informatie opvragen bij de gebruiker, mogelijk door een gesloten luisterpoort of een tijdelijk verbindingsprobleem"
 
 #: pynicotine/gtkgui/userbrowse.py:706
-#, fuzzy
 msgid "Folder Actions"
-msgstr "Map locaties"
+msgstr "Mapacties"
 
 #: pynicotine/gtkgui/userbrowse.py:910
 msgid "Upload _Folder…"
@@ -3653,15 +3636,13 @@ msgstr "Alles"
 
 #: pynicotine/gtkgui/widgets/treeview.py:917
 #: pynicotine/gtkgui/widgets/treeview.py:926
-#, fuzzy
 msgid "Move _Left"
-msgstr "_Links"
+msgstr "Naar _links verplaatsen"
 
 #: pynicotine/gtkgui/widgets/treeview.py:918
 #: pynicotine/gtkgui/widgets/treeview.py:927
-#, fuzzy
 msgid "Move _Right"
-msgstr "_Rechts"
+msgstr "Naar _rechts verplaatsen"
 
 #: pynicotine/gtkgui/widgets/treeview.py:934
 #, python-format
@@ -3677,9 +3658,8 @@ msgid "_Sort Descending"
 msgstr "_Aflopend Sorteren"
 
 #: pynicotine/gtkgui/widgets/treeview.py:954
-#, fuzzy
 msgid "Column _Position"
-msgstr "Positie in de wachtrij"
+msgstr "Kolom_positie"
 
 #: pynicotine/gtkgui/widgets/treeview.py:1125
 msgid "Ungrouped"
@@ -4883,9 +4863,8 @@ msgid "Close private chat"
 msgstr "Privéchat sluiten"
 
 #: pynicotine/plugins/core_commands/__init__.py:119
-#, fuzzy
 msgid "Request client information from user"
-msgstr "Vraag informatie aan voor 'gebruiker'"
+msgstr "Clientinformatie opvragen bij gebruiker"
 
 #: pynicotine/plugins/core_commands/__init__.py:128
 msgid "Send private message to user"
@@ -5061,21 +5040,21 @@ msgstr "Bezig met laden van plugin systeem"
 
 #: pynicotine/pluginsystem.py:487
 msgid "Uncompressed size too large"
-msgstr ""
+msgstr "Ongecomprimeerde grootte te groot"
 
 #: pynicotine/pluginsystem.py:499
 msgid "No plugin found in zip file"
-msgstr ""
+msgstr "Geen plugin gevonden in zip-bestand"
 
 #: pynicotine/pluginsystem.py:502
 #, python-format
 msgid "Plugin name %(name)s conflicts with built-in plugin"
-msgstr ""
+msgstr "Pluginnaam %(name)s botst met een ingebouwde plugin"
 
 #: pynicotine/pluginsystem.py:517
-#, fuzzy, python-format
+#, python-format
 msgid "Installed plugin %(name)s"
-msgstr "Plugin %s geïnstalleerd"
+msgstr "Plugin %(name)s geïnstalleerd"
 
 #: pynicotine/pluginsystem.py:520
 #, python-format
@@ -5088,21 +5067,19 @@ msgid "Failed to uninstall plugin %(name)s: %(error)s"
 msgstr "Fout bij het verwijderen van plugin %(name)s: %(error)s"
 
 #: pynicotine/pluginsystem.py:555
-#, fuzzy, python-format
+#, python-format
 msgid "Uninstalled plugin %(name)s"
-msgstr "Plugin %s verwijderd"
+msgstr "Plugin %(name)s verwijderd"
 
 #: pynicotine/pluginsystem.py:660
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot enable plugin %(name)s: %(error)s"
-msgstr "Kan de plugin %(name)s niet installeren: %(error)s"
+msgstr "Kan plugin %(name)s niet inschakelen: %(error)s"
 
 #: pynicotine/pluginsystem.py:662
-#, fuzzy, python-format
+#, python-format
 msgid "Plugin folder name contains invalid character '%(char)s'"
-msgstr ""
-"Kan plugin %(name)s niet laden. Mapnaam van de plugin bevat ongeldige "
-"tekens: %(characters)s"
+msgstr "Mapnaam van plugin bevat ongeldig teken '%(char)s'"
 
 #: pynicotine/pluginsystem.py:699
 #, python-format
@@ -5110,36 +5087,34 @@ msgid "Conflicting %(interface)s command in plugin %(name)s: %(command)s"
 msgstr "Conflicterend %(interface)s commando in plugin %(name)s: %(command)s"
 
 #: pynicotine/pluginsystem.py:723
-#, fuzzy, python-format
+#, python-format
 msgid "Loaded plugin %(name)s"
-msgstr "Plugin %s geladen"
+msgstr "Plugin %(name)s geladen"
 
 #: pynicotine/pluginsystem.py:727
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to load plugin %(name)s"
-msgstr "Kan de plugin %(name)s niet installeren: %(error)s"
+msgstr "Kan plugin %(name)s niet laden"
 
 #: pynicotine/pluginsystem.py:767
-#, fuzzy, python-format
+#, python-format
 msgid "Unloaded plugin %(name)s"
-msgstr "Plugin %s uitgeschakeld"
+msgstr "Plugin %(name)s uitgeschakeld"
 
 #: pynicotine/pluginsystem.py:771
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to unload plugin %(name)s"
-msgstr "Fout bij het verwijderen van plugin %(name)s: %(error)s"
+msgstr "Kan plugin %(name)s niet uitschakelen"
 
 #: pynicotine/pluginsystem.py:893
-#, fuzzy, python-format
+#, python-format
 msgid "Plugin %(name)s failed with error %(errortype)s: %(error)s"
-msgstr ""
-"Plugin %(module)s is mislukt met fout %(errortype)s: %(error)s\n"
-"Trace: %(trace)s"
+msgstr "Plugin %(name)s is mislukt met fout %(errortype)s: %(error)s"
 
 #: pynicotine/pluginsystem.py:931
-#, fuzzy, python-format
+#, python-format
 msgid "Restored default settings for plugin %(name)s"
-msgstr "Standaard instellingen voor plugin %s herstelt"
+msgstr "Standaardinstellingen hersteld voor plugin %(name)s"
 
 #: pynicotine/pluginsystem.py:963
 msgid "No description"
@@ -5192,37 +5167,36 @@ msgstr ""
 #: pynicotine/privatechat.py:173
 #, python-format
 msgid "Could not create room. Reason: %s"
-msgstr ""
+msgstr "Kan kamer niet aanmaken. Reden: %s"
 
 #: pynicotine/privatechat.py:177
-#, fuzzy
 msgid "Room name empty."
-msgstr "Kamernamen"
+msgstr "Kamernaam is leeg."
 
 #: pynicotine/privatechat.py:182
 #, python-format
 msgid "Room name %(room)s contains leading or trailing spaces."
-msgstr ""
+msgstr "Kamernaam %(room)s bevat spaties aan het begin of einde."
 
 #: pynicotine/privatechat.py:186
 #, python-format
 msgid "Room name %(room)s contains invalid characters."
-msgstr ""
+msgstr "Kamernaam %(room)s bevat ongeldige tekens."
 
 #: pynicotine/privatechat.py:190
 #, python-format
 msgid "Room name %(room)s contains multiple following spaces."
-msgstr ""
+msgstr "Kamernaam %(room)s bevat meerdere opeenvolgende spaties."
 
 #: pynicotine/privatechat.py:205
 #, python-format
 msgid "Room name %(name)s longer than %(chars)s characters."
-msgstr ""
+msgstr "Kamernaam %(name)s is langer dan %(chars)s tekens."
 
 #: pynicotine/privatechat.py:230
 #, python-format
 msgid "The room you are trying to enter (%(room)s) is registered as private."
-msgstr ""
+msgstr "De kamer die je probeert te betreden (%(room)s) is geregistreerd als privé."
 
 #: pynicotine/privatechat.py:235
 #, python-format
@@ -5230,29 +5204,29 @@ msgid ""
 "The room you are trying to enter (%(room)s) is moderated. Please contact one "
 "of these moderators if you are interested in being added to the room's "
 "member list:"
-msgstr ""
+msgstr "De kamer die je probeert te betreden (%(room)s) wordt gemodereerd. Neem contact op met een van deze moderators als je toegevoegd wilt worden aan de ledenlijst van de kamer:"
 
 #: pynicotine/privatechat.py:240
-#, fuzzy, python-format
+#, python-format
 msgid "Room (%(room)s) is registered as public."
-msgstr "Kamer %s is al openbaar."
+msgstr "Kamer (%(room)s) is geregistreerd als openbaar."
 
 #: pynicotine/privatechat.py:253
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is now a member of room %(room)s"
-msgstr "Gebruiker %(user)s is geen operator meer van kamer %(room)s"
+msgstr "Gebruiker %(user)s is nu lid van kamer %(room)s"
 
 #: pynicotine/privatechat.py:257
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is no longer a member of room %(room)s"
-msgstr "Gebruiker %(user)s is geen operator meer van kamer %(room)s"
+msgstr "Gebruiker %(user)s is geen lid meer van kamer %(room)s"
 
 #: pynicotine/privatechat.py:281
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "User [%(user)s] was added as a member of room [%(room)s] by operator "
 "[%(operator)s]"
-msgstr "Gebruiker %(user)s is aangesteld als operator van kamer %(room)s"
+msgstr "Gebruiker [%(user)s] is door operator [%(operator)s] toegevoegd als lid van kamer [%(room)s]"
 
 #: pynicotine/privatechat.py:398
 #, python-format
@@ -5368,9 +5342,8 @@ msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Kan geen verbinding maken met server %(host)s:%(port)s: %(error)s"
 
 #: pynicotine/slskproto.py:1169
-#, fuzzy
 msgid "Connection attempt timed out"
-msgstr "Verbinding time-out"
+msgstr "Verbindingspoging verlopen"
 
 #: pynicotine/slskproto.py:1198
 #, python-format
@@ -5441,16 +5414,16 @@ msgstr "Upload gestart: gebruiker %(user)s, IP-adres %(ip)s, bestand %(file)s"
 
 #: pynicotine/userbrowse.py:233
 msgid "Invalid file name in shares"
-msgstr ""
+msgstr "Ongeldige bestandsnaam in shares"
 
 #: pynicotine/userbrowse.py:236
 msgid "Invalid file size in shares"
-msgstr ""
+msgstr "Ongeldige bestandsgrootte in shares"
 
 #: pynicotine/userbrowse.py:282
-#, fuzzy, python-format
+#, python-format
 msgid "Loading shares from disk failed: %(error)s"
-msgstr "Laden van Shares van schijf mislukt: %(error)s"
+msgstr "Laden van shares vanaf schijf mislukt: %(error)s"
 
 #: pynicotine/userbrowse.py:330
 #, python-format
@@ -5465,13 +5438,11 @@ msgid "Cannot save shares for user %(user)s: %(error)s"
 msgstr "Kan Shares niet opslaan voor gebruiker %(user)s: %(error)s"
 
 #: pynicotine/userbrowse.py:410
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "User %(user)s is sharing %(num_files)s files totaling %(shared_size)s across "
 "%(num_folders)s folders"
-msgstr ""
-"Gebruiker %(user)s deelt %(num_files)s bestanden met een totaal van "
-"%(shared_size)s in %(num_folders)s mappen."
+msgstr "Gebruiker %(user)s deelt %(num_files)s bestanden met een totaal van %(shared_size)s verdeeld over %(num_folders)s mappen"
 
 #: pynicotine/userbrowse.py:416
 msgid "User Statistics"
@@ -5502,9 +5473,9 @@ msgid "Cannot Connect"
 msgstr "Kan niet verbinden"
 
 #: pynicotine/users.py:305
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot retrieve the IP of user %(user)s, since this user is offline"
-msgstr "Kan IP van gebruiker %s niet opvragen, omdat deze gebruiker offline is"
+msgstr "Kan het IP-adres van gebruiker %(user)s niet ophalen, omdat deze gebruiker offline is"
 
 #: pynicotine/users.py:306 pynicotine/users.py:321
 msgid "User IP Address"
@@ -5543,12 +5514,11 @@ msgstr "Wachtwoord gewijzigd"
 #: pynicotine/users.py:460
 #, python-format
 msgid "User %(user)s needs to be logged in first"
-msgstr ""
+msgstr "Gebruiker %(user)s moet eerst ingelogd zijn"
 
 #: pynicotine/users.py:461
-#, fuzzy
 msgid "User Offline"
-msgstr "Afgemeld"
+msgstr "Gebruiker offline"
 
 #: pynicotine/utils.py:192
 #, python-format
@@ -5583,15 +5553,15 @@ msgstr[1] "%(num)s dagen"
 msgid ""
 "Error while executing command %(command)s (%(command_no)s of "
 "%(num_commands)s: %(error)s"
-msgstr ""
+msgstr "Fout bij het uitvoeren van commando %(command)s (%(command_no)s van %(num_commands)s: %(error)s"
 
 #: pynicotine/utils.py:523
 msgid "No known URI provider available"
-msgstr ""
+msgstr "Geen bekende URI-provider beschikbaar"
 
 #: pynicotine/utils.py:584
 msgid "File path does not exist"
-msgstr ""
+msgstr "Bestandspad bestaat niet"
 
 #: pynicotine/utils.py:603
 #, python-format
@@ -5605,11 +5575,11 @@ msgstr "Kan URL %(url)s niet openen: %(error)s"
 
 #: pynicotine/utils.py:664
 msgid "*.old file is present but main file is missing"
-msgstr ""
+msgstr "*.old-bestand is aanwezig maar hoofdbestand ontbreekt"
 
 #: pynicotine/utils.py:668
 msgid "*.old file is present but main file is empty"
-msgstr ""
+msgstr "*.old-bestand is aanwezig maar hoofdbestand is leeg"
 
 #: pynicotine/utils.py:674
 #, python-format
@@ -6203,14 +6173,10 @@ msgstr ""
 "'Instrumental Remix' zal geen 'Remix Instrumental' weergeven"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:109
-#, fuzzy
 msgid ""
 "Use | (or pipes) to separate several exact phrases. Example:\n"
 "    Remix|Dub Mix|Instrumental"
-msgstr ""
-"Gebruik | (of pijp) om verschillende exacte zinnen van elkaar te scheiden. "
-"Voorbeeld:\n"
-"    Remix|Dubmix|Instrumentaal"
+msgstr "Gebruik | (pipes) om meerdere exacte zinnen te scheiden. Voorbeeld:\n    Remix|Dub Mix|Instrumentaal"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:122
 msgid "Exclude Text"
@@ -6516,22 +6482,18 @@ msgid "Store Wishlist Filters"
 msgstr "Verlanglijstfilters opslaan"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:33
-#, fuzzy
 msgid ""
 "Prohibit users from accessing your shared files, based on username, IP "
 "address or country"
-msgstr ""
-"Gebruikers verbieden toegang tot je gedeelde bestanden op basis van "
-"gebruikersnaam, IP-adres of land."
+msgstr "Gebruikers verbieden toegang te krijgen tot je gedeelde bestanden, op basis van gebruikersnaam, IP-adres of land"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:48
 msgid "Country codes to block (comma separated):"
 msgstr "Landcodes om te blokkeren (gescheiden door komma's):"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:56
-#, fuzzy
 msgid "Codes must be in ISO 3166-2 format"
-msgstr "Codes moeten in ISO 3166-2 format zijn."
+msgstr "Codes moeten in ISO 3166-2-formaat zijn"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:71
 msgid "Use custom geo block message:"
@@ -6571,9 +6533,8 @@ msgid "Accept private room invitations"
 msgstr "Accepteer privé-kameruitnodigingen"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:597
-#, fuzzy
 msgid "Respond to client information requests from other users (CTCP)"
-msgstr "Reageer op zoekverzoeken van andere gebruikers"
+msgstr "Reageren op verzoeken om clientinformatie van andere gebruikers (CTCP)"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:621
 msgid "Number of recent private chat messages to show:"
@@ -6691,13 +6652,10 @@ msgid "Load Defaults"
 msgstr "Standaardwaarden laden"
 
 #: pynicotine/gtkgui/ui/settings/ignore.ui:33
-#, fuzzy
 msgid ""
 "Ignore chat messages and search results from users, based on username or IP "
 "address"
-msgstr ""
-"Chatberichten en zoekresultaten van gebruikers negeren, op basis van "
-"gebruikersnaam of IP-adres."
+msgstr "Chatberichten en zoekresultaten van gebruikers negeren, op basis van gebruikersnaam of IP-adres"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:95
 msgid "Log chatrooms by default"
@@ -6818,13 +6776,10 @@ msgid "Network interface:"
 msgstr "Netwerkinterface:"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:32
-#, fuzzy
 msgid ""
 "Now Playing allows you to display what your media player is playing by using "
 "the /now command in chat"
-msgstr ""
-"Met 'Nu aan het afspelen' kun je laten zien wat je mediaspeler afspeelt door "
-"de commando /now in chat te gebruiken."
+msgstr "Met 'Nu aan het afspelen' kun je laten zien wat je mediaspeler afspeelt door het commando /now in de chat te gebruiken"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:73
 msgid "Other"
@@ -6897,15 +6852,12 @@ msgid "Enable search result filters by default"
 msgstr "Standaard zoekresultaatfilters inschakelen"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:422
-#, fuzzy
 msgid "Only show results from users with an available upload slot"
-msgstr ""
-"Alleen resultaten van gebruikers met een beschikbare uploadslot weergeven."
+msgstr "Alleen resultaten tonen van gebruikers met een beschikbare uploadslot"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:447
-#, fuzzy
 msgid "Only show files that are shared publicly"
-msgstr "Toon alleen bestanden die openbaar gedeeld zijn."
+msgstr "Alleen bestanden tonen die openbaar gedeeld zijn"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:468
 msgid "Network Searches"
@@ -7053,13 +7005,10 @@ msgid "Self Description"
 msgstr "Zelfomschrijving"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:58
-#, fuzzy
 msgid ""
 "Add things you want everyone to see, such as a short description, helpful "
 "tips, or guidelines for downloading your shares"
-msgstr ""
-"Voeg dingen toe die je wilt dat iedereen ziet, zoals een korte beschrijving, "
-"handige tips of richtlijnen voor het downloaden van je shares."
+msgstr "Voeg dingen toe die je wilt dat iedereen ziet, zoals een korte beschrijving, handige tips of richtlijnen voor het downloaden van je shares"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:94
 msgid "Picture:"
