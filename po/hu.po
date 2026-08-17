@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-12 14:11+0300\n"
-"PO-Revision-Date: 2026-08-17 11:04+0000\n"
+"PO-Revision-Date: 2026-08-17 12:32+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -547,11 +547,12 @@ msgid ""
 "User %(user)s has not enabled private room invitations. Message them and ask "
 "them to do so before inviting them again."
 msgstr ""
+"%(user)s felhasználó nem engedélyezte a privát szobai meghívokat. Írjon neki "
+"üzenetet, és kérje meg, hogy engedélyezze ezt, mielőtt újra meghívná."
 
 #: pynicotine/gtkgui/application.py:611
-#, fuzzy
 msgid "Open _Private Chat"
-msgstr "Privát csevegés megnyitása"
+msgstr "_Privát csevegés megnyitása"
 
 #: pynicotine/gtkgui/application.py:815
 msgid "Message Downloading Users"
@@ -2515,7 +2516,7 @@ msgstr ""
 #: pynicotine/gtkgui/dialogs/wishlist.py:264
 #: pynicotine/gtkgui/dialogs/wishlist.py:325
 msgid "Search automatically"
-msgstr ""
+msgstr "Automatikusan keres"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:272
 #: pynicotine/gtkgui/dialogs/wishlist.py:311
@@ -2824,18 +2825,16 @@ msgid "You are offline"
 msgstr "Nincs csatlakozva"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:54
-#, fuzzy
 msgid "Connect to the server to check port status"
-msgstr "Csatlakozás a kiszolgálóhoz a port állapotának ellenőrzéséhez."
+msgstr "Csatlakozás a kiszolgálóhoz a port állapotának ellenőrzéséhez"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:59
 msgid "Checking connection status…"
 msgstr "A kapcsolat állapotának ellenőrzése…"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:60
-#, fuzzy
 msgid "Waiting for response from port checker"
-msgstr "Várakozás a portellenőrző válaszára."
+msgstr "Várakozás a portellenőrző válaszára"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:75
 #, python-format
@@ -2843,9 +2842,8 @@ msgid "Port %i (TCP) status unknown"
 msgstr "Port %i (TCP) állapota ismeretlen"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:76
-#, fuzzy
 msgid "Cannot check connection status"
-msgstr "A kapcsolat állapotát nem lehet ellenőrizni."
+msgstr "A kapcsolat állapotát nem lehet ellenőrizni"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:81
 #, python-format
@@ -2853,9 +2851,8 @@ msgid "Port %i (TCP) is open"
 msgstr "Port %i (TCP) nyitott"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:82
-#, fuzzy
 msgid "Most users can connect to you"
-msgstr "A legtöbb felhasználó csatlakozhat Önhöz."
+msgstr "A legtöbb felhasználó csatlakozhat Önhöz"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:87
 #, python-format
