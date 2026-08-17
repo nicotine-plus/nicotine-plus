@@ -180,6 +180,7 @@ class ComboBox:
             self.dropdown.set_size_request(width=1, height=-1)
 
         add_css_class(self.dropdown, "entry")
+        add_css_class(self.dropdown, "raised")
         container.append(self.widget)
 
     def _create_combobox_gtk3(self, container, label, has_entry, has_entry_completion, has_dropdown):
