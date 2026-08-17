@@ -201,7 +201,8 @@ class ChatEntry:
 
     def set_sensitive(self, sensitive):
 
-        if not sensitive and self.chat_view is not None and self.container.get_focus_child():
+        if (not sensitive and self.chat_view is not None
+                and (self.widget.has_focus() or GTK_API_VERSION >= 4 and self.widget.get_focus_child())):
             self.chat_view.grab_focus()
 
         self.widget.set_sensitive(sensitive)
