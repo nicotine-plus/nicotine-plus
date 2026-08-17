@@ -15,8 +15,7 @@ def install_conda_forge():
                     "libsqlite"]
 
     packages = ["icu",
-                "cx_freeze==8.6.4",
-                "freeze-core==0.6.1",  # Temporarily downgrade due to 0.7.0.post1 not working
+                "cx_freeze",
                 "gettext-tools",
                 "gobject-introspection",
                 "gtk4",
