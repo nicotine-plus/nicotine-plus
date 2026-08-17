@@ -127,6 +127,7 @@ class ComboBox:
 
         add_css_class(self.widget, "linked")
         add_css_class(self.dropdown, "entry")
+        add_css_class(self.dropdown, "raised")
         container.append(self.widget)
 
     def _create_combobox_gtk3(self, container, label, has_entry, has_entry_completion):
