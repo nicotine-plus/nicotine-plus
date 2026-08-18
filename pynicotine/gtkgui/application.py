@@ -321,7 +321,7 @@ class Application:
         menu.add_items(
             ("=" + _("_Connect"), "app.connect"),
             ("=" + _("_Disconnect"), "app.disconnect"),
-            ("#" + _("Soulseek _Privileges"), "app.soulseek-privileges"),
+            ("#" + _("Soulseek Pri_vileges"), "app.soulseek-privileges"),
             ("", None)
         )
 
