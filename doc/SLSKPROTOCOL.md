@@ -5,19 +5,19 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on July 28, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on August 18, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
 The protocol is old and rigid, with various client implementations existing in
-the wild. Careful coordination between clients is necessary. Please don't
+the wild. Careful coordination between clients is absolutely essential. Do not
 extend the protocol without the approval of Soulseek's administrators.
 
 Please use existing client implementations when possible instead of
-implementing your own. There are a lot of subtle details to get right to ensure
-compatibility with other clients, and this documentation does not necessarily
-capture all of them. The risk of introducing bugs that have a negative effect
-on the network is also high.
+implementing your own. Clients need a lot of fine details to ensure proper
+compatibility with the server and other peers, but this documentation does
+not necessarily capture all of them. The risk of introducing subtle bugs that
+have a negative effect on the network is very high.
 
 If you find any inconsistencies, errors or omissions in the documentation,
 please report them.
@@ -2925,6 +2925,17 @@ well, but Nicotine+ >= 3.0.3, Museek+ and the official clients use the
 slskd and Seeker still use this method for downloading, so we need to ensure we
 still understand such requests.
 
+If the peer reports a different file size than we originally requested, then
+any partial data that we already downloaded before shall need to be erased in
+order to avoid file corruption. Note that old SoulseekQt clients may report a
+size of 0 for files larger than 2 GB, so in that case we have to rely on the
+cached file size we received when we initially added the download.
+
+The file size should accurately reflect data currently present on the disk,
+rather than any old value remembered from a prior request or taken from a
+cached listing. Any discrepancy causes the transfer to either fail before it
+finishes or tailing file data will be lost and its middle may be disjointed.
+
 ### Data Order
 
   - Send
@@ -3053,10 +3064,13 @@ The peer replies with the upload queue placement of the requested file.
 
 ### UploadFailed
 
-This message is sent whenever a file connection of an active upload closes.
-Soulseek NS clients can also send this message when a file cannot be read.
-The recipient either re-queues the upload (download on their end), or ignores
-the message if the transfer finished.
+This message is sent whenever a file connection of an active upload closes
+abruptly before the transfer has finished, whether due to cancellation, a
+problem while reading file data or any other kind of discrepancy.
+
+The recipient may re-queue the upload (download on their end) to try again
+in the hope that any discrepancies can be figured out later, or they should
+ignore the message if the transfer was cancelled by them intentionally.
 
 ### Data Order
 
@@ -3174,6 +3188,12 @@ functionality is a bad idea for several reasons:
 Note that Soulseek NS fails to read the size of an incomplete download if more
 than 2 GB of the file has been downloaded, and the download is resumed. In
 consequence, the client sends an invalid file offset of -1.
+
+If the offset is equal to the expected file size, then this transfer has gone
+wrong due to an earlier mistake and it has been resumed again in error.
+
+This message shall only be sent once per each file transmission, and any
+received after the first must be ignored.
 
 ### Data Order
 
