@@ -350,6 +350,8 @@ class NetworkThread(Thread):
     MAX_INCOMING_MESSAGE_SIZE_16K = 16384        # 16 KiB
     TCP_BUFFER_SIZE_MEDIUM = 208896              # 204 KiB, maximum limit NetBSD accepts by default
     TCP_BUFFER_SIZE_SMALL = 16384                # 16 KiB
+    MAX_ACCEPTED_USERNAME_SIZE = 256             # 256 bytes, for future flexibility beyond the actual 30 byte limit
+    SERVER_USERNAME = "server"
     ALLOWED_PEER_CONN_TYPES = {
         ConnectionType.PEER,
         ConnectionType.FILE,
@@ -409,7 +411,7 @@ class NetworkThread(Thread):
 
         self._server_conn = None
         self._server_address = None
-        self._server_username = None
+        self._login_username = None
         self._server_timeout_time = None
         self._server_timeout_value = -1
         self._manual_server_disconnect = False
@@ -634,7 +636,7 @@ class NetworkThread(Thread):
 
         init = conn.init
 
-        if init is not None and (init.conn_type != "P" or init.target_user == self._server_username):
+        if init is not None and (init.conn_type != "P" or init.target_user == self._login_username):
             # Distributed and file connections, as well as connections to ourselves,
             # are critical. Always assume they are active.
             return True
@@ -833,7 +835,7 @@ class NetworkThread(Thread):
     def _initiate_connection_to_peer(self, username, conn_type, msg=None, in_address=None):
         """Prepare to initiate a connection with a peer."""
 
-        init = PeerInit(init_user=self._server_username, target_user=username, conn_type=conn_type)
+        init = PeerInit(init_user=self._login_username, target_user=username, conn_type=conn_type)
         addr = None
 
         if in_address is not None:
@@ -851,7 +853,7 @@ class NetworkThread(Thread):
                     # Ask the server for a new address.
                     addr = None
 
-                elif (username != self._server_username
+                elif (username != self._login_username
                         and (time.monotonic() - user_address.last_update) > self.USER_ADDRESS_TTL):
                     # Certain clients may prefer sending a listening port update to the server without
                     # reconnecting. Make sure we request the user's port again every now and then.
@@ -952,7 +954,7 @@ class NetworkThread(Thread):
         username = init.target_user
         conn_type = init.conn_type
 
-        if username == self._server_username:
+        if username == self._login_username:
             return
 
         prev_init = self._username_init_msgs.pop(username + conn_type, None)
@@ -1321,7 +1323,7 @@ class NetworkThread(Thread):
         conn.login = True
 
         self._server_address = conn.addr
-        self._server_username = self._branch_root = login
+        self._login_username = self._branch_root = login
         self._server_timeout_value = -1
 
         self._send_message_to_server(
@@ -1387,7 +1389,7 @@ class NetworkThread(Thread):
         elif msg_class is Login:
             if msg.success:
                 # Ensure listening port is open
-                user_address = self._user_addresses[self._server_username]
+                user_address = self._user_addresses[self._login_username]
                 msg.local_address = user_address.addr
                 local_ip_address, port = msg.local_address
 
@@ -1395,7 +1397,7 @@ class NetworkThread(Thread):
                     self._portmapper.set_port(port, local_ip_address)
                     self._portmapper.add_port_mapping(blocking=True)
 
-                msg.username = self._server_username
+                msg.username = self._login_username
                 msg.server_address = self._server_address
 
                 # Ask for a list of parents to connect to (distributed network)
@@ -1453,14 +1455,14 @@ class NetworkThread(Thread):
                     self._connect_to_peer(username, addr, init)
 
             # We already store a local IP address for our username
-            if username != self._server_username and username in self._user_addresses:
+            if username != self._login_username and username in self._user_addresses:
                 if user_offline or not msg.port:
                     self._user_addresses[username] = None
                 else:
                     self._user_addresses[username] = UserAddress(addr)
 
         elif msg_class in (WatchUser, GetUserStats):
-            if msg.user == self._server_username:
+            if msg.user == self._login_username:
                 if msg.avgspeed is not None:
                     self._upload_speed = msg.avgspeed
                     log.add_conn("Server reported our upload speed as %s", human_speed(msg.avgspeed))
@@ -1572,7 +1574,7 @@ class NetworkThread(Thread):
             # a user reconnects and changes their IP address.
             self._user_addresses[msg.user] = None
 
-        elif msg_class is UnwatchUser and msg.user != self._server_username:
+        elif msg_class is UnwatchUser and msg.user != self._login_username:
             self._user_addresses.pop(msg.user, None)
 
         out_buffer = conn.out_buffer
@@ -1643,7 +1645,7 @@ class NetworkThread(Thread):
             self._set_server_timer(use_fixed_timeout=self._manual_server_reconnect)
 
         self._server_address = None
-        self._server_username = None
+        self._login_username = None
 
         events.emit_main_thread(
             "server-disconnect",
@@ -1710,12 +1712,19 @@ class NetworkThread(Thread):
             conn_type = msg.conn_type
             addr = conn.addr
 
-            log.add_conn("Received incoming direct connection of type %s from user "
-                         "%s, address %s", (conn_type, username, addr))
+            if (not 0 < msg.target_username_size <= self.MAX_ACCEPTED_USERNAME_SIZE
+                    or username == self.SERVER_USERNAME or not username.isprintable()):
+                log.add_conn("Rejected incoming direct connection from address %s "
+                             "due to invalid username: %s", (addr, repr(username)))
+                return None
 
             if conn_type not in self.ALLOWED_PEER_CONN_TYPES:
-                log.add_conn("Unknown connection type %s", conn_type)
+                log.add_conn("Rejected incoming direct connection from address %s due to "
+                             "unknown connection type: %s", (addr, repr(conn_type)))
                 return None
+
+            log.add_conn("Received incoming direct connection of type %s from user "
+                         "%s, address %s", (conn_type, username, addr))
 
             self._set_tcp_buffer_size(conn.sock, conn_type)
 
@@ -2228,7 +2237,7 @@ class NetworkThread(Thread):
 
         username = conn.init.target_user
 
-        if username == self._server_username:
+        if username == self._login_username:
             # We can't connect to ourselves
             return
 
@@ -2316,7 +2325,7 @@ class NetworkThread(Thread):
         # an indirect connection
         self._parent = None
         self._branch_level = 0
-        self._branch_root = self._server_username
+        self._branch_root = self._login_username
 
         log.add_conn("We have no parent, requesting a new one")
 
