@@ -262,6 +262,9 @@ class Buddies:
 
     def on_files_tooltip(self, treeview, iterator):
 
+        if not treeview.get_row_value(iterator, "files"):
+            return None
+
         num_files = treeview.get_row_value(iterator, "files_data")
         num_folders = treeview.get_row_value(iterator, "folders_data")
 
