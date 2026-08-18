@@ -302,6 +302,7 @@ jobs:
       - name: Enable dhcpcd
         run: |
           echo 'dhcp_client="dhcpcd"' | sudo tee -a /etc/rc.conf
+          echo 'dhcpcd_enable="YES"' | sudo tee -a /etc/rc.conf
           sudo service netif restart
 
       - name: Install dependencies
