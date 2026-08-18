@@ -1043,7 +1043,11 @@ class MainWindow(Window):
         self.search.on_search()
 
     def on_search_entry_changed(self, entry, *_args):
-        entry.props.secondary_icon_name = "edit-clear-symbolic" if entry.get_text() else None
+
+        has_text = bool(entry.get_text_length())
+
+        entry.props.secondary_icon_name = "edit-clear-symbolic" if has_text else ""
+        entry.props.secondary_icon_tooltip_text = _("Clear") if has_text else ""
 
     def on_search_entry_icon_press(self, entry, icon_pos, *_args):
 
