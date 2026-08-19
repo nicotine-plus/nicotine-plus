@@ -115,15 +115,14 @@ class ServerConnection(Connection):
 
 
 class PeerConnection(Connection):
-    __slots__ = ("init", "request_token", "response_token", "has_post_init_activity")
+    __slots__ = ("init", "pierce_token", "has_post_init_activity")
 
-    def __init__(self, *args, init=None, request_token=None, response_token=None, **kwargs):
+    def __init__(self, *args, init=None, pierce_token=None, **kwargs):
 
         Connection.__init__(self, *args, **kwargs)
 
         self.init = init
-        self.request_token = request_token    # Requesting indirect connection to user
-        self.response_token = response_token  # Responding to indirect connection request from user
+        self.pierce_token = pierce_token
         self.has_post_init_activity = False
 
 
@@ -401,7 +400,7 @@ class NetworkThread(Thread):
         self._message_queue = deque()
         self._pending_peer_conns = {}
         self._pending_init_msgs = defaultdict(list)
-        self._token_init_msgs = {}
+        self._indirect_token_init_msgs = {}
         self._username_init_msgs = {}
         self._user_addresses = {}
         self._should_process_queue = False
@@ -439,7 +438,7 @@ class NetworkThread(Thread):
         self._last_cycle_time = 0
 
         self._conns = {}
-        self._token = initial_token()
+        self._indirect_token = initial_token()
 
         self._file_init_msgs = {}
         self._file_download_msgs = {}
@@ -588,10 +587,11 @@ class NetworkThread(Thread):
 
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.TCP_BUFFER_SIZE_MEDIUM)
 
-    def _indirect_request_error(self, token, init):
+    def _indirect_request_error(self, init):
 
         username = init.target_user
         conn_type = init.conn_type
+        token = init.indirect_token
 
         log.add_conn("Indirect connect request of type %s to user %s with "
                      "token %s failed", (conn_type, username, token))
@@ -609,23 +609,23 @@ class NetworkThread(Thread):
 
     def _check_indirect_request_timeouts(self, current_time=None, expire_all=False):
 
-        if not self._token_init_msgs:
+        if not self._indirect_token_init_msgs:
             return
 
         timed_out_requests = set()
 
-        for token, (init, request_time) in self._token_init_msgs.items():
-            if not expire_all and (current_time - request_time) < self.INDIRECT_REQUEST_TIMEOUT:
+        for indirect_token, init in self._indirect_token_init_msgs.items():
+            if not expire_all and (current_time - init.indirect_request_time) < self.INDIRECT_REQUEST_TIMEOUT:
                 continue
 
-            self._indirect_request_error(token, init)
-            timed_out_requests.add(token)
+            self._indirect_request_error(init)
+            timed_out_requests.add(indirect_token)
 
         if not timed_out_requests:
             return
 
-        for token in timed_out_requests:
-            del self._token_init_msgs[token]
+        for indirect_token in timed_out_requests:
+            del self._indirect_token_init_msgs[indirect_token]
 
         timed_out_requests.clear()
 
@@ -854,7 +854,7 @@ class NetworkThread(Thread):
         else:
             self._connect_to_peer(username, addr, init)
 
-    def _connect_to_peer(self, username, addr, init, response_token=None):
+    def _connect_to_peer(self, username, addr, init, pierce_token=None):
         """Initiate a connection with a peer."""
 
         conn_type = init.conn_type
@@ -864,9 +864,7 @@ class NetworkThread(Thread):
                          "but existing connection already exists", (conn_type, username, addr))
             return
 
-        log.add_conn("Attempting direct connection of type %s to user %s, address %s",
-                     (conn_type, username, addr))
-        self._init_peer_connection(addr, init, response_token=response_token)
+        self._init_peer_connection(addr, init, pierce_token=pierce_token)
 
     def _connect_error(self, error, conn):
 
@@ -885,12 +883,12 @@ class NetworkThread(Thread):
 
         conn_type = conn.init.conn_type
         username = conn.init.target_user
-        response_token = conn.response_token
+        pierce_token = conn.pierce_token
 
-        if response_token is not None:
+        if pierce_token is not None:
             log.add_conn("Cannot respond to indirect connection request of type %s from user %s, "
-                         "token %s: %s", (conn_type, username, response_token, error))
-            self._send_message_to_server(CantConnectToPeer(response_token, username))
+                         "token %s: %s", (conn_type, username, pierce_token, error))
+            self._send_message_to_server(CantConnectToPeer(pierce_token, username))
             return
 
         log.add_conn("Direct connection of type %s to user %s failed: %s",
@@ -902,31 +900,31 @@ class NetworkThread(Thread):
 
         username = init.target_user
         conn_type = init.conn_type
-        token = self._token = increment_token(self._token)
-        request_time = time.monotonic()
 
-        self._token_init_msgs[token] = (init, request_time)
-        self._send_message_to_server(ConnectToPeer(token, username, conn_type))
+        init.indirect_token = self._indirect_token = increment_token(self._indirect_token)
+        init.indirect_request_time = time.monotonic()
 
-        log.add_conn("Requesting indirect connection to user %s with token %s", (username, token))
-        return token
+        self._indirect_token_init_msgs[init.indirect_token] = init
+        self._send_message_to_server(ConnectToPeer(init.indirect_token, username, conn_type))
+
+        log.add_conn("Requesting indirect connection to user %s with token %s", (username, init.indirect_token))
 
     def _establish_outgoing_peer_connection(self, conn):
 
         conn.is_established = True
         init = conn.init
         sock = init.sock = conn.sock
-        response_token = conn.response_token
+        pierce_token = conn.pierce_token
         username = init.target_user
         conn_type = init.conn_type
 
         log.add_conn("Established outgoing connection of type %s with user %s. List of "
                      "outgoing messages: %s", (conn_type, username, init.outgoing_msgs))
 
-        if response_token is not None:
+        if pierce_token is not None:
             log.add_conn("Responding to indirect connection request of type %s from "
-                         "user %s, token %s", (conn_type, username, response_token))
-            self._process_outgoing_messages([PierceFireWall(sock, response_token)])
+                         "user %s, token %s", (conn_type, username, pierce_token))
+            self._process_outgoing_messages([PierceFireWall(sock, pierce_token)])
             self._accept_child_peer_connection(conn)
         else:
             log.add_conn("Sending peer init message of type %s to user %s", (conn_type, username))
@@ -1067,7 +1065,7 @@ class NetworkThread(Thread):
             log.add_conn("Cannot remove peer init message, since the connection has been superseded")
             return
 
-        if conn.request_token in self._token_init_msgs:
+        if init.indirect_token in self._indirect_token_init_msgs:
             # Indirect connection attempt in progress, remove init message later on timeout
             log.add_conn("Cannot remove peer init message, since an indirect connection attempt "
                          "is still in progress")
@@ -1155,8 +1153,8 @@ class NetworkThread(Thread):
             init_timeout_conns.clear()
 
         if self._pending_peer_conns:
-            for init, (addr, response_token) in self._pending_peer_conns.copy().items():
-                self._init_peer_connection(addr, init, response_token=response_token)
+            for init, (addr, pierce_token) in self._pending_peer_conns.copy().items():
+                self._init_peer_connection(addr, init, pierce_token=pierce_token)
 
     # Server Connection #
 
@@ -1386,23 +1384,23 @@ class NetworkThread(Thread):
             username = msg.user
             addr = (msg.ip_address, msg.port)
             conn_type = msg.conn_type
-            token = msg.token
+            pierce_token = msg.token
 
             log.add_conn("Received indirect connection request of type %s from user %s, "
-                         "token %s, address %s", (conn_type, username, token, addr))
+                         "token %s, address %s", (conn_type, username, pierce_token, addr))
 
             if conn_type in self.ALLOWED_PEER_CONN_TYPES:
                 init = PeerInit(target_user=username, conn_type=conn_type)
-                self._connect_to_peer(username, addr, init, response_token=token)
+                self._connect_to_peer(username, addr, init, pierce_token=pierce_token)
             else:
                 log.add_conn("Unknown connection type %s", conn_type)
 
         elif msg_class is CantConnectToPeer:
-            token = msg.token
+            pierce_token = msg.token
 
-            if token in self._token_init_msgs:
-                init, _request_time = self._token_init_msgs.pop(token)
-                self._indirect_request_error(token, init)
+            if pierce_token in self._indirect_token_init_msgs:
+                init = self._indirect_token_init_msgs.pop(pierce_token)
+                self._indirect_request_error(init)
 
         elif msg_class is GetUserStatus:
             if msg.status == UserStatus.OFFLINE and msg.user in self._user_addresses:
@@ -1642,25 +1640,25 @@ class NetworkThread(Thread):
             return init
 
         if msg_class is PierceFireWall:
-            token = msg.token
+            pierce_token = msg.token
             log.add_conn("Received indirect connection response (PierceFireWall) with token "
-                         "%s, address %s", (token, conn.addr))
+                         "%s, address %s", (pierce_token, conn.addr))
 
-            log.add_conn("Number of stored peer init message tokens: %s", len(self._token_init_msgs))
+            log.add_conn("Number of stored peer init message tokens: %s", len(self._indirect_token_init_msgs))
 
-            if token not in self._token_init_msgs:
+            if pierce_token not in self._indirect_token_init_msgs:
                 log.add_conn("Indirect connection attempt with token %s previously expired, "
-                             "closing connection", token)
+                             "closing connection", pierce_token)
                 return None
 
-            init, _request_time = self._token_init_msgs.pop(token)
+            init = self._indirect_token_init_msgs.pop(pierce_token)
             previous_sock = init.sock
             is_direct_conn_in_progress = (
                 previous_sock is not None and not self._conns[previous_sock].is_established
             )
 
             log.add_conn("Indirect connection to user %s with token %s established",
-                         (init.target_user, token))
+                         (init.target_user, pierce_token))
 
             self._set_tcp_buffer_size(conn.sock, init.conn_type)
 
@@ -1806,32 +1804,41 @@ class NetworkThread(Thread):
 
             log.add_conn("Incoming connection from address %s", (incoming_addr,))
 
-    def _init_peer_connection(self, addr, init, response_token=None):
+    def _init_peer_connection(self, addr, init, pierce_token=None):
 
         if self._num_sockets >= self.MAX_SOCKETS:
             # Connection limit reached, re-queue
-            self._pending_peer_conns[init] = (addr, response_token)
+            self._pending_peer_conns[init] = (addr, pierce_token)
             return
 
-        request_token = None
         _ip_address, port = addr
         self._pending_peer_conns.pop(init, None)
 
-        if response_token is None:
-            # No token provided, we're not responding to an indirect connection request.
-            # Request indirect connection from our end in case the user's port is closed.
-            request_token = self._connect_to_peer_indirect(init)
+        if pierce_token is None:
+            # Send an indirect connection request to the user as well. Note that we
+            # deviate from SoulseekQt's behavior intentionally. It sends the indirect
+            # connection request (ConnectToPeer) at the same time as the user address
+            # request (GetPeerAddress) for direct connection. We delay the indirect
+            # connection request until the server tells us the user's address, since
+            # it allows us to accurately tell if the user is offline (due to the
+            # 0.0.0.0 response address). We can emit a more specific peer-connection-error
+            # event with offline status this way, while avoiding a duplicate event for
+            # the more generic CantConnectToPeer error message.
+
+            self._connect_to_peer_indirect(init)
 
         if port <= 0 or port > 65535:
             log.add_conn("Skipping direct connection attempt of type %s to user %s "
                          "due to invalid address %s", (init.conn_type, init.target_user, addr))
             return
 
+        log.add_conn("Attempting direct connection of type %s to user %s, address %s",
+                     (init.conn_type, init.target_user, addr))
+
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         io_events = selectors.EVENT_READ | selectors.EVENT_WRITE
         conn = PeerConnection(
-            sock=sock, addr=addr, io_events=io_events,
-            init=init, request_token=request_token, response_token=response_token
+            sock=sock, addr=addr, io_events=io_events, init=init, pierce_token=pierce_token
         )
 
         sock.setblocking(False)

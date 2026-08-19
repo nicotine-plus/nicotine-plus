@@ -3052,21 +3052,23 @@ class PeerInit(PeerInitMessage):
     peer. The token is apparently always 0 and ignored.
     """
 
-    __slots__ = ("sock", "init_user", "target_user", "conn_type", "outgoing_msgs", "token")
+    __slots__ = ("sock", "init_user", "target_user", "conn_type", "indirect_token", "indirect_request_time",
+                 "outgoing_msgs")
 
     def __init__(self, sock=None, init_user=None, target_user=None, conn_type=None):
         self.sock = sock
         self.init_user = init_user      # our own username
         self.target_user = target_user  # username of peer we're connected to
         self.conn_type = conn_type
+        self.indirect_token = None
+        self.indirect_request_time = None
         self.outgoing_msgs = []
-        self.token = 0
 
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_string(self.init_user)
         msg += self.pack_string(self.conn_type)
-        msg += self.pack_uint32(self.token)
+        msg += self.pack_uint32(0)  # Empty token
 
         return msg
 
