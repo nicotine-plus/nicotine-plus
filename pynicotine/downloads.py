@@ -79,13 +79,15 @@ class RequestedFolder:
 
 
 class Downloads(Transfers):
-    __slots__ = ("_requested_folders", "_requested_folder_token", "_folder_basename_byte_limits",
-                 "_pending_queue_messages", "_download_queue_timer_id", "_retry_connection_downloads_timer_id",
-                 "_retry_io_downloads_timer_id")
+    __slots__ = ("_download_filter_regex", "_requested_folders", "_requested_folder_token",
+                 "_folder_basename_byte_limits", "_pending_queue_messages", "_download_queue_timer_id",
+                 "_retry_connection_downloads_timer_id", "_retry_io_downloads_timer_id")
 
     def __init__(self):
 
         super().__init__(name="downloads")
+
+        self._download_filter_regex = None
 
         self._requested_folders = defaultdict(dict)
         self._requested_folder_token = initial_token()
@@ -285,6 +287,11 @@ class Downloads(Transfers):
 
     def update_download_filters(self):
 
+        if not config.sections["transfers"]["enablefilters"]:
+            config.sections["transfers"]["downloadregexp"] = ""
+            self._download_filter_regex = None
+            return
+
         failed = {}
         outfilter = "(\\\\("
         download_filters = sorted(config.sections["transfers"]["downloadfilters"])
@@ -316,9 +323,11 @@ class Downloads(Transfers):
             # Strange that individual filters _and_ the composite filter both fail
             log.add(_("Error: Download Filter failed! Verify your filters. Reason: %s"), error)
             config.sections["transfers"]["downloadregexp"] = ""
+            self._download_filter_regex = None
             return
 
         config.sections["transfers"]["downloadregexp"] = outfilter
+        self._download_filter_regex = re.compile(outfilter, flags=re.IGNORECASE)
 
         # Send error messages for each failed filter to log window
         if not failed:
@@ -375,20 +384,14 @@ class Downloads(Transfers):
 
             self._close_file(transfer)
 
-        if not bypass_filter and config.sections["transfers"]["enablefilters"]:
-            try:
-                downloadregexp = re.compile(config.sections["transfers"]["downloadregexp"], flags=re.IGNORECASE)
+        if (not bypass_filter and self._download_filter_regex is not None
+                and self._download_filter_regex.search(virtual_path) is not None):
+            log.add_transfer("Filtering: %s", virtual_path)
 
-                if downloadregexp.search(virtual_path) is not None:
-                    log.add_transfer("Filtering: %s", virtual_path)
+            if not self._auto_clear_transfer(transfer):
+                self._abort_transfer(transfer, status=TransferStatus.FILTERED)
 
-                    if not self._auto_clear_transfer(transfer):
-                        self._abort_transfer(transfer, status=TransferStatus.FILTERED)
-
-                    return False
-
-            except re.error:
-                pass
+            return False
 
         _file_path, file_exists = self.get_complete_download_file_path(
             username, virtual_path, size, transfer.folder_path)
