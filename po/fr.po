@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-12 14:11+0300\n"
-"PO-Revision-Date: 2026-08-15 14:35+0000\n"
-"Last-Translator: John Doe <thraex@numericable.fr>\n"
+"PO-Revision-Date: 2026-08-18 21:16+0000\n"
+"Last-Translator: Han <han@users.noreply.hosted.weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
 "Language: fr\n"
@@ -3277,7 +3277,7 @@ msgstr ""
 msgid "Cannot request information from the user, since they are offline"
 msgstr ""
 "Impossible de demander des informations à l'utilisateur, puisqu'il est hors "
-"ligne."
+"ligne"
 
 #: pynicotine/gtkgui/userbrowse.py:598 pynicotine/gtkgui/userinfo.py:539
 msgid ""
@@ -5086,7 +5086,7 @@ msgstr "Le partage \"%s\" a été retiré (Réexamen requis)"
 
 #: pynicotine/plugins/core_commands/__init__.py:605
 msgid "Installed plugins:"
-msgstr "Extensions installées"
+msgstr "Extensions installées :"
 
 #: pynicotine/plugins/core_commands/__init__.py:610
 #, python-format
