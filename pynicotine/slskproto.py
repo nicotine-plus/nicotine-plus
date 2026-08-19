@@ -1714,13 +1714,13 @@ class NetworkThread(Thread):
 
             if (not 0 < msg.target_username_size <= self.MAX_ACCEPTED_USERNAME_SIZE
                     or username == self.SERVER_USERNAME or not username.isprintable()):
-                log.add_conn("Rejected incoming direct connection from address %s "
-                             "due to invalid username: %s", (addr, repr(username)))
+                log.add_conn("Rejected incoming direct connection from address %s due to "
+                             "malformed username: %s", (addr, repr(username[:self.MAX_ACCEPTED_USERNAME_SIZE])))
                 return None
 
             if conn_type not in self.ALLOWED_PEER_CONN_TYPES:
                 log.add_conn("Rejected incoming direct connection from address %s due to "
-                             "unknown connection type: %s", (addr, repr(conn_type)))
+                             "unknown connection type: %s", (addr, repr(conn_type[:32])))
                 return None
 
             log.add_conn("Received incoming direct connection of type %s from user "
