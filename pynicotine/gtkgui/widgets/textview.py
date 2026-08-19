@@ -17,6 +17,8 @@ from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import find_whole_word
 from pynicotine.utils import open_uri
 
+URL_REGEX = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.[^\\s]+)|(mailto\\:[^\\s]+)")
+
 
 class TextView:
 
@@ -35,7 +37,6 @@ class TextView:
         DEFAULT_CURSOR = POINTER_CURSOR = TEXT_CURSOR = None
 
     MAX_NUM_LINES = 50000
-    URL_REGEX = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.[^\\s]+)|(mailto\\:[^\\s]+)")
 
     def __init__(self, parent, auto_scroll=False, parse_urls=True, editable=True,
                  horizontal_margin=12, vertical_margin=8, pixels_above_lines=1, pixels_below_lines=1):
@@ -115,7 +116,7 @@ class TextView:
 
         if self.parse_urls and ("://" in text or "www." in text or "mailto:" in text):
             # Match first url
-            match = self.URL_REGEX.search(text)
+            match = URL_REGEX.search(text)
 
             while match:
                 yield (text[:match.start()], tag)
@@ -125,7 +126,7 @@ class TextView:
 
                 # Match remaining url
                 text = text[match.end():]
-                match = self.URL_REGEX.search(text)
+                match = URL_REGEX.search(text)
 
         yield (text, tag)
 
