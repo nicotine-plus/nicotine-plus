@@ -13,7 +13,6 @@ jobs:
       matrix:
         python: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13', '3.14',
                  'pypy-3.6', 'pypy-3.10', 'pypy-3.11']
-        gtk: [4]
     runs-on: 'ubuntu-24.04'
     steps:
       - name: Checkout code
@@ -31,8 +30,8 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install gettext gir1.2-gtk-${{ matrix.gtk }}.0 libcairo2-dev \
-            libgirepository1.0-dev libgirepository-2.0-dev libgtk-${{ matrix.gtk }}-bin
+          sudo apt-get install gettext gir1.2-gtk-4.0 libcairo2-dev \
+            libgirepository1.0-dev libgirepository-2.0-dev libgtk-4-bin
           python -m pip install .[dev]
 
       - name: PEP 8 style checks
