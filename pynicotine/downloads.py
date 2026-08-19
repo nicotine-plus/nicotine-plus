@@ -271,6 +271,10 @@ class Downloads(Transfers):
 
     def update_download_filters(self):
 
+        if not config.sections["transfers"]["enablefilters"]:
+            self._download_filter_regex = None
+            return
+
         download_filters = []
         num_failed_filters = 0
 
@@ -348,7 +352,7 @@ class Downloads(Transfers):
 
             self._close_file(transfer)
 
-        if (not bypass_filter and config.sections["transfers"]["enablefilters"]
+        if (not bypass_filter and self._download_filter_regex is not None
                 and self._download_filter_regex.search(virtual_path) is not None):
             log.add_transfer("Filtering: %s", virtual_path)
 
