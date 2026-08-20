@@ -1846,7 +1846,6 @@ class ChatsPage:
 
         self.options = {
             "server": {
-                "ctcpmsgs": None,  # Special case in set_settings
                 "private_chatrooms": self.room_invitations_toggle
             },
             "logging": {
@@ -1875,6 +1874,9 @@ class ChatsPage:
             },
             "ui": {
                 "spellcheck": self.enable_spell_checker_toggle
+            },
+            "ctcp": {
+                "enable": self.enable_ctcp_toggle
             }
         }
 
@@ -1901,7 +1903,6 @@ class ChatsPage:
         self.application.preferences.set_widgets_data(self.options)
 
         self.enable_spell_checker_toggle.get_parent().set_visible(SpellChecker.is_available())
-        self.enable_ctcp_toggle.set_active(not config.sections["server"]["ctcpmsgs"])
         self.format_codes_label.set_visible(not self.application.isolated_mode)
 
         self.keywords = config.sections["words"]["keywords"][:]
@@ -1912,7 +1913,6 @@ class ChatsPage:
 
         return {
             "server": {
-                "ctcpmsgs": not self.enable_ctcp_toggle.get_active(),
                 "private_chatrooms": self.room_invitations_toggle.get_active()
             },
             "logging": {
@@ -1941,6 +1941,9 @@ class ChatsPage:
             },
             "ui": {
                 "spellcheck": self.enable_spell_checker_toggle.get_active()
+            },
+            "ctcp": {
+                "enable": self.enable_ctcp_toggle.get_active()
             }
         }
 
@@ -3872,7 +3875,8 @@ class Preferences(Dialog):
             "players": {},
             "words": {},
             "notifications": {},
-            "plugins": {}
+            "plugins": {},
+            "ctcp": {}
         }
 
         for page in self.pages.values():
