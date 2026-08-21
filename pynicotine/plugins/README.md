@@ -40,7 +40,8 @@ There are three types of commands available:
 
 - `chatroom`: Can be used in the message entry widget in chat rooms
 - `private_chat`: Can be used in the message entry widget in private chats
-- `cli`: Can be used while Nicotine+ is running in a terminal
+- `cli`: Can be used in the command entry widget in the log pane (since
+  Nicotine+ 3.4.0), or the terminal if Nicotine+ is running in one
 
 By default, commands are grouped under the same name as your plugin.
 

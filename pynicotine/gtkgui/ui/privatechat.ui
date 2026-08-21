@@ -44,7 +44,7 @@
             <property name="spacing">6</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkBox" id="chat_entry_container">
+              <object class="GtkBox" id="message_entry_container">
                 <property name="visible">True</property>
               </object>
             </child>

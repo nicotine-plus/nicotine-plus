@@ -38,7 +38,8 @@ class TextView:
     URL_REGEX = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.[^\\s]+)|(mailto\\:[^\\s]+)")
 
     def __init__(self, parent, auto_scroll=False, parse_urls=True, editable=True,
-                 horizontal_margin=12, vertical_margin=8, pixels_above_lines=1, pixels_below_lines=1):
+                 horizontal_margin=12, vertical_margin=8, pixels_above_lines=1, pixels_below_lines=1,
+                 message_entry=None):
 
         self.widget = Gtk.TextView(
             accepts_tab=False, editable=editable,
@@ -69,6 +70,7 @@ class TextView:
 
         self.pressed_x = self.pressed_y = 0
         self.parse_urls = parse_urls
+        self.message_entry = message_entry
 
         if GTK_API_VERSION >= 4:
             self.textbuffer.set_enable_undo(editable)
@@ -98,6 +100,10 @@ class TextView:
         self.gesture_click_secondary.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.gesture_click_secondary.set_button(Gdk.BUTTON_SECONDARY)
         self.gesture_click_secondary.connect("pressed", self.on_pressed_secondary)
+
+        if self.message_entry is not None:
+            Accelerator("Down", self.widget, self.on_page_down_accelerator)
+            Accelerator("Page_Down", self.widget, self.on_page_down_accelerator)
 
     def destroy(self):
 
@@ -359,15 +365,22 @@ class TextView:
 
         self.adjustment_value = new_value
 
+    def on_page_down_accelerator(self, *_args):
+        """Page_Down, Down: Give focus to text entry if already scrolled at the
+        bottom."""
+
+        if self.textbuffer.props.cursor_position >= self.textbuffer.get_char_count():
+            # Give focus to text entry upon scrolling down to the bottom
+            self.message_entry.grab_focus_without_selecting()
+
 
 class ChatView(TextView):
 
-    def __init__(self, *args, chat_entry=None, status_users=None, roomname_event=None, username_event=None, **kwargs):
+    def __init__(self, *args, status_users=None, roomname_event=None, username_event=None, **kwargs):
 
         super().__init__(*args, **kwargs)
 
         self.user_tags = self.status_users = {}
-        self.chat_entry = chat_entry
         self.roomname_event = roomname_event
         self.username_event = username_event
 
@@ -387,9 +400,6 @@ class ChatView(TextView):
         # Prevent long lines from adding a horizontal scroll bar. WORD_CHAR wrapping
         # is slower than WORD, but it's good enough for our chat views.
         self.widget.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
-
-        Accelerator("Down", self.widget, self.on_page_down_accelerator)
-        Accelerator("Page_Down", self.widget, self.on_page_down_accelerator)
 
     def add_line(self, message, prepend=False, timestamp_format=None, message_type=None,
                  timestamp=None, timestamp_string=None, roomname=None, username=None):
@@ -526,11 +536,3 @@ class ChatView(TextView):
     def update_user_tags(self):
         for username in self.user_tags:
             self.update_user_tag(username)
-
-    def on_page_down_accelerator(self, *_args):
-        """Page_Down, Down: Give focus to text entry if already scrolled at the
-        bottom."""
-
-        if self.textbuffer.props.cursor_position >= self.textbuffer.get_char_count():
-            # Give focus to text entry upon scrolling down to the bottom
-            self.chat_entry.grab_focus_without_selecting()
