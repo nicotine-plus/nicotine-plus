@@ -83,6 +83,7 @@ class NetworkPage:
         ) = self.widgets = ui.load(scope=self, path="settings/network.ui")
 
         self.application = application
+        self.extra_menu = None
 
         for event_name, callback in (
             ("server-disconnect", self.server_disconnect),
@@ -96,6 +97,13 @@ class NetworkPage:
         if GTK_API_VERSION >= 4:
             inner_button = next(iter(self.check_port_status_button))
             self.check_port_status_label.set_mnemonic_widget(inner_button)
+
+            self.extra_menu = PopupMenu(application)
+            self.extra_menu.add_items(
+                ("#" + _("Reset"), self.on_default_server)
+            )
+            self.extra_menu.update_model()
+            self.soulseek_server_entry.set_extra_menu(self.extra_menu.model)
 
         self.network_interface_combobox = ComboBox(
             container=self.network_interface_label.get_parent(), has_entry=True,
@@ -115,7 +123,12 @@ class NetworkPage:
         }
 
     def destroy(self):
+
         self.network_interface_combobox.destroy()
+
+        if self.extra_menu is not None:
+            self.extra_menu.destroy()
+
         self.__dict__.clear()
 
     def set_username(self, username):
@@ -1833,9 +1846,21 @@ class ChatsPage:
             ("#" + _("Remove"), self.on_remove_replacement)
         )
 
-        self.popup_menus = (
+        self.popup_menus = [
             self.censor_popup_menu, self.replacement_popup_menu
-        )
+        ]
+
+        if GTK_API_VERSION >= 4:
+            for entry, callback in (
+                (self.timestamp_room_entry, self.on_default_timestamp_room),
+                (self.timestamp_private_chat_entry, self.on_default_timestamp_private_chat)
+            ):
+                menu = PopupMenu(application)
+                menu.add_items(("#" + _("Reset"), callback))
+                menu.update_model()
+
+                entry.set_extra_menu(menu.model)
+                self.popup_menus.append(menu)
 
         for widget, name, title in (
             (self.mentions_page, "mentions", _("Mentions")),
@@ -2253,6 +2278,7 @@ class UserInterfacePage:
         ) = self.widgets = ui.load(scope=self, path="settings/userinterface.ui")
 
         self.application = application
+        self.popup_menus = []
         self.editing_color = False
 
         languages = [(_("System default"), "")]
@@ -2414,6 +2440,14 @@ class UserInterfacePage:
             entry.connect("icon-press", self.on_default_color, color_id)
             entry.connect("changed", self.on_color_entry_changed, color_id)
 
+            if GTK_API_VERSION >= 4:
+                menu = PopupMenu(application)
+                menu.add_items(("#" + _("Reset"), self.on_default_color_menu, entry, color_id))
+                menu.update_model()
+
+                entry.set_extra_menu(menu.model)
+                self.popup_menus.append(menu)
+
         for font_id, button in self.font_clear_buttons.items():
             button.connect("clicked", self.on_clear_font, font_id)
 
@@ -2523,6 +2557,9 @@ class UserInterfacePage:
             self.options["ui"].update(dictionary)
 
     def destroy(self):
+
+        for menu in self.popup_menus:
+            menu.destroy()
 
         self.language_combobox.destroy()
         self.close_action_combobox.destroy()
@@ -2692,6 +2729,9 @@ class UserInterfacePage:
 
         entry.set_text(config.defaults["ui"][color_id])
 
+    def on_default_color_menu(self, _action, _state, entry, color_id):
+        entry.set_text(config.defaults["ui"][color_id])
+
     # Tabs #
 
     def on_select_buddy_list_position(self, _combobox, selected_id):
@@ -2755,6 +2795,14 @@ class LoggingPage:
             chooser_type="folder", show_open_external_button=not self.application.isolated_mode
         )
 
+        if GTK_API_VERSION >= 4:
+            self.extra_menu = PopupMenu(application)
+            self.extra_menu.add_items(
+                ("#" + _("Reset"), self.on_default_timestamp)
+            )
+            self.extra_menu.update_model()
+            self.log_timestamp_format_entry.set_extra_menu(self.extra_menu.model)
+
         self.options = {
             "logging": {
                 "privatechat": self.log_private_chat_toggle,
@@ -2775,6 +2823,9 @@ class LoggingPage:
         self.chatroom_log_folder_button.destroy()
         self.transfer_log_folder_button.destroy()
         self.debug_log_folder_button.destroy()
+
+        if self.extra_menu is not None:
+            self.extra_menu.destroy()
 
         self.__dict__.clear()
 

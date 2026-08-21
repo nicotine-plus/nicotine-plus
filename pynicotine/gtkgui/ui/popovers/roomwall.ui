@@ -54,6 +54,7 @@
             <property name="placeholder-text" translatable="yes">Set wall message…</property>
             <property name="primary-icon-name">user-available-symbolic</property>
             <property name="secondary-icon-name">edit-clear-symbolic</property>
+            <property name="secondary-icon-tooltip-text" translatable="yes">Remove Message</property>
             <property name="visible">True</property>
             <property name="width-chars">15</property>
             <signal name="activate" handler="on_set_room_wall_message"/>
