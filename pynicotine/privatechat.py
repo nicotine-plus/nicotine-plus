@@ -306,7 +306,7 @@ class PrivateChat:
 
     def _process_ctcp_query(self, username, query):
 
-        if config.sections["server"]["ctcpmsgs"]:
+        if not config.sections["ctcp"]["enable"]:
             return
 
         request_time = time.monotonic()
