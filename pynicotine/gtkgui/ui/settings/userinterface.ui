@@ -6,13 +6,13 @@
 -->
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkButton" id="icon_theme_clear_button">
-    <property name="tooltip-text" translatable="yes">Clear</property>
+  <object class="GtkButton" id="icon_theme_reset_button">
+    <property name="tooltip-text" translatable="yes">Reset</property>
     <property name="visible">True</property>
-    <signal name="clicked" handler="on_clear_icon_theme"/>
+    <signal name="clicked" handler="on_reset_icon_theme"/>
     <child>
       <object class="GtkImage">
-        <property name="icon-name">edit-clear-symbolic</property>
+        <property name="icon-name">edit-undo-symbolic</property>
         <property name="visible">True</property>
       </object>
     </child>
@@ -481,7 +481,7 @@
                     <property name="hexpand">True</property>
                     <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
-                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                    <property name="secondary-icon-tooltip-text" translatable="yes">Reset</property>
                     <property name="visible">True</property>
                     <property name="width-chars">4</property>
                   </object>
@@ -521,7 +521,7 @@
                     <property name="hexpand">True</property>
                     <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
-                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                    <property name="secondary-icon-tooltip-text" translatable="yes">Reset</property>
                     <property name="visible">True</property>
                     <property name="width-chars">4</property>
                   </object>
@@ -561,7 +561,7 @@
                     <property name="hexpand">True</property>
                     <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
-                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                    <property name="secondary-icon-tooltip-text" translatable="yes">Reset</property>
                     <property name="visible">True</property>
                     <property name="width-chars">4</property>
                   </object>
@@ -1025,7 +1025,7 @@
                     <property name="hexpand">True</property>
                     <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
-                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                    <property name="secondary-icon-tooltip-text" translatable="yes">Reset</property>
                     <property name="visible">True</property>
                     <property name="width-chars">4</property>
                   </object>
@@ -1127,7 +1127,7 @@
                     <property name="hexpand">True</property>
                     <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
-                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                    <property name="secondary-icon-tooltip-text" translatable="yes">Reset</property>
                     <property name="visible">True</property>
                     <property name="width-chars">4</property>
                   </object>
@@ -1167,7 +1167,7 @@
                     <property name="hexpand">True</property>
                     <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
-                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                    <property name="secondary-icon-tooltip-text" translatable="yes">Reset</property>
                     <property name="visible">True</property>
                     <property name="width-chars">4</property>
                   </object>
@@ -1207,7 +1207,7 @@
                     <property name="hexpand">True</property>
                     <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
-                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                    <property name="secondary-icon-tooltip-text" translatable="yes">Reset</property>
                     <property name="visible">True</property>
                     <property name="width-chars">4</property>
                   </object>
@@ -1247,7 +1247,7 @@
                     <property name="hexpand">True</property>
                     <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
-                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                    <property name="secondary-icon-tooltip-text" translatable="yes">Reset</property>
                     <property name="visible">True</property>
                     <property name="width-chars">4</property>
                   </object>
@@ -1287,7 +1287,7 @@
                     <property name="hexpand">True</property>
                     <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
-                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                    <property name="secondary-icon-tooltip-text" translatable="yes">Reset</property>
                     <property name="visible">True</property>
                     <property name="width-chars">4</property>
                   </object>
@@ -1327,7 +1327,7 @@
                     <property name="hexpand">True</property>
                     <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
-                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                    <property name="secondary-icon-tooltip-text" translatable="yes">Reset</property>
                     <property name="visible">True</property>
                     <property name="width-chars">4</property>
                   </object>
@@ -1387,7 +1387,7 @@
                     <property name="hexpand">True</property>
                     <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
-                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                    <property name="secondary-icon-tooltip-text" translatable="yes">Reset</property>
                     <property name="visible">True</property>
                     <property name="width-chars">4</property>
                   </object>
@@ -1427,7 +1427,7 @@
                     <property name="hexpand">True</property>
                     <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
-                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                    <property name="secondary-icon-tooltip-text" translatable="yes">Reset</property>
                     <property name="visible">True</property>
                     <property name="width-chars">4</property>
                   </object>
@@ -1467,7 +1467,7 @@
                     <property name="hexpand">True</property>
                     <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
-                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                    <property name="secondary-icon-tooltip-text" translatable="yes">Reset</property>
                     <property name="visible">True</property>
                     <property name="width-chars">4</property>
                   </object>
@@ -1527,7 +1527,7 @@
                     <property name="hexpand">True</property>
                     <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
-                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                    <property name="secondary-icon-tooltip-text" translatable="yes">Reset</property>
                     <property name="visible">True</property>
                     <property name="width-chars">4</property>
                   </object>
@@ -1567,7 +1567,7 @@
                     <property name="hexpand">True</property>
                     <property name="input-hints">no-emoji</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
-                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                    <property name="secondary-icon-tooltip-text" translatable="yes">Reset</property>
                     <property name="visible">True</property>
                     <property name="width-chars">4</property>
                   </object>
@@ -1623,12 +1623,12 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="font_global_clear_button">
-                    <property name="tooltip-text" translatable="yes">Clear</property>
+                  <object class="GtkButton" id="font_global_reset_button">
+                    <property name="tooltip-text" translatable="yes">Reset</property>
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="icon-name">edit-clear-symbolic</property>
+                        <property name="icon-name">edit-undo-symbolic</property>
                         <property name="visible">True</property>
                       </object>
                     </child>
@@ -1671,12 +1671,12 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="font_list_clear_button">
-                    <property name="tooltip-text" translatable="yes">Clear</property>
+                  <object class="GtkButton" id="font_list_reset_button">
+                    <property name="tooltip-text" translatable="yes">Reset</property>
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="icon-name">edit-clear-symbolic</property>
+                        <property name="icon-name">edit-undo-symbolic</property>
                         <property name="visible">True</property>
                       </object>
                     </child>
@@ -1719,12 +1719,12 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="font_text_view_clear_button">
-                    <property name="tooltip-text" translatable="yes">Clear</property>
+                  <object class="GtkButton" id="font_text_view_reset_button">
+                    <property name="tooltip-text" translatable="yes">Reset</property>
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="icon-name">edit-clear-symbolic</property>
+                        <property name="icon-name">edit-undo-symbolic</property>
                         <property name="visible">True</property>
                       </object>
                     </child>
@@ -1767,12 +1767,12 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="font_chat_clear_button">
-                    <property name="tooltip-text" translatable="yes">Clear</property>
+                  <object class="GtkButton" id="font_chat_reset_button">
+                    <property name="tooltip-text" translatable="yes">Reset</property>
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="icon-name">edit-clear-symbolic</property>
+                        <property name="icon-name">edit-undo-symbolic</property>
                         <property name="visible">True</property>
                       </object>
                     </child>
@@ -1815,12 +1815,12 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="font_transfers_clear_button">
-                    <property name="tooltip-text" translatable="yes">Clear</property>
+                  <object class="GtkButton" id="font_transfers_reset_button">
+                    <property name="tooltip-text" translatable="yes">Reset</property>
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="icon-name">edit-clear-symbolic</property>
+                        <property name="icon-name">edit-undo-symbolic</property>
                         <property name="visible">True</property>
                       </object>
                     </child>
@@ -1863,12 +1863,12 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="font_search_clear_button">
-                    <property name="tooltip-text" translatable="yes">Clear</property>
+                  <object class="GtkButton" id="font_search_reset_button">
+                    <property name="tooltip-text" translatable="yes">Reset</property>
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="icon-name">edit-clear-symbolic</property>
+                        <property name="icon-name">edit-undo-symbolic</property>
                         <property name="visible">True</property>
                       </object>
                     </child>
@@ -1911,12 +1911,12 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="font_browse_clear_button">
-                    <property name="tooltip-text" translatable="yes">Clear</property>
+                  <object class="GtkButton" id="font_browse_reset_button">
+                    <property name="tooltip-text" translatable="yes">Reset</property>
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="icon-name">edit-clear-symbolic</property>
+                        <property name="icon-name">edit-undo-symbolic</property>
                         <property name="visible">True</property>
                       </object>
                     </child>

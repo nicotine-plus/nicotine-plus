@@ -302,10 +302,10 @@
                 <property name="hexpand">True</property>
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkButton" id="_default_filters_button">
-                    <property name="tooltip-text" translatable="yes">Load Defaults</property>
+                  <object class="GtkButton" id="_reset_filters_button">
+                    <property name="tooltip-text" translatable="yes">Reset All</property>
                     <property name="visible">True</property>
-                    <signal name="clicked" handler="on_default_filters"/>
+                    <signal name="clicked" handler="on_reset_filters"/>
                     <child>
                       <object class="GtkBox">
                         <property name="spacing">6</property>
@@ -319,8 +319,8 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="ellipsize">end</property>
-                            <property name="label" translatable="yes">Load Defaults</property>
-                            <property name="mnemonic-widget">_default_filters_button</property>
+                            <property name="label" translatable="yes">Reset All</property>
+                            <property name="mnemonic-widget">_reset_filters_button</property>
                             <property name="use-underline">True</property>
                             <property name="visible">True</property>
                           </object>

@@ -36,9 +36,7 @@ class RoomWall(Popover):
 
         if GTK_API_VERSION >= 4:
             self.extra_menu = PopupMenu(window.application)
-            self.extra_menu.add_items(
-                ("#" + _("Remove Message"), self.on_remove_message)
-            )
+            self.extra_menu.add_items(("#" + _("Remove Message"), self.on_remove_message))
             self.extra_menu.update_model()
             self.message_entry.set_extra_menu(self.extra_menu.model)
 

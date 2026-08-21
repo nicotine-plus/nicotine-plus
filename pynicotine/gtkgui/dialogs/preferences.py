@@ -99,9 +99,7 @@ class NetworkPage:
             self.check_port_status_label.set_mnemonic_widget(inner_button)
 
             self.extra_menu = PopupMenu(application)
-            self.extra_menu.add_items(
-                ("#" + _("Reset"), self.on_default_server)
-            )
+            self.extra_menu.add_items(("#" + _("Reset"), self.on_reset_server))
             self.extra_menu.update_model()
             self.soulseek_server_entry.set_extra_menu(self.extra_menu.model)
 
@@ -301,7 +299,7 @@ class NetworkPage:
             callback=self.on_change_password_response
         ).present()
 
-    def on_default_server(self, *_args):
+    def on_reset_server(self, *_args):
         server_address, server_port = config.defaults["server"]["server"]
         self.soulseek_server_entry.set_text(f"{server_address}:{server_port}")
 
@@ -316,17 +314,17 @@ class DownloadsPage:
             self.autoclear_downloads_toggle,
             self.container,
             self.download_double_click_label,
-            self.download_folder_default_button,
             self.download_folder_label,
+            self.download_folder_reset_button,
             self.enable_filters_toggle,
             self.enable_username_subfolders_toggle,
             self.file_finished_command_entry,
             self.filter_list_container,
             self.folder_finished_command_entry,
-            self.incomplete_folder_default_button,
             self.incomplete_folder_label,
-            self.received_folder_default_button,
+            self.incomplete_folder_reset_button,
             self.received_folder_label,
+            self.received_folder_reset_button,
             self.sent_files_permission_container,
             self.speed_spinner,
             self.use_alt_speed_limit_radio,
@@ -367,17 +365,17 @@ class DownloadsPage:
 
         self.download_folder_button = FileChooserButton(
             self.download_folder_label.get_parent(), application=application,
-            label=self.download_folder_label, end_button=self.download_folder_default_button, chooser_type="folder",
+            label=self.download_folder_label, end_button=self.download_folder_reset_button, chooser_type="folder",
             show_open_external_button=not self.application.isolated_mode
         )
         self.incomplete_folder_button = FileChooserButton(
             self.incomplete_folder_label.get_parent(), application=application,
-            label=self.incomplete_folder_label, end_button=self.incomplete_folder_default_button, chooser_type="folder",
+            label=self.incomplete_folder_label, end_button=self.incomplete_folder_reset_button, chooser_type="folder",
             show_open_external_button=not self.application.isolated_mode
         )
         self.received_folder_button = FileChooserButton(
             self.received_folder_label.get_parent(), application=application,
-            label=self.received_folder_label, end_button=self.received_folder_default_button, chooser_type="folder",
+            label=self.received_folder_label, end_button=self.received_folder_reset_button, chooser_type="folder",
             show_open_external_button=not self.application.isolated_mode
         )
 
@@ -514,13 +512,13 @@ class DownloadsPage:
             }
         }
 
-    def on_default_download_folder(self, *_args):
+    def on_reset_download_folder(self, *_args):
         self.download_folder_button.set_path(config.defaults["transfers"]["downloaddir"])
 
-    def on_default_incomplete_folder(self, *_args):
+    def on_reset_incomplete_folder(self, *_args):
         self.incomplete_folder_button.set_path(config.defaults["transfers"]["incompletedir"])
 
-    def on_default_received_folder(self, *_args):
+    def on_reset_received_folder(self, *_args):
         self.received_folder_button.set_path(config.defaults["transfers"]["uploaddir"])
 
     def validate_filter(self, dfilter, enable_regex):
@@ -631,7 +629,7 @@ class DownloadsPage:
 
             self.filter_list_view.remove_row(orig_iterator)
 
-    def on_default_filters(self, *_args):
+    def on_reset_filters(self, *_args):
 
         self.filter_list_view.clear()
         self.filter_list_view.freeze()
@@ -1112,7 +1110,7 @@ class SharesPage:
             self.share_filters.remove(sfilter)
             self.filter_list_view.remove_row(orig_iterator)
 
-    def on_default_filters(self, *_args):
+    def on_reset_filters(self, *_args):
 
         self.share_filters.clear()
         self.filter_list_view.clear()
@@ -1260,7 +1258,7 @@ class UserProfilePage:
         (
             self.container,
             self.description_view_container,
-            self.reset_picture_button,
+            self.remove_picture_button,
             self.select_picture_label
         ) = self.widgets = ui.load(scope=self, path="settings/userinfo.ui")
 
@@ -1269,7 +1267,7 @@ class UserProfilePage:
         self.description_view = TextView(self.description_view_container, parse_urls=False)
         self.select_picture_button = FileChooserButton(
             self.select_picture_label.get_parent(), application=application, label=self.select_picture_label,
-            end_button=self.reset_picture_button, chooser_type="image", is_flat=True,
+            end_button=self.remove_picture_button, chooser_type="image", is_flat=True,
             show_open_external_button=not self.application.isolated_mode
         )
 
@@ -1300,7 +1298,7 @@ class UserProfilePage:
             }
         }
 
-    def on_reset_picture(self, *_args):
+    def on_remove_picture(self, *_args):
         self.select_picture_button.clear()
 
 
@@ -1852,8 +1850,8 @@ class ChatsPage:
 
         if GTK_API_VERSION >= 4:
             for entry, callback in (
-                (self.timestamp_room_entry, self.on_default_timestamp_room),
-                (self.timestamp_private_chat_entry, self.on_default_timestamp_private_chat)
+                (self.timestamp_room_entry, self.on_reset_timestamp_room),
+                (self.timestamp_private_chat_entry, self.on_reset_timestamp_private_chat)
             ):
                 menu = PopupMenu(application)
                 menu.add_items(("#" + _("Reset"), callback))
@@ -1976,10 +1974,10 @@ class ChatsPage:
         open_uri(url)
         return True
 
-    def on_default_timestamp_room(self, *_args):
+    def on_reset_timestamp_room(self, *_args):
         self.timestamp_room_entry.set_text(config.defaults["logging"]["rooms_timestamp"])
 
-    def on_default_timestamp_private_chat(self, *_args):
+    def on_reset_timestamp_private_chat(self, *_args):
         self.timestamp_private_chat_entry.set_text(config.defaults["logging"]["private_timestamp"])
 
     def on_add_keyword_response(self, dialog, _response_id, _data):
@@ -2227,22 +2225,22 @@ class UserInterfacePage:
             self.dark_mode_toggle,
             self.exact_file_sizes_toggle,
             self.font_browse_button,
-            self.font_browse_clear_button,
+            self.font_browse_reset_button,
             self.font_chat_button,
-            self.font_chat_clear_button,
+            self.font_chat_reset_button,
             self.font_global_button,
-            self.font_global_clear_button,
+            self.font_global_reset_button,
             self.font_list_button,
-            self.font_list_clear_button,
+            self.font_list_reset_button,
             self.font_search_button,
-            self.font_search_clear_button,
+            self.font_search_reset_button,
             self.font_text_view_button,
-            self.font_text_view_clear_button,
+            self.font_text_view_reset_button,
             self.font_transfers_button,
-            self.font_transfers_clear_button,
+            self.font_transfers_reset_button,
             self.header_bar_toggle,
-            self.icon_theme_clear_button,
             self.icon_theme_label,
+            self.icon_theme_reset_button,
             self.icon_view,
             self.language_label,
             self.minimize_window_startup_toggle,
@@ -2398,14 +2396,14 @@ class UserInterfacePage:
             "browserfont": self.font_browse_button
         }
 
-        self.font_clear_buttons = {
-            "globalfont": self.font_global_clear_button,
-            "listfont": self.font_list_clear_button,
-            "textviewfont": self.font_text_view_clear_button,
-            "chatfont": self.font_chat_clear_button,
-            "searchfont": self.font_search_clear_button,
-            "transfersfont": self.font_transfers_clear_button,
-            "browserfont": self.font_browse_clear_button
+        self.font_reset_buttons = {
+            "globalfont": self.font_global_reset_button,
+            "listfont": self.font_list_reset_button,
+            "textviewfont": self.font_text_view_reset_button,
+            "chatfont": self.font_chat_reset_button,
+            "searchfont": self.font_search_reset_button,
+            "transfersfont": self.font_transfers_reset_button,
+            "browserfont": self.font_browse_reset_button
         }
 
         self.tab_position_comboboxes = {
@@ -2437,19 +2435,19 @@ class UserInterfacePage:
             button.connect("notify::rgba", self.on_color_button_changed, color_id)
 
         for color_id, entry in self.color_entries.items():
-            entry.connect("icon-press", self.on_default_color, color_id)
+            entry.connect("icon-press", self.on_reset_color, color_id)
             entry.connect("changed", self.on_color_entry_changed, color_id)
 
             if GTK_API_VERSION >= 4:
                 menu = PopupMenu(application)
-                menu.add_items(("#" + _("Reset"), self.on_default_color_menu, entry, color_id))
+                menu.add_items(("#" + _("Reset"), self.on_reset_color_menu, entry, color_id))
                 menu.update_model()
 
                 entry.set_extra_menu(menu.model)
                 self.popup_menus.append(menu)
 
-        for font_id, button in self.font_clear_buttons.items():
-            button.connect("clicked", self.on_clear_font, font_id)
+        for font_id, button in self.font_reset_buttons.items():
+            button.connect("clicked", self.on_reset_font, font_id)
 
         if (GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 10):
             color_dialog = Gtk.ColorDialog()
@@ -2500,7 +2498,7 @@ class UserInterfacePage:
 
         self.icon_theme_button = FileChooserButton(
             self.icon_theme_label.get_parent(), application=application,
-            label=self.icon_theme_label, end_button=self.icon_theme_clear_button, chooser_type="folder",
+            label=self.icon_theme_label, end_button=self.icon_theme_reset_button, chooser_type="folder",
             show_open_external_button=not self.application.isolated_mode
         )
 
@@ -2654,7 +2652,7 @@ class UserInterfacePage:
 
     # Icons #
 
-    def on_clear_icon_theme(self, *_args):
+    def on_reset_icon_theme(self, *_args):
         self.icon_theme_button.clear()
 
     # Fonts #
@@ -2667,7 +2665,7 @@ class UserInterfacePage:
 
         return button.get_font()
 
-    def on_clear_font(self, _button, font_id):
+    def on_reset_font(self, _button, font_id):
 
         font_button = self.font_buttons[font_id]
 
@@ -2720,7 +2718,7 @@ class UserInterfacePage:
         if entry.get_text() != color_hex:
             entry.set_text(color_hex)
 
-    def on_default_color(self, entry, *args):
+    def on_reset_color(self, entry, *args):
 
         if GTK_API_VERSION >= 4:
             _icon_pos, color_id = args
@@ -2729,7 +2727,7 @@ class UserInterfacePage:
 
         entry.set_text(config.defaults["ui"][color_id])
 
-    def on_default_color_menu(self, _action, _state, entry, color_id):
+    def on_reset_color_menu(self, _action, _state, entry, color_id):
         entry.set_text(config.defaults["ui"][color_id])
 
     # Tabs #
@@ -2747,11 +2745,11 @@ class LoggingPage:
     def __init__(self, application):
 
         (
-            self.chatroom_log_folder_default_button,
             self.chatroom_log_folder_label,
+            self.chatroom_log_folder_reset_button,
             self.container,
-            self.debug_log_folder_default_button,
             self.debug_log_folder_label,
+            self.debug_log_folder_reset_button,
             self.folder_locations_container,
             self.format_codes_label,
             self.log_chatroom_toggle,
@@ -2759,13 +2757,14 @@ class LoggingPage:
             self.log_private_chat_toggle,
             self.log_timestamp_format_entry,
             self.log_transfer_toggle,
-            self.private_chat_log_folder_default_button,
             self.private_chat_log_folder_label,
-            self.transfer_log_folder_default_button,
-            self.transfer_log_folder_label
+            self.private_chat_log_folder_reset_button,
+            self.transfer_log_folder_label,
+            self.transfer_log_folder_reset_button
         ) = self.widgets = ui.load(scope=self, path="settings/log.ui")
 
         self.application = application
+        self.extra_menu = None
 
         format_codes_url = "https://docs.python.org/3/library/datetime.html#format-codes"
         format_codes_label = _("Format codes")
@@ -2776,30 +2775,28 @@ class LoggingPage:
 
         self.private_chat_log_folder_button = FileChooserButton(
             self.private_chat_log_folder_label.get_parent(), application=application,
-            label=self.private_chat_log_folder_label, end_button=self.private_chat_log_folder_default_button,
+            label=self.private_chat_log_folder_label, end_button=self.private_chat_log_folder_reset_button,
             chooser_type="folder", show_open_external_button=not self.application.isolated_mode
         )
         self.chatroom_log_folder_button = FileChooserButton(
             self.chatroom_log_folder_label.get_parent(), application=application,
-            label=self.chatroom_log_folder_label, end_button=self.chatroom_log_folder_default_button,
+            label=self.chatroom_log_folder_label, end_button=self.chatroom_log_folder_reset_button,
             chooser_type="folder", show_open_external_button=not self.application.isolated_mode
         )
         self.transfer_log_folder_button = FileChooserButton(
             self.transfer_log_folder_label.get_parent(), application=application,
-            label=self.transfer_log_folder_label, end_button=self.transfer_log_folder_default_button,
+            label=self.transfer_log_folder_label, end_button=self.transfer_log_folder_reset_button,
             chooser_type="folder", show_open_external_button=not self.application.isolated_mode
         )
         self.debug_log_folder_button = FileChooserButton(
             self.debug_log_folder_label.get_parent(), application=application,
-            label=self.debug_log_folder_label, end_button=self.debug_log_folder_default_button,
+            label=self.debug_log_folder_label, end_button=self.debug_log_folder_reset_button,
             chooser_type="folder", show_open_external_button=not self.application.isolated_mode
         )
 
         if GTK_API_VERSION >= 4:
             self.extra_menu = PopupMenu(application)
-            self.extra_menu.add_items(
-                ("#" + _("Reset"), self.on_default_timestamp)
-            )
+            self.extra_menu.add_items(("#" + _("Reset"), self.on_reset_timestamp))
             self.extra_menu.update_model()
             self.log_timestamp_format_entry.set_extra_menu(self.extra_menu.model)
 
@@ -2856,19 +2853,19 @@ class LoggingPage:
         open_uri(url)
         return True
 
-    def on_default_timestamp(self, *_args):
+    def on_reset_timestamp(self, *_args):
         self.log_timestamp_format_entry.set_text(config.defaults["logging"]["log_timestamp"])
 
-    def on_default_private_chat_log_folder(self, *_args):
+    def on_reset_private_chat_log_folder(self, *_args):
         self.private_chat_log_folder_button.set_path(config.defaults["logging"]["privatelogsdir"])
 
-    def on_default_chatroom_log_folder(self, *_args):
+    def on_reset_chatroom_log_folder(self, *_args):
         self.chatroom_log_folder_button.set_path(config.defaults["logging"]["roomlogsdir"])
 
-    def on_default_transfer_log_folder(self, *_args):
+    def on_reset_transfer_log_folder(self, *_args):
         self.transfer_log_folder_button.set_path(config.defaults["logging"]["transferslogsdir"])
 
-    def on_default_debug_log_folder(self, *_args):
+    def on_reset_debug_log_folder(self, *_args):
         self.debug_log_folder_button.set_path(config.defaults["logging"]["debuglogsdir"])
 
 
@@ -3204,10 +3201,6 @@ class UrlHandlersPage:
 
             self.protocol_list_view.remove_row(orig_iterator)
             del self.protocols[protocol]
-
-    def on_default_file_manager(self, *_args):
-        default_file_manager = config.defaults["ui"]["filemanager"]
-        self.file_manager_combobox.set_text(default_file_manager)
 
 
 class NowPlayingPage:
