@@ -18,7 +18,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
-from pynicotine.gtkgui.popovers.chatcommandhelp import ChatCommandHelp
+from pynicotine.gtkgui.popovers.commandhelp import CommandHelp
 from pynicotine.gtkgui.popovers.roomwall import RoomWall
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.combobox import ComboBox
@@ -27,7 +27,7 @@ from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
-from pynicotine.gtkgui.widgets.textentry import ChatEntry
+from pynicotine.gtkgui.widgets.textentry import MessageEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import ChatView
 from pynicotine.gtkgui.widgets.textview import TextView
@@ -61,10 +61,14 @@ class ChatRooms(IconNotebook):
         self.toolbar_end_content = window.chatrooms_end
         self.toolbar_default_widget = window.chatrooms_entry
 
-        self.chat_entry = ChatEntry(
-            self.window.application, send_message_callback=core.chatrooms.send_message,
+        self.message_entry = MessageEntry(
+            self.window.application,
             command_callback=core.pluginhandler.trigger_chatroom_command_event,
-            enable_spell_check=config.sections["ui"]["spellcheck"]
+            send_message_callback=core.chatrooms.send_message,
+            enable_spell_check=config.sections["ui"]["spellcheck"],
+            enable_tab_completion=config.sections["words"]["tab"],
+            enable_completion_popup=config.sections["words"]["dropdown"],
+            min_completion_key_length=config.sections["words"]["characters"]
         )
         self.command_help = None
         self.room_wall = None
@@ -128,7 +132,7 @@ class ChatRooms(IconNotebook):
 
     def destroy(self):
 
-        self.chat_entry.destroy()
+        self.message_entry.destroy()
         self.join_room_combobox.destroy()
 
         if self.command_help is not None:
@@ -182,13 +186,13 @@ class ChatRooms(IconNotebook):
 
             joined_room = core.chatrooms.joined_rooms.get(room)
 
-            self.chat_entry.set_parent(room, tab.chat_entry_container, tab.chat_view)
-            self.chat_entry.set_sensitive(joined_room is not None and joined_room.users)
+            self.message_entry.set_parent(tab.message_entry_container, tab.chat_view, room)
+            self.message_entry.set_sensitive(joined_room is not None and joined_room.users)
             tab.toggle_chat_buttons()
             tab.update_room_user_completions()
 
             if self.command_help is None:
-                self.command_help = ChatCommandHelp(window=self.window, interface="chatroom")
+                self.command_help = CommandHelp(window=self.window, interface="chatroom")
 
             if self.room_wall is None:
                 self.room_wall = RoomWall(window=self.window)
@@ -285,7 +289,7 @@ class ChatRooms(IconNotebook):
             return
 
         if page.container == self.get_current_page():
-            self.chat_entry.set_parent(None)
+            self.message_entry.set_parent(None)
 
             if self.command_help is not None:
                 self.command_help.set_menu_button(None)
@@ -299,7 +303,7 @@ class ChatRooms(IconNotebook):
         del self.pages[room]
         page.destroy()
 
-        self.chat_entry.clear_unsent_message(room)
+        self.message_entry.clear_unsent_message(room)
 
         if room != core.chatrooms.GLOBAL_ROOM_NAME:
             combobox = self.window.search.room_search_combobox
@@ -334,7 +338,7 @@ class ChatRooms(IconNotebook):
         page.join_room(msg)
 
         if page.container == self.get_current_page():
-            self.chat_entry.set_sensitive(True)
+            self.message_entry.set_sensitive(True)
             page.on_focus()
 
     def leave_room(self, msg):
@@ -479,6 +483,11 @@ class ChatRooms(IconNotebook):
 
         page = self.get_current_page()
 
+        self.message_entry.set_tab_completion_enabled(config.sections["words"]["tab"])
+        self.message_entry.set_completion_popup_enabled(
+            config.sections["words"]["dropdown"], config.sections["words"]["characters"]
+        )
+
         for tab in self.pages.values():
             if tab.container == page:
                 tab.update_completions(completions)
@@ -486,7 +495,7 @@ class ChatRooms(IconNotebook):
 
     def update_widgets(self):
 
-        self.chat_entry.set_spell_check_enabled(config.sections["ui"]["spellcheck"])
+        self.message_entry.set_spell_check_enabled(config.sections["ui"]["spellcheck"])
 
         for tab in self.pages.values():
             tab.toggle_chat_buttons()
@@ -494,7 +503,7 @@ class ChatRooms(IconNotebook):
 
     def server_disconnect(self, *_args):
 
-        self.chat_entry.set_sensitive(False)
+        self.message_entry.set_sensitive(False)
 
         for page in self.pages.values():
             page.server_disconnect()
@@ -510,14 +519,14 @@ class ChatRoom:
             self.activity_view_container,
             self.add_room_member_button,
             self.chat_container,
-            self.chat_entry_container,
-            self.chat_entry_row,
             self.chat_paned,
             self.chat_search_bar,
             self.chat_view_container,
             self.container,
             self.help_button,
             self.log_toggle,
+            self.message_entry_container,
+            self.message_entry_row,
             self.room_wall_button,
             self.room_wall_label,
             self.user_list_button,
@@ -550,7 +559,7 @@ class ChatRoom:
             horizontal_margin=10, vertical_margin=5, pixels_below_lines=2
         )
         self.chat_view = ChatView(
-            self.chat_view_container, chat_entry=self.chatrooms.chat_entry, editable=False,
+            self.chat_view_container, message_entry=self.chatrooms.message_entry, editable=False,
             horizontal_margin=10, vertical_margin=5, pixels_below_lines=2,
             status_users=core.chatrooms.joined_rooms[room].users,
             roomname_event=(self.roomname_event if is_global else None),
@@ -566,7 +575,7 @@ class ChatRoom:
         # Chat Text Search
         self.chat_search_bar = TextSearchBar(
             self.chat_view.widget, self.chat_search_bar,
-            controller_widget=self.chat_container, focus_widget=self.chatrooms.chat_entry,
+            controller_widget=self.chat_container, focus_widget=self.chatrooms.message_entry,
             placeholder_text=_("Search chat log…")
         )
 
@@ -719,10 +728,10 @@ class ChatRoom:
         if not self.is_global:
             return
 
-        for widget in (self.activity_container, self.chat_entry_container, self.help_button, self.user_list_button):
+        for widget in (self.activity_container, self.message_entry_container, self.help_button, self.user_list_button):
             widget.set_visible(False)
 
-        self.chat_entry_row.set_halign(Gtk.Align.END)
+        self.message_entry_row.set_halign(Gtk.Align.END)
 
     def add_user_row(self, userdata):
 
@@ -876,7 +885,7 @@ class ChatRoom:
         self.log_toggle.set_visible(is_log_toggle_visible)
 
         if self.is_global:
-            self.chat_entry_row.set_visible(is_log_toggle_visible)
+            self.message_entry_row.set_visible(is_log_toggle_visible)
 
         self.user_list_button.set_active(config.sections["chatrooms"]["user_list_visible"])
 
@@ -999,7 +1008,7 @@ class ChatRoom:
 
         # Add to completion list, and completion drop-down
         if self.chatrooms.get_current_page() == self.container:
-            self.chatrooms.chat_entry.add_completion(username)
+            self.chatrooms.message_entry.add_completion(username)
 
         if (username != core.users.login_username
                 and not core.network_filter.is_user_ignored(username)
@@ -1024,7 +1033,7 @@ class ChatRoom:
 
         # Remove from completion list, and completion drop-down
         if self.chatrooms.get_current_page() == self.container and username not in core.buddies.users:
-            self.chatrooms.chat_entry.remove_completion(username)
+            self.chatrooms.message_entry.remove_completion(username)
 
         if not core.network_filter.is_user_ignored(username) and \
                 not core.network_filter.is_user_ip_ignored(username):
@@ -1299,7 +1308,7 @@ class ChatRoom:
     def on_focus(self, *_args):
 
         if self.window.current_page_id == self.window.chatrooms_page.id:
-            widget = self.chatrooms.chat_entry if self.chatrooms.chat_entry.get_sensitive() else self.chat_view
+            widget = self.chatrooms.message_entry if self.chatrooms.message_entry.get_sensitive() else self.chat_view
             widget.grab_focus()
 
         return True
@@ -1439,4 +1448,4 @@ class ChatRoom:
             room_users = core.chatrooms.joined_rooms[self.room].users
             completions.update(room_users)
 
-        self.chatrooms.chat_entry.set_completions(completions)
+        self.chatrooms.message_entry.set_completions(completions)

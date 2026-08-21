@@ -154,3 +154,11 @@ treeview button:not(:first-child):dir(rtl) > box {
     box-shadow: 1px 0 0 0 alpha(@borders, 2.8);
 }
 
+entry.compact:focus,
+entry.compact:focus-within {
+    /* Remove focus ring from compact command entries */
+    border-color: transparent;
+    box-shadow: none;
+    outline: none;
+}
+

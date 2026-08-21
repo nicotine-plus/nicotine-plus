@@ -37,6 +37,7 @@ class LogLevel:
     MESSAGE = "message"
     TRANSFER = "transfer"
     MISCELLANEOUS = "miscellaneous"
+    COMMAND = "command"
 
 
 class Logger:
@@ -308,7 +309,12 @@ class Logger:
     def _add(self, msg, msg_args=None, title=None, level=LogLevel.DEFAULT, should_log_file=True):
 
         msg = self._format_log_message(level, msg, msg_args)
-        timestamp_format = config.sections["logging"].get("log_timestamp", "%x %X")
+        timestamp_format = None
+
+        if level == LogLevel.COMMAND:
+            should_log_file = False
+        else:
+            timestamp_format = config.sections["logging"].get("log_timestamp", "%x %X")
 
         if should_log_file and config.sections["logging"].get("debug_file_output", False):
             events.invoke_main_thread(
@@ -389,6 +395,9 @@ class Logger:
 
         if level in self._log_levels:
             self._add(msg, msg_args, level=level)
+
+    def add_command(self, msg):
+        self._add(msg, level=LogLevel.COMMAND)
 
 
 log = Logger()

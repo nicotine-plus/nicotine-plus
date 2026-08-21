@@ -1521,6 +1521,18 @@
                     </child>
                   </object>
                 </child>
+                <child>
+                  <object class="GtkBox" id="message_entry_container">
+                    <property name="margin-bottom">3</property>
+                    <property name="margin-end">5</property>
+                    <property name="margin-start">5</property>
+                    <property name="margin-top">2</property>
+                    <property name="visible">True</property>
+                  </object>
+                </child>
+                <style>
+                  <class name="view"/>
+                </style>
               </object>
             </child>
           </object>
