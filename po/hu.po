@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-12 14:11+0300\n"
-"PO-Revision-Date: 2026-08-17 12:32+0000\n"
+"PO-Revision-Date: 2026-08-22 02:17+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -1116,9 +1116,9 @@ msgstr[0] "A mappa tartalmának lekérése %(num)s felhasználótól sikertelen"
 msgstr[1] "A mappa tartalmának lekérése %(num)s felhasználótól sikertelen"
 
 #: pynicotine/gtkgui/dialogs/download.py:513
-#, fuzzy, python-format
+#, python-format
 msgid "User Offline (%(user)s)"
-msgstr "Felhasználók akik kedvelik ezt: %(item)s"
+msgstr "%(user)s felhasználó nincs bejelentkezve"
 
 #: pynicotine/gtkgui/dialogs/download.py:515
 #, python-format
@@ -1996,9 +1996,9 @@ msgid "Uninstall…"
 msgstr "Eltávolítás…"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3486
-#, fuzzy, python-format
+#, python-format
 msgid "Error Loading Plugin %(name)s"
-msgstr "Egyéni ikon betöltési hiba %(path)s: %(error)s"
+msgstr "Hiba a következő bővítmény betöltésekor: %(name)s"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3508
 msgid "No Plugin Selected"
@@ -2557,13 +2557,13 @@ msgid "Clear All"
 msgstr "Mindent töröl"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:427
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Items are searched individually every %(interval)s, useful for finding rare "
 "files"
 msgstr ""
-"A kívánságlista elemei között rendszeres időközönként, automatikus keresést "
-"végez, a ritka fájlok felfedezéséhez."
+"A bejegyzések rendszeres időközönként (%(interval)s) egyenként átvizsgálásra "
+"kerülnek, ami hasznos a ritkán előforduló fájlok megtalálásához"
 
 #: pynicotine/gtkgui/downloads.py:31
 msgid "_Resume"
@@ -2991,11 +2991,10 @@ msgid "Restore Filters"
 msgstr "Szűrők visszaállítása"
 
 #: pynicotine/gtkgui/search.py:839
-#, fuzzy
 msgid "Cannot search for files shared by other users, since you are offline"
 msgstr ""
-"Amíg kijelentkezett állapotban van, addig nem kereshet más felhasználók "
-"által megosztott fájlokat."
+"Amíg nincs bejelentkezve, addig nem kereshet más felhasználók által "
+"megosztott fájlokat"
 
 #: pynicotine/gtkgui/search.py:1335
 #, python-format
@@ -3238,7 +3237,7 @@ msgstr "_Fájl útvonal másolása"
 
 #: pynicotine/gtkgui/userbrowse.py:372 pynicotine/gtkgui/userbrowse.py:384
 msgid "Copy File _URL"
-msgstr "Fájl U_RL másolása"
+msgstr "Fájl _URL másolása"
 
 #: pynicotine/gtkgui/userbrowse.py:497
 #, python-format
@@ -3259,24 +3258,20 @@ msgstr ""
 "meg semmit, vagy a fájlokat privát módon osztja meg."
 
 #: pynicotine/gtkgui/userbrowse.py:596 pynicotine/gtkgui/userinfo.py:537
-#, fuzzy
 msgid "Cannot request information from the user, since they are offline"
-msgstr ""
-"Nem lehet információt kérni a felhasználótól, mert nincs bejelentkezve."
+msgstr "Nem lehet információt kérni a felhasználótól, mert nincs bejelentkezve"
 
 #: pynicotine/gtkgui/userbrowse.py:598 pynicotine/gtkgui/userinfo.py:539
-#, fuzzy
 msgid ""
 "Cannot request information from the user, possibly due to a closed listening "
 "port or temporary connectivity issue"
 msgstr ""
-"Nem sikerült információt kérni a felhasználótól, mert valószínűleg zárt a "
-"figyelőportja, vagy átmeneti kapcsolati probléma áll fenn."
+"Nem lehet információt kérni a felhasználótól, mert valószínűleg zárt a "
+"figyelőportja, vagy átmeneti kapcsolati probléma áll fenn"
 
 #: pynicotine/gtkgui/userbrowse.py:706
-#, fuzzy
 msgid "Folder Actions"
-msgstr "Mappahelyek"
+msgstr "Mappaműveletek"
 
 #: pynicotine/gtkgui/userbrowse.py:910
 msgid "Upload _Folder…"
@@ -3670,15 +3665,13 @@ msgstr "Minden"
 
 #: pynicotine/gtkgui/widgets/treeview.py:917
 #: pynicotine/gtkgui/widgets/treeview.py:926
-#, fuzzy
 msgid "Move _Left"
-msgstr "_Balra"
+msgstr "_Balra mozgatás"
 
 #: pynicotine/gtkgui/widgets/treeview.py:918
 #: pynicotine/gtkgui/widgets/treeview.py:927
-#, fuzzy
 msgid "Move _Right"
-msgstr "_Jobbra"
+msgstr "_Jobbra mozgatás"
 
 #: pynicotine/gtkgui/widgets/treeview.py:934
 #, python-format
@@ -3694,9 +3687,8 @@ msgid "_Sort Descending"
 msgstr "_Csökkenő sorrendbe rendezés"
 
 #: pynicotine/gtkgui/widgets/treeview.py:954
-#, fuzzy
 msgid "Column _Position"
-msgstr "Várakozási pozíció"
+msgstr "_Oszlop helyzete"
 
 #: pynicotine/gtkgui/widgets/treeview.py:1125
 msgid "Ungrouped"
@@ -4903,9 +4895,8 @@ msgid "Close private chat"
 msgstr "Privát csevegés bezárása"
 
 #: pynicotine/plugins/core_commands/__init__.py:119
-#, fuzzy
 msgid "Request client information from user"
-msgstr "'user' felhasználó információinak lekérése"
+msgstr "Soulseek kliens adatainak lekérése a felhasználótól"
 
 #: pynicotine/plugins/core_commands/__init__.py:128
 msgid "Send private message to user"
@@ -5081,48 +5072,48 @@ msgstr "Bővítményrendszer betöltése"
 
 #: pynicotine/pluginsystem.py:487
 msgid "Uncompressed size too large"
-msgstr ""
+msgstr "A tömörítetlen fájl mérete túl nagy"
 
 #: pynicotine/pluginsystem.py:499
 msgid "No plugin found in zip file"
-msgstr ""
+msgstr "Nem található bővítmény a zip fájlban"
 
 #: pynicotine/pluginsystem.py:502
 #, python-format
 msgid "Plugin name %(name)s conflicts with built-in plugin"
-msgstr ""
+msgstr "A következő bővítmény ütközik egy beépített bővítménnyel: %(name)s"
 
 #: pynicotine/pluginsystem.py:517
-#, fuzzy, python-format
+#, python-format
 msgid "Installed plugin %(name)s"
-msgstr "%s telepített bővítmény"
+msgstr "A következő bővítmény telepítve lett: %(name)s"
 
 #: pynicotine/pluginsystem.py:520
 #, python-format
 msgid "Failed to install plugin %(name)s: %(error)s"
-msgstr "%(name)s bővítményt nem sikerült telepíteni: %(error)s"
+msgstr "A következő bővítményt nem sikerült telepíteni: %(name)s, %(error)s"
 
 #: pynicotine/pluginsystem.py:545
 #, python-format
 msgid "Failed to uninstall plugin %(name)s: %(error)s"
-msgstr "%(name)s bővítményt nem sikerült eltávolítani: %(error)s"
+msgstr ""
+"A következő bővítményt nem sikerült eltávolítani (törölni): %(name)s, %"
+"(error)s"
 
 #: pynicotine/pluginsystem.py:555
-#, fuzzy, python-format
+#, python-format
 msgid "Uninstalled plugin %(name)s"
-msgstr "%s eltávolított bővítmény"
+msgstr "A következő bővítmény el lett távolítva: %(name)s"
 
 #: pynicotine/pluginsystem.py:660
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot enable plugin %(name)s: %(error)s"
-msgstr "%(name)s bővítményt nem sikerült telepíteni: %(error)s"
+msgstr "A következő bővítményt nem sikerült engedélyezni: %(name)s, %(error)s"
 
 #: pynicotine/pluginsystem.py:662
-#, fuzzy, python-format
+#, python-format
 msgid "Plugin folder name contains invalid character '%(char)s'"
-msgstr ""
-"%(name)s bővítményt nem sikerült betölteni. A bővítmény mappa neve "
-"érvénytelen karaktereket tartalmaz: %(characters)s"
+msgstr "A bővítmény mappájának neve érvénytelen karaktert tartalmaz: %(char)s"
 
 #: pynicotine/pluginsystem.py:699
 #, python-format
@@ -5131,36 +5122,38 @@ msgstr ""
 "A(z) %(interface)s parancs ütközik a(z) %(name)s bővítményben: %(command)s"
 
 #: pynicotine/pluginsystem.py:723
-#, fuzzy, python-format
+#, python-format
 msgid "Loaded plugin %(name)s"
-msgstr "%s betöltött bővítmény"
+msgstr "A következő bővítmény betöltésre került: %(name)s"
 
 #: pynicotine/pluginsystem.py:727
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to load plugin %(name)s"
-msgstr "%(name)s bővítményt nem sikerült telepíteni: %(error)s"
+msgstr "A következő bővítményt nem sikerült betölteni: %(name)s"
 
 #: pynicotine/pluginsystem.py:767
-#, fuzzy, python-format
+#, python-format
 msgid "Unloaded plugin %(name)s"
-msgstr "%s betöltetlen bővítmény"
+msgstr "A következő bővítmény nincs betöltve: %(name)s"
 
 #: pynicotine/pluginsystem.py:771
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to unload plugin %(name)s"
-msgstr "%(name)s bővítményt nem sikerült eltávolítani: %(error)s"
+msgstr ""
+"A következő betöltött bővítmény nem sikerült a programból eltávolítani: %"
+"(name)s"
 
 #: pynicotine/pluginsystem.py:893
-#, fuzzy, python-format
+#, python-format
 msgid "Plugin %(name)s failed with error %(errortype)s: %(error)s"
-msgstr ""
-"%(module)s sikertelen bővítmény az alábbi hibával %(errortype)s: %(error)s.\n"
-"Nyomkövetés: %(trace)s"
+msgstr "A következő bővítmény hibás: %(name)s, a hiba: %(errortype)s: %(error)s"
 
 #: pynicotine/pluginsystem.py:931
-#, fuzzy, python-format
+#, python-format
 msgid "Restored default settings for plugin %(name)s"
-msgstr "Vissza lettek állítva a bővítmény (%s) alapértelmezett beállításai"
+msgstr ""
+"A következő a bővítmény alapértelmezett beállításai vissza lettek állítva: %"
+"(name)s"
 
 #: pynicotine/pluginsystem.py:963
 msgid "No description"
@@ -6944,9 +6937,8 @@ msgstr ""
 "feltöltési szála."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:447
-#, fuzzy
 msgid "Only show files that are shared publicly"
-msgstr "Csak a nyilvánosan megosztott fájlokat mutassa."
+msgstr "Csak a nyilvánosan megosztott fájlokat jelenítse meg"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:468
 msgid "Network Searches"
@@ -7098,14 +7090,13 @@ msgid "Self Description"
 msgstr "Önleírás"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:58
-#, fuzzy
 msgid ""
 "Add things you want everyone to see, such as a short description, helpful "
 "tips, or guidelines for downloading your shares"
 msgstr ""
-"Adjon hozzá olyan dolgokat, amelyeket mindenkivek közölni szeretne, például "
+"Adjon hozzá olyan dolgokat, amelyeket mindenkivel közölni szeretne, például "
 "egy rövid leírást, hasznos tippeket vagy útmutatókat a megosztásai "
-"letöltéséhez."
+"letöltéséhez"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:94
 msgid "Picture:"
@@ -7117,11 +7108,11 @@ msgstr "Sötét mód előnyben részesítése"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:77
 msgid "Use header bar"
-msgstr "Fejléc sáv használata"
+msgstr "Fejlécsáv használata"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:101
 msgid "Display tray icon"
-msgstr "Tálca ikon megjelenítése"
+msgstr "Tálcaikon megjelenítése"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:125
 msgid "Minimize window on startup"
