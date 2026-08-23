@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-12 14:11+0300\n"
-"PO-Revision-Date: 2026-08-22 02:17+0000\n"
+"PO-Revision-Date: 2026-08-23 12:21+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -1118,7 +1118,7 @@ msgstr[1] "A mappa tartalmának lekérése %(num)s felhasználótól sikertelen"
 #: pynicotine/gtkgui/dialogs/download.py:513
 #, python-format
 msgid "User Offline (%(user)s)"
-msgstr "%(user)s felhasználó nincs bejelentkezve"
+msgstr "A következő felhasználó nincs bejelentkezve: %(user)s"
 
 #: pynicotine/gtkgui/dialogs/download.py:515
 #, python-format
@@ -5140,7 +5140,7 @@ msgstr "A következő bővítmény nincs betöltve: %(name)s"
 #, python-format
 msgid "Failed to unload plugin %(name)s"
 msgstr ""
-"A következő betöltött bővítmény nem sikerült a programból eltávolítani: %"
+"A következő betöltött bővítményt nem sikerült a programból eltávolítani: %"
 "(name)s"
 
 #: pynicotine/pluginsystem.py:893
@@ -5207,37 +5207,38 @@ msgstr ""
 #: pynicotine/privatechat.py:173
 #, python-format
 msgid "Could not create room. Reason: %s"
-msgstr ""
+msgstr "Nem sikerült létrehozni a szobát. Az ok: %s"
 
 #: pynicotine/privatechat.py:177
-#, fuzzy
 msgid "Room name empty."
-msgstr "Szoba nevek"
+msgstr "Hiányzik a szoba neve."
 
 #: pynicotine/privatechat.py:182
 #, python-format
 msgid "Room name %(room)s contains leading or trailing spaces."
-msgstr ""
+msgstr "A szobanév elején vagy végén szóközök szerepelnek: [ %(room)s]."
 
 #: pynicotine/privatechat.py:186
 #, python-format
 msgid "Room name %(room)s contains invalid characters."
-msgstr ""
+msgstr "A szobanév érvénytelen karaktereket tartalmaz: [ %(room)s]."
 
 #: pynicotine/privatechat.py:190
 #, python-format
 msgid "Room name %(room)s contains multiple following spaces."
-msgstr ""
+msgstr "A szobanév egymást követő szóközöket tartalmaz: [ %(room)s]."
 
 #: pynicotine/privatechat.py:205
 #, python-format
 msgid "Room name %(name)s longer than %(chars)s characters."
-msgstr ""
+msgstr "A szobanév hosszabb mint %(chars)s karakter: [%(name)s]."
 
 #: pynicotine/privatechat.py:230
 #, python-format
 msgid "The room you are trying to enter (%(room)s) is registered as private."
 msgstr ""
+"A szoba (%(room)s), ahová be szeretne lépni, prrivátként van nyilvántartásba "
+"véve."
 
 #: pynicotine/privatechat.py:235
 #, python-format
@@ -5246,11 +5247,14 @@ msgid ""
 "of these moderators if you are interested in being added to the room's "
 "member list:"
 msgstr ""
+"A szoba (%(room)s), ahová be szeretne lépni, moderált. Ha szeretne "
+"felkerülni a szoba taglistájára, kérjük, vegye fel a kapcsolatot a következő "
+"moderátorok valamelyikével:"
 
 #: pynicotine/privatechat.py:240
-#, fuzzy, python-format
+#, python-format
 msgid "Room (%(room)s) is registered as public."
-msgstr "A szoba (%s) már nyilvánosként van regisztrálva."
+msgstr "A következő szoba nyilvános: (%(room)s)."
 
 #: pynicotine/privatechat.py:253
 #, python-format
@@ -5263,11 +5267,13 @@ msgid "User %(user)s is no longer a member of room %(room)s"
 msgstr "%(user)s felhasználó már nem tagja a következő szobának: %(room)s"
 
 #: pynicotine/privatechat.py:281
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "User [%(user)s] was added as a member of room [%(room)s] by operator "
 "[%(operator)s]"
-msgstr "%(user)s felhasználó a következő szoba operátora lett: %(room)s"
+msgstr ""
+"%(user)s felhasználót a szoba kezelője [%(operator)s] felvette tagnak a "
+"következő szobába: %(room)s"
 
 #: pynicotine/privatechat.py:398
 #, python-format
@@ -5392,9 +5398,8 @@ msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Nem lehet csatlakozni a szerverre, %(host)s:%(port)s: %(error)s"
 
 #: pynicotine/slskproto.py:1169
-#, fuzzy
 msgid "Connection attempt timed out"
-msgstr "Kapcsolódási időtúllépés"
+msgstr "Időtúllépés a csatlakozási kísérlet során"
 
 #: pynicotine/slskproto.py:1198
 #, python-format
@@ -5471,37 +5476,37 @@ msgstr ""
 
 #: pynicotine/userbrowse.py:233
 msgid "Invalid file name in shares"
-msgstr ""
+msgstr "Érvénytelen fájlnév a megosztásokban"
 
 #: pynicotine/userbrowse.py:236
 msgid "Invalid file size in shares"
-msgstr ""
+msgstr "Érvénytelen fájlméret a megosztásokban"
 
 #: pynicotine/userbrowse.py:282
-#, fuzzy, python-format
+#, python-format
 msgid "Loading shares from disk failed: %(error)s"
-msgstr "A megosztások betöltése a lemezről nem sikerült: %(error)s"
+msgstr "A megosztások betöltése a merevlemezről nem sikerült: %(error)s"
 
 #: pynicotine/userbrowse.py:330
 #, python-format
 msgid "Saved list of shared files for user '%(user)s' to %(dir)s"
 msgstr ""
-"'%(user)s' felhasználó által megosztott fájlok listája ide lett mentve: "
-"%(dir)s"
+"%(user)s felhasználó által megosztott fájlok listája ide lett mentve: %(dir)s"
 
 #: pynicotine/userbrowse.py:334
 #, python-format
 msgid "Cannot save shares for user %(user)s: %(error)s"
-msgstr "A(z) %(user)s felhasználó megosztásait nem lehet menteni: %(error)s"
+msgstr "%(user)s felhasználó megosztásait nem lehet menteni: %(error)s"
 
 #: pynicotine/userbrowse.py:410
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "User %(user)s is sharing %(num_files)s files totaling %(shared_size)s across "
 "%(num_folders)s folders"
 msgstr ""
-"%(user)s felhasználó %(num_folders)s mappában megoszt %(num_files)s fájlt, "
-"ami összesen %(shared_size)s."
+"%(user)s felhasználó %(num_files)s fájlt oszt meg, amelyek összesen %"
+"(shared_size)s méretűek, és a következő mappában találhatók: [%(num_folders)"
+"s]."
 
 #: pynicotine/userbrowse.py:416
 msgid "User Statistics"
@@ -5532,11 +5537,11 @@ msgid "Cannot Connect"
 msgstr "Nem lehet csatlakozni"
 
 #: pynicotine/users.py:305
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot retrieve the IP of user %(user)s, since this user is offline"
 msgstr ""
-"A(z) %s felhasználó IP-címe nem kérhető le, mert a felhasználó nincs "
-"bejelentkezve"
+"A következő felhasználó IP-címe nem kérhető le, mert nincs bejelentkezve: %"
+"(user)s."
 
 #: pynicotine/users.py:306 pynicotine/users.py:321
 msgid "User IP Address"
@@ -5573,14 +5578,13 @@ msgid "Password Changed"
 msgstr "A jelszó megváltoztatva"
 
 #: pynicotine/users.py:460
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s needs to be logged in first"
-msgstr "%(user)s felhasználó az Ön felhasználói adatait olvassa"
+msgstr "A felhasználónak [%(user)s] először be kell jelentkeznie"
 
 #: pynicotine/users.py:461
-#, fuzzy
 msgid "User Offline"
-msgstr "Nincs bejelentkezve"
+msgstr "A felhasználó nincs bejelentkezve"
 
 #: pynicotine/utils.py:192
 #, python-format
@@ -5616,14 +5620,16 @@ msgid ""
 "Error while executing command %(command)s (%(command_no)s of "
 "%(num_commands)s: %(error)s"
 msgstr ""
+"Hiba történt a parancsvégrehajtás közben: %(command)s, %(num_commands)s "
+"parancs közül (%(command_no)s parancs: %(error)s"
 
 #: pynicotine/utils.py:523
 msgid "No known URI provider available"
-msgstr ""
+msgstr "Nincs ismert és elérhető URI szolgáltató"
 
 #: pynicotine/utils.py:584
 msgid "File path does not exist"
-msgstr ""
+msgstr "A fájl elérési útja nem létezik"
 
 #: pynicotine/utils.py:603
 #, python-format
@@ -5637,16 +5643,16 @@ msgstr "%(url)s URL nem nyitható meg: %(error)s"
 
 #: pynicotine/utils.py:664
 msgid "*.old file is present but main file is missing"
-msgstr ""
+msgstr "A *.old fájl megvan, de a főfájl hiányzik"
 
 #: pynicotine/utils.py:668
 msgid "*.old file is present but main file is empty"
-msgstr ""
+msgstr "A *.old fájl létezik, de a főfájl üres"
 
 #: pynicotine/utils.py:674
 #, python-format
 msgid "Something went wrong while reading file %(filename)s: %(error)s"
-msgstr "Hiba történt a(z) %(filename)s fájl olvasása közben: %(error)s"
+msgstr "Hiba történt a fájl [%(filename)s] olvasása közben: %(error)s"
 
 #: pynicotine/utils.py:679
 #, python-format
@@ -6238,13 +6244,12 @@ msgstr ""
 "nem jeleníti meg a „Remix Instrumental” egyik elemét sem"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:109
-#, fuzzy
 msgid ""
 "Use | (or pipes) to separate several exact phrases. Example:\n"
 "    Remix|Dub Mix|Instrumental"
 msgstr ""
-"Használja a „|” karaktert (cső), több pontos kifejezés elválasztására. "
-"Példa:\n"
+"Használja a „|” karaktert több pontos kifejezés egymástól történő "
+"elválasztására. Példa:\n"
 "    Remix|Dub Mix|Instrumental"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:122
@@ -6551,22 +6556,20 @@ msgid "Store Wishlist Filters"
 msgstr "Kívánságlista-szűrők tárolása"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:33
-#, fuzzy
 msgid ""
 "Prohibit users from accessing your shared files, based on username, IP "
 "address or country"
 msgstr ""
-"Felhasználónév, IP-cím vagy ország alapján tiltja a felhasználóknak, az Ön "
-"által megosztott fájlok elérését."
+"Felhasználónév, IP-cím vagy országkód alapján korlátozhatja az Ön által "
+"megosztott fájlok elérését."
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:48
 msgid "Country codes to block (comma separated):"
 msgstr "Blokkolás országkódokkal (vesszővel elválasztva):"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:56
-#, fuzzy
 msgid "Codes must be in ISO 3166-2 format"
-msgstr "A kódoknak ISO 3166-2 formátumúaknak kell lenniük."
+msgstr "Az országkódoknak ISO 3166-2 formátumúaknak kell lenniük."
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:71
 msgid "Use custom geo block message:"
@@ -6606,9 +6609,8 @@ msgid "Accept private room invitations"
 msgstr "Privát szobai meghívások elfogadása"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:597
-#, fuzzy
 msgid "Respond to client information requests from other users (CTCP)"
-msgstr "Válaszoljon más felhasználók keresési kéréseire"
+msgstr "Válaszadás más felhasználók ügyfél-információs kéréseire (CTCP)"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:621
 msgid "Number of recent private chat messages to show:"
@@ -6725,13 +6727,12 @@ msgid "Load Defaults"
 msgstr "Alapértelmezések betöltése"
 
 #: pynicotine/gtkgui/ui/settings/ignore.ui:33
-#, fuzzy
 msgid ""
 "Ignore chat messages and search results from users, based on username or IP "
 "address"
 msgstr ""
-"Figyelmen kívül hagyja a felhasználók csevegés üzeneteit és keresési "
-"eredményeit, a felhasználónév vagy az IP-cím alapján."
+"A felhasználók csevegőüzeneteinek és keresési eredményeinek figyelmen kívül "
+"hagyása a felhasználónév vagy az IP-cím alapján."
 
 #: pynicotine/gtkgui/ui/settings/log.ui:95
 msgid "Log chatrooms by default"
@@ -6851,13 +6852,13 @@ msgid "Network interface:"
 msgstr "Hálózati csatoló:"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:32
-#, fuzzy
 msgid ""
 "Now Playing allows you to display what your media player is playing by using "
 "the /now command in chat"
 msgstr ""
-"A /now paranccsal a csevegés közben megtekintheti, hogy éppen mit játszik le "
-"a médialejátszó."
+"Csevegés közben a „/now” parancsot kiadva, a program »Most játszott« "
+"funkcióját használva megtekintheti, hogy a médialejátszója éppen mit játszik "
+"le."
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:73
 msgid "Other"
@@ -6930,11 +6931,10 @@ msgid "Enable search result filters by default"
 msgstr "Keresésieredmény-szűrők engedélyezése alapértelmezettként"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:422
-#, fuzzy
 msgid "Only show results from users with an available upload slot"
 msgstr ""
-"Csak az olyan felhasználók eredményeit jelenítse meg akiknek van szabad "
-"feltöltési szála."
+"Csak azoknak a felhasználóknak az eredményeit jelenítse meg akiknek van "
+"szabad feltöltési szála."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:447
 msgid "Only show files that are shared publicly"
