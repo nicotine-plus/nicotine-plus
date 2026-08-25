@@ -126,6 +126,8 @@ def run(hidden, ci_mode, isolated_mode, multi_instance):
         os.environ["GDK_PIXBUF_MODULE_FILE"] = os.path.join(executable_folder, "lib", "pixbuf-loaders.cache")
         os.environ["GI_TYPELIB_PATH"] = os.path.join(executable_folder, "lib", "typelibs")
         os.environ["GSETTINGS_SCHEMA_DIR"] = os.path.join(executable_folder, "lib", "schemas")
+        os.environ["FONTCONFIG_FILE"] = os.path.join(executable_folder, "share", "fonts", "fonts.conf")
+        os.environ["FONTCONFIG_PATH"] = os.path.join(executable_folder, "share", "fonts")
 
     if sys.platform == "win32":
         # Use 'fontconfig' backend for now due to issues with font fallbacks in the default backend.
