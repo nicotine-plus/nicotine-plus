@@ -1420,7 +1420,7 @@ class NetworkThread(Thread):
                 init = PeerInit(target_user=username, conn_type=conn_type)
                 self._connect_to_peer(username, addr, init, pierce_token=pierce_token)
             else:
-                log.add_conn("Unknown connection type %s", conn_type)
+                log.add_conn("Unknown connection type: %r", conn_type)
 
         elif msg_class is CantConnectToPeer:
             pierce_token = msg.token
@@ -1715,12 +1715,12 @@ class NetworkThread(Thread):
             if (not 0 < msg.target_username_size <= self.MAX_ACCEPTED_USERNAME_SIZE
                     or username == self.SERVER_USERNAME or not username.isprintable()):
                 log.add_conn("Rejected incoming direct connection from address %s "
-                             "due to invalid username: %s", (addr, repr(username)))
+                             "due to invalid username: %r", (addr, username))
                 return None
 
             if conn_type not in self.ALLOWED_PEER_CONN_TYPES:
                 log.add_conn("Rejected incoming direct connection from address %s due to "
-                             "unknown connection type: %s", (addr, repr(conn_type)))
+                             "unknown connection type: %r", (addr, conn_type))
                 return None
 
             log.add_conn("Received incoming direct connection of type %s from user "
