@@ -181,11 +181,6 @@ class Dialog(Window):
         self.widget.set_visible(False)
 
         if sys.platform == "win32":
-            # "Soft-delete" the dialog. This is necessary to prevent the dialog from
-            # appearing in window peek on Windows
-            if self.widget.get_titlebar() is None:
-                self.widget.unrealize()
-
             # Workaround for parent window minimizing when closing dialog
             # https://gitlab.gnome.org/GNOME/gtk/-/issues/7313
             if self.parent is not None and self.parent.is_visible():
