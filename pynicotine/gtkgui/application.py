@@ -418,7 +418,7 @@ class Application:
             (">" + _("_Shares"), self._create_shares_menu())
         )
 
-        if sys.platform == "darwin":
+        if (GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 20) and sys.platform == "darwin":
             # Special macOS submenu for window actions
             menu.add_items((">" + _("_Window"), self._create_window_menu()))
 
