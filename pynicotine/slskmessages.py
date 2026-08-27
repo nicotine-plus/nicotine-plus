@@ -121,7 +121,7 @@ class FileAttribute:
     BITRATE = 0
     LENGTH = 1
     VBR = 2
-    ENCODER = 3
+    ENCODER = 3  # Obsolete
     SAMPLE_RATE = 4
     BIT_DEPTH = 5
 
