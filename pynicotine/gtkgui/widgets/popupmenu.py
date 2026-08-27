@@ -31,6 +31,7 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.application import GTK_MINOR_VERSION
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.utils import TRANSLATE_PUNCTUATION
@@ -189,7 +190,7 @@ class PopupMenu:
             menuitem.set_submenu(item[1].model)
             self.submenus.append(item[1])
 
-            if sys.platform == "darwin" and label == _("Window"):
+            if (GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 20) and sys.platform == "darwin" and label == _("Window"):
                 menuitem.set_attribute_value("gtk-macos-special", GLib.Variant.new_string("window-submenu"))
 
             if GTK_API_VERSION == 3:
