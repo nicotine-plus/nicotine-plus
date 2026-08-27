@@ -378,6 +378,13 @@ class Application:
 
         return menu
 
+    def _create_window_menu(self):
+
+        from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+
+        menu = PopupMenu(self)
+        return menu
+
     def _create_help_menu(self):
 
         from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -408,9 +415,14 @@ class Application:
         menu = PopupMenu(self)
         menu.add_items(
             (">" + _("_File"), self._create_file_menu()),
-            (">" + _("_Shares"), self._create_shares_menu()),
-            (">" + _("_Help"), self._create_help_menu())
+            (">" + _("_Shares"), self._create_shares_menu())
         )
+
+        if sys.platform == "darwin":
+            # Special macOS submenu for window actions
+            menu.add_items((">" + _("_Window"), self._create_window_menu()))
+
+        menu.add_items((">" + _("_Help"), self._create_help_menu()))
 
         menu.update_model()
         self._instance.set_menubar(menu.model)
