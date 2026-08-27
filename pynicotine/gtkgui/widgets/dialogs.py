@@ -175,8 +175,10 @@ class Dialog(Window):
         # Hide the dialog
         self.widget.set_visible(False)
 
-        # Detach the dialog from parent
-        self.widget.set_transient_for(None)
+        if sys.platform == "darwin":
+            # Detach the dialog from parent to prevent hidden dialogs from appearing when
+            # toggling header bar.
+            self.widget.set_transient_for(None)
 
         if sys.platform == "win32":
             # Workaround for parent window minimizing when closing dialog
