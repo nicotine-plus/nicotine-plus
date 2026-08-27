@@ -171,6 +171,8 @@ def rename_process(new_name, debug_info=False):
 def rescan_shares():
 
     exit_code = 0
+
+    core.init_components(enabled_components={"signal_handler", "cli", "shares"})
     core.start()
 
     if not core.shares.rescan_shares(use_thread=False):
@@ -196,11 +198,6 @@ def run():
         print(error)
         return 1
 
-    core.init_components(
-        enabled_components={"signal_handler", "cli", "shares"} if rescan else None,
-        isolated_mode=isolated_mode
-    )
-
     # Dump tracebacks for C modules (in addition to pure Python code)
     try:
         import faulthandler
@@ -225,7 +222,7 @@ def run():
 
     # Run without a GUI
     from pynicotine import headless as application
-    return application.run()
+    return application.run(isolated_mode)
 
 
 apply_translations()

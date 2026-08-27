@@ -13,8 +13,9 @@ from pynicotine.logfacility import log
 
 class Application:
 
-    def __init__(self):
+    def __init__(self, isolated_mode):
 
+        self.isolated_mode = isolated_mode
         sys.excepthook = self.on_critical_error
 
         for log_level in ("download", "upload"):
@@ -31,6 +32,7 @@ class Application:
 
     def run(self):
 
+        core.init_components(isolated_mode=self.isolated_mode)
         core.start()
 
         if config.sections["server"]["auto_connect_startup"]:

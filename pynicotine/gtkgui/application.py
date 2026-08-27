@@ -91,6 +91,7 @@ class Application:
         # language, we need to revise this.
         Gtk.Widget.set_default_direction(Gtk.TextDirection.LTR)
 
+        self._instance.connect("startup", self.on_startup)
         self._instance.connect("activate", self.on_activate)
         self._instance.connect("query-end", self.on_query_end)
         self._instance.connect("shutdown", self.on_shutdown)
@@ -1009,6 +1010,21 @@ class Application:
     def on_process_thread_events(self):
         return events.process_thread_events()
 
+    def on_startup(self, *_args):
+
+        from pynicotine.gtkgui.widgets.theme import load_icons
+        from pynicotine.gtkgui.widgets.trayicon import TrayIcon
+
+        core.init_components(isolated_mode=self.isolated_mode)
+
+        load_icons()
+
+        self._set_up_actions()
+        self._set_up_action_accels()
+        self._set_up_menubar()
+
+        self.tray_icon = TrayIcon(self)
+
     def on_activate(self, *_args):
 
         if self.window:
@@ -1019,16 +1035,7 @@ class Application:
         from pynicotine.gtkgui.dialogs.chathistory import ChatHistory
         from pynicotine.gtkgui.dialogs.roomlist import RoomList
         from pynicotine.gtkgui.mainwindow import MainWindow
-        from pynicotine.gtkgui.widgets.theme import load_icons
-        from pynicotine.gtkgui.widgets.trayicon import TrayIcon
 
-        load_icons()
-
-        self._set_up_actions()
-        self._set_up_action_accels()
-        self._set_up_menubar()
-
-        self.tray_icon = TrayIcon(self)
         self.window = MainWindow(self)
         self.chat_history = ChatHistory(self)
         self.room_list = RoomList(self)
