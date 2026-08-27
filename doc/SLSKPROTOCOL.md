@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on July 28, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on August 27, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -199,7 +199,7 @@ please report them.
 | `0`    | Bitrate (kbps)     |
 | `1`    | Duration (seconds) |
 | `2`    | VBR (0 or 1)       |
-| `3`    | Encoder (unused)   |
+| `3`    | Encoder `OBSOLETE` |
 | `4`    | Sample Rate (Hz)   |
 | `5`    | Bit Depth (bits)   |
 
