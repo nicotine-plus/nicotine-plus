@@ -993,7 +993,7 @@ class Application:
         GLib.timeout_add(100, self.on_process_thread_events, priority=GLib.PRIORITY_HIGH_IDLE)
 
         gtk_version = f"{Gtk.get_major_version()}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
-        log.add(_("Loaded %(program)s %(version)s"), {"program": "GTK", "version": gtk_version})
+        log.add(_("Loading %(program)s %(version)s"), {"program": "GTK", "version": gtk_version})
 
         if config.sections["server"]["auto_connect_startup"]:
             core.connect()
