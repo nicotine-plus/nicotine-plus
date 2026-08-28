@@ -33,7 +33,8 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install gettext gir1.2-gtk-4.0 libgirepository-2.0-dev libgtk-4-bin
+          sudo apt-get install gettext gir1.2-gtk-4.0 libcairo2-dev \
+            libgirepository-2.0-dev libgtk-4-bin
           python -m pip install .[dev]
 
       - name: PEP 8 style checks
