@@ -169,6 +169,8 @@ jobs:
         include:
           - arch: x86_64
             platform: ubuntu-26.04
+          - arch: arm64
+            platform: ubuntu-26.04-arm
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout code

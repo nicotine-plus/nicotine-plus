@@ -72,6 +72,9 @@ commit.
  - [Download Unstable AppImage x64 Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/appimage-x86_64-package.zip)
     — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/appimage-x86_64-package)  
 
+ - [Download Unstable AppImage ARM64 Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/appimage-arm64-package.zip)
+    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/appimage-arm64-package)  
+
 ### Other
 
 See [All Platforms](#all-platforms) for installing the unstable version of

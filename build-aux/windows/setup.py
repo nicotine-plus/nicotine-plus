@@ -12,6 +12,9 @@ import tempfile
 from typing import Callable
 from typing import TypeVar
 
+# Always use ldd instead of patchelf to find dependencies on Linux
+os.environ["CX_FREEZE_BIND"] = ""           # noqa: E402
+
 from cx_Freeze import Executable, setup     # pylint: disable=import-error
 from cx_Freeze.hooks import _gi_ as gi      # pylint: disable=import-private-name
 
