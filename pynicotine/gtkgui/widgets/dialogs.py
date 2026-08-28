@@ -264,6 +264,11 @@ class Dialog(Window):
                 break
 
         if self.parent is not None:
+            if GTK_API_VERSION >= 4 and sys.platform == "darwin" and self.parent.is_fullscreen():
+                # Workaround for dialogs incorrectly entering fullscreen and messing up
+                # window management
+                self.parent.unfullscreen()
+
             self.widget.set_transient_for(self.parent.widget)
 
         if self not in Window.active_dialogs:
@@ -468,6 +473,11 @@ class MessageDialog(Window):
                 break
 
         if self.parent is not None:
+            if GTK_API_VERSION >= 4 and sys.platform == "darwin" and self.parent.is_fullscreen():
+                # Workaround for dialogs incorrectly entering fullscreen and messing up
+                # window management
+                self.parent.unfullscreen()
+
             self.widget.set_transient_for(self.parent.widget)
 
         if self not in Window.active_dialogs:

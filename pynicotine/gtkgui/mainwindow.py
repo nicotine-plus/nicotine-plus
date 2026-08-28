@@ -58,7 +58,6 @@ class MainWindow(Window):
         self.auto_away = False
         self.away_timer_id = None
         self.away_cooldown_time = 0
-        self.is_fullscreen = False
         self.gesture_click = None
         self.window_active_handler = None
         self.window_visible_handler = None
@@ -382,7 +381,6 @@ class MainWindow(Window):
         self.set_urgency_hint(False)
 
     def on_window_fullscreen_changed_gtk4(self, *_args):
-        self.is_fullscreen = self.widget.is_fullscreen()
         self.toggle_fullscreen_toolbar()
 
     def on_window_state_changed_gtk3(self, _window, event):
@@ -390,7 +388,6 @@ class MainWindow(Window):
         if not event.changed_mask & Gdk.WindowState.FULLSCREEN:
             return
 
-        self.is_fullscreen = (event.new_window_state & Gdk.WindowState.FULLSCREEN)
         self.toggle_fullscreen_toolbar()
 
     def on_window_visible_changed(self, *_args):
@@ -678,7 +675,7 @@ class MainWindow(Window):
         This is used when changing the active notebook tab.
         """
 
-        if config.sections["ui"]["header_bar"] and not self.is_fullscreen:
+        if config.sections["ui"]["header_bar"] and not self.is_fullscreen():
             self.hide_current_header_bar()
             self.show_header_bar(page_id)
         else:
@@ -722,7 +719,7 @@ class MainWindow(Window):
         if not config.sections["ui"]["header_bar"]:
             return
 
-        if self.is_fullscreen:
+        if self.is_fullscreen():
             self.hide_current_header_bar()
             self.show_toolbar(self.current_page_id, entering_fullscreen=True)
             return
