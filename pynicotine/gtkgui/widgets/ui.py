@@ -23,26 +23,6 @@ def load(scope, path):
         with open(encode_path(os.path.join(GTK_GUI_FOLDER_PATH, "ui", path)), encoding="utf-8") as file_handle:
             ui_content = file_handle.read()
 
-            # Translate UI strings using Python's gettext
-            start_tag = ' translatable="yes">'
-            end_tag = "</property>"
-            start_tag_len = len(start_tag)
-            tag_start_pos = ui_content.find(start_tag)
-
-            while tag_start_pos > -1:
-                string_start_pos = (tag_start_pos + start_tag_len)
-                string_end_pos = ui_content.find(end_tag, string_start_pos)
-
-                original_string = ui_content[string_start_pos:string_end_pos]
-                translated_string = _(original_string)
-
-                if original_string != translated_string:
-                    ui_content = ui_content[:string_start_pos] + translated_string + ui_content[string_end_pos:]
-
-                # Find next translatable string
-                new_string_end_pos = (string_end_pos + (len(translated_string) - len(original_string)))
-                tag_start_pos = ui_content.find(start_tag, new_string_end_pos)
-
             # GTK 4 replacements
             if GTK_API_VERSION >= 4:
                 ui_content = (
