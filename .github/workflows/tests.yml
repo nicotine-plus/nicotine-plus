@@ -33,8 +33,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install gettext gir1.2-gtk-4.0 libcairo2-dev \
-            libgirepository-2.0-dev libgtk-4-bin
+          sudo apt-get install gettext gir1.2-gtk-4.0 libgirepository-2.0-dev libgtk-4-bin
           python -m pip install .[dev]
 
       - name: PEP 8 style checks
@@ -194,7 +193,6 @@ jobs:
           export DBUS_SESSION_BUS_ADDRESS=
           export GTK_A11Y=none
           export GDK_BACKEND=wayland
-          export GSK_RENDERER=cairo
 
           cage python3.12 -m unittest -v
 
@@ -228,6 +226,7 @@ jobs:
 
       - name: Integration and unit tests
         run: |
+          export GTK_A11Y=none
           export DISPLAY=:99
           Xvfb :99 > /dev/null 2>&1 &
           python3 -m unittest -v
@@ -384,7 +383,9 @@ jobs:
           done
 
       - name: Integration and unit tests
-        run: python3.14 -m unittest -v
+        run: |
+          export GTK_A11Y=none
+          python3.14 -m unittest -v
 
       - name: Build without isolation
         run: python3.14 -m build --no-isolation
@@ -425,6 +426,7 @@ jobs:
       - name: Integration and unit tests
         run: |
           PATH=/opt/local/sbin:/opt/local/bin:$PATH
+          export GTK_A11Y=none
           export DISPLAY=:99
           Xvfb :99 > /dev/null 2>&1 &
           python3.14 -m unittest -v
