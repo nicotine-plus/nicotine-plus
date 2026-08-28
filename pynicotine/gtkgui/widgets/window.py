@@ -19,6 +19,7 @@
 import os
 import sys
 
+from gi.repository import Gdk
 from gi.repository import Gtk
 
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -36,10 +37,12 @@ class Window:
     def __init__(self, widget):
 
         self.widget = widget
+        self._is_fullscreen = False
         self._dark_mode_handler = None
         self._text_widget = None
 
         if GTK_API_VERSION == 3:
+            self.widget.connect("window-state-event", self._on_window_state_changed_gtk3)
             return
 
         self.widget.connect("notify::focus-widget", self._on_focus_widget_changed)
@@ -75,6 +78,13 @@ class Window:
         # Workaround for GTK 4 bug where broadwayd uses a lot of CPU after hiding popover
         if popover is not None and os.environ.get("GDK_BACKEND") == "broadway":
             popover.hide_handler_broadway = popover.connect_after("hide", self._on_popover_hide_broadway)
+
+    def _on_window_state_changed_gtk3(self, _window, event):
+
+        if not event.changed_mask & Gdk.WindowState.FULLSCREEN:
+            return
+
+        self._is_fullscreen = (event.new_window_state & Gdk.WindowState.FULLSCREEN)
 
     def _on_popover_hide_broadway(self, popover):
 
@@ -176,6 +186,13 @@ class Window:
     def is_maximized(self):
         return self.widget.is_maximized()
 
+    def is_fullscreen(self):
+
+        if GTK_API_VERSION >= 4:
+            return self.widget.is_fullscreen()
+
+        return self._is_fullscreen
+
     def is_visible(self):
         return self.widget.get_visible()
 
@@ -187,6 +204,12 @@ class Window:
 
     def unmaximize(self):
         self.widget.unmaximize()
+
+    def fullscreen(self):
+        self.widget.fullscreen()
+
+    def unfullscreen(self):
+        self.widget.unfullscreen()
 
     def present(self):
 

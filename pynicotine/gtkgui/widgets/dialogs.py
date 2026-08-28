@@ -209,9 +209,6 @@ class Dialog(Window):
 
         self.widget.connect("show", self._on_show)
 
-        if self.parent:
-            self.widget.set_transient_for(self.parent.widget)
-
     def _resize_dialog(self):
 
         if self.widget.get_visible():
@@ -270,6 +267,14 @@ class Dialog(Window):
             header_bar.set_show_close_button(visible)     # pylint: disable=no-member
 
     def present(self):
+
+        if self.parent is not None:
+            if GTK_API_VERSION >= 4 and sys.platform == "darwin" and self.parent.is_fullscreen():
+                # Workaround for dialogs incorrectly entering fullscreen and messing up
+                # window management
+                self.parent.unfullscreen()
+
+            self.widget.set_transient_for(self.parent.widget)
 
         if self not in Window.active_dialogs:
             Window.active_dialogs.append(self)
@@ -332,7 +337,6 @@ class MessageDialog(Window):
 
         widget = window_class(
             destroy_with_parent=True,
-            transient_for=self.parent.widget if self.parent else None,
             title=title,
             resizable=False,
             child=window_child
@@ -470,6 +474,14 @@ class MessageDialog(Window):
         present_callback()
 
     def present(self):
+
+        if self.parent is not None:
+            if GTK_API_VERSION >= 4 and sys.platform == "darwin" and self.parent.is_fullscreen():
+                # Workaround for dialogs incorrectly entering fullscreen and messing up
+                # window management
+                self.parent.unfullscreen()
+
+            self.widget.set_transient_for(self.parent.widget)
 
         if self not in Window.active_dialogs:
             Window.active_dialogs.append(self)
