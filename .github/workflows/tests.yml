@@ -191,7 +191,6 @@ jobs:
           export DBUS_SESSION_BUS_ADDRESS=
           export GTK_A11Y=none
           export GDK_BACKEND=wayland
-          export GSK_RENDERER=cairo
 
           cage python3.12 -m unittest -v
 
@@ -225,6 +224,7 @@ jobs:
 
       - name: Integration and unit tests
         run: |
+          export GTK_A11Y=none
           export DISPLAY=:99
           Xvfb :99 > /dev/null 2>&1 &
           python3 -m unittest -v
@@ -381,7 +381,9 @@ jobs:
           done
 
       - name: Integration and unit tests
-        run: python3.14 -m unittest -v
+        run: |
+          export GTK_A11Y=none
+          python3.14 -m unittest -v
 
       - name: Build without isolation
         run: python3.14 -m build --no-isolation
@@ -422,6 +424,7 @@ jobs:
       - name: Integration and unit tests
         run: |
           PATH=/opt/local/sbin:/opt/local/bin:$PATH
+          export GTK_A11Y=none
           export DISPLAY=:99
           Xvfb :99 > /dev/null 2>&1 &
           python3.14 -m unittest -v
