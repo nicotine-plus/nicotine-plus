@@ -34,6 +34,7 @@ from pynicotine.slskmessages import PrivateRoomToggle
 from pynicotine.slskmessages import RoomList
 from pynicotine.slskmessages import RoomTickerSet
 from pynicotine.slskmessages import SayChatroom
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import censor_text
 from pynicotine.utils import find_whole_word
 
@@ -211,6 +212,9 @@ class ChatRooms:
         events.emit("echo-room-message", room, message, message_type)
 
     def send_message(self, room, message):
+
+        if core.users.login_status == UserStatus.OFFLINE:
+            return
 
         if room not in self.joined_rooms:
             return

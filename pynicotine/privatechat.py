@@ -141,6 +141,9 @@ class PrivateChat:
 
     def send_message(self, username, message):
 
+        if core.users.login_status == UserStatus.OFFLINE:
+            return
+
         user_text = core.pluginhandler.outgoing_private_chat_event(username, message)
         if user_text is None:
             return
