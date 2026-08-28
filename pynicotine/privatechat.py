@@ -77,15 +77,15 @@ class PrivateChat:
 
         self.update_completions()
 
-    def add_user(self, username):
-
-        if username in self.users:
-            return
+    def show_user(self, username, switch_page=True, remembered=False):
 
         self.users.add(username)
 
         if username not in config.sections["privatechat"]["users"]:
             config.sections["privatechat"]["users"].insert(0, username)
+
+        events.emit("private-chat-show-user", username, switch_page, remembered)
+        core.users.watch_user(username, context="privatechat")
 
     def remove_user(self, username, is_permanent=True):
 
@@ -99,12 +99,6 @@ class PrivateChat:
     def remove_all_users(self, is_permanent=True):
         for username in self.users.copy():
             self.remove_user(username, is_permanent)
-
-    def show_user(self, username, switch_page=True, remembered=False):
-
-        self.add_user(username)
-        events.emit("private-chat-show-user", username, switch_page, remembered)
-        core.users.watch_user(username, context="privatechat")
 
     def clear_private_messages(self, username):
         events.emit("clear-private-messages", username)
