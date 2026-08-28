@@ -356,7 +356,6 @@ jobs:
         run: python3.11 -m build --no-isolation
 
   haiku:
-    if: false  # Temporarily disabled due to broken packages
     runs-on: ubuntu-latest
     timeout-minutes: 15
     defaults:
@@ -369,10 +368,10 @@ jobs:
           persist-credentials: false
 
       - name: Set up Haiku
-        uses: cross-platform-actions/action@24ef01df165c76df1ed2b9f9e9212e78dc2fc963 # v1.4.0
+        uses: cross-platform-actions/action@b77f08480307e762b98be92ba7ef04ea7c2272f8
         with:
           operating_system: haiku
-          version: 'r1beta5'
+          version: 'r1beta6'
           environment_variables: NICOTINE_NETWORK_TESTS
 
       - name: Install dependencies
