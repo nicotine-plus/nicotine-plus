@@ -136,13 +136,15 @@ You should install Python %(min_version)s or newer.""") % {
 
 def set_up_python():
 
-    is_frozen = getattr(sys, "frozen", False)
-
-    # Always use UTF-8 for print()
     if sys.stdout is not None:
+        # Always use UTF-8 and enable line buffering
         sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding="utf-8", line_buffering=True)
 
-    if is_frozen and sys.platform == "win32":
+    if sys.stderr is not None:
+        # Always use UTF-8 and enable line buffering
+        sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding="utf-8", line_buffering=True)
+
+    if getattr(sys, "frozen", False) and sys.platform == "win32":
         # Prioritize dlls in the 'lib' subfolder over system dlls, to avoid issues with conflicting dlls
         import ctypes
         executable_folder = os.path.dirname(sys.executable)
