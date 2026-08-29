@@ -4,24 +4,31 @@
 import gi
 from gi.repository import Gtk
 
-from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.popovers.commandhelp import CommandHelp
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.combobox import ComboBox
+from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import add_css_class
 
 
-class ChatEntry:
+class MessageEntry:
     """Custom text entry with support for chat commands and completions."""
 
-    def __init__(self, application, send_message_callback, command_callback, enable_spell_check=False):
+    def __init__(self, application, command_callback, send_message_callback=None, is_compact=False,
+                 enable_spell_check=False, enable_tab_completion=False, enable_completion_popup=False,
+                 min_completion_key_length=1):
 
         self.application = application
         self.container = Gtk.Box(visible=True)
         self.widget = Gtk.Entry(
-            hexpand=True, placeholder_text=_("Send message…"), primary_icon_name="mail-send-symbolic",
-            sensitive=False, show_emoji_icon=True, width_chars=8, visible=True
+            placeholder_text=_("Send message…") if send_message_callback is not None else _("Run command…"),
+            primary_icon_name="mail-send-symbolic" if send_message_callback is not None else "pan-end-symbolic",
+            hexpand=True, sensitive=False, width_chars=8, visible=True
         )
+
+        if is_compact:
+            add_css_class(self.widget, "compact")
 
         # Create accelerators early to override ComboBox accelerators
         Accelerator("Down", self.widget, self.on_page_down_accelerator)
@@ -34,11 +41,14 @@ class ChatEntry:
             enable_arrow_keys=False, enable_word_completion=True, visible=True
         )
 
+        self.is_compact = is_compact
         self.send_message_callback = send_message_callback
         self.command_callback = command_callback
         self.spell_checker = None
         self.entity = None
         self.chat_view = None
+        self.extra_menu = None
+        self.command_help = None
         self.unsent_messages = {}
         self.completions = {}
         self.current_completions = []
@@ -46,9 +56,24 @@ class ChatEntry:
         self.midway_completion = False  # True if the user just used tab completion
         self.is_inserting_completion = False
 
+        self.set_tab_completion_enabled(enable_tab_completion)
+        self.set_completion_popup_enabled(enable_completion_popup, min_completion_key_length)
+
         self.widget.connect("activate", self.on_send_message)
         self.widget.connect("changed", self.on_changed)
         self.widget.connect("icon-press", self.on_icon_pressed)
+
+        if send_message_callback is None:
+            self.widget.props.secondary_icon_name = "dialog-question-symbolic"
+            self.widget.connect("icon-release", self.on_icon_released)
+
+            if GTK_API_VERSION >= 4:
+                self.extra_menu = PopupMenu(application)
+                self.extra_menu.add_items(("#" + _("Command Help"), self.on_command_help))
+                self.extra_menu.update_model()
+                self.widget.set_extra_menu(self.extra_menu.model)
+        else:
+            self.widget.props.show_emoji_icon = True
 
         Accelerator("<Shift>Tab", self.widget, self.on_tab_complete_accelerator, True)
         Accelerator("Tab", self.widget, self.on_tab_complete_accelerator)
@@ -59,6 +84,9 @@ class ChatEntry:
 
         if self.spell_checker is not None:
             self.spell_checker.destroy()
+
+        if self.extra_menu is not None:
+            self.extra_menu.destroy()
 
         self.__dict__.clear()
 
@@ -84,7 +112,7 @@ class ChatEntry:
         return self.widget.get_text()
 
     def is_completion_enabled(self):
-        return config.sections["words"]["tab"] or config.sections["words"]["dropdown"]
+        return self.enable_tab_completion or self.enable_completion_popup
 
     def insert_text(self, new_text, position):
         self.widget.insert_text(new_text, position)
@@ -100,7 +128,7 @@ class ChatEntry:
         if item in self.completions:
             return
 
-        if config.sections["words"]["dropdown"]:
+        if self.enable_completion_popup:
             self.combobox.append(item)
 
         self.completions[item] = None
@@ -112,7 +140,7 @@ class ChatEntry:
 
         self.combobox.remove_id(item)
 
-    def set_parent(self, entity=None, container=None, chat_view=None):
+    def set_parent(self, container=None, chat_view=None, entity=None):
 
         if self.entity:
             self.unsent_messages[self.entity] = self.widget.get_text()
@@ -135,15 +163,16 @@ class ChatEntry:
         else:
             container.add(self.container)     # pylint: disable=no-member
 
+        if self.is_compact:
+            self.widget.set_has_frame(False)
+
+        if entity is None:
+            self.set_sensitive(True)
+
         self.widget.set_text(unsent_message)
         self.widget.set_position(-1)
 
     def set_completions(self, completions):
-
-        config_words = config.sections["words"]
-
-        self.combobox.set_completion_popup_enabled(config_words["dropdown"])
-        self.combobox.set_completion_min_key_length(config_words["characters"])
 
         self.combobox.clear()
         self.completions.clear()
@@ -154,10 +183,21 @@ class ChatEntry:
         for word in sorted(completions):
             word = str(word)
 
-            if config_words["dropdown"]:
+            if self.enable_completion_popup:
                 self.combobox.append(word)
 
             self.completions[word] = None
+
+    def set_tab_completion_enabled(self, enabled):
+        self.enable_tab_completion = enabled
+
+    def set_completion_popup_enabled(self, enabled, min_length):
+
+        self.enable_completion_popup = enabled
+        self.min_completion_key_length = min_length
+
+        self.combobox.set_completion_popup_enabled(enabled)
+        self.combobox.set_completion_min_key_length(min_length)
 
     def set_spell_check_enabled(self, enabled):
 
@@ -195,7 +235,7 @@ class ChatEntry:
         is_double_slash_cmd = text.startswith("//")
         is_single_slash_cmd = (text.startswith("/") and not is_double_slash_cmd)
 
-        if not is_single_slash_cmd:
+        if not is_single_slash_cmd and self.send_message_callback is not None:
             # Regular chat message
 
             self.widget.set_text("")
@@ -210,7 +250,10 @@ class ChatEntry:
         cmd, _separator, args = text.partition(" ")
         args = args.strip()
 
-        if not self.command_callback(self.entity, cmd[1:], args):
+        if self.entity is not None and not self.command_callback(self.entity, cmd[1:], args):
+            return
+
+        if not self.command_callback(cmd[1:] if is_single_slash_cmd else cmd, args):
             return
 
         # Clear chat entry
@@ -219,6 +262,23 @@ class ChatEntry:
     def on_icon_pressed(self, _entry, icon_pos, *_args):
         if icon_pos == Gtk.EntryIconPosition.PRIMARY:
             self.on_send_message()
+
+    def on_icon_released(self, _entry, icon_pos, *_args):
+
+        if icon_pos != Gtk.EntryIconPosition.SECONDARY:
+            return
+
+        self.on_command_help()
+
+    def on_command_help(self, *_args):
+
+        if self.command_help is None:
+            self.command_help = CommandHelp(window=self.application.window, interface="cli")
+            self.command_help.set_parent(self.container)
+
+        icon_area = self.widget.get_icon_area(Gtk.EntryIconPosition.SECONDARY)
+        self.command_help.widget.set_pointing_to(icon_area)
+        self.command_help.present()
 
     def on_changed(self, *_args):
 
@@ -229,7 +289,7 @@ class ChatEntry:
     def on_tab_complete_accelerator(self, _widget, _state, backwards=False):
         """Tab and Shift+Tab: tab complete chat."""
 
-        if not config.sections["words"]["tab"]:
+        if not self.enable_tab_completion:
             return False
 
         text = self.widget.get_text()

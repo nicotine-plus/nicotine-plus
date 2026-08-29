@@ -291,7 +291,7 @@ class BasePlugin:
         command_interface, source = self.parent.command_source
 
         if command_interface == "cli":
-            print(text)
+            log.add_command(text)
             return
 
         func = self.echo_public if command_interface == "chatroom" else self.echo_private
@@ -460,6 +460,8 @@ class PluginHandler:
         self.trigger_cli_command_event(command, args)
 
     def update_completions(self, plugin):
+
+        events.emit("cli-completions", self.get_command_list("private_chat"))
 
         if not config.sections["words"]["commands"]:
             return
@@ -877,7 +879,7 @@ class PluginHandler:
     def get_plugin_human_name(self, plugin_name):
 
         try:
-            info = core.pluginhandler.get_plugin_info(plugin_name)
+            info = self.get_plugin_info(plugin_name)
             plugin_human_name = info.get("Name", plugin_name)
 
         except OSError:

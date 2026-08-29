@@ -35,6 +35,7 @@ from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.textentry import MessageEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
@@ -109,6 +110,7 @@ class MainWindow(Window):
             self.log_container,
             self.log_search_bar,
             self.log_view_container,
+            self.message_entry_container,
             self.private_content,
             self.private_end,
             self.private_entry,
@@ -221,20 +223,27 @@ class MainWindow(Window):
         self.scan_progress_label.freeze_notify()
 
         # Logging
+        self.message_entry = MessageEntry(
+            self.application, command_callback=core.pluginhandler.trigger_cli_command_event,
+            is_compact=True, enable_tab_completion=True
+        )
         self.log_view = TextView(
             self.log_view_container, auto_scroll=not config.sections["logging"]["logcollapsed"],
-            parse_urls=False, editable=False, vertical_margin=5, pixels_below_lines=2
+            parse_urls=False, editable=False, vertical_margin=2, pixels_below_lines=2,
+            message_entry=self.message_entry
         )
         self.log_search_bar = TextSearchBar(
             self.log_view.widget, self.log_search_bar, controller_widget=self.log_container,
             placeholder_text=_("Search log…")
         )
+        self.message_entry.set_parent(container=self.message_entry_container, chat_view=self.log_view)
 
         self.create_log_context_menu()
-        events.connect("log-message", self.log_callback)
 
         # Events
         for event_name, callback in (
+            ("cli-completions", self.update_completions),
+            ("log-message", self.log_callback),
             ("quit", self.on_quit),
             ("server-login", self.update_user_status),
             ("server-disconnect", self.update_user_status),
@@ -1164,13 +1173,16 @@ class MainWindow(Window):
     def log_callback(self, timestamp_format, msg, title, level):
         events.invoke_main_thread(self.update_log, timestamp_format, msg, title, level)
 
+    def update_completions(self, completions):
+        self.message_entry.set_completions(completions)
+
     def update_log(self, timestamp_format, msg, title, level):
 
         if title:
             MessageDialog(application=self.application, title=title, message=msg, selectable=True).present()
 
         # Keep verbose debug messages out of statusbar to make it more useful
-        if level not in {"transfer", "connection", "message", "miscellaneous"}:
+        if level not in {"transfer", "connection", "message", "miscellaneous", "command"}:
             self.set_status_text(msg)
 
         self.log_view.add_line(msg, timestamp_format=timestamp_format)
@@ -1349,6 +1361,7 @@ class MainWindow(Window):
         self.notebook.destroy()
         self.log_search_bar.destroy()
         self.log_view.destroy()
+        self.message_entry.destroy()
         self.popup_menu_log_view.destroy()
         self.popup_menu_log_categories.destroy()
 
