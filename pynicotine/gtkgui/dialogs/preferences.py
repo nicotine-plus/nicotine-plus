@@ -154,6 +154,10 @@ class NetworkPage:
         self.port_checker.port = core.users.public_port
 
     def server_login(self, *_args):
+
+        if not msg.success:
+            return
+
         self.password_row_revealer.set_reveal_child(True)
         self.update_port()
 
