@@ -123,11 +123,11 @@ def set_up_python():
 
     if sys.stdout is not None:
         # Always use UTF-8 and enable line buffering
-        sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding="utf-8", line_buffering=True)
+        sys.stdout.reconfigure(encoding="utf-8", line_buffering=True)
 
     if sys.stderr is not None:
         # Always use UTF-8 and enable line buffering
-        sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding="utf-8", line_buffering=True)
+        sys.stderr.reconfigure(encoding="utf-8", line_buffering=True)
 
     if getattr(sys, "frozen", False) and sys.platform == "win32":
         # Prioritize dlls in the 'lib' subfolder over system dlls, to avoid issues with conflicting dlls
