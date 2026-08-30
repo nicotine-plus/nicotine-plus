@@ -103,12 +103,12 @@ Unstable installers are built after every commit to the 3.3.x branch.
 > **IMPORTANT**: You must follow [these instructions](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac)
 > the first time you start Nicotine+.
 
- - [Download Unstable macOS Intel Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/macos-x86_64-installer.zip)
-    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/macos-x86_64-installer)  
-   for macOS 11 Big Sur or later
-
  - [Download Unstable macOS Apple Silicon Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/macos-arm64-installer.zip)
     — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/macos-arm64-installer)  
+   for macOS 11 Big Sur or later
+
+ - [Download Unstable macOS Intel Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/macos-x86_64-installer.zip)
+    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/macos-x86_64-installer)  
    for macOS 11 Big Sur or later
 
 
