@@ -189,7 +189,7 @@ class PopupMenu:
             menuitem.set_submenu(item[1].model)
             self.submenus.append(item[1])
 
-            if sys.platform == "darwin" and label == _("_Window"):
+            if sys.platform == "darwin" and label == _("Window"):
                 menuitem.set_attribute_value("gtk-macos-special", GLib.Variant.new_string("window-submenu"))
 
             if GTK_API_VERSION == 3:

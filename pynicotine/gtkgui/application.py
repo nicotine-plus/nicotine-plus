@@ -431,7 +431,7 @@ class Application:
 
         if sys.platform == "darwin":
             # Special macOS submenu for window actions
-            menu.add_items((">" + _("_Window"), self._create_window_menu()))
+            menu.add_items((">" + _("Window"), self._create_window_menu()))
 
         menu.add_items((">" + _("_Help"), self._create_help_menu()))
 
