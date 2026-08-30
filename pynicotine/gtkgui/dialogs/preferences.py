@@ -153,7 +153,7 @@ class NetworkPage:
 
         self.port_checker.port = core.users.public_port
 
-    def server_login(self, *_args):
+    def server_login(self, msg):
 
         if not msg.success:
             return
