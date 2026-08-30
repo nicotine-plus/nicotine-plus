@@ -25,6 +25,7 @@ from collections import defaultdict
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
+from pynicotine.events import StopEventPropagation
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import AddAllowedResponse
 from pynicotine.slskmessages import ConnectionType
@@ -1044,8 +1045,7 @@ class Downloads(Transfers):
 
         if msg.list is None:
             # Response was rejected
-            msg.token = msg.dir = None
-            return
+            raise StopEventPropagation()
 
         username = msg.username
         folder_path = msg.dir
@@ -1055,14 +1055,12 @@ class Downloads(Transfers):
         )
 
         if username not in self._requested_folders:
-            msg.token = msg.dir = None
-            return
+            raise StopEventPropagation()
 
         requested_folder = self._requested_folders[username].get(msg.dir)
 
         if requested_folder is None:
-            msg.token = msg.dir = None
-            return
+            raise StopEventPropagation()
 
         log.add_transfer("Received response for folder content request for folder %s "
                          "from user %s", (folder_path, username))

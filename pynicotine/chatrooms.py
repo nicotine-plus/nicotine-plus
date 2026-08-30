@@ -4,6 +4,7 @@
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
+from pynicotine.events import StopEventPropagation
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import AddRoomMember
 from pynicotine.slskmessages import AddRoomOperator
@@ -323,7 +324,7 @@ class ChatRooms:
         if room_obj is None:
             # Reject unsolicited room join messages from the server
             core.send_message_to_server(LeaveRoom(msg.room))
-            return
+            raise StopEventPropagation()
 
         room_obj.is_private = msg.private
         self.server_rooms.add(msg.room)
@@ -341,12 +342,13 @@ class ChatRooms:
 
         room_obj = self.joined_rooms.get(msg.room)
 
-        if room_obj is not None:
-            for username in room_obj.users:
-                core.users.unwatch_user(username, context=f"chatrooms_{msg.room}")
+        if room_obj is None or not room_obj.users:
+            raise StopEventPropagation()
 
-            room_obj.users.clear()
+        for username in room_obj.users:
+            core.users.unwatch_user(username, context=f"chatrooms_{msg.room}")
 
+        room_obj.users.clear()
         core.pluginhandler.leave_chatroom_notification(msg.room)
 
     def _room_members(self, msg):
@@ -362,7 +364,7 @@ class ChatRooms:
         private_room = self.private_rooms.get(room)
 
         if private_room is None:
-            return
+            raise StopEventPropagation()
 
         private_room.members.add(username)
         core.pluginhandler.private_room_member_added_notification(room, username)
@@ -381,7 +383,7 @@ class ChatRooms:
         private_room = self.private_rooms.get(room)
 
         if private_room is None:
-            return
+            raise StopEventPropagation()
 
         private_room.members.discard(username)
         core.pluginhandler.private_room_member_removed_notification(room, username)
@@ -396,7 +398,7 @@ class ChatRooms:
         """Server code 139."""
 
         if msg.room in self.private_rooms:
-            return
+            raise StopEventPropagation()
 
         self._update_private_room(msg.room)
 
@@ -412,7 +414,7 @@ class ChatRooms:
         room = msg.room
 
         if room not in self.private_rooms:
-            return
+            raise StopEventPropagation()
 
         core.pluginhandler.private_room_membership_revoked_notification(room)
 
@@ -434,7 +436,7 @@ class ChatRooms:
         private_room = self.private_rooms.get(room)
 
         if private_room is None:
-            return
+            raise StopEventPropagation()
 
         private_room.operators.add(username)
         core.pluginhandler.private_room_operator_added_notification(room, username)
@@ -453,7 +455,7 @@ class ChatRooms:
         private_room = self.private_rooms.get(room)
 
         if private_room is None:
-            return
+            raise StopEventPropagation()
 
         private_room.operators.discard(username)
         core.pluginhandler.private_room_operator_removed_notification(room, username)
@@ -470,7 +472,7 @@ class ChatRooms:
         private_room = self.private_rooms.get(msg.room)
 
         if private_room is None:
-            return
+            raise StopEventPropagation()
 
         private_room.operators.add(core.users.login_username)
         core.pluginhandler.private_room_operatorship_granted_notification(msg.room)
@@ -483,7 +485,7 @@ class ChatRooms:
         private_room = self.private_rooms.get(msg.room)
 
         if private_room is None:
-            return
+            raise StopEventPropagation()
 
         private_room.operators.discard(core.users.login_username)
         core.pluginhandler.private_room_operatorship_revoked_notification(msg.room)
@@ -497,6 +499,9 @@ class ChatRooms:
 
     def _global_room_message(self, msg):
         """Server code 152."""
+
+        if self.GLOBAL_ROOM_NAME not in self.joined_rooms:
+            raise StopEventPropagation()
 
         self._say_chat_room(msg, is_global=True)
 
@@ -559,9 +564,8 @@ class ChatRooms:
         username = msg.user
 
         if not is_global:
-            if room not in self.joined_rooms:
-                msg.room = None
-                return
+            if room not in self.joined_rooms or not self.joined_rooms[room].users:
+                raise StopEventPropagation()
 
             log.add_chat(_("Chat message from user '%(user)s' in room '%(room)s': %(message)s"), {
                 "user": username,
@@ -571,17 +575,14 @@ class ChatRooms:
 
             if username != "server":
                 if core.network_filter.is_user_ignored(username):
-                    msg.room = None
-                    return
+                    raise StopEventPropagation()
 
                 if core.network_filter.is_user_ip_ignored(username):
-                    msg.room = None
-                    return
+                    raise StopEventPropagation()
 
             event = core.pluginhandler.incoming_public_chat_event(room, username, msg.message)
             if event is None:
-                msg.room = None
-                return
+                raise StopEventPropagation()
 
             _room, _username, msg.message = event
         else:
@@ -622,9 +623,8 @@ class ChatRooms:
 
         room_obj = self.joined_rooms.get(msg.room)
 
-        if room_obj is None:
-            msg.room = None
-            return
+        if room_obj is None or not room_obj.users:
+            raise StopEventPropagation()
 
         self._update_room_user(room_obj, msg.userdata)
         core.pluginhandler.user_join_chatroom_notification(msg.room, msg.userdata.username)
@@ -634,9 +634,8 @@ class ChatRooms:
 
         room_obj = self.joined_rooms.get(msg.room)
 
-        if room_obj is None:
-            msg.room = None
-            return
+        if room_obj is None or not room_obj.users:
+            raise StopEventPropagation()
 
         username = msg.username
         room_obj.users.discard(username)
@@ -649,9 +648,8 @@ class ChatRooms:
 
         room_obj = self.joined_rooms.get(msg.room)
 
-        if room_obj is None:
-            msg.room = None
-            return
+        if room_obj is None or not room_obj.users:
+            raise StopEventPropagation()
 
         room_obj.tickers.clear()
 
@@ -668,9 +666,8 @@ class ChatRooms:
 
         room_obj = self.joined_rooms.get(msg.room)
 
-        if room_obj is None:
-            msg.room = None
-            return
+        if room_obj is None or not room_obj.users:
+            raise StopEventPropagation()
 
         username = msg.user
 
@@ -685,9 +682,8 @@ class ChatRooms:
 
         room_obj = self.joined_rooms.get(msg.room)
 
-        if room_obj is None:
-            msg.room = None
-            return
+        if room_obj is None or not room_obj.users:
+            raise StopEventPropagation()
 
         room_obj.tickers.pop(msg.user, None)
 

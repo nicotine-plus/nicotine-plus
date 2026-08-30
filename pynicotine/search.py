@@ -17,6 +17,7 @@ from shlex import shlex
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
+from pynicotine.events import StopEventPropagation
 from pynicotine.logfacility import log
 from pynicotine.shares import PermissionLevel
 from pynicotine.slskmessages import AddAllowedResponse
@@ -623,28 +624,24 @@ class Search:
 
         if msg.list is None:
             # Response was rejected
-            msg.token = None
-            return
+            raise StopEventPropagation()
 
         search = self.searches.get(msg.token)
         username = msg.username
 
         if search is None:
-            msg.token = None
-            return
+            raise StopEventPropagation()
 
         if isinstance(search, WishSearchRequest) and (search.is_ignored or username in search.ignored_users):
-            msg.token = None
-            return
+            raise StopEventPropagation()
 
         ip_address, _port = msg.addr
 
         if core.network_filter.is_user_ignored(username):
-            msg.token = None
-            return
+            raise StopEventPropagation()
 
         if core.network_filter.is_user_ip_ignored(username, ip_address):
-            msg.token = None
+            raise StopEventPropagation()
 
     def _file_search_request_server(self, msg):
         """Server code 26."""

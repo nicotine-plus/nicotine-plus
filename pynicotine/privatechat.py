@@ -8,6 +8,7 @@ import pynicotine
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
+from pynicotine.events import StopEventPropagation
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import MessageAcked
 from pynicotine.slskmessages import MessageUser
@@ -402,20 +403,17 @@ class PrivateChat:
             if username == self.SERVER_USERNAME:
                 message = self._process_server_message(message)
                 if message is None:
-                    msg.user = None
-                    return
+                    raise StopEventPropagation()
             else:
                 # Check ignore status for all other users except "server"
                 if core.network_filter.is_user_ignored(username):
-                    msg.user = None
-                    return
+                    raise StopEventPropagation()
 
                 user_address = core.users.addresses.get(username)
 
                 if user_address is not None:
                     if core.network_filter.is_user_ip_ignored(username):
-                        msg.user = None
-                        return
+                        raise StopEventPropagation()
 
                 elif not queued_message:
                     # Ask for user's IP address and queue the private message until we receive the address
@@ -423,13 +421,11 @@ class PrivateChat:
                         core.users.request_ip_address(username)
 
                     self._private_message_queue_add(msg)
-                    msg.user = None
-                    return
+                    raise StopEventPropagation()
 
             user_text = core.pluginhandler.incoming_private_chat_event(username, message)
             if user_text is None:
-                msg.user = None
-                return
+                raise StopEventPropagation()
 
             self.show_user(username, switch_page=False)
 

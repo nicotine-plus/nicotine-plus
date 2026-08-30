@@ -224,6 +224,10 @@ class ThreadEvent:
         self.kwargs = kwargs
 
 
+class StopEventPropagation(Exception):
+    pass
+
+
 class Events:
     __slots__ = ("_callbacks", "_thread_events", "_pending_scheduler_events", "_scheduler_events",
                  "_scheduler_event_id", "_scheduler_thread", "_is_active")
@@ -274,6 +278,9 @@ class Events:
         for function in self._callbacks[event_name]:
             try:
                 function(*args, **kwargs)
+
+            except StopEventPropagation:
+                break
 
             except Exception as error:
                 from pynicotine import core

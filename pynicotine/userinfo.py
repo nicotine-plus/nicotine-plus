@@ -7,6 +7,7 @@ import time
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
+from pynicotine.events import StopEventPropagation
 from pynicotine.logfacility import log
 from pynicotine.shares import PermissionLevel
 from pynicotine.slskmessages import AddAllowedResponse
@@ -188,7 +189,7 @@ class UserInfo:
         if username in self._requested_info_times and request_time < self._requested_info_times[username] + 0.4:
             # Ignoring request, because it's less than half a second since the
             # last one by this user
-            return
+            raise StopEventPropagation()
 
         self._requested_info_times[username] = request_time
         msg = self._get_user_info_response(username, ip_address)

@@ -30,6 +30,7 @@ from pynicotine import rename_process
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
+from pynicotine.events import StopEventPropagation
 from pynicotine.external.tinytag import TinyTag, UnsupportedFormatError
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import FileListMessage
@@ -1332,7 +1333,7 @@ class Shares:
 
         if self._scanner_process is not None and self._scanner_process.is_alive():
             # Scanner was restarted
-            return
+            raise StopEventPropagation()
 
         self._scanner_process = None
         self._scanner_reader = None
@@ -1368,7 +1369,7 @@ class Shares:
         if username in self._requested_share_times and request_time < self._requested_share_times[username] + 0.4:
             # Ignoring request, because it's less than half a second since the
             # last one by this user
-            return
+            raise StopEventPropagation()
 
         self._requested_share_times[username] = request_time
 
