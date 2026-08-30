@@ -1474,7 +1474,6 @@ class _MPEG(TinyTag):
     _MAX_ESTIMATION_SEC = 30
     _CBR_DETECTION_FRAME_COUNT = 5
     _USE_XING_HEADER = True  # much faster, but can be deactivated for testing
-    _MAX_INVALID_FRAMES = 200
 
     # see this page for the magic values used in mp3:
     # http://www.mpgedit.org/mpgedit/mpeg_format/mpeghdr.htm
@@ -1535,7 +1534,6 @@ class _MPEG(TinyTag):
         max_estimation_frames = 0
         frame_size_accu = 0
         frames = 0  # count frames for determining mp3 duration
-        invalid_frames = 0
         bitrate_accu = 0    # add up bitrates to find average bitrate to detect
         last_bitrates: set[int] = set()  # CBR mp3s (many frames with same brs)
         # seek to first position after id3 tag (speedup for large header)
@@ -1571,9 +1569,6 @@ class _MPEG(TinyTag):
                     fh.seek(idx - header_len, SEEK_CUR)
                 if frames == 0:
                     audio_offset += next_offset
-                    invalid_frames += 1
-                    if invalid_frames > self._MAX_INVALID_FRAMES:
-                        raise ParseError("Invalid MPEG frame header")
                 continue
             self.channels = self._CHANNELS_PER_CHANNEL_MODE[channel_mode]
             frame_br = self._BITRATE_VERSION_LAYERS[mpeg_id][layer_id][br_id]
