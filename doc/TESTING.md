@@ -142,20 +142,20 @@ The latest installers are built after every commit.
 > **IMPORTANT**: You must follow [these instructions](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac)
 > the first time you start Nicotine+.
 
- - [Download 3.3.11rc2 macOS Intel Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/macos-x86_64-installer.zip)
-    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/macos-x86_64-installer)  
-   for macOS 11 Big Sur or later
-
  - [Download 3.3.11rc2 macOS Apple Silicon Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/macos-arm64-installer.zip)
     — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/macos-arm64-installer)  
    for macOS 11 Big Sur or later
 
- - [Download 3.4.0.dev1 macOS Intel Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-x86_64-installer.zip)
-    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-x86_64-installer)  
+ - [Download 3.3.11rc2 macOS Intel Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/macos-x86_64-installer.zip)
+    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/3.3.x/macos-x86_64-installer)  
    for macOS 11 Big Sur or later
 
  - [Download 3.4.0.dev1 macOS Apple Silicon Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-arm64-installer.zip)
     — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-arm64-installer)  
+   for macOS 11 Big Sur or later
+
+ - [Download 3.4.0.dev1 macOS Intel Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-x86_64-installer.zip)
+    — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-x86_64-installer)  
    for macOS 11 Big Sur or later
 
 
