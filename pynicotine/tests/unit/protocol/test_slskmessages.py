@@ -262,10 +262,6 @@ class LeaveGlobalRoomMessageTest(TestCase):
             message)
 
 
-class GlobalRoomMessageMessageTest(TestCase):
-    ...
-
-
 class SayChatroomMessageTest(TestCase):
 
     def test_make_network_message(self):
@@ -299,14 +295,6 @@ class JoinRoomMessageTest(TestCase):
         self.assertEqual(
             b"\x05\x00\x00\x00room2\x01\x00\x00\x00",
             message_private)
-
-
-class PrivateRoomUsersMessageTest(TestCase):
-    ...
-
-
-class PrivateRoomOwnedMessageTest(TestCase):
-    ...
 
 
 class PrivateRoomAddUserMessageTest(TestCase):
