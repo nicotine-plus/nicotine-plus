@@ -159,9 +159,11 @@ class CLI:
                 print(log_message)
 
         except OSError:
-            # stdout is gone, redirect to /dev/null to prevent future exceptions when a module
-            # like multiprocessing tries to flush the buffer
-            os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno())
+            # stdout is gone, redirect to /dev/null to prevent future exceptions if someone
+            # else tries to write to it
+            if sys.stdout is not None:
+                os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno())
+
             events.disconnect("log-message", self._log_message)
             self._log_message_queue.clear()
 
