@@ -2305,7 +2305,7 @@ class _ASF(TinyTag):
                 }
                 for i_field_name, length in data_blocks.items():
                     value = self._unpad(
-                        walker.read(length).decode('utf-16', 'replace'))
+                        walker.read(length).decode('utf-16le', 'replace'))
                     if not i_field_name.startswith('_') and value:
                         self._set_field(i_field_name, value)
             elif (self._parse_tags
@@ -2316,7 +2316,7 @@ class _ASF(TinyTag):
                 for _ in range(descriptor_count):
                     name_len = unpack('<H', walker.read(2))[0]
                     name = self._unpad(
-                        walker.read(name_len).decode('utf-16', 'replace'))
+                        walker.read(name_len).decode('utf-16le', 'replace'))
                     value_type, value_len = unpack('<HH', walker.read(4))
                     self._parse_value(walker, name, value_type, value_len)
             elif (self._parse_tags
@@ -2344,7 +2344,7 @@ class _ASF(TinyTag):
                             value_len = unpack('<I', walker.read(4))[0]
                             name = self._unpad(
                                 walker.read(name_len)
-                                .decode('utf-16', 'replace'))
+                                .decode('utf-16le', 'replace'))
                             self._parse_value(
                                 walker, name, value_type, value_len)
                     else:
@@ -2396,7 +2396,8 @@ class _ASF(TinyTag):
                      value_len: int) -> None:
         # Unicode string
         if value_type == 0:
-            value = self._unpad(fh.read(value_len).decode('utf-16', 'replace'))
+            value = self._unpad(
+                fh.read(value_len).decode('utf-16le', 'replace'))
         # DWORD / QWORD / WORD
         elif (1 < value_type < 6
                 and value_len in self._UNPACK_FORMATS):
