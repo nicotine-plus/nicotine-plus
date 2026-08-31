@@ -17,10 +17,14 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 ### Changes
 
  * Added menu items for moving column headers due to broken drag-and-drop in GTK
+ * Added Ctrl+Page Up and Ctrl+Page Down shortcuts for cycling through tabs
  * Added support for the Haiku operating system
  * Enabled fixed number of upload slots by default
+ * Show global recommendations for interests when no personalized ones are available
  * Only show online status of open chat history users to reduce server traffic
+ * Expire cached user IP addresses after 30 minutes at the latest
  * Removed 'Everyone' permission for receiving files sent via manual upload
+ * Removed automatic port forwarding from isolated mode (Docker containers)
  * macOS: Prefer integrated GPU for improved power efficiency
  * macOS: Re-added support for macOS 11 Big Sur and above
 
@@ -34,11 +38,13 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Important: Fixed some incorrect behavior in the distributed search network
  * Fixed a crash when searching for room files with no chatroom specified
  * Fixed a rare crash when connecting to the server
- * Fixed a rare crash that occurred when opening File Properties dialog
+ * Fixed a rare crash when opening File Properties dialog
+ * Fixed a rare crash when quitting the application
  * Fixed broken Add Buddy text entry in the buddies sidebar
  * Fixed configuration files not being saved when restarting or logging out
- * Fixed removing uploads when banning an IP address from the Preferences dialog
+ * Fixed upload removals when banning an IP address from the Preferences dialog
  * Fixed loading a saved shares file list from disk while offline
+ * Fixed shares not always rescanning on startup when databases were missing/corrupted
  * Fixed folder downloads adding files from other users with identical folder paths
  * Fixed stuck transfers with download folder error when user is offline
  * Fixed incorrect average transfer speed when uploading the same file many times
@@ -46,15 +52,19 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Fixed zero-byte downloads not finishing immediately
  * Fixed an issue where the first connection to the server could fail
  * Fixed occasional performance issues when responding to search requests
- * Fixed users not being sorted by date in Chat History popover
+ * Fixed incorrect sort order in file lists in some cases
  * Fixed inaccurate stuck current folder count during rescan
+ * Fixed missing shared file count for users with no shared files
+ * Fixed tabs unexpectedly being marked as read when scrolling through them
  * Fixed room list order sometimes changing after restarting
+ * Fixed removed private rooms not being fully cleaned from lists until reconnecting
  * Fixed long usernames not being ellipsized in private chat tabs
  * Fixed minor sizing issues with pages context menu on some systems
  * Fixed cosmetic issue with invalid folder paths in folder chooser button
- * Windows: Fixed incorrect sort order in file lists with some system locales
+ * Removed 'Insert Emoji' menu item from text entries that don't accept emoji
  * Windows: Fixed main window not always being raised to the top when restored
  * Windows: Fixed main window jumping around when changing virtual desktop
+ * Windows: Fixed tray icon menu not following dark mode preference
  * macOS: Fixed main window sometimes being unminimized on its own
  * DragonflyBSD: Fixed incorrect names of downloaded files
 
@@ -63,17 +73,27 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Changing Virtual Desktops makes N+ Window jump around ([#3288](https://github.com/nicotine-plus/nicotine-plus/issues/3288))
  * Nicotine spontaneously crashes ([#3325](https://github.com/nicotine-plus/nicotine-plus/issues/3325))
  * Shares not loading if they are opened with switch_page=False ([#3344](https://github.com/nicotine-plus/nicotine-plus/issues/3344))
- * Crash on browse your own shares after landing ([#3346](https://github.com/nicotine-plus/nicotine-plus/issues/3346))
+ * Crash on browse your own shares after landing 55121c6 ([#3346](https://github.com/nicotine-plus/nicotine-plus/issues/3346))
  * Private message something something ([#3351](https://github.com/nicotine-plus/nicotine-plus/issues/3351))
  * Incorrect file sorting in Nicotine+ ([#3358](https://github.com/nicotine-plus/nicotine-plus/issues/3358))
+ * track order in default sorting ([#3372](https://github.com/nicotine-plus/nicotine-plus/issues/3372))
  * Upload and download list may be showing incomplete contents ([#3377](https://github.com/nicotine-plus/nicotine-plus/issues/3377))
  * Nicotine doesn't save the config when closing from a general computer shutdown ([#3383](https://github.com/nicotine-plus/nicotine-plus/issues/3383))
  * Chat History sorts by number not by Date ([#3412](https://github.com/nicotine-plus/nicotine-plus/issues/3412))
+ * ctrl+PgUp-PgDn ([#3413](https://github.com/nicotine-plus/nicotine-plus/issues/3413))
+ * Number of folders in "Browse Shares" does not equal number of scanned shares ([#3439](https://github.com/nicotine-plus/nicotine-plus/issues/3439))
+ * Scrolling tabs should not change page in focus (v3.3.10) ([#3440](https://github.com/nicotine-plus/nicotine-plus/issues/3440))
  * Crash when stopping uwsm session ([#3443](https://github.com/nicotine-plus/nicotine-plus/issues/3443))
  * Critical Error searching empty room name ([#3469](https://github.com/nicotine-plus/nicotine-plus/issues/3469))
+ * error when closing nicotine ([#3476](https://github.com/nicotine-plus/nicotine-plus/issues/3476))
  * Downloads folder is blank when pointing to a network share ([#3501](https://github.com/nicotine-plus/nicotine-plus/issues/3501))
  * App reopens immediately after being minimized when I click the desktop or any other apps (macOS) ([#3519](https://github.com/nicotine-plus/nicotine-plus/issues/3519))
  * Nicotine+ WinError 32 ([#3526](https://github.com/nicotine-plus/nicotine-plus/issues/3526))
+ * #73b30d7 breaks the ability to browse user shares ([#3531](https://github.com/nicotine-plus/nicotine-plus/issues/3531))
+ * crash after closing last private chat tab or last user profile tab. ([#3540](https://github.com/nicotine-plus/nicotine-plus/issues/3540))
+ * Keyboard shortcut spawns new Nicotine processes instead of just focusing existing window. ([#3557](https://github.com/nicotine-plus/nicotine-plus/issues/3557))
+ * Unstable version is not fitting screen ([#3569](https://github.com/nicotine-plus/nicotine-plus/issues/3569))
+ * Critical error ([#3585](https://github.com/nicotine-plus/nicotine-plus/issues/3585))
  * Critical Error ([#3609](https://github.com/nicotine-plus/nicotine-plus/issues/3609))
  * Heavy user interface input lagging affected by responding to searches option ([#3624](https://github.com/nicotine-plus/nicotine-plus/issues/3624))
  * Upload view update issue ([#3660](https://github.com/nicotine-plus/nicotine-plus/issues/3660))
@@ -82,6 +102,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * 'NoneType' object has no attribute 'sock' ([#3740](https://github.com/nicotine-plus/nicotine-plus/issues/3740))
  * Crash when searching empty room name ([#3747](https://github.com/nicotine-plus/nicotine-plus/issues/3747))
  * Allow only one instance (optionally) ([#3762](https://github.com/nicotine-plus/nicotine-plus/issues/3762))
+ * Downloads in incomplete get stuck there if they temporarily can't be moved to completed downloads folder ([#3769](https://github.com/nicotine-plus/nicotine-plus/issues/3769))
  * "Download Folder" incorrectly adds files from other users with identical folder paths ([#3802](https://github.com/nicotine-plus/nicotine-plus/issues/3802))
 
 

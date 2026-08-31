@@ -701,7 +701,7 @@ class IconNotebook:
             GLib.idle_add(self.on_focus_page, new_page, priority=GLib.PRIORITY_HIGH_IDLE)
 
         # Dismiss tab highlight after short delay to allow transient switching
-        if self.parent_page is not None:
+        if self.parent_page is not None and self.window.current_page_id == self.parent_page.id:
             self.switch_page_delay_timer = GLib.timeout_add(250, self.on_remove_tab_changed, new_page)
 
     def on_remove_tab_changed(self, new_page):

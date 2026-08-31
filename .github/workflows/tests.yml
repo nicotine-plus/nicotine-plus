@@ -93,6 +93,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          dnf config-manager setopt fedora-cisco-openh264.enabled=0
           dnf -y upgrade --refresh
           dnf -y install gettext gtk${{ matrix.gtk }} python3 python3-build \
             python3-gobject python3-setuptools python3-wheel
@@ -194,7 +195,6 @@ jobs:
           export DBUS_SESSION_BUS_ADDRESS=
           export GTK_A11Y=none
           export GDK_BACKEND=wayland
-          export GSK_RENDERER=cairo
 
           cage python3.12 -m unittest -v
 
@@ -228,6 +228,7 @@ jobs:
 
       - name: Integration and unit tests
         run: |
+          export GTK_A11Y=none
           export DISPLAY=:99
           Xvfb :99 > /dev/null 2>&1 &
           python3 -m unittest -v
@@ -356,7 +357,6 @@ jobs:
         run: python3.11 -m build --no-isolation
 
   haiku:
-    if: false  # Temporarily disabled due to broken packages
     runs-on: ubuntu-latest
     timeout-minutes: 15
     defaults:
@@ -369,10 +369,10 @@ jobs:
           persist-credentials: false
 
       - name: Set up Haiku
-        uses: cross-platform-actions/action@24ef01df165c76df1ed2b9f9e9212e78dc2fc963 # v1.4.0
+        uses: cross-platform-actions/action@b77f08480307e762b98be92ba7ef04ea7c2272f8
         with:
           operating_system: haiku
-          version: 'r1beta5'
+          version: 'r1beta6'
           environment_variables: NICOTINE_NETWORK_TESTS
 
       - name: Install dependencies
@@ -385,7 +385,9 @@ jobs:
           done
 
       - name: Integration and unit tests
-        run: python3.14 -m unittest -v
+        run: |
+          export GTK_A11Y=none
+          python3.14 -m unittest -v
 
       - name: Build without isolation
         run: python3.14 -m build --no-isolation
@@ -426,6 +428,7 @@ jobs:
       - name: Integration and unit tests
         run: |
           PATH=/opt/local/sbin:/opt/local/bin:$PATH
+          export GTK_A11Y=none
           export DISPLAY=:99
           Xvfb :99 > /dev/null 2>&1 &
           python3.14 -m unittest -v

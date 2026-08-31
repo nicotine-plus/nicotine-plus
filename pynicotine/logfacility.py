@@ -3,7 +3,6 @@
 
 import io
 import os
-import sys
 import time
 
 from collections import deque
@@ -309,23 +308,14 @@ class Logger:
     def _add(self, msg, msg_args=None, title=None, level=LogLevel.DEFAULT, should_log_file=True):
 
         msg = self._format_log_message(level, msg, msg_args)
+        timestamp_format = config.sections["logging"].get("log_timestamp", "%x %X")
 
         if should_log_file and config.sections["logging"].get("debug_file_output", False):
             events.invoke_main_thread(
                 self.write_log_file, folder_path=self.debug_folder_path,
                 basename=self.debug_file_name, text=msg)
 
-        try:
-            timestamp_format = config.sections["logging"].get("log_timestamp", "%x %X")
-            events.emit("log-message", timestamp_format, msg, title, level)
-
-        except Exception as error:
-            try:
-                print(f"Log callback failed: {level} {msg}\n{error}", flush=True)
-
-            except OSError:
-                # stdout is gone, prevent future errors
-                sys.stdout = open(os.devnull, "w", encoding="utf-8")  # pylint: disable=consider-using-with
+        events.emit("log-message", timestamp_format, msg, title, level)
 
     def add(self, msg, msg_args=None, title=None):
         self._add(msg, msg_args, title)

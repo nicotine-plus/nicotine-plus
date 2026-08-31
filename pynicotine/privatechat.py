@@ -77,15 +77,15 @@ class PrivateChat:
 
         self.update_completions()
 
-    def add_user(self, username):
-
-        if username in self.users:
-            return
+    def show_user(self, username, switch_page=True, remembered=False):
 
         self.users.add(username)
 
         if username not in config.sections["privatechat"]["users"]:
             config.sections["privatechat"]["users"].insert(0, username)
+
+        events.emit("private-chat-show-user", username, switch_page, remembered)
+        core.users.watch_user(username, context="privatechat")
 
     def remove_user(self, username, is_permanent=True):
 
@@ -100,12 +100,6 @@ class PrivateChat:
         for username in self.users.copy():
             self.remove_user(username, is_permanent)
 
-    def show_user(self, username, switch_page=True, remembered=False):
-
-        self.add_user(username)
-        events.emit("private-chat-show-user", username, switch_page, remembered)
-        core.users.watch_user(username, context="privatechat")
-
     def clear_private_messages(self, username):
         events.emit("clear-private-messages", username)
 
@@ -116,6 +110,9 @@ class PrivateChat:
         events.emit("echo-private-message", username, message, message_type)
 
     def send_message(self, username, message):
+
+        if core.users.login_status == UserStatus.OFFLINE:
+            return
 
         user_text = core.pluginhandler.outgoing_private_chat_event(username, message)
         if user_text is None:
@@ -306,7 +303,7 @@ class PrivateChat:
 
     def _process_ctcp_query(self, username, query):
 
-        if config.sections["server"]["ctcpmsgs"]:
+        if not config.sections["ctcp"]["enable"]:
             return
 
         request_time = time.monotonic()

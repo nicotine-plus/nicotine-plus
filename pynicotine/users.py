@@ -95,6 +95,9 @@ class Users:
         if save_state:
             config.sections["server"]["away"] = is_away
 
+        if self.login_status == UserStatus.OFFLINE:
+            return
+
         self.login_status = UserStatus.AWAY if is_away else UserStatus.ONLINE
         self.request_set_status(self.login_status)
 
@@ -128,6 +131,11 @@ class Users:
             core.send_message_to_server(GivePrivileges(username, days))
 
     def request_ip_address(self, username, notify=False):
+
+        if self.login_status == UserStatus.OFFLINE:
+            if notify:
+                self._user_ip_address_offline(username)
+            return
 
         if username in self._ip_requested:
             return
@@ -237,6 +245,8 @@ class Users:
     def _server_login(self, msg):
         """Server code 1."""
 
+        self._should_open_privileges_url = False
+
         if msg.success:
             self.login_status = UserStatus.ONLINE
             self.login_username = username = msg.username
@@ -301,10 +311,7 @@ class Users:
         core.pluginhandler.user_resolve_notification(username, ip_address, msg.port, country_code)
 
         if user_offline:
-            log.add(
-                _("Cannot retrieve the IP of user %(user)s, since this user is offline"),
-                {"user": username}, title=_("User IP Address")
-            )
+            self._user_ip_address_offline(username)
             return
 
         if country_code:
@@ -453,6 +460,13 @@ class Users:
         config.write_configuration()
 
         log.add(_("Your password has been changed"), title=_("Password Changed"))
+
+    def _user_ip_address_offline(self, username):
+
+        log.add(
+            _("Cannot retrieve the IP of user %(user)s, since this user is offline"), {"user": username},
+            title=_("User IP Address")
+        )
 
     def _user_login_required(self, username):
 

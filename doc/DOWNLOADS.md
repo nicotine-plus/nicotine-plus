@@ -151,13 +151,13 @@ using them.
 > **IMPORTANT**: You must follow [these instructions](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac)
 > the first time you start Nicotine+.
 
- - [Download macOS Intel Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-x86_64-installer.zip)
-    — [`SHA256`](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-x86_64-installer.zip.sha256)  
-   for macOS 13 Ventura or later
-
  - [Download macOS Apple Silicon Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-arm64-installer.zip)
     — [`SHA256`](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-arm64-installer.zip.sha256)  
    for macOS 14 Sonoma or later
+
+ - [Download macOS Intel Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-x86_64-installer.zip)
+    — [`SHA256`](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-x86_64-installer.zip.sha256)  
+   for macOS 13 Ventura or later
 
 ### Package Managers
 

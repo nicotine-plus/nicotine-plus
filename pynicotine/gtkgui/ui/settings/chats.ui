@@ -903,11 +903,11 @@
             <child>
               <object class="GtkEntry" id="timestamp_private_chat_entry">
                 <property name="secondary-icon-name">edit-undo-symbolic</property>
-                <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                <property name="secondary-icon-tooltip-text" translatable="yes">Reset</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
                 <property name="width-chars">8</property>
-                <signal name="icon-press" handler="on_default_timestamp_private_chat"/>
+                <signal name="icon-press" handler="on_reset_timestamp_private_chat"/>
               </object>
             </child>
           </object>
@@ -930,11 +930,11 @@
             <child>
               <object class="GtkEntry" id="timestamp_room_entry">
                 <property name="secondary-icon-name">edit-undo-symbolic</property>
-                <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                <property name="secondary-icon-tooltip-text" translatable="yes">Reset</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
                 <property name="width-chars">8</property>
-                <signal name="icon-press" handler="on_default_timestamp_room"/>
+                <signal name="icon-press" handler="on_reset_timestamp_room"/>
               </object>
             </child>
           </object>

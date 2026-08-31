@@ -91,6 +91,7 @@ class Application:
         # language, we need to revise this.
         Gtk.Widget.set_default_direction(Gtk.TextDirection.LTR)
 
+        self._instance.connect("startup", self.on_startup)
         self._instance.connect("activate", self.on_activate)
         self._instance.connect("query-end", self.on_query_end)
         self._instance.connect("shutdown", self.on_shutdown)
@@ -378,6 +379,13 @@ class Application:
 
         return menu
 
+    def _create_window_menu(self):
+
+        from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+
+        menu = PopupMenu(self)
+        return menu
+
     def _create_help_menu(self):
 
         from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -408,9 +416,14 @@ class Application:
         menu = PopupMenu(self)
         menu.add_items(
             (">" + _("_File"), self._create_file_menu()),
-            (">" + _("_Shares"), self._create_shares_menu()),
-            (">" + _("_Help"), self._create_help_menu())
+            (">" + _("_Shares"), self._create_shares_menu())
         )
+
+        if (GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 20) and sys.platform == "darwin":
+            # Special macOS submenu for window actions
+            menu.add_items((">" + _("_Window"), self._create_window_menu()))
+
+        menu.add_items((">" + _("_Help"), self._create_help_menu()))
 
         menu.update_model()
         self._instance.set_menubar(menu.model)
@@ -997,6 +1010,21 @@ class Application:
     def on_process_thread_events(self):
         return events.process_thread_events()
 
+    def on_startup(self, *_args):
+
+        from pynicotine.gtkgui.widgets.theme import load_icons
+        from pynicotine.gtkgui.widgets.trayicon import TrayIcon
+
+        core.init_components(isolated_mode=self.isolated_mode)
+
+        load_icons()
+
+        self._set_up_actions()
+        self._set_up_action_accels()
+        self._set_up_menubar()
+
+        self.tray_icon = TrayIcon(self)
+
     def on_activate(self, *_args):
 
         if self.window:
@@ -1007,16 +1035,7 @@ class Application:
         from pynicotine.gtkgui.dialogs.chathistory import ChatHistory
         from pynicotine.gtkgui.dialogs.roomlist import RoomList
         from pynicotine.gtkgui.mainwindow import MainWindow
-        from pynicotine.gtkgui.widgets.theme import load_icons
-        from pynicotine.gtkgui.widgets.trayicon import TrayIcon
 
-        load_icons()
-
-        self._set_up_actions()
-        self._set_up_action_accels()
-        self._set_up_menubar()
-
-        self.tray_icon = TrayIcon(self)
         self.window = MainWindow(self)
         self.chat_history = ChatHistory(self)
         self.room_list = RoomList(self)

@@ -407,7 +407,7 @@ def load_icons():
 def get_flag_icon_name(country_code):
 
     if not country_code:
-        return ""
+        country_code = "xx"
 
     return f"nplus-flag-{country_code.lower()}"
 

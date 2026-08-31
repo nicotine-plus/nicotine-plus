@@ -16,10 +16,10 @@
     <property name="step-increment">10</property>
     <property name="upper">1000000</property>
   </object>
-  <object class="GtkButton" id="download_folder_default_button">
-    <property name="tooltip-text" translatable="yes">Default</property>
+  <object class="GtkButton" id="download_folder_reset_button">
+    <property name="tooltip-text" translatable="yes">Reset</property>
     <property name="visible">True</property>
-    <signal name="clicked" handler="on_default_download_folder"/>
+    <signal name="clicked" handler="on_reset_download_folder"/>
     <child>
       <object class="GtkImage">
         <property name="icon-name">edit-undo-symbolic</property>
@@ -30,10 +30,10 @@
       <class name="image-button"/>
     </style>
   </object>
-  <object class="GtkButton" id="incomplete_folder_default_button">
-    <property name="tooltip-text" translatable="yes">Default</property>
+  <object class="GtkButton" id="incomplete_folder_reset_button">
+    <property name="tooltip-text" translatable="yes">Reset</property>
     <property name="visible">True</property>
-    <signal name="clicked" handler="on_default_incomplete_folder"/>
+    <signal name="clicked" handler="on_reset_incomplete_folder"/>
     <child>
       <object class="GtkImage">
         <property name="icon-name">edit-undo-symbolic</property>
@@ -44,10 +44,10 @@
       <class name="image-button"/>
     </style>
   </object>
-  <object class="GtkButton" id="received_folder_default_button">
-    <property name="tooltip-text" translatable="yes">Default</property>
+  <object class="GtkButton" id="received_folder_reset_button">
+    <property name="tooltip-text" translatable="yes">Reset</property>
     <property name="visible">True</property>
-    <signal name="clicked" handler="on_default_received_folder"/>
+    <signal name="clicked" handler="on_reset_received_folder"/>
     <child>
       <object class="GtkImage">
         <property name="icon-name">edit-undo-symbolic</property>
@@ -544,10 +544,10 @@
                         <property name="hexpand">True</property>
                         <property name="visible">True</property>
                         <child>
-                          <object class="GtkButton" id="_default_filters_button">
-                            <property name="tooltip-text" translatable="yes">Load Defaults</property>
+                          <object class="GtkButton" id="_reset_filters_button">
+                            <property name="tooltip-text" translatable="yes">Reset All</property>
                             <property name="visible">True</property>
-                            <signal name="clicked" handler="on_default_filters"/>
+                            <signal name="clicked" handler="on_reset_filters"/>
                             <child>
                               <object class="GtkBox">
                                 <property name="spacing">6</property>
@@ -561,8 +561,8 @@
                                 <child>
                                   <object class="GtkLabel">
                                     <property name="ellipsize">end</property>
-                                    <property name="label" translatable="yes">Load Defaults</property>
-                                    <property name="mnemonic-widget">_default_filters_button</property>
+                                    <property name="label" translatable="yes">Reset All</property>
+                                    <property name="mnemonic-widget">_reset_filters_button</property>
                                     <property name="use-underline">True</property>
                                     <property name="visible">True</property>
                                   </object>

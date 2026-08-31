@@ -6,10 +6,10 @@
 -->
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkButton" id="chatroom_log_folder_default_button">
-    <property name="tooltip-text" translatable="yes">Default</property>
+  <object class="GtkButton" id="chatroom_log_folder_reset_button">
+    <property name="tooltip-text" translatable="yes">Reset</property>
     <property name="visible">True</property>
-    <signal name="clicked" handler="on_default_chatroom_log_folder"/>
+    <signal name="clicked" handler="on_reset_chatroom_log_folder"/>
     <child>
       <object class="GtkImage">
         <property name="icon-name">edit-undo-symbolic</property>
@@ -20,10 +20,10 @@
       <class name="image-button"/>
     </style>
   </object>
-  <object class="GtkButton" id="private_chat_log_folder_default_button">
-    <property name="tooltip-text" translatable="yes">Default</property>
+  <object class="GtkButton" id="private_chat_log_folder_reset_button">
+    <property name="tooltip-text" translatable="yes">Reset</property>
     <property name="visible">True</property>
-    <signal name="clicked" handler="on_default_private_chat_log_folder"/>
+    <signal name="clicked" handler="on_reset_private_chat_log_folder"/>
     <child>
       <object class="GtkImage">
         <property name="icon-name">edit-undo-symbolic</property>
@@ -34,10 +34,10 @@
       <class name="image-button"/>
     </style>
   </object>
-  <object class="GtkButton" id="transfer_log_folder_default_button">
-    <property name="tooltip-text" translatable="yes">Default</property>
+  <object class="GtkButton" id="transfer_log_folder_reset_button">
+    <property name="tooltip-text" translatable="yes">Reset</property>
     <property name="visible">True</property>
-    <signal name="clicked" handler="on_default_transfer_log_folder"/>
+    <signal name="clicked" handler="on_reset_transfer_log_folder"/>
     <child>
       <object class="GtkImage">
         <property name="icon-name">edit-undo-symbolic</property>
@@ -48,10 +48,10 @@
       <class name="image-button"/>
     </style>
   </object>
-  <object class="GtkButton" id="debug_log_folder_default_button">
-    <property name="tooltip-text" translatable="yes">Default</property>
+  <object class="GtkButton" id="debug_log_folder_reset_button">
+    <property name="tooltip-text" translatable="yes">Reset</property>
     <property name="visible">True</property>
-    <signal name="clicked" handler="on_default_debug_log_folder"/>
+    <signal name="clicked" handler="on_reset_debug_log_folder"/>
     <child>
       <object class="GtkImage">
         <property name="icon-name">edit-undo-symbolic</property>
@@ -199,11 +199,11 @@
             <child>
               <object class="GtkEntry" id="log_timestamp_format_entry">
                 <property name="secondary-icon-name">edit-undo-symbolic</property>
-                <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                <property name="secondary-icon-tooltip-text" translatable="yes">Reset</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
                 <property name="width-chars">8</property>
-                <signal name="icon-press" handler="on_default_timestamp"/>
+                <signal name="icon-press" handler="on_reset_timestamp"/>
               </object>
             </child>
           </object>

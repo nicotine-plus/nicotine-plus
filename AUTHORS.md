@@ -554,8 +554,8 @@ Nicotine+ is licensed under the [GNU General Public License v3.0 or later](https
 with the following exceptions:
 
 **[tinytag](https://github.com/tinytag/tinytag) licensed under the MIT License.**  
-Copyright (c) 2014-2025 Tom Wallroth, Mat (mathiascode), et al.  
-Copyright (c) 2020-2025 Nicotine+ Contributors
+Copyright (c) 2014-2026 Tom Wallroth, Mat (mathiascode), et al.  
+Copyright (c) 2020-2026 Nicotine+ Contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

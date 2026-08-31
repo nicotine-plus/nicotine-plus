@@ -121,13 +121,15 @@ You should install Python %(min_version)s or newer.""") % {
 
 def set_up_python():
 
-    is_frozen = getattr(sys, "frozen", False)
-
-    # Always use UTF-8 for print()
     if sys.stdout is not None:
-        sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding="utf-8", line_buffering=True)
+        # Always use UTF-8 and enable line buffering
+        sys.stdout.reconfigure(encoding="utf-8", line_buffering=True)
 
-    if is_frozen and sys.platform == "win32":
+    if sys.stderr is not None:
+        # Always use UTF-8 and enable line buffering
+        sys.stderr.reconfigure(encoding="utf-8", line_buffering=True)
+
+    if getattr(sys, "frozen", False) and sys.platform == "win32":
         # Prioritize dlls in the 'lib' subfolder over system dlls, to avoid issues with conflicting dlls
         import ctypes
         executable_folder = os.path.dirname(sys.executable)
@@ -169,6 +171,8 @@ def rename_process(new_name, debug_info=False):
 def rescan_shares():
 
     exit_code = 0
+
+    core.init_components(enabled_components={"signal_handler", "cli", "shares"})
     core.start()
 
     if not core.shares.rescan_shares(use_thread=False):
@@ -194,11 +198,6 @@ def run():
         print(error)
         return 1
 
-    core.init_components(
-        enabled_components={"signal_handler", "cli", "shares"} if rescan else None,
-        isolated_mode=isolated_mode
-    )
-
     # Dump tracebacks for C modules (in addition to pure Python code)
     try:
         import faulthandler
@@ -223,7 +222,7 @@ def run():
 
     # Run without a GUI
     from pynicotine import headless as application
-    return application.run()
+    return application.run(isolated_mode)
 
 
 apply_translations()

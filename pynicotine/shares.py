@@ -1157,6 +1157,16 @@ class Shares:
         self.close_shares(self.share_dbs)
         self.file_path_index = ()
 
+        # Replace broken stdout/stderr before the multiprocessing module tries to flush them
+        for file_handle in (sys.stdout, sys.stderr):
+            if file_handle is None:
+                continue
+
+            try:
+                file_handle.flush()
+            except OSError:
+                os.dup2(os.open(os.devnull, os.O_WRONLY), file_handle.fileno())
+
         events.emit("shares-scanning")
         self._scanner_process.start()
 

@@ -434,11 +434,11 @@
               <object class="GtkEntry" id="soulseek_server_entry">
                 <property name="input-hints">no-emoji</property>
                 <property name="secondary-icon-name">edit-undo-symbolic</property>
-                <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
+                <property name="secondary-icon-tooltip-text" translatable="yes">Reset</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
                 <property name="width-chars">8</property>
-                <signal name="icon-press" handler="on_default_server"/>
+                <signal name="icon-press" handler="on_reset_server"/>
               </object>
             </child>
           </object>

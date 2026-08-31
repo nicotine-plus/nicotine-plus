@@ -250,8 +250,9 @@ class RoomList(Dialog):
 
         self.list_view.unfreeze()
 
-    def server_login(self, *_args):
-        self.create_room_button.set_sensitive(True)
+    def server_login(self, msg):
+        if msg.success:
+            self.create_room_button.set_sensitive(True)
 
     def server_disconnect(self, *_args):
         self.create_room_button.set_sensitive(False)

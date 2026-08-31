@@ -4,8 +4,10 @@
 from gi.repository import Gtk
 
 from pynicotine.core import core
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.popover import Popover
+from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textview import TextView
 
 
@@ -30,9 +32,21 @@ class RoomWall(Popover):
         self.room = None
         self.message_view = TextView(self.message_view_container, editable=False, vertical_margin=4,
                                      pixels_above_lines=3, pixels_below_lines=3)
+        self.extra_menu = None
+
+        if GTK_API_VERSION >= 4:
+            self.extra_menu = PopupMenu(window.application)
+            self.extra_menu.add_items(("#" + _("Remove Message"), self.on_remove_message))
+            self.extra_menu.update_model()
+            self.message_entry.set_extra_menu(self.extra_menu.model)
 
     def destroy(self):
+
         self.message_view.destroy()
+
+        if self.extra_menu is not None:
+            self.extra_menu.destroy()
+
         super().destroy()
 
     def _update_message_list(self, tickers):
@@ -67,9 +81,13 @@ class RoomWall(Popover):
     def on_icon_pressed(self, _entry, icon_pos, *_args):
 
         if icon_pos == Gtk.EntryIconPosition.SECONDARY:
-            # Clear message
-            self.message_entry.set_text("")
+            self.on_remove_message()
+            return
 
+        self.on_set_room_wall_message()
+
+    def on_remove_message(self, *_args):
+        self.message_entry.set_text("")
         self.on_set_room_wall_message()
 
     def _on_show(self, *_args):

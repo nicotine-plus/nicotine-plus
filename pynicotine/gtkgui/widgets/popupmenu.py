@@ -16,6 +16,7 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.application import GTK_MINOR_VERSION
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
@@ -179,6 +180,9 @@ class PopupMenu:
         if submenu:
             menuitem.set_submenu(item[1].model)
             self.submenus.append(item[1])
+
+            if (GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 20) and sys.platform == "darwin" and label == _("_Window"):
+                menuitem.set_attribute_value("gtk-macos-special", GLib.Variant.new_string("window-submenu"))
 
             if GTK_API_VERSION == 3:
                 # Ideally, we wouldn't hide disabled submenus, but a GTK limitation forces us to

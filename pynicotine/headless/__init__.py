@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 
-def run():
+def run(isolated_mode=False):
     """Run application in headless (no GUI) mode."""
 
     from pynicotine.headless.application import Application
-    return Application().run()
+    return Application(isolated_mode).run()
