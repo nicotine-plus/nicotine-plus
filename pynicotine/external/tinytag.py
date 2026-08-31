@@ -28,6 +28,8 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
+# pylint: disable=consider-alternative-union-syntax,deprecated-typing-alias
+# pylint: disable=use-implicit-booleaness-not-comparison-to-zero
 # pyright: reportPrivateUsage=false
 
 """Audio file metadata reader."""
@@ -42,7 +44,7 @@ TYPE_CHECKING = False
 
 # Lazy imports for type checking
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterator  # pylint: disable-all
+    from collections.abc import Callable, Iterator
     from typing import Any, BinaryIO, Dict, List, Tuple, Union
 
     _StringListDict = Dict[str, List[str]]
@@ -244,6 +246,7 @@ class TinyTag:
                 and header[0] == 0xFF and (header[1] & 0xE0) == 0xE0):
             footer = None
             try:
+                # pylint: disable=protected-access
                 filehandle.seek(-_ID3._ID3V1_TAG_SIZE, SEEK_END)
                 footer = filehandle.read(3)
             except OSError:
@@ -841,7 +844,7 @@ class _MP4(TinyTag):
                 byte = data[offset]
                 offset += 1
                 size = (size << 7) | (byte & ((1 << 7) - 1))
-                if not (byte & continuation):
+                if not byte & continuation:
                     break
             return size, offset
 
@@ -1088,8 +1091,8 @@ class _ID3(TinyTag):
             flac_tag = _Flac()
             flac_tag.filename = self.filename
             flac_tag.filesize = self.filesize
-            flac_tag._filehandler = fh
-            flac_tag._load(
+            flac_tag._filehandler = fh  # pylint: disable=protected-access
+            flac_tag._load(  # pylint: disable=protected-access
                 tags=self._parse_tags, duration=self._parse_duration,
                 image=self._load_image)
             self._update(flac_tag)
@@ -1105,6 +1108,7 @@ class _ID3(TinyTag):
             mpeg_tag = _MPEG()
             mpeg_tag.filename = self.filename
             mpeg_tag.filesize = self.filesize
+            # pylint: disable=protected-access
             mpeg_tag._filehandler = fh
             mpeg_tag._end_padding = end_padding
             mpeg_tag._load(tags=False, duration=self._parse_duration)
@@ -1145,10 +1149,7 @@ class _ID3(TinyTag):
         return size
 
     def _parse_id3v1(self, fh: BinaryIO) -> bool:
-        if self._parse_tags:
-            content = fh.read(3 + 30 + 30 + 30 + 4 + 30 + 1)
-        else:
-            content = fh.read(3)
+        content = fh.read(128 if self._parse_tags else 3)
         if not content.startswith(b'TAG'):  # check if this is an ID3 v1 tag
             return False
         if not self._parse_tags:
@@ -1426,6 +1427,7 @@ class _ID3(TinyTag):
     def _find_string_end_pos(content: bytes,
                              encoding: int = 0x00,
                              start_pos: int = 0) -> int:
+        # pylint: disable=consider-using-in
         # latin1 and utf-8 are 1 byte
         if encoding == 0x00 or encoding == 0x03:
             end_pos = content.find(b'\x00', start_pos)
@@ -1884,6 +1886,7 @@ class _Ogg(TinyTag):
             fh, self._load_image
         ):
             if isinstance(value, Image):
+                # pylint: disable=protected-access
                 self.images._set_field(fieldname, value)
                 continue
             self._set_field(fieldname, value)
@@ -2038,12 +2041,11 @@ class _Wave(TinyTag):
                         # IFF chunks are padded to an even size
                         data_length += data_length % 2
                         data = self._unpad_bytes(walker.read(data_length))
-                        if field in self._RIFF_MAPPING:
-                            fieldname = self._RIFF_MAPPING[field]
-                        else:
-                            fieldname = (
-                                self._OTHER_PREFIX
-                                + field.decode('latin-1')).lower()
+                        fieldname = self._RIFF_MAPPING.get(
+                            field,
+                            (self._OTHER_PREFIX
+                             + field.decode('latin-1')).lower()
+                        )
                         value = data.decode('utf-8', 'replace')
                         if fieldname == 'track':
                             if value.isdecimal():
@@ -2102,7 +2104,7 @@ class _Flac(TinyTag):
         while len(block_header) == header_len:
             block_type = block_header[0] & 0x7f
             is_last_block = bool(block_header[0] & 0x80)
-            is_streaminfo_block = (block_type == self._STREAMINFO)
+            is_streaminfo_block = block_type == self._STREAMINFO
             size = int.from_bytes(block_header[1:], 'big')
             # http://xiph.org/flac/format.html#metadata_block_streaminfo
             if (self._parse_duration and is_streaminfo_block
