@@ -1159,6 +1159,9 @@ class Shares:
 
         # Replace broken stdout/stderr before the multiprocessing module tries to flush them
         for file_handle in (sys.stdout, sys.stderr):
+            if file_handle is None:
+                continue
+
             try:
                 file_handle.flush()
             except OSError:
