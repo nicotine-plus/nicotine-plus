@@ -1589,10 +1589,12 @@ class _MPEG(TinyTag):
                 xframes = 0
                 byte_count = 0
                 prev_offset = header_len + audio_offset
+                is_vbr = True
                 frame_content = fh.read(min(50, frame_length))  # optimization
                 xing_header_offset = frame_content.find(b'Xing')  # VBR
                 if xing_header_offset == -1:
                     xing_header_offset = frame_content.find(b'Info')  # CBR
+                    is_vbr = False
                 if xing_header_offset != -1:
                     xframes, byte_count = self._parse_xing_header(
                         frame_content, xing_header_offset)
@@ -1605,7 +1607,7 @@ class _MPEG(TinyTag):
                 if xframes > 0 and byte_count > 0:
                     self.duration = dur = xframes * samples_pf / samplerate
                     self.bitrate = byte_count * 8 / dur / 1000
-                    self.is_vbr = True
+                    self.is_vbr = is_vbr
                     self._duration_parsed = True
                     return
                 fh.seek(prev_offset)
