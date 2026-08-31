@@ -42,7 +42,7 @@ from pynicotine import rename_process
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
-from pynicotine.external.tinytag import TinyTag
+from pynicotine.external.tinytag import TinyTag, UnsupportedFormatError
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import FileListMessage
 from pynicotine.slskmessages import FolderContentsResponse
@@ -619,16 +619,15 @@ class Scanner:
             self.streams[virtual_folder_path] = self.get_folder_stream(file_list)
             self.current_folder_count += 1
 
-    def get_audio_tag(self, encoded_file_path, size):
+    def get_audio_tag(self, file_path):
 
-        parser_class = TinyTag._get_parser_for_filename(encoded_file_path)  # pylint: disable=protected-access
-
-        if parser_class is None:
-            return None
-
-        with open(encoded_file_path, "rb") as file_handle:
-            tag = parser_class(file_handle, size)
-            tag.load(tags=False, duration=True, image=False)
+        try:
+            tag = TinyTag.get(
+                encode_path(file_path), tags=False, duration=True, image=False,
+                check_magic_bytes=False
+            )
+        except UnsupportedFormatError:
+            tag = None
 
         return tag
 
@@ -638,13 +637,12 @@ class Scanner:
         tag = None
         quality = None
         duration = None
-        encoded_file_path = encode_path(file_path)
         size = file_stat.st_size
 
         # We skip metadata scanning of files without meaningful content
         if size > 128:
             try:
-                tag = self.get_audio_tag(encoded_file_path, size)
+                tag = self.get_audio_tag(file_path)
 
             except Exception as error:
                 self.queue.put(
@@ -657,7 +655,7 @@ class Scanner:
         if tag is not None:
             bitrate = tag.bitrate
             samplerate = tag.samplerate
-            bitdepth = tag.bitdepth
+            bitdepth = tag.bitdepth if tag.is_lossless else None
             duration = tag.duration
 
             if bitrate is not None:
