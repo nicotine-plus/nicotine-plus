@@ -8,6 +8,9 @@ from unittest import TestCase
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.slskmessages import increment_token
+from pynicotine.slskmessages import initial_token
+from pynicotine.transfers import Transfer
 from pynicotine.transfers import TransferStatus
 from pynicotine.userbrowse import BrowsedUser
 
@@ -325,3 +328,32 @@ class DownloadsTest(TestCase):
 
         for basename, exists in file_names:
             self.assertEqual(os.path.isfile(os.path.join(DATA_FOLDER_PATH, basename)), exists)
+
+    def test_download_progress_without_connecting(self):
+        """Verify that progress does not raise TypeError.
+
+        Regression test for PR #3804 replicates crash reported in issue #3877.
+        """
+
+        token = increment_token(initial_token())
+        username = "download_progress_user"
+        transfer = Transfer(username, "Folder\\File.mp3", "", size=1000)
+
+        # Simulate the retry without connecting, i.e. no peer socket has been
+        # attached and start_time is unset (only _file_transfer_init sets it)
+        core.downloads._append_transfer(transfer)
+        core.downloads._activate_transfer(transfer, token)
+
+        self.assertIsNone(transfer.sock)
+        self.assertIsNone(transfer.start_time)
+
+        # This must not raise
+        # TypeError: unsupported operand type(s) for -: 'float' and 'NoneType'
+        core.downloads._file_download_progress(username, token, bytes_left=0)
+
+        # Progress update should be a noop as the download was finished (TBD)
+        # core.downloads._finish_transfer(transfer)
+
+        self.assertIsNone(transfer.start_time)
+        self.assertEqual(transfer.time_elapsed, 0)
+        self.assertNotEqual(transfer.status, TransferStatus.TRANSFERRING)
