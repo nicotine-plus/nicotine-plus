@@ -75,7 +75,6 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Upload and download list may be showing incomplete contents ([#3377](https://github.com/nicotine-plus/nicotine-plus/issues/3377))
  * Nicotine doesn't save the config when closing from a general computer shutdown ([#3383](https://github.com/nicotine-plus/nicotine-plus/issues/3383))
  * Chat History sorts by number not by Date ([#3412](https://github.com/nicotine-plus/nicotine-plus/issues/3412))
- * ctrl+PgUp-PgDn ([#3413](https://github.com/nicotine-plus/nicotine-plus/issues/3413))
  * Number of folders in "Browse Shares" does not equal number of scanned shares ([#3439](https://github.com/nicotine-plus/nicotine-plus/issues/3439))
  * Scrolling tabs should not change page in focus (v3.3.10) ([#3440](https://github.com/nicotine-plus/nicotine-plus/issues/3440))
  * Crash when stopping uwsm session ([#3443](https://github.com/nicotine-plus/nicotine-plus/issues/3443))
