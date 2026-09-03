@@ -1130,7 +1130,7 @@ class NetworkThread(Thread):
 
                 events.emit_main_thread(
                     "file-download-progress",
-                    username=conn.init.target_user, token=file_download.token,
+                    username=conn.init.target_user, token=file_download.token, sock=conn.sock,
                     bytes_left=file_download.leftbytes, speed=file_download.speed
                 )
                 file_download.speed = 0
@@ -1140,7 +1140,7 @@ class NetworkThread(Thread):
 
                 events.emit_main_thread(
                     "file-upload-progress",
-                    username=conn.init.target_user, token=file_upload.token,
+                    username=conn.init.target_user, token=file_upload.token, sock=conn.sock,
                     offset=file_upload.offset, bytes_sent=file_upload.sentbytes,
                     speed=file_upload.speed
                 )
@@ -2064,7 +2064,7 @@ class NetworkThread(Thread):
 
         events.emit_main_thread(
             "file-upload-progress",
-            username=conn.init.target_user, token=file_upload.token,
+            username=conn.init.target_user, token=file_upload.token, sock=conn.sock,
             offset=file_upload.offset, bytes_sent=file_upload.sentbytes
         )
 
@@ -2115,7 +2115,7 @@ class NetworkThread(Thread):
         if file_download.leftbytes <= 0:
             events.emit_main_thread(
                 "file-download-progress",
-                username=conn.init.target_user, token=file_download.token,
+                username=conn.init.target_user, token=file_download.token, sock=conn.sock,
                 bytes_left=file_download.leftbytes
             )
             return False  # Close the connection
@@ -2159,7 +2159,7 @@ class NetworkThread(Thread):
         if file_upload.offset + file_upload.sentbytes == size:
             events.emit_main_thread(
                 "file-upload-progress",
-                username=conn.init.target_user, token=file_upload.token,
+                username=conn.init.target_user, token=file_upload.token, sock=conn.sock,
                 offset=file_upload.offset, bytes_sent=file_upload.sentbytes
             )
         return True
