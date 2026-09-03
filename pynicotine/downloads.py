@@ -1213,7 +1213,6 @@ class Downloads(Transfers):
         if incomplete_file_path:
             download.last_byte_offset = offset
             download.start_time = time.monotonic() - download.time_elapsed
-            download.retry_attempt = False
 
             core.statistics.append_stat_value("started_downloads", 1)
 
@@ -1326,7 +1325,7 @@ class Downloads(Transfers):
         log.add_transfer("Upload attempt by user %s for file %s failed. Reason: %s",
                          (virtual_path, username, download.status))
 
-    def _file_download_progress(self, username, token, bytes_left, speed=None):
+    def _file_download_progress(self, username, token, sock, bytes_left, speed=None):
         """A file download is in progress."""
 
         download = self.active_users.get(username, {}).get(token)
@@ -1339,7 +1338,7 @@ class Downloads(Transfers):
             download.request_timer_id = None
 
         self._update_transfer_progress(
-            download, stat_id="downloaded_size",
+            download, sock=sock, stat_id="downloaded_size",
             current_byte_offset=(download.size - bytes_left), speed=speed
         )
         self._update_transfer(download)

@@ -433,11 +433,20 @@ class Transfers:
     def _update_transfer(self, transfer):
         raise NotImplementedError
 
-    def _update_transfer_progress(self, transfer, stat_id, current_byte_offset=None, speed=None):
+    def _update_transfer_progress(self, transfer, sock, stat_id, current_byte_offset=None, speed=None):
+
+        error = None
 
         if transfer.start_time is None:
-            log.add_transfer("Error: Received file transfer update (token: %s, user: %s), but no "
-                             "start time was set", (transfer.token, transfer.username))
+            error = "Start time not set"
+
+        elif transfer.sock != sock:
+            error = "Connection mismatch"
+
+        if error:
+            log.add_transfer("Received unexpected file transfer update (token: %s, user: %s, error: %s), "
+                             "closing connection", (transfer.token, transfer.username, error))
+            core.send_message_to_network_thread(CloseConnection(sock))
             return
 
         size = transfer.size
@@ -445,6 +454,7 @@ class Transfers:
         transfer.status = TransferStatus.TRANSFERRING
         transfer.time_elapsed = time_elapsed = (time.monotonic() - transfer.start_time)
         transfer.time_left = 0
+        transfer.retry_attempt = False
 
         if current_byte_offset is None:
             return
@@ -477,6 +487,7 @@ class Transfers:
         transfer.status = TransferStatus.FINISHED
         transfer.current_byte_offset = transfer.size
         transfer.last_byte_offset = None
+        transfer.retry_attempt = False
 
     def _auto_clear_transfer(self, transfer):
 

@@ -1211,7 +1211,7 @@ class Uploads(Transfers):
             # Must be be emitted after the final update to prevent inconsistent state
             core.pluginhandler.upload_started_notification(username, virtual_path, real_path)
 
-    def _file_upload_progress(self, username, token, offset, bytes_sent, speed=None):
+    def _file_upload_progress(self, username, token, sock, offset, bytes_sent, speed=None):
         """A file upload is in progress."""
 
         upload = self.active_users.get(username, {}).get(token)
@@ -1227,7 +1227,7 @@ class Uploads(Transfers):
             upload.last_byte_offset = offset
 
         self._update_transfer_progress(
-            upload, stat_id="uploaded_size",
+            upload, sock=sock, stat_id="uploaded_size",
             current_byte_offset=(offset + bytes_sent) if offset is not None else None,
             speed=speed
         )
