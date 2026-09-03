@@ -10,7 +10,6 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 ### Changes
 
  * Added menu items for moving column headers due to broken drag-and-drop in GTK
- * Added Ctrl+Page Up and Ctrl+Page Down shortcuts for cycling through tabs
  * Added support for the Haiku operating system
  * Enabled fixed number of upload slots by default
  * Show global recommendations for interests when no personalized ones are available
