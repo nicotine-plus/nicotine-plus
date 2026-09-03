@@ -692,7 +692,7 @@ class Scanner:
         if tag is not None:
             bitrate = tag.bitrate
             samplerate = tag.samplerate
-            bitdepth = tag.bitdepth
+            bitdepth = tag.bitdepth if tag.is_lossless else None
             duration = tag.duration
 
             if bitrate is not None:
