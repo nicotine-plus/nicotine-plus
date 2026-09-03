@@ -435,6 +435,11 @@ class Transfers:
 
     def _update_transfer_progress(self, transfer, stat_id, current_byte_offset=None, speed=None):
 
+        if transfer.start_time is None:
+            log.add_transfer("Error: Received file transfer update (token: %s, user: %s), but no "
+                             "start time was set", (transfer.token, transfer.username))
+            return
+
         size = transfer.size
 
         transfer.status = TransferStatus.TRANSFERRING
