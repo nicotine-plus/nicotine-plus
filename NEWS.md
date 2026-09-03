@@ -26,6 +26,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Removed 'Everyone' permission for receiving files sent via manual upload
  * Removed automatic port forwarding from isolated mode (Docker containers)
  * macOS: Prefer integrated GPU for improved power efficiency
+ * macOS: Add Window submenu and use native window controls
  * macOS: Re-added support for macOS 11 Big Sur and above
 
 ### Corrections
@@ -37,9 +38,8 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Important: Fixed an issue where peers would sometimes receive the wrong username
  * Important: Fixed some incorrect behavior in the distributed search network
  * Fixed a crash when searching for room files with no chatroom specified
- * Fixed a rare crash when connecting to the server
  * Fixed a rare crash when opening File Properties dialog
- * Fixed a rare crash when quitting the application
+ * Fixed rare crashes when starting/quitting the application
  * Fixed broken Add Buddy text entry in the buddies sidebar
  * Fixed configuration files not being saved when restarting or logging out
  * Fixed upload removals when banning an IP address from the Preferences dialog
@@ -65,7 +65,10 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Windows: Fixed main window not always being raised to the top when restored
  * Windows: Fixed main window jumping around when changing virtual desktop
  * Windows: Fixed tray icon menu not following dark mode preference
+ * macOS: Prevent dialogs from opening in full screen
  * macOS: Fixed main window sometimes being unminimized on its own
+ * macOS: Fixed broken dialogs appearing when enabling/disabling header bars
+ * macOS: Fixed missing translations for some strings provided by GTK
  * DragonflyBSD: Fixed incorrect names of downloaded files
 
 ### Issues closed on GitHub
@@ -104,6 +107,9 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Allow only one instance (optionally) ([#3762](https://github.com/nicotine-plus/nicotine-plus/issues/3762))
  * Downloads in incomplete get stuck there if they temporarily can't be moved to completed downloads folder ([#3769](https://github.com/nicotine-plus/nicotine-plus/issues/3769))
  * "Download Folder" incorrectly adds files from other users with identical folder paths ([#3802](https://github.com/nicotine-plus/nicotine-plus/issues/3802))
+ * crash on startup ([#3866](https://github.com/nicotine-plus/nicotine-plus/issues/3866))
+ * Windows: crash when rescanning shares — NoneType has no attribute flush ([#3876](https://github.com/nicotine-plus/nicotine-plus/issues/3876))
+ * Keeps on crashing after sitting idle (unknown amount of time) ([#3877](https://github.com/nicotine-plus/nicotine-plus/issues/3877))
 
 
 ## Version 3.3.10 (March 10, 2025)
