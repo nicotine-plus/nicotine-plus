@@ -532,6 +532,7 @@ class _MP4(TinyTag):
         'mp4a.40.37',  # SLS
         'mp4a.40.38',  # SLS non-core
     }
+    _DECODER_SPECIFIC_INFO_TAG = 0x05
     _VERSIONED_ATOMS = {b'meta', b'stsd'}  # those have an extra 4 byte header
     _FLAGGED_ATOMS = {b'stsd'}  # these also have an extra 4 byte header
     _ILST_PATH = [b'ftyp', b'moov', b'udta', b'meta', b'ilst']
@@ -862,19 +863,21 @@ class _MP4(TinyTag):
         avg_br = unpack_from('>I', data, offset)[0]
         if avg_br > 0:
             yield 'bitrate', avg_br / 1000  # kbit/s
-        offset += 5
+        offset += 4
 
-        # Decoder Specific Info
-        _size, offset = _read_descriptor_size(data, offset)
-        first = data[offset]
-        second = data[offset + 1]
-        audio_object_type = first >> 3
-        if audio_object_type == 31:
-            # Read extended value
-            extended = ((first & 0x07) << 3) | (second >> 5)
-            audio_object_type = 32 + extended
-        if audio_object_type:
-            codec += f'.{audio_object_type}'
+        # Decoder Specific Info (optional)
+        if len(data) > offset:
+            descriptor_tag = data[offset]
+            offset += 1
+            if descriptor_tag == cls._DECODER_SPECIFIC_INFO_TAG:
+                _size, offset = _read_descriptor_size(data, offset)
+                first = data[offset]
+                audio_object_type = first >> 3
+                if audio_object_type == 31:
+                    # Read extended value
+                    extended = ((first & 0x07) << 3) | (data[offset + 1] >> 5)
+                    audio_object_type = 32 + extended
+                codec += f'.{audio_object_type}'
         if object_type:
             yield 'codec', codec
             yield 'is_lossless', codec in cls._LOSSLESS_CODECS
