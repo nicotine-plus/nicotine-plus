@@ -278,8 +278,8 @@ class Application:
             ("win.show-log-pane", ["<Primary>l"]),
             ("win.reopen-closed-tab", ["<Primary><Shift>t"]),
             ("win.close-tab", ["<Primary>F4", "<Primary>w"]),
-            ("win.cycle-tabs", ["<Control>Tab", "<Control>Page_Down"]),
-            ("win.cycle-tabs-reverse", ["<Control><Shift>Tab", "<Control>Page_Up"]),
+            ("win.cycle-tabs", ["<Control>Tab"]),
+            ("win.cycle-tabs-reverse", ["<Control><Shift>Tab"]),
 
             # Other accelerators (logic defined elsewhere, actions only used for shortcuts dialog)
             ("accel.cut-clipboard", ["<Primary>x"]),
