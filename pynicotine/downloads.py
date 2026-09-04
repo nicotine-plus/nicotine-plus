@@ -1269,13 +1269,11 @@ class Downloads(Transfers):
         log.add_transfer("Received file download init with token %s for file %s from user %s",
                          (token, virtual_path, username))
 
-        # _open_incomplete_transfer() aborts the transfer if the download folder is unwritable.
-        # Assign the socket before that so we actually close the connection.
-        download.sock = sock = msg.sock
         incomplete_file_path, offset = self._open_incomplete_transfer(download)
         need_update = False
 
         if incomplete_file_path:
+            download.sock = sock = msg.sock
             download.last_byte_offset = offset
             download.start_time = time.monotonic() - download.time_elapsed
             download.retry_attempt = False
