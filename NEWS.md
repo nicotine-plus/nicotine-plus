@@ -38,7 +38,6 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Fixed loading a saved shares file list from disk while offline
  * Fixed shares not always rescanning on startup when databases were missing/corrupted
  * Fixed folder downloads adding files from other users with identical folder paths
- * Fixed stuck transfers with download folder error when user is offline
  * Fixed incorrect average transfer speed when uploading the same file many times
  * Fixed transfer list not always updating fully until switching to another tab
  * Fixed zero-byte downloads not finishing immediately
@@ -96,7 +95,6 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * 'NoneType' object has no attribute 'sock' ([#3740](https://github.com/nicotine-plus/nicotine-plus/issues/3740))
  * Crash when searching empty room name ([#3747](https://github.com/nicotine-plus/nicotine-plus/issues/3747))
  * Allow only one instance (optionally) ([#3762](https://github.com/nicotine-plus/nicotine-plus/issues/3762))
- * Downloads in incomplete get stuck there if they temporarily can't be moved to completed downloads folder ([#3769](https://github.com/nicotine-plus/nicotine-plus/issues/3769))
  * "Download Folder" incorrectly adds files from other users with identical folder paths ([#3802](https://github.com/nicotine-plus/nicotine-plus/issues/3802))
  * crash on startup ([#3866](https://github.com/nicotine-plus/nicotine-plus/issues/3866))
  * Windows: crash when rescanning shares — NoneType has no attribute flush ([#3876](https://github.com/nicotine-plus/nicotine-plus/issues/3876))
