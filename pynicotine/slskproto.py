@@ -333,9 +333,10 @@ class NetworkThread(Thread):
     Soulseek server and peers. Communication with the core is done through
     events.
 
-    The server and peers send each other small binary messages that
-    start with length and message code followed by the actual message
-    data.
+    The server and peers send each other small binary messages that start with
+    length and message code followed by the actual message data payload. Each
+    client should be tolerant of receiving bad inputs, but must be strict about
+    only sending valid outputs, with respect to clients that are less capable.
     """
 
     CONNECTION_INIT_TIMEOUT = 2
@@ -348,10 +349,11 @@ class NetworkThread(Thread):
     MAX_INCOMING_MESSAGE_SIZE_16M = 16777216     # 16 MiB
     MAX_INCOMING_MESSAGE_SIZE_1M = 1048576       # 1 MiB
     MAX_INCOMING_MESSAGE_SIZE_16K = 16384        # 16 KiB
+    MAX_INCOMING_USERNAME_SIZE = 256             # 256 bytes, for future flexibility beyond the actual 30 byte limit
+    MAX_OUTGOING_USERNAME_SIZE = 30              # 30 bytes, is 30 printable ASCII characters accepted only
+    SERVER_USERNAME = "server"
     TCP_BUFFER_SIZE_MEDIUM = 208896              # 204 KiB, maximum limit NetBSD accepts by default
     TCP_BUFFER_SIZE_SMALL = 16384                # 16 KiB
-    MAX_ACCEPTED_USERNAME_SIZE = 256             # 256 bytes, for future flexibility beyond the actual 30 byte limit
-    SERVER_USERNAME = "server"
     ALLOWED_PEER_CONN_TYPES = {
         ConnectionType.PEER,
         ConnectionType.FILE,
@@ -1712,7 +1714,7 @@ class NetworkThread(Thread):
             conn_type = msg.conn_type
             addr = conn.addr
 
-            if (not 0 < msg.target_username_size <= self.MAX_ACCEPTED_USERNAME_SIZE
+            if (not 0 < msg.target_username_size <= self.MAX_INCOMING_USERNAME_SIZE
                     or username == self.SERVER_USERNAME or not username.isprintable()):
                 log.add_conn("Rejected incoming direct connection from address %s "
                              "due to invalid username: %r", (addr, username))
@@ -2306,7 +2308,7 @@ class NetworkThread(Thread):
         if conn is self._parent.conn:
             return ParentStatus.ACCEPTED
 
-        log.add_conn("Received a distributed message %s from user %s, who is not our parent. "
+        log.add_conn("Rejected a distributed message %s from user %s, who is not our parent. "
                      "Closing connection.", (msg_class, conn.init.target_user))
         return ParentStatus.REJECTED
 
@@ -2470,7 +2472,7 @@ class NetworkThread(Thread):
             if msg.level < 0:
                 # There are rare cases of parents sending a branch level value of -1,
                 # presumably buggy clients
-                log.add_conn("Received an invalid branch level value %s from user %s. "
+                log.add_conn("Rejected an invalid branch level value %s from user %s. "
                              "Closing connection.", (msg.level, username))
                 return False
 
@@ -2482,8 +2484,8 @@ class NetworkThread(Thread):
                 self._send_message_to_server(BranchLevel(self._branch_level))
                 self._send_message_to_child_peers(DistribBranchLevel(self._branch_level))
 
-                log.add_conn("Received a branch level update from our parent. Our new branch level is %s",
-                             self._branch_level)
+                log.add_conn("Received a branch level update from our parent %s. Our new branch level is %s",
+                             (username, self._branch_level))
 
             elif parent_status == ParentStatus.WAITING and username in self._potential_parents:
                 parent_candidate = self._potential_parents[username]
@@ -2501,20 +2503,25 @@ class NetworkThread(Thread):
                 return False
 
         elif msg_class is DistribBranchRoot:
-            if not msg.root_username:
-                log.add_conn("Received an empty branch root value from user %s. "
-                             "Closing connection.", username)
+            if (not 0 < msg.root_username_size <= self.MAX_OUTGOING_USERNAME_SIZE
+                    or not msg.root_username.isascii()
+                    or not msg.root_username.isprintable()
+                    or msg.root_username != msg.root_username.strip()
+                    or msg.root_username == self.SERVER_USERNAME):
+                log.add_conn("Rejected an invalid branch root username %r from user %s. "
+                             "Closing connection.", (msg.root_username, username))
                 return False
 
             parent_status = self._verify_parent_status(conn, msg_class)
 
             if parent_status == ParentStatus.ACCEPTED:
+                # Inform the server and child peers the name of our new branch root
                 self._branch_root = msg.root_username
                 self._send_message_to_server(BranchRoot(self._branch_root))
                 self._send_message_to_child_peers(DistribBranchRoot(self._branch_root))
 
-                log.add_conn("Received a branch root update from our parent. Our new branch root is %s",
-                             self._branch_root)
+                log.add_conn("Received a branch root update from our parent %s. Our new branch root is %s",
+                             (username, self._branch_root))
 
             elif parent_status == ParentStatus.WAITING and username in self._potential_parents:
                 parent_candidate = self._potential_parents[username]
