@@ -4156,17 +4156,19 @@ class DistribBranchRoot(DistribMessage):
     message regardless of our status in the distributed network.
     """
 
-    __slots__ = ("root_username",)
+    __slots__ = ("root_username", "root_username_size")
 
     def __init__(self, root_username=None, *, msg_content=None):
         DistribMessage.__init__(self, msg_content)
         self.root_username = root_username
+        self.root_username_size = None  # in bytes
 
     def make_network_message(self):
         return self.pack_string(self.root_username)
 
     def parse_network_message(self):
         self.root_username = self.unpack_string()
+        self.root_username_size = self._offset - 4
 
 
 class DistribChildDepth(DistribMessage):
