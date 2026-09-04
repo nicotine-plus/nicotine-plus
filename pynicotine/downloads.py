@@ -1216,7 +1216,9 @@ class Downloads(Transfers):
                 os.makedirs(incomplete_folder_path_encoded)
 
             incomplete_file_path = self.get_incomplete_download_file_path(username, virtual_path)
-            file_handle = open(encode_path(incomplete_file_path), "ab+")  # pylint: disable=consider-using-with
+
+            # pylint: disable=consider-using-with
+            download.file_handle = file_handle = open(encode_path(incomplete_file_path), "ab+")
 
             try:
                 import fcntl
@@ -1246,7 +1248,6 @@ class Downloads(Transfers):
             need_update = False
 
         else:
-            download.file_handle = file_handle
             download.last_byte_offset = offset
             download.start_time = time.monotonic() - download.time_elapsed
             download.retry_attempt = False
