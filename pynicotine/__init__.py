@@ -20,9 +20,7 @@ import sys
 
 from pynicotine.config import config
 from pynicotine.core import core
-from pynicotine.i18n import LOCALE_PATH
 from pynicotine.i18n import apply_translations
-from pynicotine.logfacility import log
 
 
 def check_arguments():
@@ -129,6 +127,10 @@ def set_up_python():
         # Always use UTF-8 and enable line buffering
         sys.stderr.reconfigure(encoding="utf-8", line_buffering=True)
 
+        # Dump tracebacks for C modules (in addition to pure Python code)
+        import faulthandler
+        faulthandler.enable()
+
     if getattr(sys, "frozen", False) and sys.platform == "win32":
         # Prioritize dlls in the 'lib' subfolder over system dlls, to avoid issues with conflicting dlls
         import ctypes
@@ -165,7 +167,7 @@ def rename_process(new_name, debug_info=False):
         msg = ["Errors occurred while trying to change process name:"]
         for i in errors:
             msg.append(str(i))
-        log.add("\n".join(msg))
+        print("\n".join(msg))
 
 
 def rescan_shares():
@@ -176,9 +178,6 @@ def rescan_shares():
     core.start()
 
     if not core.shares.rescan_shares(use_thread=False):
-        log.add("--------------------------------------------------")
-        log.add(_("Failed to scan shares. Please close other Nicotine+ instances and try again."))
-
         exit_code = 1
 
     core.quit()
@@ -198,17 +197,6 @@ def run():
         print(error)
         return 1
 
-    # Dump tracebacks for C modules (in addition to pure Python code)
-    try:
-        import faulthandler
-        faulthandler.enable()
-
-    except Exception as error:
-        log.add(f"Faulthandler module could not be enabled. Error: {error}")
-
-    if not os.path.isdir(LOCALE_PATH):
-        log.add("Translation files (.mo) are unavailable, using default English strings")
-
     if rescan:
         return rescan_shares()
 
@@ -222,7 +210,7 @@ def run():
 
     # Run without a GUI
     from pynicotine import headless as application
-    return application.run(isolated_mode)
+    return application.run(isolated_mode=isolated_mode, is_fallback=not headless)
 
 
 apply_translations()

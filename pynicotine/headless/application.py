@@ -13,9 +13,10 @@ from pynicotine.logfacility import log
 
 class Application:
 
-    def __init__(self, isolated_mode):
+    def __init__(self, isolated_mode, is_fallback):
 
         self.isolated_mode = isolated_mode
+        self.is_fallback = is_fallback
         sys.excepthook = self.on_critical_error
 
         for log_level in ("download", "upload"):
@@ -34,6 +35,9 @@ class Application:
 
         core.init_components(isolated_mode=self.isolated_mode)
         core.start()
+
+        if self.is_fallback:
+            log.add(_("No graphical environment available, using headless (no GUI) mode"))
 
         if config.sections["server"]["auto_connect_startup"]:
             core.connect()

@@ -4,8 +4,6 @@
 import os
 import sys
 
-from pynicotine.logfacility import log
-
 
 def get_default_gtk_version():
 
@@ -29,7 +27,6 @@ def get_default_gtk_version():
             # If screen reader is enabled, use GTK 3 until treeviews have been ported to
             # Gtk.ColumnView. Gtk.TreeView doesn't support screen readers in GTK 4.
             if dbus_proxy.Get("(ss)", "org.a11y.Status", "IsEnabled"):
-                log.add_debug("Screen reader enabled, using GTK 3 for improved accessibility")
                 return "3"
 
         except GLib.Error:
@@ -45,10 +42,6 @@ def get_default_gtk_version():
 def check_gtk_version(gtk_api_version, is_fallback=False):
 
     is_gtk3_supported = sys.platform not in {"darwin", "win32"}
-
-    if gtk_api_version == "3" and not is_gtk3_supported:
-        log.add("WARNING: Using GTK 3, which might not work properly on Windows and macOS. "
-                "GTK 4 will be required in the future.")
 
     # Require minor version of GTK
     if gtk_api_version == "4":
@@ -194,13 +187,12 @@ def run(hidden, ci_mode, isolated_mode, multi_instance):
     error = check_gtk_version(gtk_api_version=os.environ.get("NICOTINE_GTK_VERSION", get_default_gtk_version()))
 
     if error:
-        log.add(error)
+        print(error)
         return 1
 
     from gi.repository import Gdk
 
     if not ci_mode and Gdk.Display.get_default() is None:
-        log.add(_("No graphical environment available, using headless (no GUI) mode"))
         return None
 
     from pynicotine.gtkgui.application import Application

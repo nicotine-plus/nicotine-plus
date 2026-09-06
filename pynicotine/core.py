@@ -15,6 +15,7 @@ from typing import TYPE_CHECKING
 import pynicotine
 from pynicotine.config import config
 from pynicotine.events import events
+from pynicotine.i18n import LOCALE_PATH
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import InternalMessage
 from pynicotine.slskmessages import PeerMessage
@@ -234,6 +235,9 @@ class Core:
         })
         log.add_debug("Using %s executable: %s", (pynicotine.__application_name__, script_folder_path))
         log.add_debug("Using %s executable: %s", ("Python", sys.executable))
+
+        if not os.path.isdir(LOCALE_PATH):
+            log.add("Translation files (.mo) are unavailable, using default English strings")
 
         if "cli" in self.enabled_components:
             from pynicotine.cli import cli
