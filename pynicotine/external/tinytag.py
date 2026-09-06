@@ -1431,16 +1431,15 @@ class _ID3(TinyTag):
                              encoding: int = 0x00,
                              start_pos: int = 0) -> int:
         # pylint: disable=consider-using-in
-        # latin1 and utf-8 are 1 byte
+        # latin1 and utf-8
         if encoding == 0x00 or encoding == 0x03:
             end_pos = content.find(b'\x00', start_pos)
             return start_pos if end_pos < 0 else end_pos + 1
-        end_pos = -1
-        for i in range(start_pos, len(content) - 1, 2):
-            if content[i] == 0x00 and content[i + 1] == 0x00:
-                end_pos = i + 2
-                break
-        return start_pos if end_pos < 0 else end_pos
+        # utf-16
+        end_pos = content.find(b'\x00\x00', start_pos)
+        while end_pos >= 0 and (end_pos - start_pos) % 2 != 0:
+            end_pos = content.find(b'\x00\x00', end_pos + 1)
+        return start_pos if end_pos < 0 else end_pos + 2
 
     def _decode_string(self, value: bytes, encoding: int | None = None) -> str:
         if encoding == 0x00:  # ISO-8859-1 (but allow override)
