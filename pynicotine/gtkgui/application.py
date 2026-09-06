@@ -96,26 +96,6 @@ class Application:
         self._instance.connect("query-end", self.on_query_end)
         self._instance.connect("shutdown", self.on_shutdown)
 
-        for event_name, callback in (
-            ("confirm-quit", self.on_confirm_quit),
-            ("invalid-password", self.on_invalid_password),
-            ("invalid-username", self.on_invalid_username),
-            ("room-invitation-rejected", self.on_room_invitation_rejected),
-            ("quit", self._instance.quit),
-            ("server-login", self._update_user_status),
-            ("server-disconnect", self._update_user_status),
-            ("setup", self.on_fast_configure),
-            ("shares-unavailable", self.on_shares_unavailable),
-            ("show-notification", self._show_notification),
-            ("show-chatroom-notification", self._show_chatroom_notification),
-            ("show-download-notification", self._show_download_notification),
-            ("show-private-chat-notification", self._show_private_chat_notification),
-            ("show-search-notification", self._show_search_notification),
-            ("show-upload-notification", self._show_upload_notification),
-            ("user-status", self.on_user_status)
-        ):
-            events.connect(event_name, callback)
-
     def run(self):
         return self._instance.run()
 
@@ -1012,10 +992,30 @@ class Application:
 
     def on_startup(self, *_args):
 
+        core.init_components(isolated_mode=self.isolated_mode)
+
+        for event_name, callback in (
+            ("confirm-quit", self.on_confirm_quit),
+            ("invalid-password", self.on_invalid_password),
+            ("invalid-username", self.on_invalid_username),
+            ("room-invitation-rejected", self.on_room_invitation_rejected),
+            ("quit", self._instance.quit),
+            ("server-login", self._update_user_status),
+            ("server-disconnect", self._update_user_status),
+            ("setup", self.on_fast_configure),
+            ("shares-unavailable", self.on_shares_unavailable),
+            ("show-notification", self._show_notification),
+            ("show-chatroom-notification", self._show_chatroom_notification),
+            ("show-download-notification", self._show_download_notification),
+            ("show-private-chat-notification", self._show_private_chat_notification),
+            ("show-search-notification", self._show_search_notification),
+            ("show-upload-notification", self._show_upload_notification),
+            ("user-status", self.on_user_status)
+        ):
+            events.connect(event_name, callback)
+
         from pynicotine.gtkgui.widgets.theme import load_icons
         from pynicotine.gtkgui.widgets.trayicon import TrayIcon
-
-        core.init_components(isolated_mode=self.isolated_mode)
 
         load_icons()
 
