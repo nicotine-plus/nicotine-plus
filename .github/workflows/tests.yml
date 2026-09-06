@@ -292,19 +292,11 @@ jobs:
           persist-credentials: false
 
       - name: Set up DragonflyBSD
-        uses: cross-platform-actions/action@faa0c6197e94aacf1c5956460152c8380d3560a5 # v1.5.0
+        uses: cross-platform-actions/action@25da832d5e5640894a2a34c7b9b60bb820f8857c
         with:
           operating_system: dragonflybsd
           version: '6.4.2'
           environment_variables: NICOTINE_NETWORK_TESTS
-
-      # Use dhcpcd instead of dhclient for reliable networking
-      # https://bugs.dragonflybsd.org/issues/3317
-      - name: Enable dhcpcd
-        run: |
-          echo 'dhcp_client="dhcpcd"' | sudo tee -a /etc/rc.conf
-          echo 'dhcpcd_enable="YES"' | sudo tee -a /etc/rc.conf
-          sudo service netif restart
 
       - name: Install dependencies
         run: |
