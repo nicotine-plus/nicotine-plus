@@ -24,6 +24,13 @@ if __name__ == "__main__":
     is_frozen = getattr(sys, "frozen", False)
 
     if is_frozen:
+        if sys.platform == "win32":
+            # Prioritize dlls in the 'lib' subfolder over system dlls, to avoid issues with conflicting dlls
+            import ctypes
+            import os
+            executable_folder = os.path.dirname(sys.executable)
+            ctypes.windll.kernel32.SetDllDirectoryW(os.path.join(executable_folder, "lib"))
+
         import multiprocessing
         multiprocessing.freeze_support()
 

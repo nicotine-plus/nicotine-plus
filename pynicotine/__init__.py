@@ -131,12 +131,6 @@ def set_up_python():
         import faulthandler
         faulthandler.enable()
 
-    if getattr(sys, "frozen", False) and sys.platform == "win32":
-        # Prioritize dlls in the 'lib' subfolder over system dlls, to avoid issues with conflicting dlls
-        import ctypes
-        executable_folder = os.path.dirname(sys.executable)
-        ctypes.windll.kernel32.SetDllDirectoryW(os.path.join(executable_folder, "lib"))
-
 
 def rename_process(new_name, debug_info=False):
 
