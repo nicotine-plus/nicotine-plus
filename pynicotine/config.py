@@ -57,8 +57,9 @@ class Config:
         - the data folder
         """
 
-        script_folder_path = os.path.dirname(sys.argv[0])
-        portable_folder_path = os.path.join(script_folder_path, "portable")
+        is_frozen = getattr(sys, "frozen", False)
+        root_folder_path = os.path.dirname(sys.executable if is_frozen else sys.argv[0])
+        portable_folder_path = os.path.join(root_folder_path, "portable")
 
         if os.path.isdir(portable_folder_path):
             data_folder_path = os.path.join(portable_folder_path, "data")
