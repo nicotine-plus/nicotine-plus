@@ -333,10 +333,9 @@ class NetworkThread(Thread):
     Soulseek server and peers. Communication with the core is done through
     events.
 
-    The server and peers send each other small binary messages that start with
-    length and message code followed by the actual message data payload. Each
-    client should be tolerant of receiving bad inputs, but must be strict about
-    only sending valid outputs, with respect to clients that are less capable.
+    The server and peers send each other small binary messages that
+    start with length and message code followed by the actual message
+    data.
     """
 
     CONNECTION_INIT_TIMEOUT = 2
@@ -349,11 +348,10 @@ class NetworkThread(Thread):
     MAX_INCOMING_MESSAGE_SIZE_16M = 16777216     # 16 MiB
     MAX_INCOMING_MESSAGE_SIZE_1M = 1048576       # 1 MiB
     MAX_INCOMING_MESSAGE_SIZE_16K = 16384        # 16 KiB
-    MAX_INCOMING_USERNAME_SIZE = 256             # 256 bytes, for future flexibility beyond the actual 30 byte limit
-    MAX_OUTGOING_USERNAME_SIZE = 30              # 30 bytes, is 30 printable ASCII characters accepted only
-    SERVER_USERNAME = "server"
     TCP_BUFFER_SIZE_MEDIUM = 208896              # 204 KiB, maximum limit NetBSD accepts by default
     TCP_BUFFER_SIZE_SMALL = 16384                # 16 KiB
+    MAX_ACCEPTED_USERNAME_SIZE = 256             # 256 bytes, for future flexibility beyond the actual 30 byte limit
+    SERVER_USERNAME = "server"
     ALLOWED_PEER_CONN_TYPES = {
         ConnectionType.PEER,
         ConnectionType.FILE,
@@ -1714,7 +1712,7 @@ class NetworkThread(Thread):
             conn_type = msg.conn_type
             addr = conn.addr
 
-            if (not 0 < msg.target_username_size <= self.MAX_INCOMING_USERNAME_SIZE
+            if (not 0 < msg.target_username_size <= self.MAX_ACCEPTED_USERNAME_SIZE
                     or username == self.SERVER_USERNAME or not username.isprintable()):
                 log.add_conn("Rejected incoming direct connection from address %s "
                              "due to invalid username: %r", (addr, username))
@@ -2503,11 +2501,8 @@ class NetworkThread(Thread):
                 return False
 
         elif msg_class is DistribBranchRoot:
-            if (not 0 < msg.root_username_size <= self.MAX_OUTGOING_USERNAME_SIZE
-                    or not msg.root_username.isascii()
-                    or not msg.root_username.isprintable()
-                    or msg.root_username != msg.root_username.strip()
-                    or msg.root_username == self.SERVER_USERNAME):
+            if (not 0 < msg.root_username_size <= self.MAX_ACCEPTED_USERNAME_SIZE
+                    or msg.root_username == self.SERVER_USERNAME or not msg.root_username.isprintable()):
                 log.add_conn("Rejected an invalid branch root username %r from user %s. "
                              "Closing connection.", (msg.root_username, username))
                 return False
