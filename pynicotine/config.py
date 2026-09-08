@@ -58,11 +58,7 @@ class Config:
         """
 
         is_frozen = getattr(sys, "frozen", False)
-
-        if is_frozen and sys.platform == "win32":
-            root_folder_path = os.path.dirname(sys.executable)
-        else:
-            root_folder_path = os.path.dirname(sys.argv[0])
+        root_folder_path = os.path.dirname(sys.executable if is_frozen else sys.argv[0])
         portable_folder_path = os.path.join(root_folder_path, "portable")
 
         if os.path.isdir(portable_folder_path):
