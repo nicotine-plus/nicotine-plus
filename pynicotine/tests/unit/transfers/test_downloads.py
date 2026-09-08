@@ -8,8 +8,10 @@ from unittest import TestCase
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.transfers import Transfer
 from pynicotine.transfers import TransferStatus
 from pynicotine.userbrowse import BrowsedUser
+from pynicotine.utils import encode_path
 
 CURRENT_FOLDER_PATH = os.path.dirname(os.path.realpath(__file__))
 DATA_FOLDER_PATH = os.path.join(CURRENT_FOLDER_PATH, "temp_data")
@@ -32,7 +34,7 @@ class DownloadsTest(TestCase):
 
         shutil.copy(TRANSFERS_FILE_PATH, os.path.join(DATA_FOLDER_PATH, TRANSFERS_BASENAME))
 
-        core.init_components(enabled_components={"users", "downloads", "userbrowse"})
+        core.init_components(enabled_components={"users", "downloads", "userbrowse", "statistics", "notifications"})
         config.sections["transfers"]["downloaddir"] = DATA_FOLDER_PATH
         config.sections["transfers"]["incompletedir"] = DATA_FOLDER_PATH
 
@@ -325,3 +327,49 @@ class DownloadsTest(TestCase):
 
         for basename, exists in file_names:
             self.assertEqual(os.path.isfile(os.path.join(DATA_FOLDER_PATH, basename)), exists)
+
+    def test_enqueue_download_finished_offline_move(self):
+        """Verify that resuming an errored download finishes if it's finished."""
+
+        username = "finished_offline_move_user"
+        virtual_path = "TestFolder\\FinishedName.mp3"
+        size = 1000
+        incomplete_file_path = core.downloads.get_incomplete_download_file_path(username, virtual_path)
+
+        os.makedirs(os.path.dirname(encode_path(incomplete_file_path)), exist_ok=True)
+
+        # Write the complete incomplete file to disk
+        with open(encode_path(incomplete_file_path), "wb") as file_handle:
+            file_handle.write(b"0" * size)
+
+        transfer = Transfer(
+            username,
+            virtual_path,
+            size=size,
+            status=TransferStatus.DOWNLOAD_FOLDER_ERROR,
+            current_byte_offset=size  # 100%
+        )
+        core.downloads._append_transfer(transfer)
+        enqueue_result = core.downloads._enqueue_transfer(transfer)
+
+        # File was already downloaded previously, but not successfully moved to the final download
+        # destination. Attempt to move it again should cause it to be FINISHED even while offline.
+        self.assertFalse(enqueue_result)
+        self.assertEqual(transfer.status, TransferStatus.FINISHED)
+
+        # No peer connection is required to do this in the 100% pending case
+        self.assertIsNone(transfer.token)
+        self.assertIsNone(transfer.sock)
+        self.assertIsNone(transfer.start_time)
+        self.assertIsNone(transfer.file_handle)
+
+        finished_folder_path = core.downloads.get_default_download_folder(username)
+        finished_basename = core.downloads.get_download_basename(virtual_path, finished_folder_path)
+        finished_file_path = os.path.join(finished_folder_path, finished_basename)
+
+        # It should be in the final download destination finished folder path
+        self.assertFalse(os.path.isfile(encode_path(incomplete_file_path)))
+        self.assertTrue(os.path.isfile(encode_path(finished_file_path)))
+        self.assertEqual(os.path.getsize(encode_path(finished_file_path)), size)
+
+        os.remove(encode_path(finished_file_path))
