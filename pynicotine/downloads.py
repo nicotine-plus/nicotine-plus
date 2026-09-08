@@ -1110,9 +1110,9 @@ class Downloads(Transfers):
         if download is not None:
             # Remote peer is signaling a transfer is ready, attempting to download it
 
-            # If the file is larger than 2GB, the SoulseekQt client seems to
-            # send a malformed file size (0 bytes) in the TransferRequest response.
-            # In that case, we rely on the cached, correct file size we received when
+            # If the file is larger than 2GB, old SoulseekQt clients may
+            # send a malformed file size (0 bytes) in the TransferRequest, so
+            # in that case we have to rely on the cached file size we received when
             # we initially added the download.
 
             self._unfail_transfer(download)
