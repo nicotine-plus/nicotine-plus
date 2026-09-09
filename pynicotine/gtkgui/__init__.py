@@ -43,6 +43,9 @@ def check_gtk_version(gtk_api_version, is_fallback=False):
 
     is_gtk3_supported = sys.platform not in {"darwin", "win32"}
 
+    if not is_gtk3_supported and gtk_api_version == "3":
+        return _("%s is not supported on this operating system") % f"GTK {gtk_api_version}"
+
     # Require minor version of GTK
     if gtk_api_version == "4":
         pygobject_version = (3, 42, 1)
