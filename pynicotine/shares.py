@@ -218,7 +218,8 @@ class Database:
     def close(self):
 
         if self._overwrite:
-            os.fsync(self._file_handle)
+            self._file_handle.flush()
+            os.fsync(self._file_handle.fileno())
 
         self._file_handle.close()
 
