@@ -148,11 +148,11 @@ using them.
 
  - [Download macOS Intel Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-x86_64-installer.zip)
     — [`SHA256`](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-x86_64-installer.zip.sha256)  
-   for macOS 14 Sonoma or later
+   for macOS 11 Big Sur or later
 
  - [Download macOS Apple Silicon Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-arm64-installer.zip)
     — [`SHA256`](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-arm64-installer.zip.sha256)  
-   for macOS 14 Sonoma or later
+   for macOS 11 Big Sur or later
 
 ### Package Managers
 
