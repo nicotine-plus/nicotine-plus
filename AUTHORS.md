@@ -415,6 +415,7 @@
  - Lucas Vieites
  - m-balthazar
  - Maite Guix
+ - mala
  - mantas
  - ManWell
  - marciozomb13
@@ -438,6 +439,7 @@
  - ms-afk
  - Mutnick
  - mzf-guest
+ - n6id
  - Nachtalb
  - nicola
  - Nicolas Abril
