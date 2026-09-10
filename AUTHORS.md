@@ -360,6 +360,7 @@
  - b1llso
  - baloo79
  - bgo-eiu
+ - Billy Enrique Herculano Madrid
  - blueboy
  - Bonislaw
  - boredcar
@@ -368,6 +369,7 @@
  - Bugmenot
  - burnmail123
  - ButterflyOfFire
+ - cardpuncher
  - Carlos Laviola
  - Cata
  - César Augusto do Nascimento
@@ -375,6 +377,7 @@
  - Christian Swinehart
  - chz
  - Coda
+ - Coool
  - cravings
  - cwpute
  - daelstorm
@@ -388,6 +391,7 @@
  - Emily
  - Enr1X
  - Eric Zhang
+ - Ernie
  - Eryk Michalak
  - Everly
  - Felipe Nogaroto Gonzalez
@@ -442,9 +446,11 @@
  - ketacat
  - Kian-Meng Ang
  - Kip Warner
+ - Kira Toshi
  - Kirill Feoktistov
  - KOXXPL
  - Kylie McClain
+ - LedeetLMAO
  - lee8oi
  - Lene Preuss
  - Lev Gorodetskiy
@@ -462,6 +468,7 @@
  - mathsped
  - Matthaiks
  - Maxime Leroy
+ - meegle84
  - Mehavoid
  - MELERIX
  - MendelGusmao
@@ -486,6 +493,7 @@
  - Nils
  - nince78
  - Nir Arbel
+ - NoPlagiarism
  - nyoooooooooooooooom
  - OffHand
  - Oğuz Ersen
@@ -503,7 +511,9 @@
  - quinox
  - Ramsey Harrison
  - redactedscribe
+ - reducedradius
  - rimasx
+ - rizkiv1
  - Saumon
  - SeeSchloss
  - sierracat
@@ -524,8 +534,10 @@
  - tagomago
  - thine
  - Timo Vanwynsberghe
+ - Tko Toradi
  - Toine Rademacher
  - tsointsoin
+ - turbomankor
  - (va)\*10^3
  - vasi
  - Vinícius Soares
@@ -545,6 +557,7 @@
  - zniavre
  - ZTetriminos
  - Žygimantas Beručka
+ - 大王叫我来巡山
  - தமிழ்நேரம்
 
 
