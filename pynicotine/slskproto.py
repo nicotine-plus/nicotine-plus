@@ -2280,7 +2280,7 @@ class NetworkThread(Thread):
         """Verify that a connection is our current parent connection."""
 
         if conn is not self._parent_conn:
-            log.add_conn("Received a distributed message %s from user %s, who is not our parent. "
+            log.add_conn("Rejected a distributed message %s from user %s, who is not our parent. "
                          "Closing connection.", (msg_class, conn.init.target_user))
             return False
 
@@ -2380,7 +2380,7 @@ class NetworkThread(Thread):
             if msg.level < 0:
                 # There are rare cases of parents sending a branch level value of -1,
                 # presumably buggy clients
-                log.add_conn("Received an invalid branch level value %s from user %s. "
+                log.add_conn("Rejected an invalid branch level value %s from user %s. "
                              "Closing connection.", (msg.level, msg.username))
                 return False
 
@@ -2416,10 +2416,16 @@ class NetworkThread(Thread):
                 self._send_message_to_server(BranchLevel(self._branch_level))
                 self._send_message_to_child_peers(DistribBranchLevel(self._branch_level))
 
-                log.add_conn("Received a branch level update from our parent. Our new branch level is %s",
-                             self._branch_level)
+                log.add_conn("Received a branch level update from our parent %s. Our new branch level is %s",
+                             (msg.username, self._branch_level))
 
         elif msg_class is DistribBranchRoot:
+            if (not 0 < msg.root_username_size <= self.MAX_ACCEPTED_USERNAME_SIZE
+                    or msg.root_username == self.SERVER_USERNAME or not msg.root_username.isprintable()):
+                log.add_conn("Rejected an invalid branch root username %r from user %s. "
+                             "Closing connection.", (msg.root_username, msg.username))
+                return False
+
             if not self._verify_parent_connection(conn, msg_class):
                 return False
 
