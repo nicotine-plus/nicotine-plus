@@ -46,6 +46,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Fixed incorrect sort order in file lists in some cases
  * Fixed inaccurate stuck current folder count during rescan
  * Fixed missing shared file count for users with no shared files
+ * Fixed issues reading audio properties for some files when rescanning shares
  * Fixed tabs unexpectedly being marked as read when scrolling through them
  * Fixed room list order sometimes changing after restarting
  * Fixed removed private rooms not being fully cleaned from lists until reconnecting
@@ -99,6 +100,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * crash on startup ([#3866](https://github.com/nicotine-plus/nicotine-plus/issues/3866))
  * Windows: crash when rescanning shares — NoneType has no attribute flush ([#3876](https://github.com/nicotine-plus/nicotine-plus/issues/3876))
  * Keeps on crashing after sitting idle (unknown amount of time) ([#3877](https://github.com/nicotine-plus/nicotine-plus/issues/3877))
+ * Latest alpha builds fail to start on Win11 ([#3885](https://github.com/nicotine-plus/nicotine-plus/issues/3885))
 
 
 ## Version 3.3.10 (March 10, 2025)
