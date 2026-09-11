@@ -36,7 +36,7 @@ Files: pynicotine/external/data/ip_country_data.csv
 Copyright: 2001-2024 Hexasoft Development Sdn. Bhd.
 License: CC-BY-SA-4.0
 
-Files: pynicotine/gtkgui/icons/hicolor/scalable/intl/nplus-flag-*.svg
+Files: pynicotine/gtkgui/icons/hicolor/scalable/emotes/nplus-flag-*.svg
 Copyright: 2016-2021 Bowtie AB
 License: Expat
 
