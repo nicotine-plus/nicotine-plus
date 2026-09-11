@@ -272,6 +272,7 @@ add_translations()
 setup(
     name=PACKAGE_NAME,
     description=pynicotine.__application_name__,
+    long_description=pynicotine.__application_name__,
     author=pynicotine.__author__,
     version=pynicotine.__version__,
     options={
