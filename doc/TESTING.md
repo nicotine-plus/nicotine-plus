@@ -35,7 +35,7 @@ following:
 
 ```sh
 sudo apt update; sudo apt install python3-launchpadlib software-properties-common
-sudo add-apt-repository 'deb https://ppa.launchpadcontent.net/nicotine-team/unstable/ubuntu jammy main'
+sudo add-apt-repository 'deb https://ppa.launchpadcontent.net/nicotine-team/unstable/ubuntu resolute main'
 sudo apt update; sudo apt install nicotine
 ```
 
