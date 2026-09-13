@@ -3577,7 +3577,8 @@ class PluginsPage:
 
         if iterator is not None and not core.pluginhandler.is_internal_plugin(self.selected_plugin):
             self.info_bar.show_warning_message(
-                _("This is a third-party plugin. Safety is not guaranteed. Use at your own risk.")
+                _("Plugin is not provided by %s, and is not guaranteed to be safe. "
+                  "Only enable plugins you trust.") % pynicotine.__application_name__
             )
         else:
             self.info_bar.set_visible(False)
@@ -3646,7 +3647,7 @@ class PluginsPage:
         if iterator is not None:
             self.plugin_list_view.select_row(iterator)
 
-    def on_install_plugin(self, *_args):
+    def on_install_plugin_response(self, *_args):
 
         from pynicotine.gtkgui.widgets.filechooser import FileChooser
 
@@ -3654,6 +3655,21 @@ class PluginsPage:
             application=self.application,
             title=_("Select a Zip File"),
             callback=self.on_install_plugin_selected
+        ).present()
+
+    def on_install_plugin(self, *_args):
+
+        OptionDialog(
+            application=self.application,
+            title=_("Install External Plugins?"),
+            message=_("External plugins are not verified or sandboxed, and can be malicious. "
+                      "Only install plugins you trust."),
+            buttons=[
+                ("cancel", _("_Cancel")),
+                ("ok", _("_Proceed"))
+            ],
+            destructive_response_id="ok",
+            callback=self.on_install_plugin_response
         ).present()
 
     def on_reset_plugin_settings_response(self, _dialog, _response_id, selected_plugin):
