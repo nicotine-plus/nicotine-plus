@@ -46,6 +46,7 @@ from pynicotine.gtkgui.widgets.combobox import ComboBox
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
+from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
@@ -2982,8 +2983,23 @@ class PluginsPage:
         config.sections["plugins"]["enabled"] = enabled_plugin_ids
         self.plugin_settings_button.set_sensitive(False)
 
-    def on_add_plugins(self, *_args):
+    def on_add_plugins_response(self, *_args):
         open_folder_path(core.pluginhandler.user_plugin_folder, create_folder=True)
+
+    def on_add_plugins(self, *_args):
+
+        OptionDialog(
+            parent=self.application.preferences,
+            title=_("Install External Plugins?"),
+            message=_("External plugins are not verified or sandboxed, and can be malicious. "
+                      "Only install plugins you trust."),
+            buttons=[
+                ("cancel", _("_Cancel")),
+                ("ok", _("_Proceed"))
+            ],
+            destructive_response_id="ok",
+            callback=self.on_add_plugins_response
+        ).present()
 
     def on_plugin_settings(self, *_args):
 
