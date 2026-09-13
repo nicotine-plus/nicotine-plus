@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-12 14:11+0300\n"
-"PO-Revision-Date: 2026-05-04 06:09+0000\n"
-"Last-Translator: turbomankor <sbsts0@gmail.com>\n"
+"PO-Revision-Date: 2026-08-31 13:52+0000\n"
+"Last-Translator: 임영민 <lym3293@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ko/>\n"
 "Language: ko\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17.1\n"
+"X-Generator: Weblate 2026.9.dev0\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -104,7 +104,7 @@ msgstr "웹사이드:%s"
 
 #: pynicotine/__init__.py:41
 msgid "show this help message and exit"
-msgstr "이 도움말 메시지를 표시하고 종료합니다."
+msgstr "이 도움말 메시지를 표시하고 종료합니다"
 
 #: pynicotine/__init__.py:44
 msgid "file"
@@ -112,7 +112,7 @@ msgstr "파일"
 
 #: pynicotine/__init__.py:45
 msgid "use non-default configuration file"
-msgstr "기본값이 아닌 구성 파일을 사용합니다."
+msgstr "기본값이 아닌 구성 파일을 사용합니다"
 
 #: pynicotine/__init__.py:48
 msgid "folder"
@@ -120,11 +120,11 @@ msgstr "폴더"
 
 #: pynicotine/__init__.py:49
 msgid "alternative folder for user data and plugins"
-msgstr ""
+msgstr "유저 데이터 및 플러그인 대체 폴더"
 
 #: pynicotine/__init__.py:53
 msgid "start the program without showing window"
-msgstr ""
+msgstr "백그라운드 실행"
 
 #: pynicotine/__init__.py:56
 msgid "address"
