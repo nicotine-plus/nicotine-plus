@@ -372,7 +372,7 @@ class ResponseThrottle:
 
 class PluginHandler:
     __slots__ = ("plugin_folders", "enabled_plugins", "command_source", "commands",
-                 "user_plugin_folder", "_load_now_playing_sender")
+                 "internal_plugin_folder", "user_plugin_folder", "_load_now_playing_sender")
 
     def __init__(self, isolated_mode=False):
 
@@ -392,7 +392,8 @@ class PluginHandler:
 
         # Load system-wide plugins
         prefix = os.path.dirname(os.path.realpath(__file__))
-        self.plugin_folders.append(os.path.join(prefix, "plugins"))
+        self.internal_plugin_folder = os.path.join(prefix, "plugins")
+        self.plugin_folders.append(self.internal_plugin_folder)
 
         # Load home folder plugins
         self.user_plugin_folder = os.path.join(config.data_folder_path, "plugins")
@@ -455,6 +456,15 @@ class PluginHandler:
                 return file_path
 
         return None
+
+    def is_internal_plugin(self, plugin_name):
+
+        plugin_path = self.get_plugin_path(plugin_name)
+
+        if plugin_path is None:
+            return False
+
+        return plugin_path.startswith(self.internal_plugin_folder)
 
     def _import_plugin_instance(self, plugin_name):
 

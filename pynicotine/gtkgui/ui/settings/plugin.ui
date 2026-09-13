@@ -269,7 +269,13 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkBox">
+                        <property name="orientation">vertical</property>
                         <property name="visible">True</property>
+                        <child>
+                          <object class="GtkBox" id="info_bar_container">
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
                         <child>
                           <object class="GtkScrolledWindow" id="plugin_description_view_container">
                             <property name="hexpand">True</property>

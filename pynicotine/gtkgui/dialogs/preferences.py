@@ -49,6 +49,7 @@ from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
+from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.textentry import SpellChecker
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
@@ -2837,6 +2838,7 @@ class PluginsPage:
             self.add_plugins_button,
             self.container,
             self.enable_plugins_toggle,
+            self.info_bar_container,
             self.plugin_authors_label,
             self.plugin_description_view_container,
             self.plugin_list_container,
@@ -2855,6 +2857,7 @@ class PluginsPage:
             }
         }
 
+        self.info_bar = InfoBar(parent=self.info_bar_container)
         self.plugin_description_view = TextView(self.plugin_description_view_container, editable=False,
                                                 pixels_below_lines=2)
         self.plugin_list_view = TreeView(
@@ -2883,6 +2886,7 @@ class PluginsPage:
 
     def destroy(self):
 
+        self.info_bar.destroy()
         self.plugin_description_view.destroy()
         self.plugin_list_view.destroy()
 
@@ -2937,6 +2941,14 @@ class PluginsPage:
         self.plugin_description_view.clear()
         self.plugin_description_view.append_line(plugin_description)
         self.plugin_description_view.place_cursor_at_line(0)
+
+        if iterator is not None and not core.pluginhandler.is_internal_plugin(self.selected_plugin):
+            self.info_bar.show_warning_message(
+                _("Plugin is not provided by Nicotine+, and is not guaranteed to be safe. "
+                  "Only enable plugins you trust.")
+            )
+        else:
+            self.info_bar.set_visible(False)
 
         self.check_plugin_settings_button(self.selected_plugin)
 
