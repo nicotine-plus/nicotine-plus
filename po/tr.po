@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-13 07:08+0300\n"
-"PO-Revision-Date: 2026-08-13 12:51+0000\n"
+"PO-Revision-Date: 2026-09-13 16:12+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.9.dev0\n"
+"X-Generator: Weblate 2026.10.dev0\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -366,7 +366,7 @@ msgstr "İndirme başladı: %(user)s kullanıcısı, %(file)s dosyası"
 #: pynicotine/gtkgui/__init__.py:47
 #, python-format
 msgid "%s is not supported on this operating system"
-msgstr ""
+msgstr "%s, bu işletim sisteminde desteklenmiyor"
 
 #: pynicotine/gtkgui/__init__.py:69 pynicotine/gtkgui/__init__.py:78
 #, python-format
@@ -384,7 +384,6 @@ msgid "_Disconnect"
 msgstr "Bağlantıyı _Kes"
 
 #: pynicotine/gtkgui/application.py:305
-#, fuzzy
 msgid "Soulseek Pri_vileges"
 msgstr "Soulseek _Ayrıcalıkları"
 
@@ -451,9 +450,8 @@ msgstr "_Paylaşımlar"
 
 #: pynicotine/gtkgui/application.py:404
 #: pynicotine/gtkgui/widgets/popupmenu.py:184
-#, fuzzy
 msgid "_Window"
-msgstr "Pencere"
+msgstr "_Pencere"
 
 #: pynicotine/gtkgui/application.py:406 pynicotine/gtkgui/application.py:422
 msgid "_Help"
@@ -2048,25 +2046,28 @@ msgid ""
 "Plugin is not provided by Nicotine+, and is not guaranteed to be safe. Only "
 "enable plugins you trust."
 msgstr ""
+"Bu eklenti Nicotine+ tarafından sağlanmıyor ve güvenliği garanti edilmez. "
+"Yalnızca güvendiğiniz eklentileri etkinleştirin."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3656
 msgid "Select a Zip File"
 msgstr "Zip Dosyası Seç"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3664
-#, fuzzy
 msgid "Install External Plugins?"
-msgstr "Kurulu eklentiler:"
+msgstr "Harici Eklentiler Kurulsun mu?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3665
 msgid ""
 "External plugins are not verified or sandboxed, and can be malicious. Only "
 "install plugins you trust."
 msgstr ""
+"Harici eklentiler doğrulanmaz veya sınırlandırılmaz ve zararlı olabilir. "
+"Yalnızca güvendiğiniz eklentileri kurun."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3669
 msgid "_Proceed"
-msgstr ""
+msgstr "İ_lerle"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3684
 msgid "Reset Plugin Settings?"
@@ -2924,9 +2925,8 @@ msgstr ""
 
 #: pynicotine/gtkgui/popovers/roomwall.py:39
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:57
-#, fuzzy
 msgid "Remove Message"
-msgstr "Paylaşımı kaldır"
+msgstr "Mesajı Kaldır"
 
 #: pynicotine/gtkgui/privatechat.py:355 pynicotine/gtkgui/search.py:655
 #: pynicotine/gtkgui/userbrowse.py:268 pynicotine/gtkgui/userinfo.py:340
@@ -5364,23 +5364,19 @@ msgstr[1] ""
 "%(user)s kullanıcısı \"%(query)s\" için arama yapıyor, %(num)s sonuç bulundu"
 
 #: pynicotine/shares.py:310
-#, fuzzy, python-format
+#, python-format
 msgid "%(num)s folder found previously, %(action)s…"
 msgid_plural "%(num)s folders found previously, %(action)s…"
-msgstr[0] ""
-"Yeniden taramadan önce %(num)s klasör bulundu, yeniden oluşturuluyor…"
-msgstr[1] ""
-"Yeniden taramadan önce %(num)s klasör bulundu, yeniden oluşturuluyor…"
+msgstr[0] "Daha önce %(num)s klasör bulundu, %(action)s…"
+msgstr[1] "Daha önce %(num)s klasör bulundu, %(action)s…"
 
 #: pynicotine/shares.py:316
-#, fuzzy
 msgid "rebuilding shares"
-msgstr "Paylaşımlar yeniden oluşturuluyor…"
+msgstr "paylaşımlar yeniden oluşturuluyor"
 
 #: pynicotine/shares.py:316
-#, fuzzy
 msgid "rescanning shares"
-msgstr "Paylaşımlar yeniden taranıyor…"
+msgstr "paylaşımlar yeniden taranıyor"
 
 #: pynicotine/shares.py:347
 #, python-format
@@ -7076,9 +7072,8 @@ msgstr "Dosya yöneticisi komutu:"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:10
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:26
-#, fuzzy
 msgid "Remove Picture"
-msgstr "Resmi Sıfırla"
+msgstr "Resmi Kaldır"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:45
 msgid "Self Description"
