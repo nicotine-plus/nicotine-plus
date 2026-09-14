@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-13 07:08+0300\n"
-"PO-Revision-Date: 2026-08-13 12:51+0000\n"
+"PO-Revision-Date: 2026-09-13 16:12+0000\n"
 "Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2026.9.dev0\n"
+"X-Generator: Weblate 2026.10.dev0\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -367,7 +367,7 @@ msgstr "Download inicializado: usuário %(user)s, arquivo %(file)s"
 #: pynicotine/gtkgui/__init__.py:47
 #, python-format
 msgid "%s is not supported on this operating system"
-msgstr ""
+msgstr "%s não é compatível com este sistema operacional"
 
 #: pynicotine/gtkgui/__init__.py:69 pynicotine/gtkgui/__init__.py:78
 #, python-format
@@ -385,9 +385,8 @@ msgid "_Disconnect"
 msgstr "_Desconectar"
 
 #: pynicotine/gtkgui/application.py:305
-#, fuzzy
 msgid "Soulseek Pri_vileges"
-msgstr "Soulseek _Privilégios"
+msgstr "Soulseek Pri_vilégios"
 
 #: pynicotine/gtkgui/application.py:311
 msgid "_Preferences"
@@ -452,9 +451,8 @@ msgstr "_Compartilhamentos"
 
 #: pynicotine/gtkgui/application.py:404
 #: pynicotine/gtkgui/widgets/popupmenu.py:184
-#, fuzzy
 msgid "_Window"
-msgstr "Janela"
+msgstr "_Janela"
 
 #: pynicotine/gtkgui/application.py:406 pynicotine/gtkgui/application.py:422
 msgid "_Help"
@@ -2049,25 +2047,28 @@ msgid ""
 "Plugin is not provided by Nicotine+, and is not guaranteed to be safe. Only "
 "enable plugins you trust."
 msgstr ""
+"O plug-in não é fornecido pelo Nicotine+ e não é garantido que seja seguro. "
+"Habilite apenas plug-ins em que você confia."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3656
 msgid "Select a Zip File"
 msgstr "Selecionar um Arquivo Zip"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3664
-#, fuzzy
 msgid "Install External Plugins?"
-msgstr "Plugins instalados:"
+msgstr "Instalar plug-ins externos?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3665
 msgid ""
 "External plugins are not verified or sandboxed, and can be malicious. Only "
 "install plugins you trust."
 msgstr ""
+"Plug-ins externos não são verificados ou colocados em sandbox e podem ser "
+"maliciosos. Instale apenas plug-ins em que você confia."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3669
 msgid "_Proceed"
-msgstr ""
+msgstr "_Continuar"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3684
 msgid "Reset Plugin Settings?"
@@ -2923,9 +2924,8 @@ msgstr ""
 
 #: pynicotine/gtkgui/popovers/roomwall.py:39
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:57
-#, fuzzy
 msgid "Remove Message"
-msgstr "Remover compartilhamento"
+msgstr "Remover mensagem"
 
 #: pynicotine/gtkgui/privatechat.py:355 pynicotine/gtkgui/search.py:655
 #: pynicotine/gtkgui/userbrowse.py:268 pynicotine/gtkgui/userinfo.py:340
@@ -5367,21 +5367,19 @@ msgstr[1] ""
 "resultados"
 
 #: pynicotine/shares.py:310
-#, fuzzy, python-format
+#, python-format
 msgid "%(num)s folder found previously, %(action)s…"
 msgid_plural "%(num)s folders found previously, %(action)s…"
-msgstr[0] "%(num)s pastas encontradas antes da nova varredura, reconstrução…"
-msgstr[1] "%(num)s pastas encontradas antes da nova varredura, reconstrução…"
+msgstr[0] "%(num)s pasta encontrada anteriormente, %(action)s…"
+msgstr[1] "%(num)s pastas encontradas anteriormente, %(action)s…"
 
 #: pynicotine/shares.py:316
-#, fuzzy
 msgid "rebuilding shares"
-msgstr "Reconstruindo compartilhamentos…"
+msgstr "Reconstruindo compartilhamentos"
 
 #: pynicotine/shares.py:316
-#, fuzzy
 msgid "rescanning shares"
-msgstr "Reescaneando compartilhamentos…"
+msgstr "Reescaneando compartilhamentos"
 
 #: pynicotine/shares.py:347
 #, python-format
@@ -7088,9 +7086,8 @@ msgstr "Comando do gerenciador de arquivos:"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:10
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:26
-#, fuzzy
 msgid "Remove Picture"
-msgstr "Redefinir imagem"
+msgstr "Remover imagem"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:45
 msgid "Self Description"
