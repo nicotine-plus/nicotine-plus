@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-13 07:04+0300\n"
-"PO-Revision-Date: 2025-03-02 14:14+0000\n"
+"PO-Revision-Date: 2026-09-13 16:12+0000\n"
 "Last-Translator: Matthaiks <kitynska@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
@@ -1454,21 +1454,24 @@ msgid ""
 "Plugin is not provided by Nicotine+, and is not guaranteed to be safe. Only "
 "enable plugins you trust."
 msgstr ""
+"Wtyczka nie jest dostarczana przez Nicotine+ i nie ma gwarancji, że jest "
+"bezpieczna. Włączaj tylko te wtyczki, którym ufasz."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2993
-#, fuzzy
 msgid "Install External Plugins?"
-msgstr "Nie można aktywować wtyczki %s"
+msgstr "Zainstalować zewnętrzne wtyczki?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2994
 msgid ""
 "External plugins are not verified or sandboxed, and can be malicious. Only "
 "install plugins you trust."
 msgstr ""
+"Zewnętrzne wtyczki nie są weryfikowane ani uruchamiane w izolowanym "
+"środowisku i mogą być szkodliwe. Instaluj tylko te wtyczki, którym ufasz."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2998
 msgid "_Proceed"
-msgstr ""
+msgstr "_Kontynuuj"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3050
 #: pynicotine/gtkgui/widgets/trayicon.py:106

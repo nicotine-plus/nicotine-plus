@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-13 07:04+0300\n"
-"PO-Revision-Date: 2024-08-07 19:33+0000\n"
+"PO-Revision-Date: 2026-09-13 16:12+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -1452,20 +1452,24 @@ msgid ""
 "Plugin is not provided by Nicotine+, and is not guaranteed to be safe. Only "
 "enable plugins you trust."
 msgstr ""
+"Bu eklenti Nicotine+ tarafından sağlanmıyor ve güvenliği garanti edilmez. "
+"Yalnızca güvendiğiniz eklentileri etkinleştirin."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2993
 msgid "Install External Plugins?"
-msgstr ""
+msgstr "Harici Eklentiler Kurulsun mu?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2994
 msgid ""
 "External plugins are not verified or sandboxed, and can be malicious. Only "
 "install plugins you trust."
 msgstr ""
+"Harici eklentiler doğrulanmaz veya sınırlandırılmaz ve zararlı olabilir. "
+"Yalnızca güvendiğiniz eklentileri kurun."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2998
 msgid "_Proceed"
-msgstr ""
+msgstr "İ_lerle"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3050
 #: pynicotine/gtkgui/widgets/trayicon.py:106
