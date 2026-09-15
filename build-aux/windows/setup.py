@@ -361,6 +361,7 @@ setup(
             script=os.path.join(PROJECT_PATH, SCRIPT_NAME),
             base="console",
             target_name=f"{pynicotine.__application_name__}-debug",
+            icon=os.path.join(CURRENT_PATH, ICON_NAME),
             manifest=MANIFEST_NAME,
             copyright=pynicotine.__copyright__
         )
