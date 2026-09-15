@@ -221,9 +221,6 @@ def add_schemas():
 def add_gtk():
 
     if sys.platform == "win32":
-        # Keep dll next to executable to match older Nicotine+ versions
-        add_file(file_path=os.path.join(LIB_PATH, "libwinpthread-1.dll"), output_path="libwinpthread-1.dll")
-
         # gdbus required for single-instance application
         add_file(file_path=os.path.join(LIB_PATH, "gdbus.exe"), output_path="lib/gdbus.exe")
 

@@ -165,8 +165,8 @@ jobs:
       matrix:
         include:
           - arch: x86_64
-            prefix: mingw-w64-clang-x86_64
-            msystem: clang64
+            prefix: mingw-w64-ucrt-x86_64
+            msystem: ucrt64
             platform: windows-latest
           - arch: arm64
             prefix: mingw-w64-clang-aarch64

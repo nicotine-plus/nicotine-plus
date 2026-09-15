@@ -30,8 +30,8 @@ def install_pacman():
         prefix = "mingw-w64-clang-aarch64"
         mingw_type = "clangarm64"
     else:
-        prefix = "mingw-w64-clang-x86_64"
-        mingw_type = "clang64"
+        prefix = "mingw-w64-ucrt-x86_64"
+        mingw_type = "ucrt64"
 
     packages = [f"{prefix}-ca-certificates",
                 f"{prefix}-gettext-tools",
