@@ -4,6 +4,12 @@ nicotine (3.4.0-dev2) oracular; urgency=medium
 
  -- Mat <mail@mathias.is>  Wed, 16 Sep 2026 09:24:36 +0300
 
+nicotine (3.3.11-1) resolute; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Wed, 16 Sep 2026 06:44:53 +0300
+
 nicotine (3.3.10-1) oracular; urgency=medium
 
   * Latest upstream.
