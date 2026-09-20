@@ -53,7 +53,7 @@ jobs:
         run: python3 -m build --no-isolation
 
   ubuntu-debian:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     strategy:
       fail-fast: false
@@ -82,7 +82,7 @@ jobs:
       matrix:
         container: ['fedora:rawhide']
         gtk: [4, 3]
-        platform: ['ubuntu-latest', 'ubuntu-24.04-arm']
+        platform: ['ubuntu-26.04', 'ubuntu-26.04-arm']
     runs-on: ${{ matrix.platform }}
     container: ${{ matrix.container }}
     steps:
@@ -108,7 +108,7 @@ jobs:
         run: python3 -m build --no-isolation
 
   opensuse:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     strategy:
       fail-fast: false
@@ -137,7 +137,7 @@ jobs:
         run: python3.14 -m build --no-isolation
 
   alpine:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     strategy:
       fail-fast: false
@@ -165,7 +165,7 @@ jobs:
         run: python3 -m build --no-isolation
 
   freebsd:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     defaults:
       run:
@@ -205,7 +205,7 @@ jobs:
         run: python3.12 -m build --no-isolation
 
   openbsd:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     defaults:
       run:
@@ -240,7 +240,7 @@ jobs:
         run: python3 -m build --no-isolation
 
   netbsd:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     defaults:
       run:
@@ -280,7 +280,7 @@ jobs:
           python3.14 -m build --no-isolation
 
   dragonflybsd:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     defaults:
       run:
@@ -313,7 +313,7 @@ jobs:
         run: python3.11 -m build --no-isolation
 
   midnightbsd:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     defaults:
       run:
@@ -349,7 +349,7 @@ jobs:
         run: python3.11 -m build --no-isolation
 
   haiku:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     defaults:
       run:
@@ -385,7 +385,7 @@ jobs:
         run: python3.14 -m build --no-isolation
 
   illumos:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     defaults:
       run:
@@ -444,7 +444,7 @@ jobs:
           - arch: x86_64
             prefix: mingw-w64-ucrt-x86_64
             msystem: ucrt64
-            platform: windows-latest
+            platform: windows-2025
           - arch: arm64
             prefix: mingw-w64-clang-aarch64
             msystem: clangarm64

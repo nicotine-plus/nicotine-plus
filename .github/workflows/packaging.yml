@@ -168,7 +168,7 @@ jobs:
       matrix:
         include:
           - arch: x86_64
-            platform: ubuntu-latest
+            platform: ubuntu-26.04
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout code
@@ -218,7 +218,7 @@ jobs:
           - arch: x86_64
             prefix: mingw-w64-ucrt-x86_64
             msystem: ucrt64
-            platform: windows-latest
+            platform: windows-2025
           - arch: arm64
             prefix: mingw-w64-clang-aarch64
             msystem: clangarm64
@@ -452,7 +452,7 @@ jobs:
       github.repository == 'nicotine-plus/nicotine-plus' &&
       github.event_name == 'workflow_dispatch' && inputs.create_release
     needs: [attestation, metadata]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     environment:
       name: pypi
