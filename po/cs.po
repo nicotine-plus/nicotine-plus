@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-13 07:08+0300\n"
-"PO-Revision-Date: 2026-07-14 06:01+0000\n"
-"Last-Translator: slrslr <adm@prnet.info>\n"
+"PO-Revision-Date: 2026-09-20 09:26+0000\n"
+"Last-Translator: mslr8 <hosted.weblate.org.poncho089@passmail.net>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
 "Language: cs\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.8.dev0\n"
+"X-Generator: Weblate 2026.10.dev0\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -127,14 +127,12 @@ msgid "start the program without showing window"
 msgstr "spusťte program bez zobrazení okna"
 
 #: pynicotine/__init__.py:54
-#, fuzzy
 msgid "address"
-msgstr "IP adresa"
+msgstr "adresa"
 
 #: pynicotine/__init__.py:55
-#, fuzzy
 msgid "bind connections to the given IP address"
-msgstr "Blokovat připojení od uživatele nebo IP adresy"
+msgstr "svázat připojení s danou IP adresou"
 
 #: pynicotine/__init__.py:58
 msgid "port"
@@ -185,9 +183,9 @@ msgid "Buddy Status"
 msgstr "Stav kamaráda"
 
 #: pynicotine/chatrooms.py:316
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has not enabled private room invitations"
-msgstr "Uživatel %(user)s byl přidán do soukromé místnosti %(room)s"
+msgstr "Uživatel %(user)s nezapnul pozvánky do soukromé místnosti"
 
 #: pynicotine/chatrooms.py:371
 #, python-format
@@ -210,9 +208,9 @@ msgid "You have been removed from private room %(room)s"
 msgstr "Byli jste odebráni ze soukromé místnosti %(room)s"
 
 #: pynicotine/chatrooms.py:443 pynicotine/privatechat.py:258
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is now an operator of room %(room)s"
-msgstr "Uživatel %(user)s již není operátorem místnosti %(room)s"
+msgstr "Uživatel %(user)s je nyní operátorem místnosti %(room)s"
 
 #: pynicotine/chatrooms.py:462 pynicotine/privatechat.py:262
 #, python-format
@@ -220,9 +218,9 @@ msgid "User %(user)s is no longer an operator of room %(room)s"
 msgstr "Uživatel %(user)s již není operátorem místnosti %(room)s"
 
 #: pynicotine/chatrooms.py:478
-#, fuzzy, python-format
+#, python-format
 msgid "You are now an operator of room %(room)s"
-msgstr "Již nejste operátorem místnosti %(room)s"
+msgstr "Nyní jste operátorem místnosti %(room)s"
 
 #: pynicotine/chatrooms.py:491
 #, python-format
@@ -367,12 +365,12 @@ msgstr "Stahování zahájeno: uživatel %(user)s, soubor %(file)s"
 #: pynicotine/gtkgui/__init__.py:47
 #, python-format
 msgid "%s is not supported on this operating system"
-msgstr ""
+msgstr "%s není podporováno na tomto operačním systému"
 
 #: pynicotine/gtkgui/__init__.py:69 pynicotine/gtkgui/__init__.py:78
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot find %s, please install it"
-msgstr "Nelze najít %s, nainstalujte jej."
+msgstr "Nelze najít %s, nainstalujte jej"
 
 #: pynicotine/gtkgui/application.py:303
 #: pynicotine/gtkgui/widgets/trayicon.py:86
@@ -385,7 +383,6 @@ msgid "_Disconnect"
 msgstr "_Odpojit"
 
 #: pynicotine/gtkgui/application.py:305
-#, fuzzy
 msgid "Soulseek Pri_vileges"
 msgstr "Soulseek _Privilegia"
 
@@ -452,9 +449,8 @@ msgstr "_Sdílení"
 
 #: pynicotine/gtkgui/application.py:404
 #: pynicotine/gtkgui/widgets/popupmenu.py:184
-#, fuzzy
 msgid "_Window"
-msgstr "Okno"
+msgstr "_Okno"
 
 #: pynicotine/gtkgui/application.py:406 pynicotine/gtkgui/application.py:422
 msgid "_Help"
@@ -538,7 +534,7 @@ msgstr "_Vynutit opětovné skenování"
 
 #: pynicotine/gtkgui/application.py:599
 msgid "Room Invitation Rejected"
-msgstr ""
+msgstr "Pozvánka do místnosti odmítnuta"
 
 #: pynicotine/gtkgui/application.py:600
 #, python-format
@@ -546,11 +542,12 @@ msgid ""
 "User %(user)s has not enabled private room invitations. Message them and ask "
 "them to do so before inviting them again."
 msgstr ""
+"Uživatel %(user)s nemá povolené pozvánky do soukromých místností. Pošlete mu "
+"zprávu a požádejte ho, aby si tuto funkci povolil, než ho znovu pozvete."
 
 #: pynicotine/gtkgui/application.py:604
-#, fuzzy
 msgid "Open _Private Chat"
-msgstr "Otevřít soukromý chat"
+msgstr "Otevřít _soukromý chat"
 
 #: pynicotine/gtkgui/application.py:808
 msgid "Message Downloading Users"
@@ -1111,9 +1108,9 @@ msgstr[1] "Nelze požádat o obsah složky od %(num)s uživatelů"
 msgstr[2] "Nelze požádat o obsah složky od %(num)s uživatelů"
 
 #: pynicotine/gtkgui/dialogs/download.py:513
-#, fuzzy, python-format
+#, python-format
 msgid "User Offline (%(user)s)"
-msgstr "Uživatelé, kteří mají rádi %(item)s"
+msgstr "Uživatel je offline (%(user)s)"
 
 #: pynicotine/gtkgui/dialogs/download.py:515
 #, python-format
@@ -2031,9 +2028,9 @@ msgid "Uninstall…"
 msgstr "Odinstalovat…"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3537
-#, fuzzy, python-format
+#, python-format
 msgid "Error Loading Plugin %(name)s"
-msgstr "Chyba při načítání vlastní ikony %(path)s: %(error)s"
+msgstr "Chyba při načítání pluginu %(name)s"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3559
 msgid "No Plugin Selected"
@@ -2044,25 +2041,28 @@ msgid ""
 "Plugin is not provided by Nicotine+, and is not guaranteed to be safe. Only "
 "enable plugins you trust."
 msgstr ""
+"Tento plugin Nicotine+ neposkytuje a není zaručena jeho bezpečnost. Zapněte "
+"jen pluginy, kterým důvěřujete."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3656
 msgid "Select a Zip File"
 msgstr "Vybrat Zip soubor"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3664
-#, fuzzy
 msgid "Install External Plugins?"
-msgstr "Nainstalované pluginy:"
+msgstr "Nainstalovat externí pluginy?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3665
 msgid ""
 "External plugins are not verified or sandboxed, and can be malicious. Only "
 "install plugins you trust."
 msgstr ""
+"Externí pluginy nejsou ověřovány ani izolovány v sandboxu a mohou být "
+"škodlivé. Instalujte pouze pluginy, kterým důvěřujete."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3669
 msgid "_Proceed"
-msgstr ""
+msgstr "_Pokračovat"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3684
 msgid "Reset Plugin Settings?"
@@ -2562,7 +2562,7 @@ msgstr ""
 #: pynicotine/gtkgui/dialogs/wishlist.py:264
 #: pynicotine/gtkgui/dialogs/wishlist.py:325
 msgid "Search automatically"
-msgstr ""
+msgstr "Hledat automaticky"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:272
 #: pynicotine/gtkgui/dialogs/wishlist.py:311
@@ -2603,13 +2603,13 @@ msgid "Clear All"
 msgstr "Vyčistit vše"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:427
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Items are searched individually every %(interval)s, useful for finding rare "
 "files"
 msgstr ""
-"Položky seznamu přání jsou automaticky hledány v pravidelných intervalech, "
-"aby byly nalezeny neobyčejné soubory."
+"Položky jsou hledány individuálně každých %(interval)s, což je vhodné pro "
+"nalezení vzácných souborů."
 
 #: pynicotine/gtkgui/downloads.py:31
 msgid "_Resume"
@@ -2878,18 +2878,16 @@ msgid "You are offline"
 msgstr "Jste offline"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:54
-#, fuzzy
 msgid "Connect to the server to check port status"
-msgstr "Připojte se k serveru pro kontrolu stavu portu."
+msgstr "Připojte se k serveru pro kontrolu stavu portu"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:59
 msgid "Checking connection status…"
 msgstr "Kontrola stavu připojení…"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:60
-#, fuzzy
 msgid "Waiting for response from port checker"
-msgstr "Čekání na výsledek kontroly portu."
+msgstr "Čekání na odpověď kontroly portu"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:75
 #, python-format
@@ -2897,9 +2895,8 @@ msgid "Port %i (TCP) status unknown"
 msgstr "Stav portu %i (TCP) je neznámý"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:76
-#, fuzzy
 msgid "Cannot check connection status"
-msgstr "Nelze zkontrolovat stav připojení."
+msgstr "Nelze zkontrolovat stav připojení"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:81
 #, python-format
@@ -2907,9 +2904,8 @@ msgid "Port %i (TCP) is open"
 msgstr "Port %i (TCP) je otevřený"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:82
-#, fuzzy
 msgid "Most users can connect to you"
-msgstr "Většina uživatelů se k vám připojí."
+msgstr "Většina uživatelů se k vám připojí"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:87
 #, python-format
@@ -2926,9 +2922,8 @@ msgstr ""
 
 #: pynicotine/gtkgui/popovers/roomwall.py:39
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:57
-#, fuzzy
 msgid "Remove Message"
-msgstr "Odebrat sdílení"
+msgstr "Odebrat zprávu"
 
 #: pynicotine/gtkgui/privatechat.py:355 pynicotine/gtkgui/search.py:655
 #: pynicotine/gtkgui/userbrowse.py:268 pynicotine/gtkgui/userinfo.py:340
@@ -3052,10 +3047,9 @@ msgid "Restore Filters"
 msgstr "Obnovit filtry"
 
 #: pynicotine/gtkgui/search.py:839
-#, fuzzy
 msgid "Cannot search for files shared by other users, since you are offline"
 msgstr ""
-"Nelze vyhledat soubory sdílené ostatními uživateli, protože jste offline."
+"Nelze vyhledat soubory sdílené ostatními uživateli, protože jste offline"
 
 #: pynicotine/gtkgui/search.py:1335
 #, python-format
@@ -3320,23 +3314,20 @@ msgstr ""
 "nebo sdílí soubory soukromě."
 
 #: pynicotine/gtkgui/userbrowse.py:596 pynicotine/gtkgui/userinfo.py:537
-#, fuzzy
 msgid "Cannot request information from the user, since they are offline"
-msgstr "Od uživatele nelze získat informace, protože je offline."
+msgstr "Od uživatele nelze získat informace, protože je offline"
 
 #: pynicotine/gtkgui/userbrowse.py:598 pynicotine/gtkgui/userinfo.py:539
-#, fuzzy
 msgid ""
 "Cannot request information from the user, possibly due to a closed listening "
 "port or temporary connectivity issue"
 msgstr ""
 "Od uživatele nelze vyžádat informace. Možná že má uzavřený port pro "
-"naslouchání a nebo došlo k dočasnému problému s připojením."
+"naslouchání a nebo došlo k dočasnému problému s připojením"
 
 #: pynicotine/gtkgui/userbrowse.py:706
-#, fuzzy
 msgid "Folder Actions"
-msgstr "Umístění složek"
+msgstr "Akce složky"
 
 #: pynicotine/gtkgui/userbrowse.py:910
 msgid "Upload _Folder…"
@@ -3732,15 +3723,13 @@ msgstr "Vše"
 
 #: pynicotine/gtkgui/widgets/treeview.py:916
 #: pynicotine/gtkgui/widgets/treeview.py:925
-#, fuzzy
 msgid "Move _Left"
-msgstr "V_levo"
+msgstr "Přesunout V_levo"
 
 #: pynicotine/gtkgui/widgets/treeview.py:917
 #: pynicotine/gtkgui/widgets/treeview.py:926
-#, fuzzy
 msgid "Move _Right"
-msgstr "V_pravo"
+msgstr "Přesunout V_pravo"
 
 #: pynicotine/gtkgui/widgets/treeview.py:933
 #, python-format
@@ -3756,9 +3745,8 @@ msgid "_Sort Descending"
 msgstr "Řadit _sestupně"
 
 #: pynicotine/gtkgui/widgets/treeview.py:953
-#, fuzzy
 msgid "Column _Position"
-msgstr "Šířky sloupců"
+msgstr "Pozice _sloupce"
 
 #: pynicotine/gtkgui/widgets/treeview.py:1124
 msgid "Ungrouped"
@@ -4964,7 +4952,7 @@ msgstr "Zavřít soukromý chat"
 
 #: pynicotine/plugins/core_commands/__init__.py:119
 msgid "Request client information from user"
-msgstr ""
+msgstr "Požádat uživatele o informace o klientovi"
 
 #: pynicotine/plugins/core_commands/__init__.py:128
 msgid "Send private message to user"
@@ -5142,21 +5130,21 @@ msgstr "Načítání systému pluginů"
 
 #: pynicotine/pluginsystem.py:487
 msgid "Uncompressed size too large"
-msgstr ""
+msgstr "Nekomprimovaná velikost je příliš velká"
 
 #: pynicotine/pluginsystem.py:499
 msgid "No plugin found in zip file"
-msgstr ""
+msgstr "V zip souboru nebyl nalezen žádný plugin"
 
 #: pynicotine/pluginsystem.py:502
 #, python-format
 msgid "Plugin name %(name)s conflicts with built-in plugin"
-msgstr ""
+msgstr "Jméno pluginu %(name)s je konfliktu s vestavěným pluginem"
 
 #: pynicotine/pluginsystem.py:517
-#, fuzzy, python-format
+#, python-format
 msgid "Installed plugin %(name)s"
-msgstr "Nainstalován plugin %s"
+msgstr "Nainstalovaný plugin %(name)s"
 
 #: pynicotine/pluginsystem.py:520
 #, python-format
@@ -5169,21 +5157,19 @@ msgid "Failed to uninstall plugin %(name)s: %(error)s"
 msgstr "Selhala odinstalace pluginu %(name)s: %(error)s"
 
 #: pynicotine/pluginsystem.py:555
-#, fuzzy, python-format
+#, python-format
 msgid "Uninstalled plugin %(name)s"
-msgstr "Odinstalován plugin %s"
+msgstr "Odinstalovaný plugin %(name)s"
 
 #: pynicotine/pluginsystem.py:660
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot enable plugin %(name)s: %(error)s"
-msgstr "Selhala instalace pluginu %(name)s: %(error)s"
+msgstr "Nelze povolit plugin %(name)s: %(error)s"
 
 #: pynicotine/pluginsystem.py:662
-#, fuzzy, python-format
+#, python-format
 msgid "Plugin folder name contains invalid character '%(char)s'"
-msgstr ""
-"Nelze načíst plugin %(name)s. Název složky pluginu obsahuje neplatné znaky: "
-"%(characters)s"
+msgstr "Název složky pluginu obsahuje neplatný znak: '%(char)s'"
 
 #: pynicotine/pluginsystem.py:699
 #, python-format
@@ -5191,36 +5177,34 @@ msgid "Conflicting %(interface)s command in plugin %(name)s: %(command)s"
 msgstr "Konfliktní %(interface)s příkaz v pluginu %(name)s: %(command)s"
 
 #: pynicotine/pluginsystem.py:723
-#, fuzzy, python-format
+#, python-format
 msgid "Loaded plugin %(name)s"
-msgstr "Načten plugin %s"
+msgstr "Načten plugin %(name)s"
 
 #: pynicotine/pluginsystem.py:727
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to load plugin %(name)s"
-msgstr "Selhala instalace pluginu %(name)s: %(error)s"
+msgstr "Selhalo načtení pluginu %(name)s"
 
 #: pynicotine/pluginsystem.py:767
-#, fuzzy, python-format
+#, python-format
 msgid "Unloaded plugin %(name)s"
-msgstr "Ukončen plugin %s"
+msgstr "Ukončen plugin %(name)s"
 
 #: pynicotine/pluginsystem.py:771
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to unload plugin %(name)s"
-msgstr "Selhala odinstalace pluginu %(name)s: %(error)s"
+msgstr "Selhalo ukončení pluginu %(name)s"
 
 #: pynicotine/pluginsystem.py:893
-#, fuzzy, python-format
+#, python-format
 msgid "Plugin %(name)s failed with error %(errortype)s: %(error)s"
-msgstr ""
-"Plugin %(module)s selhal. Chyba %(errortype)s: %(error)s.\n"
-"Trasování: %(trace)s"
+msgstr "Plugin %(name)s selhal s chybou %(errortype)s: %(error)s"
 
 #: pynicotine/pluginsystem.py:931
-#, fuzzy, python-format
+#, python-format
 msgid "Restored default settings for plugin %(name)s"
-msgstr "Obnovena výchozí nastavení pluginu %s"
+msgstr "Obnovena výchozí nastavení pluginu %(name)s"
 
 #: pynicotine/pluginsystem.py:963
 msgid "No description"
@@ -5274,37 +5258,38 @@ msgstr ""
 #: pynicotine/privatechat.py:170
 #, python-format
 msgid "Could not create room. Reason: %s"
-msgstr ""
+msgstr "Nepodařilo se vytvořit místnost. Důvod: %s"
 
 #: pynicotine/privatechat.py:174
-#, fuzzy
 msgid "Room name empty."
-msgstr "Názvy místností"
+msgstr "Název místnosti je prázdný."
 
 #: pynicotine/privatechat.py:179
 #, python-format
 msgid "Room name %(room)s contains leading or trailing spaces."
-msgstr ""
+msgstr "Název místnosti %(room)s obsahuje mezery na začátku nebo na konci."
 
 #: pynicotine/privatechat.py:183
 #, python-format
 msgid "Room name %(room)s contains invalid characters."
-msgstr ""
+msgstr "Název místnosti %(room)s obsahuje neplatné znaky."
 
 #: pynicotine/privatechat.py:187
 #, python-format
 msgid "Room name %(room)s contains multiple following spaces."
-msgstr ""
+msgstr "Název místnosti %(room)s obsahuje několik za sebou jdoucích mezer."
 
 #: pynicotine/privatechat.py:202
 #, python-format
 msgid "Room name %(name)s longer than %(chars)s characters."
-msgstr ""
+msgstr "Název místnosti %(name)s je delší než %(chars)s znaků."
 
 #: pynicotine/privatechat.py:227
 #, python-format
 msgid "The room you are trying to enter (%(room)s) is registered as private."
 msgstr ""
+"Místnost (%(room)s), do které se pokoušíte vstoupit, je registrována jako "
+"soukromá."
 
 #: pynicotine/privatechat.py:232
 #, python-format
@@ -5313,28 +5298,33 @@ msgid ""
 "of these moderators if you are interested in being added to the room's "
 "member list:"
 msgstr ""
+"Místnost (%(room)s), do které se pokoušíte vstoupit, je moderovaná. Pokud "
+"máte zájem o zařazení do seznamu členů této místnosti, obraťte se prosím na "
+"některého z těchto moderátorů:"
 
 #: pynicotine/privatechat.py:237
-#, fuzzy, python-format
+#, python-format
 msgid "Room (%(room)s) is registered as public."
-msgstr "Místnost %s je již zaregistrována jako veřejná."
+msgstr "Místnost (%(room)s) je registrována jako veřejná."
 
 #: pynicotine/privatechat.py:250
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is now a member of room %(room)s"
-msgstr "Uživatel %(user)s již není operátorem místnosti %(room)s"
+msgstr "Uživatel %(user)s je nyní členem místnosti %(room)s"
 
 #: pynicotine/privatechat.py:254
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is no longer a member of room %(room)s"
-msgstr "Uživatel %(user)s již není operátorem místnosti %(room)s"
+msgstr "Uživatel %(user)s již není členem místnosti %(room)s"
 
 #: pynicotine/privatechat.py:278
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "User [%(user)s] was added as a member of room [%(room)s] by operator "
 "[%(operator)s]"
-msgstr "Uživatel %(user)s byl nastaven jako operátor místnosti %(room)s"
+msgstr ""
+"Uživatel [%(user)s] byl přidán jako člen místnosti [%(room)s] operátorem [%"
+"(operator)s]"
 
 #: pynicotine/privatechat.py:395
 #, python-format
@@ -5376,19 +5366,17 @@ msgstr[2] "Uživatel %(user)s hledá \"%(query)s\", našel %(num)s výsledků"
 #, python-format
 msgid "%(num)s folder found previously, %(action)s…"
 msgid_plural "%(num)s folders found previously, %(action)s…"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%(num)s složka dříve nalezena, %(action)s…"
+msgstr[1] "%(num)s složky dříve nalezeny, %(action)s…"
+msgstr[2] "%(num)s složek dříve nalezeno, %(action)s…"
 
 #: pynicotine/shares.py:316
-#, fuzzy
 msgid "rebuilding shares"
-msgstr "Opětovné sestavování sdílení…"
+msgstr "opětovné sestavování sdílení"
 
 #: pynicotine/shares.py:316
-#, fuzzy
 msgid "rescanning shares"
-msgstr "Opětovné skenování sdílení…"
+msgstr "opětovné skenování sdílení"
 
 #: pynicotine/shares.py:347
 #, python-format
@@ -5468,9 +5456,8 @@ msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Nelze se připojit k serveru %(host)s:%(port)s: %(error)s"
 
 #: pynicotine/slskproto.py:1171
-#, fuzzy
 msgid "Connection attempt timed out"
-msgstr "Připojení vypršel čas"
+msgstr "Pokusu o připojení vypršel čas"
 
 #: pynicotine/slskproto.py:1200
 #, python-format
@@ -5541,14 +5528,14 @@ msgstr ""
 
 #: pynicotine/userbrowse.py:233
 msgid "Invalid file name in shares"
-msgstr ""
+msgstr "Ve sdílení je neplatný název souboru"
 
 #: pynicotine/userbrowse.py:236
 msgid "Invalid file size in shares"
-msgstr ""
+msgstr "Ve sdílení je neplatná velikost souboru"
 
 #: pynicotine/userbrowse.py:282
-#, fuzzy, python-format
+#, python-format
 msgid "Loading shares from disk failed: %(error)s"
 msgstr "Selhalo načítání sdílení z disku: %(error)s"
 
@@ -5563,13 +5550,13 @@ msgid "Cannot save shares for user %(user)s: %(error)s"
 msgstr "Nepodařilo se uložit sdílení pro uživatele %(user)s: %(error)s"
 
 #: pynicotine/userbrowse.py:410
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "User %(user)s is sharing %(num_files)s files totaling %(shared_size)s across "
 "%(num_folders)s folders"
 msgstr ""
-"Uživatel %(user)s sdílí %(num_files)s souborů o velikosti %(shared_size)s ze "
-"%(num_folders)s složek."
+"Uživatel %(user)s sdílí %(num_files)s souborů o velikosti %(shared_size)s z %"
+"(num_folders)s složek"
 
 #: pynicotine/userbrowse.py:416
 msgid "User Statistics"
@@ -5634,19 +5621,19 @@ msgid "Password Changed"
 msgstr "Heslo změněno"
 
 #: pynicotine/users.py:467
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot retrieve the IP of user %(user)s, since this user is offline"
-msgstr "Nelze načíst IP adresu uživatele %s, protože tento uživatel je offline"
+msgstr ""
+"Nelze získat IP adresu uživatele %(user)s, protože tento uživatel je offline"
 
 #: pynicotine/users.py:474
 #, python-format
 msgid "User %(user)s needs to be logged in first"
-msgstr ""
+msgstr "Uživatel %(user)s se musí nejprve přihlásit"
 
 #: pynicotine/users.py:475
-#, fuzzy
 msgid "User Offline"
-msgstr "Offline"
+msgstr "Uživatel je offline"
 
 #: pynicotine/utils.py:192
 #, python-format
@@ -5686,14 +5673,16 @@ msgid ""
 "Error while executing command %(command)s (%(command_no)s of "
 "%(num_commands)s: %(error)s"
 msgstr ""
+"Chyba při vykonávání příkazu %(command)s (%(command_no)s z %(num_commands)s: "
+"%(error)s"
 
 #: pynicotine/utils.py:523
 msgid "No known URI provider available"
-msgstr ""
+msgstr "Není k dispozici žádný známý poskytovatel URI"
 
 #: pynicotine/utils.py:584
 msgid "File path does not exist"
-msgstr ""
+msgstr "Cesta souboru neexistuje"
 
 #: pynicotine/utils.py:603
 #, python-format
@@ -5707,11 +5696,11 @@ msgstr "Nelze otevřít URL %(url)s: %(error)s"
 
 #: pynicotine/utils.py:664
 msgid "*.old file is present but main file is missing"
-msgstr ""
+msgstr "*.old soubor je k dispozici, ale hlavní soubor chybí"
 
 #: pynicotine/utils.py:668
 msgid "*.old file is present but main file is empty"
-msgstr ""
+msgstr "*.old soubor je k dispozici, ale hlavní soubor je prázdný"
 
 #: pynicotine/utils.py:674
 #, python-format
@@ -6262,7 +6251,6 @@ msgstr ""
 "'Instrumental Remix' nezobrazí 'Remix Instrumental'"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:109
-#, fuzzy
 msgid ""
 "Use | (or pipes) to separate several exact phrases. Example:\n"
 "    Remix|Dub Mix|Instrumental"
@@ -6567,22 +6555,20 @@ msgid "Store Wishlist Filters"
 msgstr "Uchovávat filtry seznamu přání"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:33
-#, fuzzy
 msgid ""
 "Prohibit users from accessing your shared files, based on username, IP "
 "address or country"
 msgstr ""
 "Zakažte uživatelům přístup k vašim sdíleným souborům na základě "
-"uživatelského jména, IP adresy nebo země."
+"uživatelského jména, IP adresy nebo země"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:48
 msgid "Country codes to block (comma separated):"
 msgstr "Kódy zemí, které se mají blokovat (oddělené čárkou):"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:56
-#, fuzzy
 msgid "Codes must be in ISO 3166-2 format"
-msgstr "Kódy musí být ve formátu ISO 3166-2."
+msgstr "Kódy musí být ve formátu ISO 3166-2"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:71
 msgid "Use custom geo block message:"
@@ -6622,9 +6608,8 @@ msgid "Accept private room invitations"
 msgstr "Přijímat pozvánky do soukromých místností"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:597
-#, fuzzy
 msgid "Respond to client information requests from other users (CTCP)"
-msgstr "Odpovídat na žádosti o vyhledávání od ostatních uživatelů"
+msgstr "Odpovídat na žádosti ostatních uživatelů o informaci o klientovi (CTCP)"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:621
 msgid "Number of recent private chat messages to show:"
@@ -6731,13 +6716,12 @@ msgid "Enable download filters"
 msgstr "Povolit filtry stahování"
 
 #: pynicotine/gtkgui/ui/settings/ignore.ui:33
-#, fuzzy
 msgid ""
 "Ignore chat messages and search results from users, based on username or IP "
 "address"
 msgstr ""
 "Ignorovat zprávy chatu a výsledky vyhledávání od uživatelů na základě "
-"uživatelského jména nebo IP adresy."
+"uživatelského jména nebo IP adresy"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:95
 msgid "Log chatrooms by default"
@@ -6857,13 +6841,12 @@ msgid "Network interface:"
 msgstr "Síťové rozhraní:"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:32
-#, fuzzy
 msgid ""
 "Now Playing allows you to display what your media player is playing by using "
 "the /now command in chat"
 msgstr ""
 "Funkce Nyní se přehrává umožňuje zobrazit, co přehrávač médií právě "
-"přehrává, pomocí příkazu /now v chatu."
+"přehrává, pomocí příkazu /now v chatu"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:73
 msgid "Other"
