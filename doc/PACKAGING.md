@@ -44,7 +44,7 @@ Generate the "upstream" tarball:
 
 ```sh
 python3 -m build --sdist
-mk-origtargz dist/nicotine-plus-*.tar.gz
+mk-origtargz dist/nicotine*.tar.gz
 ```
 
 Build the Debian package:
