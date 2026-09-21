@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-13 07:08+0300\n"
-"PO-Revision-Date: 2026-09-20 09:26+0000\n"
+"PO-Revision-Date: 2026-09-21 04:52+0000\n"
 "Last-Translator: mslr8 <hosted.weblate.org.poncho089@passmail.net>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
@@ -2609,7 +2609,7 @@ msgid ""
 "files"
 msgstr ""
 "Položky jsou hledány individuálně každých %(interval)s, což je vhodné pro "
-"nalezení vzácných souborů."
+"nalezení vzácných souborů"
 
 #: pynicotine/gtkgui/downloads.py:31
 msgid "_Resume"
@@ -6919,14 +6919,12 @@ msgid "Enable search result filters by default"
 msgstr "Povolení filtrů výsledků hledání ve výchozím stavu"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:422
-#, fuzzy
 msgid "Only show results from users with an available upload slot"
-msgstr "Zorazení pouze výsledků od uživatelů s dostupným slotem pro nahrávání."
+msgstr "Zobrazení pouze výsledků od uživatelů s dostupným slotem pro nahrávání"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:447
-#, fuzzy
 msgid "Only show files that are shared publicly"
-msgstr "Zobrazit jen soubory sdílené veřejně."
+msgstr "Zobrazit jen soubory sdílené veřejně"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:468
 msgid "Network Searches"
@@ -7070,22 +7068,20 @@ msgstr "Příkaz Správce souborů:"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:10
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:26
-#, fuzzy
 msgid "Remove Picture"
-msgstr "Vynulovat obrázek"
+msgstr "Odebrat obrázek"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:45
 msgid "Self Description"
 msgstr "Vlastní popis"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:58
-#, fuzzy
 msgid ""
 "Add things you want everyone to see, such as a short description, helpful "
 "tips, or guidelines for downloading your shares"
 msgstr ""
 "Přidejte věci, které chcete aby ostatní viděli, například krátký popis, "
-"užitečné tipy, instrukce ke stažení vašeho sdílení."
+"užitečné tipy, instrukce ke stažení vašeho sdílení"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:94
 msgid "Picture:"
