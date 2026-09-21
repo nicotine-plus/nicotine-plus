@@ -106,6 +106,14 @@ class Popover:
 
         self.menu_button = menu_button
 
+    def set_parent(self, widget):
+
+        if GTK_API_VERSION >= 4:
+            self.widget.set_parent(widget)   # pylint: disable=no-member
+            return
+
+        self.widget.set_relative_to(widget)  # pylint: disable=no-member
+
     def present(self):
         self.widget.popup()
 

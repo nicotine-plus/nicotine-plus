@@ -12,14 +12,14 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
-from pynicotine.gtkgui.popovers.chatcommandhelp import ChatCommandHelp
+from pynicotine.gtkgui.popovers.commandhelp import CommandHelp
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.combobox import ComboBox
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
-from pynicotine.gtkgui.widgets.textentry import ChatEntry
+from pynicotine.gtkgui.widgets.textentry import MessageEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import ChatView
 from pynicotine.gtkgui.widgets.theme import add_css_class
@@ -46,10 +46,14 @@ class PrivateChats(IconNotebook):
         self.toolbar_end_content = window.private_end
         self.toolbar_default_widget = window.private_entry
 
-        self.chat_entry = ChatEntry(
-            window.application, send_message_callback=core.privatechat.send_message,
+        self.message_entry = MessageEntry(
+            window.application,
             command_callback=core.pluginhandler.trigger_private_chat_command_event,
-            enable_spell_check=config.sections["ui"]["spellcheck"]
+            send_message_callback=core.privatechat.send_message,
+            enable_spell_check=config.sections["ui"]["spellcheck"],
+            enable_tab_completion=config.sections["words"]["tab"],
+            enable_completion_popup=config.sections["words"]["dropdown"],
+            min_completion_key_length=config.sections["words"]["characters"]
         )
         self.username_combobox = ComboBox(
             container=window.private_entry_container, has_entry=True, has_dropdown=False,
@@ -87,7 +91,7 @@ class PrivateChats(IconNotebook):
 
     def destroy(self):
 
-        self.chat_entry.destroy()
+        self.message_entry.destroy()
         self.username_combobox.destroy()
 
         if self.command_help is not None:
@@ -135,11 +139,11 @@ class PrivateChats(IconNotebook):
             if tab.container != page:
                 continue
 
-            self.chat_entry.set_parent(user, tab.chat_entry_container, tab.chat_view)
+            self.message_entry.set_parent(tab.message_entry_container, tab.chat_view, user)
             tab.update_room_user_completions()
 
             if self.command_help is None:
-                self.command_help = ChatCommandHelp(window=self.window, interface="private_chat")
+                self.command_help = CommandHelp(window=self.window, interface="private_chat")
 
             self.command_help.set_menu_button(tab.help_button)
 
@@ -217,7 +221,7 @@ class PrivateChats(IconNotebook):
             return
 
         if page.container == self.get_current_page():
-            self.chat_entry.set_parent(None)
+            self.message_entry.set_parent(None)
 
             if self.command_help is not None:
                 self.command_help.set_menu_button(None)
@@ -227,7 +231,7 @@ class PrivateChats(IconNotebook):
         del self.pages[user]
         page.destroy()
 
-        self.chat_entry.clear_unsent_message(user)
+        self.message_entry.clear_unsent_message(user)
 
     def highlight_user(self, user, mention_type, mention_keyword):
 
@@ -265,6 +269,11 @@ class PrivateChats(IconNotebook):
 
         page = self.get_current_page()
 
+        self.message_entry.set_tab_completion_enabled(config.sections["words"]["tab"])
+        self.message_entry.set_completion_popup_enabled(
+            config.sections["words"]["dropdown"], config.sections["words"]["characters"]
+        )
+
         for tab in self.pages.values():
             if tab.container == page:
                 tab.update_completions(completions)
@@ -272,7 +281,7 @@ class PrivateChats(IconNotebook):
 
     def update_widgets(self):
 
-        self.chat_entry.set_spell_check_enabled(config.sections["ui"]["spellcheck"])
+        self.message_entry.set_spell_check_enabled(config.sections["ui"]["spellcheck"])
 
         for tab in self.pages.values():
             tab.toggle_chat_buttons()
@@ -284,7 +293,7 @@ class PrivateChats(IconNotebook):
             return
 
         page = self.get_current_page()
-        self.chat_entry.set_sensitive(True)
+        self.message_entry.set_sensitive(True)
 
         for tab in self.pages.values():
             if tab.container == page:
@@ -293,7 +302,7 @@ class PrivateChats(IconNotebook):
 
     def server_disconnect(self, *_args):
 
-        self.chat_entry.set_sensitive(False)
+        self.message_entry.set_sensitive(False)
 
         for user, page in self.pages.items():
             page.server_disconnect()
@@ -305,11 +314,11 @@ class PrivateChat:
     def __init__(self, chats, user):
 
         (
-            self.chat_entry_container,
             self.chat_view_container,
             self.container,
             self.help_button,
             self.log_toggle,
+            self.message_entry_container,
             self.search_bar
         ) = ui.load(scope=self, path="privatechat.ui")
 
@@ -321,7 +330,7 @@ class PrivateChat:
         self.offline_message = False
 
         self.chat_view = ChatView(
-            self.chat_view_container, chat_entry=self.chats.chat_entry, editable=False,
+            self.chat_view_container, message_entry=self.chats.message_entry, editable=False,
             horizontal_margin=10, vertical_margin=5, pixels_below_lines=2,
             username_event=self.username_event
         )
@@ -329,7 +338,7 @@ class PrivateChat:
         # Text Search
         self.search_bar = TextSearchBar(
             self.chat_view.widget, self.search_bar,
-            controller_widget=self.container, focus_widget=self.chats.chat_entry,
+            controller_widget=self.container, focus_widget=self.chats.message_entry,
             placeholder_text=_("Search chat log…")
         )
 
@@ -589,7 +598,7 @@ class PrivateChat:
     def on_focus(self, *_args):
 
         if self.window.current_page_id == self.window.private_page.id:
-            widget = self.chats.chat_entry if self.chats.chat_entry.get_sensitive() else self.chat_view
+            widget = self.chats.message_entry if self.chats.message_entry.get_sensitive() else self.chat_view
             widget.grab_focus()
 
         return True
@@ -608,4 +617,4 @@ class PrivateChat:
         # Tab-complete the recipient username
         completions.add(self.user)
 
-        self.chats.chat_entry.set_completions(completions)
+        self.chats.message_entry.set_completions(completions)

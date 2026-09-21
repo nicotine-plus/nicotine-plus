@@ -9,7 +9,7 @@ from pynicotine.gtkgui.widgets.popover import Popover
 from pynicotine.gtkgui.widgets.theme import add_css_class
 
 
-class ChatCommandHelp(Popover):
+class CommandHelp(Popover):
 
     def __init__(self, window, interface):
 

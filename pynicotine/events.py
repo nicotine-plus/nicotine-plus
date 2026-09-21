@@ -12,8 +12,6 @@ EVENT_NAMES = {
     # General
     "check-latest-version",
     "check-port-status",
-    "cli-command",
-    "cli-prompt-finished",
     "confirm-quit",
     "enable-message-queue",
     "log-message",
@@ -24,6 +22,11 @@ EVENT_NAMES = {
     "setup",
     "start",
     "thread-callback",
+
+    # CLI
+    "cli-command",
+    "cli-completions",
+    "cli-prompt-finished",
 
     # Users
     "admin-message",
