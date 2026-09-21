@@ -365,7 +365,7 @@ msgstr "Download gestart: gebruiker %(user)s, bestand %(file)s"
 #: pynicotine/gtkgui/__init__.py:47
 #, python-format
 msgid "%s is not supported on this operating system"
-msgstr ""
+msgstr "%s wordt niet ondersteund op dit besturingssysteem"
 
 #: pynicotine/gtkgui/__init__.py:69 pynicotine/gtkgui/__init__.py:78
 #, python-format
@@ -383,9 +383,8 @@ msgid "_Disconnect"
 msgstr "_Verbinding verbreken"
 
 #: pynicotine/gtkgui/application.py:305
-#, fuzzy
 msgid "Soulseek Pri_vileges"
-msgstr "_Soulseek-privileges"
+msgstr "Soulseek-_privileges"
 
 #: pynicotine/gtkgui/application.py:311
 msgid "_Preferences"
@@ -450,9 +449,8 @@ msgstr "_Shares"
 
 #: pynicotine/gtkgui/application.py:404
 #: pynicotine/gtkgui/widgets/popupmenu.py:184
-#, fuzzy
 msgid "_Window"
-msgstr "Venster"
+msgstr "_Venster"
 
 #: pynicotine/gtkgui/application.py:406 pynicotine/gtkgui/application.py:422
 msgid "_Help"
@@ -2041,26 +2039,25 @@ msgstr "Geen plugin geselecteerd"
 msgid ""
 "Plugin is not provided by Nicotine+, and is not guaranteed to be safe. Only "
 "enable plugins you trust."
-msgstr ""
+msgstr "Deze plugin wordt niet door Nicotine+ geleverd en de veiligheid ervan is niet gegarandeerd. Schakel alleen plugins in die je vertrouwt."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3656
 msgid "Select a Zip File"
 msgstr "Kies een zip-bestand"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3664
-#, fuzzy
 msgid "Install External Plugins?"
-msgstr "Geïnstalleerde plugins:"
+msgstr "Externe plugins installeren?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3665
 msgid ""
 "External plugins are not verified or sandboxed, and can be malicious. Only "
 "install plugins you trust."
-msgstr ""
+msgstr "Externe plugins worden niet geverifieerd of in een sandbox uitgevoerd, en kunnen schadelijk zijn. Installeer alleen plugins die je vertrouwt."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3669
 msgid "_Proceed"
-msgstr ""
+msgstr "_Doorgaan"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3684
 msgid "Reset Plugin Settings?"
@@ -2913,9 +2910,8 @@ msgstr ""
 
 #: pynicotine/gtkgui/popovers/roomwall.py:39
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:57
-#, fuzzy
 msgid "Remove Message"
-msgstr "Verwijder share"
+msgstr "Bericht verwijderen"
 
 #: pynicotine/gtkgui/privatechat.py:355 pynicotine/gtkgui/search.py:655
 #: pynicotine/gtkgui/userbrowse.py:268 pynicotine/gtkgui/userinfo.py:340
@@ -5349,21 +5345,19 @@ msgstr[1] ""
 "Gebruiker %(user)s zoekt naar \"%(query)s\", %(num)s resultaten gevonden"
 
 #: pynicotine/shares.py:310
-#, fuzzy, python-format
+#, python-format
 msgid "%(num)s folder found previously, %(action)s…"
 msgid_plural "%(num)s folders found previously, %(action)s…"
-msgstr[0] "%(num)s mappen gevonden vóór opnieuw scannen, opnieuw doorzoeken…"
-msgstr[1] "%(num)s mappen gevonden vóór opnieuw scannen, opnieuw doorzoeken…"
+msgstr[0] "%(num)s map eerder gevonden, %(action)s…"
+msgstr[1] "%(num)s mappen eerder gevonden, %(action)s…"
 
 #: pynicotine/shares.py:316
-#, fuzzy
 msgid "rebuilding shares"
-msgstr "Shares opnieuw bouwen…"
+msgstr "shares opnieuw bouwen"
 
 #: pynicotine/shares.py:316
-#, fuzzy
 msgid "rescanning shares"
-msgstr "Shares opnieuw scannen…"
+msgstr "shares opnieuw scannen"
 
 #: pynicotine/shares.py:347
 #, python-format
@@ -7062,9 +7056,8 @@ msgstr "Bestandsbeheer commando:"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:10
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:26
-#, fuzzy
 msgid "Remove Picture"
-msgstr "Afbeelding resetten"
+msgstr "Afbeelding verwijderen"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:45
 msgid "Self Description"
