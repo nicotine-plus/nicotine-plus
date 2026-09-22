@@ -96,8 +96,11 @@ class Application:
         self._instance.connect("query-end", self.on_query_end)
         self._instance.connect("shutdown", self.on_shutdown)
 
-    def run(self):
-        return self._instance.run()
+    def run(self, argv):
+        return self._instance.run(argv)
+
+    def activate(self):
+        self._instance.activate()
 
     def add_action(self, action):
         self._instance.add_action(action)
@@ -753,44 +756,44 @@ class Application:
 
     def on_chatroom_notification_activated(self, _action, room_variant):
 
+        self.activate()
+
         room = room_variant.get_string()
         core.chatrooms.show_room(room)
 
-        self.window.present()
-
     def on_private_chat_notification_activated(self, _action, user_variant):
+
+        self.activate()
 
         user = user_variant.get_string()
         core.privatechat.show_user(user)
 
-        self.window.present()
-
     def on_search_notification_activated(self, _action, search_token_variant):
+
+        self.activate()
 
         search_token = int(search_token_variant.get_string())
         core.search.show_search(search_token)
 
-        self.window.present()
-
     def on_downloads(self, *_args):
+        self.activate()
         self.window.change_main_page(self.window.downloads_page)
-        self.window.present()
 
     def on_uploads(self, *_args):
+        self.activate()
         self.window.change_main_page(self.window.uploads_page)
-        self.window.present()
 
     def on_private_chat(self, *_args):
+        self.activate()
         self.window.change_main_page(self.window.private_page)
-        self.window.present()
 
     def on_chat_rooms(self, *_args):
+        self.activate()
         self.window.change_main_page(self.window.chatrooms_page)
-        self.window.present()
 
     def on_searches(self, *_args):
+        self.activate()
         self.window.change_main_page(self.window.search_page)
-        self.window.present()
 
     def on_message_users_response(self, dialog, _response_id, target):
 
@@ -873,7 +876,7 @@ class Application:
             self.window.hide()
             return
 
-        self.window.present()
+        self.activate()
 
     def on_away_accelerator(self, action, *_args):
         """Ctrl+H: Away/Online toggle."""
