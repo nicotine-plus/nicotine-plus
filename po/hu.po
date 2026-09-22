@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-13 07:08+0300\n"
-"PO-Revision-Date: 2026-08-23 12:21+0000\n"
+"PO-Revision-Date: 2026-09-22 21:51+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.9.dev0\n"
+"X-Generator: Weblate 2026.10.dev0\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -368,7 +368,7 @@ msgstr "A letöltés elindult: %(user)s felhasználó, %(file)s fájl"
 #: pynicotine/gtkgui/__init__.py:47
 #, python-format
 msgid "%s is not supported on this operating system"
-msgstr ""
+msgstr "%s nem támogatott ezen az operációs rendszeren"
 
 #: pynicotine/gtkgui/__init__.py:69 pynicotine/gtkgui/__init__.py:78
 #, python-format
@@ -386,7 +386,6 @@ msgid "_Disconnect"
 msgstr "S_zétkapcsolás"
 
 #: pynicotine/gtkgui/application.py:305
-#, fuzzy
 msgid "Soulseek Pri_vileges"
 msgstr "Soulseek _kiváltságok"
 
@@ -453,9 +452,8 @@ msgstr "_Megosztások"
 
 #: pynicotine/gtkgui/application.py:404
 #: pynicotine/gtkgui/widgets/popupmenu.py:184
-#, fuzzy
 msgid "_Window"
-msgstr "Ablak"
+msgstr "_Ablak"
 
 #: pynicotine/gtkgui/application.py:406 pynicotine/gtkgui/application.py:422
 msgid "_Help"
@@ -2053,25 +2051,29 @@ msgid ""
 "Plugin is not provided by Nicotine+, and is not guaranteed to be safe. Only "
 "enable plugins you trust."
 msgstr ""
+"Ezt a bővítményt nem a Nicotine+ biztosítja, és nem garantált a "
+"biztonságossága. Csak olyan bővítményeket engedélyezzen, amelyekben megbízik."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3656
 msgid "Select a Zip File"
 msgstr "Válasszon ki egy ZIP fájlt"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3664
-#, fuzzy
 msgid "Install External Plugins?"
-msgstr "Telepített bővítmények:"
+msgstr "Külső bővítményeket kíván telepíteni?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3665
 msgid ""
 "External plugins are not verified or sandboxed, and can be malicious. Only "
 "install plugins you trust."
 msgstr ""
+"A külső bővítmények nincsenek ellenőrízve és nem elszigetelt környezetben "
+"futnak, ezért kártékonyak is lehetnek. Csak olyan bővítményeket telepítsen, "
+"amelyekben megbízik."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3669
 msgid "_Proceed"
-msgstr ""
+msgstr "_Folytatás"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3684
 msgid "Reset Plugin Settings?"
@@ -2930,9 +2932,8 @@ msgstr ""
 
 #: pynicotine/gtkgui/popovers/roomwall.py:39
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:57
-#, fuzzy
 msgid "Remove Message"
-msgstr "Megosztás eltávolítása"
+msgstr "Üzenet eltávolítása"
 
 #: pynicotine/gtkgui/privatechat.py:355 pynicotine/gtkgui/search.py:655
 #: pynicotine/gtkgui/userbrowse.py:268 pynicotine/gtkgui/userinfo.py:340
@@ -5389,21 +5390,19 @@ msgstr[1] ""
 "eredményt talált"
 
 #: pynicotine/shares.py:310
-#, fuzzy, python-format
+#, python-format
 msgid "%(num)s folder found previously, %(action)s…"
 msgid_plural "%(num)s folders found previously, %(action)s…"
-msgstr[0] "%(num)s mappa található az újraellenőrzés, újraépítés előtt…"
-msgstr[1] "%(num)s mappa található az újraellenőrzés, újraépítés előtt…"
+msgstr[0] "%(num)s korábban megtalált mappa: %(action)s…"
+msgstr[1] "A korábban megtalált %(num)s mappa: %(action)s…"
 
 #: pynicotine/shares.py:316
-#, fuzzy
 msgid "rebuilding shares"
-msgstr "Megosztások újraépítése…"
+msgstr "megosztások újra felépítése"
 
 #: pynicotine/shares.py:316
-#, fuzzy
 msgid "rescanning shares"
-msgstr "Megosztások frissítése…"
+msgstr "megosztások frissítése"
 
 #: pynicotine/shares.py:347
 #, python-format
@@ -7120,9 +7119,8 @@ msgstr "Fájlkezelő parancs:"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:10
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:26
-#, fuzzy
 msgid "Remove Picture"
-msgstr "Kép visszaállítása"
+msgstr "Kép eltávolítása"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:45
 msgid "Self Description"
