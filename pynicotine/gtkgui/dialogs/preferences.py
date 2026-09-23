@@ -4176,7 +4176,7 @@ class Preferences(Dialog):
         self.close()
 
         if not config.sections["ui"]["trayicon"]:
-            self.application.window.present()
+            self.application.activate()
 
         if rescan_required:
             core.shares.rescan_shares()

@@ -83,8 +83,16 @@ def check_arguments():
     # Disables features that require external applications, useful for e.g. Docker containers
     parser.add_argument("--isolated", action="store_true", help=argparse.SUPPRESS)
 
-    args = parser.parse_args()
+    args, unhandled_args = parser.parse_known_args()
+    gui_argv = None
     multi_instance = False
+
+    if args.headless:
+        # Show error about unrecognized arguments immediately
+        args = parser.parse_args()
+    else:
+        # Pass unhandled arguments to GUI, e.g. --gapplication-service
+        gui_argv = [sys.argv[0], *unhandled_args]
 
     if args.config:
         config.set_config_file(args.config)
@@ -99,7 +107,7 @@ def check_arguments():
     core.cli_listen_port = args.port
     core.cli_rescanning = args.rescan
 
-    return args.headless, args.hidden, args.ci_mode, args.isolated, args.rescan, multi_instance
+    return gui_argv, args.hidden, args.ci_mode, args.isolated, args.rescan, multi_instance
 
 
 def check_python_version():
@@ -184,7 +192,7 @@ def run():
     set_up_python()
     rename_process(b"nicotine")
 
-    headless, hidden, ci_mode, isolated_mode, rescan, multi_instance = check_arguments()
+    gui_argv, hidden, ci_mode, isolated_mode, rescan, multi_instance = check_arguments()
     error = check_python_version()
 
     if error:
@@ -195,16 +203,16 @@ def run():
         return rescan_shares()
 
     # Initialize GTK-based GUI
-    if not headless:
+    if gui_argv:
         from pynicotine import gtkgui as application
-        exit_code = application.run(hidden, ci_mode, isolated_mode, multi_instance)
+        exit_code = application.run(gui_argv, hidden, ci_mode, isolated_mode, multi_instance)
 
         if exit_code is not None:
             return exit_code
 
     # Run without a GUI
     from pynicotine import headless as application
-    return application.run(isolated_mode=isolated_mode, is_fallback=not headless)
+    return application.run(isolated_mode=isolated_mode, is_fallback=bool(gui_argv))
 
 
 apply_translations()

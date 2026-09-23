@@ -102,7 +102,7 @@ def check_gtk_version(gtk_api_version, is_fallback=False):
     return None
 
 
-def run(hidden, ci_mode, isolated_mode, multi_instance):
+def run(argv, hidden, ci_mode, isolated_mode, multi_instance):
     """Run Nicotine+ GTK GUI."""
 
     if getattr(sys, "frozen", False):
@@ -199,4 +199,4 @@ def run(hidden, ci_mode, isolated_mode, multi_instance):
         return None
 
     from pynicotine.gtkgui.application import Application
-    return Application(hidden, ci_mode, isolated_mode, multi_instance).run()
+    return Application(hidden, ci_mode, isolated_mode, multi_instance).run(argv)
