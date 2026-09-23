@@ -56,12 +56,16 @@ class Application:
 
     def __init__(self, start_hidden, ci_mode, isolated_mode, multi_instance):
 
-        self._instance = Gtk.Application(application_id=pynicotine.__application_id__, register_session=True)
-        GLib.set_application_name(pynicotine.__application_name__)
-        GLib.set_prgname(pynicotine.__application_id__)
+        flags = Gio.ApplicationFlags.HANDLES_OPEN
 
         if multi_instance:
-            self._instance.set_flags(Gio.ApplicationFlags.NON_UNIQUE)
+            flags |= Gio.ApplicationFlags.NON_UNIQUE
+
+        self._instance = Gtk.Application(
+            application_id=pynicotine.__application_id__, flags=flags, register_session=True
+        )
+        GLib.set_application_name(pynicotine.__application_name__)
+        GLib.set_prgname(pynicotine.__application_id__)
 
         self.start_hidden = start_hidden
         self.ci_mode = ci_mode
@@ -91,10 +95,14 @@ class Application:
         # language, we need to revise this.
         Gtk.Widget.set_default_direction(Gtk.TextDirection.LTR)
 
-        self._instance.connect("startup", self.on_startup)
-        self._instance.connect("activate", self.on_activate)
-        self._instance.connect("query-end", self.on_query_end)
-        self._instance.connect("shutdown", self.on_shutdown)
+        for signal_name, callback in (
+            ("startup", self.on_startup),
+            ("activate", self.on_activate),
+            ("open", self.on_open),
+            ("query-end", self.on_query_end),
+            ("shutdown", self.on_shutdown)
+        ):
+            self._instance.connect(signal_name, callback)
 
     def run(self, argv):
         return self._instance.run(argv)
@@ -1066,6 +1074,13 @@ class Application:
 
         if start_hidden:
             self.window.minimize()
+
+    def on_open(self, _application, files, _num_files, _hint):
+
+        self.activate()
+
+        for file in files:
+            core.userbrowse.open_soulseek_url(file.get_uri())
 
     def on_confirm_quit_request(self, *_args):
         core.confirm_quit()
