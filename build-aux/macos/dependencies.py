@@ -20,6 +20,7 @@ def install_conda_forge():
                 "gobject-introspection",
                 "gtk4",
                 "libadwaita",
+                "libharfbuzz-devel",
                 "pygobject",
                 "python-build"]
 
