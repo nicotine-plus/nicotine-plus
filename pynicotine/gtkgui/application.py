@@ -56,12 +56,16 @@ class Application:
 
     def __init__(self, start_hidden, ci_mode, isolated_mode, multi_instance):
 
-        self._instance = Gtk.Application(application_id=pynicotine.__application_id__, register_session=True)
-        GLib.set_application_name(pynicotine.__application_name__)
-        GLib.set_prgname(pynicotine.__application_id__)
+        flags = Gio.ApplicationFlags.HANDLES_OPEN
 
         if multi_instance:
-            self._instance.set_flags(Gio.ApplicationFlags.NON_UNIQUE)
+            flags |= Gio.ApplicationFlags.NON_UNIQUE
+
+        self._instance = Gtk.Application(
+            application_id=pynicotine.__application_id__, flags=flags, register_session=True
+        )
+        GLib.set_application_name(pynicotine.__application_name__)
+        GLib.set_prgname(pynicotine.__application_id__)
 
         self.start_hidden = start_hidden
         self.ci_mode = ci_mode
@@ -83,6 +87,7 @@ class Application:
         self.previous_download_folder = None
         self.previous_file_download_folder = None
 
+        self._pending_files = []
         self._inhibit_logout_cookie = None
 
         # Show errors in the GUI from here on
@@ -95,6 +100,7 @@ class Application:
         for signal_name, callback in (
             ("startup", self.on_startup),
             ("activate", self.on_activate),
+            ("open", self.on_open),
             ("query-end", self.on_query_end),
             ("shutdown", self.on_shutdown)
         ):
@@ -287,6 +293,13 @@ class Application:
 
         # Disable Alt+1-9 accelerators for numpad keys to avoid conflict with Alt codes
         self._set_accels_for_action("app.disabled", numpad_accels)
+
+    def _open_pending_files(self):
+
+        for file in self._pending_files:
+            core.userbrowse.open_soulseek_url(file.get_uri())
+
+        self._pending_files.clear()
 
     def _update_user_status(self, *_args):
 
@@ -517,8 +530,12 @@ class Application:
     # Core Events #
 
     def on_server_login(self, msg):
-        if msg.success:
-            self._update_user_status()
+
+        if not msg.success:
+            return
+
+        self._update_user_status()
+        self._open_pending_files()
 
     def on_server_disconnect(self, *_args):
         self._update_user_status()
@@ -1077,6 +1094,17 @@ class Application:
 
         if start_hidden:
             self.window.minimize()
+
+    def on_open(self, _application, files, _num_files, _hint):
+
+        self.activate()
+
+        self._pending_files.extend(files)
+        core.connect()
+        self.window.present()
+
+        if core.users.login_status != UserStatus.OFFLINE:
+            self._open_pending_files()
 
     def on_confirm_quit_request(self, *_args):
         core.confirm_quit()
