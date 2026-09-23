@@ -312,6 +312,26 @@ setup(
             "launch_on_finish": True,
             "dist_dir": BUILD_PATH,
             "install_icon": os.path.join(CURRENT_PATH, ICON_NAME),
+            "data": {
+                "Registry": [
+                    (
+                        f"{pynicotine.__application_name__}URLProtocol",
+                        -1,
+                        "Software\\Classes\\slsk",
+                        "URL Protocol",
+                        "",
+                        "TARGETDIR"
+                    ),
+                    (
+                        f"{pynicotine.__application_name__}URLCommand",
+                        -1,
+                        "Software\\Classes\\slsk\\shell\\open\\command",
+                        None,
+                        f'"[TARGETDIR]{pynicotine.__application_name__}.exe" "%1"',
+                        "TARGETDIR"
+                    )
+                ]
+            },
             "upgrade_code": "{8ffb9dbb-7106-41fc-9e8a-b2469aa1fe9f}"
         },
         "bdist_mac": {
