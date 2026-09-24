@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-13 07:08+0300\n"
-"PO-Revision-Date: 2026-09-22 21:51+0000\n"
+"PO-Revision-Date: 2026-09-24 19:51+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -2885,7 +2885,7 @@ msgstr "Az újraolvasás nem sikerült"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:53
 msgid "You are offline"
-msgstr "Nincs csatlakozva"
+msgstr "Nincs bejelentkezve"
 
 #: pynicotine/gtkgui/popovers/portchecker.py:54
 msgid "Connect to the server to check port status"
@@ -5073,7 +5073,7 @@ msgstr "Az elérhető parancsok listájához írja be a(z) %(command)s parancsot
 #: pynicotine/plugins/core_commands/__init__.py:381
 #, python-format
 msgid "Not joined in room %s"
-msgstr "Nincs csatlakozva a(z) %s szobához"
+msgstr "Nem csatlakozott a(z) %s szobához"
 
 #: pynicotine/plugins/core_commands/__init__.py:398
 #, python-format
@@ -5393,12 +5393,12 @@ msgstr[1] ""
 #, python-format
 msgid "%(num)s folder found previously, %(action)s…"
 msgid_plural "%(num)s folders found previously, %(action)s…"
-msgstr[0] "%(num)s korábban megtalált mappa: %(action)s…"
-msgstr[1] "A korábban megtalált %(num)s mappa: %(action)s…"
+msgstr[0] "%(num)s korábban talált mappa: %(action)s…"
+msgstr[1] "A korábban talált %(num)s mappa: %(action)s…"
 
 #: pynicotine/shares.py:316
 msgid "rebuilding shares"
-msgstr "megosztások újra felépítése"
+msgstr "megosztások újraépítése"
 
 #: pynicotine/shares.py:316
 msgid "rescanning shares"
