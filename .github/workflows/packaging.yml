@@ -90,7 +90,7 @@ jobs:
             platform: ubuntu-26.04-arm
     runs-on: ${{ matrix.platform }}
     container:
-      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-50
+      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-51
       options: --privileged
     steps:
       - name: Checkout code
