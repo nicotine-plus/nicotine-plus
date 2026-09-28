@@ -424,6 +424,9 @@ class UserBrowse:
 
     def open_soulseek_url(self, url):
 
+        if not url.startswith("slsk://"):
+            return
+
         import urllib.parse
 
         url = urllib.parse.unquote(url.replace("slsk://", "", 1))
