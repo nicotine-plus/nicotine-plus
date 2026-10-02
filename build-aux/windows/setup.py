@@ -323,6 +323,7 @@ setup(
                 ("CFBundleShortVersionString", pynicotine.__version__),
                 ("CFBundleVersion", pynicotine.__version__),
                 ("CFBundleInfoDictionaryVersion", "6.0"),
+                ("LSMinimumSystemVersion", "11.0"),
                 ("NSHumanReadableCopyright", pynicotine.__copyright__),
                 ("NSSupportsAutomaticGraphicsSwitching", True)  # Prefer integrated GPU
             ],
