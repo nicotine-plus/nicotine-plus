@@ -92,10 +92,13 @@ class Application:
         # language, we need to revise this.
         Gtk.Widget.set_default_direction(Gtk.TextDirection.LTR)
 
-        self._instance.connect("startup", self.on_startup)
-        self._instance.connect("activate", self.on_activate)
-        self._instance.connect("query-end", self.on_query_end)
-        self._instance.connect("shutdown", self.on_shutdown)
+        for signal_name, callback in (
+            ("startup", self.on_startup),
+            ("activate", self.on_activate),
+            ("query-end", self.on_query_end),
+            ("shutdown", self.on_shutdown)
+        ):
+            self._instance.connect(signal_name, callback)
 
     def run(self, argv):
         return self._instance.run(argv)
