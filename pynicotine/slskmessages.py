@@ -3729,6 +3729,19 @@ class TransferRequest(PeerMessage):
     use the QueueUpload message for this purpose today.  Clients like
     slskd and Seeker still use this method for downloading, so we need to
     ensure we still understand such requests.
+
+    If the peer reports a different file size than we originally requested,
+    then any partial data that we already downloaded before shall need to be
+    erased in order to avoid file corruption. Note that old SoulseekQt clients
+    may report a size of 0 for files larger than 2 GB, so in that case we have
+    to rely on the cached file size we received when we initially added the
+    download.
+
+    The file size should accurately reflect data currently present on the disk,
+    rather than any old value remembered from a prior request or taken from a
+    cached listing. Any discrepancy causes the transfer to either fail before
+    it finishes or tailing file data will be lost and its middle may be
+    disjointed.
     """
 
     __slots__ = ("direction", "token", "file", "filesize")
@@ -3879,10 +3892,13 @@ class PlaceInQueueResponse(PeerMessage):
 class UploadFailed(PeerMessage):
     """Peer code 46.
 
-    This message is sent whenever a file connection of an active upload
-    closes. Soulseek NS clients can also send this message when a file
-    cannot be read. The recipient either re-queues the upload (download
-    on their end), or ignores the message if the transfer finished.
+    This message is sent whenever a file connection of an active upload closes
+    abruptly before the transfer has finished, whether due to cancellation, a
+    problem while reading file data or any other kind of discrepancy.
+
+    The recipient may re-queue the upload (download on their end) to try again
+    in the hope that any discrepancies can be figured out later, or they should
+    ignore the message if the transfer was cancelled by them intentionally.
     """
 
     __slots__ = ("file",)
@@ -4029,6 +4045,12 @@ class FileOffset(FileMessage):
     Note that Soulseek NS fails to read the size of an incomplete download if more
     than 2 GB of the file has been downloaded, and the download is resumed. In
     consequence, the client sends an invalid file offset of -1.
+
+    If the offset is equal to the expected file size, then this transfer has gone
+    wrong due to an earlier mistake and it has been resumed again in error.
+
+    This message shall only be sent once per each file transmission, and any
+    received after the first must be ignored.
     """
 
     __slots__ = ("offset",)
