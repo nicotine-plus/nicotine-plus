@@ -516,6 +516,13 @@ class Application:
 
     # Core Events #
 
+    def on_server_login(self, msg):
+        if msg.success:
+            self._update_user_status()
+
+    def on_server_disconnect(self, *_args):
+        self._update_user_status()
+
     def on_confirm_quit_response(self, dialog, response_id, _data):
 
         should_finish_uploads = dialog.get_option_value()
@@ -1007,8 +1014,8 @@ class Application:
             ("invalid-username", self.on_invalid_username),
             ("room-invitation-rejected", self.on_room_invitation_rejected),
             ("quit", self._instance.quit),
-            ("server-login", self._update_user_status),
-            ("server-disconnect", self._update_user_status),
+            ("server-login", self.on_server_login),
+            ("server-disconnect", self.on_server_disconnect),
             ("setup", self.on_fast_configure),
             ("shares-unavailable", self.on_shares_unavailable),
             ("show-notification", self._show_notification),
