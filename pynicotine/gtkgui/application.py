@@ -80,9 +80,10 @@ class Application:
         self.tray_icon = None
         self.spell_checker = None
 
-        self.inhibit_logout_cookie = None
         self.previous_download_folder = None
         self.previous_file_download_folder = None
+
+        self._inhibit_logout_cookie = None
 
         # Show errors in the GUI from here on
         sys.excepthook = self.on_critical_error
@@ -117,25 +118,25 @@ class Application:
     def remove_window(self, window):
         self._instance.remove_window(window)
 
-    def inhibit_logout(self, reason):
+    def get_accels_for_action(self, action_name):
+        return self._instance.get_accels_for_action(action_name)
 
-        if self.inhibit_logout_cookie:
+    def _inhibit_logout(self, reason):
+
+        if self._inhibit_logout_cookie:
             return
 
-        self.inhibit_logout_cookie = self._instance.inhibit(
+        self._inhibit_logout_cookie = self._instance.inhibit(
             self.window.widget, Gtk.ApplicationInhibitFlags.LOGOUT, reason
         )
 
-    def uninhibit_logout(self):
+    def _uninhibit_logout(self):
 
-        if not self.inhibit_logout_cookie:
+        if not self._inhibit_logout_cookie:
             return
 
-        self._instance.uninhibit(self.inhibit_logout_cookie)
-        self.inhibit_logout_cookie = None
-
-    def get_accels_for_action(self, action_name):
-        return self._instance.get_accels_for_action(action_name)
+        self._instance.uninhibit(self._inhibit_logout_cookie)
+        self._inhibit_logout_cookie = None
 
     def _set_up_actions(self):
 
@@ -1082,7 +1083,7 @@ class Application:
         core.confirm_quit()
 
     def on_query_end(self, *_args):
-        self.inhibit_logout(_("Saving configuration…"))
+        self._inhibit_logout(_("Saving configuration…"))
         core.quit()
 
     def on_shutdown(self, *_args):
@@ -1123,5 +1124,5 @@ class Application:
         if self.tray_icon is not None:
             self.tray_icon.destroy()
 
-        self.uninhibit_logout()
+        self._uninhibit_logout()
         self.__dict__.clear()
