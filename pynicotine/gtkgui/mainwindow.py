@@ -1008,6 +1008,9 @@ class MainWindow(Window):
             self.remove_away_timer()
 
         # Status bar
+        if core.uploads.pending_shutdown:
+            return
+
         username = core.users.login_username
         icon_name = USER_STATUS_ICON_NAMES[status]
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
