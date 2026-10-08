@@ -3488,6 +3488,12 @@ class FileSearchResponse(PeerMessage):
         self._offset = 0
         self._message = memoryview(decompressor.decompress(self._message, 4))
         self._offset = username_len = self.unpack_uint32()
+
+        header_size = username_len + 8  # Username length, username and token
+
+        if header_size >= max_uncompressed_size:
+            raise ValueError("Search response header too large")
+
         self._message = memoryview(decompressor.decompress(decompressor.unconsumed_tail, username_len + 4))
         self.token = self.unpack_uint32()
 
@@ -3497,9 +3503,11 @@ class FileSearchResponse(PeerMessage):
 
         # Optimization: only decompress the rest of the message when needed
         self._offset = 0
-        self._message = memoryview(decompressor.decompress(decompressor.unconsumed_tail, max_uncompressed_size))
+        self._message = memoryview(decompressor.decompress(
+            decompressor.unconsumed_tail, max_uncompressed_size - header_size
+        ))
 
-        if not decompressor.unconsumed_tail:
+        if decompressor.eof and not decompressor.unconsumed_tail:
             self._parse_remaining_network_message()
 
     def _parse_remaining_network_message(self):
@@ -3659,8 +3667,17 @@ class FolderContentsResponse(PeerMessage):
         self.token = self.unpack_uint32()
         dir_len = self.unpack_uint32()
 
+        header_size = dir_len + 8  # Token, directory length and directory
+
+        if header_size >= max_uncompressed_size:
+            raise ValueError("Folder contents response header too large")
+
         self._offset = 4  # Skip token
-        self._message = memoryview(message_bytes + decompressor.decompress(decompressor.unconsumed_tail, dir_len))
+
+        if dir_len:
+            message_bytes += decompressor.decompress(decompressor.unconsumed_tail, dir_len)
+
+        self._message = memoryview(message_bytes)
         self.dir = self.unpack_string()
 
         if self.username + self.dir not in self.allowed_responses:
@@ -3668,9 +3685,11 @@ class FolderContentsResponse(PeerMessage):
 
         # Optimization: only decompress the rest of the message when needed
         self._offset = 0
-        self._message = memoryview(decompressor.decompress(decompressor.unconsumed_tail, max_uncompressed_size))
+        self._message = memoryview(decompressor.decompress(
+            decompressor.unconsumed_tail, max_uncompressed_size - header_size
+        ))
 
-        if not decompressor.unconsumed_tail:
+        if decompressor.eof and not decompressor.unconsumed_tail:
             self._parse_remaining_network_message()
 
     def _parse_remaining_network_message(self):
