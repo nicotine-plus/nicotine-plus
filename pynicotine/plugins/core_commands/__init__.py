@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from pynicotine.pluginsystem import BasePlugin
-from pynicotine.shares import PermissionLevel
 from pynicotine.slskmessages import UserStatus
 
 
@@ -284,38 +283,39 @@ class Plugin(BasePlugin):
         search_query = " ".join(args.lower().split(" ", maxsplit=1))
         command_groups = self.parent.get_command_groups_data(command_interface, search_query=search_query)
         num_commands = sum(len(command_groups[x]) for x in command_groups)
-        output_text = ""
 
         if not search_query:
-            output_text += ngettext(
-                "Listing %(num)s available command:",
-                "Listing %(num)s available commands:",
-                num_commands
-            ) % {"num": num_commands}
+            self.output(
+                ngettext(
+                    "%(num)s available command:",
+                    "%(num)s available commands:",
+                    num_commands
+                ) % {"num": num_commands}
+            )
         else:
-            output_text += ngettext(
-                'Listing %(num)s available command matching "%(query)s":',
-                'Listing %(num)s available commands matching "%(query)s":',
-                num_commands
-            ) % {
-                "num": num_commands,
-                "query": search_query
-            }
+            self.output(
+                ngettext(
+                    '%(num)s available command matching "%(query)s":',
+                    '%(num)s available commands matching "%(query)s":',
+                    num_commands
+                ) % {"num": num_commands, "query": search_query}
+            )
 
         for group_name, command_data in command_groups.items():
-            output_text += f"\n\n{group_name}:"
+            self.output(f"\n{group_name}:")
 
             for command, aliases, parameters, description in command_data:
                 command_message = f"/{', /'.join([command] + aliases)} {' '.join(parameters)}".strip()
-                output_text += f"\n\t{command_message}  -  {description}"
+                self.output(_("• %(item)s") % {"item": _("%(field)s  -  %(value)s") % {
+                    "field": command_message,
+                    "value": description
+                }})
 
         if not search_query:
-            output_text += "\n\n" + _("Type %(command)s to list similar commands") % {"command": "/help [query]"}
+            self.output("\n" + _("Type %(command)s to list similar commands") % {"command": "/help [query]"})
 
         elif not num_commands:
-            output_text += "\n" + _("Type %(command)s to list available commands") % {"command": "/help"}
-
-        self.output(output_text)
+            self.output("\n" + _("Type %(command)s to list available commands") % {"command": "/help"})
 
     def connect_command(self, _args, **_unused):
         if self.core.users.login_status == UserStatus.OFFLINE:
@@ -533,33 +533,34 @@ class Plugin(BasePlugin):
 
     def list_shares_command(self, args, **_unused):
 
-        permission_levels = {
-            0: PermissionLevel.PUBLIC,
-            1: PermissionLevel.BUDDY,
-            2: PermissionLevel.TRUSTED
-        }
-        share_groups = self.core.shares.get_shared_folders()
-        num_total = num_listed = 0
+        public_shares, buddy_shares, trusted_shares = self.core.shares.get_shared_folders()
+        separator = ""
 
-        for group_index, share_group in enumerate(share_groups):
-            permission_level = permission_levels.get(group_index)
+        for permission_level, h_permission_level, share_group in (
+            ("public", _("public"), public_shares),
+            ("buddy", _("buddy"), buddy_shares),
+            ("trusted", _("trusted"), trusted_shares)
+        ):
             num_shares = len(share_group)
-            num_total += num_shares
 
             if not num_shares or args and permission_level not in args.lower():
                 continue
 
-            self.output("\n" + f"{num_shares} {permission_level} shares:")
+            self.output(
+                separator + ngettext(
+                    '%(num)s share with "%(permission_level)s" permission level:',
+                    '%(num)s shares with "%(permission_level)s" permission level:',
+                    num_shares
+                ) % {"num": num_shares, "permission_level": h_permission_level}
+            )
 
             for virtual_name, folder_path, *_ignored in share_group:
-                self.output(f'• "{virtual_name}" {folder_path}')
+                self.output(_("• %(item)s") % {"item": _("%(field)s %(value)s") % {
+                    "field": f'"{virtual_name}"',
+                    "value": folder_path
+                }})
 
-            num_listed += num_shares
-
-        self.output("\n" + _("%(num_listed)s shares listed (%(num_total)s configured)") % {
-            "num_listed": num_listed,
-            "num_total": num_total
-        })
+            separator = "\n"
 
     def share_command(self, args, **_unused):
 
@@ -568,12 +569,17 @@ class Plugin(BasePlugin):
         virtual_name = self.core.shares.add_share(folder_path, permission_level=permission_level)
 
         if not virtual_name:
-            self.output(_("Cannot share inaccessible folder \"%s\"") % folder_path)
+            self.output(_('Cannot share inaccessible folder "%s"') % folder_path)
             return False
 
-        self.output(_("Added %(group_name)s share \"%(virtual_name)s\" (rescan required)") % {
-            "group_name": permission_level,
-            "virtual_name": virtual_name
+        self.output(_('Added share "%(virtual_name)s" with "%(permission_level)s" permission level '
+                      '(rescan required)') % {
+            "virtual_name": virtual_name,
+            "permission_level": {
+                "public": _("public"),
+                "buddy": _("buddy"),
+                "trusted": _("trusted")
+            }[permission_level]
         })
         return True
 
@@ -582,10 +588,10 @@ class Plugin(BasePlugin):
         virtual_name_or_folder_path = args.strip(' "')
 
         if not self.core.shares.remove_share(virtual_name_or_folder_path):
-            self.output(_("No share with name \"%s\"") % virtual_name_or_folder_path)
+            self.output(_('No share with name "%s"') % virtual_name_or_folder_path)
             return False
 
-        self.output(_("Removed share \"%s\" (rescan required)") % virtual_name_or_folder_path)
+        self.output(_('Removed share "%s" (rescan required)') % virtual_name_or_folder_path)
         return True
 
     # Search Files #
@@ -605,13 +611,23 @@ class Plugin(BasePlugin):
 
     # Plugin Commands #
 
+    def get_plugin_status_string(self, plugin_name):
+
+        if self.parent.is_plugin_loaded(plugin_name):
+            return _("enabled")
+
+        if self.parent.is_plugin_failed(plugin_name):
+            return _("failed")
+
+        return _("disabled")
+
     def plugin_command(self, args, **_unused):
 
         action, plugin_name = args.split(maxsplit=1)
 
         if self.parent.get_plugin_path(plugin_name) is None:
             self.list_plugins_command(args)
-            self.output(_("No plugin with name \"%s\"") % plugin_name)
+            self.output("\n" + _('No plugin with name "%s"') % plugin_name)
 
         elif action == "toggle":
             self.parent.toggle_plugin(plugin_name)
@@ -620,14 +636,37 @@ class Plugin(BasePlugin):
             self.parent.reload_plugin(plugin_name)
 
         elif action == "info":
-            plugin_info = self.parent.get_plugin_info(plugin_name)
+            info = self.parent.get_plugin_info(plugin_name)
 
-            for key, value in plugin_info.items():
-                self.output(f"• {key}: {value}")
+            for field, value in (
+                (_("Name:"), info.get("Name", plugin_name)),
+                (_("Version:"), info.get("Version")),
+                (_("Created by:"), ", ".join(info.get("Authors", ""))),
+                (_("Status:"), self.get_plugin_status_string(plugin_name)),
+                (_("Description:"), info.get("Description"))
+            ):
+                if value:
+                    self.output(_("• %(item)s") % {"item": _("%(field)s %(value)s") % {
+                        "field": field,
+                        "value": value
+                    }})
 
     def list_plugins_command(self, _args, **_unused):
 
-        self.output(_("Installed plugins:"))
+        installed_plugins = sorted(self.parent.list_installed_plugins())
+        num_installed_plugins = len(installed_plugins)
 
-        for basename in sorted(self.parent.list_installed_plugins()):
-            self.output(f"{'‣' if self.parent.is_plugin_loaded(basename) else '•'} {basename}")
+        self.output(
+            ngettext(
+                '%(num)s installed plugin:',
+                '%(num)s installed plugins:',
+                num_installed_plugins
+            ) % {"num": num_installed_plugins}
+        )
+
+        for plugin_name in installed_plugins:
+            status = self.get_plugin_status_string(plugin_name)
+            self.output(_("• %(item)s") % {"item": _("%(field)s %(value)s") % {
+                "field": plugin_name,
+                "value": f"({status})"
+            }})
