@@ -9,6 +9,7 @@ from pynicotine.slskmessages import UserStatus
 class _CommandGroup:
     CHAT = _("Chat")
     CHAT_ROOMS = _("Chat Rooms")
+    PLUGINS = _("Plugins")
     PRIVATE_CHAT = _("Private Chat")
     NETWORK_FILTERS = _("Network Filters")
     SEARCH_FILES = _("Search Files")
@@ -41,11 +42,6 @@ class Plugin(BasePlugin):
                 "aliases": ["a"],
                 "callback": self.away_command,
                 "description": _("Toggle away status"),
-            },
-            "plugin": {
-                "callback": self.plugin_handler_command,
-                "description": _("Manage plugins"),
-                "parameters": ["<toggle|reload|info>", "<plugin name>"]
             },
             "quit": {
                 "aliases": ["q", "exit"],
@@ -257,6 +253,18 @@ class Plugin(BasePlugin):
                 "disable": ["cli"],
                 "group": _CommandGroup.SEARCH_FILES,
                 "parameters": ["<user>", "<query>"]
+            },
+            "plugin": {
+                "callback": self.plugin_command,
+                "description": _("Manage plugin"),
+                "parameters": ["<toggle|reload|info>", "<plugin name>"],
+                "group": _CommandGroup.PLUGINS
+            },
+            "plugins": {
+                "aliases": ["lp"],
+                "callback": self.list_plugins_command,
+                "description": _("List installed plugins"),
+                "group": _CommandGroup.PLUGINS
             }
         }
 
@@ -597,16 +605,12 @@ class Plugin(BasePlugin):
 
     # Plugin Commands #
 
-    def plugin_handler_command(self, args, **_unused):
+    def plugin_command(self, args, **_unused):
 
         action, plugin_name = args.split(maxsplit=1)
 
         if self.parent.get_plugin_path(plugin_name) is None:
-            self.output(_("Installed plugins:"))
-
-            for basename in sorted(self.parent.list_installed_plugins()):
-                self.output(f"{'‣' if self.parent.is_plugin_loaded(basename) else '•'} {basename}")
-
+            self.list_plugins_command(args)
             self.output(_("No plugin with name \"%s\"") % plugin_name)
 
         elif action == "toggle":
@@ -620,3 +624,10 @@ class Plugin(BasePlugin):
 
             for key, value in plugin_info.items():
                 self.output(f"• {key}: {value}")
+
+    def list_plugins_command(self, _args, **_unused):
+
+        self.output(_("Installed plugins:"))
+
+        for basename in sorted(self.parent.list_installed_plugins()):
+            self.output(f"{'‣' if self.parent.is_plugin_loaded(basename) else '•'} {basename}")
