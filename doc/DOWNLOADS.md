@@ -150,6 +150,7 @@ using them.
 | Package Manager                                                                                    | Package Name           |
 |----------------------------------------------------------------------------------------------------|------------------------|
 | [Chocolatey](https://community.chocolatey.org/packages/nicotine-plus)                              | `nicotine-plus`        |
+| [MSYS2](https://packages.msys2.org/base/mingw-w64-nicotine+)                                       | `nicotine+`            |
 | [Scoop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nicotine-plus.json)            | `extras/nicotine-plus` |
 | [Winget](https://github.com/microsoft/winget-pkgs/tree/master/manifests/n/Nicotine%2B/Nicotine%2B) | `nicotine+.nicotine+`  |
 
