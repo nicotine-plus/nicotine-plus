@@ -13,6 +13,7 @@ import re
 from collections import deque
 from itertools import islice
 
+from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -44,6 +45,7 @@ from pynicotine.search import ResultFilterMode
 from pynicotine.shares import FileTypes
 from pynicotine.slskmessages import FileListMessage
 from pynicotine.utils import factorize
+from pynicotine.utils import get_ancestor_folder_paths
 from pynicotine.utils import humanize
 from pynicotine.utils import human_size
 from pynicotine.utils import human_speed
@@ -116,6 +118,7 @@ class Searches(IconNotebook):
 
         self.download_dialog = None
         self.file_properties = None
+        self.pending_ancestor_folders = {}
 
         for event_name, callback in (
             ("add-search", self.add_search),
@@ -126,6 +129,8 @@ class Searches(IconNotebook):
             ("remove-search", self.remove_search),
             ("remove-wish", self.update_wish_button),
             ("search-failed", self.search_failed),
+            ("shared-file-list-failed", self.shared_file_list_failed),
+            ("shared-file-list-response", self.shared_file_list_response),
             ("show-search", self.show_search),
             ("update-wish-filters", self.update_wish_filters)
         ):
@@ -149,6 +154,42 @@ class Searches(IconNotebook):
             self.file_properties.destroy()
 
         super().destroy()
+
+    def download_ancestor_folder(self, username, folder_path):
+
+        browsed_user = core.userbrowse.users.get(username)
+
+        if browsed_user is None or not (browsed_user.public_folders or browsed_user.private_folders):
+            # Shares not loaded yet, fetch them in a background Browse tab
+            self.pending_ancestor_folders[username] = folder_path
+            core.userbrowse.browse_user(username, path=folder_path, new_request=True, switch_page=False)
+            return
+
+        data = []
+
+        for i_folder_path, files in core.userbrowse.iter_matching_folders(
+            folder_path, browsed_user=browsed_user, recurse=True
+        ):
+            for _code, basename, file_size, _ext, file_attributes, *_unused in files:
+                file_path = "\\".join([i_folder_path, basename])
+
+                data.append((username, file_path, file_size, file_attributes, True, folder_path))
+
+        if self.download_dialog is None:
+            self.download_dialog = Download(self.window.application)
+
+        self.download_dialog.update_files(data, partial_files=False)
+        self.download_dialog.present()
+
+    def shared_file_list_response(self, msg):
+
+        folder_path = self.pending_ancestor_folders.pop(msg.username, None)
+
+        if folder_path is not None:
+            self.download_ancestor_folder(msg.username, folder_path)
+
+    def shared_file_list_failed(self, username, _is_offline=False):
+        self.pending_ancestor_folders.pop(username, None)
 
     def on_focus(self, *_args):
 
@@ -629,6 +670,15 @@ class Search:
             ("#" + _("Copy Folder URL"), self.on_copy_folder_url)
         )
 
+        self.popup_menu_ancestor_folders = PopupMenu(self.window.application)
+        self.ancestor_folders_user = None
+        self.download_ancestor_folder_action = Gio.SimpleAction(
+            name=f"search-download-ancestor-folder-{self.popup_menu_ancestor_folders.popup_id}",
+            parameter_type=GLib.VariantType("s")
+        )
+        self.download_ancestor_folder_action.connect("activate", self.on_download_ancestor_folder)
+        self.window.application.add_action(self.download_ancestor_folder_action)
+
         self.popup_menu = FilePopupMenu(
             self.window.application, parent=self.tree_view.widget, callback=self.on_popup_menu
         )
@@ -636,6 +686,7 @@ class Search:
             ("#" + "download_files", self.on_download_files),
             ("#" + "download_files_to", self.on_download_files_to),
             ("#" + "download_folders", self.on_download_folders),
+            (">" + _("Download _Ancestor Folder"), self.popup_menu_ancestor_folders),
             ("", None),
             ("#" + _("F_ile Properties"), self.on_file_properties),
             ("", None),
@@ -657,7 +708,8 @@ class Search:
         )
 
         self.popup_menus = (
-            self.popup_menu, self.popup_menu_users, self.popup_menu_copy, self.tab_menu
+            self.popup_menu, self.popup_menu_users, self.popup_menu_copy, self.popup_menu_ancestor_folders,
+            self.tab_menu
         )
 
         # Key bindings
@@ -729,6 +781,8 @@ class Search:
 
         for menu in self.popup_menus:
             menu.destroy()
+
+        self.window.application.remove_action(self.download_ancestor_folder_action.get_name())
 
         for combobox in self.filter_comboboxes.values():
             combobox.destroy()
@@ -1441,6 +1495,29 @@ class Search:
         popup.update_model()
         popup.toggle_user_items()
 
+    def populate_popup_menu_ancestor_folders(self):
+
+        self.popup_menu_ancestor_folders.clear()
+        iterator = next(iter(self.selected_results.values()), None)
+        folder_paths = []
+
+        if iterator is not None:
+            self.ancestor_folders_user = self.tree_view.get_row_value(iterator, "user")
+            file_path = self.tree_view.get_row_value(iterator, "file_data").path
+            folder_paths = get_ancestor_folder_paths(file_path)
+            action_id = f"app.{self.download_ancestor_folder_action.get_name()}"
+
+            # Folder paths are passed as action targets, since they may contain
+            # characters not allowed in action names
+            for folder_path in folder_paths:
+                self.popup_menu_ancestor_folders.add_items(
+                    ("O" + folder_path.replace("_", "__") + "\\", action_id, folder_path)
+                )
+
+            self.popup_menu_ancestor_folders.update_model()
+
+        self.popup_menu.actions[_("Download _Ancestor Folder")].set_enabled(bool(folder_paths))
+
     def populate_popup_menu_users(self):
 
         self.popup_menu_users.clear()
@@ -1640,6 +1717,7 @@ class Search:
             _("_Download Folder…") if len(user_folder_paths) == 1 else _("_Download Folders…")
         )
 
+        self.populate_popup_menu_ancestor_folders()
         self.populate_popup_menu_users()
 
     def on_browse_folder(self, *_args):
@@ -1762,6 +1840,9 @@ class Search:
 
             file_data.is_downloading = True
             self.tree_view.set_row_value(iterator, "downloading", "folder-download-symbolic")
+
+    def on_download_ancestor_folder(self, _action, parameter):
+        self.searches.download_ancestor_folder(self.ancestor_folders_user, parameter.get_string())
 
     def on_download_folders(self, *_args):
 

@@ -6,6 +6,7 @@ import os
 from unittest import TestCase
 
 from pynicotine.utils import clean_file
+from pynicotine.utils import get_ancestor_folder_paths
 from pynicotine.utils import safe_path_join
 
 
@@ -115,3 +116,18 @@ class UtilsTest(TestCase):
             safe_path_join(os.sep.join(["base", "path"]), "\\absolute", "..", "."),
             os.sep.join([base, "base", "path", "_absolute", "__", "_"])
         )
+
+    def test_get_ancestor_folder_paths(self):
+        """Verify that ancestor folders of a remote file path are listed, deepest first."""
+
+        self.assertEqual(
+            get_ancestor_folder_paths("@@abcde\\Music\\Artist\\Album\\song.mp3"),
+            ["@@abcde\\Music\\Artist\\Album", "@@abcde\\Music\\Artist", "@@abcde\\Music", "@@abcde"]
+        )
+        self.assertEqual(
+            get_ancestor_folder_paths("C:\\Some_Folder\\file_name.flac"),
+            ["C:\\Some_Folder", "C:"]
+        )
+        self.assertEqual(get_ancestor_folder_paths("@@abcde\\song.mp3"), ["@@abcde"])
+        self.assertEqual(get_ancestor_folder_paths("song.mp3"), [])
+        self.assertEqual(get_ancestor_folder_paths(""), [])

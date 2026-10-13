@@ -165,6 +165,20 @@ def safe_path_join(base_path: str, *parts) -> str:
     return path
 
 
+def get_ancestor_folder_paths(file_path: str) -> list[str]:
+    """Returns the ancestor folders of a remote (backslash-separated) file
+    path, starting with the deepest one."""
+
+    folder_paths = []
+    folder_path = file_path.rpartition("\\")[0]
+
+    while folder_path:
+        folder_paths.append(folder_path)
+        folder_path = folder_path.rpartition("\\")[0]
+
+    return folder_paths
+
+
 def encode_path(path: str, prefix: bool = True):
     """Converts a file path to bytes for processing by the system.
 
