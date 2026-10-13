@@ -293,7 +293,7 @@ def factorize(
 
 
 def truncate_string_byte(
-    string: str, byte_limit: int, encoding: str = "utf-8", ellipsize: bool = False
+    string: str, byte_limit: int, encoding: str = "utf-8", ellipsize: bool = False, crc_suffix: bool = False
 ) -> str:
     """Truncates a string to fit inside a byte limit."""
 
@@ -302,6 +302,21 @@ def truncate_string_byte(
     if len(string_bytes) <= byte_limit:
         # Nothing to do, return original string
         return string
+
+    if crc_suffix:
+        # Append suffix to ensure a UDF compliant path or file name component
+        from binascii import crc_hqx  # CRC-CCITT (poly 0x1021)
+
+        crc = f"#{crc_hqx(string_bytes, 0xFFFF) & 0xFFF:03X}"  # 4 ASCII chars
+        _base, dot, ext = string.rpartition(".")
+        ext_bytes = ext.encode(encoding)
+
+        if dot and len(ext_bytes) <= 5:
+            basename = string_bytes[:byte_limit - 5 - len(ext_bytes)].decode(encoding, "ignore")
+            return f"{basename}{crc}.{ext}"  # "#XYZ" (4) + "." (1) + ext
+
+        basename = string_bytes[:byte_limit - 4].decode(encoding, "ignore")
+        return f"{basename}{crc}"  # "#XYZ" (4)
 
     if ellipsize:
         ellipsis_char = "…".encode(encoding)
