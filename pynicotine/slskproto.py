@@ -759,7 +759,7 @@ class NetworkThread(Thread):
             username=username
         )
 
-        if unpacked_msg.identifier != "1":
+        if unpacked_msg is None or unpacked_msg.identifier != "1":
             # Ignore invalid message
             return None
 
