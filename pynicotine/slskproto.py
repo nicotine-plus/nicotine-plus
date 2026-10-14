@@ -759,8 +759,11 @@ class NetworkThread(Thread):
             username=username
         )
 
+        if unpacked_msg is None:
+            return None
+
         if unpacked_msg.identifier != "1":
-            # Ignore invalid message
+            # Ignore unrecognized search request message
             return None
 
         return unpacked_msg
