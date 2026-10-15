@@ -1137,6 +1137,11 @@ class Downloads(Transfers):
                 cancel_reason = TransferRejectReason.COMPLETE
 
         elif self.can_send_any_files(username):
+            parent_folder_path, _separator, basename = virtual_path.replace("/", "\\").rpartition("\\")
+
+            if not basename:
+                return TransferResponse(allowed=False, reason=cancel_reason, token=token)
+
             # Check if download exists in our default download folder
             _file_path, file_exists = self.get_complete_download_file_path(username, virtual_path, size)
 
@@ -1145,7 +1150,7 @@ class Downloads(Transfers):
             else:
                 # If this file is not in your download queue, then it must be
                 # a remotely initiated download and someone is manually uploading to you
-                parent_folder_path = virtual_path.replace("/", "\\").split("\\")[-2]
+                parent_folder_path = parent_folder_path.rpartition("\\")[-1]
                 received_folder_path = os.path.normpath(os.path.expandvars(config.sections["transfers"]["uploaddir"]))
                 folder_path = safe_path_join(received_folder_path, username, parent_folder_path)
 
