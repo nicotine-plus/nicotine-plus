@@ -50,6 +50,7 @@ from pynicotine.transfers import TransferStatus
 from pynicotine.utils import execute_command
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
+from pynicotine.utils import REPLACEMENTCHAR
 from pynicotine.utils import safe_path_join
 from pynicotine.utils import truncate_string_byte
 
@@ -720,7 +721,7 @@ class Downloads(Transfers):
 
         max_bytes = self.get_basename_byte_limit(download_folder_path)
 
-        basename = clean_file(virtual_path.rpartition("\\")[-1])
+        basename = clean_file(virtual_path.rpartition("\\")[-1]) or REPLACEMENTCHAR
         basename_no_extension, extension = os.path.splitext(basename)
         basename_limit = max_bytes - len(extension.encode())
         basename_no_extension = truncate_string_byte(basename_no_extension, max(0, basename_limit))
@@ -777,7 +778,7 @@ class Downloads(Transfers):
         incomplete_folder_path = self.get_incomplete_download_folder()
         max_bytes = self.get_basename_byte_limit(incomplete_folder_path)
 
-        basename = clean_file(virtual_path.rpartition("\\")[-1])
+        basename = clean_file(virtual_path.rpartition("\\")[-1]) or REPLACEMENTCHAR
         basename_no_extension, extension = os.path.splitext(basename)
         basename_limit = max_bytes - len(prefix) - len(extension.encode())
         basename_no_extension = truncate_string_byte(basename_no_extension, max(0, basename_limit))
@@ -1145,9 +1146,11 @@ class Downloads(Transfers):
             else:
                 # If this file is not in your download queue, then it must be
                 # a remotely initiated download and someone is manually uploading to you
-                parent_folder_path = virtual_path.replace("/", "\\").split("\\")[-2]
                 received_folder_path = os.path.normpath(os.path.expandvars(config.sections["transfers"]["uploaddir"]))
-                folder_path = safe_path_join(received_folder_path, username, parent_folder_path)
+                virtual_path = virtual_path.replace("/", "\\")
+                virtual_folder_path = virtual_path.rpartition("\\")[0]
+                parent_folder_name = virtual_folder_path.rpartition("\\")[-1]
+                folder_path = safe_path_join(received_folder_path, username, parent_folder_name)
 
                 transfer = Transfer(username, virtual_path, folder_path, size)
 

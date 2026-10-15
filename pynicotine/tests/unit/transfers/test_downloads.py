@@ -139,6 +139,23 @@ class DownloadsTest(TestCase):
         self.assertEqual(transfer.virtual_path, "Hello\\Path\\File.mp3")
         self.assertEqual(transfer.folder_path, config.data_folder_path)
 
+    def test_empty_basename(self):
+        """Verify that an appropriate basename is used if virtual path is empty."""
+
+        username = "abc"
+        virtual_path = ""
+        finished_folder_path = os.path.join(os.sep, "path", "to", "somewhere", "downloads")
+
+        # Incomplete download
+        incomplete_file_path = core.downloads.get_incomplete_download_file_path(username, virtual_path)
+        incomplete_basename = os.path.basename(incomplete_file_path)
+
+        self.assertEqual(incomplete_basename, "INCOMPLETE900150983cd24fb0d6963f7d28e17f72_")
+
+        # Finished download
+        finished_basename = core.downloads.get_download_basename(virtual_path, finished_folder_path)
+        self.assertEqual(finished_basename, "_")
+
     def test_long_basename(self):
         """Verify that the basename in download paths doesn't exceed 255 bytes.
 
