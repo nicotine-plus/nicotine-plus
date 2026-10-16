@@ -904,7 +904,7 @@ class Transfers:
 
         virtual_path = transfer.virtual_path
 
-        if virtual_path:
+        if virtual_path is not None:
             folder_path, _separator, _basename = virtual_path.rpartition("\\")
             return folder_path
 
