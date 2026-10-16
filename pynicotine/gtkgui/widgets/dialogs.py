@@ -305,7 +305,7 @@ class MessageDialog(Window):
         self.default_focus_widget = None
 
         if not buttons:
-            buttons = [("cancel", _("Close"))]
+            buttons = [("cancel", _("_Dismiss"))]
 
         widget = self._create_dialog(title, message, buttons, selectable)
         super().__init__(widget=widget)

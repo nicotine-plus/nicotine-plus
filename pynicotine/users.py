@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2020-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import time
+
 import pynicotine
 from pynicotine.config import config
 from pynicotine.core import core
@@ -427,7 +429,13 @@ class Users:
     def _admin_message(msg):
         """Server code 66."""
 
-        log.add(msg.msg, title=_("Soulseek Announcement"))
+        log.add(
+            _("Server Announcement (%(date)s): %(message)s") % {
+                "date": time.strftime("%x"),
+                "message": msg.msg
+            },
+            title=_("Server Announcement")
+        )
 
     def _privileged_users(self, msg):
         """Server code 69."""
