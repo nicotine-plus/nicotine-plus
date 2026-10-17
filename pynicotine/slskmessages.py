@@ -1747,12 +1747,6 @@ class RoomList(ServerMessage):
     def make_network_message(self):
         return b""
 
-    def parse_network_message(self):
-        self.rooms = self.parse_rooms()
-        self.rooms_owner = self.parse_rooms()
-        self.rooms_member = self.parse_rooms()
-        self.rooms_operator = self.parse_rooms(has_count=False)
-
     def parse_rooms(self, has_count=True):
         numrooms = self.unpack_uint32()
 
@@ -1774,6 +1768,12 @@ class RoomList(ServerMessage):
             rooms[i][1] = self.unpack_uint32()
 
         return rooms
+
+    def parse_network_message(self):
+        self.rooms = self.parse_rooms()
+        self.rooms_owner = self.parse_rooms()
+        self.rooms_member = self.parse_rooms()
+        self.rooms_operator = self.parse_rooms(has_count=False)
 
 
 class ExactFileSearch(ServerMessage):
@@ -2518,16 +2518,16 @@ class NotifyPrivileges(ServerMessage):
         self.token = token
         self.user = user
 
-    def parse_network_message(self):
-        self.token = self.unpack_uint32()
-        self.user = self.unpack_string()
-
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_uint32(self.token)
         msg += self.pack_string(self.user)
 
         return msg
+
+    def parse_network_message(self):
+        self.token = self.unpack_uint32()
+        self.user = self.unpack_string()
 
 
 class AckNotifyPrivileges(ServerMessage):
@@ -2542,11 +2542,11 @@ class AckNotifyPrivileges(ServerMessage):
         ServerMessage.__init__(self, msg_content)
         self.token = token
 
-    def parse_network_message(self):
-        self.token = self.unpack_uint32()
-
     def make_network_message(self):
         return self.pack_uint32(self.token)
+
+    def parse_network_message(self):
+        self.token = self.unpack_uint32()
 
 
 class BranchLevel(ServerMessage):
@@ -3350,20 +3350,6 @@ class SharedFileListResponse(PeerMessage):
         self.built = zlib.compress(msg, ZLIB_COMPRESSION_LEVEL)
         return self.built
 
-    def parse_network_message(self):
-        decompressor = zlib.decompressobj()
-        max_uncompressed_size = 2147483648  # 2 GiB
-        self._message = memoryview(decompressor.decompress(self._message, max_uncompressed_size))
-
-        if not decompressor.unconsumed_tail:
-            self._parse_network_message()
-
-    def parse_local_message(self):
-        self._message = memoryview(self.make_network_message())
-        self._offset = 0
-
-        self.parse_network_message()
-
     def _parse_result_list(self):
         ndir = self.unpack_uint32()
 
@@ -3404,6 +3390,20 @@ class SharedFileListResponse(PeerMessage):
 
         if self.has_remaining_content():
             self.privatelist = self._parse_result_list()
+
+    def parse_network_message(self):
+        decompressor = zlib.decompressobj()
+        max_uncompressed_size = 2147483648  # 2 GiB
+        self._message = memoryview(decompressor.decompress(self._message, max_uncompressed_size))
+
+        if not decompressor.unconsumed_tail:
+            self._parse_network_message()
+
+    def parse_local_message(self):
+        self._message = memoryview(self.make_network_message())
+        self._offset = 0
+
+        self.parse_network_message()
 
 
 class FileSearchRequest(PeerMessage):
@@ -3481,39 +3481,6 @@ class FileSearchResponse(PeerMessage):
 
         return zlib.compress(msg, ZLIB_COMPRESSION_LEVEL)
 
-    def parse_network_message(self):
-        decompressor = zlib.decompressobj()
-        max_uncompressed_size = 134217728  # 128 MiB
-
-        self._offset = 0
-        self._message = memoryview(decompressor.decompress(self._message, 4))
-        self._offset = username_len = self.unpack_uint32()
-        self._message = memoryview(decompressor.decompress(decompressor.unconsumed_tail, username_len + 4))
-        self.token = self.unpack_uint32()
-
-        if self.token not in self.allowed_responses:
-            # Results are no longer accepted for this search token, stop parsing message
-            return
-
-        # Optimization: only decompress the rest of the message when needed
-        self._offset = 0
-        self._message = memoryview(decompressor.decompress(decompressor.unconsumed_tail, max_uncompressed_size))
-
-        if not decompressor.unconsumed_tail:
-            self._parse_remaining_network_message()
-
-    def _parse_remaining_network_message(self):
-        self.list = self._parse_result_list()
-        self.freeulslots = self.unpack_bool()
-        self.ulspeed = self.unpack_uint32()
-        self.inqueue = self.unpack_uint32()
-
-        if self.has_remaining_content():
-            self.unknown = self.unpack_uint32()
-
-        if self.has_remaining_content():
-            self.privatelist = self._parse_result_list()
-
     def _parse_result_list(self):
         nfiles = self.unpack_uint32()
 
@@ -3534,6 +3501,38 @@ class FileSearchResponse(PeerMessage):
             results.sort(key=itemgetter(1))
 
         return results
+
+    def parse_network_message(self):
+        decompressor = zlib.decompressobj()
+        max_uncompressed_size = 134217728  # 128 MiB
+
+        self._offset = 0
+        self._message = memoryview(decompressor.decompress(self._message, 4))
+        self._offset = username_len = self.unpack_uint32()
+        self._message = memoryview(decompressor.decompress(decompressor.unconsumed_tail, username_len + 4))
+        self.token = self.unpack_uint32()
+
+        if self.token not in self.allowed_responses:
+            # Results are no longer accepted for this search token, stop parsing message
+            return
+
+        # Optimization: only decompress the rest of the message when needed
+        self._offset = 0
+        self._message = memoryview(decompressor.decompress(decompressor.unconsumed_tail, max_uncompressed_size))
+
+        if decompressor.unconsumed_tail:
+            return
+
+        self.list = self._parse_result_list()
+        self.freeulslots = self.unpack_bool()
+        self.ulspeed = self.unpack_uint32()
+        self.inqueue = self.unpack_uint32()
+
+        if self.has_remaining_content():
+            self.unknown = self.unpack_uint32()
+
+        if self.has_remaining_content():
+            self.privatelist = self._parse_result_list()
 
 
 class UserInfoRequest(PeerMessage):
@@ -3649,6 +3648,23 @@ class FolderContentsResponse(PeerMessage):
         self.token = token
         self.list = shares
 
+    def make_network_message(self):
+        msg = bytearray()
+        msg += self.pack_uint32(self.token)
+        msg += self.pack_string(self.dir)
+
+        if self.list is not None:
+            msg += self.pack_uint32(1)
+            msg += self.pack_string(self.dir)
+
+            # We already saved the folder contents as a bytearray when scanning our shares
+            msg += self.list
+        else:
+            # No folder contents
+            msg += self.pack_uint32(0)
+
+        return zlib.compress(msg, ZLIB_COMPRESSION_LEVEL)
+
     def parse_network_message(self):
         decompressor = zlib.decompressobj()
         max_uncompressed_size = 134217728  # 128 MiB
@@ -3670,10 +3686,9 @@ class FolderContentsResponse(PeerMessage):
         self._offset = 0
         self._message = memoryview(decompressor.decompress(decompressor.unconsumed_tail, max_uncompressed_size))
 
-        if not decompressor.unconsumed_tail:
-            self._parse_remaining_network_message()
+        if decompressor.unconsumed_tail:
+            return
 
-    def _parse_remaining_network_message(self):
         ndir = self.unpack_uint32()
         folders = {}
 
@@ -3698,23 +3713,6 @@ class FolderContentsResponse(PeerMessage):
                 folders[directory].sort(key=itemgetter(1))
 
         self.list = folders
-
-    def make_network_message(self):
-        msg = bytearray()
-        msg += self.pack_uint32(self.token)
-        msg += self.pack_string(self.dir)
-
-        if self.list is not None:
-            msg += self.pack_uint32(1)
-            msg += self.pack_string(self.dir)
-
-            # We already saved the folder contents as a bytearray when scanning our shares
-            msg += self.list
-        else:
-            # No folder contents
-            msg += self.pack_uint32(0)
-
-        return zlib.compress(msg, ZLIB_COMPRESSION_LEVEL)
 
 
 class TransferRequest(PeerMessage):
