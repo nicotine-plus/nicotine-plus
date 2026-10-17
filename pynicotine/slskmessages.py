@@ -3382,7 +3382,14 @@ class SharedFileListResponse(PeerMessage):
 
         return shares
 
-    def _parse_network_message(self):
+    def parse_network_message(self):
+        decompressor = zlib.decompressobj()
+        max_uncompressed_size = 2147483648  # 2 GiB
+        self._message = memoryview(decompressor.decompress(self._message, max_uncompressed_size))
+
+        if decompressor.unconsumed_tail:
+            return
+
         self.list = self._parse_result_list()
 
         if self.has_remaining_content():
@@ -3390,14 +3397,6 @@ class SharedFileListResponse(PeerMessage):
 
         if self.has_remaining_content():
             self.privatelist = self._parse_result_list()
-
-    def parse_network_message(self):
-        decompressor = zlib.decompressobj()
-        max_uncompressed_size = 2147483648  # 2 GiB
-        self._message = memoryview(decompressor.decompress(self._message, max_uncompressed_size))
-
-        if not decompressor.unconsumed_tail:
-            self._parse_network_message()
 
     def parse_local_message(self):
         self._message = memoryview(self.make_network_message())
