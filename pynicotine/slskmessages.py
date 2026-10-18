@@ -3388,7 +3388,7 @@ class SharedFileListResponse(PeerMessage):
         self._message = memoryview(decompressor.decompress(self._message, max_uncompressed_size))
 
         if not decompressor.eof:
-            return
+            raise ValueError("Invalid or too large compressed message")
 
         self.list = self._parse_result_list()
 
@@ -3520,7 +3520,7 @@ class FileSearchResponse(PeerMessage):
         self._message = memoryview(decompressor.decompress(decompressor.unconsumed_tail, max_uncompressed_size))
 
         if not decompressor.eof:
-            return
+            raise ValueError("Invalid or too large compressed message")
 
         self.list = self._parse_result_list()
         self.freeulslots = self.unpack_bool()
@@ -3686,7 +3686,7 @@ class FolderContentsResponse(PeerMessage):
         self._message = memoryview(decompressor.decompress(decompressor.unconsumed_tail, max_uncompressed_size))
 
         if not decompressor.eof:
-            return
+            raise ValueError("Invalid or too large compressed message")
 
         ndir = self.unpack_uint32()
         folders = {}
