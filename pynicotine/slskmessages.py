@@ -3387,7 +3387,7 @@ class SharedFileListResponse(PeerMessage):
         max_uncompressed_size = 2147483648  # 2 GiB
         self._message = memoryview(decompressor.decompress(self._message, max_uncompressed_size))
 
-        if decompressor.unconsumed_tail:
+        if not decompressor.eof:
             return
 
         self.list = self._parse_result_list()
@@ -3519,7 +3519,7 @@ class FileSearchResponse(PeerMessage):
         self._offset = 0
         self._message = memoryview(decompressor.decompress(decompressor.unconsumed_tail, max_uncompressed_size))
 
-        if decompressor.unconsumed_tail:
+        if not decompressor.eof:
             return
 
         self.list = self._parse_result_list()
@@ -3685,7 +3685,7 @@ class FolderContentsResponse(PeerMessage):
         self._offset = 0
         self._message = memoryview(decompressor.decompress(decompressor.unconsumed_tail, max_uncompressed_size))
 
-        if decompressor.unconsumed_tail:
+        if not decompressor.eof:
             return
 
         ndir = self.unpack_uint32()
