@@ -3384,11 +3384,11 @@ class SharedFileListResponse(PeerMessage):
 
     def parse_network_message(self):
         decompressor = zlib.decompressobj()
-        max_uncompressed_size = 2147483648  # 2 GiB
+        max_uncompressed_size = 2147483648  # 2 GiB total
         self._message = memoryview(decompressor.decompress(self._message, max_uncompressed_size))
 
         if not decompressor.eof:
-            raise ValueError("Invalid or too large compressed message")
+            raise ValueError("Compressed message invalid or too large")
 
         self.list = self._parse_result_list()
 
@@ -3503,16 +3503,19 @@ class FileSearchResponse(PeerMessage):
 
     def parse_network_message(self):
         decompressor = zlib.decompressobj()
-        max_uncompressed_size = 134217728  # 128 MiB
-
-        self._offset = 0
         self._message = memoryview(decompressor.decompress(self._message, 4))
-        self._offset = username_len = self.unpack_uint32()
+
+        username_len = self.unpack_uint32()
+        max_uncompressed_size = 134217728 - username_len - 8  # 128 MiB total
+
+        if max_uncompressed_size <= 0:
+            raise ValueError("Compressed message too large")
+
+        self._offset = username_len
         self._message = memoryview(decompressor.decompress(decompressor.unconsumed_tail, username_len + 4))
         self.token = self.unpack_uint32()
 
         if self.token not in self.allowed_responses:
-            # Results are no longer accepted for this search token, stop parsing message
             return
 
         # Optimization: only decompress the rest of the message when needed
@@ -3520,7 +3523,7 @@ class FileSearchResponse(PeerMessage):
         self._message = memoryview(decompressor.decompress(decompressor.unconsumed_tail, max_uncompressed_size))
 
         if not decompressor.eof:
-            raise ValueError("Invalid or too large compressed message")
+            raise ValueError("Compressed message invalid or too large")
 
         self.list = self._parse_result_list()
         self.freeulslots = self.unpack_bool()
@@ -3666,16 +3669,21 @@ class FolderContentsResponse(PeerMessage):
 
     def parse_network_message(self):
         decompressor = zlib.decompressobj()
-        max_uncompressed_size = 134217728  # 128 MiB
-
-        self._offset = 0
         message_bytes = decompressor.decompress(self._message, 8)
         self._message = memoryview(message_bytes)
+
         self.token = self.unpack_uint32()
         dir_len = self.unpack_uint32()
+        max_uncompressed_size = 134217728 - dir_len - 8  # 128 MiB total
+
+        if max_uncompressed_size <= 0:
+            raise ValueError("Compressed message too large")
+
+        if dir_len:
+            message_bytes += decompressor.decompress(decompressor.unconsumed_tail, dir_len)
+            self._message = memoryview(message_bytes)
 
         self._offset = 4  # Skip token
-        self._message = memoryview(message_bytes + decompressor.decompress(decompressor.unconsumed_tail, dir_len))
         self.dir = self.unpack_string()
 
         if self.username + self.dir not in self.allowed_responses:
@@ -3686,7 +3694,7 @@ class FolderContentsResponse(PeerMessage):
         self._message = memoryview(decompressor.decompress(decompressor.unconsumed_tail, max_uncompressed_size))
 
         if not decompressor.eof:
-            raise ValueError("Invalid or too large compressed message")
+            raise ValueError("Compressed message invalid or too large")
 
         ndir = self.unpack_uint32()
         folders = {}
