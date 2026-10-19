@@ -6,6 +6,9 @@ import os
 import time
 
 from collections import deque
+from dataclasses import dataclass
+from dataclasses import field
+from typing import BinaryIO
 
 from pynicotine.config import config
 from pynicotine.events import events
@@ -14,13 +17,11 @@ from pynicotine.utils import open_file_path
 from pynicotine.utils import safe_path_join
 
 
+@dataclass(slots=True, eq=False)
 class LogFile:
-    __slots__ = ("path", "handle", "last_active")
-
-    def __init__(self, path, handle):
-        self.path = path
-        self.handle = handle
-        self.last_active = time.monotonic()
+    path: str
+    handle: BinaryIO
+    last_active: float = field(default_factory=time.monotonic)
 
 
 class LogLevel:

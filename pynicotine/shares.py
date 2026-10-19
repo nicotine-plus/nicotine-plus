@@ -14,6 +14,7 @@ import sys
 import time
 
 from collections import defaultdict
+from dataclasses import dataclass
 from datetime import datetime
 from datetime import timedelta
 from itertools import chain
@@ -80,6 +81,17 @@ class PermissionLevel:
     BUDDY = "buddy"
     TRUSTED = "trusted"
     BANNED = "banned"
+
+
+class ScannerState:
+    INITIALIZED = "initialized"
+    SUCCESS = "success"
+
+
+@dataclass(slots=True, eq=False)
+class ScannerLogMessage:
+    msg: str
+    msg_args: dict | None = None
 
 
 class RestrictedUnpickler(Unpickler):
@@ -223,19 +235,6 @@ class Database:
             os.fsync(self._file_handle.fileno())
 
         self._file_handle.close()
-
-
-class ScannerState:
-    INITIALIZED = "initialized"
-    SUCCESS = "success"
-
-
-class ScannerLogMessage:
-    __slots__ = ("msg", "msg_args")
-
-    def __init__(self, msg, msg_args=None):
-        self.msg = msg
-        self.msg_args = msg_args
 
 
 class Scanner:
