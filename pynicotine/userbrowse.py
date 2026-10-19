@@ -4,6 +4,8 @@
 import json
 import os
 
+from dataclasses import dataclass
+from dataclasses import field
 from itertools import chain
 from threading import Thread
 
@@ -26,24 +28,20 @@ from pynicotine.utils import humanize
 from pynicotine.utils import safe_path_join
 
 
+@dataclass(slots=True, eq=False)
 class BrowsedUser:
-    __slots__ = ("username", "public_folders", "private_folders", "num_folders", "num_files",
-                 "shared_size")
-
-    def __init__(self, username):
-
-        self.username = username
-        self.public_folders = {}
-        self.private_folders = {}
-        self.num_folders = None
-        self.num_files = None
-        self.shared_size = None
+    username: str
+    num_folders: int | None = None
+    num_files: int | None = None
+    shared_size: int | None = None
+    public_folders: dict = field(default_factory=dict)
+    private_folders: dict = field(default_factory=dict)
 
     def clear(self):
 
+        self.num_folders = self.num_files = self.shared_size = None
         self.public_folders.clear()
         self.private_folders.clear()
-        self.num_folders = self.num_files = self.shared_size = None
 
 
 class UserBrowse:
@@ -464,8 +462,8 @@ class UserBrowse:
             num_files += len(files)
 
         if browsed_user is not None:
-            browsed_user.public_folders = dict(msg.list)
-            browsed_user.private_folders = dict(msg.privatelist)
+            browsed_user.public_folders.update(msg.list)
+            browsed_user.private_folders.update(msg.privatelist)
             browsed_user.num_folders = num_folders
             browsed_user.num_files = num_files
             browsed_user.shared_size = shared_size

@@ -10,6 +10,8 @@ import json
 import os
 import time
 
+from dataclasses import dataclass
+from dataclasses import field
 from itertools import islice
 from operator import itemgetter
 from shlex import shlex
@@ -43,58 +45,36 @@ class ResultFilterMode:
     CUSTOM = "custom"
 
 
+@dataclass(slots=True, eq=False)
 class SearchRequest:
-    __slots__ = ("token", "term", "term_sanitized", "term_transmitted", "included_words", "excluded_words",
-                 "mode", "room", "users")
-
-    def __init__(self, token=None, term=None, term_sanitized=None, term_transmitted=None, included_words=None,
-                 excluded_words=None, mode="global", room=None, users=None):
-
-        self.token = token
-        self.term = term
-        self.term_sanitized = term_sanitized
-        self.term_transmitted = term_transmitted
-        self.included_words = included_words
-        self.excluded_words = excluded_words
-        self.mode = mode
-        self.room = room
-        self.users = users
+    token: int
+    term: str
+    term_sanitized: str
+    term_transmitted: str
+    included_words: list[str]
+    excluded_words: list[str]
+    mode: str
+    room: str | None = None
+    users: list[str] = field(default_factory=list)
 
 
+@dataclass(slots=True, eq=False, kw_only=True)
 class WishSearchRequest(SearchRequest):
-    __slots__ = ("auto_search", "filter_mode", "time_added", "is_ignored", "custom_filters", "ignored_users")
-
-    def __init__(self, *args, auto_search=True, filter_mode=ResultFilterMode.NONE, time_added=None,
-                 custom_filters=None, ignored_users=None, **kwargs):
-
-        super().__init__(*args, **kwargs)
-
-        self.auto_search = auto_search
-        self.filter_mode = filter_mode
-        self.time_added = time_added
-        self.custom_filters = custom_filters
-        self.ignored_users = ignored_users
-        self.mode = "wishlist"
-        self.is_ignored = True
-
-        if time_added is None:
-            self.time_added = int(time.time())
-
-        if custom_filters is None:
-            self.custom_filters = []
-
-        if ignored_users is None:
-            self.ignored_users = set()
+    auto_search: bool
+    filter_mode: ResultFilterMode
+    time_added: int
+    custom_filters: list[str | bool] = field(default_factory=list)
+    ignored_users: set[str] = field(default_factory=set)
+    mode: str = "wishlist"
+    is_ignored: bool = True
 
     @property
     def num_active_filters(self):
 
-        num_filters = 0
-
-        if self.filter_mode == ResultFilterMode.CUSTOM:
-            num_filters = sum(1 for filter in self.custom_filters if filter)
-
-        return num_filters
+        return (
+            sum(1 for filter in self.custom_filters if filter)
+            if self.filter_mode == ResultFilterMode.CUSTOM else 0
+        )
 
     def as_dict(self):
 
@@ -372,21 +352,22 @@ class Search:
 
         self.searches[token] = search = SearchRequest(
             token=token, term=search_term, term_sanitized=term_sanitized, term_transmitted=term_transmitted,
-            included_words=included_words, excluded_words=excluded_words, mode=mode, room=room, users=users
+            included_words=included_words, excluded_words=excluded_words, mode=mode, room=room,
+            users=users or []
         )
 
         return search
 
     def _add_wish_search(self, token, search_term, auto_search=True, filter_mode=ResultFilterMode.NONE,
-                         time_added=None, custom_filters=None, ignored_users=None):
+                         time_added=int(time.time()), custom_filters=None, ignored_users=None):
 
         term_sanitized, term_transmitted, included_words, excluded_words = self._sanitize_search_term(search_term)
 
         self.wishlist[search_term] = self.searches[token] = search = WishSearchRequest(
             token=token, term=search_term, term_sanitized=term_sanitized, term_transmitted=term_transmitted,
             included_words=included_words, excluded_words=excluded_words, auto_search=auto_search,
-            filter_mode=filter_mode, time_added=time_added, custom_filters=custom_filters,
-            ignored_users=ignored_users
+            filter_mode=filter_mode, time_added=time_added, custom_filters=custom_filters or [],
+            ignored_users=ignored_users or set()
         )
 
         return search

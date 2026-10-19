@@ -14,7 +14,10 @@ import sys
 import time
 
 from collections import defaultdict
-from queue import Empty, SimpleQueue
+from dataclasses import dataclass
+from dataclasses import field
+from queue import Empty
+from queue import SimpleQueue
 from threading import Thread
 
 from pynicotine.events import events
@@ -78,51 +81,35 @@ from pynicotine.utils import human_duration_approx
 from pynicotine.utils import human_speed
 
 
+@dataclass(slots=True, eq=False)
 class Connection:
-    __slots__ = ("sock", "addr", "io_events", "is_established", "in_buffer", "out_buffer",
-                 "last_active", "recv_size")
-
-    def __init__(self, sock=None, addr=None, io_events=None):
-
-        self.sock = sock
-        self.addr = addr
-        self.io_events = io_events
-        self.in_buffer = bytearray()
-        self.out_buffer = bytearray()
-        self.last_active = time.monotonic()
-        self.recv_size = 51200
-        self.is_established = False
+    sock: socket
+    addr: tuple[str, int]
+    io_events: int
+    recv_size: int = 51200
+    is_established: bool = False
+    in_buffer: bytearray = field(default_factory=bytearray)
+    out_buffer: bytearray = field(default_factory=bytearray)
+    last_active: float = field(default_factory=time.monotonic)
 
 
+@dataclass(slots=True, eq=False, kw_only=True)
 class ServerConnection(Connection):
-    __slots__ = ("username", "password")
-
-    def __init__(self, *args, username=None, password=None, **kwargs):
-
-        Connection.__init__(self, *args, **kwargs)
-
-        self.username = username
-        self.password = password
+    username: str
+    password: str
 
 
+@dataclass(slots=True, eq=False, kw_only=True)
 class PeerConnection(Connection):
-    __slots__ = ("init", "pierce_token", "has_post_init_activity")
-
-    def __init__(self, *args, init=None, pierce_token=None, **kwargs):
-
-        Connection.__init__(self, *args, **kwargs)
-
-        self.init = init
-        self.pierce_token = pierce_token
-        self.has_post_init_activity = False
+    init: PeerInit | None = None
+    pierce_token: int | None = None
+    has_post_init_activity: bool = False
 
 
+@dataclass(slots=True, eq=False)
 class UserAddress:
-    __slots__ = ("addr", "last_update")
-
-    def __init__(self, addr):
-        self.addr = addr
-        self.last_update = time.monotonic()
+    addr: tuple[str, int]
+    last_update: float = field(default_factory=time.monotonic)
 
 
 class ConnectionInitTimeoutError(Exception):

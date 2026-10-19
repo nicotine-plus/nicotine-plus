@@ -3,6 +3,9 @@
 
 import time
 
+from dataclasses import dataclass
+from dataclasses import field
+
 import pynicotine
 from pynicotine.config import config
 from pynicotine.core import core
@@ -25,18 +28,14 @@ from pynicotine.utils import human_duration_approx
 from pynicotine.utils import open_uri
 
 
+@dataclass(slots=True, eq=False)
 class WatchedUser:
-
-    __slots__ = ("username", "upload_speed", "files", "folders", "contexts", "is_implicit")
-
-    def __init__(self, username):
-
-        self.username = username
-        self.upload_speed = None
-        self.files = None
-        self.folders = None
-        self.contexts = set()
-        self.is_implicit = True
+    username: str
+    upload_speed: int | None = None
+    files: int | None = None
+    folders: int | None = None
+    is_implicit: bool = True
+    contexts: set[str] = field(default_factory=set)
 
 
 class Users:
