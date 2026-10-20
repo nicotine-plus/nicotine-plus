@@ -28,6 +28,7 @@ from pynicotine.slskmessages import PEER_INIT_MESSAGE_CLASSES
 from pynicotine.slskmessages import PEER_INIT_MESSAGE_CODES
 from pynicotine.slskmessages import SERVER_MESSAGE_CLASSES
 from pynicotine.slskmessages import SERVER_MESSAGE_CODES
+from pynicotine.slskmessages import SERVER_USERNAME
 from pynicotine.slskmessages import DOUBLE_UINT32_UNPACK
 from pynicotine.slskmessages import UINT32_UNPACK
 from pynicotine.slskmessages import AcceptChildren
@@ -354,7 +355,6 @@ class NetworkThread(Thread):
     TCP_BUFFER_SIZE_MEDIUM = 208896              # 204 KiB, maximum limit NetBSD accepts by default
     TCP_BUFFER_SIZE_SMALL = 16384                # 16 KiB
     MAX_ACCEPTED_USERNAME_SIZE = 256             # 256 bytes, for future flexibility beyond the actual 30 byte limit
-    SERVER_USERNAME = "server"
     ALLOWED_PEER_CONN_TYPES = {
         ConnectionType.PEER,
         ConnectionType.FILE,
@@ -1717,7 +1717,7 @@ class NetworkThread(Thread):
             addr = conn.addr
 
             if (not 0 < msg.target_username_size <= self.MAX_ACCEPTED_USERNAME_SIZE
-                    or username == self.SERVER_USERNAME or not username.isprintable()):
+                    or username == SERVER_USERNAME or not username.isprintable()):
                 log.add_conn("Rejected incoming direct connection from address %s "
                              "due to invalid username: %r", (addr, username))
                 return None
@@ -2504,7 +2504,7 @@ class NetworkThread(Thread):
 
         elif isinstance(msg, DistribBranchRoot):
             if (not 0 < msg.root_username_size <= self.MAX_ACCEPTED_USERNAME_SIZE
-                    or msg.root_username == self.SERVER_USERNAME or not msg.root_username.isprintable()):
+                    or msg.root_username == SERVER_USERNAME or not msg.root_username.isprintable()):
                 log.add_conn("Rejected an invalid branch root username %r from user %s. "
                              "Closing connection.", (msg.root_username, username))
                 return False

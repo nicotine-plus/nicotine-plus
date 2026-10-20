@@ -39,6 +39,7 @@ INT32_PACK = Struct("<i").pack
 UINT32_PACK = Struct("<I").pack
 UINT64_PACK = Struct("<Q").pack
 
+SERVER_USERNAME = "server"
 ZLIB_COMPRESSION_LEVEL = 4
 
 

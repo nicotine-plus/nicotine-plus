@@ -10,6 +10,7 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.events import StopEventPropagation
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import SERVER_USERNAME
 from pynicotine.slskmessages import MessageAcked
 from pynicotine.slskmessages import MessageUser
 from pynicotine.slskmessages import MessageUsers
@@ -23,8 +24,6 @@ from pynicotine.utils import replace_text
 class PrivateChat:
     __slots__ = ("completions", "users", "_away_message_users", "_private_message_queue",
                  "_ctcp_query_times")
-
-    SERVER_USERNAME = "server"
 
     def __init__(self):
 
@@ -294,7 +293,7 @@ class PrivateChat:
                 translated_message += "\n" + remaining_message
 
             if redirect_room is not None:
-                msg = SayChatroom(room=redirect_room, message=translated_message, user=self.SERVER_USERNAME)
+                msg = SayChatroom(room=redirect_room, message=translated_message, user=SERVER_USERNAME)
                 events.emit("say-chat-room", msg)
                 return None
 
@@ -400,7 +399,7 @@ class PrivateChat:
 
                 core.send_message_to_server(MessageAcked(msg.message_id))
 
-            if username == self.SERVER_USERNAME:
+            if username == SERVER_USERNAME:
                 message = self._process_server_message(message)
                 if message is None:
                     raise StopEventPropagation()
