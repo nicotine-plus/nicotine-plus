@@ -572,14 +572,14 @@ class FileAttributes:
 
 class ParentCandidate:
 
-    __slots__ = ("username", "ip_address", "port", "conn", "branch_root", "branch_level")
+    __slots__ = ("username", "ip_address", "port", "sock", "branch_root", "branch_level")
 
     def __init__(self, username, ip_address, port):
         self.username = username
         self.ip_address = ip_address
         self.port = port
 
-        self.conn = None
+        self.sock = None
         self.branch_root = None
         self.branch_level = None
 

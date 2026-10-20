@@ -1038,11 +1038,11 @@ class NetworkThread(Thread):
         if conn_type == ConnectionType.DISTRIBUTED:
             parent_candidate = self._potential_parents.get(username)
 
-            if self._parent is not None and conn is self._parent.conn:
+            if self._parent is not None and sock is self._parent.sock:
                 self._send_have_no_parent()
 
-            if parent_candidate is not None and conn is parent_candidate.conn:
-                parent_candidate.conn = None
+            if parent_candidate is not None and sock is parent_candidate.sock:
+                parent_candidate.sock = None
 
             child_conn = self._child_peers.get(username)
 
@@ -1510,7 +1510,7 @@ class NetworkThread(Thread):
             log.add_conn("Received a reset request for distributed network")
 
             if self._parent is not None:
-                self._close_connection(self._parent.conn)
+                self._close_connection(self._conns[self._parent.sock])
 
             for child_conn in self._child_peers.copy().values():
                 self._close_connection(child_conn)
@@ -2302,7 +2302,7 @@ class NetworkThread(Thread):
         if self._parent is None:
             return ParentStatus.WAITING
 
-        if conn is self._parent.conn:
+        if conn.sock is self._parent.sock:
             return ParentStatus.ACCEPTED
 
         log.add_conn("Rejected a distributed message '%s' from user %s, who is not our parent. "
@@ -2340,7 +2340,7 @@ class NetworkThread(Thread):
 
         parent_candidate = self._potential_parents.get(username)
 
-        if parent_candidate is None or parent_candidate.conn is None:
+        if parent_candidate is None or parent_candidate.sock is None:
             return
 
         if parent_candidate.branch_level is None or not parent_candidate.branch_root:
@@ -2379,16 +2379,16 @@ class NetworkThread(Thread):
     def _close_parent_candidate_connections(self):
 
         for parent_candidate in self._potential_parents.values():
-            conn = parent_candidate.conn
+            sock = parent_candidate.sock
 
-            if conn is None:
+            if sock is None:
                 continue
 
-            if self._parent is not None and conn is self._parent.conn:
+            if self._parent is not None and sock is self._parent.sock:
                 continue
 
-            self._close_connection(conn)
-            parent_candidate.conn = None
+            self._close_connection(self._conns[sock])
+            parent_candidate.sock = None
 
     def _update_maximum_distributed_children(self):
 
@@ -2486,7 +2486,7 @@ class NetworkThread(Thread):
 
             elif parent_status == ParentStatus.WAITING and username in self._potential_parents:
                 parent_candidate = self._potential_parents[username]
-                parent_candidate.conn = conn
+                parent_candidate.sock = conn.sock
                 parent_candidate.branch_level = msg.level
 
                 # Branch roots are not guaranteed to send a separate branch root message
@@ -2519,7 +2519,7 @@ class NetworkThread(Thread):
 
             elif parent_status == ParentStatus.WAITING and username in self._potential_parents:
                 parent_candidate = self._potential_parents[username]
-                parent_candidate.conn = conn
+                parent_candidate.sock = conn.sock
                 parent_candidate.branch_root = msg.root_username
 
             self._emit_network_message_event(msg)
