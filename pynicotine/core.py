@@ -285,7 +285,8 @@ class Core:
 
         self.send_message_to_network_thread(ServerConnect(
             addr=config.sections["server"]["server"],
-            login=(config.sections["server"]["login"], config.sections["server"]["passw"]),
+            username=config.sections["server"]["login"],
+            password=config.sections["server"]["passw"],
             interface_name=config.sections["server"]["interface"],
             interface_address=self.cli_interface_address,
             listen_port=self.cli_listen_port or config.sections["server"]["portrange"][0],

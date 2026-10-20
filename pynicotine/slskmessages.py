@@ -155,14 +155,15 @@ class CloseConnection(InternalMessage):
 class ServerConnect(InternalMessage):
     """Sent to the networking thread to establish a server connection."""
 
-    __slots__ = ("addr", "login", "interface_name", "interface_address", "listen_port",
+    __slots__ = ("addr", "username", "password", "interface_name", "interface_address", "listen_port",
                  "portmapper")
-    __excluded_attrs__ = {"login"}
+    __excluded_attrs__ = {"username", "password"}
 
-    def __init__(self, addr=None, login=None, interface_name=None, interface_address=None,
+    def __init__(self, addr=None, username=None, password=None, interface_name=None, interface_address=None,
                  listen_port=None, portmapper=None):
         self.addr = addr
-        self.login = login
+        self.username = username
+        self.password = password
         self.interface_name = interface_name
         self.interface_address = interface_address
         self.listen_port = listen_port

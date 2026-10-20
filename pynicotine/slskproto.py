@@ -99,11 +99,14 @@ class Connection:
 
 
 class ServerConnection(Connection):
-    __slots__ = ("login",)
+    __slots__ = ("username", "password")
 
-    def __init__(self, *args, login=None, **kwargs):
+    def __init__(self, *args, username=None, password=None, **kwargs):
+
         Connection.__init__(self, *args, **kwargs)
-        self.login = login
+
+        self.username = username
+        self.password = password
 
 
 class PeerConnection(Connection):
@@ -1285,7 +1288,8 @@ class NetworkThread(Thread):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         io_events = selectors.EVENT_READ | selectors.EVENT_WRITE
         conn = ServerConnection(
-            sock=sock, addr=msg.addr, io_events=io_events, login=msg.login
+            sock=sock, addr=msg.addr, io_events=io_events, username=msg.username,
+            password=msg.password
         )
 
         sock.setblocking(False)
@@ -1321,17 +1325,18 @@ class NetworkThread(Thread):
             }
         )
 
-        login, password = conn.login
-        self._user_addresses[login] = UserAddress((self._local_ip_address, self._listen_port))
-        conn.login = True
+        username = conn.username
+        password = conn.password
+        conn.username = conn.password = None
 
+        self._user_addresses[username] = UserAddress((self._local_ip_address, self._listen_port))
         self._server_address = conn.addr
-        self._login_username = self._branch_root = login
+        self._login_username = self._branch_root = username
         self._server_timeout_value = -1
 
         self._send_message_to_server(
             Login(
-                login, password,
+                username, password,
                 # Soulseek client major version
                 # NS and SoulseekQt use 157, Soulseek.NET and slskd use 170
                 # We use our reserved major version number for Nicotine+
