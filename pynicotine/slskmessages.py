@@ -19,6 +19,7 @@ from socket import inet_aton
 from socket import inet_ntoa
 from struct import Struct
 
+from pynicotine.logfacility import log
 from pynicotine.utils import UINT32_LIMIT
 from pynicotine.utils import human_length
 
@@ -139,6 +140,7 @@ class ParentStatus:
 class InternalMessage:
     __slots__ = ()
     TYPE = MessageType.INTERNAL
+    LOGGED = True
     HIDDEN_FIELDS = {}
 
     def __repr__(self):
@@ -278,6 +280,7 @@ class SlskMessage:
     __slots__ = ("_message", "_offset")
     TYPE = None
     EVENT_NAME = None
+    LOGGED = True
     HIDDEN_FIELDS = {}
 
     def __init__(self, msg_content=None):
@@ -2141,6 +2144,7 @@ class EmbeddedMessage(ServerMessage):
     """
 
     __slots__ = ("distrib_code", "distrib_message")
+    LOGGED = False
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -3354,7 +3358,6 @@ class SharedFileListResponse(PeerMessage):
                     msg_list += shares[key]
 
         except Exception as error:
-            from pynicotine.logfacility import log
             msg_list = self.pack_uint32(0)
             log.add(_("Unable to read shares database. Please rescan your shares. Error: %s"), error)
 
@@ -4034,6 +4037,7 @@ class UnknownPeerMessage(PeerMessage):
     """
 
     __slots__ = ()
+    LOGGED = False
 
     def parse_network_message(self):
         # Empty message
@@ -4157,6 +4161,7 @@ class DistribSearch(DistribMessage):
 
     __slots__ = ("identifier", "search_username", "token", "searchterm")
     EVENT_NAME = "file-search-request-distributed"
+    LOGGED = False
 
     def __init__(self, *, msg_content=None):
         DistribMessage.__init__(self, msg_content)
@@ -4281,6 +4286,7 @@ class DistribEmbeddedMessage(DistribMessage):
     """
 
     __slots__ = ("distrib_code", "distrib_message")
+    LOGGED = False
 
     def __init__(self, *, msg_content=None):
         DistribMessage.__init__(self, msg_content)

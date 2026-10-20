@@ -9,10 +9,6 @@ from collections import deque
 
 from pynicotine.config import config
 from pynicotine.events import events
-from pynicotine.slskmessages import DistribEmbeddedMessage
-from pynicotine.slskmessages import DistribSearch
-from pynicotine.slskmessages import EmbeddedMessage
-from pynicotine.slskmessages import UnknownPeerMessage
 from pynicotine.utils import encode_path
 from pynicotine.utils import open_file_path
 from pynicotine.utils import safe_path_join
@@ -54,13 +50,6 @@ class Logger:
         LogLevel.MESSAGE: "Msg",
         LogLevel.TRANSFER: "Transfer",
         LogLevel.MISCELLANEOUS: "Misc"
-    }
-
-    EXCLUDED_MSGS = {
-        DistribEmbeddedMessage,
-        DistribSearch,
-        EmbeddedMessage,
-        UnknownPeerMessage
     }
 
     def __init__(self):
@@ -372,10 +361,10 @@ class Logger:
         if level not in self._log_levels:
             return
 
-        # Compile message contents
-        if type(msg) in self.EXCLUDED_MSGS:
+        if not msg.LOGGED:
             return
 
+        # Compile message contents
         msg_direction = "OUT" if is_outgoing else "IN"
         msg = f"{msg_direction}: {msg}"
         msg_args = None
