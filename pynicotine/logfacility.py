@@ -373,7 +373,7 @@ class Logger:
             return
 
         # Compile message contents
-        if msg.__class__ in self.EXCLUDED_MSGS:
+        if type(msg) in self.EXCLUDED_MSGS:
             return
 
         msg_direction = "OUT" if is_outgoing else "IN"

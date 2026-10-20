@@ -443,10 +443,8 @@ class UserBrowse:
         if conn_type != ConnectionType.PEER:
             return
 
-        failed_msg_types = {SharedFileListRequest, SharedFileListResponse}
-
         for msg in msgs:
-            if msg.__class__ in failed_msg_types:
+            if isinstance(msg, (SharedFileListRequest, SharedFileListResponse)):
                 core.send_message_to_network_thread(RemoveAllowedResponse(SharedFileListResponse, username))
                 events.emit("shared-file-list-failed", username, is_offline)
                 break

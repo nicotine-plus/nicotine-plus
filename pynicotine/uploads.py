@@ -873,10 +873,8 @@ class Uploads(Transfers):
         if conn_type not in {ConnectionType.FILE, ConnectionType.PEER}:
             return
 
-        failed_msg_types = {TransferRequest, FileTransferInit}
-
         for msg in msgs:
-            if msg.__class__ in failed_msg_types:
+            if isinstance(msg, (TransferRequest, FileTransferInit)):
                 self._cant_connect_upload(username, msg.token, is_offline, is_timeout)
 
     def _peer_connection_closed(self, username, conn_type, msgs, is_offline=False):
