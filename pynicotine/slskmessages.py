@@ -138,12 +138,12 @@ class ParentStatus:
 
 class InternalMessage:
     __slots__ = ()
-    __excluded_attrs__ = {}
-    msg_type = MessageType.INTERNAL
+    TYPE = MessageType.INTERNAL
+    HIDDEN_FIELDS = {}
 
-    def __str__(self):
-        attrs = {s: getattr(self, s) for s in self.__slots__ if s not in self.__excluded_attrs__}
-        return f"<{self.msg_type} - {type(self).__name__}> {attrs}"
+    def __repr__(self):
+        attrs = {s: getattr(self, s) for s in self.__slots__ if s not in self.HIDDEN_FIELDS}
+        return f"<{self.TYPE} - {type(self).__name__}> {attrs}"
 
 
 class CloseConnection(InternalMessage):
@@ -158,7 +158,7 @@ class ServerConnect(InternalMessage):
 
     __slots__ = ("addr", "username", "password", "interface_name", "interface_address", "listen_port",
                  "portmapper")
-    __excluded_attrs__ = {"username", "password"}
+    HIDDEN_FIELDS = {"username", "password"}
 
     def __init__(self, addr=None, username=None, password=None, interface_name=None, interface_address=None,
                  listen_port=None, portmapper=None):
@@ -276,9 +276,9 @@ class SlskMessage:
     """This is a parent class for all protocol messages."""
 
     __slots__ = ("_message", "_offset")
-    __excluded_attrs__ = {}
-    msg_type = None
+    TYPE = None
     EVENT_NAME = None
+    HIDDEN_FIELDS = {}
 
     def __init__(self, msg_content=None):
         self._message = msg_content
@@ -391,9 +391,9 @@ class SlskMessage:
         self._offset += 8
         return result
 
-    def __str__(self):
-        attrs = {s: getattr(self, s) for s in self.__slots__ if s not in self.__excluded_attrs__}
-        return f"<{self.msg_type} - {type(self).__name__}> {attrs}"
+    def __repr__(self):
+        attrs = {s: getattr(self, s) for s in self.__slots__ if s not in self.HIDDEN_FIELDS}
+        return f"<{self.TYPE} - {type(self).__name__}> {attrs}"
 
 
 class FileListMessage(SlskMessage):
@@ -586,7 +586,7 @@ class ParentCandidate:
 
 class ServerMessage(SlskMessage):
     __slots__ = ()
-    msg_type = MessageType.SERVER
+    TYPE = MessageType.SERVER
 
     def parse_users(self):
         numusers = self.unpack_uint32()
@@ -664,8 +664,8 @@ class Login(ServerMessage):
     __slots__ = ("username", "passwd", "version", "minorversion", "success", "rejection_reason",
                  "rejection_detail", "banner", "ip_address", "local_address", "server_address",
                  "is_supporter")
-    __excluded_attrs__ = {"passwd"}
     EVENT_NAME = "server-login"
+    HIDDEN_FIELDS = {"passwd"}
 
     def __init__(self, username=None, passwd=None, version=None, minorversion=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -2849,8 +2849,8 @@ class ChangePassword(ServerMessage):
     """
 
     __slots__ = ("password",)
-    __excluded_attrs__ = {"password"}
     EVENT_NAME = "change-password"
+    HIDDEN_FIELDS = {"password"}
 
     def __init__(self, password=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -3174,7 +3174,7 @@ class CantCreateRoom(ServerMessage):
 
 class PeerInitMessage(SlskMessage):
     __slots__ = ()
-    msg_type = MessageType.INIT
+    TYPE = MessageType.INIT
 
 
 class PierceFireWall(PeerInitMessage):
@@ -3243,7 +3243,7 @@ class PeerInit(PeerInitMessage):
 class PeerMessage(SlskMessage):
 
     __slots__ = ("username", "sock", "addr", "allowed_responses")
-    msg_type = MessageType.PEER
+    TYPE = MessageType.PEER
 
     def __init__(self, msg_content=None):
         SlskMessage.__init__(self, msg_content)
@@ -3322,8 +3322,8 @@ class SharedFileListResponse(PeerMessage):
 
     __slots__ = ("list", "unknown", "privatelist", "built", "permission_level",
                  "public_shares", "buddy_shares", "trusted_shares")
-    __excluded_attrs__ = {"list", "privatelist", "built"}
     EVENT_NAME = "shared-file-list-response"
+    HIDDEN_FIELDS = {"list", "privatelist", "built"}
 
     def __init__(self, public_shares=None, buddy_shares=None, trusted_shares=None,
                  permission_level=None, *, msg_content=None):
@@ -3490,8 +3490,8 @@ class FileSearchResponse(PeerMessage):
 
     __slots__ = ("search_username", "token", "list", "privatelist", "freeulslots",
                  "ulspeed", "inqueue", "unknown")
-    __excluded_attrs__ = {"list", "privatelist"}
     EVENT_NAME = "file-search-response"
+    HIDDEN_FIELDS = {"list", "privatelist"}
 
     def __init__(self, search_username=None, token=None, shares=None, freeulslots=None,
                  ulspeed=None, inqueue=None, private_shares=None, *, msg_content=None):
@@ -3609,8 +3609,8 @@ class UserInfoResponse(PeerMessage):
     """
 
     __slots__ = ("descr", "pic", "totalupl", "queuesize", "slotsavail", "uploadallowed", "has_pic")
-    __excluded_attrs__ = {"pic"}
     EVENT_NAME = "user-info-response"
+    HIDDEN_FIELDS = {"pic"}
 
     def __init__(self, descr=None, pic=None, totalupl=None, queuesize=None,
                  slotsavail=None, uploadallowed=None, *, msg_content=None):
@@ -3692,8 +3692,8 @@ class FolderContentsResponse(PeerMessage):
     """
 
     __slots__ = ("dir", "token", "list")
-    __excluded_attrs__ = {"list"}
     EVENT_NAME = "folder-contents-response"
+    HIDDEN_FIELDS = {"list"}
 
     def __init__(self, directory=None, token=None, shares=None, *, msg_content=None):
         PeerMessage.__init__(self, msg_content)
@@ -4046,7 +4046,7 @@ class UnknownPeerMessage(PeerMessage):
 class FileMessage(SlskMessage):
 
     __slots__ = ("sock", "username")
-    msg_type = MessageType.FILE
+    TYPE = MessageType.FILE
 
     def __init__(self, msg_content=None, sock=None):
         SlskMessage.__init__(self, msg_content)
@@ -4114,7 +4114,7 @@ class FileOffset(FileMessage):
 class DistribMessage(SlskMessage):
 
     __slots__ = ("sock", "username")
-    msg_type = MessageType.DISTRIBUTED
+    TYPE = MessageType.DISTRIBUTED
 
     def __init__(self, msg_content=None):
         SlskMessage.__init__(self, msg_content)

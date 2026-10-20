@@ -804,7 +804,7 @@ class NetworkThread(Thread):
     def _send_message_to_peer(self, username, msg):
 
         init = None
-        conn_type = msg.msg_type
+        conn_type = msg.TYPE
         init_key = username + conn_type
 
         # Check if there's already a connection for the specified username
@@ -2785,7 +2785,7 @@ class NetworkThread(Thread):
             if not self._should_process_queue:
                 return
 
-            msg_type = msg.msg_type
+            msg_type = msg.TYPE
             process_func = None
             sock = None
 
