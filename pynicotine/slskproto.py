@@ -21,7 +21,6 @@ from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import DISTRIBUTED_MESSAGE_CLASSES
 from pynicotine.slskmessages import DISTRIBUTED_MESSAGE_CODES
-from pynicotine.slskmessages import NETWORK_MESSAGE_EVENTS
 from pynicotine.slskmessages import PEER_MESSAGE_CLASSES
 from pynicotine.slskmessages import PEER_MESSAGE_CODES
 from pynicotine.slskmessages import PEER_INIT_MESSAGE_CLASSES
@@ -776,12 +775,10 @@ class NetworkThread(Thread):
         if msg is None:
             return
 
-        msg_class = type(msg)
         log.add_msg_contents(msg)
 
-        if msg_class in NETWORK_MESSAGE_EVENTS:
-            event_name = NETWORK_MESSAGE_EVENTS[msg_class]
-            events.emit_main_thread(event_name, msg)
+        if msg.EVENT_NAME is not None:
+            events.emit_main_thread(msg.EVENT_NAME, msg)
 
     def _modify_connection_events(self, conn, io_events):
 
