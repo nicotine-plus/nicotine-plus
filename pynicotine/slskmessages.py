@@ -3849,10 +3849,10 @@ class TransferResponse(PeerMessage):
         msg += self.pack_uint32(self.token)
         msg += self.pack_bool(self.allowed)
 
-        if self.reason is not None:
+        if not self.allowed:
             msg += self.pack_string(self.reason)
 
-        if self.filesize is not None:
+        elif self.filesize is not None:
             msg += self.pack_uint64(self.filesize)
 
         return msg
@@ -3861,13 +3861,11 @@ class TransferResponse(PeerMessage):
         self.token = self.unpack_uint32()
         self.allowed = self.unpack_bool()
 
-        if not self.has_remaining_content():
-            return
-
-        if self.allowed:
-            self.filesize = self.unpack_uint64()
-        else:
+        if not self.allowed:
             self.reason = self.unpack_string()
+
+        elif self.has_remaining_content():
+            self.filesize = self.unpack_uint64()
 
 
 class PlaceholdUpload(PeerMessage):

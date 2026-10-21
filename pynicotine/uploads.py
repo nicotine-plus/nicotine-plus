@@ -1088,7 +1088,7 @@ class Uploads(Transfers):
             log.add_transfer("Upload with token %s already has an existing file connection", token)
             return
 
-        if reason is not None:
+        if not msg.allowed:
             if reason in TransferStatus.__dict__.values() or reason == TransferRejectReason.DISALLOWED_EXTENSION:
                 # Don't allow internal statuses as reason
                 reason = TransferRejectReason.CANCELLED
