@@ -1,0 +1,5 @@
+{
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "editor.formatOnPaste": false,
+    "editor.mouseWheelZoom": false
+}
