@@ -1,3 +1,4 @@
+
 <!--
   SPDX-FileCopyrightText: 2013-2026 Nicotine+ Contributors
   SPDX-License-Identifier: GPL-3.0-or-later
