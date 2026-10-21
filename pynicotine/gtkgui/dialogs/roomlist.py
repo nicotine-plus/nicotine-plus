@@ -16,6 +16,7 @@ from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
+from pynicotine.slskmessages import RoomType
 from pynicotine.utils import humanize
 
 
@@ -209,7 +210,7 @@ class RoomList(Dialog):
 
         if room not in self.list_view.iterators:
             self.add_room(
-                room, user_count, is_private=msg.private,
+                room, user_count, is_private=(msg.room_type == RoomType.PRIVATE),
                 is_owner=(msg.owner == core.users.login_username)
             )
 

@@ -18,6 +18,7 @@ from pynicotine.slskmessages import Login
 from pynicotine.slskmessages import NotifyPrivileges
 from pynicotine.slskmessages import RemoveRoomMember
 from pynicotine.slskmessages import RoomSomething
+from pynicotine.slskmessages import RoomType
 from pynicotine.slskmessages import SayChatroom
 from pynicotine.slskmessages import SetStatus
 from pynicotine.slskmessages import SetWaitPort
@@ -241,8 +242,8 @@ class JoinRoomMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = JoinRoom(room="room2", private=False)
-        obj_private = JoinRoom(room="room2", private=True)
+        obj = JoinRoom(room="room2", room_type=RoomType.PUBLIC)
+        obj_private = JoinRoom(room="room2", room_type=RoomType.PRIVATE)
 
         # Act
         message = obj.make_network_message()

@@ -36,6 +36,7 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import RoomType
 from pynicotine.slskmessages import UserData
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
@@ -1269,7 +1270,7 @@ class ChatRoom:
 
     def join_room(self, msg):
 
-        self.is_private = msg.private
+        self.is_private = (msg.room_type == RoomType.PRIVATE)
         login_username = core.users.login_username
         private_room = core.chatrooms.private_rooms.get(self.room)
 

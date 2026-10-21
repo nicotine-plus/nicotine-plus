@@ -101,6 +101,11 @@ class UserStatus:
     ONLINE = 2
 
 
+class RoomType:
+    PUBLIC = 0
+    PRIVATE = 1
+
+
 class TransferDirection:
     DOWNLOAD = 0
     UPLOAD = 1
@@ -975,14 +980,14 @@ class JoinRoom(ServerMessage):
       - No consecutive spaces
     """
 
-    __slots__ = ("room", "private", "owner", "users", "operators")
+    __slots__ = ("room", "room_type", "owner", "users", "operators")
     CODE = 14
     EVENT_NAME = "join-room"
 
-    def __init__(self, room=None, private=False, *, msg_content=None):
+    def __init__(self, room=None, room_type=RoomType.PUBLIC, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.room = room
-        self.private = private
+        self.room_type = room_type
         self.owner = None
         self.users = []
         self.operators = []
@@ -990,7 +995,7 @@ class JoinRoom(ServerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_string(self.room)
-        msg += self.pack_uint32(1 if self.private else 0)
+        msg += self.pack_uint32(self.room_type)
 
         return msg
 
@@ -1001,7 +1006,7 @@ class JoinRoom(ServerMessage):
         if not self.has_remaining_content():
             return
 
-        self.private = True
+        self.room_type = RoomType.PRIVATE
         self.owner = self.unpack_string()
         numops = self.unpack_uint32()
 

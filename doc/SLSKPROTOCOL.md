@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on August 27, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on October 23, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -143,6 +143,14 @@ please report them.
 | `0`  | Offline |
 | `1`  | Away    |
 | `2`  | Online  |
+
+
+## Room Types
+
+| Code | Type    |
+|------|---------|
+| `0`  | Public  |
+| `1`  | Private |
 
 
 ## Upload Permissions
@@ -697,8 +705,8 @@ Requirements include:
 
   - Send
     1.  **string** *room*
-    2.  **uint32** *private*  
-        If the room doesn't exist, should the new room be private?
+    2.  **uint32** *room type*  
+        See [Room Types](#room-types). Type of room to create if nonexistent.
   - Receive
     1.  **string** *room*
     2.  **uint32** *number of users in room*  

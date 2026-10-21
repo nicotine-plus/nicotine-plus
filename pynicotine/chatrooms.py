@@ -19,6 +19,7 @@ from pynicotine.slskmessages import LeaveRoom
 from pynicotine.slskmessages import RemoveRoomOperator
 from pynicotine.slskmessages import RemoveRoomMember
 from pynicotine.slskmessages import RoomList
+from pynicotine.slskmessages import RoomType
 from pynicotine.slskmessages import SayChatroom
 from pynicotine.slskmessages import SetRoomTicker
 from pynicotine.slskmessages import UserStatus
@@ -148,7 +149,9 @@ class ChatRooms:
             if room == self.GLOBAL_ROOM_NAME:
                 core.send_message_to_server(JoinGlobalRoom())
             else:
-                core.send_message_to_server(JoinRoom(room, is_private))
+                core.send_message_to_server(
+                    JoinRoom(room, RoomType.PRIVATE if is_private else RoomType.PUBLIC)
+                )
 
         events.emit("show-room", room, is_private, switch_page, remembered)
 
@@ -327,10 +330,10 @@ class ChatRooms:
             core.send_message_to_server(LeaveRoom(msg.room))
             raise StopEventPropagation()
 
-        room_obj.is_private = msg.private
+        room_obj.is_private = (msg.room_type == RoomType.PRIVATE)
         self.server_rooms.add(msg.room)
 
-        if msg.private:
+        if room_obj.is_private:
             self._update_private_room(msg.room, owner=msg.owner, operators=msg.operators)
 
         for user_data in msg.users:
