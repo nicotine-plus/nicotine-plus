@@ -74,7 +74,7 @@ class Uploads(Transfers):
             ("ban-user", self._ban_user),
             ("ban-user-ip", self._ban_user),
             ("file-connection-closed", self._file_connection_closed),
-            ("file-transfer-init", self._file_transfer_init),
+            ("file-upload-init", self._file_upload_init),
             ("file-upload-progress", self._file_upload_progress),
             ("peer-connection-closed", self._peer_connection_error),
             ("peer-connection-error", self._peer_connection_error),
@@ -1105,7 +1105,7 @@ class Uploads(Transfers):
             self._check_upload_queue()
             return
 
-        core.send_message_to_peer(upload.username, FileTransferInit(token=token, is_outgoing=True))
+        core.send_message_to_peer(upload.username, FileTransferInit(token=token))
         self._check_upload_queue()
 
     def _transfer_timeout(self, transfer):
@@ -1138,24 +1138,18 @@ class Uploads(Transfers):
         log.add(_("Upload I/O error: %s"), error)
         self._check_upload_queue()
 
-    def _file_transfer_init(self, msg):
+    def _file_upload_init(self, username, token, sock):
         """We are requesting to start uploading a file to a peer."""
 
-        if not msg.is_outgoing:
-            # Transfer init message received from another peer, ignore
-            return
-
-        username = msg.username
-        token = msg.token
         upload = self.active_users.get(username, {}).get(token)
 
         if upload is None or upload.sock is not None:
             log.add_transfer("Sending file upload init message with unknown token %s, closing connection", token)
-            core.send_message_to_network_thread(CloseConnection(msg.sock))
+            core.send_message_to_network_thread(CloseConnection(sock))
             return
 
         virtual_path = upload.virtual_path
-        sock = upload.sock = msg.sock
+        upload.sock = sock
         need_update = True
         upload_started = False
 

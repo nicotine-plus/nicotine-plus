@@ -4064,13 +4064,11 @@ class FileTransferInit(FileMessage):
     TransferRequest peer message.
     """
 
-    __slots__ = ("token", "is_outgoing")
-    EVENT_NAME = "file-transfer-init"
+    __slots__ = ("token",)
 
-    def __init__(self, token=None, is_outgoing=False, *, msg_content=None):
+    def __init__(self, token=None, *, msg_content=None):
         FileMessage.__init__(self, msg_content)
         self.token = token
-        self.is_outgoing = is_outgoing
 
     def make_network_message(self):
         return self.pack_uint32(self.token)

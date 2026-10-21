@@ -88,7 +88,7 @@ class Downloads(Transfers):
         for event_name, callback in (
             ("download-file-error", self._download_file_error),
             ("file-connection-closed", self._file_connection_closed),
-            ("file-transfer-init", self._file_transfer_init),
+            ("file-download-init", self._file_download_init),
             ("file-download-progress", self._file_download_progress),
             ("folder-contents-response", self._folder_contents_response),
             ("peer-connection-closed", self._peer_connection_closed),
@@ -1182,20 +1182,14 @@ class Downloads(Transfers):
         self._abort_transfer(download, status=TransferStatus.LOCAL_FILE_ERROR)
         log.add(_("Download I/O error: %s"), error)
 
-    def _file_transfer_init(self, msg):
+    def _file_download_init(self, username, token, sock):
         """A peer is requesting to start uploading a file to us."""
 
-        if msg.is_outgoing:
-            # Transfer init message sent to another peer, ignore
-            return
-
-        username = msg.username
-        token = msg.token
         download = self.active_users.get(username, {}).get(token)
 
         if download is None or download.sock is not None:
             log.add_transfer("Received file transfer init message with unknown token %s, closing connection", token)
-            core.send_message_to_network_thread(CloseConnection(msg.sock))
+            core.send_message_to_network_thread(CloseConnection(sock))
             return
 
         virtual_path = download.virtual_path
@@ -1205,7 +1199,7 @@ class Downloads(Transfers):
 
         # _open_incomplete_transfer() aborts the transfer if the download folder is unwritable.
         # Assign the socket before that so we actually close the connection.
-        download.sock = sock = msg.sock
+        download.sock = sock
         incomplete_file_path, offset = self._open_incomplete_transfer(download)
         need_update = False
 

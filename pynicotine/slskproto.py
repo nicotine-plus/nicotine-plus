@@ -2054,9 +2054,15 @@ class NetworkThread(Thread):
             username=conn.init.target_user
         )
 
-        if msg is not None and msg.token is not None:
-            self._file_init_msgs[conn] = msg
-            self._emit_network_message_event(msg)
+        if msg is None or msg.token is None:
+            return idx
+
+        self._file_init_msgs[conn] = msg
+
+        events.emit_main_thread(
+            "file-download-init",
+            username=msg.username, token=msg.token, sock=msg.sock
+        )
 
         return idx
 
@@ -2214,7 +2220,10 @@ class NetworkThread(Thread):
             self._file_init_msgs[conn] = msg
             conn.out_buffer += msg_content
 
-            self._emit_network_message_event(msg)
+            events.emit_main_thread(
+                "file-upload-init",
+                username=conn.init.target_user, token=msg.token, sock=conn.sock
+            )
 
         elif isinstance(msg, FileOffset):
             msg_content = self._pack_network_message(msg)
