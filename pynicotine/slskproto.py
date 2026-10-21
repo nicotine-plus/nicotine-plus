@@ -2054,7 +2054,7 @@ class NetworkThread(Thread):
             username=conn.init.target_user
         )
 
-        if msg is None or msg.token is None:
+        if msg is None:
             return idx
 
         self._file_init_msgs[conn] = msg
@@ -2085,7 +2085,7 @@ class NetworkThread(Thread):
             username=conn.init.target_user
         )
 
-        if msg is None or msg.offset is None:
+        if msg is None:
             return idx
 
         file_upload.offset = msg.offset
