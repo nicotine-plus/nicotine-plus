@@ -978,13 +978,11 @@ class Downloads(Transfers):
         if conn_type not in {ConnectionType.FILE, ConnectionType.PEER}:
             return
 
-        failed_msg_types = {QueueUpload, PlaceInQueueRequest}
-
         for msg in msgs:
-            if msg.__class__ in failed_msg_types:
+            if isinstance(msg, (QueueUpload, PlaceInQueueRequest)):
                 self._cant_connect_queue_file(username, msg.file, is_offline, is_timeout)
 
-            if msg.__class__ == FolderContentsRequest:
+            if isinstance(msg, FolderContentsRequest):
                 requested_folder = self._requested_folders.get(username, {}).get(msg.dir)
 
                 if requested_folder is not None:

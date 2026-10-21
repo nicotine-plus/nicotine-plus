@@ -6,6 +6,7 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.events import StopEventPropagation
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import SERVER_USERNAME
 from pynicotine.slskmessages import AddRoomMember
 from pynicotine.slskmessages import AddRoomOperator
 from pynicotine.slskmessages import CancelRoomMembership
@@ -564,7 +565,10 @@ class ChatRooms:
         username = msg.user
 
         if not is_global:
-            if room not in self.joined_rooms or not self.joined_rooms[room].users:
+            if room not in self.joined_rooms:
+                raise StopEventPropagation()
+
+            if username != SERVER_USERNAME and not self.joined_rooms[room].users:
                 raise StopEventPropagation()
 
             log.add_chat(_("Chat message from user '%(user)s' in room '%(room)s': %(message)s"), {
