@@ -447,8 +447,6 @@ class NetworkThread(Thread):
         self._download_limit = 0
         self._upload_limit_split = 0
         self._download_limit_split = 0
-        self._total_uploads = 0
-        self._total_downloads = 0
         self._total_download_bandwidth = 0
         self._total_upload_bandwidth = 0
 
@@ -1061,18 +1059,16 @@ class NetworkThread(Thread):
 
         if conn in self._file_download_msgs:
             del self._file_download_msgs[conn]
-            self._total_downloads -= 1
 
-            if not self._total_downloads:
+            if not self._file_download_msgs:
                 self._total_download_bandwidth = 0
 
             self._calc_download_limit()
 
         elif conn in self._file_upload_msgs:
             del self._file_upload_msgs[conn]
-            self._total_uploads -= 1
 
-            if not self._total_uploads:
+            if not self._file_upload_msgs:
                 self._total_upload_bandwidth = 0
 
             self._calc_upload_limit_function()
@@ -2016,8 +2012,10 @@ class NetworkThread(Thread):
             self._upload_limit_split = 0
             return
 
-        if not limit_per_transfer and self._total_uploads > 1:
-            limit //= self._total_uploads
+        total_uploads = len(self._file_upload_msgs)
+
+        if not limit_per_transfer and total_uploads > 1:
+            limit //= total_uploads
 
         self._upload_limit_split = int(limit)
 
@@ -2037,8 +2035,10 @@ class NetworkThread(Thread):
             self._download_limit_split = 0
             return
 
-        if self._total_downloads > 1:
-            limit //= self._total_downloads
+        total_downloads = len(self._file_download_msgs)
+
+        if total_downloads > 1:
+            limit //= total_downloads
 
         self._download_limit_split = int(limit)
 
@@ -2629,7 +2629,6 @@ class NetworkThread(Thread):
             if conn is not None:
                 self._file_download_msgs[conn] = msg
 
-                self._total_downloads += 1
                 self._calc_download_limit()
                 self._process_conn_incoming_messages(conn)
 
@@ -2639,7 +2638,6 @@ class NetworkThread(Thread):
             if conn is not None:
                 self._file_upload_msgs[conn] = msg
 
-                self._total_uploads += 1
                 self._calc_upload_limit_function()
                 self._process_conn_incoming_messages(conn)
 
