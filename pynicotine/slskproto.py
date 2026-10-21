@@ -20,13 +20,9 @@ from threading import Thread
 from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import DISTRIBUTED_MESSAGE_CLASSES
-from pynicotine.slskmessages import DISTRIBUTED_MESSAGE_CODES
 from pynicotine.slskmessages import PEER_MESSAGE_CLASSES
-from pynicotine.slskmessages import PEER_MESSAGE_CODES
 from pynicotine.slskmessages import PEER_INIT_MESSAGE_CLASSES
-from pynicotine.slskmessages import PEER_INIT_MESSAGE_CODES
 from pynicotine.slskmessages import SERVER_MESSAGE_CLASSES
-from pynicotine.slskmessages import SERVER_MESSAGE_CODES
 from pynicotine.slskmessages import SERVER_USERNAME
 from pynicotine.slskmessages import DOUBLE_UINT32_UNPACK
 from pynicotine.slskmessages import UINT32_UNPACK
@@ -1578,7 +1574,7 @@ class NetworkThread(Thread):
         out_buffer = conn.out_buffer
 
         out_buffer += msg.pack_uint32(len(msg_content) + 4)
-        out_buffer += msg.pack_uint32(SERVER_MESSAGE_CODES[type(msg)])
+        out_buffer += msg.pack_uint32(msg.CODE)
         out_buffer += msg_content
 
         self._modify_connection_events(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -1798,7 +1794,7 @@ class NetworkThread(Thread):
         out_buffer = conn.out_buffer
 
         out_buffer += msg.pack_uint32(len(msg_content) + 1)
-        out_buffer += msg.pack_uint8(PEER_INIT_MESSAGE_CODES[type(msg)])
+        out_buffer += msg.pack_uint8(msg.CODE)
         out_buffer += msg_content
 
         self._modify_connection_events(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -1995,7 +1991,7 @@ class NetworkThread(Thread):
         out_buffer = conn.out_buffer
 
         out_buffer += msg.pack_uint32(len(msg_content) + 4)
-        out_buffer += msg.pack_uint32(PEER_MESSAGE_CODES[type(msg)])
+        out_buffer += msg.pack_uint32(msg.CODE)
         out_buffer += msg_content
 
         conn.has_post_init_activity = True
@@ -2599,7 +2595,7 @@ class NetworkThread(Thread):
         out_buffer = conn.out_buffer
 
         out_buffer += msg.pack_uint32(len(msg_content) + 1)
-        out_buffer += msg.pack_uint8(DISTRIBUTED_MESSAGE_CODES[type(msg)])
+        out_buffer += msg.pack_uint8(msg.CODE)
         out_buffer += msg_content
 
         conn.has_post_init_activity = True

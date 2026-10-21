@@ -279,6 +279,7 @@ class SlskMessage:
 
     __slots__ = ("_message", "_offset")
     TYPE = None
+    CODE = None
     EVENT_NAME = None
     LOGGED = True
     HIDDEN_FIELDS = {}
@@ -667,6 +668,7 @@ class Login(ServerMessage):
     __slots__ = ("username", "passwd", "version", "minorversion", "success", "rejection_reason",
                  "rejection_detail", "banner", "ip_address", "local_address", "server_address",
                  "is_supporter")
+    CODE = 1
     EVENT_NAME = "server-login"
     HIDDEN_FIELDS = {"passwd"}
 
@@ -734,6 +736,7 @@ class SetWaitPort(ServerMessage):
     """
 
     __slots__ = ("port",)
+    CODE = 2
 
     def __init__(self, port=None):
         ServerMessage.__init__(self)
@@ -751,6 +754,7 @@ class GetPeerAddress(ServerMessage):
     """
 
     __slots__ = ("user", "ip_address", "port", "obfuscation_type", "obfuscated_port")
+    CODE = 3
     EVENT_NAME = "peer-address"
 
     def __init__(self, user=None, *, msg_content=None):
@@ -785,6 +789,7 @@ class WatchUser(ServerMessage):
 
     __slots__ = ("user", "userexists", "status", "avgspeed", "uploadnum", "unknown", "files", "dirs",
                  "country")
+    CODE = 5
     EVENT_NAME = "watch-user"
 
     def __init__(self, user=None, *, msg_content=None):
@@ -830,6 +835,7 @@ class UnwatchUser(ServerMessage):
     """
 
     __slots__ = ("user",)
+    CODE = 6
 
     def __init__(self, user=None, *, msg_content=None):
         ServerMessage.__init__(self)
@@ -846,6 +852,7 @@ class GetUserStatus(ServerMessage):
     """
 
     __slots__ = ("user", "status", "privileged")
+    CODE = 7
     EVENT_NAME = "user-status"
 
     def __init__(self, user=None, status=None, *, msg_content=None):
@@ -874,6 +881,7 @@ class IgnoreUser(ServerMessage):
     """
 
     __slots__ = ("user",)
+    CODE = 11
 
     def __init__(self, user=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -897,6 +905,7 @@ class UnignoreUser(ServerMessage):
     """
 
     __slots__ = ("user",)
+    CODE = 12
 
     def __init__(self, user=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -917,6 +926,7 @@ class SayChatroom(ServerMessage):
     """
 
     __slots__ = ("room", "message", "user", "message_type", "mention_type", "mention_keyword")
+    CODE = 13
     EVENT_NAME = "say-chat-room"
 
     def __init__(self, room=None, message=None, user=None, *, msg_content=None):
@@ -966,6 +976,7 @@ class JoinRoom(ServerMessage):
     """
 
     __slots__ = ("room", "private", "owner", "users", "operators")
+    CODE = 14
     EVENT_NAME = "join-room"
 
     def __init__(self, room=None, private=False, *, msg_content=None):
@@ -1006,6 +1017,7 @@ class LeaveRoom(ServerMessage):
     """
 
     __slots__ = ("room",)
+    CODE = 15
     EVENT_NAME = "leave-room"
 
     def __init__(self, room=None, *, msg_content=None):
@@ -1026,6 +1038,7 @@ class UserJoinedRoom(ServerMessage):
     """
 
     __slots__ = ("room", "userdata")
+    CODE = 16
     EVENT_NAME = "user-joined-room"
 
     def __init__(self, *, msg_content=None):
@@ -1055,6 +1068,7 @@ class UserLeftRoom(ServerMessage):
     """
 
     __slots__ = ("room", "username")
+    CODE = 17
     EVENT_NAME = "user-left-room"
 
     def __init__(self, *, msg_content=None):
@@ -1077,6 +1091,7 @@ class ConnectToPeer(ServerMessage):
 
     __slots__ = ("token", "user", "conn_type", "ip_address", "port", "privileged", "obfuscation_type",
                  "obfuscated_port")
+    CODE = 18
     EVENT_NAME = "connect-to-peer"
 
     def __init__(self, token=None, user=None, conn_type=None, *, msg_content=None):
@@ -1117,6 +1132,7 @@ class MessageUser(ServerMessage):
 
     __slots__ = ("user", "message", "message_id", "timestamp", "is_new_message", "message_type",
                  "mention_type", "mention_keyword")
+    CODE = 22
     EVENT_NAME = "message-user"
 
     def __init__(self, user=None, message=None, *, msg_content=None):
@@ -1154,6 +1170,7 @@ class MessageAcked(ServerMessage):
     """
 
     __slots__ = ("msgid",)
+    CODE = 23
 
     def __init__(self, msgid=None):
         ServerMessage.__init__(self)
@@ -1172,6 +1189,7 @@ class FileSearchRoom(ServerMessage):
     """
 
     __slots__ = ("token", "roomid", "searchterm")
+    CODE = 25
 
     def __init__(self, token=None, roomid=None, text=None):
         ServerMessage.__init__(self)
@@ -1201,6 +1219,7 @@ class FileSearch(ServerMessage):
     """
 
     __slots__ = ("token", "searchterm", "search_username")
+    CODE = 26
     EVENT_NAME = "file-search-request-server"
 
     def __init__(self, token=None, text=None, *, msg_content=None):
@@ -1235,6 +1254,7 @@ class SetStatus(ServerMessage):
     """
 
     __slots__ = ("status",)
+    CODE = 28
 
     def __init__(self, status=None):
         ServerMessage.__init__(self)
@@ -1257,6 +1277,7 @@ class ServerPing(ServerMessage):
     """
 
     __slots__ = ()
+    CODE = 32
 
     def make_network_message(self):
         return b""
@@ -1282,6 +1303,7 @@ class SendConnectToken(ServerMessage):
     """
 
     __slots__ = ("user", "token")
+    CODE = 33
 
     def __init__(self, user=None, token=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -1310,6 +1332,7 @@ class SendDownloadSpeed(ServerMessage):
     """
 
     __slots__ = ("user", "speed")
+    CODE = 34
 
     def __init__(self, user=None, speed=None):
         ServerMessage.__init__(self)
@@ -1332,6 +1355,7 @@ class SharedFoldersFiles(ServerMessage):
     """
 
     __slots__ = ("folders", "files")
+    CODE = 35
 
     def __init__(self, folders=None, files=None):
         ServerMessage.__init__(self)
@@ -1355,6 +1379,7 @@ class GetUserStats(ServerMessage):
     """
 
     __slots__ = ("user", "avgspeed", "uploadnum", "unknown", "files", "dirs")
+    CODE = 36
     EVENT_NAME = "user-stats"
 
     def __init__(self, user=None, avgspeed=None, files=None, dirs=None, *, msg_content=None):
@@ -1392,6 +1417,7 @@ class UploadSlotsFull(ServerMessage):
     """
 
     __slots__ = ("user", "slotsfull")
+    CODE = 40
 
     def __init__(self, slotsfull=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -1414,6 +1440,7 @@ class Relogged(ServerMessage):
     """
 
     __slots__ = ()
+    CODE = 41
 
     def parse_network_message(self):
         # Empty message
@@ -1432,6 +1459,7 @@ class UserSearch(ServerMessage):
     """
 
     __slots__ = ("search_username", "token", "searchterm")
+    CODE = 42
 
     def __init__(self, search_username=None, token=None, text=None):
         ServerMessage.__init__(self)
@@ -1464,6 +1492,7 @@ class SimilarRecommendations(ServerMessage):
     """
 
     __slots__ = ("recommendation", "similar_recommendations")
+    CODE = 50
 
     def __init__(self, recommendation=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -1489,6 +1518,7 @@ class AddThingILike(ServerMessage):
     """
 
     __slots__ = ("thing",)
+    CODE = 51
 
     def __init__(self, thing=None):
         ServerMessage.__init__(self)
@@ -1506,6 +1536,7 @@ class RemoveThingILike(ServerMessage):
     """
 
     __slots__ = ("thing",)
+    CODE = 52
 
     def __init__(self, thing=None):
         ServerMessage.__init__(self)
@@ -1523,6 +1554,7 @@ class Recommendations(ServerMessage):
     """
 
     __slots__ = ("recommendations", "unrecommendations")
+    CODE = 54
     EVENT_NAME = "recommendations"
 
     def __init__(self, *, msg_content=None):
@@ -1553,6 +1585,7 @@ class MyRecommendations(ServerMessage):
     """
 
     __slots__ = ("my_recommendations",)
+    CODE = 55
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -1577,6 +1610,7 @@ class GlobalRecommendations(ServerMessage):
     """
 
     __slots__ = ("recommendations", "unrecommendations")
+    CODE = 56
     EVENT_NAME = "global-recommendations"
 
     def __init__(self, *, msg_content=None):
@@ -1599,6 +1633,7 @@ class UserInterests(ServerMessage):
     """
 
     __slots__ = ("user", "likes", "hates")
+    CODE = 57
     EVENT_NAME = "user-interests"
 
     def __init__(self, user=None, *, msg_content=None):
@@ -1635,6 +1670,7 @@ class AdminCommand(ServerMessage):
     """
 
     __slots__ = ("command", "command_args")
+    CODE = 58
 
     def __init__(self, command=None, command_args=None):
         ServerMessage.__init__(self)
@@ -1659,6 +1695,7 @@ class PlaceInLineRequest(ServerMessage):
     """
 
     __slots__ = ("user", "token")
+    CODE = 59
 
     def __init__(self, user=None, token=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -1687,6 +1724,7 @@ class PlaceInLineResponse(ServerMessage):
     """
 
     __slots__ = ("token", "user", "place")
+    CODE = 60
 
     def __init__(self, user=None, token=None, place=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -1717,6 +1755,7 @@ class RoomAdded(ServerMessage):
     """
 
     __slots__ = ("room",)
+    CODE = 62
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -1735,6 +1774,7 @@ class RoomRemoved(ServerMessage):
     """
 
     __slots__ = ("room",)
+    CODE = 63
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -1755,6 +1795,7 @@ class RoomList(ServerMessage):
     """
 
     __slots__ = ("rooms", "rooms_owner", "rooms_member", "rooms_operator")
+    CODE = 64
     EVENT_NAME = "room-list"
 
     def __init__(self, *, msg_content=None):
@@ -1806,6 +1847,7 @@ class ExactFileSearch(ServerMessage):
     """
 
     __slots__ = ("token", "file", "folder", "size", "checksum", "user", "unknown")
+    CODE = 65
 
     def __init__(self, token=None, file=None, folder=None, size=None, checksum=None, unknown=None,
                  *, msg_content=None):
@@ -1845,6 +1887,7 @@ class AdminMessage(ServerMessage):
     """
 
     __slots__ = ("msg",)
+    CODE = 66
     EVENT_NAME = "admin-message"
 
     def __init__(self, *, msg_content=None):
@@ -1864,6 +1907,7 @@ class GlobalUserList(ServerMessage):
     """
 
     __slots__ = ("users",)
+    CODE = 67
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -1885,6 +1929,7 @@ class TunneledMessage(ServerMessage):
     """
 
     __slots__ = ("user", "token", "code", "msg", "addr")
+    CODE = 68
 
     def __init__(self, user=None, token=None, code=None, msg=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -1923,6 +1968,7 @@ class PrivilegedUsers(ServerMessage):
     """
 
     __slots__ = ("users",)
+    CODE = 69
     EVENT_NAME = "privileged-users"
 
     def __init__(self, *, msg_content=None):
@@ -1948,6 +1994,7 @@ class HaveNoParent(ServerMessage):
     """
 
     __slots__ = ("noparent",)
+    CODE = 71
 
     def __init__(self, noparent=None):
         ServerMessage.__init__(self)
@@ -1966,6 +2013,7 @@ class ParentIP(ServerMessage):
     """
 
     __slots__ = ("parentip",)
+    CODE = 73
 
     def __init__(self, parentip=None):
         ServerMessage.__init__(self)
@@ -1989,6 +2037,7 @@ class ParentMinSpeed(ServerMessage):
     """
 
     __slots__ = ("speed",)
+    CODE = 83
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -2007,6 +2056,7 @@ class ParentSpeedRatio(ServerMessage):
     """
 
     __slots__ = ("ratio",)
+    CODE = 84
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -2023,6 +2073,7 @@ class ParentInactivityTimeout(ServerMessage):
     """
 
     __slots__ = ("seconds",)
+    CODE = 86
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -2039,6 +2090,7 @@ class SearchInactivityTimeout(ServerMessage):
     """
 
     __slots__ = ("seconds",)
+    CODE = 87
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -2055,6 +2107,7 @@ class MinParentsInCache(ServerMessage):
     """
 
     __slots__ = ("num",)
+    CODE = 88
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -2071,6 +2124,7 @@ class DistribPingInterval(ServerMessage):
     """
 
     __slots__ = ("seconds",)
+    CODE = 90
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -2090,6 +2144,7 @@ class AddToPrivileged(ServerMessage):
     """
 
     __slots__ = ("user",)
+    CODE = 91
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -2107,6 +2162,7 @@ class CheckPrivileges(ServerMessage):
     """
 
     __slots__ = ("seconds",)
+    CODE = 92
     EVENT_NAME = "check-privileges"
 
     def __init__(self, *, msg_content=None):
@@ -2141,6 +2197,7 @@ class EmbeddedMessage(ServerMessage):
     """
 
     __slots__ = ("distrib_code", "distrib_message")
+    CODE = 93
     LOGGED = False
 
     def __init__(self, *, msg_content=None):
@@ -2160,6 +2217,7 @@ class AcceptChildren(ServerMessage):
     """
 
     __slots__ = ("enabled",)
+    CODE = 100
 
     def __init__(self, enabled=None):
         ServerMessage.__init__(self)
@@ -2184,6 +2242,7 @@ class PossibleParents(ServerMessage):
     """
 
     __slots__ = ("list",)
+    CODE = 102
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -2208,6 +2267,7 @@ class WishlistSearch(ServerMessage):
     """
 
     __slots__ = ("token", "searchterm")
+    CODE = 103
 
     def __init__(self, token=None, text=None):
         ServerMessage.__init__(self)
@@ -2229,6 +2289,7 @@ class WishlistInterval(ServerMessage):
     """
 
     __slots__ = ("seconds",)
+    CODE = 104
     EVENT_NAME = "set-wishlist-interval"
 
     def __init__(self, *, msg_content=None):
@@ -2247,6 +2308,7 @@ class SimilarUsers(ServerMessage):
     """
 
     __slots__ = ("users",)
+    CODE = 110
     EVENT_NAME = "similar-users"
 
     def __init__(self, *, msg_content=None):
@@ -2280,6 +2342,7 @@ class ItemRecommendations(ServerMessage):
     """
 
     __slots__ = ("thing", "recommendations", "unrecommendations")
+    CODE = 111
     EVENT_NAME = "item-recommendations"
 
     def __init__(self, thing=None, *, msg_content=None):
@@ -2305,6 +2368,7 @@ class ItemSimilarUsers(ServerMessage):
     """
 
     __slots__ = ("thing", "users")
+    CODE = 112
     EVENT_NAME = "item-similar-users"
 
     def __init__(self, thing=None, *, msg_content=None):
@@ -2333,6 +2397,7 @@ class RoomTickers(ServerMessage):
     """
 
     __slots__ = ("room", "user", "msgs")
+    CODE = 113
     EVENT_NAME = "room-tickers"
 
     def __init__(self, *, msg_content=None):
@@ -2362,6 +2427,7 @@ class RoomTickerAdded(ServerMessage):
     """
 
     __slots__ = ("room", "user", "msg")
+    CODE = 114
     EVENT_NAME = "room-ticker-added"
 
     def __init__(self, *, msg_content=None):
@@ -2386,6 +2452,7 @@ class RoomTickerRemoved(ServerMessage):
     """
 
     __slots__ = ("room", "user")
+    CODE = 115
     EVENT_NAME = "room-ticker-removed"
 
     def __init__(self, *, msg_content=None):
@@ -2410,6 +2477,7 @@ class SetRoomTicker(ServerMessage):
     """
 
     __slots__ = ("room", "msg")
+    CODE = 116
 
     def __init__(self, room=None, msg=""):
         ServerMessage.__init__(self)
@@ -2431,6 +2499,7 @@ class AddThingIHate(ServerMessage):
     """
 
     __slots__ = ("thing",)
+    CODE = 117
 
     def __init__(self, thing=None):
         ServerMessage.__init__(self)
@@ -2448,6 +2517,7 @@ class RemoveThingIHate(ServerMessage):
     """
 
     __slots__ = ("thing",)
+    CODE = 118
 
     def __init__(self, thing=None):
         ServerMessage.__init__(self)
@@ -2469,6 +2539,7 @@ class RoomSearch(ServerMessage):
     """
 
     __slots__ = ("room", "token", "searchterm")
+    CODE = 120
 
     def __init__(self, room=None, token=None, text=""):
         ServerMessage.__init__(self)
@@ -2493,6 +2564,7 @@ class SendUploadSpeed(ServerMessage):
     """
 
     __slots__ = ("speed",)
+    CODE = 121
 
     def __init__(self, speed=None):
         ServerMessage.__init__(self)
@@ -2511,6 +2583,7 @@ class UserPrivileged(ServerMessage):
     """
 
     __slots__ = ("user", "privileged")
+    CODE = 122
 
     def __init__(self, user=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -2533,6 +2606,7 @@ class GivePrivileges(ServerMessage):
     """
 
     __slots__ = ("user", "days")
+    CODE = 123
 
     def __init__(self, user=None, days=None):
         ServerMessage.__init__(self)
@@ -2554,6 +2628,7 @@ class NotifyPrivileges(ServerMessage):
     """
 
     __slots__ = ("token", "user")
+    CODE = 124
 
     def __init__(self, token=None, user=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -2579,6 +2654,7 @@ class AckNotifyPrivileges(ServerMessage):
     """
 
     __slots__ = ("token",)
+    CODE = 125
 
     def __init__(self, token=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -2599,6 +2675,7 @@ class BranchLevel(ServerMessage):
     """
 
     __slots__ = ("value",)
+    CODE = 126
 
     def __init__(self, value=None):
         ServerMessage.__init__(self)
@@ -2616,6 +2693,7 @@ class BranchRoot(ServerMessage):
     """
 
     __slots__ = ("user",)
+    CODE = 127
 
     def __init__(self, user=None):
         ServerMessage.__init__(self)
@@ -2642,6 +2720,7 @@ class ChildDepth(ServerMessage):
     """
 
     __slots__ = ("value",)
+    CODE = 129
 
     def __init__(self, value=None):
         ServerMessage.__init__(self)
@@ -2658,6 +2737,7 @@ class ResetDistributed(ServerMessage):
     """
 
     __slots__ = ()
+    CODE = 130
 
     def parse_network_message(self):
         # Empty message
@@ -2672,6 +2752,7 @@ class RoomMembers(ServerMessage):
     """
 
     __slots__ = ("room", "members")
+    CODE = 133
     EVENT_NAME = "room-members"
 
     def __init__(self, *, msg_content=None):
@@ -2698,6 +2779,7 @@ class AddRoomMember(ServerMessage):
     """
 
     __slots__ = ("room", "user")
+    CODE = 134
     EVENT_NAME = "add-room-member"
 
     def __init__(self, room=None, user=None, *, msg_content=None):
@@ -2728,6 +2810,7 @@ class RemoveRoomMember(ServerMessage):
     """
 
     __slots__ = ("room", "user")
+    CODE = 135
     EVENT_NAME = "remove-room-member"
 
     def __init__(self, room=None, user=None, *, msg_content=None):
@@ -2754,6 +2837,7 @@ class CancelRoomMembership(ServerMessage):
     """
 
     __slots__ = ("room",)
+    CODE = 136
 
     def __init__(self, room=None):
         ServerMessage.__init__(self)
@@ -2770,6 +2854,7 @@ class CancelRoomOwnership(ServerMessage):
     """
 
     __slots__ = ("room",)
+    CODE = 137
 
     def __init__(self, room=None):
         ServerMessage.__init__(self)
@@ -2786,6 +2871,7 @@ class RoomSomething(ServerMessage):
     """
 
     __slots__ = ("room",)
+    CODE = 138
 
     def __init__(self, room=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -2805,6 +2891,7 @@ class RoomMembershipGranted(ServerMessage):
     """
 
     __slots__ = ("room",)
+    CODE = 139
     EVENT_NAME = "room-membership-granted"
 
     def __init__(self, room=None, *, msg_content=None):
@@ -2822,6 +2909,7 @@ class RoomMembershipRevoked(ServerMessage):
     """
 
     __slots__ = ("room",)
+    CODE = 140
     EVENT_NAME = "room-membership-revoked"
 
     def __init__(self, room=None, *, msg_content=None):
@@ -2840,6 +2928,7 @@ class EnableRoomInvitations(ServerMessage):
     """
 
     __slots__ = ("enabled",)
+    CODE = 141
     EVENT_NAME = "enable-room-invitations"
 
     def __init__(self, enabled=None, *, msg_content=None):
@@ -2861,6 +2950,7 @@ class ChangePassword(ServerMessage):
     """
 
     __slots__ = ("password",)
+    CODE = 142
     EVENT_NAME = "change-password"
     HIDDEN_FIELDS = {"password"}
 
@@ -2886,6 +2976,7 @@ class AddRoomOperator(ServerMessage):
     """
 
     __slots__ = ("room", "user")
+    CODE = 143
     EVENT_NAME = "add-room-operator"
 
     def __init__(self, room=None, user=None, *, msg_content=None):
@@ -2916,6 +3007,7 @@ class RemoveRoomOperator(ServerMessage):
     """
 
     __slots__ = ("room", "user")
+    CODE = 144
     EVENT_NAME = "remove-room-operator"
 
     def __init__(self, room=None, user=None, *, msg_content=None):
@@ -2943,6 +3035,7 @@ class RoomOperatorshipGranted(ServerMessage):
     """
 
     __slots__ = ("room",)
+    CODE = 145
     EVENT_NAME = "room-operatorship-granted"
 
     def __init__(self, room=None, *, msg_content=None):
@@ -2961,6 +3054,7 @@ class RoomOperatorshipRevoked(ServerMessage):
     """
 
     __slots__ = ("room",)
+    CODE = 146
     EVENT_NAME = "room-operatorship-revoked"
 
     def __init__(self, room=None, *, msg_content=None):
@@ -2981,6 +3075,7 @@ class RoomOperators(ServerMessage):
     """
 
     __slots__ = ("room", "operators")
+    CODE = 148
     EVENT_NAME = "room-operators"
 
     def __init__(self, *, msg_content=None):
@@ -3004,6 +3099,7 @@ class MessageUsers(ServerMessage):
     """
 
     __slots__ = ("users", "msg")
+    CODE = 149
 
     def __init__(self, users=None, msg=None):
         ServerMessage.__init__(self)
@@ -3029,6 +3125,7 @@ class JoinGlobalRoom(ServerMessage):
     """
 
     __slots__ = ()
+    CODE = 150
 
     def __init__(self):
         ServerMessage.__init__(self)
@@ -3045,6 +3142,7 @@ class LeaveGlobalRoom(ServerMessage):
     """
 
     __slots__ = ()
+    CODE = 151
 
     def __init__(self):
         ServerMessage.__init__(self)
@@ -3061,6 +3159,7 @@ class GlobalRoomMessage(ServerMessage):
     """
 
     __slots__ = ("room", "user", "message", "message_type", "mention_type", "mention_keyword")
+    CODE = 152
     EVENT_NAME = "global-room-message"
 
     def __init__(self, *, msg_content=None):
@@ -3088,6 +3187,7 @@ class RelatedSearch(ServerMessage):
     """
 
     __slots__ = ("query", "terms")
+    CODE = 153
 
     def __init__(self, query=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -3117,6 +3217,7 @@ class ExcludedSearchPhrases(ServerMessage):
     """
 
     __slots__ = ("phrases",)
+    CODE = 160
     EVENT_NAME = "excluded-search-phrases"
 
     def __init__(self, *, msg_content=None):
@@ -3144,6 +3245,7 @@ class CantConnectToPeer(ServerMessage):
     """
 
     __slots__ = ("token", "user")
+    CODE = 1001
 
     def __init__(self, token=None, user=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -3172,6 +3274,7 @@ class CantCreateRoom(ServerMessage):
     """
 
     __slots__ = ("room",)
+    CODE = 1003
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
@@ -3199,6 +3302,7 @@ class PierceFireWall(PeerInitMessage):
     """
 
     __slots__ = ("sock", "token")
+    CODE = 0
 
     def __init__(self, sock=None, token=None, *, msg_content=None):
         PeerInitMessage.__init__(self, msg_content)
@@ -3223,6 +3327,7 @@ class PeerInit(PeerInitMessage):
 
     __slots__ = ("sock", "init_user", "target_user", "conn_type", "target_username_size",
                  "indirect_token", "indirect_request_time", "outgoing_msgs")
+    CODE = 1
 
     def __init__(self, sock=None, init_user=None, target_user=None, conn_type=None, *, msg_content=None):
         PeerInitMessage.__init__(self, msg_content)
@@ -3315,6 +3420,7 @@ class SharedFileListRequest(PeerMessage):
     """
 
     __slots__ = ()
+    CODE = 4
     EVENT_NAME = "shared-file-list-request"
 
     def make_network_message(self):
@@ -3334,6 +3440,7 @@ class SharedFileListResponse(PeerMessage):
 
     __slots__ = ("list", "unknown", "privatelist", "built", "permission_level",
                  "public_shares", "buddy_shares", "trusted_shares")
+    CODE = 5
     EVENT_NAME = "shared-file-list-response"
     HIDDEN_FIELDS = {"list", "privatelist", "built"}
 
@@ -3472,6 +3579,7 @@ class FileSearchRequest(PeerMessage):
     """
 
     __slots__ = ("token", "text", "searchterm")
+    CODE = 8
 
     def __init__(self, token=None, text=None, *, msg_content=None):
         PeerMessage.__init__(self, msg_content)
@@ -3501,6 +3609,7 @@ class FileSearchResponse(PeerMessage):
 
     __slots__ = ("search_username", "token", "list", "privatelist", "freeulslots",
                  "ulspeed", "inqueue", "unknown")
+    CODE = 9
     EVENT_NAME = "file-search-response"
     HIDDEN_FIELDS = {"list", "privatelist"}
 
@@ -3603,6 +3712,7 @@ class UserInfoRequest(PeerMessage):
     """
 
     __slots__ = ()
+    CODE = 15
     EVENT_NAME = "user-info-request"
 
     def make_network_message(self):
@@ -3620,6 +3730,7 @@ class UserInfoResponse(PeerMessage):
     """
 
     __slots__ = ("descr", "pic", "totalupl", "queuesize", "slotsavail", "uploadallowed", "has_pic")
+    CODE = 16
     EVENT_NAME = "user-info-response"
     HIDDEN_FIELDS = {"pic"}
 
@@ -3675,6 +3786,7 @@ class FolderContentsRequest(PeerMessage):
     """
 
     __slots__ = ("dir", "token", "legacy_client")
+    CODE = 36
     EVENT_NAME = "folder-contents-request"
 
     def __init__(self, directory=None, token=None, legacy_client=False, *, msg_content=None):
@@ -3703,6 +3815,7 @@ class FolderContentsResponse(PeerMessage):
     """
 
     __slots__ = ("dir", "token", "list")
+    CODE = 37
     EVENT_NAME = "folder-contents-response"
     HIDDEN_FIELDS = {"list"}
 
@@ -3799,6 +3912,7 @@ class TransferRequest(PeerMessage):
     """
 
     __slots__ = ("direction", "token", "file", "filesize")
+    CODE = 40
     EVENT_NAME = "transfer-request"
 
     def __init__(self, direction=None, token=None, file=None, filesize=None, *, msg_content=None):
@@ -3843,6 +3957,7 @@ class TransferResponse(PeerMessage):
     """
 
     __slots__ = ("allowed", "token", "reason", "filesize")
+    CODE = 41
     EVENT_NAME = "transfer-response"
 
     def __init__(self, allowed=None, reason=None, token=None, filesize=None, *, msg_content=None):
@@ -3883,6 +3998,7 @@ class PlaceholdUpload(PeerMessage):
     """
 
     __slots__ = ("file",)
+    CODE = 42
 
     def __init__(self, file=None, *, msg_content=None):
         PeerMessage.__init__(self, msg_content)
@@ -3904,6 +4020,7 @@ class QueueUpload(PeerMessage):
     """
 
     __slots__ = ("file", "legacy_client")
+    CODE = 43
     EVENT_NAME = "queue-upload"
 
     def __init__(self, file=None, legacy_client=False, *, msg_content=None):
@@ -3926,6 +4043,7 @@ class PlaceInQueueResponse(PeerMessage):
     """
 
     __slots__ = ("filename", "place")
+    CODE = 44
     EVENT_NAME = "place-in-queue-response"
 
     def __init__(self, filename=None, place=None, *, msg_content=None):
@@ -3955,6 +4073,7 @@ class UploadFailed(PeerMessage):
     """
 
     __slots__ = ("file",)
+    CODE = 46
     EVENT_NAME = "upload-failed"
 
     def __init__(self, file=None, *, msg_content=None):
@@ -3977,6 +4096,7 @@ class UploadDenied(PeerMessage):
     """
 
     __slots__ = ("file", "reason")
+    CODE = 50
     EVENT_NAME = "upload-denied"
 
     def __init__(self, file=None, reason=None, *, msg_content=None):
@@ -4004,6 +4124,7 @@ class PlaceInQueueRequest(PeerMessage):
     """
 
     __slots__ = ("file", "legacy_client")
+    CODE = 51
     EVENT_NAME = "place-in-queue-request"
 
     def __init__(self, file=None, legacy_client=False, *, msg_content=None):
@@ -4028,6 +4149,7 @@ class UploadQueueNotification(PeerMessage):
     """
 
     __slots__ = ()
+    CODE = 52
 
     def make_network_message(self):
         return b""
@@ -4043,6 +4165,7 @@ class UnknownPeerMessage(PeerMessage):
     """
 
     __slots__ = ()
+    CODE = 12547
     LOGGED = False
 
     def parse_network_message(self):
@@ -4139,6 +4262,7 @@ class DistribPing(DistribMessage):
     """
 
     __slots__ = ()
+    CODE = 0
 
     def make_network_message(self):
         return b""
@@ -4164,6 +4288,7 @@ class DistribSearch(DistribMessage):
     """
 
     __slots__ = ("identifier", "search_username", "token", "searchterm")
+    CODE = 3
     EVENT_NAME = "file-search-request-distributed"
     LOGGED = False
 
@@ -4202,6 +4327,7 @@ class DistribBranchLevel(DistribMessage):
     """
 
     __slots__ = ("level",)
+    CODE = 4
 
     def __init__(self, level=None, *, msg_content=None):
         DistribMessage.__init__(self, msg_content)
@@ -4231,6 +4357,7 @@ class DistribBranchRoot(DistribMessage):
     """
 
     __slots__ = ("root_username", "root_username_size")
+    CODE = 5
 
     def __init__(self, root_username=None, *, msg_content=None):
         DistribMessage.__init__(self, msg_content)
@@ -4261,6 +4388,7 @@ class DistribChildDepth(DistribMessage):
     """
 
     __slots__ = ("value",)
+    CODE = 7
 
     def __init__(self, value=None, *, msg_content=None):
         DistribMessage.__init__(self, msg_content)
@@ -4290,6 +4418,7 @@ class DistribEmbeddedMessage(DistribMessage):
     """
 
     __slots__ = ("distrib_code", "distrib_message")
+    CODE = 93
     LOGGED = False
 
     def __init__(self, *, msg_content=None):
@@ -4308,150 +4437,10 @@ class DistribEmbeddedMessage(DistribMessage):
         self.distrib_message = self._message[self._offset:]
 
 
-# Message Codes #
+# Message Mappings #
 
 
-SERVER_MESSAGE_CODES = {
-    Login: 1,
-    SetWaitPort: 2,
-    GetPeerAddress: 3,
-    WatchUser: 5,
-    UnwatchUser: 6,
-    GetUserStatus: 7,
-    IgnoreUser: 11,
-    UnignoreUser: 12,
-    SayChatroom: 13,
-    JoinRoom: 14,
-    LeaveRoom: 15,
-    UserJoinedRoom: 16,
-    UserLeftRoom: 17,
-    ConnectToPeer: 18,
-    MessageUser: 22,
-    MessageAcked: 23,
-    FileSearchRoom: 25,           # Obsolete
-    FileSearch: 26,
-    SetStatus: 28,
-    ServerPing: 32,
-    SendConnectToken: 33,         # Obsolete
-    SendDownloadSpeed: 34,        # Obsolete
-    SharedFoldersFiles: 35,
-    GetUserStats: 36,
-    UploadSlotsFull: 40,          # Obsolete
-    Relogged: 41,
-    UserSearch: 42,
-    SimilarRecommendations: 50,   # Obsolete
-    AddThingILike: 51,
-    RemoveThingILike: 52,
-    Recommendations: 54,
-    MyRecommendations: 55,        # Obsolete
-    GlobalRecommendations: 56,
-    UserInterests: 57,
-    AdminCommand: 58,             # Obsolete
-    PlaceInLineRequest: 59,       # Obsolete
-    PlaceInLineResponse: 60,      # Obsolete
-    RoomAdded: 62,                # Obsolete
-    RoomRemoved: 63,              # Obsolete
-    RoomList: 64,
-    ExactFileSearch: 65,          # Obsolete
-    AdminMessage: 66,
-    GlobalUserList: 67,           # Obsolete
-    TunneledMessage: 68,          # Obsolete
-    PrivilegedUsers: 69,
-    HaveNoParent: 71,
-    ParentIP: 73,                 # Deprecated
-    ParentMinSpeed: 83,
-    ParentSpeedRatio: 84,
-    ParentInactivityTimeout: 86,  # Obsolete
-    SearchInactivityTimeout: 87,  # Obsolete
-    MinParentsInCache: 88,        # Obsolete
-    DistribPingInterval: 90,      # Obsolete
-    AddToPrivileged: 91,          # Obsolete
-    CheckPrivileges: 92,
-    EmbeddedMessage: 93,
-    AcceptChildren: 100,
-    PossibleParents: 102,
-    WishlistSearch: 103,
-    WishlistInterval: 104,
-    SimilarUsers: 110,
-    ItemRecommendations: 111,
-    ItemSimilarUsers: 112,
-    RoomTickers: 113,
-    RoomTickerAdded: 114,
-    RoomTickerRemoved: 115,
-    SetRoomTicker: 116,
-    AddThingIHate: 117,
-    RemoveThingIHate: 118,
-    RoomSearch: 120,
-    SendUploadSpeed: 121,
-    UserPrivileged: 122,          # Deprecated
-    GivePrivileges: 123,
-    NotifyPrivileges: 124,        # Deprecated
-    AckNotifyPrivileges: 125,     # Deprecated
-    BranchLevel: 126,
-    BranchRoot: 127,
-    ChildDepth: 129,              # Obsolete
-    ResetDistributed: 130,
-    RoomMembers: 133,
-    AddRoomMember: 134,
-    RemoveRoomMember: 135,
-    CancelRoomMembership: 136,
-    CancelRoomOwnership: 137,
-    RoomSomething: 138,           # Obsolete
-    RoomMembershipGranted: 139,
-    RoomMembershipRevoked: 140,
-    EnableRoomInvitations: 141,
-    ChangePassword: 142,
-    AddRoomOperator: 143,
-    RemoveRoomOperator: 144,
-    RoomOperatorshipGranted: 145,
-    RoomOperatorshipRevoked: 146,
-    RoomOperators: 148,
-    MessageUsers: 149,
-    JoinGlobalRoom: 150,
-    LeaveGlobalRoom: 151,
-    GlobalRoomMessage: 152,
-    RelatedSearch: 153,           # Obsolete
-    ExcludedSearchPhrases: 160,
-    CantConnectToPeer: 1001,
-    CantCreateRoom: 1003
-}
-
-PEER_INIT_MESSAGE_CODES = {
-    PierceFireWall: 0,
-    PeerInit: 1
-}
-
-PEER_MESSAGE_CODES = {
-    SharedFileListRequest: 4,
-    SharedFileListResponse: 5,
-    FileSearchRequest: 8,         # Obsolete
-    FileSearchResponse: 9,
-    UserInfoRequest: 15,
-    UserInfoResponse: 16,
-    FolderContentsRequest: 36,
-    FolderContentsResponse: 37,
-    TransferRequest: 40,
-    TransferResponse: 41,
-    PlaceholdUpload: 42,          # Obsolete
-    QueueUpload: 43,
-    PlaceInQueueResponse: 44,
-    UploadFailed: 46,
-    UploadDenied: 50,
-    PlaceInQueueRequest: 51,
-    UploadQueueNotification: 52,  # Deprecated
-    UnknownPeerMessage: 12547
-}
-
-DISTRIBUTED_MESSAGE_CODES = {
-    DistribPing: 0,               # Deprecated
-    DistribSearch: 3,
-    DistribBranchLevel: 4,
-    DistribBranchRoot: 5,
-    DistribChildDepth: 7,         # Obsolete
-    DistribEmbeddedMessage: 93    # Deprecated
-}
-
-SERVER_MESSAGE_CLASSES = {v: k for k, v in SERVER_MESSAGE_CODES.items()}
-PEER_INIT_MESSAGE_CLASSES = {v: k for k, v in PEER_INIT_MESSAGE_CODES.items()}
-PEER_MESSAGE_CLASSES = {v: k for k, v in PEER_MESSAGE_CODES.items()}
-DISTRIBUTED_MESSAGE_CLASSES = {v: k for k, v in DISTRIBUTED_MESSAGE_CODES.items()}
+SERVER_MESSAGE_CLASSES = {cls.CODE: cls for cls in ServerMessage.__subclasses__()}
+PEER_INIT_MESSAGE_CLASSES = {cls.CODE: cls for cls in PeerInitMessage.__subclasses__()}
+PEER_MESSAGE_CLASSES = {cls.CODE: cls for cls in PeerMessage.__subclasses__()}
+DISTRIBUTED_MESSAGE_CLASSES = {cls.CODE: cls for cls in DistribMessage.__subclasses__()}
