@@ -1326,15 +1326,11 @@ class Downloads(Transfers):
         if download is None:
             return
 
-        if download.request_timer_id is not None:
-            events.cancel_scheduled(download.request_timer_id)
-            download.request_timer_id = None
-
-        self._update_transfer_progress(
+        if self._update_transfer_progress(
             download, sock=sock, stat_id="downloaded_size",
             current_byte_offset=(download.size - bytes_left), speed=speed
-        )
-        self._update_transfer(download)
+        ):
+            self._update_transfer(download)
 
     def _file_connection_closed(self, username, token, sock, **_unused):
         """A file download connection has closed for any reason."""

@@ -447,7 +447,14 @@ class Transfers:
             log.add_transfer("Received unexpected file transfer update (token: %s, user: %s, error: %s), "
                              "closing connection", (transfer.token, transfer.username, error))
             core.send_message_to_network_thread(CloseConnection(sock))
-            return
+            return False
+
+        if transfer.last_byte_offset is None:
+            transfer.last_byte_offset = current_byte_offset
+
+        if transfer.request_timer_id is not None:
+            events.cancel_scheduled(transfer.request_timer_id)
+            transfer.request_timer_id = None
 
         size = transfer.size
 
@@ -457,7 +464,7 @@ class Transfers:
         transfer.retry_attempt = False
 
         if current_byte_offset is None:
-            return
+            return True
 
         transfer.current_byte_offset = current_byte_offset
         transferred_fragment_size = current_byte_offset - transfer.last_byte_offset
@@ -477,6 +484,8 @@ class Transfers:
 
         if transfer.speed > 0 and size > current_byte_offset:
             transfer.time_left = (size - current_byte_offset) // transfer.speed
+
+        return True
 
     def _finish_transfer(self, transfer):
 

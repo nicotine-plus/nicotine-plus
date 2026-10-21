@@ -1211,19 +1211,12 @@ class Uploads(Transfers):
         if upload is None:
             return
 
-        if upload.request_timer_id is not None:
-            events.cancel_scheduled(upload.request_timer_id)
-            upload.request_timer_id = None
-
-        if upload.last_byte_offset is None:
-            upload.last_byte_offset = offset
-
-        self._update_transfer_progress(
+        if self._update_transfer_progress(
             upload, sock=sock, stat_id="uploaded_size",
             current_byte_offset=(offset + bytes_sent) if offset is not None else None,
             speed=speed
-        )
-        self._update_transfer(upload)
+        ):
+            self._update_transfer(upload)
 
     def _file_connection_closed(self, username, token, sock, timed_out):
         """A file upload connection has closed for any reason."""
