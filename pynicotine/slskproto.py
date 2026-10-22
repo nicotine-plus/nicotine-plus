@@ -2040,7 +2040,12 @@ class NetworkThread(Thread):
 
     def _process_file_init_message(self, conn, in_buffer):
 
-        msg_size = idx = 4
+        msg_size = 4
+        idx = 0
+
+        if len(in_buffer) < msg_size:
+            return idx
+
         msg = self._unpack_network_message(
             FileTransferInit,
             memoryview(in_buffer)[:msg_size],
@@ -2049,6 +2054,7 @@ class NetworkThread(Thread):
             sock=conn.sock,
             username=conn.init.target_user
         )
+        idx = msg_size
 
         if msg is None:
             return idx
@@ -2071,7 +2077,12 @@ class NetworkThread(Thread):
             # file offset. If peer sends something anyway, clear it.
             return len(in_buffer)
 
-        msg_size = idx = 8
+        msg_size = 8
+        idx = 0
+
+        if len(in_buffer) < msg_size:
+            return idx
+
         msg = self._unpack_network_message(
             FileOffset,
             memoryview(in_buffer)[:msg_size],
@@ -2080,6 +2091,7 @@ class NetworkThread(Thread):
             sock=conn.sock,
             username=conn.init.target_user
         )
+        idx = msg_size
 
         if msg is None:
             return idx
