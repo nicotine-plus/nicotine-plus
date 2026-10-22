@@ -1209,9 +1209,6 @@ class FileSearch(ServerMessage):
         self.searchterm = text
         self.search_username = None
 
-        if text:
-            self.searchterm = " ".join(x for x in text.split() if x != "-")
-
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_uint32(self.token)
@@ -2459,14 +2456,13 @@ class RoomSearch(ServerMessage):
     message.
     """
 
-    __slots__ = ("room", "token", "searchterm", "search_username")
+    __slots__ = ("room", "token", "searchterm")
 
     def __init__(self, room=None, token=None, text=""):
         ServerMessage.__init__(self)
         self.room = room
         self.token = token
-        self.searchterm = " ".join([x for x in text.split() if x != "-"])
-        self.search_username = None
+        self.searchterm = text
 
     def make_network_message(self):
         msg = bytearray()
