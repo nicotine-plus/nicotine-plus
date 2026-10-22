@@ -2200,14 +2200,26 @@ class PossibleParents(ServerMessage):
             self.list[username] = ParentCandidate(username, ip_address, port)
 
 
-class WishlistSearch(FileSearch):
+class WishlistSearch(ServerMessage):
     """Server code 103.
 
     We send the server one of our wishlist search queries at each
     interval.
     """
 
-    __slots__ = ()
+    __slots__ = ("token", "searchterm")
+
+    def __init__(self, token=None, text=None):
+        ServerMessage.__init__(self)
+        self.token = token
+        self.searchterm = text
+
+    def make_network_message(self):
+        msg = bytearray()
+        msg += self.pack_uint32(self.token)
+        msg += self.pack_string(self.searchterm)
+
+        return msg
 
 
 class WishlistInterval(ServerMessage):
