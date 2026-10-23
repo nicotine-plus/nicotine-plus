@@ -3414,7 +3414,7 @@ class SharedFileListResponse(PeerMessage):
         shares = []
 
         for _ in range(ndir):
-            directory = self.unpack_string().replace("/", "\\")
+            directory = self.unpack_string()
             nfiles = self.unpack_uint32()
 
             files = []
@@ -3552,7 +3552,7 @@ class FileSearchResponse(PeerMessage):
             self._offset += ext_len
             attrs = self.unpack_file_attributes()
 
-            results.append((code, name.replace("/", "\\"), size, ext, attrs))
+            results.append((code, name, size, ext, attrs))
 
         if nfiles > 1:
             results.sort(key=itemgetter(1))
@@ -3762,7 +3762,7 @@ class FolderContentsResponse(PeerMessage):
         folders = {}
 
         for _ in range(ndir):
-            directory = self.unpack_string().replace("/", "\\")
+            directory = self.unpack_string()
             nfiles = self.unpack_uint32()
 
             ext = None
