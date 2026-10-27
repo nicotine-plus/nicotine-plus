@@ -652,7 +652,6 @@ class IconNotebook:
 
         self.reorder_page_handler = self.widget.connect("page-reordered", self.on_reorder_page)
         self.switch_page_handler = self.widget.connect("switch-page", self.on_switch_page)
-        self.widget.connect("page-removed", self.on_remove_page)
 
         if self.parent_page is None:
             # Show active page and focus default widget
@@ -669,9 +668,6 @@ class IconNotebook:
 
     def on_restore_removed_page(self, page_args):
         raise NotImplementedError
-
-    def on_remove_page(self, _notebook, new_page, _page_num):
-        self._remove_unread_page(new_page)
 
     def _on_remove_all_pages(self, *args):
 
