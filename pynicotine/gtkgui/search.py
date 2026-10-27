@@ -66,8 +66,7 @@ class Searches(IconNotebook):
             window,
             parent=window.search_content,
             parent_page=window.search_page,
-            switch_page_callback=self.on_switch_search_page,
-            read_changed_page_callback=self.on_read_changed_page
+            switch_page_callback=self.on_switch_search_page
         )
 
         self.page = window.search_page
@@ -176,15 +175,6 @@ class Searches(IconNotebook):
             self.window.update_title()
             break
 
-    def on_read_changed_page(self, _notebook, page):
-
-        for tab in self.pages.values():
-            if tab.container != page:
-                continue
-
-            tab.on_read_changed()
-            break
-
     def on_search_mode(self, action, state):
 
         action.set_state(state)
@@ -257,8 +247,10 @@ class Searches(IconNotebook):
         if mode_label is not None:
             text = f"({mode_label}) {text}"
 
-        self.append_page(page.container, text, focus_callback=page.on_focus,
-                         close_callback=page.on_close)
+        self.append_page(
+            page.container, text,
+            focus_callback=page.on_focus, read_callback=page.on_read, close_callback=page.on_close
+        )
         page.set_label(self.get_tab_label_inner(page.container))
 
         return page
@@ -2124,7 +2116,7 @@ class Search:
 
         return True
 
-    def on_read_changed(self, *_args):
+    def on_read(self, *_args):
 
         search = core.search.wishlist.get(self.text)
 
