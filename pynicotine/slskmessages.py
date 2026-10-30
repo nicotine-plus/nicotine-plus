@@ -3513,8 +3513,7 @@ class SharedFileListResponse(PeerMessage):
             if shares and shares not in share_groups:
                 private_share_groups.append(shares)
 
-        if private_share_groups:
-            msg += self._make_shares_list(share_groups=private_share_groups)
+        msg += self._make_shares_list(share_groups=private_share_groups)
 
         self.built = zlib.compress(msg, ZLIB_COMPRESSION_LEVEL)
         return self.built
@@ -3643,12 +3642,10 @@ class FileSearchResponse(PeerMessage):
         msg += self.pack_uint32(self.ulspeed)
         msg += self.pack_uint32(self.inqueue)
         msg += self.pack_uint32(self.unknown)
+        msg += self.pack_uint32(len(self.privatelist))
 
-        if self.privatelist:
-            msg += self.pack_uint32(len(self.privatelist))
-
-            for fileinfo in self.privatelist:
-                msg += FileListMessage.pack_file_info(fileinfo)
+        for fileinfo in self.privatelist:
+            msg += FileListMessage.pack_file_info(fileinfo)
 
         return zlib.compress(msg, ZLIB_COMPRESSION_LEVEL)
 
