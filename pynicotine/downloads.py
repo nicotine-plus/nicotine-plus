@@ -1148,7 +1148,6 @@ class Downloads(Transfers):
                 # If this file is not in your download queue, then it must be
                 # a remotely initiated download and someone is manually uploading to you
                 received_folder_path = os.path.normpath(os.path.expandvars(config.sections["transfers"]["uploaddir"]))
-                virtual_path = virtual_path.replace("/", "\\")
                 virtual_folder_path = virtual_path.rpartition("\\")[0]
                 parent_folder_name = virtual_folder_path.rpartition("\\")[-1]
                 folder_path = safe_path_join(received_folder_path, username, parent_folder_name)
