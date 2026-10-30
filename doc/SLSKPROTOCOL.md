@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on October 23, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on October 30, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -2682,23 +2682,25 @@ A peer responds with a list of shared files after we've sent a
                 1.  **uint32** *attribute code*  
                     See [File Attribute Types](#file-attribute-types)
                 2.  **uint32** *attribute value*
-    4.  **uint32** *unknown*  
-        Official clients always send a value of `0`
-    5.  **uint32** *number of private directories*
-    6.  Iterate *number of private directories*
-        1.  **string** *directory*
-        2.  **uint32** *number of files*
-        3.  Iterate *number of files*
-            1.  **uint8** *code*  
-                Value is always `1`
-            2.  **string** *filename*
-            3.  **uint64** *file size*
-            4.  **string** *file extension*
-            5.  **uint32** *number of attributes*
-            6.  Iterate for *number of attributes*
-                1.  **uint32** *attribute code*  
-                    See [File Attribute Types](#file-attribute-types)
-                2.  **uint32** *attribute value*
+    4.  Optional
+        1.  **uint32** *unknown*  
+            Official clients always send a value of `0`
+    5.  Optional
+        1.  **uint32** *number of private directories*
+        2.  Iterate *number of private directories*
+            1.  **string** *directory*
+            2.  **uint32** *number of files*
+            3.  Iterate *number of files*
+                1.  **uint8** *code*  
+                    Value is always `1`
+                2.  **string** *filename*
+                3.  **uint64** *file size*
+                4.  **string** *file extension*
+                5.  **uint32** *number of attributes*
+                6.  Iterate for *number of attributes*
+                    1.  **uint32** *attribute code*  
+                        See [File Attribute Types](#file-attribute-types)
+                    2.  **uint32** *attribute value*
 
 
 ## Peer Code 8
@@ -2785,21 +2787,23 @@ from original [FileSearch](#server-code-26), [UserSearch](#server-code-42) or
     6.  **bool** *slotfree*
     7.  **uint32** *avgspeed*
     8.  **uint32** *queue length*
-    9.  **uint32** *unknown*  
-        Official clients always send a value of `0`
-    10.  **uint32** *number of privately shared results*
-    11.  Iterate for *number of privately shared results*
-         1.  **uint8** *code*  
-             Value is always `1`
-         2.  **string** *filename*
-         3.  **uint64** *file size*
-         4.  **string** *file extension*  
-             Always blank from SoulseekQt clients
-         5.  **uint32** *number of attributes*
-         6.  Iterate for *number of attributes*
-             1.  **uint32** *attribute code*  
-                 See [File Attribute Types](#file-attribute-types)
-             2.  **uint32** *attribute value*
+    9.  Optional
+        1.  **uint32** *unknown*  
+            Official clients always send a value of `0`
+    10. Optional
+        1.  **uint32** *number of privately shared results*
+        2.  Iterate for *number of privately shared results*
+            1.  **uint8** *code*  
+                Value is always `1`
+            2.  **string** *filename*
+            3.  **uint64** *file size*
+            4.  **string** *file extension*  
+                Always blank from SoulseekQt clients
+            5.  **uint32** *number of attributes*
+            6.  Iterate for *number of attributes*
+                1.  **uint32** *attribute code*  
+                    See [File Attribute Types](#file-attribute-types)
+                2.  **uint32** *attribute value*
 
 
 ## Peer Code 15
