@@ -31,6 +31,7 @@ from pynicotine.slskmessages import AddAllowedResponse
 from pynicotine.slskmessages import ConnectionType
 from pynicotine.slskmessages import CloseConnection
 from pynicotine.slskmessages import DownloadFile
+from pynicotine.slskmessages import FileAttributes
 from pynicotine.slskmessages import FileOffset
 from pynicotine.slskmessages import FolderContentsRequest
 from pynicotine.slskmessages import FolderContentsResponse
@@ -850,8 +851,10 @@ class Downloads(Transfers):
             # Duplicate download found, stop here
             return
 
-        transfer = Transfer(username, virtual_path, folder_path, size, file_attributes, TransferStatus.PAUSED)
-
+        transfer = Transfer(
+            username, virtual_path, folder_path, size, file_attributes or FileAttributes(),
+            TransferStatus.PAUSED
+        )
         self._append_transfer(transfer)
 
         if paused or self._enqueue_transfer(transfer, bypass_filter=bypass_filter):

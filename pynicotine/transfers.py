@@ -198,12 +198,12 @@ class Transfers:
     def _load_file_attributes(self, num_attributes, transfer_row):
 
         if num_attributes < 7:
-            return None
+            return FileAttributes()
 
         loaded_file_attributes = transfer_row[6]
 
         if not loaded_file_attributes:
-            return None
+            return FileAttributes()
 
         is_new_format = isinstance(loaded_file_attributes, dict)
 
