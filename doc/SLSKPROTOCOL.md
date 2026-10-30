@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on October 30, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on October 31, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -578,17 +578,17 @@ response. As a consequence, stats can be outdated.
     3.  If *exists* is true
         1.  **uint32** *status*  
             See [User Status Codes](#user-status-codes)
-        2.  **uint32** *avgspeed*
-        3.  **uint32** *uploadnum*  
+        2.  **uint32** *upload speed*
+        3.  **uint32** *upload number*  
             Number of uploaded files, previously used for number of downloaded
             files in old versions of Soulseek. Used to grow indefinitely, but
             now rolls over after a certain point. The value increments when
             sending a [SendUploadSpeed](#server-code-121) server message.
         4.  **uint32** *unknown*
-        5.  **uint32** *files*
-        6.  **uint32** *dirs*
+        5.  **uint32** *number of files*
+        6.  **uint32** *number of folders*
         7.  If *status* is away/online
-            1.  **string** *countrycode*  
+            1.  **string** *country code*  
                 Uppercase country code
 
 
@@ -713,23 +713,23 @@ Requirements include:
         For private rooms, also contain owner and operators
     3.  Iterate for *number of users*
         1.  **string** *username*
-    4.  **uint32** *number of statuses*
-    5.  Iterate for *number of statuses*
+    4.  **uint32** *number of user statuses*
+    5.  Iterate for *number of user statuses*
         1.  **uint32** *status*
     6.  **uint32** *number of user stats*
     7.  Iterate for *number of user stats*
-        1.  **uint32** *avgspeed*
-        2.  **uint32** *uploadnum*
+        1.  **uint32** *upload speed*
+        2.  **uint32** *upload number*
         3.  **uint32** *unknown*
-        4.  **uint32** *files*
-        5.  **uint32** *dirs*
-    8.  **uint32** *number of slotsfull*
-    9.  Iterate for *number of slotsfull*
-        1.  **uint32** *slotsfull*  
+        4.  **uint32** *number of files*
+        5.  **uint32** *number of folders*
+    8.  **uint32** *number of slots full*
+    9.  Iterate for *number of slots full*
+        1.  **uint32** *slots full*  
             Boolean value `1` or `0`, see [UploadSlotsFull](#server-code-40)
-    10. **uint32** *number of user countries*
-    11. Iterate for *number of user countries*
-        1.  **string** *countrycode*  
+    10. **uint32** *number of user country codes*
+    11. Iterate for *number of user country codes*
+        1.  **string** *country code*  
             Uppercase country code
     12. If private room
         1.  **string** *owner*
@@ -766,14 +766,14 @@ The server tells us someone has just joined a room we're in.
     1.  **string** *room*
     2.  **string** *username*
     3.  **uint32** *status*
-    4.  **uint32** *avgspeed*
-    5.  **uint32** *uploadnum*
+    4.  **uint32** *upload speed*
+    5.  **uint32** *upload number*
     6.  **uint32** *unknown*
-    7.  **uint32** *files*
-    8.  **uint32** *dirs*
-    9.  **uint32** *slotsfull*  
+    7.  **uint32** *number of files*
+    8.  **uint32** *number of folders*
+    9.  **uint32** *slots full*  
         Boolean value `1` or `0`, see [UploadSlotsFull](#server-code-40)
-    10. **string** *countrycode*  
+    10. **string** *country code*  
         Uppercase country code
 
 
@@ -995,8 +995,8 @@ share.
 ### Data Order
 
   - Send
-    1.  **uint32** *dirs*
-    2.  **uint32** *files*
+    1.  **uint32** *number of folders*
+    2.  **uint32** *number of files*
   - Receive
     -   *No Message*
 
@@ -1015,11 +1015,11 @@ the message to the server.
     1.  **string** *username*
   - Receive
     1.  **string** *username*
-    2.  **uint32** *avgspeed*
-    3.  **uint32** *uploadnum*
+    2.  **uint32** *upload speed*
+    3.  **uint32** *upload number*
     4.  **uint32** *unknown*
-    5.  **uint32** *files*
-    6.  **uint32** *dirs*
+    5.  **uint32** *number of files*
+    6.  **uint32** *number of folders*
 
 
 ## Server Code 40
@@ -1038,11 +1038,11 @@ grayed out in room user lists.
 ### Data Order
 
   - Send
-    1.  **uint32** *slotsfull*  
+    1.  **uint32** *slots full*  
         Boolean value `1` or `0`
   - Receive
     1.  **string** *username*
-    2.  **uint32** *slotsfull*  
+    2.  **uint32** *slots full*  
         Boolean value `1` or `0`
 
 
@@ -1406,23 +1406,23 @@ We send this to get a global list of all users online.
     1.  **uint32** *number of users in room*
     2.  Iterate for *number of users*
         1.  **string** *username*
-    3.  **uint32** *number of userdata*
-    4.  Iterate for *number of users*
+    3.  **uint32** *number of user statuses*
+    4.  Iterate for *number of user statuses*
         1.  **uint32** *status*
-    5.  **uint32** *number of userdata*
-    6.  Iterate for *number of userdata*
-        1.  **uint32** *avgspeed*
-        2.  **uint32** *uploadnum*
+    5.  **uint32** *number of user stats*
+    6.  Iterate for *number of user stats*
+        1.  **uint32** *upload speed*
+        2.  **uint32** *upload number*
         3.  **uint32** *unknown*
-        4.  **uint32** *files*
-        5.  **uint32** *dirs*
-    7.  **uint32** *number of slotsfull*
-    8.  Iterate for *number of slotsfull*
-        1.  **uint32** *slotsfull*  
+        4.  **uint32** *number of files*
+        5.  **uint32** *number of folders*
+    7.  **uint32** *number of slots full*
+    8.  Iterate for *number of slots full*
+        1.  **uint32** *slots full*  
             Boolean value `1` or `0`, see [UploadSlotsFull](#server-code-40)
-    9. **uint32** *number of usercountries*
-    10. Iterate for *number of usercountries*
-        1.  **string** *countrycode*  
+    9. **uint32** *number of user country codes*
+    10. Iterate for *number of user country codes*
+        1.  **string** *country code*  
             Uppercase country code
 
 
@@ -1734,7 +1734,7 @@ The server sends us a list of similar users related to our interests.
     -   Empty Message
   - Receive
     1.  **uint32** *number of users*
-    2.  Iterate for *number of user*
+    2.  Iterate for *number of users*
         1.  **string** *username*
         2.  **uint32** *rating*
 
@@ -1792,7 +1792,7 @@ walls.
   - Receive
     1.  **string** *room*
     2.  **uint32** *number of users*
-    3.  Iterate for *number of user*
+    3.  Iterate for *number of users*
         1.  **string** *username*
         2.  **string** *tickers*
 
@@ -2372,7 +2372,7 @@ The server returns a list of related search terms for a search query.
   - Receive
     1.  **string** *query*
     2.  **uint32** *number of terms*
-    3.  Iterate for *number of term*
+    3.  Iterate for *number of terms*
         1.  **string** *term*
         2.  **uint32** *score*
 
@@ -2748,9 +2748,9 @@ from original [FileSearch](#server-code-26), [UserSearch](#server-code-42) or
             1.  **uint32** *attribute code*  
                 See [File Attribute Types](#file-attribute-types)
             2.  **uint32** *attribute value*
-    5.  **bool** *slotfree*
-    6.  **uint32** *avgspeed*
-    7.  **uint32** *queue length*
+    5.  **bool** *slot available*
+    6.  **uint32** *upload speed*
+    7.  **uint32** *number of queued uploads*
     8.  **uint32** *unknown*
         Official clients always send a value of `0`
     9.  **uint32** *number of privately shared results*
@@ -2784,9 +2784,9 @@ from original [FileSearch](#server-code-26), [UserSearch](#server-code-42) or
             1.  **uint32** *attribute code*  
                 See [File Attribute Types](#file-attribute-types)
             2.  **uint32** *attribute value*
-    6.  **bool** *slotfree*
-    7.  **uint32** *avgspeed*
-    8.  **uint32** *queue length*
+    6.  **bool** *slot available*
+    7.  **uint32** *upload speed*
+    8.  **uint32** *number of queued uploads*
     9.  Optional
         1.  **uint32** *unknown*  
             Official clients always send a value of `0`
@@ -2835,24 +2835,24 @@ A peer responds with this after we've sent a [UserInfoRequest](#peer-code-15).
         2.  **bytes** *picture*
     3.  If *picture* is empty
         1.  **bool** *has picture* **False**
-    4.  **uint32** *totalupl*
-    5.  **uint32** *queuesize*
-    6.  **bool** *slotsfree*  
+    4.  **uint32** *number of upload slots*
+    5.  **uint32** *number of queued uploads*
+    6.  **bool** *slot available*  
         Can immediately upload
     7.  Optional (not sent by SoulseekQt)
-        1.  **uint32** *uploadpermitted*  
+        1.  **uint32** *upload permission*  
             Who can upload anything to us? See [Upload Permissions](#upload-permissions).
   - Receive
     1.  **string** *description*
     2.  **bool** *has picture*
     3.  If has picture
         1.  **bytes** *picture*
-    4.  **uint32** *totalupl*
-    5.  **uint32** *queuesize*
-    6.  **bool** *slotsfree*  
+    4.  **uint32** *number of upload slots*
+    5.  **uint32** *number of queued uploads*
+    6.  **bool** *slot available*  
         Can immediately download
     7.  Optional (not sent by SoulseekQt)
-        1.  **uint32** *uploadpermitted*  
+        1.  **uint32** *upload permission*  
             Who can upload anything to this user? See [Upload Permissions](#upload-permissions).
 
 
