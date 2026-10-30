@@ -530,18 +530,19 @@ class UserData:
     """When we join a room, the server sends us a bunch of these for each
     user."""
 
-    __slots__ = ("username", "status", "avgspeed", "uploadnum", "unknown", "files", "dirs", "slotsfull", "country")
+    __slots__ = ("username", "status", "upload_speed", "upload_number", "unknown", "num_files", "num_folders",
+                 "slots_full", "country")
 
-    def __init__(self, username=None, status=None, avgspeed=None, uploadnum=None, unknown=None, files=None, dirs=None,
-                 slotsfull=None, country=None):
+    def __init__(self, username=None, status=None, upload_speed=None, upload_number=None, unknown=None,
+                 num_files=None, num_folders=None, slots_full=None, country=None):
         self.username = username
         self.status = status
-        self.avgspeed = avgspeed
-        self.uploadnum = uploadnum
+        self.upload_speed = upload_speed
+        self.upload_number = upload_number
         self.unknown = unknown
-        self.files = files
-        self.dirs = dirs
-        self.slotsfull = slotsfull
+        self.num_files = num_files
+        self.num_folders = num_folders
+        self.slots_full = slots_full
         self.country = country
 
 
@@ -611,15 +612,15 @@ class ServerMessage(SlskMessage):
 
         statslen = self.unpack_uint32()
         for i in range(statslen):
-            users[i].avgspeed = self.unpack_uint32()
-            users[i].uploadnum = self.unpack_uint32()
+            users[i].upload_speed = self.unpack_uint32()
+            users[i].upload_number = self.unpack_uint32()
             users[i].unknown = self.unpack_uint32()
-            users[i].files = self.unpack_uint32()
-            users[i].dirs = self.unpack_uint32()
+            users[i].num_files = self.unpack_uint32()
+            users[i].num_folders = self.unpack_uint32()
 
         slotslen = self.unpack_uint32()
         for i in range(slotslen):
-            users[i].slotsfull = self.unpack_uint32()
+            users[i].slots_full = self.unpack_uint32()
 
         countrylen = self.unpack_uint32()
         for i in range(countrylen):
@@ -792,8 +793,8 @@ class WatchUser(ServerMessage):
     As a consequence, stats can be outdated.
     """
 
-    __slots__ = ("user", "userexists", "status", "avgspeed", "uploadnum", "unknown", "files", "dirs",
-                 "country")
+    __slots__ = ("user", "userexists", "status", "upload_speed", "upload_number", "unknown", "num_files",
+                 "num_folders", "country")
     CODE = 5
     EVENT_NAME = "watch-user"
 
@@ -802,11 +803,11 @@ class WatchUser(ServerMessage):
         self.user = user
         self.userexists = None
         self.status = None
-        self.avgspeed = None
-        self.uploadnum = None
+        self.upload_speed = None
+        self.upload_number = None
         self.unknown = None
-        self.files = None
-        self.dirs = None
+        self.num_files = None
+        self.num_folders = None
         self.country = None
 
     def make_network_message(self):
@@ -820,11 +821,11 @@ class WatchUser(ServerMessage):
             return
 
         self.status = self.unpack_uint32()
-        self.avgspeed = self.unpack_uint32()
-        self.uploadnum = self.unpack_uint32()
+        self.upload_speed = self.unpack_uint32()
+        self.upload_number = self.unpack_uint32()
         self.unknown = self.unpack_uint32()
-        self.files = self.unpack_uint32()
-        self.dirs = self.unpack_uint32()
+        self.num_files = self.unpack_uint32()
+        self.num_folders = self.unpack_uint32()
 
         if not self.has_remaining_content():
             # User is offline
@@ -1056,12 +1057,12 @@ class UserJoinedRoom(ServerMessage):
         self.userdata = UserData(
             username=self.unpack_string(),
             status=self.unpack_uint32(),
-            avgspeed=self.unpack_uint32(),
-            uploadnum=self.unpack_uint32(),
+            upload_speed=self.unpack_uint32(),
+            upload_number=self.unpack_uint32(),
             unknown=self.unpack_uint32(),
-            files=self.unpack_uint32(),
-            dirs=self.unpack_uint32(),
-            slotsfull=self.unpack_uint32(),
+            num_files=self.unpack_uint32(),
+            num_folders=self.unpack_uint32(),
+            slots_full=self.unpack_uint32(),
             country=self.unpack_string()
         )
 
@@ -1359,18 +1360,18 @@ class SharedFoldersFiles(ServerMessage):
     that we share.
     """
 
-    __slots__ = ("folders", "files")
+    __slots__ = ("num_folders", "num_files")
     CODE = 35
 
-    def __init__(self, folders=None, files=None):
+    def __init__(self, num_folders=None, num_files=None):
         ServerMessage.__init__(self)
-        self.folders = folders
-        self.files = files
+        self.num_folders = num_folders
+        self.num_files = num_files
 
     def make_network_message(self):
         msg = bytearray()
-        msg += self.pack_uint32(self.folders)
-        msg += self.pack_uint32(self.files)
+        msg += self.pack_uint32(self.num_folders)
+        msg += self.pack_uint32(self.num_files)
 
         return msg
 
@@ -1383,17 +1384,17 @@ class GetUserStats(ServerMessage):
     the message to the server.
     """
 
-    __slots__ = ("user", "avgspeed", "uploadnum", "unknown", "files", "dirs")
+    __slots__ = ("user", "upload_speed", "upload_number", "unknown", "num_files", "num_folders")
     CODE = 36
     EVENT_NAME = "user-stats"
 
-    def __init__(self, user=None, avgspeed=None, files=None, dirs=None, *, msg_content=None):
+    def __init__(self, user=None, upload_speed=None, num_files=None, num_folders=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.user = user
-        self.avgspeed = avgspeed
-        self.files = files
-        self.dirs = dirs
-        self.uploadnum = None
+        self.upload_speed = upload_speed
+        self.num_files = num_files
+        self.num_folders = num_folders
+        self.upload_number = None
         self.unknown = None
 
     def make_network_message(self):
@@ -1401,11 +1402,11 @@ class GetUserStats(ServerMessage):
 
     def parse_network_message(self):
         self.user = self.unpack_string()
-        self.avgspeed = self.unpack_uint32()
-        self.uploadnum = self.unpack_uint32()
+        self.upload_speed = self.unpack_uint32()
+        self.upload_number = self.unpack_uint32()
         self.unknown = self.unpack_uint32()
-        self.files = self.unpack_uint32()
-        self.dirs = self.unpack_uint32()
+        self.num_files = self.unpack_uint32()
+        self.num_folders = self.unpack_uint32()
 
 
 class UploadSlotsFull(ServerMessage):
@@ -1421,20 +1422,20 @@ class UploadSlotsFull(ServerMessage):
     OBSOLETE, no longer used
     """
 
-    __slots__ = ("user", "slotsfull")
+    __slots__ = ("user", "slots_full")
     CODE = 40
 
-    def __init__(self, slotsfull=None, *, msg_content=None):
+    def __init__(self, slots_full=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.slotsfull = slotsfull
+        self.slots_full = slots_full
         self.user = None
 
     def make_network_message(self):
-        return self.pack_uint32(self.slotsfull)
+        return self.pack_uint32(self.slots_full)
 
     def parse_network_message(self):
         self.user = self.unpack_string()
-        self.slotsfull = self.unpack_uint32()
+        self.slots_full = self.unpack_uint32()
 
 
 class Relogged(ServerMessage):
@@ -3611,22 +3612,22 @@ class FileSearchResponse(PeerMessage):
     message.
     """
 
-    __slots__ = ("search_username", "token", "list", "privatelist", "freeulslots",
-                 "ulspeed", "inqueue", "unknown")
+    __slots__ = ("search_username", "token", "list", "privatelist", "slot_available",
+                 "upload_speed", "num_queued_uploads", "unknown")
     CODE = 9
     EVENT_NAME = "file-search-response"
     HIDDEN_FIELDS = {"list", "privatelist"}
 
-    def __init__(self, search_username=None, token=None, shares=None, freeulslots=None,
-                 ulspeed=None, inqueue=None, private_shares=None, *, msg_content=None):
+    def __init__(self, search_username=None, token=None, shares=None, slot_available=None,
+                 upload_speed=None, num_queued_uploads=None, private_shares=None, *, msg_content=None):
         PeerMessage.__init__(self, msg_content)
         self.search_username = search_username
         self.token = token
         self.list = shares
         self.privatelist = private_shares
-        self.freeulslots = freeulslots
-        self.ulspeed = ulspeed
-        self.inqueue = inqueue
+        self.slot_available = slot_available
+        self.upload_speed = upload_speed
+        self.num_queued_uploads = num_queued_uploads
         self.unknown = 0
 
     def make_network_message(self):
@@ -3638,9 +3639,9 @@ class FileSearchResponse(PeerMessage):
         for fileinfo in self.list:
             msg += FileListMessage.pack_file_info(fileinfo)
 
-        msg += self.pack_bool(self.freeulslots)
-        msg += self.pack_uint32(self.ulspeed)
-        msg += self.pack_uint32(self.inqueue)
+        msg += self.pack_bool(self.slot_available)
+        msg += self.pack_uint32(self.upload_speed)
+        msg += self.pack_uint32(self.num_queued_uploads)
         msg += self.pack_uint32(self.unknown)
         msg += self.pack_uint32(len(self.privatelist))
 
@@ -3695,9 +3696,9 @@ class FileSearchResponse(PeerMessage):
             raise ValueError("Compressed message invalid or too large")
 
         self.list = self._parse_result_list()
-        self.freeulslots = self.unpack_bool()
-        self.ulspeed = self.unpack_uint32()
-        self.inqueue = self.unpack_uint32()
+        self.slot_available = self.unpack_bool()
+        self.upload_speed = self.unpack_uint32()
+        self.num_queued_uploads = self.unpack_uint32()
 
         if self.has_remaining_content():
             self.unknown = self.unpack_uint32()
@@ -3731,20 +3732,21 @@ class UserInfoResponse(PeerMessage):
     A peer responds with this after we've sent a UserInfoRequest.
     """
 
-    __slots__ = ("descr", "pic", "totalupl", "queuesize", "slotsavail", "uploadallowed", "has_pic")
+    __slots__ = ("descr", "pic", "num_upload_slots", "num_queued_uploads", "slot_available",
+                 "upload_permission", "has_pic")
     CODE = 16
     EVENT_NAME = "user-info-response"
     HIDDEN_FIELDS = {"pic"}
 
-    def __init__(self, descr=None, pic=None, totalupl=None, queuesize=None,
-                 slotsavail=None, uploadallowed=None, *, msg_content=None):
+    def __init__(self, descr=None, pic=None, num_upload_slots=None, num_queued_uploads=None,
+                 slot_available=None, upload_permission=None, *, msg_content=None):
         PeerMessage.__init__(self, msg_content)
         self.descr = descr
         self.pic = pic
-        self.totalupl = totalupl
-        self.queuesize = queuesize
-        self.slotsavail = slotsavail
-        self.uploadallowed = uploadallowed
+        self.num_upload_slots = num_upload_slots
+        self.num_queued_uploads = num_queued_uploads
+        self.slot_available = slot_available
+        self.upload_permission = upload_permission
         self.has_pic = None
 
     def make_network_message(self):
@@ -3757,10 +3759,10 @@ class UserInfoResponse(PeerMessage):
         else:
             msg += self.pack_bool(False)
 
-        msg += self.pack_uint32(self.totalupl)
-        msg += self.pack_uint32(self.queuesize)
-        msg += self.pack_bool(self.slotsavail)
-        msg += self.pack_uint32(self.uploadallowed)
+        msg += self.pack_uint32(self.num_upload_slots)
+        msg += self.pack_uint32(self.num_queued_uploads)
+        msg += self.pack_bool(self.slot_available)
+        msg += self.pack_uint32(self.upload_permission)
 
         return msg
 
@@ -3771,14 +3773,14 @@ class UserInfoResponse(PeerMessage):
         if self.has_pic:
             self.pic = self.unpack_bytes()
 
-        self.totalupl = self.unpack_uint32()
-        self.queuesize = self.unpack_uint32()
-        self.slotsavail = self.unpack_bool()
+        self.num_upload_slots = self.unpack_uint32()
+        self.num_queued_uploads = self.unpack_uint32()
+        self.slot_available = self.unpack_bool()
 
         # To prevent errors, ensure that >= 4 bytes are left. Museek+ incorrectly sends
-        # slotsavail as an integer, resulting in 3 bytes of garbage here.
+        # slot_available as an integer, resulting in 3 bytes of garbage here.
         if len(self._message[self._offset:]) >= 4:
-            self.uploadallowed = self.unpack_uint32()
+            self.upload_permission = self.unpack_uint32()
 
 
 class FolderContentsRequest(PeerMessage):

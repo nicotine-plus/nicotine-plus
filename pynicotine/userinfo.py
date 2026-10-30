@@ -67,8 +67,8 @@ class UserInfo:
             # Hide most details from banned users
             pic = None
             descr = ""
-            totalupl = queuesize = uploadallowed = 0
-            slotsavail = False
+            num_upload_slots = num_queued_uploads = upload_permission = 0
+            slot_available = False
 
             if reject_reason:
                 descr = f"You are not allowed to download my shared files.\nReason: {reject_reason}"
@@ -82,18 +82,18 @@ class UserInfo:
 
             descr = unescape(config.sections["userinfo"]["descr"])
 
-            totalupl = core.uploads.get_total_uploads_allowed()
-            queuesize = core.uploads.get_upload_queue_size(requesting_username)
-            slotsavail = core.uploads.is_new_upload_accepted()
+            num_upload_slots = core.uploads.get_total_uploads_allowed()
+            num_queued_uploads = core.uploads.get_upload_queue_size(requesting_username)
+            slot_available = core.uploads.is_new_upload_accepted()
 
             if config.sections["transfers"]["remotedownloads"]:
-                uploadallowed = config.sections["transfers"]["uploadallowed"]
+                upload_permission = config.sections["transfers"]["uploadallowed"]
             else:
-                uploadallowed = 0
+                upload_permission = 0
 
         msg = UserInfoResponse(
-            descr=descr, pic=pic, totalupl=totalupl, queuesize=queuesize, slotsavail=slotsavail,
-            uploadallowed=uploadallowed
+            descr=descr, pic=pic, num_upload_slots=num_upload_slots, num_queued_uploads=num_queued_uploads,
+            slot_available=slot_available, upload_permission=upload_permission
         )
         msg.username = core.users.login_username or config.sections["server"]["login"]
         return msg

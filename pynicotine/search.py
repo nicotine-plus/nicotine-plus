@@ -917,9 +917,9 @@ class Search:
             search_username=local_username,
             token=token,
             shares=fileinfos,
-            freeulslots=core.uploads.is_new_upload_accepted(),
-            ulspeed=core.uploads.upload_speed,
-            inqueue=core.uploads.get_upload_queue_size(username),
+            slot_available=core.uploads.is_new_upload_accepted(),
+            upload_speed=core.uploads.upload_speed,
+            num_queued_uploads=core.uploads.get_upload_queue_size(username),
             private_shares=private_fileinfos
         ))
 

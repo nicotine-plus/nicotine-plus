@@ -27,14 +27,14 @@ from pynicotine.utils import open_uri
 
 class WatchedUser:
 
-    __slots__ = ("username", "upload_speed", "files", "folders", "contexts", "is_implicit")
+    __slots__ = ("username", "upload_speed", "num_files", "num_folders", "contexts", "is_implicit")
 
     def __init__(self, username):
 
         self.username = username
         self.upload_speed = None
-        self.files = None
-        self.folders = None
+        self.num_files = None
+        self.num_folders = None
         self.contexts = set()
         self.is_implicit = True
 
@@ -406,21 +406,21 @@ class Users:
         """Server code 36."""
 
         username = msg.user
-        upload_speed = msg.avgspeed
-        files = msg.files
-        folders = msg.dirs
+        upload_speed = msg.upload_speed
+        num_files = msg.num_files
+        num_folders = msg.num_folders
 
         stats = self.watched.get(username)
 
         if stats is not None:
             stats.upload_speed = upload_speed
-            stats.files = files
-            stats.folders = folders
+            stats.num_files = num_files
+            stats.num_folders = num_folders
 
         core.pluginhandler.user_stats_notification(msg.user, stats={
             "avgspeed": upload_speed,
-            "files": files,
-            "dirs": folders,
+            "files": num_files,
+            "dirs": num_folders,
             "shared_size": None,
             "source": "server"
         })

@@ -828,7 +828,7 @@ class Uploads(Transfers):
         """Server code 36."""
 
         if msg.user == core.users.login_username:
-            self.upload_speed = msg.avgspeed
+            self.upload_speed = msg.upload_speed
 
     def _privileged_users(self, _msg):
         """Server code 69."""

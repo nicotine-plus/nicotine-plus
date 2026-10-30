@@ -1137,7 +1137,7 @@ class Shares:
             "user-stats",
             GetUserStats(
                 user=local_username,
-                avgspeed=core.uploads.upload_speed, files=num_shared_files, dirs=num_shared_folders
+                upload_speed=core.uploads.upload_speed, num_files=num_shared_files, num_folders=num_shared_folders
             )
         )
 

@@ -407,20 +407,20 @@ class UserInfo:
 
         if stats is not None:
             speed = stats.upload_speed or 0
-            files = stats.files
-            folders = stats.folders
+            num_files = stats.num_files
+            num_folders = stats.num_folders
         else:
             speed = 0
-            files = folders = None
+            num_files = num_folders = None
 
         if speed > 0:
             self.upload_speed_label.set_text(human_speed(speed))
 
-        if files is not None:
-            self.shared_files_label.set_text(humanize(files))
+        if num_files is not None:
+            self.shared_files_label.set_text(humanize(num_files))
 
-        if folders is not None:
-            self.shared_folders_label.set_text(humanize(folders))
+        if num_folders is not None:
+            self.shared_folders_label.set_text(humanize(num_folders))
 
         if country_code:
             self.user_country(country_code)
@@ -636,11 +636,11 @@ class UserInfo:
             self.description_view.clear()
             self.description_view.add_line(msg.descr)
 
-        self.free_upload_slots_label.set_text(_("Yes") if msg.slotsavail else _("No"))
-        self.upload_slots_label.set_text(humanize(msg.totalupl))
-        self.queued_uploads_label.set_text(humanize(msg.queuesize))
+        self.free_upload_slots_label.set_text(_("Yes") if msg.slot_available else _("No"))
+        self.upload_slots_label.set_text(humanize(msg.num_upload_slots))
+        self.queued_uploads_label.set_text(humanize(msg.num_queued_uploads))
 
-        self.queued_uploads_label.get_parent().set_visible(bool(msg.queuesize))
+        self.queued_uploads_label.get_parent().set_visible(bool(msg.num_queued_uploads))
 
         self.picture_bytes = msg.pic
         self.picture_data = None
@@ -662,16 +662,16 @@ class UserInfo:
 
     def user_stats(self, msg):
 
-        speed = msg.avgspeed or 0
-        num_files = msg.files or 0
-        num_folders = msg.dirs or 0
+        upload_speed = msg.upload_speed or 0
+        num_files = msg.num_files or 0
+        num_folders = msg.num_folders or 0
 
-        h_speed = human_speed(speed) if speed > 0 else _("Unknown")
+        h_upload_speed = human_speed(upload_speed) if upload_speed > 0 else _("Unknown")
         h_num_files = humanize(num_files)
         h_num_folders = humanize(num_folders)
 
-        if self.upload_speed_label.get_text() != h_speed:
-            self.upload_speed_label.set_text(h_speed)
+        if self.upload_speed_label.get_text() != h_upload_speed:
+            self.upload_speed_label.set_text(h_upload_speed)
 
         if self.shared_files_label.get_text() != h_num_files:
             self.shared_files_label.set_text(h_num_files)

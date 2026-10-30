@@ -1459,9 +1459,9 @@ class NetworkThread(Thread):
 
         elif isinstance(msg, (WatchUser, GetUserStats)):
             if msg.user == self._login_username:
-                if msg.avgspeed is not None:
-                    self._upload_speed = msg.avgspeed
-                    log.add_conn("Server reported our upload speed as %s", human_speed(msg.avgspeed))
+                if msg.upload_speed is not None:
+                    self._upload_speed = msg.upload_speed
+                    log.add_conn("Server reported our upload speed as %s", human_speed(msg.upload_speed))
                     self._update_maximum_distributed_children()
 
             elif isinstance(msg, WatchUser) and not msg.userexists:

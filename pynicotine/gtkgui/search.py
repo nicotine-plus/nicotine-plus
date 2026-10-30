@@ -830,8 +830,8 @@ class Search:
         if is_offline:
             self.info_bar.show_error_message(_("Cannot search for files shared by other users, since you are offline"))
 
-    def add_result_list(self, result_list, user, country_code, inqueue, ulspeed, h_speed,
-                        h_queue, is_private=False):
+    def add_result_list(self, result_list, user, country_code, num_queued, upload_speed, h_upload_speed,
+                        h_num_queued, is_private=False):
         """Adds a list of search results to the treeview.
 
         Lists can either contain publicly or privately shared files.
@@ -888,8 +888,8 @@ class Search:
                 [
                     user,
                     get_flag_icon_name(country_code),
-                    h_speed,
-                    h_queue,
+                    h_upload_speed,
+                    h_num_queued,
                     private_icon_name,
                     folder_path,
                     get_file_type_icon_name(name),
@@ -898,8 +898,8 @@ class Search:
                     h_size,
                     h_quality,
                     h_length,
-                    ulspeed,
-                    inqueue,
+                    upload_speed,
+                    num_queued,
                     size,
                     bitrate,
                     length,
@@ -930,29 +930,29 @@ class Search:
             or core.users.countries.get(user)
         )
 
-        if msg.freeulslots:
-            inqueue = 0
-            h_queue = ""
+        if msg.slot_available:
+            num_queued = 0
+            h_num_queued = ""
         else:
-            inqueue = msg.inqueue or 1  # Ensure value is always >= 1
-            h_queue = humanize(inqueue)
+            num_queued = msg.num_queued or 1  # Ensure value is always >= 1
+            h_num_queued = humanize(num_queued)
 
-        h_speed = ""
-        ulspeed = msg.ulspeed or 0
+        h_upload_speed = ""
+        upload_speed = msg.upload_speed or 0
 
-        if ulspeed > 0:
-            h_speed = human_speed(ulspeed)
+        if upload_speed > 0:
+            h_upload_speed = human_speed(upload_speed)
 
         update_ui_private = False
 
         if msg.privatelist and config.sections["searches"]["private_search_results"]:
             update_ui_private = self.add_result_list(
-                msg.privatelist, user, country_code, inqueue, ulspeed, h_speed, h_queue,
+                msg.privatelist, user, country_code, num_queued, upload_speed, h_upload_speed, h_num_queued,
                 is_private=True
             )
 
         update_ui = self.add_result_list(
-            msg.list, user, country_code, inqueue, ulspeed, h_speed, h_queue) or update_ui_private
+            msg.list, user, country_code, num_queued, upload_speed, h_upload_speed, h_num_queued) or update_ui_private
 
         if update_ui:
             # If this search wasn't initiated by us (e.g. wishlist), and the results aren't spoofed, show tab
@@ -988,8 +988,8 @@ class Search:
 
     def add_row_to_model(self, row):
 
-        (user, flag, h_speed, h_queue, private_icon_name, h_folder_path, _unused, _unused, _unused, _unused,
-            _unused, _unused, speed, queue, _unused, _unused, _unused, is_public, file_data, _unused) = row
+        (user, flag, h_upload_speed, h_num_queued, private_icon_name, h_folder_path, _unused, _unused, _unused, _unused,
+            _unused, _unused, upload_speed, queue, _unused, _unused, _unused, is_public, file_data, _unused) = row
 
         expand_allowed = self.initialized
         expand_user = False
@@ -1009,8 +1009,8 @@ class Search:
                     [
                         user,
                         flag,
-                        h_speed,
-                        h_queue,
+                        h_upload_speed,
+                        h_num_queued,
                         empty_str,
                         empty_str,
                         empty_str,
@@ -1019,7 +1019,7 @@ class Search:
                         empty_str,
                         empty_str,
                         empty_str,
-                        speed,
+                        upload_speed,
                         queue,
                         empty_int,
                         empty_int,
@@ -1049,8 +1049,8 @@ class Search:
                         [
                             user,
                             flag,
-                            h_speed,
-                            h_queue,
+                            h_upload_speed,
+                            h_num_queued,
                             private_icon_name,
                             h_folder_path,
                             empty_str,
@@ -1059,7 +1059,7 @@ class Search:
                             empty_str,
                             empty_str,
                             empty_str,
-                            speed,
+                            upload_speed,
                             queue,
                             empty_int,
                             empty_int,

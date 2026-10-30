@@ -312,18 +312,18 @@ class Buddies:
         if iterator is None:
             return
 
-        speed = msg.avgspeed or 0
-        num_files = msg.files or 0
-        num_folders = msg.dirs or 0
+        upload_speed = msg.upload_speed or 0
+        num_files = msg.num_files or 0
+        num_folders = msg.num_folders or 0
         h_num_files = humanize(num_files)
         column_ids = []
         column_values = []
 
-        if speed != self.list_view.get_row_value(iterator, "speed_data"):
-            h_speed = human_speed(speed) if speed > 0 else ""
+        if upload_speed != self.list_view.get_row_value(iterator, "speed_data"):
+            h_upload_speed = human_speed(upload_speed) if upload_speed > 0 else ""
 
             column_ids.extend(("speed", "speed_data"))
-            column_values.extend((h_speed, speed))
+            column_values.extend((h_upload_speed, upload_speed))
 
         if h_num_files != self.list_view.get_row_value(iterator, "files"):
             column_ids.extend(("files", "files_data"))
@@ -347,16 +347,16 @@ class Buddies:
         stats = core.users.watched.get(user)
 
         if stats is not None:
-            speed = stats.upload_speed or 0
-            files = stats.files
-            folders = stats.folders
+            upload_speed = stats.upload_speed or 0
+            num_files = stats.num_files
+            num_folders = stats.num_folders
         else:
-            speed = 0
-            files = None
-            folders = None
+            upload_speed = 0
+            num_files = None
+            num_folders = None
 
-        h_speed = human_speed(speed) if speed > 0 else ""
-        h_files = humanize(files) if files is not None else ""
+        h_upload_speed = human_speed(upload_speed) if upload_speed > 0 else ""
+        h_num_files = humanize(num_files) if num_files is not None else ""
         last_seen = UINT64_LIMIT
         h_last_seen = ""
 
@@ -374,16 +374,16 @@ class Buddies:
             USER_STATUS_ICON_NAMES.get(status, ""),
             get_flag_icon_name(country_code),
             str(user),
-            h_speed,
-            h_files,
+            h_upload_speed,
+            h_num_files,
             bool(user_data.is_trusted),
             bool(user_data.notify_status),
             bool(user_data.is_prioritized),
             str(h_last_seen),
             str(user_data.note),
-            speed,
-            files or 0,
-            folders or 0,
+            upload_speed,
+            num_files or 0,
+            num_folders or 0,
             last_seen
         ], select_row=select_row)
 

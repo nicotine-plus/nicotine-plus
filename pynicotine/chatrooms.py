@@ -279,9 +279,9 @@ class ChatRooms:
         core.users.watch_user(username, context=f"chatrooms_{room_obj.name}", is_implicit=True)
 
         watched_user = core.users.watched[username]
-        watched_user.upload_speed = user_data.avgspeed
-        watched_user.files = user_data.files
-        watched_user.folders = user_data.dirs
+        watched_user.upload_speed = user_data.upload_speed
+        watched_user.num_files = user_data.num_files
+        watched_user.num_folders = user_data.num_folders
 
         core.users.statuses[username] = user_data.status
 

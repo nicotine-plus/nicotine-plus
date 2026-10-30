@@ -740,10 +740,10 @@ class ChatRoom:
         status = userdata.status
         status_icon_name = USER_STATUS_ICON_NAMES.get(status, "")
         flag_icon_name = get_flag_icon_name(userdata.country)
-        speed = userdata.avgspeed or 0
-        files = userdata.files or 0
-        folders = userdata.dirs or 0
-        h_files = humanize(files)
+        upload_speed = userdata.upload_speed or 0
+        num_files = userdata.num_files or 0
+        num_folders = userdata.num_folders or 0
+        h_num_files = humanize(num_files)
         weight = Pango.Weight.NORMAL
         underline = Pango.Underline.NONE
         is_unignored = not (core.network_filter.is_user_ignored(username)
@@ -763,10 +763,10 @@ class ChatRoom:
             status_icon_name,
             flag_icon_name,
             username,
-            h_files,
-            speed,
-            files,
-            folders,
+            h_num_files,
+            upload_speed,
+            num_files,
+            num_folders,
             weight,
             underline,
             is_unignored
@@ -1176,15 +1176,15 @@ class ChatRoom:
             # Private room member offline/not currently joined
             return
 
-        speed = msg.avgspeed or 0
-        num_files = msg.files or 0
-        num_folders = msg.dirs or 0
+        upload_speed = msg.upload_speed or 0
+        num_files = msg.num_files or 0
+        num_folders = msg.num_folders or 0
         column_ids = []
         column_values = []
 
-        if speed != self.users_list_view.get_row_value(iterator, "speed_data"):
+        if upload_speed != self.users_list_view.get_row_value(iterator, "speed_data"):
             column_ids.append("speed_data")
-            column_values.append(speed)
+            column_values.append(upload_speed)
 
         if num_files != self.users_list_view.get_row_value(iterator, "files_data"):
             h_num_files = humanize(num_files)
@@ -1318,12 +1318,12 @@ class ChatRoom:
 
         num_files = treeview.get_row_value(iterator, "files_data")
         num_folders = treeview.get_row_value(iterator, "folders_data")
-        speed = treeview.get_row_value(iterator, "speed_data")
+        upload_speed = treeview.get_row_value(iterator, "speed_data")
 
         return (
             _("Files: %(num_files)s") % {"num_files": humanize(num_files)} + "\n"
             + _("Folders: %(num_folders)s") % {"num_folders": humanize(num_folders)} + "\n"
-            + _("Speed: %(speed)s") % {"speed": human_speed(speed) if speed > 0 else _("Unknown")}
+            + _("Speed: %(speed)s") % {"speed": human_speed(upload_speed) if upload_speed > 0 else _("Unknown")}
         )
 
     def on_find_activity_log(self, *_args):

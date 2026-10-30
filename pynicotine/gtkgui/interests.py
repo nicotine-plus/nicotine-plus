@@ -490,26 +490,26 @@ class Interests:
             rating = index + (1000 * (similar_user.rating or 0))  # Preserve default sort order
 
             if stats is not None:
-                speed = stats.upload_speed or 0
-                files = stats.files or 0
-                folders = stats.folders or 0
+                upload_speed = stats.upload_speed or 0
+                num_files = stats.num_files or 0
+                num_folders = stats.num_folders or 0
             else:
-                speed = 0
-                files = 0
-                folders = 0
+                upload_speed = 0
+                num_files = 0
+                num_folders = 0
 
-            h_speed = human_speed(speed) if speed > 0 else ""
-            h_files = humanize(files)
+            h_upload_speed = human_speed(upload_speed) if upload_speed > 0 else ""
+            h_num_files = humanize(num_files)
 
             self.similar_users_list_view.add_row([
                 USER_STATUS_ICON_NAMES[status],
                 get_flag_icon_name(country_code),
                 username,
-                h_speed,
-                h_files,
-                speed,
-                files,
-                folders,
+                h_upload_speed,
+                h_num_files,
+                upload_speed,
+                num_files,
+                num_folders,
                 rating
             ], select_row=False)
 
@@ -552,17 +552,17 @@ class Interests:
         if iterator is None:
             return
 
-        speed = msg.avgspeed or 0
-        num_files = msg.files or 0
-        num_folders = msg.dirs or 0
+        upload_speed = msg.upload_speed or 0
+        num_files = msg.num_files or 0
+        num_folders = msg.num_folders or 0
         column_ids = []
         column_values = []
 
-        if speed != self.similar_users_list_view.get_row_value(iterator, "speed_data"):
-            h_speed = human_speed(speed) if speed > 0 else ""
+        if upload_speed != self.similar_users_list_view.get_row_value(iterator, "speed_data"):
+            h_upload_speed = human_speed(upload_speed) if upload_speed > 0 else ""
 
             column_ids.extend(("speed", "speed_data"))
-            column_values.extend((h_speed, speed))
+            column_values.extend((h_upload_speed, upload_speed))
 
         if num_files != self.similar_users_list_view.get_row_value(iterator, "files_data"):
             h_num_files = humanize(num_files)
