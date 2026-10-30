@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-13 07:08+0300\n"
-"PO-Revision-Date: 2026-06-26 23:01+0000\n"
-"Last-Translator: rizkiv1 <rizki.irianto.smp@gmail.com>\n"
+"PO-Revision-Date: 2026-10-30 10:49+0000\n"
+"Last-Translator: Riezchy Amien <riezamn@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/id/>\n"
 "Language: id\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.7.dev0\n"
+"X-Generator: Weblate 2026.11.dev0\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -128,9 +128,8 @@ msgid "start the program without showing window"
 msgstr "mulai program tanpa menampilkan jendela"
 
 #: pynicotine/__init__.py:54
-#, fuzzy
 msgid "address"
-msgstr "Alamat IP"
+msgstr "alamat IP"
 
 #: pynicotine/__init__.py:55
 #, fuzzy
@@ -187,9 +186,9 @@ msgid "Buddy Status"
 msgstr "Status Teman"
 
 #: pynicotine/chatrooms.py:316
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has not enabled private room invitations"
-msgstr "Pengguna %(user)s telah ditambahkan ke ruangan privat %(room)s"
+msgstr "Pengguna %(user)s belum mengaktifkan undangan ruang privat"
 
 #: pynicotine/chatrooms.py:371
 #, python-format
@@ -212,9 +211,9 @@ msgid "You have been removed from private room %(room)s"
 msgstr "Anda telah dikeluarkan dari ruangan privat %(room)s"
 
 #: pynicotine/chatrooms.py:443 pynicotine/privatechat.py:258
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is now an operator of room %(room)s"
-msgstr "Pengguna %(user)s telah berhenti menjadi operator ruangan %(room)s"
+msgstr "Pengguna %(user)s sekarang menjadi operator ruangan %(room)s"
 
 #: pynicotine/chatrooms.py:462 pynicotine/privatechat.py:262
 #, python-format
@@ -222,9 +221,9 @@ msgid "User %(user)s is no longer an operator of room %(room)s"
 msgstr "Pengguna %(user)s telah berhenti menjadi operator ruangan %(room)s"
 
 #: pynicotine/chatrooms.py:478
-#, fuzzy, python-format
+#, python-format
 msgid "You are now an operator of room %(room)s"
-msgstr "Anda berhenti menjadi operator ruangan %(room)s"
+msgstr "Anda sekarang menjadi operator ruangan %(room)s"
 
 #: pynicotine/chatrooms.py:491
 #, python-format
@@ -369,7 +368,7 @@ msgstr "Unduhan dimulai: berkas %(user)s, berkas %(file)s"
 #: pynicotine/gtkgui/__init__.py:47
 #, python-format
 msgid "%s is not supported on this operating system"
-msgstr ""
+msgstr "%s tidak didukung di sistem operasi ini"
 
 #: pynicotine/gtkgui/__init__.py:69 pynicotine/gtkgui/__init__.py:78
 #, fuzzy, python-format
@@ -598,7 +597,7 @@ msgstr "_Keluar Nicotine+"
 
 #: pynicotine/gtkgui/application.py:929
 msgid "_Copy & Report Bug"
-msgstr "_Salin & Lapor Bug"
+msgstr "_Salin & Laporkan Bug"
 
 #: pynicotine/gtkgui/application.py:1082
 msgid "Saving configuration…"
@@ -1470,28 +1469,28 @@ msgstr ""
 #: pynicotine/gtkgui/dialogs/preferences.py:395
 #: pynicotine/gtkgui/dialogs/preferences.py:753
 msgid "Filter"
-msgstr "Saring"
+msgstr "Filter"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:402
 msgid "Validity"
-msgstr ""
+msgstr "Validitas"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:409
 msgid "Regex"
 msgstr "Eksreg"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:546
-#, fuzzy, python-format
+#, python-format
 msgid "Invalid Regular Expression: %s"
-msgstr "Aktifkan Ekspresi Reguler"
+msgstr "Ekspresi Reguler Invalid: %s"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:583
 msgid "Add Download Filter"
-msgstr "Tambah Penyaring Unduhan"
+msgstr "Tambah Filter Unduhan"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:584
 msgid "Enter a new download filter:"
-msgstr "Masukkan saring unduhan baru:"
+msgstr "Masukkan filter unduhan baru:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:588
 #: pynicotine/gtkgui/dialogs/preferences.py:624
@@ -1500,11 +1499,11 @@ msgstr "Aktifkan Ekspresi Reguler"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:617
 msgid "Edit Download Filter"
-msgstr "Ubah Penyaring Unduhan"
+msgstr "Ubah Filter Unduhan"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:618
 msgid "Modify the following download filter:"
-msgstr "Ubah saring unduhan berikut:"
+msgstr "Ubah filter unduhan berikut:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:654
 #: pynicotine/gtkgui/dialogs/preferences.py:824
@@ -1564,7 +1563,7 @@ msgstr "Direktori Bersama"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:779
 msgid "Filters"
-msgstr "Saringan"
+msgstr "Filter"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:869
 #: pynicotine/gtkgui/dialogs/preferences.py:888
@@ -1625,7 +1624,7 @@ msgstr "_Ubah"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1062
 msgid "Add Share Filter"
-msgstr "Tambah Saringan Berbagi"
+msgstr "Tambah Filter Berbagi"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1063
 msgid "Enter a new share filter:"
@@ -1633,11 +1632,11 @@ msgstr "Masukkan filter berbagi baru:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1095
 msgid "Edit Share Filter"
-msgstr "Ubah Saringan Berbagi"
+msgstr "Ubah Filter Berbagi"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1096
 msgid "Modify the following share filter:"
-msgstr "Ubah saringan berbagi berikut:"
+msgstr "Ubah filter berbagi berikut:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1169
 #: pynicotine/gtkgui/ui/uploads.ui:45
@@ -2063,20 +2062,20 @@ msgstr "Atur Ulang Pengaturan Plugin?"
 #: pynicotine/gtkgui/dialogs/preferences.py:3685
 #, python-format
 msgid "Do you really want to restore the default settings for plugin %s?"
-msgstr "Anda ingin memgembalikan pengaturan bawaan untuk plugin %s?"
+msgstr "Apakah Anda ingin mengembalikan pengaturan bawaan untuk plugin %s?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3708
 msgid "Uninstall Plugin?"
 msgstr "Hapus Instalasi Plugin?"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3709
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Do you really want to uninstall plugin %s? This will delete all settings and "
 "data stored by the plugin."
 msgstr ""
-"Anda ingin menghapus instalasi plugin %s? Tindakan ini akan menghapus file "
-"yang disimpan plugin."
+"Apakah Anda ingin menghapus instalasi plugin %s? Tindakan ini akan menghapus "
+"file yang disimpan plugin."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3713
 msgid "Uninstall"
@@ -2399,7 +2398,7 @@ msgstr "Cari File"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:87
 msgid "Result Filters"
-msgstr "Saring Hasil"
+msgstr "Filter Hasil"
 
 #: pynicotine/gtkgui/dialogs/shortcuts.py:89
 #: pynicotine/gtkgui/dialogs/wishlist.py:51
@@ -2508,7 +2507,7 @@ msgstr "Cari Kata Kunci"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:78
 msgid "Custom Filters"
-msgstr "Saring Khusus"
+msgstr "Filter Khusus"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:87
 msgid "Added"
@@ -2522,7 +2521,7 @@ msgstr "_Cari Item"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:112
 msgid "Set Custom _Filters…"
-msgstr "Atur _Saringan Khusus…"
+msgstr "Atur _Filter Khusus…"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:114
 msgid "Reset Seen Results"
@@ -2530,12 +2529,12 @@ msgstr "Atur Ulang Hasil Terlihat"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:115
 msgid "Reset Filters"
-msgstr "Atur Ulang Saringan"
+msgstr "Atur Ulang Filter"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:197
 #, python-format
 msgid "Custom Filters Enabled (%(num)s Active)"
-msgstr "Saringan Khusus Aktif %(num)s"
+msgstr "Filter Khusus Aktif %(num)s"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:217
 #, python-format
@@ -2553,18 +2552,17 @@ msgstr "Masukkan kata yang ingin ditambahkan ke keinginan:"
 #: pynicotine/gtkgui/dialogs/wishlist.py:264
 #: pynicotine/gtkgui/dialogs/wishlist.py:325
 msgid "Search automatically"
-msgstr ""
+msgstr "Cari otomatis"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:272
 #: pynicotine/gtkgui/dialogs/wishlist.py:311
 msgid "No filters"
-msgstr ""
+msgstr "Tidak ada filter"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:272
 #: pynicotine/gtkgui/dialogs/wishlist.py:311
-#, fuzzy
 msgid "Default filters"
-msgstr "Cari Berkas"
+msgstr "Filter bawaan"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:312
 #, python-format
@@ -2582,11 +2580,11 @@ msgstr ""
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:382
 msgid "Clear Wishlist?"
-msgstr ""
+msgstr "Kosongkan Keinginan?"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:383
 msgid "Do you really want to clear your wishlist?"
-msgstr ""
+msgstr "Apakah Anda yakin ingin mengosongkan Keinginan Anda?"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:386 pynicotine/gtkgui/downloads.py:130
 #: pynicotine/gtkgui/downloads.py:147 pynicotine/gtkgui/transfers.py:282
@@ -2600,6 +2598,8 @@ msgid ""
 "Items are searched individually every %(interval)s, useful for finding rare "
 "files"
 msgstr ""
+"Item akan dicari satu per satu tiap %(interval)s, berguna untuk menemukan "
+"file langka"
 
 #: pynicotine/gtkgui/downloads.py:31
 msgid "_Resume"
@@ -2624,7 +2624,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/downloads.py:60 pynicotine/gtkgui/transfers.py:57
 msgid "Filtered"
-msgstr ""
+msgstr "Tersaring"
 
 #: pynicotine/gtkgui/downloads.py:61
 msgid "Deleted"
@@ -2694,7 +2694,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/interests.py:99
 msgid "Item"
-msgstr ""
+msgstr "Item"
 
 #: pynicotine/gtkgui/interests.py:186 pynicotine/gtkgui/interests.py:195
 #: pynicotine/gtkgui/interests.py:207 pynicotine/gtkgui/userinfo.py:349
@@ -2733,7 +2733,7 @@ msgstr ""
 #: pynicotine/gtkgui/interests.py:478
 #, python-format
 msgid "Users who like %(item)s"
-msgstr ""
+msgstr "Pengguna yang menyukai %(item)s"
 
 #: pynicotine/gtkgui/mainwindow.py:229
 msgid "Search log…"
@@ -2756,7 +2756,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/mainwindow.py:444 pynicotine/gtkgui/search.py:981
 msgid "Wishlist Results Found"
-msgstr ""
+msgstr "Hasil Keinginan Ditemukan"
 
 #: pynicotine/gtkgui/mainwindow.py:777 pynicotine/gtkgui/ui/mainwindow.ui:948
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:682
@@ -3020,11 +3020,11 @@ msgstr ""
 
 #: pynicotine/gtkgui/search.py:750
 msgid "Clear Filters"
-msgstr ""
+msgstr "Bersihkan Filter"
 
 #: pynicotine/gtkgui/search.py:753
 msgid "Restore Filters"
-msgstr ""
+msgstr "Kembalikan Filter"
 
 #: pynicotine/gtkgui/search.py:839
 msgid "Cannot search for files shared by other users, since you are offline"
@@ -3043,7 +3043,7 @@ msgstr ""
 #, python-format
 msgid "%(num)s Active Filter"
 msgid_plural "%(num)s Active Filters"
-msgstr[0] ""
+msgstr[0] "%(num)s Filter Aktif"
 
 #: pynicotine/gtkgui/search.py:1395
 msgid "Add Wi_sh"
@@ -3060,11 +3060,11 @@ msgstr ""
 #: pynicotine/gtkgui/search.py:1566
 #, python-format
 msgid "Total: %s"
-msgstr ""
+msgstr "Total: %s"
 
 #: pynicotine/gtkgui/search.py:1569 pynicotine/gtkgui/ui/search.ui:126
 msgid "Results"
-msgstr ""
+msgstr "Hasil"
 
 #: pynicotine/gtkgui/search.py:1624
 #, fuzzy
@@ -4870,7 +4870,7 @@ msgstr ""
 
 #: pynicotine/plugins/core_commands/__init__.py:13
 msgid "Network Filters"
-msgstr ""
+msgstr "Filter Jaringan"
 
 #: pynicotine/plugins/core_commands/__init__.py:29
 msgid "List available commands"
@@ -5289,7 +5289,7 @@ msgstr ""
 #: pynicotine/search.py:535
 #, python-format
 msgid "Searching for wishlist item \"%s\""
-msgstr ""
+msgstr "Mencari item Keinginan \"%s\""
 
 #: pynicotine/search.py:596
 #, python-format
@@ -5346,17 +5346,17 @@ msgstr ""
 #: pynicotine/shares.py:655
 #, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
-msgstr ""
+msgstr "Eror ketika memindai file %(path)s: %(error)s"
 
 #: pynicotine/shares.py:663
 #, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
-msgstr ""
+msgstr "Error ketika memindai folder %(path)s: %(error)s"
 
 #: pynicotine/shares.py:699
 #, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
-msgstr ""
+msgstr "Error ketika memindai metadata untuk file %(path)s: %(error)s"
 
 #: pynicotine/shares.py:1156
 #, python-format
@@ -5438,7 +5438,7 @@ msgstr ""
 #: pynicotine/uploads.py:652
 #, python-format
 msgid "%(user)s is downloading file %(file)s (%(size)s) from folder %(folder)s"
-msgstr ""
+msgstr "%(user)s sedang mengunduh %(file)s (%(size)s) dari folder %(folder)s"
 
 #: pynicotine/uploads.py:659
 #, python-format
@@ -5498,7 +5498,7 @@ msgstr ""
 
 #: pynicotine/userbrowse.py:416
 msgid "User Statistics"
-msgstr ""
+msgstr "Statistik Pengguna"
 
 #: pynicotine/userinfo.py:157
 #, python-format
@@ -5531,11 +5531,11 @@ msgstr ""
 
 #: pynicotine/users.py:328 pynicotine/users.py:468
 msgid "User IP Address"
-msgstr ""
+msgstr "Alamat IP Pengguna"
 
 #: pynicotine/users.py:430
 msgid "Soulseek Announcement"
-msgstr ""
+msgstr "Pengumuman Soulseek"
 
 #: pynicotine/users.py:444
 msgid ""
@@ -5575,25 +5575,25 @@ msgstr "Luring"
 #, python-format
 msgid "%(num)s second"
 msgid_plural "%(num)s seconds"
-msgstr[0] ""
+msgstr[0] "%(num)s detik"
 
 #: pynicotine/utils.py:197
 #, python-format
 msgid "%(num)s minute"
 msgid_plural "%(num)s minutes"
-msgstr[0] ""
+msgstr[0] "%(num)s menit"
 
 #: pynicotine/utils.py:202
 #, python-format
 msgid "%(num)s hour"
 msgid_plural "%(num)s hours"
-msgstr[0] ""
+msgstr[0] "%(num)s jam"
 
 #: pynicotine/utils.py:206
 #, python-format
 msgid "%(num)s day"
 msgid_plural "%(num)s days"
-msgstr[0] ""
+msgstr[0] "%(num)s hari"
 
 #: pynicotine/utils.py:494
 #, python-format
@@ -5907,7 +5907,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/downloads.ui:145
 msgid "Clear All Finished/Filtered Downloads"
-msgstr ""
+msgstr "Bersihkan Semua"
 
 #: pynicotine/gtkgui/ui/downloads.ui:161 pynicotine/gtkgui/ui/uploads.ui:162
 msgid "Clear Finished"
@@ -5967,7 +5967,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:149
 msgid "_Wishlist"
-msgstr ""
+msgstr "_Keinginan"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:216
 msgid "Enter a search term to search for files shared by other online users"
@@ -6150,7 +6150,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:154
 msgid "Filters files based upon their file extension."
-msgstr ""
+msgstr "Menyaring file berdasarkan ekstensinya."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:164
 msgid ""
@@ -6165,6 +6165,9 @@ msgid ""
 "don't want in your results with an exclamation mark! Example:\n"
 "    !mp3 !jpg"
 msgstr ""
+"Anda juga bisa membalikkan filter dengan menentukan ekstensi yang tidak "
+"ingin disertakan dalam hasil pencarian menggunakan tanda seru ! Contohnya:\n"
+"    !mp3 !jpg"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:186
 msgid "File Size"
@@ -6172,7 +6175,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:202
 msgid "Filters files based upon their file size."
-msgstr ""
+msgstr "Menyaring file berdasarkan ukurannya."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:212
 msgid ""
@@ -6214,7 +6217,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:294
 msgid "Filters files based upon their bitrate."
-msgstr ""
+msgstr "Menyaring file berdasarkan bitratenya."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:304
 msgid ""
@@ -6232,7 +6235,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:343
 msgid "Filters files based upon their duration."
-msgstr ""
+msgstr "Menyaring file berdasarkan durasinya."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:353
 msgid ""
@@ -6264,6 +6267,11 @@ msgid ""
 "States.\n"
 "    !GB will hide results that come from users in Great Britain."
 msgstr ""
+"Menyaring file berdasarkan lokasi pengguna berdasarkan kode negara ISO 3166-"
+"2:\n"
+"    US hanya akan menampilkan hasil dari pengguna beralamat IP di Amerika "
+"Serikat.\n"
+"    !GB akan menyembunyikan hasil dari pengguna di Inggris."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:414
 msgid "Multiple countries can be specified with commas or spaces."
@@ -6376,7 +6384,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/search.ui:222
 msgid "Store Wishlist Filters"
-msgstr ""
+msgstr "Simpan Filter Keinginan"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:33
 msgid ""
@@ -6535,7 +6543,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:404
 msgid "Enable download filters"
-msgstr ""
+msgstr "Aktifkan filter unduhan"
 
 #: pynicotine/gtkgui/ui/settings/ignore.ui:33
 msgid ""
@@ -6758,7 +6766,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/search.ui:664
 msgid "Clear Filter History"
-msgstr ""
+msgstr "Bersihkan Riwayat Filter"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:141
 msgid "File Manager"
@@ -6940,7 +6948,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:321
 msgid "Wishlist results found"
-msgstr ""
+msgstr "Hasil Keinginan ditemukan"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:333
 msgid "Private messages"
