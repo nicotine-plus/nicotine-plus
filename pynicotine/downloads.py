@@ -21,6 +21,7 @@ except ImportError:
     from hashlib import md5
 
 from collections import defaultdict
+from dataclasses import dataclass
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -55,15 +56,13 @@ from pynicotine.utils import safe_path_join
 from pynicotine.utils import truncate_string_byte
 
 
+@dataclass(slots=True, eq=False)
 class RequestedFolder:
-    __slots__ = ("username", "folder_path", "request_timer_id", "has_retried", "legacy_attempt")
-
-    def __init__(self, username, folder_path):
-        self.username = username
-        self.folder_path = folder_path
-        self.request_timer_id = None
-        self.has_retried = False
-        self.legacy_attempt = False
+    username: str
+    folder_path: str
+    request_timer_id: int | None = None
+    has_retried: bool = False
+    legacy_attept: bool = False
 
 
 class Downloads(Transfers):

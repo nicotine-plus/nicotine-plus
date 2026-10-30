@@ -13,10 +13,12 @@ try:
 except ImportError:
     from hashlib import md5
 
+from dataclasses import dataclass
 from operator import itemgetter
 from random import randint
 from socket import inet_aton
 from socket import inet_ntoa
+from socket import socket
 from struct import Struct
 
 from pynicotine.logfacility import log
@@ -137,6 +139,67 @@ class ParentStatus:
     ACCEPTED = 0
     WAITING = 1
     REJECTED = 2
+
+
+# Data Classes #
+
+
+@dataclass(slots=True, eq=False)
+class SimilarUser:
+    username: str
+    rating: int | None = None
+
+
+@dataclass(slots=True, eq=False)
+class UserData:
+    username: str
+    status: UserStatus = UserStatus.ONLINE
+    avgspeed: int = 0
+    uploadnum: int = 0
+    unknown: int = 0
+    files: int = 0
+    dirs: int = 0
+    slotsfull: int = 0
+    country: str = ""
+
+
+@dataclass(slots=True, eq=False)
+class FileAttributes:
+    bitrate: int | None = None
+    length: int | None = None
+    vbr: int | None = None
+    sample_rate: int | None = None
+    bit_depth: int | None = None
+
+    def as_dict(self):
+        attributes = {}
+
+        if self.bitrate is not None:
+            attributes[FileAttribute.BITRATE] = self.bitrate
+
+        if self.length is not None:
+            attributes[FileAttribute.LENGTH] = self.length
+
+        if self.vbr is not None:
+            attributes[FileAttribute.VBR] = self.vbr
+
+        if self.sample_rate is not None:
+            attributes[FileAttribute.SAMPLE_RATE] = self.sample_rate
+
+        if self.bit_depth is not None:
+            attributes[FileAttribute.BIT_DEPTH] = self.bit_depth
+
+        return attributes
+
+
+@dataclass(slots=True, eq=False)
+class ParentCandidate:
+    username: str
+    ip_address: str
+    port: int
+    sock: socket | None = None
+    branch_root: str | None = None
+    branch_level: int | None = None
 
 
 # Internal Messages #
@@ -515,81 +578,6 @@ class FileListMessage(SlskMessage):
         return h_quality, bitrate, h_length, length
 
 
-class SimilarUser:
-    __slots__ = ("username", "rating")
-
-    def __init__(self, username, rating=None):
-        self.username = username
-        self.rating = rating
-
-    def __repr__(self):
-        return f"({self.username!r}, {self.rating!r})"
-
-
-class UserData:
-    """When we join a room, the server sends us a bunch of these for each
-    user."""
-
-    __slots__ = ("username", "status", "avgspeed", "uploadnum", "unknown", "files", "dirs", "slotsfull", "country")
-
-    def __init__(self, username=None, status=None, avgspeed=None, uploadnum=None, unknown=None, files=None, dirs=None,
-                 slotsfull=None, country=None):
-        self.username = username
-        self.status = status
-        self.avgspeed = avgspeed
-        self.uploadnum = uploadnum
-        self.unknown = unknown
-        self.files = files
-        self.dirs = dirs
-        self.slotsfull = slotsfull
-        self.country = country
-
-
-class FileAttributes:
-    __slots__ = ("bitrate", "length", "vbr", "sample_rate", "bit_depth")
-
-    def __init__(self, bitrate=None, length=None, vbr=None, sample_rate=None, bit_depth=None):
-        self.bitrate = bitrate
-        self.length = length
-        self.vbr = vbr
-        self.sample_rate = sample_rate
-        self.bit_depth = bit_depth
-
-    def as_dict(self):
-        attributes = {}
-
-        if self.bitrate is not None:
-            attributes[FileAttribute.BITRATE] = self.bitrate
-
-        if self.length is not None:
-            attributes[FileAttribute.LENGTH] = self.length
-
-        if self.vbr is not None:
-            attributes[FileAttribute.VBR] = self.vbr
-
-        if self.sample_rate is not None:
-            attributes[FileAttribute.SAMPLE_RATE] = self.sample_rate
-
-        if self.bit_depth is not None:
-            attributes[FileAttribute.BIT_DEPTH] = self.bit_depth
-
-        return attributes
-
-
-class ParentCandidate:
-
-    __slots__ = ("username", "ip_address", "port", "sock", "branch_root", "branch_level")
-
-    def __init__(self, username, ip_address, port):
-        self.username = username
-        self.ip_address = ip_address
-        self.port = port
-
-        self.sock = None
-        self.branch_root = None
-        self.branch_level = None
-
-
 # Server Messages #
 
 
@@ -602,8 +590,7 @@ class ServerMessage(SlskMessage):
 
         users = []
         for i in range(numusers):
-            users.append(UserData())
-            users[i].username = self.unpack_string()
+            users.append(UserData(username=self.unpack_string()))
 
         statuslen = self.unpack_uint32()
         for i in range(statuslen):
