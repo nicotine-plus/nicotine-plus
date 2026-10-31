@@ -2336,7 +2336,7 @@ class SimilarUsers(ServerMessage):
                 )
             )
 
-        if num > 1:
+        if num_users > 1:
             self.users.sort(key=lambda x: x.rating, reverse=True)
 
 
