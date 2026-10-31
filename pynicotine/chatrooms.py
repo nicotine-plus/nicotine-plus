@@ -633,8 +633,8 @@ class ChatRooms:
         if room_obj is None or not room_obj.users:
             raise StopEventPropagation()
 
-        self._update_room_user(room_obj, msg.userdata)
-        core.pluginhandler.user_join_chatroom_notification(msg.room, msg.userdata.username)
+        self._update_room_user(room_obj, msg.user_data)
+        core.pluginhandler.user_join_chatroom_notification(msg.room, msg.user_data.username)
 
     def _user_left_room(self, msg):
         """Server code 17."""

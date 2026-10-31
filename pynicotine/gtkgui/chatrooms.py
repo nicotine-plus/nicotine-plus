@@ -734,15 +734,15 @@ class ChatRoom:
 
         self.message_entry_row.set_halign(Gtk.Align.END)
 
-    def add_user_row(self, userdata):
+    def add_user_row(self, user_data):
 
-        username = userdata.username
-        status = userdata.status
+        username = user_data.username
+        status = user_data.status
         status_icon_name = USER_STATUS_ICON_NAMES.get(status, "")
-        flag_icon_name = get_flag_icon_name(userdata.country)
-        upload_speed = userdata.upload_speed or 0
-        num_files = userdata.num_files or 0
-        num_folders = userdata.num_folders or 0
+        flag_icon_name = get_flag_icon_name(user_data.country)
+        upload_speed = user_data.upload_speed or 0
+        num_files = user_data.num_files or 0
+        num_folders = user_data.num_folders or 0
         h_num_files = humanize(num_files)
         weight = Pango.Weight.NORMAL
         underline = Pango.Underline.NONE
@@ -801,14 +801,14 @@ class ChatRoom:
         # Temporarily disable sorting for increased performance
         self.users_list_view.freeze()
 
-        for userdata in joined_users:
-            username = userdata.username
+        for user_data in joined_users:
+            username = user_data.username
             iterator = self.users_list_view.iterators.get(username)
 
             if iterator is not None:
                 self.users_list_view.remove_row(iterator)
 
-            self.add_user_row(userdata)
+            self.add_user_row(user_data)
 
         private_room = core.chatrooms.private_rooms.get(self.room)
 
@@ -997,8 +997,8 @@ class ChatRoom:
 
     def user_joined_room(self, msg):
 
-        userdata = msg.userdata
-        username = userdata.username
+        user_data = msg.user_data
+        username = user_data.username
         iterator = self.users_list_view.iterators.get(username)
 
         if iterator is not None:
@@ -1019,7 +1019,7 @@ class ChatRoom:
                 timestamp_format=config.sections["logging"]["rooms_timestamp"]
             )
 
-        self.add_user_row(userdata)
+        self.add_user_row(user_data)
 
         self.chat_view.update_user_tag(username)
         self.update_user_count()

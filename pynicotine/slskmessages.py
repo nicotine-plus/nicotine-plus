@@ -1044,18 +1044,18 @@ class UserJoinedRoom(ServerMessage):
     The server tells us someone has just joined a room we're in.
     """
 
-    __slots__ = ("room", "userdata")
+    __slots__ = ("room", "user_data")
     CODE = 16
     EVENT_NAME = "user-joined-room"
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.room = None
-        self.userdata = None
+        self.user_data = None
 
     def parse_network_message(self):
         self.room = self.unpack_string()
-        self.userdata = UserData(
+        self.user_data = UserData(
             username=self.unpack_string(),
             status=self.unpack_uint32(),
             upload_speed=self.unpack_uint32(),
