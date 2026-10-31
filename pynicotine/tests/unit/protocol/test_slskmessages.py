@@ -151,7 +151,7 @@ class FileSearchTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = FileSearch(token=524700074, text="70 gwen auto")
+        obj = FileSearch(token=524700074, search_term="70 gwen auto")
 
         # Act
         message = obj.make_network_message()

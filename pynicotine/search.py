@@ -646,14 +646,14 @@ class Search:
     def _file_search_request_server(self, msg):
         """Server code 26."""
 
-        self._process_search_request(msg.searchterm, msg.search_username, msg.token)
-        core.pluginhandler.search_request_notification(msg.searchterm, msg.search_username, msg.token)
+        self._process_search_request(msg.search_term, msg.search_username, msg.token)
+        core.pluginhandler.search_request_notification(msg.search_term, msg.search_username, msg.token)
 
     def _file_search_request_distributed(self, msg):
         """Distrib code 3."""
 
-        self._process_search_request(msg.searchterm, msg.search_username, msg.token)
-        core.pluginhandler.distrib_search_notification(msg.searchterm, msg.search_username, msg.token)
+        self._process_search_request(msg.search_term, msg.search_username, msg.token)
+        core.pluginhandler.distrib_search_notification(msg.search_term, msg.search_username, msg.token)
 
     # Incoming Search Requests #
 

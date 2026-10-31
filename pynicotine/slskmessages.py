@@ -1195,20 +1195,20 @@ class FileSearchRoom(ServerMessage):
     OBSOLETE, superseded by RoomSearch server message
     """
 
-    __slots__ = ("token", "roomid", "searchterm")
+    __slots__ = ("token", "room_id", "search_term")
     CODE = 25
 
-    def __init__(self, token=None, roomid=None, text=None):
+    def __init__(self, token=None, room_id=None, search_term=None):
         ServerMessage.__init__(self)
         self.token = token
-        self.roomid = roomid
-        self.searchterm = text
+        self.room_id = room_id
+        self.search_term = search_term
 
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_uint32(self.token)
-        msg += self.pack_uint32(self.roomid)
-        msg += self.pack_string(self.searchterm)
+        msg += self.pack_uint32(self.room_id)
+        msg += self.pack_string(self.search_term)
 
         return msg
 
@@ -1225,27 +1225,27 @@ class FileSearch(ServerMessage):
     the search results.
     """
 
-    __slots__ = ("token", "searchterm", "search_username")
+    __slots__ = ("token", "search_term", "search_username")
     CODE = 26
     EVENT_NAME = "file-search-request-server"
 
-    def __init__(self, token=None, text=None, *, msg_content=None):
+    def __init__(self, token=None, search_term=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.token = token
-        self.searchterm = text
+        self.search_term = search_term
         self.search_username = None
 
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_uint32(self.token)
-        msg += self.pack_string(self.searchterm)
+        msg += self.pack_string(self.search_term)
 
         return msg
 
     def parse_network_message(self):
         self.search_username = self.unpack_string()
         self.token = self.unpack_uint32()
-        self.searchterm = self.unpack_string()
+        self.search_term = self.unpack_string()
 
 
 class SetStatus(ServerMessage):
@@ -1465,20 +1465,20 @@ class UserSearch(ServerMessage):
     message.
     """
 
-    __slots__ = ("search_username", "token", "searchterm")
+    __slots__ = ("search_username", "token", "search_term")
     CODE = 42
 
-    def __init__(self, search_username=None, token=None, text=None):
+    def __init__(self, search_username=None, token=None, search_term=None):
         ServerMessage.__init__(self)
         self.search_username = search_username
         self.token = token
-        self.searchterm = text
+        self.search_term = search_term
 
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_string(self.search_username)
         msg += self.pack_uint32(self.token)
-        msg += self.pack_string(self.searchterm)
+        msg += self.pack_string(self.search_term)
 
         return msg
 
@@ -2273,18 +2273,18 @@ class WishlistSearch(ServerMessage):
     interval.
     """
 
-    __slots__ = ("token", "searchterm")
+    __slots__ = ("token", "search_term")
     CODE = 103
 
-    def __init__(self, token=None, text=None):
+    def __init__(self, token=None, search_term=None):
         ServerMessage.__init__(self)
         self.token = token
-        self.searchterm = text
+        self.search_term = search_term
 
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_uint32(self.token)
-        msg += self.pack_string(self.searchterm)
+        msg += self.pack_string(self.search_term)
 
         return msg
 
@@ -2545,20 +2545,20 @@ class RoomSearch(ServerMessage):
     message.
     """
 
-    __slots__ = ("room", "token", "searchterm")
+    __slots__ = ("room", "token", "search_term")
     CODE = 120
 
-    def __init__(self, room=None, token=None, text=""):
+    def __init__(self, room=None, token=None, search_term=""):
         ServerMessage.__init__(self)
         self.room = room
         self.token = token
-        self.searchterm = text
+        self.search_term = search_term
 
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_string(self.room)
         msg += self.pack_uint32(self.token)
-        msg += self.pack_string(self.searchterm)
+        msg += self.pack_string(self.search_term)
 
         return msg
 
@@ -3193,26 +3193,26 @@ class RelatedSearch(ServerMessage):
     OBSOLETE, server sends empty list as of 2018
     """
 
-    __slots__ = ("query", "terms")
+    __slots__ = ("search_term", "related_terms")
     CODE = 153
 
-    def __init__(self, query=None, *, msg_content=None):
+    def __init__(self, search_term=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.query = query
-        self.terms = []
+        self.search_term = search_term
+        self.related_terms = []
 
     def make_network_message(self):
-        return self.pack_string(self.query)
+        return self.pack_string(self.search_term)
 
     def parse_network_message(self):
-        self.query = self.unpack_string()
-        num = self.unpack_uint32()
+        self.search_term = self.unpack_string()
+        num_related_terms = self.unpack_uint32()
 
-        for _ in range(num):
+        for _ in range(num_related_terms):
             term = self.unpack_string()
             score = self.unpack_uint32()
 
-            self.terms.append((term, score))
+            self.related_terms.append((term, score))
 
 
 class ExcludedSearchPhrases(ServerMessage):
@@ -3232,9 +3232,9 @@ class ExcludedSearchPhrases(ServerMessage):
         self.phrases = []
 
     def parse_network_message(self):
-        num = self.unpack_uint32()
+        num_phrases = self.unpack_uint32()
 
-        for _ in range(num):
+        for _ in range(num_phrases):
             phrase = self.unpack_string()
             self.phrases.append(phrase)
 
@@ -3582,25 +3582,24 @@ class FileSearchRequest(PeerMessage):
     OBSOLETE, superseded by UserSearch server message
     """
 
-    __slots__ = ("token", "text", "searchterm")
+    __slots__ = ("token", "search_term")
     CODE = 8
 
-    def __init__(self, token=None, text=None, *, msg_content=None):
+    def __init__(self, token=None, search_term=None, *, msg_content=None):
         PeerMessage.__init__(self, msg_content)
         self.token = token
-        self.text = text
-        self.searchterm = None
+        self.search_term = search_term
 
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_uint32(self.token)
-        msg += self.pack_string(self.text)
+        msg += self.pack_string(self.search_term)
 
         return msg
 
     def parse_network_message(self):
         self.token = self.unpack_uint32()
-        self.searchterm = self.unpack_string()
+        self.search_term = self.unpack_string()
 
 
 class FileSearchResponse(PeerMessage):
@@ -4288,7 +4287,7 @@ class DistribSearch(DistribMessage):
     messages that use any other value.
     """
 
-    __slots__ = ("identifier", "search_username", "token", "searchterm")
+    __slots__ = ("identifier", "search_username", "token", "search_term")
     CODE = 3
     EVENT_NAME = "file-search-request-distributed"
     LOGGED = False
@@ -4298,14 +4297,14 @@ class DistribSearch(DistribMessage):
         self.identifier = None
         self.search_username = None
         self.token = None
-        self.searchterm = None
+        self.search_term = None
 
     def parse_network_message(self):
         codepoint = self.unpack_uint32()
         self.identifier = chr(codepoint)
         self.search_username = self.unpack_string()
         self.token = self.unpack_uint32()
-        self.searchterm = self.unpack_string()
+        self.search_term = self.unpack_string()
 
 
 class DistribBranchLevel(DistribMessage):
