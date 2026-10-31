@@ -871,7 +871,7 @@ We send this to the server when we search for something in a room.
   - Send
     1. **uint32** *token*
     2. **uint32** *room id*
-    3. **string** *search query*
+    3. **string** *search term*
   - Receive
     -   *No Message*
 
@@ -892,11 +892,11 @@ results.
 
   - Send
     1.  **uint32** *token*
-    2.  **string** *search query*
+    2.  **string** *search term*
   - Receive
     1.  **string** *username*
     2.  **uint32** *token*
-    3.  **string** *search query*
+    3.  **string** *search term*
 
 
 ## Server Code 28
@@ -1076,7 +1076,7 @@ message.
   - Send
     1.  **string** *username*
     2.  **uint32** *token*
-    3.  **string** *search query*
+    3.  **string** *search term*
   - Receive
     -   *No Message*
 
@@ -1701,7 +1701,7 @@ We send the server one of our wishlist search queries at each interval.
 
   - Send
     1.  **uint32** *token*
-    2.  **string** *search query*
+    2.  **string** *search term*
   - Receive
     -   *No Message*
 
@@ -1897,7 +1897,7 @@ message.
   - Send
     1.  **string** *room*
     2.  **uint32** *token*
-    3.  **string** *search query*
+    3.  **string** *search term*
   - Receive
     -   *No Message*
 
@@ -2368,11 +2368,11 @@ The server returns a list of related search terms for a search query.
 ### Data Order
 
   - Send
-    1.  **string** *query*
+    1.  **string** *search term*
   - Receive
-    1.  **string** *query*
-    2.  **uint32** *number of terms*
-    3.  Iterate for *number of terms*
+    1.  **string** *search term*
+    2.  **uint32** *number of related terms*
+    3.  Iterate for *number of related terms*
         1.  **string** *term*
         2.  **uint32** *score*
 
@@ -2716,10 +2716,10 @@ sends this to tell us it is searching for a file.
 
   - Send
     1.  **uint32** *token*
-    2.  **string** *query*
+    2.  **string** *search term*
   - Receive
     1.  **uint32** *token*
-    2.  **string** *query*
+    2.  **string** *search term*
 
 
 ## Peer Code 9
@@ -3288,7 +3288,7 @@ messages that use any other value.
         Value is always the code point of ASCII character 1 (`49`)
     2.  **string** *username*
     3.  **uint32** *token*
-    4.  **string** *query*
+    4.  **string** *search term*
 
 
 ## Distributed Code 4
