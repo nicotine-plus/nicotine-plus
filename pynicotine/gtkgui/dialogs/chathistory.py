@@ -248,7 +248,7 @@ class ChatHistory(Dialog):
 
     def user_status(self, msg):
 
-        username = msg.user
+        username = msg.username
         iterator = self.list_view.iterators.get(username)
 
         if iterator is None:

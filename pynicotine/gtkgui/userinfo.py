@@ -177,18 +177,18 @@ class UserInfos(IconNotebook):
 
     def user_stats(self, msg):
 
-        page = self.pages.get(msg.user)
+        page = self.pages.get(msg.username)
 
         if page is not None:
             page.user_stats(msg)
 
     def user_status(self, msg):
 
-        page = self.pages.get(msg.user)
+        page = self.pages.get(msg.username)
 
         if page is not None:
             page.user_status(msg)
-            self.set_user_status(page.container, msg.user, msg.status)
+            self.set_user_status(page.container, msg.username, msg.status)
 
     def user_country(self, user, country_code):
 
@@ -199,7 +199,7 @@ class UserInfos(IconNotebook):
 
     def user_interests(self, msg):
 
-        page = self.pages.get(msg.user)
+        page = self.pages.get(msg.username)
 
         if page is not None:
             page.user_interests(msg)

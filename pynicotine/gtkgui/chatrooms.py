@@ -966,7 +966,7 @@ class ChatRoom:
     def say_chat_room(self, msg):
 
         roomname = msg.room
-        username = msg.user
+        username = msg.username
         message = msg.message
         message_type = msg.message_type
         mention_type = msg.mention_type
@@ -1062,7 +1062,7 @@ class ChatRoom:
 
     def add_room_member(self, msg):
 
-        username = msg.user
+        username = msg.username
         iterator = self.users_list_view.iterators.get(username)
 
         if iterator is not None:
@@ -1075,7 +1075,7 @@ class ChatRoom:
 
     def add_room_operator(self, msg):
 
-        iterator = self.users_list_view.iterators.get(msg.user)
+        iterator = self.users_list_view.iterators.get(msg.username)
 
         if iterator is None:
             return
@@ -1091,7 +1091,7 @@ class ChatRoom:
 
     def remove_room_member(self, msg):
 
-        username = msg.user
+        username = msg.username
         iterator = self.users_list_view.iterators.get(username)
 
         if iterator is None:
@@ -1104,7 +1104,7 @@ class ChatRoom:
 
     def remove_room_operator(self, msg):
 
-        iterator = self.users_list_view.iterators.get(msg.user)
+        iterator = self.users_list_view.iterators.get(msg.username)
 
         if iterator is None:
             return
@@ -1117,14 +1117,14 @@ class ChatRoom:
 
     def room_ticker_added(self, msg):
 
-        if msg.user == core.users.login_username:
+        if msg.username == core.users.login_username:
             return
 
-        self.unread_room_wall_users.add(msg.user)
+        self.unread_room_wall_users.add(msg.username)
         self.update_room_wall_label()
 
     def room_ticker_removed(self, msg):
-        self.unread_room_wall_users.discard(msg.user)
+        self.unread_room_wall_users.discard(msg.username)
         self.update_room_wall_label()
 
     def update_user_count(self):
@@ -1157,7 +1157,7 @@ class ChatRoom:
 
     def peer_address(self, msg):
 
-        username = msg.user
+        username = msg.username
 
         if not core.network_filter.is_user_ip_ignored(username):
             return
@@ -1166,13 +1166,13 @@ class ChatRoom:
 
     def user_stats(self, msg):
 
-        user = msg.user
-        iterator = self.users_list_view.iterators.get(user)
+        username = msg.username
+        iterator = self.users_list_view.iterators.get(username)
 
         if iterator is None:
             return
 
-        if user not in core.chatrooms.joined_rooms[self.room].users:
+        if username not in core.chatrooms.joined_rooms[self.room].users:
             # Private room member offline/not currently joined
             return
 
@@ -1201,13 +1201,13 @@ class ChatRoom:
 
     def user_status(self, msg):
 
-        user = msg.user
-        iterator = self.users_list_view.iterators.get(user)
+        username = msg.username
+        iterator = self.users_list_view.iterators.get(username)
 
         if iterator is None:
             return
 
-        if user not in core.chatrooms.joined_rooms[self.room].users:
+        if username not in core.chatrooms.joined_rooms[self.room].users:
             # Private room member offline/not currently joined
             return
 
@@ -1228,13 +1228,13 @@ class ChatRoom:
             # left the room before an offline status is sent.
             return
 
-        if not core.network_filter.is_user_ignored(user) and not core.network_filter.is_user_ip_ignored(user):
+        if not core.network_filter.is_user_ignored(username) and not core.network_filter.is_user_ip_ignored(username):
             self.activity_view.add_line(
-                action % user, timestamp_format=config.sections["logging"]["rooms_timestamp"])
+                action % username, timestamp_format=config.sections["logging"]["rooms_timestamp"])
 
         self.users_list_view.set_row_value(iterator, "status", status_icon_name)
 
-        self.chat_view.update_user_tag(user)
+        self.chat_view.update_user_tag(username)
 
     def user_country(self, user, country_code):
 

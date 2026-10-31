@@ -363,7 +363,7 @@ class ChatRooms:
     def _add_room_member(self, msg):
         """Server code 134."""
 
-        username = msg.user
+        username = msg.username
         room = msg.room
         private_room = self.private_rooms.get(room)
 
@@ -382,7 +382,7 @@ class ChatRooms:
     def _remove_room_member(self, msg):
         """Server code 135."""
 
-        username = msg.user
+        username = msg.username
         room = msg.room
         private_room = self.private_rooms.get(room)
 
@@ -435,7 +435,7 @@ class ChatRooms:
     def _add_room_operator(self, msg):
         """Server code 143."""
 
-        username = msg.user
+        username = msg.username
         room = msg.room
         private_room = self.private_rooms.get(room)
 
@@ -454,7 +454,7 @@ class ChatRooms:
     def _remove_room_operator(self, msg):
         """Server code 144."""
 
-        username = msg.user
+        username = msg.username
         room = msg.room
         private_room = self.private_rooms.get(room)
 
@@ -565,7 +565,7 @@ class ChatRooms:
         """Server code 13."""
 
         room = msg.room
-        username = msg.user
+        username = msg.username
 
         if not is_global:
             if room not in self.joined_rooms:
@@ -676,7 +676,7 @@ class ChatRooms:
         if room_obj is None or not room_obj.users:
             raise StopEventPropagation()
 
-        username = msg.user
+        username = msg.username
 
         if core.network_filter.is_user_ignored(username) or core.network_filter.is_user_ip_ignored(username):
             # User ignored, ignore Ticker messages
@@ -692,7 +692,7 @@ class ChatRooms:
         if room_obj is None or not room_obj.users:
             raise StopEventPropagation()
 
-        room_obj.tickers.pop(msg.user, None)
+        room_obj.tickers.pop(msg.username, None)
 
     def update_completions(self):
 

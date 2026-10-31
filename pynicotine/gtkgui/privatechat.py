@@ -186,16 +186,17 @@ class PrivateChats(IconNotebook):
 
     def user_status(self, msg):
 
-        page = self.pages.get(msg.user)
+        username = msg.username
+        page = self.pages.get(username)
 
         if page is not None:
-            self.set_user_status(page.container, msg.user, msg.status)
-            page.chat_view.update_user_tag(msg.user)
+            self.set_user_status(page.container, username, msg.status)
+            page.chat_view.update_user_tag(username)
 
-        if msg.user == core.users.login_username:
+        if username == core.users.login_username:
             for page in self.pages.values():
                 # We've enabled/disabled away mode, update our username color in all chats
-                page.chat_view.update_user_tag(msg.user)
+                page.chat_view.update_user_tag(username)
 
     def show_user(self, user, switch_page=True, remembered=False):
 
@@ -260,7 +261,7 @@ class PrivateChats(IconNotebook):
 
     def message_user(self, msg, **_unused):
 
-        page = self.pages.get(msg.user)
+        page = self.pages.get(msg.username)
 
         if page is not None:
             page.message_user(msg)
@@ -545,7 +546,7 @@ class PrivateChat:
         mention_type = msg.mention_type
         mention_keyword = msg.mention_keyword
 
-        username = msg.user
+        username = msg.username
         tag_username = (core.users.login_username if is_outgoing_message else username)
 
         timestamp = msg.timestamp if not is_new_message else None

@@ -938,7 +938,7 @@ class Downloads(Transfers):
     def _user_status(self, msg):
         """Server code 7."""
 
-        username = msg.user
+        username = msg.username
 
         if not any(username in users for users in (self.active_users, self.queued_users, self.failed_users)):
             # Ignore irrelevant user status updates

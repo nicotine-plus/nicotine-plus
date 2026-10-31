@@ -151,7 +151,7 @@ class PrivateChat:
     def _private_message_queue_add(self, msg):
         """Queue a private message until we've received a user's IP address."""
 
-        username = msg.user
+        username = msg.username
 
         if username not in self._private_message_queue:
             self._private_message_queue[username] = [msg]
@@ -293,7 +293,7 @@ class PrivateChat:
                 translated_message += "\n" + remaining_message
 
             if redirect_room is not None:
-                msg = SayChatroom(room=redirect_room, message=translated_message, user=SERVER_USERNAME)
+                msg = SayChatroom(room=redirect_room, message=translated_message, username=SERVER_USERNAME)
                 events.emit("say-chat-room", msg)
                 return None
 
@@ -329,25 +329,25 @@ class PrivateChat:
         messages and check if the IP is ignored
         """
 
-        username = msg.user
+        username = msg.username
 
         if username not in self._private_message_queue:
             return
 
         for queued_msg in self._private_message_queue[username][:]:
             self._private_message_queue[username].remove(queued_msg)
-            queued_msg.user = username
+            queued_msg.username = username
             events.emit("message-user", queued_msg, queued_message=True)
 
     def _user_status(self, msg):
         """Server code 7."""
 
-        if msg.user == core.users.login_username and msg.status != UserStatus.AWAY:
+        if msg.username == core.users.login_username and msg.status != UserStatus.AWAY:
             # Reset list of users we've sent away messages to when the away session ends
             self._away_message_users.clear()
 
         if msg.status == UserStatus.OFFLINE:
-            self._private_message_queue.pop(msg.user, None)
+            self._private_message_queue.pop(msg.username, None)
 
     def get_message_type(self, text, is_outgoing_message):
 
@@ -385,7 +385,7 @@ class PrivateChat:
 
         is_outgoing_message = (msg.message_id is None)
 
-        username = msg.user
+        username = msg.username
         tag_username = (core.users.login_username if is_outgoing_message else username)
         message = msg.message
         timestamp = msg.timestamp if not msg.is_new_message else None

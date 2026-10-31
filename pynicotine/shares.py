@@ -1136,7 +1136,7 @@ class Shares:
         events.emit(
             "user-stats",
             GetUserStats(
-                user=local_username,
+                username=local_username,
                 upload_speed=core.uploads.upload_speed, num_files=num_shared_files, num_folders=num_shared_folders
             )
         )

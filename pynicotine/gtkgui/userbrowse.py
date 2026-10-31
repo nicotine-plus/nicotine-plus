@@ -166,10 +166,10 @@ class UserBrowses(IconNotebook):
 
     def user_status(self, msg):
 
-        page = self.pages.get(msg.user)
+        page = self.pages.get(msg.username)
 
         if page is not None:
-            self.set_user_status(page.container, msg.user, msg.status)
+            self.set_user_status(page.container, msg.username, msg.status)
 
     def shared_file_list_failed(self, username, is_offline=False):
 

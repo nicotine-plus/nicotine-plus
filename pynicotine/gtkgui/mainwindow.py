@@ -1050,7 +1050,7 @@ class MainWindow(Window):
         self.update_user_status()
 
     def user_status(self, msg):
-        if msg.user == core.users.login_username:
+        if msg.username == core.users.login_username:
             self.update_user_status()
 
     # Search #

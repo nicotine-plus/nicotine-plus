@@ -535,7 +535,7 @@ class Interests:
 
     def user_status(self, msg):
 
-        iterator = self.similar_users_list_view.iterators.get(msg.user)
+        iterator = self.similar_users_list_view.iterators.get(msg.username)
 
         if iterator is None:
             return
@@ -547,7 +547,7 @@ class Interests:
 
     def user_stats(self, msg):
 
-        iterator = self.similar_users_list_view.iterators.get(msg.user)
+        iterator = self.similar_users_list_view.iterators.get(msg.username)
 
         if iterator is None:
             return

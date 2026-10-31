@@ -639,7 +639,7 @@ class Application:
         ).present()
 
     def on_user_status(self, msg):
-        if msg.user == core.users.login_username:
+        if msg.username == core.users.login_username:
             self._update_user_status()
 
     # Actions #

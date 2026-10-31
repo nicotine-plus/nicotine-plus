@@ -760,23 +760,23 @@ class GetPeerAddress(ServerMessage):
     and port), given the peer's username.
     """
 
-    __slots__ = ("user", "ip_address", "port", "obfuscation_type", "obfuscated_port")
+    __slots__ = ("username", "ip_address", "port", "obfuscation_type", "obfuscated_port")
     CODE = 3
     EVENT_NAME = "peer-address"
 
-    def __init__(self, user=None, *, msg_content=None):
+    def __init__(self, username=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.user = user
+        self.username = username
         self.ip_address = None
         self.port = None
         self.obfuscation_type = None
         self.obfuscated_port = None
 
     def make_network_message(self):
-        return self.pack_string(self.user)
+        return self.pack_string(self.username)
 
     def parse_network_message(self):
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
         self.ip_address = self.unpack_ip()
         self.port = self.unpack_uint32()
         self.obfuscation_type = self.unpack_uint32()
@@ -794,15 +794,15 @@ class WatchUser(ServerMessage):
     As a consequence, stats can be outdated.
     """
 
-    __slots__ = ("user", "userexists", "status", "upload_speed", "upload_number", "unknown", "num_files",
+    __slots__ = ("username", "exists", "status", "upload_speed", "upload_number", "unknown", "num_files",
                  "num_folders", "country")
     CODE = 5
     EVENT_NAME = "watch-user"
 
-    def __init__(self, user=None, *, msg_content=None):
+    def __init__(self, username=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.user = user
-        self.userexists = None
+        self.username = username
+        self.exists = None
         self.status = None
         self.upload_speed = None
         self.upload_number = None
@@ -812,13 +812,13 @@ class WatchUser(ServerMessage):
         self.country = None
 
     def make_network_message(self):
-        return self.pack_string(self.user)
+        return self.pack_string(self.username)
 
     def parse_network_message(self):
-        self.user = self.unpack_string()
-        self.userexists = self.unpack_bool()
+        self.username = self.unpack_string()
+        self.exists = self.unpack_bool()
 
-        if not self.userexists:
+        if not self.exists:
             return
 
         self.status = self.unpack_uint32()
@@ -841,15 +841,15 @@ class UnwatchUser(ServerMessage):
     Used when we no longer want to be kept updated about a user's status.
     """
 
-    __slots__ = ("user",)
+    __slots__ = ("username",)
     CODE = 6
 
-    def __init__(self, user=None, *, msg_content=None):
+    def __init__(self, username=None, *, msg_content=None):
         ServerMessage.__init__(self)
-        self.user = user
+        self.username = username
 
     def make_network_message(self):
-        return self.pack_string(self.user)
+        return self.pack_string(self.username)
 
 
 class GetUserStatus(ServerMessage):
@@ -858,21 +858,21 @@ class GetUserStatus(ServerMessage):
     The server tells us if a user has gone away or has returned.
     """
 
-    __slots__ = ("user", "status", "privileged")
+    __slots__ = ("username", "status", "privileged")
     CODE = 7
     EVENT_NAME = "user-status"
 
-    def __init__(self, user=None, status=None, *, msg_content=None):
+    def __init__(self, username=None, status=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.user = user
+        self.username = username
         self.status = status
         self.privileged = None
 
     def make_network_message(self):
-        return self.pack_string(self.user)
+        return self.pack_string(self.username)
 
     def parse_network_message(self):
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
         self.status = self.unpack_uint32()
         self.privileged = self.unpack_bool()
 
@@ -887,18 +887,18 @@ class IgnoreUser(ServerMessage):
     OBSOLETE, no longer functional
     """
 
-    __slots__ = ("user",)
+    __slots__ = ("username",)
     CODE = 11
 
-    def __init__(self, user=None, *, msg_content=None):
+    def __init__(self, username=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.user = user
+        self.username = username
 
     def make_network_message(self):
-        return self.pack_string(self.user)
+        return self.pack_string(self.username)
 
     def parse_network_message(self):
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
 
 
 class UnignoreUser(ServerMessage):
@@ -911,18 +911,18 @@ class UnignoreUser(ServerMessage):
     OBSOLETE, no longer functional
     """
 
-    __slots__ = ("user",)
+    __slots__ = ("username",)
     CODE = 12
 
-    def __init__(self, user=None, *, msg_content=None):
+    def __init__(self, username=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.user = user
+        self.username = username
 
     def make_network_message(self):
-        return self.pack_string(self.user)
+        return self.pack_string(self.username)
 
     def parse_network_message(self):
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
 
 
 class SayChatroom(ServerMessage):
@@ -932,15 +932,15 @@ class SayChatroom(ServerMessage):
     did.
     """
 
-    __slots__ = ("room", "message", "user", "message_type", "mention_type", "mention_keyword")
+    __slots__ = ("room", "message", "username", "message_type", "mention_type", "mention_keyword")
     CODE = 13
     EVENT_NAME = "say-chat-room"
 
-    def __init__(self, room=None, message=None, user=None, *, msg_content=None):
+    def __init__(self, room=None, message=None, username=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.room = room
         self.message = message
-        self.user = user
+        self.username = username
         self.message_type = None
         self.mention_type = None
         self.mention_keyword = None
@@ -954,7 +954,7 @@ class SayChatroom(ServerMessage):
 
     def parse_network_message(self):
         self.room = self.unpack_string()
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
         self.message = self.unpack_string()
 
 
@@ -1096,15 +1096,15 @@ class ConnectToPeer(ServerMessage):
     a connection to our IP address and port from their end.
     """
 
-    __slots__ = ("token", "user", "conn_type", "ip_address", "port", "privileged", "obfuscation_type",
+    __slots__ = ("token", "username", "conn_type", "ip_address", "port", "privileged", "obfuscation_type",
                  "obfuscated_port")
     CODE = 18
     EVENT_NAME = "connect-to-peer"
 
-    def __init__(self, token=None, user=None, conn_type=None, *, msg_content=None):
+    def __init__(self, token=None, username=None, conn_type=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.token = token
-        self.user = user
+        self.username = username
         self.conn_type = conn_type
         self.ip_address = None
         self.port = None
@@ -1115,13 +1115,13 @@ class ConnectToPeer(ServerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_uint32(self.token)
-        msg += self.pack_string(self.user)
+        msg += self.pack_string(self.username)
         msg += self.pack_string(self.conn_type)
 
         return msg
 
     def parse_network_message(self):
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
         self.conn_type = self.unpack_string()
         self.ip_address = self.unpack_ip()
         self.port = self.unpack_uint32()
@@ -1137,14 +1137,14 @@ class MessageUser(ServerMessage):
     Chat phrase sent to someone or received by us in private.
     """
 
-    __slots__ = ("user", "message", "message_id", "timestamp", "is_new_message", "message_type",
+    __slots__ = ("username", "message", "message_id", "timestamp", "is_new_message", "message_type",
                  "mention_type", "mention_keyword")
     CODE = 22
     EVENT_NAME = "message-user"
 
-    def __init__(self, user=None, message=None, *, msg_content=None):
+    def __init__(self, username=None, message=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.user = user
+        self.username = username
         self.message = message
         self.message_id = None
         self.timestamp = None
@@ -1155,7 +1155,7 @@ class MessageUser(ServerMessage):
 
     def make_network_message(self):
         msg = bytearray()
-        msg += self.pack_string(self.user)
+        msg += self.pack_string(self.username)
         msg += self.pack_string(self.message)
 
         return msg
@@ -1163,7 +1163,7 @@ class MessageUser(ServerMessage):
     def parse_network_message(self):
         self.message_id = self.unpack_uint32()
         self.timestamp = self.unpack_uint32()
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
         self.message = self.unpack_string()
         self.is_new_message = self.unpack_bool()
 
@@ -1309,23 +1309,23 @@ class SendConnectToken(ServerMessage):
     OBSOLETE, no longer used
     """
 
-    __slots__ = ("user", "token")
+    __slots__ = ("username", "token")
     CODE = 33
 
-    def __init__(self, user=None, token=None, *, msg_content=None):
+    def __init__(self, username=None, token=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.user = user
+        self.username = username
         self.token = token
 
     def make_network_message(self):
         msg = bytearray()
-        msg += self.pack_string(self.user)
+        msg += self.pack_string(self.username)
         msg += self.pack_uint32(self.token)
 
         return msg
 
     def parse_network_message(self):
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
         self.token = self.unpack_uint32()
 
 
@@ -1338,17 +1338,17 @@ class SendDownloadSpeed(ServerMessage):
     OBSOLETE, superseded by SendUploadSpeed server message
     """
 
-    __slots__ = ("user", "speed")
+    __slots__ = ("username", "speed")
     CODE = 34
 
-    def __init__(self, user=None, speed=None):
+    def __init__(self, username=None, speed=None):
         ServerMessage.__init__(self)
-        self.user = user
+        self.username = username
         self.speed = speed
 
     def make_network_message(self):
         msg = bytearray()
-        msg += self.pack_string(self.user)
+        msg += self.pack_string(self.username)
         msg += self.pack_uint32(self.speed)
 
         return msg
@@ -1385,13 +1385,13 @@ class GetUserStats(ServerMessage):
     the message to the server.
     """
 
-    __slots__ = ("user", "upload_speed", "upload_number", "unknown", "num_files", "num_folders")
+    __slots__ = ("username", "upload_speed", "upload_number", "unknown", "num_files", "num_folders")
     CODE = 36
     EVENT_NAME = "user-stats"
 
-    def __init__(self, user=None, upload_speed=None, num_files=None, num_folders=None, *, msg_content=None):
+    def __init__(self, username=None, upload_speed=None, num_files=None, num_folders=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.user = user
+        self.username = username
         self.upload_speed = upload_speed
         self.num_files = num_files
         self.num_folders = num_folders
@@ -1399,10 +1399,10 @@ class GetUserStats(ServerMessage):
         self.unknown = None
 
     def make_network_message(self):
-        return self.pack_string(self.user)
+        return self.pack_string(self.username)
 
     def parse_network_message(self):
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
         self.upload_speed = self.unpack_uint32()
         self.upload_number = self.unpack_uint32()
         self.unknown = self.unpack_uint32()
@@ -1423,19 +1423,19 @@ class UploadSlotsFull(ServerMessage):
     OBSOLETE, no longer used
     """
 
-    __slots__ = ("user", "slots_full")
+    __slots__ = ("username", "slots_full")
     CODE = 40
 
     def __init__(self, slots_full=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.slots_full = slots_full
-        self.user = None
+        self.username = None
 
     def make_network_message(self):
         return self.pack_uint32(self.slots_full)
 
     def parse_network_message(self):
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
         self.slots_full = self.unpack_uint32()
 
 
@@ -1465,18 +1465,18 @@ class UserSearch(ServerMessage):
     message.
     """
 
-    __slots__ = ("search_username", "token", "search_term")
+    __slots__ = ("username", "token", "search_term")
     CODE = 42
 
-    def __init__(self, search_username=None, token=None, search_term=None):
+    def __init__(self, username=None, token=None, search_term=None):
         ServerMessage.__init__(self)
-        self.search_username = search_username
+        self.username = username
         self.token = token
         self.search_term = search_term
 
     def make_network_message(self):
         msg = bytearray()
-        msg += self.pack_string(self.search_username)
+        msg += self.pack_string(self.username)
         msg += self.pack_uint32(self.token)
         msg += self.pack_string(self.search_term)
 
@@ -1639,21 +1639,21 @@ class UserInterests(ServerMessage):
     responds with a list of interests.
     """
 
-    __slots__ = ("user", "likes", "hates")
+    __slots__ = ("username", "likes", "hates")
     CODE = 57
     EVENT_NAME = "user-interests"
 
-    def __init__(self, user=None, *, msg_content=None):
+    def __init__(self, username=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.user = user
+        self.username = username
         self.likes = []
         self.hates = []
 
     def make_network_message(self):
-        return self.pack_string(self.user)
+        return self.pack_string(self.username)
 
     def parse_network_message(self):
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
         num_likes = self.unpack_uint32()
 
         for _ in range(num_likes):
@@ -1701,23 +1701,23 @@ class PlaceInLineRequest(ServerMessage):
     OBSOLETE, superseded by PlaceInQueueRequest peer message
     """
 
-    __slots__ = ("user", "token")
+    __slots__ = ("username", "token")
     CODE = 59
 
-    def __init__(self, user=None, token=None, *, msg_content=None):
+    def __init__(self, username=None, token=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.token = token
-        self.user = user
+        self.username = username
 
     def make_network_message(self):
         msg = bytearray()
-        msg += self.pack_string(self.user)
+        msg += self.pack_string(self.username)
         msg += self.pack_uint32(self.token)
 
         return msg
 
     def parse_network_message(self):
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
         self.token = self.unpack_uint32()
 
 
@@ -1730,25 +1730,25 @@ class PlaceInLineResponse(ServerMessage):
     OBSOLETE, superseded by PlaceInQueueResponse peer message
     """
 
-    __slots__ = ("token", "user", "place")
+    __slots__ = ("token", "username", "place")
     CODE = 60
 
-    def __init__(self, user=None, token=None, place=None, *, msg_content=None):
+    def __init__(self, username=None, token=None, place=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.token = token
-        self.user = user
+        self.username = username
         self.place = place
 
     def make_network_message(self):
         msg = bytearray()
-        msg += self.pack_string(self.user)
+        msg += self.pack_string(self.username)
         msg += self.pack_uint32(self.token)
         msg += self.pack_uint32(self.place)
 
         return msg
 
     def parse_network_message(self):
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
         self.token = self.unpack_uint32()
         self.place = self.unpack_uint32()
 
@@ -1853,7 +1853,7 @@ class ExactFileSearch(ServerMessage):
     OBSOLETE, no results even with official client
     """
 
-    __slots__ = ("token", "file_path", "folder_path", "file_size", "checksum", "user", "unknown")
+    __slots__ = ("token", "file_path", "folder_path", "file_size", "checksum", "username", "unknown")
     CODE = 65
 
     def __init__(self, token=None, file_path=None, folder_path=None, file_size=None, checksum=None,
@@ -1865,7 +1865,7 @@ class ExactFileSearch(ServerMessage):
         self.file_size = file_size
         self.checksum = checksum
         self.unknown = unknown
-        self.user = None
+        self.username = None
 
     def make_network_message(self):
         msg = bytearray()
@@ -1879,7 +1879,7 @@ class ExactFileSearch(ServerMessage):
         return msg
 
     def parse_network_message(self):
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
         self.token = self.unpack_uint32()
         self.file_path = self.unpack_string()
         self.folder_path = self.unpack_string()
@@ -1935,12 +1935,12 @@ class TunneledMessage(ServerMessage):
     OBSOLETE, no longer used
     """
 
-    __slots__ = ("user", "token", "code", "msg", "addr")
+    __slots__ = ("username", "token", "code", "msg", "addr")
     CODE = 68
 
-    def __init__(self, user=None, token=None, code=None, msg=None, *, msg_content=None):
+    def __init__(self, username=None, token=None, code=None, msg=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.user = user
+        self.username = username
         self.token = token
         self.code = code
         self.msg = msg
@@ -1948,7 +1948,7 @@ class TunneledMessage(ServerMessage):
 
     def make_network_message(self):
         msg = bytearray()
-        msg += self.pack_string(self.user)
+        msg += self.pack_string(self.username)
         msg += self.pack_uint32(self.token)
         msg += self.pack_uint32(self.code)
         msg += self.pack_string(self.msg)
@@ -1956,7 +1956,7 @@ class TunneledMessage(ServerMessage):
         return msg
 
     def parse_network_message(self):
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
         self.code = self.unpack_uint32()
         self.token = self.unpack_uint32()
 
@@ -1974,20 +1974,20 @@ class PrivilegedUsers(ServerMessage):
     have donated.
     """
 
-    __slots__ = ("users",)
+    __slots__ = ("usernames",)
     CODE = 69
     EVENT_NAME = "privileged-users"
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.users = []
+        self.usernames = []
 
     def parse_network_message(self):
         num_users = self.unpack_uint32()
 
         for _ in range(num_users):
-            user = self.unpack_string()
-            self.users.append(user)
+            username = self.unpack_string()
+            self.usernames.append(username)
 
 
 class HaveNoParent(ServerMessage):
@@ -2150,15 +2150,15 @@ class AddToPrivileged(ServerMessage):
     OBSOLETE, no longer sent by the server
     """
 
-    __slots__ = ("user",)
+    __slots__ = ("username",)
     CODE = 91
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.user = None
+        self.username = None
 
     def parse_network_message(self):
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
 
 
 class CheckPrivileges(ServerMessage):
@@ -2403,14 +2403,13 @@ class RoomTickers(ServerMessage):
     room walls.
     """
 
-    __slots__ = ("room", "user", "msgs")
+    __slots__ = ("room", "msgs")
     CODE = 113
     EVENT_NAME = "room-tickers"
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.room = None
-        self.user = None
         self.msgs = []
 
     def parse_network_message(self):
@@ -2418,10 +2417,10 @@ class RoomTickers(ServerMessage):
         num_tickers = self.unpack_uint32()
 
         for _ in range(num_tickers):
-            user = self.unpack_string()
+            username = self.unpack_string()
             msg = self.unpack_string()
 
-            self.msgs.append((user, msg))
+            self.msgs.append((username, msg))
 
 
 class RoomTickerAdded(ServerMessage):
@@ -2433,19 +2432,19 @@ class RoomTickerAdded(ServerMessage):
     room walls.
     """
 
-    __slots__ = ("room", "user", "msg")
+    __slots__ = ("room", "username", "msg")
     CODE = 114
     EVENT_NAME = "room-ticker-added"
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.room = None
-        self.user = None
+        self.username = None
         self.msg = None
 
     def parse_network_message(self):
         self.room = self.unpack_string()
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
         self.msg = self.unpack_string()
 
 
@@ -2458,18 +2457,18 @@ class RoomTickerRemoved(ServerMessage):
     room walls.
     """
 
-    __slots__ = ("room", "user")
+    __slots__ = ("room", "username")
     CODE = 115
     EVENT_NAME = "room-ticker-removed"
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.room = None
-        self.user = None
+        self.username = None
 
     def parse_network_message(self):
         self.room = self.unpack_string()
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
 
 
 class SetRoomTicker(ServerMessage):
@@ -2589,19 +2588,19 @@ class UserPrivileged(ServerMessage):
     DEPRECATED, use WatchUser and GetUserStatus server messages
     """
 
-    __slots__ = ("user", "privileged")
+    __slots__ = ("username", "privileged")
     CODE = 122
 
-    def __init__(self, user=None, *, msg_content=None):
+    def __init__(self, username=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.user = user
+        self.username = username
         self.privileged = None
 
     def make_network_message(self):
-        return self.pack_string(self.user)
+        return self.pack_string(self.username)
 
     def parse_network_message(self):
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
         self.privileged = self.unpack_bool()
 
 
@@ -2612,17 +2611,17 @@ class GivePrivileges(ServerMessage):
     on the network.
     """
 
-    __slots__ = ("user", "days")
+    __slots__ = ("username", "days")
     CODE = 123
 
-    def __init__(self, user=None, days=None):
+    def __init__(self, username=None, days=None):
         ServerMessage.__init__(self)
-        self.user = user
+        self.username = username
         self.days = days
 
     def make_network_message(self):
         msg = bytearray()
-        msg += self.pack_string(self.user)
+        msg += self.pack_string(self.username)
         msg += self.pack_uint32(self.days)
 
         return msg
@@ -2634,24 +2633,24 @@ class NotifyPrivileges(ServerMessage):
     DEPRECATED, sent by Soulseek NS but not SoulseekQt
     """
 
-    __slots__ = ("token", "user")
+    __slots__ = ("token", "username")
     CODE = 124
 
-    def __init__(self, token=None, user=None, *, msg_content=None):
+    def __init__(self, token=None, username=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.token = token
-        self.user = user
+        self.username = username
 
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_uint32(self.token)
-        msg += self.pack_string(self.user)
+        msg += self.pack_string(self.username)
 
         return msg
 
     def parse_network_message(self):
         self.token = self.unpack_uint32()
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
 
 
 class AckNotifyPrivileges(ServerMessage):
@@ -2699,15 +2698,15 @@ class BranchRoot(ServerMessage):
     distributed network.
     """
 
-    __slots__ = ("user",)
+    __slots__ = ("username",)
     CODE = 127
 
-    def __init__(self, user=None):
+    def __init__(self, username=None):
         ServerMessage.__init__(self)
-        self.user = user
+        self.username = username
 
     def make_network_message(self):
-        return self.pack_string(self.user)
+        return self.pack_string(self.username)
 
 
 class ChildDepth(ServerMessage):
@@ -2772,8 +2771,8 @@ class RoomMembers(ServerMessage):
         num_members = self.unpack_uint32()
 
         for _ in range(num_members):
-            user = self.unpack_string()
-            self.members.append(user)
+            username = self.unpack_string()
+            self.members.append(username)
 
 
 class AddRoomMember(ServerMessage):
@@ -2785,25 +2784,25 @@ class AddRoomMember(ServerMessage):
     The server tells us a member has been added to a private room we are in.
     """
 
-    __slots__ = ("room", "user")
+    __slots__ = ("room", "username")
     CODE = 134
     EVENT_NAME = "add-room-member"
 
-    def __init__(self, room=None, user=None, *, msg_content=None):
+    def __init__(self, room=None, username=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.room = room
-        self.user = user
+        self.username = username
 
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_string(self.room)
-        msg += self.pack_string(self.user)
+        msg += self.pack_string(self.username)
 
         return msg
 
     def parse_network_message(self):
         self.room = self.unpack_string()
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
 
 
 class RemoveRoomMember(ServerMessage):
@@ -2816,25 +2815,25 @@ class RemoveRoomMember(ServerMessage):
     The server tells us a member has been removed from a private room we are in.
     """
 
-    __slots__ = ("room", "user")
+    __slots__ = ("room", "username")
     CODE = 135
     EVENT_NAME = "remove-room-member"
 
-    def __init__(self, room=None, user=None, *, msg_content=None):
+    def __init__(self, room=None, username=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.room = room
-        self.user = user
+        self.username = username
 
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_string(self.room)
-        msg += self.pack_string(self.user)
+        msg += self.pack_string(self.username)
 
         return msg
 
     def parse_network_message(self):
         self.room = self.unpack_string()
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
 
 
 class CancelRoomMembership(ServerMessage):
@@ -2982,25 +2981,25 @@ class AddRoomOperator(ServerMessage):
     room we are in.
     """
 
-    __slots__ = ("room", "user")
+    __slots__ = ("room", "username")
     CODE = 143
     EVENT_NAME = "add-room-operator"
 
-    def __init__(self, room=None, user=None, *, msg_content=None):
+    def __init__(self, room=None, username=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.room = room
-        self.user = user
+        self.username = username
 
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_string(self.room)
-        msg += self.pack_string(self.user)
+        msg += self.pack_string(self.username)
 
         return msg
 
     def parse_network_message(self):
         self.room = self.unpack_string()
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
 
 
 class RemoveRoomOperator(ServerMessage):
@@ -3013,25 +3012,25 @@ class RemoveRoomOperator(ServerMessage):
     private room we are in.
     """
 
-    __slots__ = ("room", "user")
+    __slots__ = ("room", "username")
     CODE = 144
     EVENT_NAME = "remove-room-operator"
 
-    def __init__(self, room=None, user=None, *, msg_content=None):
+    def __init__(self, room=None, username=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.room = room
-        self.user = user
+        self.username = username
 
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_string(self.room)
-        msg += self.pack_string(self.user)
+        msg += self.pack_string(self.username)
 
         return msg
 
     def parse_network_message(self):
         self.room = self.unpack_string()
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
 
 
 class RoomOperatorshipGranted(ServerMessage):
@@ -3095,8 +3094,8 @@ class RoomOperators(ServerMessage):
         num_operators = self.unpack_uint32()
 
         for _ in range(num_operators):
-            user = self.unpack_string()
-            self.operators.append(user)
+            username = self.unpack_string()
+            self.operators.append(username)
 
 
 class MessageUsers(ServerMessage):
@@ -3105,20 +3104,20 @@ class MessageUsers(ServerMessage):
     Sends a broadcast private message to the given list of online users.
     """
 
-    __slots__ = ("users", "msg")
+    __slots__ = ("usernames", "msg")
     CODE = 149
 
-    def __init__(self, users=None, msg=None):
+    def __init__(self, usernames=None, msg=None):
         ServerMessage.__init__(self)
-        self.users = users
+        self.usernames = usernames
         self.msg = msg
 
     def make_network_message(self):
         msg = bytearray()
-        msg += self.pack_uint32(len(self.users))
+        msg += self.pack_uint32(len(self.usernames))
 
-        for user in self.users:
-            msg += self.pack_string(user)
+        for username in self.usernames:
+            msg += self.pack_string(username)
 
         msg += self.pack_string(self.msg)
         return msg
@@ -3165,14 +3164,14 @@ class GlobalRoomMessage(ServerMessage):
     public room feed (every single line written in every public room).
     """
 
-    __slots__ = ("room", "user", "message", "message_type", "mention_type", "mention_keyword")
+    __slots__ = ("room", "username", "message", "message_type", "mention_type", "mention_keyword")
     CODE = 152
     EVENT_NAME = "global-room-message"
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.room = None
-        self.user = None
+        self.username = None
         self.message = None
         self.message_type = None
         self.mention_type = None
@@ -3180,7 +3179,7 @@ class GlobalRoomMessage(ServerMessage):
 
     def parse_network_message(self):
         self.room = self.unpack_string()
-        self.user = self.unpack_string()
+        self.username = self.unpack_string()
         self.message = self.unpack_string()
 
 
@@ -3251,18 +3250,18 @@ class CantConnectToPeer(ServerMessage):
     for indirect connections as well.
     """
 
-    __slots__ = ("token", "user")
+    __slots__ = ("token", "username")
     CODE = 1001
 
-    def __init__(self, token=None, user=None, *, msg_content=None):
+    def __init__(self, token=None, username=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.token = token
-        self.user = user
+        self.username = username
 
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_uint32(self.token)
-        msg += self.pack_string(self.user)
+        msg += self.pack_string(self.username)
 
         return msg
 
@@ -3332,15 +3331,15 @@ class PeerInit(PeerInitMessage):
     verification.
     """
 
-    __slots__ = ("sock", "init_user", "target_user", "conn_type", "target_username_size",
+    __slots__ = ("sock", "init_username", "target_username", "conn_type", "target_username_size",
                  "indirect_token", "indirect_request_time", "outgoing_msgs")
     CODE = 1
 
-    def __init__(self, sock=None, init_user=None, target_user=None, conn_type=None, *, msg_content=None):
+    def __init__(self, sock=None, init_username=None, target_username=None, conn_type=None, *, msg_content=None):
         PeerInitMessage.__init__(self, msg_content)
         self.sock = sock
-        self.init_user = init_user        # our own username
-        self.target_user = target_user    # username of peer we're connected to
+        self.init_username = init_username      # our own username
+        self.target_username = target_username  # username of peer we're connected to
         self.conn_type = conn_type
         self.target_username_size = None  # in bytes
         self.indirect_token = None
@@ -3349,14 +3348,14 @@ class PeerInit(PeerInitMessage):
 
     def make_network_message(self):
         msg = bytearray()
-        msg += self.pack_string(self.init_user)
+        msg += self.pack_string(self.init_username)
         msg += self.pack_string(self.conn_type)
         msg += self.pack_uint32(0)  # Empty token
 
         return msg
 
     def parse_network_message(self):
-        self.target_user = self.unpack_string()
+        self.target_username = self.unpack_string()
         self.target_username_size = self._offset - 4
         self.conn_type = self.unpack_string()
 

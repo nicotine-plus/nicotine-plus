@@ -792,7 +792,7 @@ class Uploads(Transfers):
     def _user_status(self, msg):
         """Server code 7."""
 
-        username = msg.user
+        username = msg.username
 
         if not any(username in users for users in (self.active_users, self.queued_users, self.failed_users)):
             # Ignore irrelevant user status updates
@@ -827,7 +827,7 @@ class Uploads(Transfers):
     def _user_stats(self, msg):
         """Server code 36."""
 
-        if msg.user == core.users.login_username:
+        if msg.username == core.users.login_username:
             self.upload_speed = msg.upload_speed
 
     def _privileged_users(self, _msg):

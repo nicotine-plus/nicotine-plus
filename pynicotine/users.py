@@ -285,7 +285,7 @@ class Users:
     def _get_peer_address(self, msg):
         """Server code 3."""
 
-        username = msg.user
+        username = msg.username
         notify = self._ip_requested.pop(username, None)
         ip_address = msg.ip_address
         user_offline = (ip_address == "0.0.0.0")
@@ -333,9 +333,9 @@ class Users:
     def _watch_user(self, msg):
         """Server code 5."""
 
-        if not msg.userexists:
-            log.add_conn("Unwatching non-existent user %s", msg.user)
-            self.watched.pop(msg.user, None)
+        if not msg.exists:
+            log.add_conn("Unwatching non-existent user %s", msg.username)
+            self.watched.pop(msg.username, None)
             return
 
         events.emit("user-stats", msg)
@@ -343,7 +343,7 @@ class Users:
     def _user_status(self, msg):
         """Server code 7."""
 
-        username = msg.user
+        username = msg.username
         status = msg.status
         is_privileged = msg.privileged
 
@@ -390,7 +390,7 @@ class Users:
     def _connect_to_peer(self, msg):
         """Server code 18."""
 
-        username = msg.user
+        username = msg.username
         is_privileged = msg.privileged
 
         if is_privileged is None:
@@ -405,7 +405,7 @@ class Users:
     def _user_stats(self, msg):
         """Server code 36."""
 
-        username = msg.user
+        username = msg.username
         upload_speed = msg.upload_speed
         num_files = msg.num_files
         num_folders = msg.num_folders
@@ -417,7 +417,7 @@ class Users:
             stats.num_files = num_files
             stats.num_folders = num_folders
 
-        core.pluginhandler.user_stats_notification(msg.user, stats={
+        core.pluginhandler.user_stats_notification(msg.username, stats={
             "avgspeed": upload_speed,
             "files": num_files,
             "dirs": num_folders,
@@ -440,7 +440,7 @@ class Users:
     def _privileged_users(self, msg):
         """Server code 69."""
 
-        for username in msg.users:
+        for username in msg.usernames:
             self.privileged.add(username)
 
     def _check_privileges(self, msg):

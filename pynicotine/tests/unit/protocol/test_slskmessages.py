@@ -99,7 +99,7 @@ class GetPeerAddressMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = GetPeerAddress(user="user1")
+        obj = GetPeerAddress(username="user1")
 
         # Act
         message = obj.make_network_message()
@@ -112,7 +112,7 @@ class WatchUserMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = WatchUser(user="user2")
+        obj = WatchUser(username="user2")
 
         # Act
         message = obj.make_network_message()
@@ -125,7 +125,7 @@ class UnwatchUserMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = UnwatchUser(user="user3")
+        obj = UnwatchUser(username="user3")
 
         # Act
         message = obj.make_network_message()
@@ -138,7 +138,7 @@ class GetUserStatusMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = GetUserStatus(user="user4")
+        obj = GetUserStatus(username="user4")
 
         # Act
         message = obj.make_network_message()
@@ -177,7 +177,7 @@ class NotifyPrivilegesMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = NotifyPrivileges(token=123456, user="user5")
+        obj = NotifyPrivileges(token=123456, username="user5")
 
         # Act
         message = obj.make_network_message()
@@ -258,7 +258,7 @@ class AddRoomMemberMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = AddRoomMember(room="room3", user="admin")
+        obj = AddRoomMember(room="room3", username="admin")
 
         # Act
         message = obj.make_network_message()
@@ -310,7 +310,7 @@ class RemoveRoomMemberMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = RemoveRoomMember(room="room7", user="admin")
+        obj = RemoveRoomMember(room="room7", username="admin")
 
         # Act
         message = obj.make_network_message()
@@ -328,4 +328,4 @@ class RemoveRoomMemberMessageTest(TestCase):
 
         # Assert
         self.assertEqual(obj.room, "room7")
-        self.assertEqual(obj.user, "admin")
+        self.assertEqual(obj.username, "admin")

@@ -294,7 +294,7 @@ class Buddies:
 
     def user_status(self, msg):
 
-        iterator = self.list_view.iterators.get(msg.user)
+        iterator = self.list_view.iterators.get(msg.username)
 
         if iterator is None:
             return
@@ -307,7 +307,7 @@ class Buddies:
 
     def user_stats(self, msg):
 
-        iterator = self.list_view.iterators.get(msg.user)
+        iterator = self.list_view.iterators.get(msg.username)
 
         if iterator is None:
             return

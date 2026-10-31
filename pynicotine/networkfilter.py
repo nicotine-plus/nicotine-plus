@@ -555,7 +555,7 @@ class NetworkFilter:
     def _get_peer_address(self, msg):
         """Server code 3."""
 
-        username = msg.user
+        username = msg.username
         ip_address = msg.ip_address
 
         if ip_address == "0.0.0.0":

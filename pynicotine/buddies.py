@@ -271,7 +271,7 @@ class Buddies:
     def _user_status(self, msg):
         """Server code 7."""
 
-        username = msg.user
+        username = msg.username
 
         if username not in self.users:
             return
