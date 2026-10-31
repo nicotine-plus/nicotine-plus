@@ -1362,16 +1362,16 @@ sources.
 
   - Send
     1.  **uint32** *token*
-    2.  **string** *filename*
-    3.  **string** *path*
+    2.  **string** *file path*
+    3.  **string** *folder path*
     4.  **uint64** *file size*
     5.  **uint32** *checksum*
     6.  **uint8** *unknown*
   - Receive
     1.  **string** *username*
     2.  **uint32** *token*
-    3.  **string** *filename*
-    4.  **string** *path*
+    3.  **string** *file path*
+    4.  **string** *folder path*
     5.  **uint64** *file size*
     6.  **uint32** *checksum*
 
@@ -2632,14 +2632,14 @@ A peer responds with a list of shared files after we've sent a
 ### Data Order
 
   - Send
-    1.  **uint32** *number of directories*
-    2.  Iterate *number of directories*
-        1.  **string** *directory*
+    1.  **uint32** *number of folders*
+    2.  Iterate *number of folders*
+        1.  **string** *folder path*
         2.  **uint32** *number of files*
         3.  Iterate *number of files*
             1.  **uint8** *code*  
                 Value is always `1`
-            2.  **string** *filename*
+            2.  **string** *basename*
             3.  **uint64** *file size*
             4.  **string** *file extension*
             5.  **uint32** *number of attributes*
@@ -2649,14 +2649,14 @@ A peer responds with a list of shared files after we've sent a
                 2.  **uint32** *attribute value*
     3.  **uint32** *unknown*  
         Official clients always send a value of `0`
-    4.  **uint32** *number of private directories*
-    5.  Iterate *number of private directories*
-        1.  **string** *directory*
+    4.  **uint32** *number of private folders*
+    5.  Iterate *number of private folders*
+        1.  **string** *folder path*
         2.  **uint32** *number of files*
         3.  Iterate *number of files*
             1.  **uint8** *code*  
                 Value is always `1`
-            2.  **string** *filename*
+            2.  **string** *basename*
             3.  **uint64** *file size*
             4.  **string** *file extension*
             5.  **uint32** *number of attributes*
@@ -2667,14 +2667,14 @@ A peer responds with a list of shared files after we've sent a
     6. zlib compress
   - Receive
     1.  zlib decompress
-    2.  **uint32** *number of directories*
-    3.  Iterate *number of directories*
-        1.  **string** *directory*
+    2.  **uint32** *number of folders*
+    3.  Iterate *number of folders*
+        1.  **string** *folder path*
         2.  **uint32** *number of files*
         3.  Iterate *number of files*
             1.  **uint8** *code*  
                 Value is always `1`
-            2.  **string** *filename*
+            2.  **string** *basename*
             3.  **uint64** *file size*
             4.  **string** *file extension*
             5.  **uint32** *number of attributes*
@@ -2686,14 +2686,14 @@ A peer responds with a list of shared files after we've sent a
         1.  **uint32** *unknown*  
             Official clients always send a value of `0`
     5.  Optional
-        1.  **uint32** *number of private directories*
-        2.  Iterate *number of private directories*
-            1.  **string** *directory*
+        1.  **uint32** *number of private folders*
+        2.  Iterate *number of private folders*
+            1.  **string** *folder path*
             2.  **uint32** *number of files*
             3.  Iterate *number of files*
                 1.  **uint8** *code*  
                     Value is always `1`
-                2.  **string** *filename*
+                2.  **string** *basename*
                 3.  **uint64** *file size*
                 4.  **string** *file extension*
                 5.  **uint32** *number of attributes*
@@ -2739,7 +2739,7 @@ from original [FileSearch](#server-code-26), [UserSearch](#server-code-42) or
     4.  Iterate for *number of results*
         1.  **uint8** *code*  
             Value is always `1`
-        2.  **string** *filename*
+        2.  **string** *file path*
         3.  **uint64** *file size*
         4.  **string** *file extension*  
             SoulseekNS requires `mp3` to show attributes
@@ -2757,7 +2757,7 @@ from original [FileSearch](#server-code-26), [UserSearch](#server-code-42) or
     10. Iterate for *number of privately shared results*
         1.  **uint8** *code*
             Value is always `1`
-        2.  **string** *filename*
+        2.  **string** *file path*
         3.  **uint64** *file size*
         4.  **string** *file extension*  
             SoulseekNS requires `mp3` to show attributes
@@ -2775,7 +2775,7 @@ from original [FileSearch](#server-code-26), [UserSearch](#server-code-42) or
     5.  Iterate for *number of results*
         1.  **uint8** *code*
             Value is always `1`
-        2.  **string** *filename*
+        2.  **string** *file path*
         3.  **uint64** *file size*
         4.  **string** *file extension*  
             Always blank from SoulseekQt clients
@@ -2795,7 +2795,7 @@ from original [FileSearch](#server-code-26), [UserSearch](#server-code-42) or
         2.  Iterate for *number of privately shared results*
             1.  **uint8** *code*  
                 Value is always `1`
-            2.  **string** *filename*
+            2.  **string** *file path*
             3.  **uint64** *file size*
             4.  **string** *file extension*  
                 Always blank from SoulseekQt clients
@@ -2883,15 +2883,15 @@ after we've sent a [FolderContentsRequest](#peer-code-36).
 
   - Send
     1.  **uint32** *token*
-    2.  **string** *folder*
+    2.  **string** *folder path*
     3.  **uint32** *number of folders*
     4.  Iterate for *number of folders*
-        1.  **string** *dir*
+        1.  **string** *folder path*
         2.  **uint32** *number of files*
         3.  Iterate *number of files*
             1.  **uint8** *code*
                 Value is always `1`
-            2.  **string** *file*
+            2.  **string** *basename*
             3.  **uint64** *file size*
             4.  **string** *file extension*  
                 Always blank from SoulseekQt clients
@@ -2904,15 +2904,15 @@ after we've sent a [FolderContentsRequest](#peer-code-36).
   - Receive
     1.  zlib decompress
     2.  **uint32** *token*
-    3.  **string** *folder*
+    3.  **string** *folder path*
     4.  **uint32** *number of folders*
     5.  Iterate for *number of folders*
-        1.  **string** *dir*
+        1.  **string** *folder path*
         2.  **uint32** *number of files*
         3.  Iterate *number of files*
             1.  **uint8** *code*  
                 Value is always `1`
-            2.  **string** *file*
+            2.  **string** *basename*
             3.  **uint64** *file size*
             4.  **string** *file extension*  
                 Always blank from SoulseekQt clients
@@ -2943,14 +2943,14 @@ still understand such requests.
     1.  **uint32** *direction*  
         See [Transfer Directions](#transfer-directions)
     2.  **uint32** *token*
-    3.  **string** *filename*
+    3.  **string** *file path*
     4.  If direction == 1 (upload)
         1.  **uint64** *file size*
   - Receive
     1.  **uint32** *direction*  
         See [Transfer Directions](#transfer-directions)
     2.  **uint32** *token*
-    3.  **string** *filename*
+    3.  **string** *file path*
     4.  If direction == 1 (upload)
         1.  **uint64** *file size*
 
@@ -3024,9 +3024,9 @@ We either accept the upload request, or tell the reason for rejecting it.
 ### Data Order
 
   - Send
-    1.  **string** *filename*
+    1.  **string** *file path*
   - Receive
-    1.  **string** *filename*
+    1.  **string** *file path*
 
 
 ## Peer Code 43
@@ -3040,9 +3040,9 @@ send a [TransferRequest](#peer-code-40) to us.
 ### Data Order
 
   - Send
-    1.  **string** *filename*
+    1.  **string** *file path*
   - Receive
-    1.  **string** *filename*
+    1.  **string** *file path*
 
 
 ## Peer Code 44
@@ -3054,10 +3054,10 @@ The peer replies with the upload queue placement of the requested file.
 ### Data Order
 
   - Send
-    1.  **string** *filename*
+    1.  **string** *file path*
     2.  **uint32** *place*
   - Receive
-    1.  **string** *filename*
+    1.  **string** *file path*
     2.  **uint32** *place*
 
 
@@ -3073,9 +3073,9 @@ the message if the transfer finished.
 ### Data Order
 
   - Send
-    1.  **string** *filename*
+    1.  **string** *file path*
   - Receive
-    1.  **string** *filename*
+    1.  **string** *file path*
 
 
 ## Peer Code 50
@@ -3089,11 +3089,11 @@ list of the recipient.
 ### Data Order
 
   - Send
-    1.  **string** *filename*
+    1.  **string** *file path*
     2.  **string** *reason*  
         See [Transfer Rejection Reasons](#transfer-rejection-reasons)
   - Receive
-    1.  **string** *filename*
+    1.  **string** *file path*
     2.  **string** *reason*  
         See [Transfer Rejection Reasons](#transfer-rejection-reasons)
 
@@ -3107,9 +3107,9 @@ This message is sent when asking for the upload queue placement of a file.
 ### Data Order
 
   - Send
-    1.  **string** *filename*
+    1.  **string** *file path*
   - Receive
-    1.  **string** *filename*
+    1.  **string** *file path*
 
 
 ## Peer Code 52
