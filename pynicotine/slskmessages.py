@@ -600,44 +600,44 @@ class ServerMessage(SlskMessage):
     TYPE = MessageType.SERVER
 
     def parse_users(self):
-        numusers = self.unpack_uint32()
+        num_users = self.unpack_uint32()
 
         users = []
-        for i in range(numusers):
+        for i in range(num_users):
             users.append(UserData())
             users[i].username = self.unpack_string()
 
-        statuslen = self.unpack_uint32()
-        for i in range(statuslen):
+        num_statuses = self.unpack_uint32()
+        for i in range(num_statuses):
             users[i].status = self.unpack_uint32()
 
-        statslen = self.unpack_uint32()
-        for i in range(statslen):
+        num_stats = self.unpack_uint32()
+        for i in range(num_stats):
             users[i].upload_speed = self.unpack_uint32()
             users[i].upload_number = self.unpack_uint32()
             users[i].unknown = self.unpack_uint32()
             users[i].num_files = self.unpack_uint32()
             users[i].num_folders = self.unpack_uint32()
 
-        slotslen = self.unpack_uint32()
-        for i in range(slotslen):
+        num_slots_full = self.unpack_uint32()
+        for i in range(num_slots_full):
             users[i].slots_full = self.unpack_uint32()
 
-        countrylen = self.unpack_uint32()
-        for i in range(countrylen):
+        num_countries = self.unpack_uint32()
+        for i in range(num_countries):
             users[i].country = self.unpack_string()
 
         return users
 
     def populate_recommendations(self, recommendations, unrecommendations):
-        num = self.unpack_uint32()
+        num_recommendations = self.unpack_uint32()
 
-        for _ in range(num):
-            key = self.unpack_string()
+        for _ in range(num_recommendations):
+            recommendation = self.unpack_string()
             rating = self.unpack_int32()
 
             lst = recommendations if rating >= 0 else unrecommendations
-            item = (key, rating)
+            item = (recommendation, rating)
 
             if item not in lst:
                 lst.append(item)
@@ -1010,9 +1010,9 @@ class JoinRoom(ServerMessage):
 
         self.room_type = RoomType.PRIVATE
         self.owner = self.unpack_string()
-        numops = self.unpack_uint32()
+        num_operators = self.unpack_uint32()
 
-        for _ in range(numops):
+        for _ in range(num_operators):
             operator = self.unpack_string()
             self.operators.append(operator)
 
@@ -1511,9 +1511,9 @@ class SimilarRecommendations(ServerMessage):
 
     def parse_network_message(self):
         self.recommendation = self.unpack_string()
-        num = self.unpack_uint32()
+        num_recommendations = self.unpack_uint32()
 
-        for _ in range(num):
+        for _ in range(num_recommendations):
             similar_recommendation = self.unpack_string()
             self.similar_recommendations.append(similar_recommendation)
 
@@ -1602,9 +1602,9 @@ class MyRecommendations(ServerMessage):
         return b""
 
     def parse_network_message(self):
-        num = self.unpack_uint32()
+        num_recommendations = self.unpack_uint32()
 
-        for _ in range(num):
+        for _ in range(num_recommendations):
             recommendation = self.unpack_string()
             self.my_recommendations.append(recommendation)
 
@@ -1654,17 +1654,17 @@ class UserInterests(ServerMessage):
 
     def parse_network_message(self):
         self.user = self.unpack_string()
-        likesnum = self.unpack_uint32()
+        num_likes = self.unpack_uint32()
 
-        for _ in range(likesnum):
-            key = self.unpack_string()
-            self.likes.append(key)
+        for _ in range(num_likes):
+            interest = self.unpack_string()
+            self.likes.append(interest)
 
-        hatesnum = self.unpack_uint32()
+        num_hates = self.unpack_uint32()
 
-        for _ in range(hatesnum):
-            key = self.unpack_string()
-            self.hates.append(key)
+        for _ in range(num_hates):
+            interest = self.unpack_string()
+            self.hates.append(interest)
 
 
 class AdminCommand(ServerMessage):
@@ -1816,10 +1816,10 @@ class RoomList(ServerMessage):
         return b""
 
     def parse_rooms(self, has_count=True):
-        numrooms = self.unpack_uint32()
+        num_rooms = self.unpack_uint32()
 
         rooms = []
-        for i in range(numrooms):
+        for i in range(num_rooms):
             room = self.unpack_string()
 
             if has_count:
@@ -1830,9 +1830,9 @@ class RoomList(ServerMessage):
         if not has_count:
             return rooms
 
-        numusers = self.unpack_uint32()
+        num_users = self.unpack_uint32()
 
-        for i in range(numusers):
+        for i in range(num_users):
             rooms[i][1] = self.unpack_uint32()
 
         return rooms
@@ -1983,9 +1983,9 @@ class PrivilegedUsers(ServerMessage):
         self.users = []
 
     def parse_network_message(self):
-        numusers = self.unpack_uint32()
+        num_users = self.unpack_uint32()
 
-        for _ in range(numusers):
+        for _ in range(num_users):
             user = self.unpack_string()
             self.users.append(user)
 
@@ -2256,9 +2256,9 @@ class PossibleParents(ServerMessage):
         self.list = {}
 
     def parse_network_message(self):
-        num = self.unpack_uint32()
+        num_candidates = self.unpack_uint32()
 
-        for _ in range(num):
+        for _ in range(num_candidates):
             username = self.unpack_string()
             ip_address = self.unpack_ip()
             port = self.unpack_uint32()
@@ -2326,9 +2326,9 @@ class SimilarUsers(ServerMessage):
         return b""
 
     def parse_network_message(self):
-        num = self.unpack_uint32()
+        num_users = self.unpack_uint32()
 
-        for _ in range(num):
+        for _ in range(num_users):
             self.users.append(
                 SimilarUser(
                     username=self.unpack_string(),
@@ -2388,9 +2388,9 @@ class ItemSimilarUsers(ServerMessage):
 
     def parse_network_message(self):
         self.thing = self.unpack_string()
-        num = self.unpack_uint32()
+        num_users = self.unpack_uint32()
 
-        for _ in range(num):
+        for _ in range(num_users):
             self.users.append(SimilarUser(username=self.unpack_string()))
 
 
@@ -2415,9 +2415,9 @@ class RoomTickers(ServerMessage):
 
     def parse_network_message(self):
         self.room = self.unpack_string()
-        num = self.unpack_uint32()
+        num_tickers = self.unpack_uint32()
 
-        for _ in range(num):
+        for _ in range(num_tickers):
             user = self.unpack_string()
             msg = self.unpack_string()
 
