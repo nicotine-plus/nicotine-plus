@@ -847,7 +847,7 @@ class Search:
         # any), so set the end row id to the maximum possible number of new rows.
         end_row_id = self.row_id = self.row_id + (len(result_list) * 2) + 1
 
-        for _code, file_path, size, _ext, file_attributes, *_unused in reversed(result_list):
+        for _code, file_path, size, _file_extension, file_attributes, *_unused in reversed(result_list):
             if self.num_results_found >= config.sections["searches"]["max_displayed_results"]:
                 break
 
@@ -945,9 +945,9 @@ class Search:
 
         update_ui_private = False
 
-        if msg.privatelist and config.sections["searches"]["private_search_results"]:
+        if msg.private_list and config.sections["searches"]["private_search_results"]:
             update_ui_private = self.add_result_list(
-                msg.privatelist, user, country_code, num_queued, upload_speed, h_upload_speed, h_num_queued,
+                msg.private_list, user, country_code, num_queued, upload_speed, h_upload_speed, h_num_queued,
                 is_private=True
             )
 

@@ -631,8 +631,8 @@ class Uploads(Transfers):
 
         core.send_message_to_peer(
             username, TransferRequest(
-                direction=TransferDirection.UPLOAD, token=self._token, file=virtual_path,
-                filesize=final_upload_candidate.size))
+                direction=TransferDirection.UPLOAD, token=self._token, file_path=virtual_path,
+                file_size=final_upload_candidate.size))
 
         self._update_transfer(final_upload_candidate)
 
@@ -918,7 +918,7 @@ class Uploads(Transfers):
         """
 
         username = msg.username
-        virtual_path = msg.file
+        virtual_path = msg.file_path
         allowed, reason, real_path, size = self._check_queue_upload_allowed(username, msg.addr, virtual_path, msg)
         is_backslash_path = False
         is_lowercase_path = False
@@ -996,7 +996,7 @@ class Uploads(Transfers):
 
         log.add_transfer("Responding to legacy upload request %s for file %s from user %s, "
                          "allowed: %s, reason: %s",
-                         (response.token, msg.file, username, response.allowed, response.reason))
+                         (response.token, msg.file_path, username, response.allowed, response.reason))
 
         core.send_message_to_peer(username, response)
 
@@ -1012,7 +1012,7 @@ class Uploads(Transfers):
         """
 
         username = msg.username
-        virtual_path = msg.file
+        virtual_path = msg.file_path
         token = msg.token
         is_backslash_path = False
 
@@ -1076,7 +1076,7 @@ class Uploads(Transfers):
         reason = msg.reason
 
         log.add_transfer("Received response for upload with token: %s, allowed: %s, "
-                         "reason: %s, file size: %s", (token, msg.allowed, reason, msg.filesize))
+                         "reason: %s, file size: %s", (token, msg.allowed, reason, msg.file_size))
 
         upload = self.active_users.get(username, {}).get(token)
 
@@ -1189,7 +1189,7 @@ class Uploads(Transfers):
             if upload.size > 0:
                 upload.status = TransferStatus.TRANSFERRING
                 core.send_message_to_network_thread(UploadFile(
-                    sock=sock, token=token, file=file_handle, size=upload.size
+                    sock=sock, token=token, file_handle=file_handle, file_size=upload.size
                 ))
 
             else:
@@ -1260,7 +1260,7 @@ class Uploads(Transfers):
         """Peer code 51."""
 
         username = msg.username
-        virtual_path = msg.file
+        virtual_path = msg.file_path
         upload = self.queued_users.get(username, {}).get(virtual_path)
 
         if upload is None:

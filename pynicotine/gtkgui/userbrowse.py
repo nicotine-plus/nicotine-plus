@@ -573,7 +573,7 @@ class UserBrowse:
 
     def shared_file_list(self, msg):
 
-        is_empty = (not msg.list and not msg.privatelist)
+        is_empty = (not msg.list and not msg.private_list)
         self.local_permission_level = msg.permission_level
 
         self.rebuild_model()
@@ -761,7 +761,7 @@ class UserBrowse:
         # Temporarily disable sorting for increased performance
         self.file_list_view.freeze()
 
-        for _code, basename, size, _ext, file_attributes, *_unused in reversed(files):
+        for _code, basename, size, _file_extension, file_attributes, *_unused in reversed(files):
             h_size = human_size(size, config.sections["ui"]["file_size_unit"])
             h_quality, bitrate, h_length, length = FileListMessage.parse_audio_quality_length(size, file_attributes)
 
@@ -786,9 +786,9 @@ class UserBrowse:
 
         for iterator in self.file_list_view.get_selected_rows():
             basename = self.file_list_view.get_row_value(iterator, "filename")
-            filesize = self.file_list_view.get_row_value(iterator, "size_data")
+            file_size = self.file_list_view.get_row_value(iterator, "size_data")
 
-            self.selected_files[basename] = filesize
+            self.selected_files[basename] = file_size
 
     def get_selected_folder_path(self):
 
@@ -945,7 +945,7 @@ class UserBrowse:
             for folder_path, files in core.userbrowse.iter_matching_folders(
                 selected_folder_path, browsed_user=core.userbrowse.users[self.user], recurse=True
             ):
-                for _code, basename, file_size, _ext, file_attributes, *_unused in files:
+                for _code, basename, file_size, _file_extension, file_attributes, *_unused in files:
                     file_path = "\\".join([folder_path, basename])
 
                     data.append((self.user, file_path, file_size, file_attributes, selected, selected_folder_path))
@@ -1250,7 +1250,7 @@ class UserBrowse:
                     selected_folder_path, browsed_user=core.userbrowse.users[self.user], recurse=True
                 ):
                     for file_data in files:
-                        _code, basename, file_size, _ext, file_attributes, *_unused = file_data
+                        _code, basename, file_size, _file_extension, file_attributes, *_unused = file_data
                         file_path = "\\".join([folder_path, basename])
                         selected_size += file_size
 

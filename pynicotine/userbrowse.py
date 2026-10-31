@@ -335,7 +335,7 @@ class UserBrowse:
 
     def download_file(self, username, folder_path, file_data, download_folder_path=None):
 
-        _code, basename, file_size, _ext, file_attributes, *_unused = file_data
+        _code, basename, file_size, _file_extension, file_attributes, *_unused = file_data
         file_path = "\\".join([folder_path, basename])
 
         core.downloads.enqueue_download(
@@ -374,7 +374,7 @@ class UserBrowse:
                 download_folder_path=download_folder_path)
 
             if files:
-                for _code, basename, file_size, _ext, file_attributes, *_unused in files:
+                for _code, basename, file_size, _file_extension, file_attributes, *_unused in files:
                     file_path = "\\".join([folder_path, basename])
 
                     core.downloads.enqueue_download(
@@ -453,11 +453,11 @@ class UserBrowse:
 
         username = msg.username
         browsed_user = self.users.get(username)
-        num_folders = len(msg.list) + len(msg.privatelist)
+        num_folders = len(msg.list) + len(msg.private_list)
         num_files = 0
         shared_size = 0
 
-        for _folder_path, files in chain(msg.list, msg.privatelist):
+        for _folder_path, files in chain(msg.list, msg.private_list):
             for file_info in files:
                 shared_size += file_info[2]
 
@@ -465,7 +465,7 @@ class UserBrowse:
 
         if browsed_user is not None:
             browsed_user.public_folders = dict(msg.list)
-            browsed_user.private_folders = dict(msg.privatelist)
+            browsed_user.private_folders = dict(msg.private_list)
             browsed_user.num_folders = num_folders
             browsed_user.num_files = num_files
             browsed_user.shared_size = shared_size

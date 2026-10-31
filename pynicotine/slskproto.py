@@ -1141,7 +1141,7 @@ class NetworkThread(Thread):
                 events.emit_main_thread(
                     "file-download-progress",
                     username=conn.init.target_user, token=file_download.token, sock=conn.sock,
-                    bytes_left=file_download.leftbytes, speed=file_download.speed
+                    bytes_left=file_download.num_bytes_left, speed=file_download.speed
                 )
                 file_download.speed = 0
 
@@ -1151,7 +1151,7 @@ class NetworkThread(Thread):
                 events.emit_main_thread(
                     "file-upload-progress",
                     username=conn.init.target_user, token=file_upload.token, sock=conn.sock,
-                    offset=file_upload.offset, bytes_sent=file_upload.sentbytes,
+                    offset=file_upload.offset, bytes_sent=file_upload.num_bytes_sent,
                     speed=file_upload.speed
                 )
                 file_upload.speed = 0
@@ -2101,11 +2101,11 @@ class NetworkThread(Thread):
         events.emit_main_thread(
             "file-upload-progress",
             username=conn.init.target_user, token=file_upload.token, sock=conn.sock,
-            offset=file_upload.offset, bytes_sent=file_upload.sentbytes
+            offset=file_upload.offset, bytes_sent=file_upload.num_bytes_sent
         )
 
         try:
-            file_upload.file.seek(msg.offset)
+            file_upload.file_handle.seek(msg.offset)
             self._modify_connection_events(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
         except (OSError, ValueError) as error:
@@ -2126,13 +2126,13 @@ class NetworkThread(Thread):
         file_download.speed += data_len
         self._total_download_bandwidth += data_len
 
-        file_download.file.write(data)
-        file_download.leftbytes -= data_len
+        file_download.file_handle.write(data)
+        file_download.num_bytes_left -= data_len
 
     def _process_download(self, conn, data, data_len):
 
         file_download = self._file_download_msgs[conn]
-        idx = file_download.leftbytes
+        idx = file_download.num_bytes_left
 
         try:
             if data_len > idx:
@@ -2148,17 +2148,17 @@ class NetworkThread(Thread):
             return False  # Close the connection
 
         # Download finished
-        if file_download.leftbytes <= 0:
+        if file_download.num_bytes_left <= 0:
             events.emit_main_thread(
                 "file-download-progress",
                 username=conn.init.target_user, token=file_download.token, sock=conn.sock,
-                bytes_left=file_download.leftbytes
+                bytes_left=file_download.num_bytes_left
             )
             return False  # Close the connection
 
         return True
 
-    def _process_upload(self, conn, num_sent_bytes, current_time):
+    def _process_upload(self, conn, num_bytes_sent, current_time):
 
         file_upload = self._file_upload_msgs[conn]
 
@@ -2167,18 +2167,18 @@ class NetworkThread(Thread):
 
         out_buffer = conn.out_buffer
         out_buffer_len = len(out_buffer)
-        file_upload.sentbytes += num_sent_bytes
-        total_read_bytes = file_upload.offset + file_upload.sentbytes + out_buffer_len
-        size = file_upload.size
+        file_upload.num_bytes_sent += num_bytes_sent
+        total_read_bytes = file_upload.offset + file_upload.num_bytes_sent + out_buffer_len
+        file_size = file_upload.file_size
 
         try:
-            if total_read_bytes < size:
+            if total_read_bytes < file_size:
                 num_bytes_to_read = int(
-                    (max(4096, num_sent_bytes * 1.25) / max(1, current_time - conn.last_active))
+                    (max(4096, num_bytes_sent * 1.25) / max(1, current_time - conn.last_active))
                     - out_buffer_len
                 )
                 if num_bytes_to_read > 0:
-                    out_buffer += file_upload.file.read(num_bytes_to_read)
+                    out_buffer += file_upload.file_handle.read(num_bytes_to_read)
                     self._modify_connection_events(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
         except (OSError, ValueError) as error:
@@ -2188,15 +2188,15 @@ class NetworkThread(Thread):
             )
             return False  # Close the connection
 
-        file_upload.speed += num_sent_bytes
-        self._total_upload_bandwidth += num_sent_bytes
+        file_upload.speed += num_bytes_sent
+        self._total_upload_bandwidth += num_bytes_sent
 
         # Upload finished
-        if file_upload.offset + file_upload.sentbytes == size:
+        if file_upload.offset + file_upload.num_bytes_sent == file_size:
             events.emit_main_thread(
                 "file-upload-progress",
                 username=conn.init.target_user, token=file_upload.token, sock=conn.sock,
-                offset=file_upload.offset, bytes_sent=file_upload.sentbytes
+                offset=file_upload.offset, bytes_sent=file_upload.num_bytes_sent
             )
         return True
 

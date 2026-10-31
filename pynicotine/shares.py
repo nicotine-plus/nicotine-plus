@@ -1388,7 +1388,7 @@ class Shares:
 
         ip_address, _port = msg.addr
         username = msg.username
-        folder_path = msg.dir
+        folder_path = msg.folder_path
         permission_level, _reject_reason = self.check_user_permission(username, ip_address)
         folder_data = None
 
@@ -1406,4 +1406,4 @@ class Shares:
                 folder_data = self.share_dbs.get("trusted_streams", {}).get(folder_path)
 
         core.send_message_to_peer(
-            username, FolderContentsResponse(directory=folder_path, token=msg.token, shares=folder_data))
+            username, FolderContentsResponse(folder_path=folder_path, token=msg.token, shares=folder_data))

@@ -209,25 +209,26 @@ class EmitNetworkMessageEvents(InternalMessage):
 class DownloadFile(InternalMessage):
     """Sent to the networking thread to pass the file object to write."""
 
-    __slots__ = ("sock", "token", "file", "leftbytes", "speed")
+    __slots__ = ("sock", "token", "file_handle", "num_bytes_left", "speed")
 
-    def __init__(self, sock=None, token=None, file=None, leftbytes=None):
+    def __init__(self, sock=None, token=None, file_handle=None, num_bytes_left=None):
         self.sock = sock
         self.token = token
-        self.file = file
-        self.leftbytes = leftbytes
+        self.file_handle = file_handle
+        self.num_bytes_left = num_bytes_left
         self.speed = 0
 
 
 class UploadFile(InternalMessage):
-    __slots__ = ("sock", "token", "file", "size", "sentbytes", "offset", "speed")
+    __slots__ = ("sock", "token", "file_handle", "file_size", "num_bytes_sent", "offset", "speed")
 
-    def __init__(self, sock=None, token=None, file=None, size=None, sentbytes=0, offset=None):
+    def __init__(self, sock=None, token=None, file_handle=None, file_size=None, num_bytes_sent=0,
+                 offset=None):
         self.sock = sock
         self.token = token
-        self.file = file
-        self.size = size
-        self.sentbytes = sentbytes
+        self.file_handle = file_handle
+        self.file_size = file_size
+        self.num_bytes_sent = num_bytes_sent
         self.offset = offset
         self.speed = 0
 
@@ -467,7 +468,7 @@ class FileListMessage(SlskMessage):
         return msg
 
     @classmethod
-    def parse_audio_quality_length(cls, filesize, attributes, always_show_bitrate=False):
+    def parse_audio_quality_length(cls, file_size, attributes, always_show_bitrate=False):
 
         bitrate = attributes.bitrate
         length = attributes.length
@@ -486,7 +487,7 @@ class FileListMessage(SlskMessage):
         if length is None:
             if bitrate > 0:
                 # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
-                length = filesize // (bitrate * 125)
+                length = file_size // (bitrate * 125)
             else:
                 length = -1
 
@@ -1852,16 +1853,16 @@ class ExactFileSearch(ServerMessage):
     OBSOLETE, no results even with official client
     """
 
-    __slots__ = ("token", "file", "folder", "size", "checksum", "user", "unknown")
+    __slots__ = ("token", "file_path", "folder_path", "file_size", "checksum", "user", "unknown")
     CODE = 65
 
-    def __init__(self, token=None, file=None, folder=None, size=None, checksum=None, unknown=None,
-                 *, msg_content=None):
+    def __init__(self, token=None, file_path=None, folder_path=None, file_size=None, checksum=None,
+                 unknown=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.token = token
-        self.file = file
-        self.folder = folder
-        self.size = size
+        self.file_path = file_path
+        self.folder_path = folder_path
+        self.file_size = file_size
         self.checksum = checksum
         self.unknown = unknown
         self.user = None
@@ -1869,9 +1870,9 @@ class ExactFileSearch(ServerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_uint32(self.token)
-        msg += self.pack_string(self.file)
-        msg += self.pack_string(self.folder)
-        msg += self.pack_uint64(self.size)
+        msg += self.pack_string(self.file_path)
+        msg += self.pack_string(self.folder_path)
+        msg += self.pack_uint64(self.file_size)
         msg += self.pack_uint32(self.checksum)
         msg += self.pack_uint8(self.unknown)
 
@@ -1880,9 +1881,9 @@ class ExactFileSearch(ServerMessage):
     def parse_network_message(self):
         self.user = self.unpack_string()
         self.token = self.unpack_uint32()
-        self.file = self.unpack_string()
-        self.folder = self.unpack_string()
-        self.size = self.unpack_uint64()
+        self.file_path = self.unpack_string()
+        self.folder_path = self.unpack_string()
+        self.file_size = self.unpack_uint64()
         self.checksum = self.unpack_uint32()
 
 
@@ -3394,29 +3395,29 @@ class PeerMessage(SlskMessage):
 
     def unpack_file_attributes(self):
 
-        attrs = FileAttributes()
-        numattr = self.unpack_uint32()
+        attributes = FileAttributes()
+        num_attributes = self.unpack_uint32()
 
-        for _ in range(numattr):
-            attrnum = self.unpack_uint32()
-            attr = self.unpack_uint32()
+        for _ in range(num_attributes):
+            attribute = self.unpack_uint32()
+            value = self.unpack_uint32()
 
-            if attrnum == FileAttribute.BITRATE:
-                attrs.bitrate = attr
+            if attribute == FileAttribute.BITRATE:
+                attributes.bitrate = value
 
-            elif attrnum == FileAttribute.LENGTH:
-                attrs.length = attr
+            elif attribute == FileAttribute.LENGTH:
+                attributes.length = value
 
-            elif attrnum == FileAttribute.VBR:
-                attrs.vbr = attr
+            elif attribute == FileAttribute.VBR:
+                attributes.vbr = value
 
-            elif attrnum == FileAttribute.SAMPLE_RATE:
-                attrs.sample_rate = attr
+            elif attribute == FileAttribute.SAMPLE_RATE:
+                attributes.sample_rate = value
 
-            elif attrnum == FileAttribute.BIT_DEPTH:
-                attrs.bit_depth = attr
+            elif attribute == FileAttribute.BIT_DEPTH:
+                attributes.bit_depth = value
 
-        return attrs
+        return attributes
 
 
 class SharedFileListRequest(PeerMessage):
@@ -3444,11 +3445,11 @@ class SharedFileListResponse(PeerMessage):
     SharedFileListRequest.
     """
 
-    __slots__ = ("list", "unknown", "privatelist", "built", "permission_level",
+    __slots__ = ("list", "unknown", "private_list", "built", "permission_level",
                  "public_shares", "buddy_shares", "trusted_shares")
     CODE = 5
     EVENT_NAME = "shared-file-list-response"
-    HIDDEN_FIELDS = {"list", "privatelist", "built"}
+    HIDDEN_FIELDS = {"list", "private_list", "built"}
 
     def __init__(self, public_shares=None, buddy_shares=None, trusted_shares=None,
                  permission_level=None, *, msg_content=None):
@@ -3458,7 +3459,7 @@ class SharedFileListResponse(PeerMessage):
         self.trusted_shares = trusted_shares
         self.permission_level = permission_level
         self.list = []
-        self.privatelist = []
+        self.private_list = []
         self.unknown = 0
         self.built = None
 
@@ -3520,33 +3521,31 @@ class SharedFileListResponse(PeerMessage):
         return self.built
 
     def _parse_result_list(self):
-        ndir = self.unpack_uint32()
-
-        ext = None
+        num_folders = self.unpack_uint32()
+        file_extension = None
         shares = []
 
-        for _ in range(ndir):
-            directory = self.unpack_string()
-            nfiles = self.unpack_uint32()
-
+        for _ in range(num_folders):
+            folder_path = self.unpack_string()
+            num_files = self.unpack_uint32()
             files = []
 
-            for _ in range(nfiles):
+            for _ in range(num_files):
                 code = self.unpack_uint8()
-                name = self.unpack_string()
-                size = self.unpack_file_size()
-                ext_len = self.unpack_uint32()  # Obsolete, ignore
-                self._offset += ext_len
-                attrs = self.unpack_file_attributes()
+                basename = self.unpack_string()
+                file_size = self.unpack_file_size()
+                file_extension_len = self.unpack_uint32()  # Obsolete, ignore
+                self._offset += file_extension_len
+                file_attributes = self.unpack_file_attributes()
 
-                files.append((code, name, size, ext, attrs))
+                files.append((code, basename, file_size, file_extension, file_attributes))
 
-            if nfiles > 1:
+            if num_files > 1:
                 files.sort(key=itemgetter(1))
 
-            shares.append((directory, files))
+            shares.append((folder_path, files))
 
-        if ndir > 1:
+        if num_folders > 1:
             shares.sort(key=itemgetter(0))
 
         return shares
@@ -3565,7 +3564,7 @@ class SharedFileListResponse(PeerMessage):
             self.unknown = self.unpack_uint32()
 
         if self.has_remaining_content():
-            self.privatelist = self._parse_result_list()
+            self.private_list = self._parse_result_list()
 
     def parse_local_message(self):
         self._message = memoryview(self.make_network_message())
@@ -3612,11 +3611,11 @@ class FileSearchResponse(PeerMessage):
     message.
     """
 
-    __slots__ = ("search_username", "token", "list", "privatelist", "slot_available",
+    __slots__ = ("search_username", "token", "list", "private_list", "slot_available",
                  "upload_speed", "num_queued_uploads", "unknown")
     CODE = 9
     EVENT_NAME = "file-search-response"
-    HIDDEN_FIELDS = {"list", "privatelist"}
+    HIDDEN_FIELDS = {"list", "private_list"}
 
     def __init__(self, search_username=None, token=None, shares=None, slot_available=None,
                  upload_speed=None, num_queued_uploads=None, private_shares=None, *, msg_content=None):
@@ -3624,7 +3623,7 @@ class FileSearchResponse(PeerMessage):
         self.search_username = search_username
         self.token = token
         self.list = shares
-        self.privatelist = private_shares
+        self.private_list = private_shares
         self.slot_available = slot_available
         self.upload_speed = upload_speed
         self.num_queued_uploads = num_queued_uploads
@@ -3643,30 +3642,29 @@ class FileSearchResponse(PeerMessage):
         msg += self.pack_uint32(self.upload_speed)
         msg += self.pack_uint32(self.num_queued_uploads)
         msg += self.pack_uint32(self.unknown)
-        msg += self.pack_uint32(len(self.privatelist))
+        msg += self.pack_uint32(len(self.private_list))
 
-        for fileinfo in self.privatelist:
+        for fileinfo in self.private_list:
             msg += FileListMessage.pack_file_info(fileinfo)
 
         return zlib.compress(msg, ZLIB_COMPRESSION_LEVEL)
 
     def _parse_result_list(self):
-        nfiles = self.unpack_uint32()
-
-        ext = None
+        num_files = self.unpack_uint32()
+        file_extension = None
         results = []
 
-        for _ in range(nfiles):
+        for _ in range(num_files):
             code = self.unpack_uint8()
-            name = self.unpack_string()
-            size = self.unpack_file_size()
-            ext_len = self.unpack_uint32()  # Obsolete, ignore
-            self._offset += ext_len
-            attrs = self.unpack_file_attributes()
+            file_path = self.unpack_string()
+            file_size = self.unpack_file_size()
+            file_extension_len = self.unpack_uint32()  # Obsolete, ignore
+            self._offset += file_extension_len
+            file_attributes = self.unpack_file_attributes()
 
-            results.append((code, name, size, ext, attrs))
+            results.append((code, file_path, file_size, file_extension, file_attributes))
 
-        if nfiles > 1:
+        if num_files > 1:
             results.sort(key=itemgetter(1))
 
         return results
@@ -3704,7 +3702,7 @@ class FileSearchResponse(PeerMessage):
             self.unknown = self.unpack_uint32()
 
         if self.has_remaining_content():
-            self.privatelist = self._parse_result_list()
+            self.private_list = self._parse_result_list()
 
 
 class UserInfoRequest(PeerMessage):
@@ -3789,26 +3787,26 @@ class FolderContentsRequest(PeerMessage):
     We ask the peer to send us the contents of a single folder.
     """
 
-    __slots__ = ("dir", "token", "legacy_client")
+    __slots__ = ("folder_path", "token", "legacy_client")
     CODE = 36
     EVENT_NAME = "folder-contents-request"
 
-    def __init__(self, directory=None, token=None, legacy_client=False, *, msg_content=None):
+    def __init__(self, folder_path=None, token=None, legacy_client=False, *, msg_content=None):
         PeerMessage.__init__(self, msg_content)
-        self.dir = directory
+        self.folder_path = folder_path
         self.token = token
         self.legacy_client = legacy_client
 
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_uint32(self.token)
-        msg += self.pack_string(self.dir, is_legacy=self.legacy_client)
+        msg += self.pack_string(self.folder_path, is_legacy=self.legacy_client)
 
         return msg
 
     def parse_network_message(self):
         self.token = self.unpack_uint32()
-        self.dir = self.unpack_string()
+        self.folder_path = self.unpack_string()
 
 
 class FolderContentsResponse(PeerMessage):
@@ -3818,25 +3816,25 @@ class FolderContentsResponse(PeerMessage):
     subfolders) after we've sent a FolderContentsRequest.
     """
 
-    __slots__ = ("dir", "token", "list")
+    __slots__ = ("folder_path", "token", "list")
     CODE = 37
     EVENT_NAME = "folder-contents-response"
     HIDDEN_FIELDS = {"list"}
 
-    def __init__(self, directory=None, token=None, shares=None, *, msg_content=None):
+    def __init__(self, folder_path=None, token=None, shares=None, *, msg_content=None):
         PeerMessage.__init__(self, msg_content)
-        self.dir = directory
+        self.folder_path = folder_path
         self.token = token
         self.list = shares
 
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_uint32(self.token)
-        msg += self.pack_string(self.dir)
+        msg += self.pack_string(self.folder_path)
 
         if self.list is not None:
             msg += self.pack_uint32(1)
-            msg += self.pack_string(self.dir)
+            msg += self.pack_string(self.folder_path)
 
             # We already saved the folder contents as a bytearray when scanning our shares
             msg += self.list
@@ -3852,20 +3850,20 @@ class FolderContentsResponse(PeerMessage):
         self._message = memoryview(message_bytes)
 
         self.token = self.unpack_uint32()
-        dir_len = self.unpack_uint32()
-        max_uncompressed_size = 134217728 - dir_len - 8  # 128 MiB total
+        folder_path_len = self.unpack_uint32()
+        max_uncompressed_size = 134217728 - folder_path_len - 8  # 128 MiB total
 
         if max_uncompressed_size <= 0:
             raise ValueError("Compressed message too large")
 
-        if dir_len:
-            message_bytes += decompressor.decompress(decompressor.unconsumed_tail, dir_len)
+        if folder_path_len:
+            message_bytes += decompressor.decompress(decompressor.unconsumed_tail, folder_path_len)
             self._message = memoryview(message_bytes)
 
         self._offset = 4  # Skip token
-        self.dir = self.unpack_string()
+        self.folder_path = self.unpack_string()
 
-        if self.username + self.dir not in self.allowed_responses:
+        if self.username + self.folder_path not in self.allowed_responses:
             return
 
         # Optimization: only decompress the rest of the message when needed
@@ -3875,28 +3873,27 @@ class FolderContentsResponse(PeerMessage):
         if not decompressor.eof:
             raise ValueError("Compressed message invalid or too large")
 
-        ndir = self.unpack_uint32()
+        num_folders = self.unpack_uint32()
         folders = {}
 
-        for _ in range(ndir):
-            directory = self.unpack_string()
-            nfiles = self.unpack_uint32()
+        for _ in range(num_folders):
+            folder_path = self.unpack_string()
+            num_files = self.unpack_uint32()
+            file_extension = None
+            folders[folder_path] = []
 
-            ext = None
-            folders[directory] = []
-
-            for _ in range(nfiles):
+            for _ in range(num_files):
                 code = self.unpack_uint8()
-                name = self.unpack_string()
-                size = self.unpack_file_size()
-                ext_len = self.unpack_uint32()  # Obsolete, ignore
-                self._offset += ext_len
-                attrs = self.unpack_file_attributes()
+                basename = self.unpack_string()
+                file_size = self.unpack_file_size()
+                file_extension_len = self.unpack_uint32()  # Obsolete, ignore
+                self._offset += file_extension_len
+                file_attributes = self.unpack_file_attributes()
 
-                folders[directory].append((code, name, size, ext, attrs))
+                folders[folder_path].append((code, basename, file_size, file_extension, file_attributes))
 
-            if nfiles > 1:
-                folders[directory].sort(key=itemgetter(1))
+            if num_files > 1:
+                folders[folder_path].sort(key=itemgetter(1))
 
         self.list = folders
 
@@ -3915,35 +3912,35 @@ class TransferRequest(PeerMessage):
     ensure we still understand such requests.
     """
 
-    __slots__ = ("direction", "token", "file", "filesize")
+    __slots__ = ("direction", "token", "file_path", "file_size")
     CODE = 40
     EVENT_NAME = "transfer-request"
 
-    def __init__(self, direction=None, token=None, file=None, filesize=None, *, msg_content=None):
+    def __init__(self, direction=None, token=None, file_path=None, file_size=None, *, msg_content=None):
         PeerMessage.__init__(self, msg_content)
         self.direction = direction
         self.token = token
-        self.file = file  # virtual file
-        self.filesize = filesize
+        self.file_path = file_path
+        self.file_size = file_size
 
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_uint32(self.direction)
         msg += self.pack_uint32(self.token)
-        msg += self.pack_string(self.file)
+        msg += self.pack_string(self.file_path)
 
         if self.direction == TransferDirection.UPLOAD:
-            msg += self.pack_uint64(self.filesize)
+            msg += self.pack_uint64(self.file_size)
 
         return msg
 
     def parse_network_message(self):
         self.direction = self.unpack_uint32()
         self.token = self.unpack_uint32()
-        self.file = self.unpack_string()
+        self.file_path = self.unpack_string()
 
         if self.direction == TransferDirection.UPLOAD:
-            self.filesize = self.unpack_uint64()
+            self.file_size = self.unpack_uint64()
 
 
 class TransferResponse(PeerMessage):
@@ -3960,16 +3957,16 @@ class TransferResponse(PeerMessage):
     server.
     """
 
-    __slots__ = ("allowed", "token", "reason", "filesize")
+    __slots__ = ("allowed", "token", "reason", "file_size")
     CODE = 41
     EVENT_NAME = "transfer-response"
 
-    def __init__(self, allowed=None, reason=None, token=None, filesize=None, *, msg_content=None):
+    def __init__(self, allowed=None, reason=None, token=None, file_size=None, *, msg_content=None):
         PeerMessage.__init__(self, msg_content)
         self.allowed = allowed
         self.token = token
         self.reason = reason
-        self.filesize = filesize
+        self.file_size = file_size
 
     def make_network_message(self):
         msg = bytearray()
@@ -3979,8 +3976,8 @@ class TransferResponse(PeerMessage):
         if not self.allowed:
             msg += self.pack_string(self.reason)
 
-        elif self.filesize is not None:
-            msg += self.pack_uint64(self.filesize)
+        elif self.file_size is not None:
+            msg += self.pack_uint64(self.file_size)
 
         return msg
 
@@ -3992,7 +3989,7 @@ class TransferResponse(PeerMessage):
             self.reason = self.unpack_string()
 
         elif self.has_remaining_content():
-            self.filesize = self.unpack_uint64()
+            self.file_size = self.unpack_uint64()
 
 
 class PlaceholdUpload(PeerMessage):
@@ -4001,18 +3998,18 @@ class PlaceholdUpload(PeerMessage):
     OBSOLETE, no longer used
     """
 
-    __slots__ = ("file",)
+    __slots__ = ("file_path",)
     CODE = 42
 
-    def __init__(self, file=None, *, msg_content=None):
+    def __init__(self, file_path=None, *, msg_content=None):
         PeerMessage.__init__(self, msg_content)
-        self.file = file
+        self.file_path = file_path
 
     def make_network_message(self):
-        return self.pack_string(self.file)
+        return self.pack_string(self.file_path)
 
     def parse_network_message(self):
-        self.file = self.unpack_string()
+        self.file_path = self.unpack_string()
 
 
 class QueueUpload(PeerMessage):
@@ -4023,20 +4020,20 @@ class QueueUpload(PeerMessage):
     file, they will send a TransferRequest to us.
     """
 
-    __slots__ = ("file", "legacy_client")
+    __slots__ = ("file_path", "legacy_client")
     CODE = 43
     EVENT_NAME = "queue-upload"
 
-    def __init__(self, file=None, legacy_client=False, *, msg_content=None):
+    def __init__(self, file_path=None, legacy_client=False, *, msg_content=None):
         PeerMessage.__init__(self, msg_content)
-        self.file = file
+        self.file_path = file_path
         self.legacy_client = legacy_client
 
     def make_network_message(self):
-        return self.pack_string(self.file, is_legacy=self.legacy_client)
+        return self.pack_string(self.file_path, is_legacy=self.legacy_client)
 
     def parse_network_message(self):
-        self.file = self.unpack_string()
+        self.file_path = self.unpack_string()
 
 
 class PlaceInQueueResponse(PeerMessage):
@@ -4046,24 +4043,24 @@ class PlaceInQueueResponse(PeerMessage):
     file.
     """
 
-    __slots__ = ("filename", "place")
+    __slots__ = ("file_path", "place")
     CODE = 44
     EVENT_NAME = "place-in-queue-response"
 
-    def __init__(self, filename=None, place=None, *, msg_content=None):
+    def __init__(self, file_path=None, place=None, *, msg_content=None):
         PeerMessage.__init__(self, msg_content)
-        self.filename = filename
+        self.file_path = file_path
         self.place = place
 
     def make_network_message(self):
         msg = bytearray()
-        msg += self.pack_string(self.filename)
+        msg += self.pack_string(self.file_path)
         msg += self.pack_uint32(self.place)
 
         return msg
 
     def parse_network_message(self):
-        self.filename = self.unpack_string()
+        self.file_path = self.unpack_string()
         self.place = self.unpack_uint32()
 
 
@@ -4076,19 +4073,19 @@ class UploadFailed(PeerMessage):
     on their end), or ignores the message if the transfer finished.
     """
 
-    __slots__ = ("file",)
+    __slots__ = ("file_path",)
     CODE = 46
     EVENT_NAME = "upload-failed"
 
-    def __init__(self, file=None, *, msg_content=None):
+    def __init__(self, file_path=None, *, msg_content=None):
         PeerMessage.__init__(self, msg_content)
-        self.file = file
+        self.file_path = file_path
 
     def make_network_message(self):
-        return self.pack_string(self.file)
+        return self.pack_string(self.file_path)
 
     def parse_network_message(self):
-        self.file = self.unpack_string()
+        self.file_path = self.unpack_string()
 
 
 class UploadDenied(PeerMessage):
@@ -4099,24 +4096,24 @@ class UploadDenied(PeerMessage):
     list of the recipient.
     """
 
-    __slots__ = ("file", "reason")
+    __slots__ = ("file_path", "reason")
     CODE = 50
     EVENT_NAME = "upload-denied"
 
-    def __init__(self, file=None, reason=None, *, msg_content=None):
+    def __init__(self, file_path=None, reason=None, *, msg_content=None):
         PeerMessage.__init__(self, msg_content)
-        self.file = file
+        self.file_path = file_path
         self.reason = reason
 
     def make_network_message(self):
         msg = bytearray()
-        msg += self.pack_string(self.file)
+        msg += self.pack_string(self.file_path)
         msg += self.pack_string(self.reason)
 
         return msg
 
     def parse_network_message(self):
-        self.file = self.unpack_string()
+        self.file_path = self.unpack_string()
         self.reason = self.unpack_string()
 
 
@@ -4127,20 +4124,20 @@ class PlaceInQueueRequest(PeerMessage):
     file.
     """
 
-    __slots__ = ("file", "legacy_client")
+    __slots__ = ("file_path", "legacy_client")
     CODE = 51
     EVENT_NAME = "place-in-queue-request"
 
-    def __init__(self, file=None, legacy_client=False, *, msg_content=None):
+    def __init__(self, file_path=None, legacy_client=False, *, msg_content=None):
         PeerMessage.__init__(self, msg_content)
-        self.file = file
+        self.file_path = file_path
         self.legacy_client = legacy_client
 
     def make_network_message(self):
-        return self.pack_string(self.file, is_legacy=self.legacy_client)
+        return self.pack_string(self.file_path, is_legacy=self.legacy_client)
 
     def parse_network_message(self):
-        self.file = self.unpack_string()
+        self.file_path = self.unpack_string()
 
 
 class UploadQueueNotification(PeerMessage):

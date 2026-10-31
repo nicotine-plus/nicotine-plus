@@ -983,10 +983,10 @@ class Downloads(Transfers):
 
         for msg in msgs:
             if isinstance(msg, (QueueUpload, PlaceInQueueRequest)):
-                self._cant_connect_queue_file(username, msg.file, is_offline, is_timeout)
+                self._cant_connect_queue_file(username, msg.file_path, is_offline, is_timeout)
 
             if isinstance(msg, FolderContentsRequest):
-                requested_folder = self._requested_folders.get(username, {}).get(msg.dir)
+                requested_folder = self._requested_folders.get(username, {}).get(msg.folder_path)
 
                 if requested_folder is not None:
                     self._requested_folder_timeout(requested_folder, is_offline)
@@ -1050,7 +1050,7 @@ class Downloads(Transfers):
             raise StopEventPropagation()
 
         username = msg.username
-        folder_path = msg.dir
+        folder_path = msg.folder_path
 
         core.send_message_to_network_thread(
             RemoveAllowedResponse(FolderContentsResponse, username + folder_path)
@@ -1059,7 +1059,7 @@ class Downloads(Transfers):
         if username not in self._requested_folders:
             raise StopEventPropagation()
 
-        requested_folder = self._requested_folders[username].get(msg.dir)
+        requested_folder = self._requested_folders[username].get(msg.folder_path)
 
         if requested_folder is None:
             raise StopEventPropagation()
@@ -1090,15 +1090,15 @@ class Downloads(Transfers):
 
         log.add_transfer("Responding to download request with token %s for file %s "
                          "from user: %s, allowed: %s, reason: %s",
-                         (response.token, msg.file, username, response.allowed, response.reason))
+                         (response.token, msg.file_path, username, response.allowed, response.reason))
 
         core.send_message_to_peer(username, response)
 
     def _transfer_request_downloads(self, msg):
 
         username = msg.username
-        virtual_path = msg.file
-        size = msg.filesize
+        virtual_path = msg.file_path
+        file_size = msg.file_size
         token = msg.token
 
         log.add_transfer("Received download request with token %s for file %s from user %s",
@@ -1118,12 +1118,12 @@ class Downloads(Transfers):
             self._unfail_transfer(download)
             self._dequeue_transfer(download)
 
-            if size > 0:
-                if download.size != size:
+            if file_size > 0:
+                if download.size != file_size:
                     # The remote user's file contents have changed since we queued the download
                     download.size_changed = True
 
-                download.size = size
+                download.size = file_size
 
             self._activate_transfer(download, token)
             self._update_transfer(download)
@@ -1140,7 +1140,7 @@ class Downloads(Transfers):
 
         elif self.can_send_any_files(username):
             # Check if download exists in our default download folder
-            _file_path, file_exists = self.get_complete_download_file_path(username, virtual_path, size)
+            _file_path, file_exists = self.get_complete_download_file_path(username, virtual_path, file_size)
 
             if file_exists:
                 cancel_reason = TransferRejectReason.COMPLETE
@@ -1152,7 +1152,7 @@ class Downloads(Transfers):
                 parent_folder_name = virtual_folder_path.rpartition("\\")[-1]
                 folder_path = safe_path_join(received_folder_path, username, parent_folder_name)
 
-                transfer = Transfer(username, virtual_path, folder_path, size)
+                transfer = Transfer(username, virtual_path, folder_path, file_size)
 
                 self._append_transfer(transfer)
                 self._activate_transfer(transfer, token)
@@ -1221,7 +1221,8 @@ class Downloads(Transfers):
             if download.size > offset:
                 download.status = TransferStatus.TRANSFERRING
                 core.send_message_to_network_thread(DownloadFile(
-                    sock=sock, token=token, file=download.file_handle, leftbytes=(download.size - offset)
+                    sock=sock, token=token, file_handle=download.file_handle,
+                    num_bytes_left=(download.size - offset)
                 ))
                 core.send_message_to_peer(username, FileOffset(sock, offset))
                 need_update = True
@@ -1240,7 +1241,7 @@ class Downloads(Transfers):
         """Peer code 50."""
 
         username = msg.username
-        virtual_path = msg.file
+        virtual_path = msg.file_path
         reason = msg.reason
         queued_downloads = self.queued_users.get(username, {})
         download = queued_downloads.get(virtual_path)
@@ -1283,7 +1284,7 @@ class Downloads(Transfers):
         """Peer code 46."""
 
         username = msg.username
-        virtual_path = msg.file
+        virtual_path = msg.file_path
         download = self.transfers.get(username + virtual_path)
 
         if download is None:
@@ -1363,7 +1364,7 @@ class Downloads(Transfers):
         """
 
         username = msg.username
-        virtual_path = msg.filename
+        virtual_path = msg.file_path
         download = self.queued_users.get(username, {}).get(virtual_path)
 
         if download is None:
