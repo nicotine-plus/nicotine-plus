@@ -1416,17 +1416,17 @@ class IgnoredUsersPage:
         users = dialog.get_entry_value().split("\n")
         is_first_item = True
 
-        for user in users:
-            user = user.strip()
+        for username in users:
+            username = username.strip()
 
-            if not user or user in self.ignored_users:
+            if not username or username in self.ignored_users:
                 continue
 
-            self.ignored_users.append(user)
-            self.ignored_users_list_view.add_row([str(user)], select_row=is_first_item)
+            self.ignored_users.append(username)
+            self.ignored_users_list_view.add_row([username], select_row=is_first_item)
 
-            self.added_users.add(user)
-            self.removed_users.discard(user)
+            self.added_users.add(username)
+            self.removed_users.discard(username)
 
             is_first_item = False
 
@@ -1444,16 +1444,16 @@ class IgnoredUsersPage:
     def on_remove_ignored_user(self, *_args):
 
         for iterator in reversed(list(self.ignored_users_list_view.get_selected_rows())):
-            user = self.ignored_users_list_view.get_row_value(iterator, "username")
-            orig_iterator = self.ignored_users_list_view.iterators[user]
+            username = self.ignored_users_list_view.get_row_value(iterator, "username")
+            orig_iterator = self.ignored_users_list_view.iterators[username]
 
             self.ignored_users_list_view.remove_row(orig_iterator)
-            self.ignored_users.remove(user)
+            self.ignored_users.remove(username)
 
-            if user not in self.added_users:
-                self.removed_users.add(user)
+            if username not in self.added_users:
+                self.removed_users.add(username)
 
-            self.added_users.discard(user)
+            self.added_users.discard(username)
 
     def on_add_ignored_ip_response(self, dialog, _response_id, _data):
 
@@ -1469,11 +1469,11 @@ class IgnoredUsersPage:
             if ip_address in self.ignored_ips:
                 continue
 
-            user = core.network_filter.get_online_username(ip_address) or ""
-            user_ip_pair = (user, ip_address)
+            username = core.network_filter.get_online_username(ip_address) or ""
+            user_ip_pair = (username, ip_address)
 
-            self.ignored_ips[ip_address] = user
-            self.ignored_ips_list_view.add_row([ip_address, user], select_row=is_first_item)
+            self.ignored_ips[ip_address] = username
+            self.ignored_ips_list_view.add_row([ip_address, username], select_row=is_first_item)
 
             self.added_ips.add(user_ip_pair)
             self.removed_ips.discard(user_ip_pair)
@@ -1495,8 +1495,8 @@ class IgnoredUsersPage:
 
         for iterator in reversed(list(self.ignored_ips_list_view.get_selected_rows())):
             ip_address = self.ignored_ips_list_view.get_row_value(iterator, "ip_address")
-            user = self.ignored_ips_list_view.get_row_value(iterator, "user")
-            user_ip_pair = (user, ip_address)
+            username = self.ignored_ips_list_view.get_row_value(iterator, "user")
+            user_ip_pair = (username, ip_address)
             orig_iterator = self.ignored_ips_list_view.iterators[ip_address]
 
             self.ignored_ips_list_view.remove_row(orig_iterator)
@@ -1643,17 +1643,17 @@ class BannedUsersPage:
         users = dialog.get_entry_value().split("\n")
         is_first_item = True
 
-        for user in users:
-            user = user.strip()
+        for username in users:
+            username = username.strip()
 
-            if not user or user in self.banned_users:
+            if not username or username in self.banned_users:
                 continue
 
-            self.banned_users.append(user)
-            self.banned_users_list_view.add_row([user], select_row=is_first_item)
+            self.banned_users.append(username)
+            self.banned_users_list_view.add_row([username], select_row=is_first_item)
 
-            self.added_users.add(user)
-            self.removed_users.discard(user)
+            self.added_users.add(username)
+            self.removed_users.discard(username)
 
             is_first_item = False
 
@@ -1671,16 +1671,16 @@ class BannedUsersPage:
     def on_remove_banned_user(self, *_args):
 
         for iterator in reversed(list(self.banned_users_list_view.get_selected_rows())):
-            user = self.banned_users_list_view.get_row_value(iterator, "username")
-            orig_iterator = self.banned_users_list_view.iterators[user]
+            username = self.banned_users_list_view.get_row_value(iterator, "username")
+            orig_iterator = self.banned_users_list_view.iterators[username]
 
             self.banned_users_list_view.remove_row(orig_iterator)
-            self.banned_users.remove(user)
+            self.banned_users.remove(username)
 
-            if user not in self.added_users:
-                self.removed_users.add(user)
+            if username not in self.added_users:
+                self.removed_users.add(username)
 
-            self.added_users.discard(user)
+            self.added_users.discard(username)
 
     def on_add_banned_ip_response(self, dialog, _response_id, _data):
 
@@ -1696,11 +1696,11 @@ class BannedUsersPage:
             if ip_address in self.banned_ips:
                 continue
 
-            user = core.network_filter.get_online_username(ip_address) or ""
-            user_ip_pair = (user, ip_address)
+            username = core.network_filter.get_online_username(ip_address) or ""
+            user_ip_pair = (username, ip_address)
 
-            self.banned_ips[ip_address] = user
-            self.banned_ips_list_view.add_row([ip_address, user], select_row=is_first_item)
+            self.banned_ips[ip_address] = username
+            self.banned_ips_list_view.add_row([ip_address, username], select_row=is_first_item)
 
             self.added_ips.add(user_ip_pair)
             self.removed_ips.discard(user_ip_pair)
@@ -1722,8 +1722,8 @@ class BannedUsersPage:
 
         for iterator in reversed(list(self.banned_ips_list_view.get_selected_rows())):
             ip_address = self.banned_ips_list_view.get_row_value(iterator, "ip_address")
-            user = self.banned_ips_list_view.get_row_value(iterator, "user")
-            user_ip_pair = (user, ip_address)
+            username = self.banned_ips_list_view.get_row_value(iterator, "user")
+            user_ip_pair = (username, ip_address)
             orig_iterator = self.banned_ips_list_view.iterators[ip_address]
 
             self.banned_ips_list_view.remove_row(orig_iterator)

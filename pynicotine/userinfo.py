@@ -113,7 +113,7 @@ class UserInfo:
             self.users.add(username)
             refresh = True
 
-        events.emit("user-info-show-user", user=username, refresh=refresh, switch_page=switch_page)
+        events.emit("user-info-show-user", username, refresh=refresh, switch_page=switch_page)
 
         if not refresh:
             return

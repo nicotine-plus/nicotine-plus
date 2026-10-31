@@ -120,15 +120,15 @@ class UserInfos(IconNotebook):
         self.window.userinfo_entry.set_text("")
         core.userinfo.show_user(username)
 
-    def show_user(self, user, refresh=False, switch_page=True):
+    def show_user(self, username, refresh=False, switch_page=True):
 
-        page = self.pages.get(user)
+        page = self.pages.get(username)
 
         if page is None:
-            self.pages[user] = page = UserInfo(self, user)
+            self.pages[username] = page = UserInfo(self, username)
 
-            self.append_page(page.container, user, focus_callback=page.on_focus,
-                             close_callback=page.on_close, user=user)
+            self.append_page(page.container, username, focus_callback=page.on_focus,
+                             close_callback=page.on_close, username=username)
             page.set_label(self.get_tab_label_inner(page.container))
 
         if switch_page:
@@ -138,39 +138,39 @@ class UserInfos(IconNotebook):
         if refresh:
             page.set_indeterminate_progress()
 
-    def remove_user(self, user):
+    def remove_user(self, username):
 
-        page = self.pages.get(user)
+        page = self.pages.get(username)
 
         if page is None:
             return
 
         page.clear()
-        self.remove_page(page.container, page_args=(user,))
-        del self.pages[user]
+        self.remove_page(page.container, page_args=(username,))
+        del self.pages[username]
         page.destroy()
 
     def check_privileges(self, _msg):
         for page in self.pages.values():
             page.update_privileges_button_state()
 
-    def ban_unban_user(self, user):
+    def ban_unban_user(self, username):
 
-        page = self.pages.get(user)
+        page = self.pages.get(username)
 
         if page is not None:
             page.update_ban_button_state()
 
-    def ignore_unignore_user(self, user):
+    def ignore_unignore_user(self, username):
 
-        page = self.pages.get(user)
+        page = self.pages.get(username)
 
         if page is not None:
             page.update_ignore_button_state()
 
-    def add_remove_buddy(self, user, *_args):
+    def add_remove_buddy(self, username, *_args):
 
-        page = self.pages.get(user)
+        page = self.pages.get(username)
 
         if page is not None:
             page.update_buddy_button_state()
@@ -190,9 +190,9 @@ class UserInfos(IconNotebook):
             page.user_status(msg)
             self.set_user_status(page.container, msg.username, msg.status)
 
-    def user_country(self, user, country_code):
+    def user_country(self, username, country_code):
 
-        page = self.pages.get(user)
+        page = self.pages.get(username)
 
         if page is not None:
             page.user_country(country_code)
@@ -211,9 +211,9 @@ class UserInfos(IconNotebook):
         if page is not None:
             page.user_info_failed(is_offline)
 
-    def user_info_progress(self, user, _sock, position, total):
+    def user_info_progress(self, username, _sock, position, total):
 
-        page = self.pages.get(user)
+        page = self.pages.get(username)
 
         if page is not None:
             page.user_info_progress(position, total)
@@ -226,13 +226,13 @@ class UserInfos(IconNotebook):
             page.user_info_response(msg)
 
     def server_disconnect(self, *_args):
-        for user, page in self.pages.items():
-            self.set_user_status(page.container, user, UserStatus.OFFLINE)
+        for username, page in self.pages.items():
+            self.set_user_status(page.container, username, UserStatus.OFFLINE)
 
 
 class UserInfo:
 
-    def __init__(self, userinfos, user):
+    def __init__(self, userinfos, username):
 
         (
             self.add_remove_buddy_label,
@@ -274,7 +274,7 @@ class UserInfo:
 
         self.info_bar = InfoBar(parent=self.info_bar_container, button=self.retry_button)
         self.description_view = TextView(self.description_view_container, editable=False, vertical_margin=5)
-        self.user_label.set_text(user)
+        self.user_label.set_text(username)
 
         if GTK_API_VERSION >= 4:
             self.country_icon.set_pixel_size(21)
@@ -297,7 +297,7 @@ class UserInfo:
 
             self.picture_view.add(self.picture)    # pylint: disable=no-member
 
-        self.user = user
+        self.username = username
         self.picture_bytes = None
         self.picture_data = None
         self.picture_surface = None
@@ -333,7 +333,7 @@ class UserInfo:
 
         # Popup menus
         self.user_popup_menu = UserPopupMenu(
-            self.window.application, callback=self.on_tab_popup, username=user, tab_name="userinfo"
+            self.window.application, callback=self.on_tab_popup, username=username, tab_name="userinfo"
         )
         self.user_popup_menu.add_items(
             ("", None),
@@ -402,8 +402,8 @@ class UserInfo:
 
     def populate_stats(self):
 
-        country_code = core.users.countries.get(self.user)
-        stats = core.users.watched.get(self.user)
+        country_code = core.users.countries.get(self.username)
+        stats = core.users.watched.get(self.username)
 
         if stats is not None:
             speed = stats.upload_speed or 0
@@ -492,7 +492,7 @@ class UserInfo:
 
         except Exception as error:
             log.add(_("Failed to load picture for user %(user)s: %(error)s"), {
-                "user": self.user,
+                "user": self.username,
                 "error": error
             })
             self.remove_picture()
@@ -597,21 +597,21 @@ class UserInfo:
         local_username = core.users.login_username or config.sections["server"]["login"]
 
         for widget in (self.edit_interests_button, self.edit_profile_button):
-            widget.set_visible(self.user == local_username)
+            widget.set_visible(self.username == local_username)
 
         for widget in (self.ban_unban_user_button, self.ignore_unignore_user_button):
-            widget.set_visible(self.user != local_username)
+            widget.set_visible(self.username != local_username)
 
     def update_buddy_button_state(self):
-        label = _("Remove _Buddy") if self.user in core.buddies.users else _("Add _Buddy")
+        label = _("Remove _Buddy") if self.username in core.buddies.users else _("Add _Buddy")
         self.add_remove_buddy_label.set_text_with_mnemonic(label)
 
     def update_ban_button_state(self):
-        label = _("Unban User") if core.network_filter.is_user_banned(self.user) else _("Ban User")
+        label = _("Unban User") if core.network_filter.is_user_banned(self.username) else _("Ban User")
         self.ban_unban_user_label.set_text(label)
 
     def update_ignore_button_state(self):
-        label = _("Unignore User") if core.network_filter.is_user_ignored(self.user) else _("Ignore User")
+        label = _("Unignore User") if core.network_filter.is_user_ignored(self.username) else _("Ignore User")
         self.ignore_unignore_user_label.set_text(label)
 
     def update_privileges_button_state(self):
@@ -762,42 +762,42 @@ class UserInfo:
         self.window.interests.show_item_recommendations(self.dislikes_list_view, column_id="dislikes")
 
     def on_send_message(self, *_args):
-        core.privatechat.show_user(self.user)
+        core.privatechat.show_user(self.username)
 
     def on_show_ip_address(self, *_args):
-        core.users.request_ip_address(self.user, notify=True)
+        core.users.request_ip_address(self.username, notify=True)
 
     def on_browse_user(self, *_args):
-        core.userbrowse.browse_user(self.user)
+        core.userbrowse.browse_user(self.username)
 
     def on_add_remove_buddy(self, *_args):
 
-        if self.user in core.buddies.users:
-            core.buddies.remove_buddy(self.user)
+        if self.username in core.buddies.users:
+            core.buddies.remove_buddy(self.username)
             return
 
-        core.buddies.add_buddy(self.user)
+        core.buddies.add_buddy(self.username)
 
     def on_ban_unban_user(self, *_args):
 
-        if core.network_filter.is_user_banned(self.user):
-            core.network_filter.unban_user(self.user)
+        if core.network_filter.is_user_banned(self.username):
+            core.network_filter.unban_user(self.username)
             return
 
-        core.network_filter.ban_user(self.user)
+        core.network_filter.ban_user(self.username)
 
     def on_ignore_unignore_user(self, *_args):
 
-        if core.network_filter.is_user_ignored(self.user):
-            core.network_filter.unignore_user(self.user)
+        if core.network_filter.is_user_ignored(self.username):
+            core.network_filter.unignore_user(self.username)
             return
 
-        core.network_filter.ignore_user(self.user)
+        core.network_filter.ignore_user(self.username)
 
     def on_privileged_user(self, *_args):
         log.add(_("User %(user)s has Soulseek privileges. Their downloads are queued ahead "
                   "of those of non-privileged users."), {
-            "user": self.user
+            "user": self.username
         }, title=_("Privileged User"))
 
     def on_give_privileges_response(self, dialog, _response_id, _data):
@@ -818,7 +818,7 @@ class UserInfo:
             self.on_give_privileges(error=_("Please enter a valid number of days."))
             return
 
-        core.users.request_give_privileges(self.user, days)
+        core.users.request_give_privileges(self.username, days)
 
     def on_give_privileges(self, *_args, error=None):
 
@@ -835,7 +835,7 @@ class UserInfo:
             message += error + "\n\n"
 
         message += (_("Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):") %
-                    {"user": self.user, "days_left": _("%(days)s days left") % {"days": days}})
+                    {"user": self.username, "days_left": _("%(days)s days left") % {"days": days}})
 
         EntryDialog(
             application=self.window.application,
@@ -889,7 +889,7 @@ class UserInfo:
             application=self.window.application,
             callback=self.on_save_picture_response,
             initial_folder=core.downloads.get_default_download_folder(),
-            initial_file=f"{self.user}_{current_date_time}.{self.picture_extension}"
+            initial_file=f"{self.username}_{current_date_time}.{self.picture_extension}"
         ).present()
 
     def on_hide_picture(self, *_args):
@@ -908,14 +908,14 @@ class UserInfo:
 
     def on_refresh(self, *_args):
         if not self.refreshing:
-            core.userinfo.show_user(self.user, refresh=True)
+            core.userinfo.show_user(self.username, refresh=True)
 
     def on_focus(self, *_args):
         self.userinfos.grab_focus()
         return True
 
     def on_close(self, *_args):
-        core.userinfo.remove_user(self.user)
+        core.userinfo.remove_user(self.username)
 
     def on_close_all_tabs(self, *_args):
         self.userinfos.remove_all_pages()

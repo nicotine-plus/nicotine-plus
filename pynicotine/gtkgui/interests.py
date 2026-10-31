@@ -521,9 +521,9 @@ class Interests:
     def item_similar_users(self, msg):
         self.set_similar_users(msg.users, msg.thing)
 
-    def user_country(self, user, country_code):
+    def user_country(self, username, country_code):
 
-        iterator = self.similar_users_list_view.iterators.get(user)
+        iterator = self.similar_users_list_view.iterators.get(username)
 
         if iterator is None:
             return
@@ -610,16 +610,16 @@ class Interests:
     def on_popup_ru_menu(self, menu, *_args):
 
         for iterator in self.similar_users_list_view.get_selected_rows():
-            user = self.similar_users_list_view.get_row_value(iterator, "user")
+            username = self.similar_users_list_view.get_row_value(iterator, "user")
 
-            menu.set_user(user)
+            menu.set_user(username)
             menu.toggle_user_items()
             return
 
     def on_ru_row_activated(self, *_args):
 
         for iterator in self.similar_users_list_view.get_selected_rows():
-            user = self.similar_users_list_view.get_row_value(iterator, "user")
+            username = self.similar_users_list_view.get_row_value(iterator, "user")
 
-            core.userinfo.show_user(user)
+            core.userinfo.show_user(username)
             return

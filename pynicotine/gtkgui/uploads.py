@@ -173,8 +173,8 @@ class Uploads(Transfers):
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            user = config.sections["server"]["login"]
-            url = core.userbrowse.get_soulseek_url(user, transfer.virtual_path)
+            username = config.sections["server"]["login"]
+            url = core.userbrowse.get_soulseek_url(username, transfer.virtual_path)
             clipboard.copy_text(url)
 
     def on_copy_folder_url(self, *_args):
@@ -182,9 +182,9 @@ class Uploads(Transfers):
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            user = config.sections["server"]["login"]
+            username = config.sections["server"]["login"]
             folder_path, separator, _basename = transfer.virtual_path.rpartition("\\")
-            url = core.userbrowse.get_soulseek_url(user, folder_path + separator)
+            url = core.userbrowse.get_soulseek_url(username, folder_path + separator)
 
             clipboard.copy_text(url)
 
@@ -209,10 +209,10 @@ class Uploads(Transfers):
         if not transfer:
             return
 
-        user = config.sections["server"]["login"]
+        username = config.sections["server"]["login"]
         path = transfer.virtual_path
 
-        core.userbrowse.browse_user(user, path=path)
+        core.userbrowse.browse_user(username, path=path)
 
     def on_abort_users(self, *_args):
 

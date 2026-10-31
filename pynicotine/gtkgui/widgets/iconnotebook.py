@@ -382,11 +382,11 @@ class IconNotebook:
             tab_label.set_close_button_visibility(config.sections["ui"]["tabclosers"])
 
     def append_page(self, page, text, focus_callback=None, read_callback=None, close_callback=None,
-                    user=None):
-        self.insert_page(page, text, focus_callback, read_callback, close_callback, user, position=-1)
+                    username=None):
+        self.insert_page(page, text, focus_callback, read_callback, close_callback, username, position=-1)
 
     def insert_page(self, page, text, focus_callback=None, read_callback=None, close_callback=None,
-                    user=None, position=None):
+                    username=None, position=None):
 
         full_text = text
         text = (text[:25] + "…") if len(text) > 25 else text
@@ -412,13 +412,13 @@ class IconNotebook:
         self.set_tab_reorderable(page, True)
         self.parent.set_visible(True)
 
-        if user is not None:
-            status = core.users.statuses.get(user, UserStatus.OFFLINE)
+        if username is not None:
+            status = core.users.statuses.get(username, UserStatus.OFFLINE)
             self.set_user_status(page, text, status)
 
     def prepend_page(self, page, text, focus_callback=None, read_callback=None, close_callback=None,
-                     user=None):
-        self.insert_page(page, text, focus_callback, read_callback, close_callback, user, position=0)
+                     username=None):
+        self.insert_page(page, text, focus_callback, read_callback, close_callback, username, position=0)
 
     def restore_removed_page(self, *_args):
         if self.recently_removed_pages:
@@ -623,7 +623,7 @@ class IconNotebook:
 
     # Tab User Status #
 
-    def set_user_status(self, page, user, status):
+    def set_user_status(self, page, username, status):
 
         if status == UserStatus.AWAY:
             status_text = _("Away")
@@ -636,7 +636,7 @@ class IconNotebook:
 
         tab_label = self.get_tab_label(page)
         tab_label.set_status_icon(status)
-        tab_label.set_tooltip_text(f"{user} ({status_text})")
+        tab_label.set_tooltip_text(f"{username} ({status_text})")
 
     # Signals #
 

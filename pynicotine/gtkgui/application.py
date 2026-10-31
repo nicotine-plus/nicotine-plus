@@ -507,10 +507,10 @@ class Application:
             high_priority=high_priority
         )
 
-    def _show_private_chat_notification(self, user, message, title=None):
+    def _show_private_chat_notification(self, username, message, title=None):
 
         self._show_notification(
-            message, title, action="app.private-chat-notification-activated", action_target=user,
+            message, title, action="app.private-chat-notification-activated", action_target=username,
             high_priority=True
         )
 
@@ -793,8 +793,8 @@ class Application:
 
         self.activate()
 
-        user = user_variant.get_string()
-        core.privatechat.show_user(user)
+        username = user_variant.get_string()
+        core.privatechat.show_user(username)
 
     def on_search_notification_activated(self, _action, search_token_variant):
 

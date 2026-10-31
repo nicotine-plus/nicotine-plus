@@ -310,12 +310,12 @@ class ChatRooms(IconNotebook):
             combobox = self.window.search.room_search_combobox
             combobox.remove_id(room)
 
-    def highlight_room(self, room, user, mention_type, mention_keyword):
+    def highlight_room(self, room, username, mention_type, mention_keyword):
 
         if not room:
             return
 
-        self.highlighted_rooms[room] = (user, mention_type, mention_keyword)
+        self.highlighted_rooms[room] = (username, mention_type, mention_keyword)
         self.window.update_title()
         self.window.application.tray_icon.update()
 
@@ -369,9 +369,9 @@ class ChatRooms(IconNotebook):
         for page in self.pages.values():
             page.user_status(msg)
 
-    def user_country(self, user, country):
+    def user_country(self, username, country):
         for page in self.pages.values():
-            page.user_country(user, country)
+            page.user_country(username, country)
 
     def user_joined_room(self, msg):
 
@@ -835,8 +835,8 @@ class ChatRoom:
         if self.chatrooms.get_current_page() == self.container:
             self.update_room_user_completions()
 
-    def populate_user_menu(self, user, menu):
-        menu.set_user(user)
+    def populate_user_menu(self, username, menu):
+        menu.set_user(username)
         menu.toggle_user_items()
 
     def get_selected_username(self):
@@ -863,14 +863,14 @@ class ChatRoom:
 
     def on_row_activated(self, _list_view, _path, _column):
 
-        user = self.get_selected_username()
+        username = self.get_selected_username()
 
-        if user is not None:
-            core.userinfo.show_user(user)
+        if username is not None:
+            core.userinfo.show_user(username)
 
     def on_popup_menu_user(self, menu, _widget):
-        user = self.get_selected_username()
-        self.populate_user_menu(user, menu)
+        username = self.get_selected_username()
+        self.populate_user_menu(username, menu)
 
     def on_popup_menu_log(self, menu, _textview):
         menu.actions[_("Copy")].set_enabled(self.activity_view.get_has_selection())
@@ -890,7 +890,7 @@ class ChatRoom:
 
         self.user_list_button.set_active(config.sections["chatrooms"]["user_list_visible"])
 
-    def _show_notification(self, room, user, text, mention_type, mention_keyword):
+    def _show_notification(self, room, username, text, mention_type, mention_keyword):
 
         self.chatrooms.request_tab_changed(
             self.container, is_important=mention_type is not None, is_quiet=self.is_global)
@@ -900,12 +900,12 @@ class ChatRoom:
             return
 
         if mention_type == "self":
-            log.add(_("%(user)s mentioned you in room %(room)s") % {"user": user, "room": room})
+            log.add(_("%(user)s mentioned you in room %(room)s") % {"user": username, "room": room})
 
         elif mention_type == "keyword":
             log.add(_("Keyword %(keyword)s mentioned by %(user)s in room %(room)s") % {
                 "keyword": mention_keyword,
-                "user": user,
+                "user": username,
                 "room": room
             })
 
@@ -922,13 +922,13 @@ class ChatRoom:
 
         if mention_type is not None:
             # We were mentioned, update tray icon and show urgency hint
-            self.chatrooms.highlight_room(room, user, mention_type, mention_keyword)
+            self.chatrooms.highlight_room(room, username, mention_type, mention_keyword)
 
         if config.sections["notifications"]["notification_popup_chatroom_mention"]:
             if mention_type == "self":
                 core.notifications.show_chatroom_notification(
                     room, text,
-                    title=_("Mentioned by %(user)s in Room %(room)s") % {"user": user, "room": room},
+                    title=_("Mentioned by %(user)s in Room %(room)s") % {"user": username, "room": room},
                     high_priority=True
                 )
                 return
@@ -938,7 +938,7 @@ class ChatRoom:
                     room, text,
                     title=_("Keyword %(keyword)s Mentioned by %(user)s in Room %(room)s") % {
                         "keyword": mention_keyword,
-                        "user": user,
+                        "user": username,
                         "room": room
                     },
                     high_priority=True
@@ -960,7 +960,7 @@ class ChatRoom:
             # Don't show notifications for public feed room, they're too noisy
             core.notifications.show_chatroom_notification(
                 room, text,
-                title=_("Message by %(user)s in Room %(room)s") % {"user": user, "room": room}
+                title=_("Message by %(user)s in Room %(room)s") % {"user": username, "room": room}
             )
 
     def say_chat_room(self, msg):
@@ -1236,14 +1236,14 @@ class ChatRoom:
 
         self.chat_view.update_user_tag(username)
 
-    def user_country(self, user, country_code):
+    def user_country(self, username, country_code):
 
-        iterator = self.users_list_view.iterators.get(user)
+        iterator = self.users_list_view.iterators.get(username)
 
         if iterator is None:
             return
 
-        if user not in core.chatrooms.joined_rooms[self.room].users:
+        if username not in core.chatrooms.joined_rooms[self.room].users:
             # Private room member offline/not currently joined
             return
 
@@ -1255,11 +1255,11 @@ class ChatRoom:
     def roomname_event(self, _pos_x, _pos_y, room):
         core.chatrooms.show_room(room)
 
-    def username_event(self, pos_x, pos_y, user):
+    def username_event(self, pos_x, pos_y, username):
 
         menu = self.popup_menu_user_chat
         menu.update_model()
-        self.populate_user_menu(user, menu)
+        self.populate_user_menu(username, menu)
         menu.popup(pos_x, pos_y)
 
     def update_tags(self):
@@ -1341,16 +1341,16 @@ class ChatRoom:
             # Tab was closed
             return
 
-        user = dialog.get_entry_value().strip()
+        username = dialog.get_entry_value().strip()
         private_room = core.chatrooms.private_rooms.get(self.room)
 
-        if not user or private_room is None:
+        if not username or private_room is None:
             return
 
-        if user == private_room.owner or user in private_room.members:
+        if username == private_room.owner or username in private_room.members:
             return
 
-        core.chatrooms.request_add_room_member(self.room, user)
+        core.chatrooms.request_add_room_member(self.room, username)
 
     def on_add_room_member(self, *_args):
 

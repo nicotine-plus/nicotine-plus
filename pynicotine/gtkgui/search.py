@@ -197,8 +197,8 @@ class Searches(IconNotebook):
 
         mode = self.window.lookup_action("search-mode").get_state().get_string()
         room = self.room_search_combobox.get_text()
-        user = self.user_search_combobox.get_text()
-        users = [user] if user else []
+        username = self.user_search_combobox.get_text()
+        users = [username] if username else []
 
         if mode == "rooms" and not room:
             return
@@ -830,7 +830,7 @@ class Search:
         if is_offline:
             self.info_bar.show_error_message(_("Cannot search for files shared by other users, since you are offline"))
 
-    def add_result_list(self, result_list, user, country_code, num_queued_uploads, upload_speed, h_upload_speed,
+    def add_result_list(self, result_list, username, country_code, num_queued_uploads, upload_speed, h_upload_speed,
                         h_num_queued_uploads, is_private=False):
         """Adds a list of search results to the treeview.
 
@@ -856,7 +856,7 @@ class Search:
             if any(word in file_path_lower for word in search.excluded_words):
                 # Filter out results with filtered words (e.g. nicotine -music)
                 log.add_debug(("Filtered out excluded search result %s from user %s for "
-                               'search term "%s"'), (file_path, user, self.text))
+                               'search term "%s"'), (file_path, username, self.text))
                 continue
 
             if not all(word in file_path_lower for word in search.included_words):
@@ -886,7 +886,7 @@ class Search:
 
             is_result_visible = self.append(
                 [
-                    user,
+                    username,
                     get_flag_icon_name(country_code),
                     h_upload_speed,
                     h_num_queued_uploads,
@@ -917,9 +917,9 @@ class Search:
 
     def file_search_response(self, msg):
 
-        user = msg.username
+        username = msg.username
 
-        if user in self.users:
+        if username in self.users:
             return
 
         self.initialized = True
@@ -927,7 +927,7 @@ class Search:
         ip_address, _port = msg.addr
         country_code = (
             core.network_filter.get_country_code(ip_address)
-            or core.users.countries.get(user)
+            or core.users.countries.get(username)
         )
 
         if msg.slot_available:
@@ -947,12 +947,12 @@ class Search:
 
         if msg.private_list and config.sections["searches"]["private_search_results"]:
             update_ui_private = self.add_result_list(
-                msg.private_list, user, country_code, num_queued_uploads, upload_speed, h_upload_speed,
+                msg.private_list, username, country_code, num_queued_uploads, upload_speed, h_upload_speed,
                 h_num_queued_uploads, is_private=True
             )
 
         update_ui = self.add_result_list(
-            msg.list, user, country_code, num_queued_uploads, upload_speed, h_upload_speed,
+            msg.list, username, country_code, num_queued_uploads, upload_speed, h_upload_speed,
             h_num_queued_uploads) or update_ui_private
 
         if update_ui:
@@ -989,9 +989,9 @@ class Search:
 
     def add_row_to_model(self, row):
 
-        (user, flag, h_upload_speed, h_num_queued_uploads, private_icon_name, h_folder_path, _unused, _unused, _unused,
-            _unused, _unused, _unused, upload_speed, num_queued_uploads, _unused, _unused, _unused, is_public,
-            file_data, _unused) = row
+        (username, flag, h_upload_speed, h_num_queued_uploads, private_icon_name, h_folder_path, _unused, _unused,
+            _unused, _unused, _unused, _unused, upload_speed, num_queued_uploads, _unused, _unused, _unused,
+            is_public, file_data, _unused) = row
 
         expand_allowed = self.initialized
         expand_user = False
@@ -1006,10 +1006,10 @@ class Search:
             empty_int = 0
             empty_str = ""
 
-            if user not in self.users:
+            if username not in self.users:
                 iterator = self.tree_view.add_row(
                     [
-                        user,
+                        username,
                         flag,
                         h_upload_speed,
                         h_num_queued_uploads,
@@ -1036,20 +1036,20 @@ class Search:
                     expand_user = self.grouping_mode == "folder_grouping" or self.expand_mode != "none"
 
                 self.row_id -= 1
-                self.users[user] = (iterator, deque())
+                self.users[username] = (iterator, deque())
 
-            user_iterator, user_child_iterators = self.users[user]
+            user_iterator, user_child_iterators = self.users[username]
 
             if self.grouping_mode == "folder_grouping":
                 # Group by folder
 
                 folder_path = file_data.path.rpartition("\\")[0]
-                user_folder_path = user + folder_path
+                user_folder_path = username + folder_path
 
                 if user_folder_path not in self.folders:
                     iterator = self.tree_view.add_row(
                         [
-                            user,
+                            username,
                             flag,
                             h_upload_speed,
                             h_num_queued_uploads,
@@ -1086,10 +1086,10 @@ class Search:
                 parent_iterator = user_iterator
 
         else:
-            if user not in self.users:
-                self.users[user] = (None, deque())
+            if username not in self.users:
+                self.users[username] = (None, deque())
 
-            user_iterator, user_child_iterators = self.users[user]
+            user_iterator, user_child_iterators = self.users[username]
 
         row[19] = self.row_id
         iterator = self.tree_view.add_row(row, select_row=False, parent_iterator=parent_iterator)
@@ -1426,11 +1426,11 @@ class Search:
 
         self.store_filters_button.set_sensitive(False)
 
-    def add_popup_menu_user(self, popup, user):
+    def add_popup_menu_user(self, popup, username):
 
         popup.add_items(
             ("", None),
-            ("#" + _("Select User's Results"), self.on_select_user_results, user)
+            ("#" + _("Select User's Results"), self.on_select_user_results, username)
         )
         popup.update_model()
         popup.toggle_user_items()
@@ -1444,17 +1444,17 @@ class Search:
 
         # Multiple users, create submenus for some of them
         if len(self.selected_users) > 1:
-            for user in islice(self.selected_users, 20):
-                popup = UserPopupMenu(self.window.application, username=user, tab_name="search")
-                self.add_popup_menu_user(popup, user)
-                self.popup_menu_users.add_items((">" + user, popup))
+            for username in islice(self.selected_users, 20):
+                popup = UserPopupMenu(self.window.application, username=username, tab_name="search")
+                self.add_popup_menu_user(popup, username)
+                self.popup_menu_users.add_items((">" + username, popup))
                 self.popup_menu_users.update_model()
             return
 
         # Single user, add items directly to "User Actions" submenu
-        user = next(iter(self.selected_users), None)
-        self.popup_menu_users.setup_user_menu(user)
-        self.add_popup_menu_user(self.popup_menu_users, user)
+        username = next(iter(self.selected_users), None)
+        self.popup_menu_users.setup_user_menu(username)
+        self.add_popup_menu_user(self.popup_menu_users, username)
 
     def on_close_filter_bar_accelerator(self, *_args):
         """Escape - hide filter bar."""
@@ -1476,12 +1476,12 @@ class Search:
         self.on_file_properties()
         return True
 
-    def on_select_user_results(self, _action, _parameter, selected_user):
+    def on_select_user_results(self, _action, _parameter, selected_username):
 
         if not self.selected_users:
             return
 
-        _user_iterator, user_child_iterators = self.users[selected_user]
+        _user_iterator, user_child_iterators = self.users[selected_username]
 
         self.tree_view.unselect_all_rows()
 
@@ -1490,7 +1490,7 @@ class Search:
                 self.tree_view.select_row(iterator, should_scroll=False)
                 continue
 
-            user_folder_path = selected_user + self.tree_view.get_row_value(iterator, "file_data").path
+            user_folder_path = selected_username + self.tree_view.get_row_value(iterator, "file_data").path
             user_folder_data = self.folders.get(user_folder_path)
 
             if not user_folder_data:
@@ -1503,10 +1503,10 @@ class Search:
 
     def select_result(self, iterator):
 
-        user = self.tree_view.get_row_value(iterator, "user")
+        username = self.tree_view.get_row_value(iterator, "user")
 
-        if user not in self.selected_users:
-            self.selected_users[user] = None
+        if username not in self.selected_users:
+            self.selected_users[username] = None
 
         if self.tree_view.get_row_value(iterator, "filename"):
             row_id = self.tree_view.get_row_value(iterator, "id_data")
@@ -1516,18 +1516,18 @@ class Search:
 
             return
 
-        self.select_child_results(iterator, user)
+        self.select_child_results(iterator, username)
 
-    def select_child_results(self, iterator, user):
+    def select_child_results(self, iterator, username):
 
         folder_path = self.tree_view.get_row_value(iterator, "folder")
 
         if folder_path:
             folder_path = self.tree_view.get_row_value(iterator, "file_data").path
-            user_folder_path = user + folder_path
+            user_folder_path = username + folder_path
             row_data = self.folders[user_folder_path]
         else:
-            row_data = self.users[user]
+            row_data = self.users[username]
 
         _row_iter, child_transfers = row_data
 
@@ -1625,9 +1625,9 @@ class Search:
         user_folder_paths = set()
 
         for iterator in self.selected_results.values():
-            user = self.tree_view.get_row_value(iterator, "user")
+            username = self.tree_view.get_row_value(iterator, "user")
             file_data = self.tree_view.get_row_value(iterator, "file_data")
-            user_folder_paths.add((user, file_data.path.rpartition("\\")[0]))
+            user_folder_paths.add((username, file_data.path.rpartition("\\")[0]))
 
         self.popup_menu.update_item_label(
             "download_folders",
@@ -1643,10 +1643,10 @@ class Search:
         if iterator is None:
             return
 
-        user = self.tree_view.get_row_value(iterator, "user")
+        username = self.tree_view.get_row_value(iterator, "user")
         path = self.tree_view.get_row_value(iterator, "file_data").path
 
-        core.userbrowse.browse_user(user, path=path)
+        core.userbrowse.browse_user(username, path=path)
 
     def on_user_profile(self, *_args):
 
@@ -1655,8 +1655,8 @@ class Search:
         if iterator is None:
             return
 
-        user = self.tree_view.get_row_value(iterator, "user")
-        core.userinfo.show_user(user)
+        username = self.tree_view.get_row_value(iterator, "user")
+        core.userinfo.show_user(username)
 
     def on_file_properties(self, *_args):
 
@@ -1698,13 +1698,13 @@ class Search:
     def on_download_files(self, *_args, download_folder_path=None):
 
         for iterator in self.selected_results.values():
-            user = self.tree_view.get_row_value(iterator, "user")
+            username = self.tree_view.get_row_value(iterator, "user")
             file_data = self.tree_view.get_row_value(iterator, "file_data")
             file_path = file_data.path
             size = self.tree_view.get_row_value(iterator, "size_data")
 
             core.downloads.enqueue_download(
-                user, file_path, folder_path=download_folder_path, size=size,
+                username, file_path, folder_path=download_folder_path, size=size,
                 file_attributes=file_data.attributes)
 
             file_data.is_downloading = True
@@ -1814,9 +1814,9 @@ class Search:
         if iterator is None:
             return
 
-        user = self.tree_view.get_row_value(iterator, "user")
+        username = self.tree_view.get_row_value(iterator, "user")
         file_path = self.tree_view.get_row_value(iterator, "file_data").path
-        url = core.userbrowse.get_soulseek_url(user, file_path)
+        url = core.userbrowse.get_soulseek_url(username, file_path)
         clipboard.copy_text(url)
 
     def on_copy_folder_url(self, *_args):
@@ -1826,10 +1826,10 @@ class Search:
         if iterator is None:
             return
 
-        user = self.tree_view.get_row_value(iterator, "user")
+        username = self.tree_view.get_row_value(iterator, "user")
         file_path = self.tree_view.get_row_value(iterator, "file_data").path
         folder_path, separator, _basename = file_path.rpartition("\\")
-        url = core.userbrowse.get_soulseek_url(user, folder_path + separator)
+        url = core.userbrowse.get_soulseek_url(username, folder_path + separator)
 
         clipboard.copy_text(url)
 

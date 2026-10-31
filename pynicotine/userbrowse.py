@@ -85,7 +85,7 @@ class UserBrowse:
             self.users[username] = BrowsedUser(username)
 
         events.emit(
-            "user-browse-show-user", user=username, path=path, new_request=new_request,
+            "user-browse-show-user", username, path=path, new_request=new_request,
             switch_page=switch_page
         )
 

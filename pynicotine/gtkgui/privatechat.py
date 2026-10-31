@@ -124,22 +124,22 @@ class PrivateChats(IconNotebook):
 
         tab_order = {}
 
-        for user, tab in self.pages.items():
+        for username, tab in self.pages.items():
             tab_position = self.page_num(tab.container)
-            tab_order[tab_position] = user
+            tab_order[tab_position] = username
 
-        config.sections["privatechat"]["users"] = [user for tab_index, user in sorted(tab_order.items())]
+        config.sections["privatechat"]["users"] = [username for tab_index, username in sorted(tab_order.items())]
 
     def on_switch_chat(self, _notebook, page, _page_num):
 
         if self.window.current_page_id != self.window.private_page.id:
             return
 
-        for user, tab in self.pages.items():
+        for username, tab in self.pages.items():
             if tab.container != page:
                 continue
 
-            self.message_entry.set_parent(tab.message_entry_container, tab.chat_view, user)
+            self.message_entry.set_parent(tab.message_entry_container, tab.chat_view, username)
             tab.update_room_user_completions()
 
             if self.command_help is None:
@@ -151,7 +151,7 @@ class PrivateChats(IconNotebook):
                 tab.load()
 
             # Remove highlight if selected tab belongs to a user in the list of highlights
-            self.unhighlight_user(user)
+            self.unhighlight_user(username)
             break
 
     def on_get_private_chat(self, *_args):
@@ -164,9 +164,9 @@ class PrivateChats(IconNotebook):
         self.window.private_entry.set_text("")
         core.privatechat.show_user(username)
 
-    def clear_messages(self, user):
+    def clear_messages(self, username):
 
-        page = self.pages.get(user)
+        page = self.pages.get(username)
 
         if page is not None:
             page.chat_view.clear()
@@ -178,10 +178,10 @@ class PrivateChats(IconNotebook):
 
         page = self.get_current_page()
 
-        for user, tab in self.pages.items():
+        for username, tab in self.pages.items():
             if tab.container == page:
                 # Remove highlight
-                self.unhighlight_user(user)
+                self.unhighlight_user(username)
                 break
 
     def user_status(self, msg):
@@ -198,25 +198,25 @@ class PrivateChats(IconNotebook):
                 # We've enabled/disabled away mode, update our username color in all chats
                 page.chat_view.update_user_tag(username)
 
-    def show_user(self, user, switch_page=True, remembered=False):
+    def show_user(self, username, switch_page=True, remembered=False):
 
-        if user not in self.pages:
-            self.pages[user] = page = PrivateChat(self, user)
+        if username not in self.pages:
+            self.pages[username] = page = PrivateChat(self, username)
             tab_position = -1 if remembered else 0
 
             self.insert_page(
-                page.container, user, focus_callback=page.on_focus, close_callback=page.on_close, user=user,
-                position=tab_position
+                page.container, username, focus_callback=page.on_focus, close_callback=page.on_close,
+                username=username, position=tab_position
             )
             page.set_label(self.get_tab_label_inner(page.container))
 
         if switch_page:
-            self.set_current_page(self.pages[user].container)
+            self.set_current_page(self.pages[username].container)
             self.window.change_main_page(self.window.private_page)
 
-    def remove_user(self, user):
+    def remove_user(self, username):
 
-        page = self.pages.get(user)
+        page = self.pages.get(username)
 
         if page is None:
             return
@@ -228,33 +228,33 @@ class PrivateChats(IconNotebook):
                 self.command_help.set_menu_button(None)
 
         page.clear()
-        self.remove_page(page.container, page_args=(user,))
-        del self.pages[user]
+        self.remove_page(page.container, page_args=(username,))
+        del self.pages[username]
         page.destroy()
 
-        self.message_entry.clear_unsent_message(user)
+        self.message_entry.clear_unsent_message(username)
 
-    def highlight_user(self, user, mention_type, mention_keyword):
+    def highlight_user(self, username, mention_type, mention_keyword):
 
-        if not user:
+        if not username:
             return
 
-        self.highlighted_users[user] = (mention_type, mention_keyword)
+        self.highlighted_users[username] = (mention_type, mention_keyword)
         self.window.update_title()
         self.window.application.tray_icon.update()
 
-    def unhighlight_user(self, user):
+    def unhighlight_user(self, username):
 
-        if user not in self.highlighted_users:
+        if username not in self.highlighted_users:
             return
 
-        del self.highlighted_users[user]
+        del self.highlighted_users[username]
         self.window.update_title()
         self.window.application.tray_icon.update()
 
-    def echo_private_message(self, user, text, message_type):
+    def echo_private_message(self, username, text, message_type):
 
-        page = self.pages.get(user)
+        page = self.pages.get(username)
 
         if page is not None:
             page.echo_private_message(text, message_type)
@@ -305,14 +305,14 @@ class PrivateChats(IconNotebook):
 
         self.message_entry.set_sensitive(False)
 
-        for user, page in self.pages.items():
+        for username, page in self.pages.items():
             page.server_disconnect()
-            self.set_user_status(page.container, user, UserStatus.OFFLINE)
+            self.set_user_status(page.container, username, UserStatus.OFFLINE)
 
 
 class PrivateChat:
 
-    def __init__(self, chats, user):
+    def __init__(self, chats, username):
 
         (
             self.chat_view_container,
@@ -323,7 +323,7 @@ class PrivateChat:
             self.search_bar
         ) = ui.load(scope=self, path="privatechat.ui")
 
-        self.user = user
+        self.username = username
         self.chats = chats
         self.window = chats.window
 
@@ -343,7 +343,7 @@ class PrivateChat:
             placeholder_text=_("Search chat log…")
         )
 
-        self.log_toggle.set_active(user in config.sections["logging"]["private_chats"])
+        self.log_toggle.set_active(username in config.sections["logging"]["private_chats"])
         self.toggle_chat_buttons()
 
         if GTK_API_VERSION >= 4:
@@ -352,10 +352,10 @@ class PrivateChat:
 
         self.popup_menu_user_chat = UserPopupMenu(
             self.window.application, parent=self.chat_view.widget, connect_events=False,
-            username=user, tab_name="privatechat"
+            username=username, tab_name="privatechat"
         )
         self.popup_menu_user_tab = UserPopupMenu(
-            self.window.application, callback=self.on_popup_menu_user, username=user,
+            self.window.application, callback=self.on_popup_menu_user, username=username,
             tab_name="privatechat"
         )
 
@@ -408,7 +408,7 @@ class PrivateChat:
 
         log_lines = log.read_log(
             folder_path=log.private_chat_folder_path,
-            basename=self.user,
+            basename=self.username,
             num_lines=config.sections["logging"]["readprivatelines"]
         )
 
@@ -423,7 +423,7 @@ class PrivateChat:
 
     def clear(self):
         self.chat_view.clear()
-        self.chats.unhighlight_user(self.user)
+        self.chats.unhighlight_user(self.username)
 
     def destroy(self):
 
@@ -453,18 +453,18 @@ class PrivateChat:
     def on_log_toggled(self, *_args):
 
         if not self.log_toggle.get_active():
-            if self.user in config.sections["logging"]["private_chats"]:
-                config.sections["logging"]["private_chats"].remove(self.user)
+            if self.username in config.sections["logging"]["private_chats"]:
+                config.sections["logging"]["private_chats"].remove(self.username)
             return
 
-        if self.user not in config.sections["logging"]["private_chats"]:
-            config.sections["logging"]["private_chats"].append(self.user)
+        if self.username not in config.sections["logging"]["private_chats"]:
+            config.sections["logging"]["private_chats"].append(self.username)
 
     def on_find_chat_log(self, *_args):
         self.search_bar.set_visible(True)
 
     def on_view_chat_log(self, *_args):
-        log.open_log(log.private_chat_folder_path, self.user)
+        log.open_log(log.private_chat_folder_path, self.username)
 
     def on_delete_chat_log_response(self, *_args):
 
@@ -472,9 +472,9 @@ class PrivateChat:
             # Tab was closed
             return
 
-        log.delete_log(log.private_chat_folder_path, self.user)
-        self.chats.window.application.chat_history.remove_user(self.user)
-        self.chats.username_combobox.remove_id(self.user)
+        log.delete_log(log.private_chat_folder_path, self.username)
+        self.chats.window.application.chat_history.remove_user(self.username)
+        self.chats.username_combobox.remove_id(self.username)
         self.chat_view.clear()
 
     def on_delete_chat_log(self, *_args):
@@ -493,17 +493,17 @@ class PrivateChat:
 
     def _show_notification(self, text, mention_type, mention_keyword):
 
-        is_buddy = (self.user in core.buddies.users)
+        is_buddy = (self.username in core.buddies.users)
 
         self.chats.request_tab_changed(self.container, is_important=is_buddy or mention_type is not None)
 
         if mention_type == "self":
-            log.add(_("%(user)s mentioned you in a private message") % {"user": self.user})
+            log.add(_("%(user)s mentioned you in a private message") % {"user": self.username})
 
         elif mention_type == "keyword":
             log.add(_("Keyword %(keyword)s mentioned by %(user)s in private") % {
                 "keyword": mention_keyword,
-                "user": self.user
+                "user": self.username
             })
 
         if (self.chats.get_current_page() == self.container
@@ -512,30 +512,30 @@ class PrivateChat:
             return
 
         # Update tray icon and show urgency hint
-        self.chats.highlight_user(self.user, mention_type, mention_keyword)
+        self.chats.highlight_user(self.username, mention_type, mention_keyword)
 
         if config.sections["notifications"]["notification_popup_private_mention"]:
             if mention_type == "self":
                 core.notifications.show_private_chat_notification(
-                    self.user, text,
-                    title=_("Mentioned by %(user)s in Private") % {"user": self.user}
+                    self.username, text,
+                    title=_("Mentioned by %(user)s in Private") % {"user": self.username}
                 )
                 return
 
             if mention_type == "keyword":
                 core.notifications.show_private_chat_notification(
-                    self.user, text,
+                    self.username, text,
                     title=_("Keyword %(keyword)s Mentioned by %(user)s in Private") % {
                         "keyword": mention_keyword,
-                        "user": self.user
+                        "user": self.username
                     }
                 )
                 return
 
         if config.sections["notifications"]["notification_popup_private_message"]:
             core.notifications.show_private_chat_notification(
-                self.user, text,
-                title=_("Private Message from %(user)s") % {"user": self.user}
+                self.username, text,
+                title=_("Private Message from %(user)s") % {"user": self.username}
             )
 
     def message_user(self, msg):
@@ -586,10 +586,10 @@ class PrivateChat:
 
         self.chat_view.add_line(message, message_type=message_type, timestamp_format=timestamp_format)
 
-    def username_event(self, pos_x, pos_y, user):
+    def username_event(self, pos_x, pos_y, username):
 
         self.popup_menu_user_chat.update_model()
-        self.popup_menu_user_chat.set_user(user)
+        self.popup_menu_user_chat.set_user(username)
         self.popup_menu_user_chat.toggle_user_items()
         self.popup_menu_user_chat.popup(pos_x, pos_y)
 
@@ -605,7 +605,7 @@ class PrivateChat:
         return True
 
     def on_close(self, *_args):
-        core.privatechat.remove_user(self.user)
+        core.privatechat.remove_user(self.username)
 
     def on_close_all_tabs(self, *_args):
         self.chats.remove_all_pages()
@@ -616,6 +616,6 @@ class PrivateChat:
     def update_completions(self, completions):
 
         # Tab-complete the recipient username
-        completions.add(self.user)
+        completions.add(self.username)
 
         self.chats.message_entry.set_completions(completions)

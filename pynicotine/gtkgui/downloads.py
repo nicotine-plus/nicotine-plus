@@ -225,10 +225,10 @@ class Downloads(Transfers):
         if not transfer:
             return
 
-        user = transfer.username
+        username = transfer.username
         path = transfer.virtual_path
 
-        core.userbrowse.browse_user(user, path=path)
+        core.userbrowse.browse_user(username, path=path)
 
     def on_clear_queued(self, *_args):
         core.downloads.clear_downloads(statuses={TransferStatus.QUEUED})

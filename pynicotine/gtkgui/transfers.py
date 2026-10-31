@@ -334,14 +334,14 @@ class Transfers:
             return
 
         # Dummy Transfer object for user/folder rows
-        user = transfer.username
+        username = transfer.username
         folder_path = self.get_transfer_folder_path(transfer)
 
         if folder_path is not None:
-            user_folder_path = user + folder_path
+            user_folder_path = username + folder_path
             row_data = self.paths[user_folder_path]
         else:
-            row_data = self.users[user]
+            row_data = self.users[username]
 
         _row_iter, child_transfers = row_data
 
@@ -723,11 +723,11 @@ class Transfers:
         parent_iterator = None
         select_iterator = None
 
-        user = transfer.username
+        username = transfer.username
         folder_path, _separator, basename = transfer.virtual_path.rpartition("\\")
         original_folder_path = folder_path = self.get_transfer_folder_path(transfer)
         is_sensitive = (status != TransferStatus.USER_LOGGED_OFF)
-        username_underline_data = Pango.Underline.SINGLE if user in core.buddies.users else Pango.Underline.NONE
+        username_underline_data = Pango.Underline.SINGLE if username in core.buddies.users else Pango.Underline.NONE
 
         if use_reverse_file_path:
             parts = folder_path.split("\\")
@@ -744,11 +744,11 @@ class Transfers:
             empty_int = 0
             empty_str = ""
 
-            if user not in self.users:
+            if username not in self.users:
                 # Create parent if it doesn't exist
                 iterator = self.tree_view.add_row(
                     [
-                        user,
+                        username,
                         empty_str,
                         empty_str,
                         empty_str,
@@ -767,7 +767,7 @@ class Transfers:
                         empty_int,
                         is_sensitive,
                         username_underline_data,
-                        Transfer(user, status=status),  # Dummy Transfer object
+                        Transfer(username, status=status),  # Dummy Transfer object
                         self.row_id
                     ], select_row=False
                 )
@@ -776,9 +776,9 @@ class Transfers:
                     expand_user = self.grouping_mode == "folder_grouping" or self.expand_mode != "none"
 
                 self.row_id += 1
-                self.users[user] = (iterator, [])
+                self.users[username] = (iterator, [])
 
-            user_iterator, user_child_transfers = self.users[user]
+            user_iterator, user_child_transfers = self.users[username]
             parent_iterator = user_iterator
 
             if select_parent:
@@ -788,15 +788,15 @@ class Transfers:
                 # Group by folder
 
                 # Make sure we don't add files to the wrong user in the TreeView
-                user_folder_path = user + original_folder_path
+                user_folder_path = username + original_folder_path
 
                 if user_folder_path not in self.paths:
                     path_transfer = Transfer(  # Dummy Transfer object
-                        user, folder_path=original_folder_path, status=status
+                        username, folder_path=original_folder_path, status=status
                     )
                     iterator = self.tree_view.add_row(
                         [
-                            user,
+                            username,
                             folder_path,
                             empty_str,
                             empty_str,
@@ -837,15 +837,15 @@ class Transfers:
                 user_child_transfers.append(transfer)
         else:
             # No grouping
-            if user not in self.users:
-                self.users[user] = (None, [])
+            if username not in self.users:
+                self.users[username] = (None, [])
 
-            user_iterator, user_child_transfers = self.users[user]
+            user_iterator, user_child_transfers = self.users[username]
             user_child_transfers.append(transfer)
 
         # Add a new transfer
         transfer.iterator = self.tree_view.add_row([
-            user,
+            username,
             folder_path,
             get_file_type_icon_name(basename),
             basename,
@@ -937,18 +937,18 @@ class Transfers:
         if not iterator or iterator in self.PENDING_ITERATORS:
             return
 
-        user = transfer.username
+        username = transfer.username
 
         if self.grouping_mode == "folder_grouping":
-            user_folder_path = user + self.get_transfer_folder_path(transfer)
+            user_folder_path = username + self.get_transfer_folder_path(transfer)
             _user_folder_path_iter, user_folder_path_child_transfers = self.paths[user_folder_path]
             user_folder_path_child_transfers.remove(transfer)
         else:
-            _user_iter, user_child_transfers = self.users[user]
+            _user_iter, user_child_transfers = self.users[username]
             user_child_transfers.remove(transfer)
 
             if self.grouping_mode == "ungrouped" and not user_child_transfers:
-                del self.users[user]
+                del self.users[username]
 
         self.tree_view.remove_row(iterator)
 
@@ -963,14 +963,14 @@ class Transfers:
     def clear_transfers(self, *_args):
         self.update_parent_rows()
 
-    def update_buddy(self, user, user_data=None):
+    def update_buddy(self, username, user_data=None):
 
-        if user not in self.users:
+        if username not in self.users:
             return
 
         column_key = "username_underline_data"
         underline_data = Pango.Underline.SINGLE if user_data is not None else Pango.Underline.NONE
-        user_iterator, user_child_transfers = self.users[user]
+        user_iterator, user_child_transfers = self.users[username]
 
         if user_iterator is not None:
             self.tree_view.set_row_value(user_iterator, column_key, underline_data)
@@ -1012,17 +1012,17 @@ class Transfers:
 
         # Multiple users, create submenus for some of them
         if len(self.selected_users) > 1:
-            for user in islice(self.selected_users, 20):
-                popup = UserPopupMenu(self.window.application, username=user, tab_name="transfers")
-                self.add_popup_menu_user(popup, user)
-                self.popup_menu_users.add_items((">" + user, popup))
+            for username in islice(self.selected_users, 20):
+                popup = UserPopupMenu(self.window.application, username=username, tab_name="transfers")
+                self.add_popup_menu_user(popup, username)
+                self.popup_menu_users.add_items((">" + username, popup))
                 self.popup_menu_users.update_model()
             return
 
         # Single user, add items directly to "User Actions" submenu
-        user = next(iter(self.selected_users), None)
-        self.popup_menu_users.setup_user_menu(user)
-        self.add_popup_menu_user(self.popup_menu_users, user)
+        username = next(iter(self.selected_users), None)
+        self.popup_menu_users.setup_user_menu(username)
+        self.add_popup_menu_user(self.popup_menu_users, username)
 
     def update_expand_state(self):
 
