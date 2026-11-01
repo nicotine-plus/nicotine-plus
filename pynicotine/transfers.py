@@ -53,8 +53,6 @@ class TransferStatus:
 
 @dataclass(slots=True, eq=False)
 class Transfer:
-    """This class holds information about a single transfer."""
-
     username: str
     virtual_path: str | None = None
     folder_path: str | None = None
