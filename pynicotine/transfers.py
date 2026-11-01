@@ -18,6 +18,7 @@ import time
 from ast import literal_eval
 from collections import defaultdict
 from dataclasses import dataclass
+from dataclasses import field
 from io import BufferedRandom
 from os.path import normpath
 from socket import socket
@@ -56,7 +57,7 @@ class Transfer:
     virtual_path: str | None = None
     folder_path: str | None = None
     size: int = 0
-    file_attributes: FileAttributes | None = None
+    file_attributes: FileAttributes = field(default_factory=FileAttributes)
     status: str | None = None
     current_byte_offset: int | None = None
 
@@ -79,10 +80,6 @@ class Transfer:
     size_changed: bool = False
     is_backslash_path: bool = False
     is_lowercase_path: bool = False
-
-    def __post_init__(self):
-        if self.file_attributes is None:
-            self.file_attributes = FileAttributes()
 
 
 class Transfers:
