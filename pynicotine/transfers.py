@@ -18,7 +18,6 @@ import time
 from ast import literal_eval
 from collections import defaultdict
 from dataclasses import dataclass
-from dataclasses import field
 from io import BufferedRandom
 from os.path import normpath
 from socket import socket
@@ -61,25 +60,25 @@ class Transfer:
     status: str | None = None
     current_byte_offset: int | None = None
 
-    sock: socket | None = field(default=None, init=False)
-    file_handle: BufferedRandom | None = field(default=None, init=False)
-    token: int | None = field(default=None, init=False)
-    queue_position: int = field(default=0, init=False)
-    modifier: None = field(default=None, init=False)
-    request_timer_id: int | None = field(default=None, init=False)
-    start_time: float | None = field(default=None, init=False)
-    last_byte_offset: int | None = field(default=None, init=False)
-    transferred_bytes_total: int = field(default=0, init=False)
-    speed: float = field(default=0, init=False)
-    avg_speed: int = field(default=0, init=False)
-    time_elapsed: float = field(default=0, init=False)
-    time_left: int = field(default=0, init=False)
-    iterator: int | None = field(default=None, init=False)
-    legacy_attempt: bool = field(default=False, init=False)
-    retry_attempt: bool = field(default=False, init=False)
-    size_changed: bool = field(default=False, init=False)
-    is_backslash_path: bool = field(default=False, init=False)
-    is_lowercase_path: bool = field(default=False, init=False)
+    sock: socket | None = None
+    file_handle: BufferedRandom | None = None
+    token: int | None = None
+    queue_position: int = 0
+    modifier: None = None
+    request_timer_id: int | None = None
+    start_time: float | None = None
+    last_byte_offset: int | None = None
+    transferred_bytes_total: int = 0
+    speed: float = 0
+    avg_speed: int = 0
+    time_elapsed: float = 0
+    time_left: int = 0
+    iterator: int | None = None
+    legacy_attempt: bool = False
+    retry_attempt: bool = False
+    size_changed: bool = False
+    is_backslash_path: bool = False
+    is_lowercase_path: bool = False
 
     def __post_init__(self):
         if self.file_attributes is None:
