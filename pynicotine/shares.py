@@ -543,20 +543,20 @@ class Scanner:
         gc.collect()
 
     @classmethod
-    def is_hidden(cls, folder, filename=None, entry=None):
+    def is_hidden(cls, folder_path, basename=None, entry=None):
         """Stop sharing any hidden folders/files."""
 
         # Check if file is marked as hidden on Windows
         if sys.platform == "win32":
-            if len(folder) == 3 and folder[1] == ":" and folder[2] == os.sep:
+            if len(folder_path) == 3 and folder_path[1] == ":" and folder_path[2] == os.sep:
                 # Root folders are marked as hidden, but we allow scanning them
                 return False
 
             if entry is None:
-                if filename is not None:
-                    entry_stat = os.stat(encode_path(os.path.join(folder, filename)))
+                if basename is not None:
+                    entry_stat = os.stat(encode_path(os.path.join(folder_path, basename)))
                 else:
-                    entry_stat = os.stat(encode_path(folder))
+                    entry_stat = os.stat(encode_path(folder_path))
             else:
                 entry_stat = entry.stat()
 
@@ -1260,7 +1260,7 @@ class Shares:
 
         context = multiprocessing.get_context(method="spawn")
         reader, writer = context.Pipe(duplex=False)
-        scanner_obj = Scanner(
+        scanner = Scanner(
             writer,
             share_groups,
             self.share_db_paths,
@@ -1275,8 +1275,8 @@ class Shares:
             ),
             share_filters=config.sections["transfers"]["share_filters"]
         )
-        scanner = context.Process(target=scanner_obj.run, daemon=True)
-        return scanner, reader, writer
+        scanner_process = context.Process(target=scanner.run, daemon=True)
+        return scanner_process, reader, writer
 
     def _process_scanner(self, process, reader, emit_event=None):
 
