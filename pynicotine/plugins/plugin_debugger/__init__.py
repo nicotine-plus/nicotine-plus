@@ -87,7 +87,7 @@ class Plugin(BasePlugin):
         self._trigger_log(f"room={room}, line={line}")
 
     def outgoing_public_chat_notification(self, room, line):
-        self._trigger_log(f"user={room}, line={line}")
+        self._trigger_log(f"room={room}, line={line}")
 
     def outgoing_global_search_event(self, text):
         self._trigger_log(f"text={text}")
