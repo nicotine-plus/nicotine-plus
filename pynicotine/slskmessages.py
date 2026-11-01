@@ -1395,6 +1395,11 @@ class GetUserStats(ServerMessage):
     The server sends this to indicate a change in a user's stats, if we have
     joined the same chat room. We can also request a user's stats by sending
     the message to the server.
+
+    The server increments the value of the upload number attribute when
+    receiving a SendUploadSpeed message, and rolls it over after a certain
+    point. In old versions of Soulseek, the attribute was connected to the
+    SendDownloadSpeed message instead, and never rolled over.
     """
 
     __slots__ = ("username", "stats")
