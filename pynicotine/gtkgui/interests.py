@@ -442,17 +442,17 @@ class Interests:
             widget.clear()
             widget.freeze()
 
-        for thing, rating in recommendations:
-            if thing not in self.likes_list_view.iterators:
-                self.add_like_combobox.append(thing)
+        for recommendation, rating in recommendations:
+            if recommendation not in self.likes_list_view.iterators:
+                self.add_like_combobox.append(recommendation)
 
-            self.recommendations_list_view.add_row([humanize(rating), thing, rating], select_row=False)
+            self.recommendations_list_view.add_row([humanize(rating), recommendation, rating], select_row=False)
 
-        for thing, rating in unrecommendations:
-            if thing not in self.dislikes_list_view.iterators:
-                self.add_dislike_combobox.append(thing)
+        for unrecommendation, rating in unrecommendations:
+            if unrecommendation not in self.dislikes_list_view.iterators:
+                self.add_dislike_combobox.append(unrecommendation)
 
-            self.recommendations_list_view.add_row([humanize(rating), thing, rating], select_row=False)
+            self.recommendations_list_view.add_row([humanize(rating), unrecommendation, rating], select_row=False)
 
         for widget in widgets:
             widget.unfreeze()
@@ -470,7 +470,7 @@ class Interests:
         self.show_recommendations(always_global=True)
 
     def item_recommendations(self, msg):
-        self.set_recommendations(msg.recommendations, msg.unrecommendations, msg.thing)
+        self.set_recommendations(msg.recommendations, msg.unrecommendations, msg.item)
 
     def set_similar_users(self, users, item=None):
 
@@ -519,7 +519,7 @@ class Interests:
         self.set_similar_users(msg.users)
 
     def item_similar_users(self, msg):
-        self.set_similar_users(msg.users, msg.thing)
+        self.set_similar_users(msg.users, msg.item)
 
     def user_country(self, username, country_code):
 

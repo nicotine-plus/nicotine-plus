@@ -1524,15 +1524,15 @@ class AddThingILike(ServerMessage):
     We send this to the server when we add an item to our likes list.
     """
 
-    __slots__ = ("thing",)
+    __slots__ = ("item",)
     CODE = 51
 
-    def __init__(self, thing=None):
+    def __init__(self, item=None):
         ServerMessage.__init__(self)
-        self.thing = thing
+        self.item = item
 
     def make_network_message(self):
-        return self.pack_string(self.thing)
+        return self.pack_string(self.item)
 
 
 class RemoveThingILike(ServerMessage):
@@ -1542,15 +1542,15 @@ class RemoveThingILike(ServerMessage):
     list.
     """
 
-    __slots__ = ("thing",)
+    __slots__ = ("item",)
     CODE = 52
 
-    def __init__(self, thing=None):
+    def __init__(self, item=None):
         ServerMessage.__init__(self)
-        self.thing = thing
+        self.item = item
 
     def make_network_message(self):
-        return self.pack_string(self.thing)
+        return self.pack_string(self.item)
 
 
 class Recommendations(ServerMessage):
@@ -1657,14 +1657,14 @@ class UserInterests(ServerMessage):
         num_likes = self.unpack_uint32()
 
         for _ in range(num_likes):
-            interest = self.unpack_string()
-            self.likes.append(interest)
+            item = self.unpack_string()
+            self.likes.append(item)
 
         num_hates = self.unpack_uint32()
 
         for _ in range(num_hates):
-            interest = self.unpack_string()
-            self.hates.append(interest)
+            item = self.unpack_string()
+            self.hates.append(item)
 
 
 class AdminCommand(ServerMessage):
@@ -2348,21 +2348,21 @@ class ItemRecommendations(ServerMessage):
     existing recommendation list.
     """
 
-    __slots__ = ("thing", "recommendations", "unrecommendations")
+    __slots__ = ("item", "recommendations", "unrecommendations")
     CODE = 111
     EVENT_NAME = "item-recommendations"
 
-    def __init__(self, thing=None, *, msg_content=None):
+    def __init__(self, item=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.thing = thing
+        self.item = item
         self.recommendations = []
         self.unrecommendations = []
 
     def make_network_message(self):
-        return self.pack_string(self.thing)
+        return self.pack_string(self.item)
 
     def parse_network_message(self):
-        self.thing = self.unpack_string()
+        self.item = self.unpack_string()
         self.recommendations, self.unrecommendations = self.parse_recommendations()
 
 
@@ -2374,20 +2374,20 @@ class ItemSimilarUsers(ServerMessage):
     recommendation list.
     """
 
-    __slots__ = ("thing", "users")
+    __slots__ = ("item", "users")
     CODE = 112
     EVENT_NAME = "item-similar-users"
 
-    def __init__(self, thing=None, *, msg_content=None):
+    def __init__(self, item=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.thing = thing
+        self.item = item
         self.users = []
 
     def make_network_message(self):
-        return self.pack_string(self.thing)
+        return self.pack_string(self.item)
 
     def parse_network_message(self):
-        self.thing = self.unpack_string()
+        self.item = self.unpack_string()
         num_users = self.unpack_uint32()
 
         for _ in range(num_users):
@@ -2504,15 +2504,15 @@ class AddThingIHate(ServerMessage):
     We send this to the server when we add an item to our hate list.
     """
 
-    __slots__ = ("thing",)
+    __slots__ = ("item",)
     CODE = 117
 
-    def __init__(self, thing=None):
+    def __init__(self, item=None):
         ServerMessage.__init__(self)
-        self.thing = thing
+        self.item = item
 
     def make_network_message(self):
-        return self.pack_string(self.thing)
+        return self.pack_string(self.item)
 
 
 class RemoveThingIHate(ServerMessage):
@@ -2522,15 +2522,15 @@ class RemoveThingIHate(ServerMessage):
     list.
     """
 
-    __slots__ = ("thing",)
+    __slots__ = ("item",)
     CODE = 118
 
-    def __init__(self, thing=None):
+    def __init__(self, item=None):
         ServerMessage.__init__(self)
-        self.thing = thing
+        self.item = item
 
     def make_network_message(self):
-        return self.pack_string(self.thing)
+        return self.pack_string(self.item)
 
 
 class RoomSearch(ServerMessage):
