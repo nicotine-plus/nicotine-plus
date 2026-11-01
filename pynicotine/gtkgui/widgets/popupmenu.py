@@ -537,9 +537,9 @@ class UserPopupMenu(PopupMenu):
 
         _reserved = _("Make Owner of %s")
 
-        for room, data in core.chatrooms.private_rooms.items():
-            is_owner = core.chatrooms.is_room_owner(room)
-            is_operator = core.chatrooms.is_room_operator(room)
+        for room_name, data in core.chatrooms.private_rooms.items():
+            is_owner = core.chatrooms.is_room_owner(room_name)
+            is_operator = core.chatrooms.is_room_operator(room_name)
 
             if not is_owner and not is_operator:
                 continue
@@ -553,21 +553,21 @@ class UserPopupMenu(PopupMenu):
             if not is_user_operator:
                 if is_user_member:
                     self.add_items(
-                        ("#" + _("Remove from Private Room %s") % room, self.on_remove_room_member, room))
+                        ("#" + _("Remove from Private Room %s") % room_name, self.on_remove_room_member, room_name))
                 else:
                     self.add_items(
-                        ("#" + _("Add to Private Room %s") % room, self.on_add_room_member, room))
+                        ("#" + _("Add to Private Room %s") % room_name, self.on_add_room_member, room_name))
 
             if not is_owner:
                 continue
 
             if is_user_operator:
                 self.add_items(
-                    ("#" + _("Remove as Operator of %s") % room, self.on_remove_room_operator, room))
+                    ("#" + _("Remove as Operator of %s") % room_name, self.on_remove_room_operator, room_name))
 
             elif is_user_member:
                 self.add_items(
-                    ("#" + _("Add as Operator of %s") % room, self.on_add_room_operator, room))
+                    ("#" + _("Add as Operator of %s") % room_name, self.on_add_room_operator, room_name))
 
             self.add_items(("", None))
 
@@ -589,19 +589,19 @@ class UserPopupMenu(PopupMenu):
     def on_browse_user(self, *_args):
         core.userbrowse.browse_user(self.username)
 
-    def on_add_room_member(self, _action, _parameter, room):
-        core.chatrooms.request_add_room_member(room, self.username)
+    def on_add_room_member(self, _action, _parameter, room_name):
+        core.chatrooms.request_add_room_member(room_name, self.username)
 
-    def on_remove_room_member(self, _action, _parameter, room):
-        core.chatrooms.request_remove_room_member(room, self.username)
+    def on_remove_room_member(self, _action, _parameter, room_name):
+        core.chatrooms.request_remove_room_member(room_name, self.username)
 
-    def on_add_room_operator(self, _action, _parameter, room):
-        core.chatrooms.request_add_room_operator(room, self.username)
+    def on_add_room_operator(self, _action, _parameter, room_name):
+        core.chatrooms.request_add_room_operator(room_name, self.username)
 
-    def on_remove_room_operator(self, _action, _parameter, room):
-        core.chatrooms.request_remove_room_operator(room, self.username)
+    def on_remove_room_operator(self, _action, _parameter, room_name):
+        core.chatrooms.request_remove_room_operator(room_name, self.username)
 
-    def on_change_room_owner(self, _action, _parameter, room):
+    def on_change_room_owner(self, _action, _parameter, room_name):
         """Reserved for the future. Not implemented in the server yet."""
 
         OptionDialog(
@@ -609,7 +609,7 @@ class UserPopupMenu(PopupMenu):
             title=_("Change Room Owner?"),
             message=_("Do you really want to make %(user)s the new owner of your private room %(room)s?") % {
                 "user": self.username,
-                "room": room
+                "room": room_name
             },
             buttons=[
                 ("cancel", _("_Cancel")),

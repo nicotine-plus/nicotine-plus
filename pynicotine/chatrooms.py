@@ -117,11 +117,11 @@ class ChatRooms:
 
         self.request_enable_room_invitations(config.sections["server"]["private_chatrooms"])
 
-        for room in self.joined_rooms:
-            if room == self.GLOBAL_ROOM_NAME:
+        for room_name in self.joined_rooms:
+            if room_name == self.GLOBAL_ROOM_NAME:
                 core.send_message_to_server(JoinGlobalRoom())
             else:
-                core.send_message_to_server(JoinRoom(room))
+                core.send_message_to_server(JoinRoom(room_name))
 
     def _server_disconnect(self, _msg):
 

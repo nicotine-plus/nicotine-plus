@@ -493,10 +493,10 @@ class Application:
         except Exception as error:
             log.add(_("Unable to show notification: %s"), error)
 
-    def _show_chatroom_notification(self, room, message, title=None, high_priority=False):
+    def _show_chatroom_notification(self, room_name, message, title=None, high_priority=False):
 
         self._show_notification(
-            message, title, action="app.chatroom-notification-activated", action_target=room,
+            message, title, action="app.chatroom-notification-activated", action_target=room_name,
             high_priority=high_priority
         )
 
@@ -786,8 +786,8 @@ class Application:
 
         self.activate()
 
-        room = room_variant.get_string()
-        core.chatrooms.show_room(room)
+        room_name = room_variant.get_string()
+        core.chatrooms.show_room(room_name)
 
     def on_private_chat_notification_activated(self, _action, user_variant):
 

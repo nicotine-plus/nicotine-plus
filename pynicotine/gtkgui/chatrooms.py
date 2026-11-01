@@ -162,17 +162,17 @@ class ChatRooms(IconNotebook):
         core.chatrooms.remove_all_rooms()
 
     def on_restore_removed_page(self, page_args):
-        room, is_private = page_args
-        core.chatrooms.show_room(room, is_private=is_private)
+        room_name, is_private = page_args
+        core.chatrooms.show_room(room_name, is_private=is_private)
 
     def on_reordered_page(self, *_args):
 
         room_tab_order = {}
 
         # Find position of opened auto-joined rooms
-        for room, room_page in self.pages.items():
+        for room_name, room_page in self.pages.items():
             room_position = self.page_num(room_page.container)
-            room_tab_order[room_position] = room
+            room_tab_order[room_position] = room_name
 
         config.sections["server"]["autojoin"] = [room for room_index, room in sorted(room_tab_order.items())]
 
@@ -181,13 +181,13 @@ class ChatRooms(IconNotebook):
         if self.window.current_page_id != self.window.chatrooms_page.id:
             return
 
-        for room, tab in self.pages.items():
+        for room_name, tab in self.pages.items():
             if tab.container != page:
                 continue
 
-            joined_room = core.chatrooms.joined_rooms.get(room)
+            joined_room = core.chatrooms.joined_rooms.get(room_name)
 
-            self.message_entry.set_parent(tab.message_entry_container, tab.chat_view, room)
+            self.message_entry.set_parent(tab.message_entry_container, tab.chat_view, room_name)
             self.message_entry.set_sensitive(joined_room is not None and joined_room.users)
             tab.toggle_chat_buttons()
             tab.update_room_user_completions()
@@ -200,49 +200,49 @@ class ChatRooms(IconNotebook):
 
             self.command_help.set_menu_button(tab.help_button)
             self.room_wall.set_menu_button(tab.room_wall_button)
-            self.room_wall.room = room
+            self.room_wall.room_name = room_name
 
             if not tab.loaded:
                 tab.load()
 
             # Remove highlight
-            self.unhighlight_room(room)
+            self.unhighlight_room(room_name)
             break
 
-    def on_create_room_response(self, dialog, _response_id, room):
+    def on_create_room_response(self, dialog, _response_id, room_name):
         private = dialog.get_option_value()
-        core.chatrooms.show_room(room, private)
+        core.chatrooms.show_room(room_name, private)
 
     def on_create_room(self, *_args):
 
-        room = self.window.chatrooms_entry.get_text().strip()
+        room_name = self.window.chatrooms_entry.get_text().strip()
 
-        if not room:
+        if not room_name:
             return
 
         if (core.users.login_status != UserStatus.OFFLINE
-                and room not in core.chatrooms.server_rooms and room not in core.chatrooms.private_rooms):
-            room = core.chatrooms.sanitize_room_name(room)
+                and room_name not in core.chatrooms.server_rooms and room_name not in core.chatrooms.private_rooms):
+            room_name = core.chatrooms.sanitize_room_name(room_name)
             OptionDialog(
                 application=self.window.application,
                 title=_("Create New Room?"),
-                message=_('Do you really want to create a new room "%s"?') % room,
+                message=_('Do you really want to create a new room "%s"?') % room_name,
                 option_label=_("Make room private"),
                 buttons=[
                     ("cancel", _("_Cancel")),
                     ("ok", _("Cre_ate"))
                 ],
                 callback=self.on_create_room_response,
-                callback_data=room
+                callback_data=room_name
             ).present()
         else:
-            core.chatrooms.show_room(room)
+            core.chatrooms.show_room(room_name)
 
         self.window.chatrooms_entry.set_text("")
 
-    def clear_room_messages(self, room):
+    def clear_room_messages(self, room_name):
 
-        page = self.pages.get(room)
+        page = self.pages.get(room_name)
 
         if page is not None:
             page.chat_view.clear()
@@ -255,36 +255,36 @@ class ChatRooms(IconNotebook):
 
         page = self.get_current_page()
 
-        for room, tab in self.pages.items():
+        for room_name, tab in self.pages.items():
             if tab.container == page:
                 # Remove highlight
-                self.unhighlight_room(room)
+                self.unhighlight_room(room_name)
                 break
 
-    def show_room(self, room, is_private=False, switch_page=True, remembered=False):
+    def show_room(self, room_name, is_private=False, switch_page=True, remembered=False):
 
-        if room not in self.pages:
-            is_global = (room == core.chatrooms.GLOBAL_ROOM_NAME)
+        if room_name not in self.pages:
+            is_global = (room_name == core.chatrooms.GLOBAL_ROOM_NAME)
             tab_position = 0 if is_global and not remembered else -1
-            self.pages[room] = tab = ChatRoom(self, room, is_private=is_private, is_global=is_global)
+            self.pages[room_name] = tab = ChatRoom(self, room_name, is_private=is_private, is_global=is_global)
 
             self.insert_page(
-                tab.container, room, focus_callback=tab.on_focus, close_callback=tab.on_leave_room,
+                tab.container, room_name, focus_callback=tab.on_focus, close_callback=tab.on_leave_room,
                 position=tab_position
             )
             tab.set_label(self.get_tab_label_inner(tab.container))
 
             if not is_global:
                 combobox = self.window.search.room_search_combobox
-                combobox.append(room)
+                combobox.append(room_name)
 
         if switch_page:
-            self.set_current_page(self.pages[room].container)
+            self.set_current_page(self.pages[room_name].container)
             self.window.change_main_page(self.window.chatrooms_page)
 
-    def remove_room(self, room):
+    def remove_room(self, room_name):
 
-        page = self.pages.get(room)
+        page = self.pages.get(room_name)
 
         if page is None:
             return
@@ -300,31 +300,31 @@ class ChatRooms(IconNotebook):
                 self.room_wall.room = None
 
         page.clear()
-        self.remove_page(page.container, page_args=(room, page.is_private))
-        del self.pages[room]
+        self.remove_page(page.container, page_args=(room_name, page.is_private))
+        del self.pages[room_name]
         page.destroy()
 
-        self.message_entry.clear_unsent_message(room)
+        self.message_entry.clear_unsent_message(room_name)
 
-        if room != core.chatrooms.GLOBAL_ROOM_NAME:
+        if room_name != core.chatrooms.GLOBAL_ROOM_NAME:
             combobox = self.window.search.room_search_combobox
-            combobox.remove_id(room)
+            combobox.remove_id(room_name)
 
-    def highlight_room(self, room, username, mention_type, mention_keyword):
+    def highlight_room(self, room_name, username, mention_type, mention_keyword):
 
-        if not room:
+        if not room_name:
             return
 
-        self.highlighted_rooms[room] = (username, mention_type, mention_keyword)
+        self.highlighted_rooms[room_name] = (username, mention_type, mention_keyword)
         self.window.update_title()
         self.window.application.tray_icon.update()
 
-    def unhighlight_room(self, room):
+    def unhighlight_room(self, room_name):
 
-        if room not in self.highlighted_rooms:
+        if room_name not in self.highlighted_rooms:
             return
 
-        del self.highlighted_rooms[room]
+        del self.highlighted_rooms[room_name]
         self.window.update_title()
         self.window.application.tray_icon.update()
 
@@ -393,14 +393,14 @@ class ChatRooms(IconNotebook):
         self.join_room_combobox.freeze()
         self.join_room_combobox.clear()
 
-        for room, _user_count in chain(msg.rooms, msg.rooms_owner, msg.rooms_member):
-            self.join_room_combobox.append(room)
+        for room_name, _user_count in chain(msg.rooms, msg.rooms_owner, msg.rooms_member):
+            self.join_room_combobox.append(room_name)
 
         self.join_room_combobox.unfreeze()
 
-    def echo_room_message(self, room, text, message_type):
+    def echo_room_message(self, room_name, text, message_type):
 
-        page = self.pages.get(room)
+        page = self.pages.get(room_name)
 
         if page is not None:
             page.echo_room_message(text, message_type)
@@ -513,7 +513,7 @@ class ChatRooms(IconNotebook):
 
 class ChatRoom:
 
-    def __init__(self, chatrooms, room, is_private, is_global):
+    def __init__(self, chatrooms, room_name, is_private, is_global):
 
         (
             self.activity_container,
@@ -540,7 +540,7 @@ class ChatRoom:
 
         self.chatrooms = chatrooms
         self.window = chatrooms.window
-        self.room = room
+        self.room_name = room_name
         self.is_private = is_private
         self.is_global = is_global
 
@@ -563,7 +563,7 @@ class ChatRoom:
         self.chat_view = ChatView(
             self.chat_view_container, message_entry=self.chatrooms.message_entry, editable=False,
             horizontal_margin=10, vertical_margin=5, pixels_below_lines=2,
-            status_users=core.chatrooms.joined_rooms[room].users,
+            status_users=core.chatrooms.joined_rooms[room_name].users,
             room_name_event=(self.room_name_event if is_global else None),
             username_event=self.username_event
         )
@@ -584,7 +584,7 @@ class ChatRoom:
         self.user_list_button.connect("toggled", self.on_toggle_user_list_visibility)
         self.user_list_button.set_active(config.sections["chatrooms"]["user_list_visible"])
 
-        self.log_toggle.set_active(room in config.sections["logging"]["rooms"])
+        self.log_toggle.set_active(room_name in config.sections["logging"]["rooms"])
         self.toggle_chat_buttons()
 
         if GTK_API_VERSION >= 4:
@@ -598,7 +598,7 @@ class ChatRoom:
         room_wall_button.connect("toggled", self.on_show_room_wall)
 
         self.users_list_view = TreeView(
-            self.window, parent=self.users_list_container, name="chat_room", secondary_name=room,
+            self.window, parent=self.users_list_container, name="chat_room", secondary_name=room_name,
             persistent_sort=True, persistent_widths=False, activate_row_callback=self.on_row_activated,
             columns={
                 # Visible columns
@@ -749,7 +749,7 @@ class ChatRoom:
         underline = Pango.Underline.NONE
         is_unignored = not (core.network_filter.is_user_ignored(username)
                             or core.network_filter.is_user_ip_ignored(username))
-        private_room = core.chatrooms.private_rooms.get(self.room)
+        private_room = core.chatrooms.private_rooms.get(self.room_name)
 
         if private_room is not None:
             if username == private_room.owner:
@@ -788,7 +788,7 @@ class ChatRoom:
 
         log_lines = log.read_log(
             folder_path=log.room_folder_path,
-            basename=self.room,
+            basename=self.room_name,
             num_lines=config.sections["logging"]["readroomlines"]
         )
 
@@ -811,7 +811,7 @@ class ChatRoom:
 
             self.add_user_row(user_data)
 
-        private_room = core.chatrooms.private_rooms.get(self.room)
+        private_room = core.chatrooms.private_rooms.get(self.room_name)
 
         # List private room members who are offline/not currently joined
         if private_room is not None:
@@ -891,29 +891,29 @@ class ChatRoom:
 
         self.user_list_button.set_active(config.sections["chatrooms"]["user_list_visible"])
 
-    def _show_notification(self, room, username, text, mention_type, mention_keyword):
+    def _show_notification(self, room_name, username, text, mention_type, mention_keyword):
 
         self.chatrooms.request_tab_changed(
             self.container, is_important=mention_type is not None, is_quiet=self.is_global)
 
-        if self.is_global and room in core.chatrooms.joined_rooms:
+        if self.is_global and room_name in core.chatrooms.joined_rooms:
             # Don't show notifications about the Public feed that's duplicated in an open tab
             return
 
         if mention_type == "self":
-            log.add(_("%(user)s mentioned you in room %(room)s") % {"user": username, "room": room})
+            log.add(_("%(user)s mentioned you in room %(room)s") % {"user": username, "room": room_name})
 
         elif mention_type == "keyword":
             log.add(_("Keyword %(keyword)s mentioned by %(user)s in room %(room)s") % {
                 "keyword": mention_keyword,
                 "user": username,
-                "room": room
+                "room": room_name
             })
 
         elif mention_type == "username":
             log.add(_("Message by watched user %(user)s in room %(room)s") % {
                 "user": mention_keyword,
-                "room": room
+                "room": room_name
             })
 
         if (self.chatrooms.get_current_page() == self.container
@@ -923,24 +923,24 @@ class ChatRoom:
 
         if mention_type is not None:
             # We were mentioned, update tray icon and show urgency hint
-            self.chatrooms.highlight_room(room, username, mention_type, mention_keyword)
+            self.chatrooms.highlight_room(room_name, username, mention_type, mention_keyword)
 
         if config.sections["notifications"]["notification_popup_chatroom_mention"]:
             if mention_type == "self":
                 core.notifications.show_chatroom_notification(
-                    room, text,
-                    title=_("Mentioned by %(user)s in Room %(room)s") % {"user": username, "room": room},
+                    room_name, text,
+                    title=_("Mentioned by %(user)s in Room %(room)s") % {"user": username, "room": room_name},
                     high_priority=True
                 )
                 return
 
             if mention_type == "keyword":
                 core.notifications.show_chatroom_notification(
-                    room, text,
+                    room_name, text,
                     title=_("Keyword %(keyword)s Mentioned by %(user)s in Room %(room)s") % {
                         "keyword": mention_keyword,
                         "user": username,
-                        "room": room
+                        "room": room_name
                     },
                     high_priority=True
                 )
@@ -948,10 +948,10 @@ class ChatRoom:
 
             if mention_type == "username":
                 core.notifications.show_chatroom_notification(
-                    room, text,
+                    room_name, text,
                     title=_("Message by Watched User %(user)s in Room %(room)s") % {
                         "user": mention_keyword,
-                        "room": room
+                        "room": room_name
                     },
                     high_priority=True
                 )
@@ -960,8 +960,8 @@ class ChatRoom:
         if not self.is_global and config.sections["notifications"]["notification_popup_chatroom"]:
             # Don't show notifications for public feed room, they're too noisy
             core.notifications.show_chatroom_notification(
-                room, text,
-                title=_("Message by %(user)s in Room %(room)s") % {"user": username, "room": room}
+                room_name, text,
+                title=_("Message by %(user)s in Room %(room)s") % {"user": username, "room": room_name}
             )
 
     def say_chat_room(self, msg):
@@ -1173,7 +1173,7 @@ class ChatRoom:
         if iterator is None:
             return
 
-        if username not in core.chatrooms.joined_rooms[self.room].users:
+        if username not in core.chatrooms.joined_rooms[self.room_name].users:
             # Private room member offline/not currently joined
             return
 
@@ -1208,7 +1208,7 @@ class ChatRoom:
         if iterator is None:
             return
 
-        if username not in core.chatrooms.joined_rooms[self.room].users:
+        if username not in core.chatrooms.joined_rooms[self.room_name].users:
             # Private room member offline/not currently joined
             return
 
@@ -1244,7 +1244,7 @@ class ChatRoom:
         if iterator is None:
             return
 
-        if username not in core.chatrooms.joined_rooms[self.room].users:
+        if username not in core.chatrooms.joined_rooms[self.room_name].users:
             # Private room member offline/not currently joined
             return
 
@@ -1253,8 +1253,8 @@ class ChatRoom:
         if flag_icon_name and flag_icon_name != self.users_list_view.get_row_value(iterator, "country"):
             self.users_list_view.set_row_value(iterator, "country", flag_icon_name)
 
-    def room_name_event(self, _pos_x, _pos_y, room):
-        core.chatrooms.show_room(room)
+    def room_name_event(self, _pos_x, _pos_y, room_name):
+        core.chatrooms.show_room(room_name)
 
     def username_event(self, pos_x, pos_y, username):
 
@@ -1273,7 +1273,7 @@ class ChatRoom:
 
         self.is_private = (msg.room_type == RoomType.PRIVATE)
         login_username = core.users.login_username
-        private_room = core.chatrooms.private_rooms.get(self.room)
+        private_room = core.chatrooms.private_rooms.get(self.room_name)
 
         self.users_description_label.set_label(_("Members") if self.is_private else _("Online"))
         self.add_room_member_button.set_visible(
@@ -1334,7 +1334,7 @@ class ChatRoom:
         self.chat_search_bar.set_visible(True)
 
     def on_leave_room(self, *_args):
-        core.chatrooms.remove_room(self.room)
+        core.chatrooms.remove_room(self.room_name)
 
     def on_add_room_member_response(self, dialog, _response_id, _data):
 
@@ -1343,7 +1343,7 @@ class ChatRoom:
             return
 
         username = dialog.get_entry_value().strip()
-        private_room = core.chatrooms.private_rooms.get(self.room)
+        private_room = core.chatrooms.private_rooms.get(self.room_name)
 
         if not username or private_room is None:
             return
@@ -1351,11 +1351,11 @@ class ChatRoom:
         if username == private_room.owner or username in private_room.members:
             return
 
-        core.chatrooms.request_add_room_member(self.room, username)
+        core.chatrooms.request_add_room_member(self.room_name, username)
 
     def on_add_room_member(self, *_args):
 
-        if self.room not in core.chatrooms.private_rooms:
+        if self.room_name not in core.chatrooms.private_rooms:
             return
 
         EntryDialog(
@@ -1370,15 +1370,15 @@ class ChatRoom:
     def on_log_toggled(self, *_args):
 
         if not self.log_toggle.get_active():
-            if self.room in config.sections["logging"]["rooms"]:
-                config.sections["logging"]["rooms"].remove(self.room)
+            if self.room_name in config.sections["logging"]["rooms"]:
+                config.sections["logging"]["rooms"].remove(self.room_name)
             return
 
-        if self.room not in config.sections["logging"]["rooms"]:
-            config.sections["logging"]["rooms"].append(self.room)
+        if self.room_name not in config.sections["logging"]["rooms"]:
+            config.sections["logging"]["rooms"].append(self.room_name)
 
     def on_view_room_log(self, *_args):
-        log.open_log(log.room_folder_path, self.room)
+        log.open_log(log.room_folder_path, self.room_name)
 
     def on_delete_room_log_response(self, *_args):
 
@@ -1386,7 +1386,7 @@ class ChatRoom:
             # Tab was closed
             return
 
-        log.delete_log(log.room_folder_path, self.room)
+        log.delete_log(log.room_folder_path, self.room_name)
         self.activity_view.clear()
         self.chat_view.clear()
 
@@ -1447,7 +1447,7 @@ class ChatRoom:
 
         # We want to include users for this room only
         if config.sections["words"]["roomusers"]:
-            room_users = core.chatrooms.joined_rooms[self.room].users
+            room_users = core.chatrooms.joined_rooms[self.room_name].users
             completions.update(room_users)
 
         self.chatrooms.message_entry.set_completions(completions)

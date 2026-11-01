@@ -73,7 +73,7 @@ class RoomList(Dialog):
             }
         )
 
-        self.popup_room = None
+        self.popup_room_name = None
         self.popup_menu = PopupMenu(application, self.list_view.widget, self.on_popup_menu)
         self.popup_menu.add_items(
             ("=" + _("_Join Room"), self.on_popup_join),
@@ -132,7 +132,7 @@ class RoomList(Dialog):
     def toggle_room_invitations(self, active):
         self.room_invitations_toggle.set_active(active)
 
-    def add_room(self, room, user_count=0, is_private=False, is_owner=False):
+    def add_room(self, room_name, user_count=0, is_private=False, is_owner=False):
 
         h_user_count = humanize(user_count)
 
@@ -144,7 +144,7 @@ class RoomList(Dialog):
         text_underline = Pango.Underline.SINGLE if is_owner else Pango.Underline.NONE
 
         self.list_view.add_row([
-            room,
+            room_name,
             h_user_count,
             user_count,
             is_private,
@@ -155,9 +155,9 @@ class RoomList(Dialog):
         if not self.list_container.get_visible():
             self.list_container.set_visible(True)
 
-    def update_room_user_count(self, room, user_count=None, decrement=False):
+    def update_room_user_count(self, room_name, user_count=None, decrement=False):
 
-        iterator = self.list_view.iterators.get(room)
+        iterator = self.list_view.iterators.get(room_name)
 
         if iterator is None:
             return
@@ -201,31 +201,31 @@ class RoomList(Dialog):
 
     def join_room(self, msg):
 
-        room = msg.room_name
+        room_name = msg.room_name
 
-        if room not in core.chatrooms.joined_rooms:
+        if room_name not in core.chatrooms.joined_rooms:
             return
 
         user_count = len(msg.users)
 
-        if room not in self.list_view.iterators:
+        if room_name not in self.list_view.iterators:
             self.add_room(
-                room, user_count, is_private=(msg.room_type == RoomType.PRIVATE),
+                room_name, user_count, is_private=(msg.room_type == RoomType.PRIVATE),
                 is_owner=(msg.owner == core.users.login_username)
             )
 
-        self.update_room_user_count(room, user_count=user_count)
+        self.update_room_user_count(room_name, user_count=user_count)
 
-    def show_room(self, room, *_args):
-        if room == core.chatrooms.GLOBAL_ROOM_NAME:
+    def show_room(self, room_name, *_args):
+        if room_name == core.chatrooms.GLOBAL_ROOM_NAME:
             self.public_feed_toggle.set_active(True)
 
-    def remove_room(self, room):
+    def remove_room(self, room_name):
 
-        if room == core.chatrooms.GLOBAL_ROOM_NAME:
+        if room_name == core.chatrooms.GLOBAL_ROOM_NAME:
             self.public_feed_toggle.set_active(False)
 
-        self.update_room_user_count(room, decrement=True)
+        self.update_room_user_count(room_name, decrement=True)
 
     def user_joined_room(self, msg):
         if msg.user_data.username != core.users.login_username:
@@ -240,14 +240,14 @@ class RoomList(Dialog):
         self.list_view.freeze()
         self.clear()
 
-        for room, user_count in msg.rooms_owner:
-            self.add_room(room, user_count, is_private=True, is_owner=True)
+        for room_name, user_count in msg.rooms_owner:
+            self.add_room(room_name, user_count, is_private=True, is_owner=True)
 
-        for room, user_count in msg.rooms_member:
-            self.add_room(room, user_count, is_private=True)
+        for room_name, user_count in msg.rooms_member:
+            self.add_room(room_name, user_count, is_private=True)
 
-        for room, user_count in msg.rooms:
-            self.add_room(room, user_count)
+        for room_name, user_count in msg.rooms:
+            self.add_room(room_name, user_count)
 
         self.list_view.unfreeze()
 
@@ -261,43 +261,43 @@ class RoomList(Dialog):
 
     def on_room_tooltip(self, treeview, iterator):
 
-        room = treeview.get_row_value(iterator, "room")
+        room_name = treeview.get_row_value(iterator, "room")
         room_underline = treeview.get_row_value(iterator, "room_underline_data")
 
         if room_underline != Pango.Underline.NONE:
-            return _("%(room)s (%(role)s)") % {"room": room, "role": _("Room Owner")}
+            return _("%(room)s (%(role)s)") % {"room": room_name, "role": _("Room Owner")}
 
         room_weight = treeview.get_row_value(iterator, "room_weight_data")
 
         if room_weight != Pango.Weight.NORMAL:
-            return _("%(room)s (%(role)s)") % {"room": room, "role": _("Room Member")}
+            return _("%(room)s (%(role)s)") % {"room": room_name, "role": _("Room Member")}
 
-        return room
+        return room_name
 
     def on_row_activated(self, *_args):
 
-        room = self.get_selected_room()
+        room_name = self.get_selected_room()
 
-        if room is not None:
-            self.popup_room = room
+        if room_name is not None:
+            self.popup_room_name = room_name
             self.on_popup_join()
 
     def on_popup_menu(self, menu, _widget):
 
-        room = self.get_selected_room()
-        self.popup_room = room
+        room_name = self.get_selected_room()
+        self.popup_room_name = room_name
 
-        is_owner = core.chatrooms.is_room_owner(room)
-        is_member = core.chatrooms.is_room_member(room)
+        is_owner = core.chatrooms.is_room_owner(room_name)
+        is_member = core.chatrooms.is_room_member(room_name)
 
-        menu.actions[_("_Join Room")].set_enabled(room not in core.chatrooms.joined_rooms)
-        menu.actions[_("_Leave Room")].set_enabled(room in core.chatrooms.joined_rooms)
+        menu.actions[_("_Join Room")].set_enabled(room_name not in core.chatrooms.joined_rooms)
+        menu.actions[_("_Leave Room")].set_enabled(room_name in core.chatrooms.joined_rooms)
 
         menu.actions[_("Delete Private Room…")].set_enabled(is_owner)
         menu.actions[_("Cancel Room Membership")].set_enabled(is_member and not is_owner)
 
     def on_popup_join(self, *_args):
-        core.chatrooms.show_room(self.popup_room)
+        core.chatrooms.show_room(self.popup_room_name)
         self.close()
 
     def on_toggle_label_pressed(self, _controller, _num_p, _pos_x, _pos_y, toggle):
@@ -316,57 +316,57 @@ class RoomList(Dialog):
 
         core.chatrooms.remove_room(global_room_name)
 
-    def on_popup_delete_private_room_response(self, _dialog, _response_id, room):
-        core.chatrooms.request_cancel_room_ownership(room)
+    def on_popup_delete_private_room_response(self, _dialog, _response_id, room_name):
+        core.chatrooms.request_cancel_room_ownership(room_name)
 
     def on_popup_delete_private_room(self, *_args):
 
         OptionDialog(
             application=self.application,
             title=_("Delete Private Room?"),
-            message=_("Do you really want to permanently delete your private room %s?") % self.popup_room,
+            message=_("Do you really want to permanently delete your private room %s?") % self.popup_room_name,
             buttons=[
                 ("cancel", _("_Cancel")),
                 ("ok", _("Delete"))
             ],
             destructive_response_id="ok",
             callback=self.on_popup_delete_private_room_response,
-            callback_data=self.popup_room
+            callback_data=self.popup_room_name
         ).present()
 
     def on_popup_cancel_room_membership(self, *_args):
-        core.chatrooms.request_cancel_room_membership(self.popup_room)
+        core.chatrooms.request_cancel_room_membership(self.popup_room_name)
 
     def on_popup_leave(self, *_args):
-        core.chatrooms.remove_room(self.popup_room)
+        core.chatrooms.remove_room(self.popup_room_name)
 
     def on_create_room_response(self, dialog, _response_id, _data):
 
-        room = dialog.get_entry_value().strip()
+        room_name = dialog.get_entry_value().strip()
         private = dialog.get_option_value()
 
-        if not room:
+        if not room_name:
             return
 
-        if core.chatrooms.sanitize_room_name(room) != room:
+        if core.chatrooms.sanitize_room_name(room_name) != room_name:
             self.on_create_room(
-                room=room, private=private,
+                room_name=room_name, private=private,
                 error=_("Room names can only contain letters (A-Z), numbers, and a single "
                         "space between characters.")
             )
             return
 
-        if private and room not in core.chatrooms.private_rooms and room in core.chatrooms.server_rooms:
+        if private and room_name not in core.chatrooms.private_rooms and room_name in core.chatrooms.server_rooms:
             self.on_create_room(
-                room=room, private=private,
-                error=_("Room %s is already registered as public.") % room
+                room_name=room_name, private=private,
+                error=_("Room %s is already registered as public.") % room_name
             )
             return
 
-        core.chatrooms.show_room(room, private)
+        core.chatrooms.show_room(room_name, private)
         self.close()
 
-    def on_create_room(self, *_args, room="", private=False, error=None):
+    def on_create_room(self, *_args, room_name="", private=False, error=None):
 
         message = ""
 
@@ -379,7 +379,7 @@ class RoomList(Dialog):
             application=self.application,
             title=_("Create New Room"),
             message=message,
-            default=room,
+            default=room_name,
             max_length=core.chatrooms.ROOM_NAME_MAX_LENGTH,
             action_button_label=_("Cre_ate"),
             option_label=_("Make room private"),

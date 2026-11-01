@@ -429,22 +429,22 @@ class MainWindow(Window):
 
         elif self.chatrooms.highlighted_rooms:
             # Allow for the possibility the username is not available
-            room, (username, mention_type, mention_keyword) = list(self.chatrooms.highlighted_rooms.items())[-1]
+            room_name, (username, mention_type, mention_keyword) = list(self.chatrooms.highlighted_rooms.items())[-1]
 
             if mention_type == "self":
-                notification_text = _("Mentioned by %(user)s in Room %(room)s") % {"user": username, "room": room}
+                notification_text = _("Mentioned by %(user)s in Room %(room)s") % {"user": username, "room": room_name}
 
             elif mention_type == "keyword":
                 notification_text = _("Keyword %(keyword)s Mentioned by %(user)s in Room %(room)s") % {
                     "keyword": mention_keyword,
                     "user": username,
-                    "room": room
+                    "room": room_name
                 }
 
             elif mention_type == "username":
                 notification_text = _("Message by Watched User %(user)s in Room %(room)s") % {
                     "user": mention_keyword,
-                    "room": room
+                    "room": room_name
                 }
 
             self.set_urgency_hint(True)

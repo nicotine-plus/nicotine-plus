@@ -157,8 +157,8 @@ class Searches(IconNotebook):
         return True
 
     def on_restore_removed_page(self, page_args):
-        search_term, mode, room, users = page_args
-        core.search.do_search(search_term, mode, room=room, users=users)
+        search_term, mode, room_name, users = page_args
+        core.search.do_search(search_term, mode, room=room_name, users=users)
 
     def on_remove_all_pages(self, *_args):
         core.search.remove_all_searches()
@@ -196,15 +196,15 @@ class Searches(IconNotebook):
             return
 
         mode = self.window.lookup_action("search-mode").get_state().get_string()
-        room = self.room_search_combobox.get_text()
+        room_name = self.room_search_combobox.get_text()
         username = self.user_search_combobox.get_text()
         users = [username] if username else []
 
-        if mode == "rooms" and not room:
+        if mode == "rooms" and not room_name:
             return
 
         self.window.search_entry.set_text("")
-        core.search.do_search(text, mode, room=room, users=users)
+        core.search.do_search(text, mode, room=room_name, users=users)
 
     def populate_search_history(self):
 
@@ -229,7 +229,7 @@ class Searches(IconNotebook):
         while self.search_combobox.get_num_items() > core.search.SEARCH_HISTORY_LIMIT:
             self.search_combobox.remove_pos(-1)
 
-    def create_page(self, token, text, mode=None, mode_label=None, room=None, users=None,
+    def create_page(self, token, text, mode=None, mode_label=None, room_name=None, users=None,
                     show_page=True):
 
         page = self.pages.get(token)
@@ -237,7 +237,7 @@ class Searches(IconNotebook):
         if page is None:
             self.pages[token] = page = Search(
                 self, text=text, token=token, mode=mode, mode_label=mode_label,
-                room=room, users=users, show_page=show_page)
+                room_name=room_name, users=users, show_page=show_page)
         else:
             mode_label = page.mode_label
 
@@ -259,11 +259,11 @@ class Searches(IconNotebook):
 
         mode = search.mode
         mode_label = None
-        room = search.room
+        room_name = search.room
         users = search.users
 
         if mode == "rooms":
-            mode_label = room.strip() if room else ""
+            mode_label = room_name.strip() if room_name else ""
 
         elif mode == "user":
             mode_label = ",".join(users)
@@ -271,7 +271,7 @@ class Searches(IconNotebook):
         elif mode == "buddies":
             mode_label = _("Buddies")
 
-        self.create_page(token, search.term_sanitized, mode, mode_label, room=room, users=users)
+        self.create_page(token, search.term_sanitized, mode, mode_label, room_name=room_name, users=users)
 
         if switch_page:
             self.show_search(token)
@@ -298,7 +298,7 @@ class Searches(IconNotebook):
         page.clear()
 
         if page.show_page:
-            self.remove_page(page.container, page_args=(page.text, page.mode, page.room, page.searched_users))
+            self.remove_page(page.container, page_args=(page.text, page.mode, page.room_name, page.searched_users))
 
         del self.pages[token]
         page.destroy()
@@ -405,7 +405,7 @@ class Search:
         "filterpublic": (False, False),
     }
 
-    def __init__(self, searches, text, token, mode, mode_label, room, users, show_page):
+    def __init__(self, searches, text, token, mode, mode_label, room_name, users, show_page):
 
         (
             self.add_wish_button,
@@ -451,7 +451,7 @@ class Search:
         self.token = token
         self.mode = mode
         self.mode_label = mode_label
-        self.room = room
+        self.room_name = room_name
         self.searched_users = users
         self.show_page = show_page
         self.initialized = False
@@ -1947,7 +1947,7 @@ class Search:
         self.window.lookup_action("search-mode").change_state(GLib.Variant.new_string(self.mode))
 
         if self.mode == "room":
-            self.window.room_search_entry.set_text(self.room)
+            self.window.room_search_entry.set_text(self.room_name)
 
         elif self.mode == "user":
             self.window.user_search_entry.set_text(self.searched_users[0])

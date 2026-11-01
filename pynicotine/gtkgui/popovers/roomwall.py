@@ -29,7 +29,7 @@ class RoomWall(Popover):
             height=500
         )
 
-        self.room = None
+        self.room_name = None
         self.message_view = TextView(self.message_view_container, editable=False, vertical_margin=4,
                                      pixels_above_lines=3, pixels_below_lines=3)
         self.extra_menu = None
@@ -62,7 +62,7 @@ class RoomWall(Popover):
 
         entry_text = self.message_entry.get_text()
         login_username = core.users.login_username
-        tickers = core.chatrooms.joined_rooms[self.room].tickers
+        tickers = core.chatrooms.joined_rooms[self.room_name].tickers
         old_ticker = tickers.get(login_username, "")
 
         if entry_text == old_ticker or not login_username:
@@ -76,7 +76,7 @@ class RoomWall(Popover):
             self.message_view.add_line(f"> [{login_username}] {entry_text}", prepend=True)
             self.message_entry.set_text("")
 
-        core.chatrooms.request_update_ticker(self.room, entry_text)
+        core.chatrooms.request_update_ticker(self.room_name, entry_text)
 
     def on_icon_pressed(self, _entry, icon_pos, *_args):
 
@@ -92,7 +92,7 @@ class RoomWall(Popover):
 
     def _on_show(self, *_args):
 
-        tickers = core.chatrooms.joined_rooms[self.room].tickers
+        tickers = core.chatrooms.joined_rooms[self.room_name].tickers
         login_username = core.users.login_username
 
         self._update_message_list(tickers)
