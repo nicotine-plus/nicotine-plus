@@ -117,7 +117,7 @@ class BasePlugin:
         # Override method in plugin
         pass
 
-    def outgoing_room_search_event(self, rooms, text):
+    def outgoing_room_search_event(self, room, text):
         # Override method in plugin
         pass
 
@@ -1173,8 +1173,8 @@ class PluginHandler:
     def outgoing_global_search_event(self, text):
         return self._trigger_event("outgoing_global_search_event", (text,))
 
-    def outgoing_room_search_event(self, rooms, text):
-        return self._trigger_event("outgoing_room_search_event", (rooms, text))
+    def outgoing_room_search_event(self, room, text):
+        return self._trigger_event("outgoing_room_search_event", (room, text))
 
     def outgoing_buddy_search_event(self, text):
         return self._trigger_event("outgoing_buddy_search_event", (text,))

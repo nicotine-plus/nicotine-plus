@@ -92,8 +92,8 @@ class Plugin(BasePlugin):
     def outgoing_global_search_event(self, text):
         self._trigger_log(f"text={text}")
 
-    def outgoing_room_search_event(self, rooms, text):
-        self._trigger_log(f"rooms={rooms}, text={text}")
+    def outgoing_room_search_event(self, room, text):
+        self._trigger_log(f"room={room}, text={text}")
 
     def outgoing_buddy_search_event(self, text):
         self._trigger_log(f"text={text}")

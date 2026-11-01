@@ -15,8 +15,8 @@ class Plugin(BasePlugin):
     def outgoing_global_search_event(self, text):
         return (self.get_np(text),)
 
-    def outgoing_room_search_event(self, rooms, text):
-        return rooms, self.get_np(text)
+    def outgoing_room_search_event(self, room, text):
+        return room, self.get_np(text)
 
     def outgoing_buddy_search_event(self, text):
         return (self.get_np(text),)
