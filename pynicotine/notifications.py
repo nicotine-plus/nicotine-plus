@@ -10,8 +10,8 @@ class Notifications:
     def show_notification(self, message, title=None):
         events.emit("show-notification", message, title=title)
 
-    def show_chatroom_notification(self, room, message, title=None, high_priority=False):
-        events.emit("show-chatroom-notification", room, message, title=title, high_priority=high_priority)
+    def show_chatroom_notification(self, room_name, message, title=None, high_priority=False):
+        events.emit("show-chatroom-notification", room_name, message, title=title, high_priority=high_priority)
 
     def show_download_notification(self, message, title=None, high_priority=False):
         events.emit("show-download-notification", message, title=title, high_priority=high_priority)
