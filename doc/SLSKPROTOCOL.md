@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on October 31, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on November 1, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -668,10 +668,10 @@ Either we want to say something in the chatroom, or someone else did.
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
     3.  **string** *message*
 
@@ -704,11 +704,11 @@ Requirements include:
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **uint32** *room type*  
         See [Room Types](#room-types). Type of room to create if nonexistent.
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **uint32** *number of users in room*  
         For private rooms, also contain owner and operators
     3.  Iterate for *number of users*
@@ -747,9 +747,9 @@ We send this to the server when we want to leave a room.
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
 
 
 ## Server Code 16
@@ -763,7 +763,7 @@ The server tells us someone has just joined a room we're in.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
     3.  **uint32** *status*
     4.  **uint32** *upload speed*
@@ -788,7 +788,7 @@ The server tells us someone has just left a room we're in.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
 
 
@@ -1293,7 +1293,7 @@ The server tells us a new room has been added.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
 
 
 ## Server Code 63
@@ -1309,7 +1309,7 @@ The server tells us a room has been removed.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
 
 
 ## Server Code 64
@@ -1328,7 +1328,7 @@ Requesting the room list yields a response containing the missing rooms.
   - Receive
     1.  **uint32** *number of rooms*
     2.  Iterate for *number of rooms*
-        1.  **string** *room*
+        1.  **string** *room name*
     3.  **uint32** *number of rooms*
     4.  Iterate for *number of rooms*
         1.  **uint32** *number of users in room*
@@ -1790,7 +1790,7 @@ walls.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **uint32** *number of users*
     3.  Iterate for *number of users*
         1.  **string** *username*
@@ -1811,7 +1811,7 @@ walls.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
     3.  **string** *ticker*
 
@@ -1830,7 +1830,7 @@ walls.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
 
 
@@ -1847,7 +1847,7 @@ walls.
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *ticker*
   - Receive
     -   *No Message*
@@ -1895,7 +1895,7 @@ message.
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **uint32** *token*
     3.  **string** *search term*
   - Receive
@@ -2060,7 +2060,7 @@ room we are in.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **uint32** *number of members*
     3.  Iterate for *number of members*
         1.  **string** *members*
@@ -2078,10 +2078,10 @@ The server tells us a member has been added to a private room we are in.
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
 
 
@@ -2098,10 +2098,10 @@ The server tells us a member has been removed from a private room we are in.
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
 
 
@@ -2114,7 +2114,7 @@ We send this to the server to cancel our own membership of a private room.
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
   - Receive
     -   *No Message*
 
@@ -2128,7 +2128,7 @@ We send this to the server to stop owning a private room.
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
   - Receive
     -   *No Message*
 
@@ -2144,9 +2144,9 @@ Unknown purpose
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
 
 
 ## Server Code 139
@@ -2160,7 +2160,7 @@ The server tells us we were added to a private room.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
 
 
 ## Server Code 140
@@ -2174,7 +2174,7 @@ The server tells us we were removed from a private room.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
 
 
 ## Server Code 141
@@ -2219,10 +2219,10 @@ room we are in.
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
 
 
@@ -2239,10 +2239,10 @@ private room we are in.
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
 
 
@@ -2258,7 +2258,7 @@ we are in.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
 
 
 ## Server Code 146
@@ -2273,7 +2273,7 @@ we are in.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
 
 
 ## Server Code 148
@@ -2287,7 +2287,7 @@ The server sends us a list of operators in a private room we are in.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **uint32** *number of operators in room*
     3.  Iterate for *number of operators*
         1.  **string** *operator*
@@ -2352,7 +2352,7 @@ feed (every single line written in every public room).
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
     3.  **string** *message*
 
@@ -2434,7 +2434,7 @@ message is sent.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
 
 
 # Peer Init Messages
