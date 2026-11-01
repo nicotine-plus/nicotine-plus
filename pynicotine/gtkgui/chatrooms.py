@@ -330,8 +330,9 @@ class ChatRooms(IconNotebook):
 
     def join_room(self, msg):
 
-        page = self.pages.get(msg.room)
-        self.join_room_combobox.append(msg.room)
+        room_name = msg.room_name
+        page = self.pages.get(room_name)
+        self.join_room_combobox.append(room_name)
 
         if page is None:
             return
@@ -344,7 +345,7 @@ class ChatRooms(IconNotebook):
 
     def leave_room(self, msg):
 
-        page = self.pages.get(msg.room)
+        page = self.pages.get(msg.room_name)
 
         if page is not None:
             page.leave_room()
@@ -375,14 +376,14 @@ class ChatRooms(IconNotebook):
 
     def user_joined_room(self, msg):
 
-        page = self.pages.get(msg.room)
+        page = self.pages.get(msg.room_name)
 
         if page is not None:
             page.user_joined_room(msg)
 
     def user_left_room(self, msg):
 
-        page = self.pages.get(msg.room)
+        page = self.pages.get(msg.room_name)
 
         if page is not None:
             page.user_left_room(msg)
@@ -406,7 +407,7 @@ class ChatRooms(IconNotebook):
 
     def say_chat_room(self, msg):
 
-        page = self.pages.get(msg.room)
+        page = self.pages.get(msg.room_name)
 
         if page is not None:
             page.say_chat_room(msg)
@@ -419,63 +420,63 @@ class ChatRooms(IconNotebook):
             page.global_room_message(msg)
 
     def room_membership_granted(self, msg):
-        self.join_room_combobox.append(msg.room)
+        self.join_room_combobox.append(msg.room_name)
 
     def room_operatorship_granted(self, msg):
 
-        page = self.pages.get(msg.room)
+        page = self.pages.get(msg.room_name)
 
         if page is not None:
             page.room_operatorship_granted()
 
     def add_room_operator(self, msg):
 
-        page = self.pages.get(msg.room)
+        page = self.pages.get(msg.room_name)
 
         if page is not None:
             page.add_room_operator(msg)
 
     def add_room_member(self, msg):
 
-        page = self.pages.get(msg.room)
+        page = self.pages.get(msg.room_name)
 
         if page is not None:
             page.add_room_member(msg)
 
     def room_membership_revoked(self, msg):
-        self.join_room_combobox.remove_id(msg.room)
+        self.join_room_combobox.remove_id(msg.room_name)
 
     def room_operatorship_revoked(self, msg):
 
-        page = self.pages.get(msg.room)
+        page = self.pages.get(msg.room_name)
 
         if page is not None:
             page.room_operatorship_revoked()
 
     def remove_room_member(self, msg):
 
-        page = self.pages.get(msg.room)
+        page = self.pages.get(msg.room_name)
 
         if page is not None:
             page.remove_room_member(msg)
 
     def remove_room_operator(self, msg):
 
-        page = self.pages.get(msg.room)
+        page = self.pages.get(msg.room_name)
 
         if page is not None:
             page.remove_room_operator(msg)
 
     def room_ticker_added(self, msg):
 
-        page = self.pages.get(msg.room)
+        page = self.pages.get(msg.room_name)
 
         if page is not None:
             page.room_ticker_added(msg)
 
     def room_ticker_removed(self, msg):
 
-        page = self.pages.get(msg.room)
+        page = self.pages.get(msg.room_name)
 
         if page is not None:
             page.room_ticker_removed(msg)
@@ -563,7 +564,7 @@ class ChatRoom:
             self.chat_view_container, message_entry=self.chatrooms.message_entry, editable=False,
             horizontal_margin=10, vertical_margin=5, pixels_below_lines=2,
             status_users=core.chatrooms.joined_rooms[room].users,
-            roomname_event=(self.roomname_event if is_global else None),
+            room_name_event=(self.room_name_event if is_global else None),
             username_event=self.username_event
         )
 
@@ -965,7 +966,7 @@ class ChatRoom:
 
     def say_chat_room(self, msg):
 
-        roomname = msg.room
+        room_name = msg.room_name
         username = msg.username
         message = msg.message
         message_type = msg.message_type
@@ -973,13 +974,13 @@ class ChatRoom:
         mention_keyword = msg.mention_keyword
 
         if message_type != "local":
-            self._show_notification(roomname, username, message, mention_type, mention_keyword)
+            self._show_notification(room_name, username, message, mention_type, mention_keyword)
 
         if mention_type is not None:
             message_type = "hilite"
 
         self.chat_view.add_line(
-            message, message_type=message_type, roomname=roomname if self.is_global else None, username=username,
+            message, message_type=message_type, room_name=room_name if self.is_global else None, username=username,
             timestamp_format=config.sections["logging"]["rooms_timestamp"]
         )
 
@@ -1252,7 +1253,7 @@ class ChatRoom:
         if flag_icon_name and flag_icon_name != self.users_list_view.get_row_value(iterator, "country"):
             self.users_list_view.set_row_value(iterator, "country", flag_icon_name)
 
-    def roomname_event(self, _pos_x, _pos_y, room):
+    def room_name_event(self, _pos_x, _pos_y, room):
         core.chatrooms.show_room(room)
 
     def username_event(self, pos_x, pos_y, username):

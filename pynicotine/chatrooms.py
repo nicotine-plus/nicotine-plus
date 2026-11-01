@@ -323,109 +323,113 @@ class ChatRooms:
     def _join_room(self, msg):
         """Server code 14."""
 
-        room_obj = self.joined_rooms.get(msg.room)
+        room_name = msg.room_name
+        room_obj = self.joined_rooms.get(room_name)
 
         if room_obj is None:
             # Reject unsolicited room join messages from the server
-            core.send_message_to_server(LeaveRoom(msg.room))
+            core.send_message_to_server(LeaveRoom(room_name))
             raise StopEventPropagation()
 
         room_obj.is_private = (msg.room_type == RoomType.PRIVATE)
-        self.server_rooms.add(msg.room)
+        self.server_rooms.add(room_name)
 
         if room_obj.is_private:
-            self._update_private_room(msg.room, owner=msg.owner, operators=msg.operators)
+            self._update_private_room(room_name, owner=msg.owner, operators=msg.operators)
 
         for user_data in msg.users:
             self._update_room_user(room_obj, user_data)
 
-        core.pluginhandler.join_chatroom_notification(msg.room)
+        core.pluginhandler.join_chatroom_notification(room_name)
 
     def _leave_room(self, msg):
         """Server code 15."""
 
-        room_obj = self.joined_rooms.get(msg.room)
+        room_name = msg.room_name
+        room_obj = self.joined_rooms.get(room_name)
 
         if room_obj is None or not room_obj.users:
             raise StopEventPropagation()
 
         for username in room_obj.users:
-            core.users.unwatch_user(username, context=f"chatrooms_{msg.room}")
+            core.users.unwatch_user(username, context=f"chatrooms_{room_name}")
 
         room_obj.users.clear()
-        core.pluginhandler.leave_chatroom_notification(msg.room)
+        core.pluginhandler.leave_chatroom_notification(room_name)
 
     def _room_members(self, msg):
         """Server code 133."""
 
-        self._update_private_room(msg.room, members=msg.members)
+        self._update_private_room(msg.room_name, members=msg.members)
 
     def _add_room_member(self, msg):
         """Server code 134."""
 
         username = msg.username
-        room = msg.room
-        private_room = self.private_rooms.get(room)
+        room_name = msg.room_name
+        private_room = self.private_rooms.get(room_name)
 
         if private_room is None:
             raise StopEventPropagation()
 
         private_room.members.add(username)
-        core.pluginhandler.private_room_member_added_notification(room, username)
+        core.pluginhandler.private_room_member_added_notification(room_name, username)
 
         if username != core.users.login_username:
             log.add(_("User %(user)s has been added to private room %(room)s"), {
                 "user": username,
-                "room": room
+                "room": room_name
             })
 
     def _remove_room_member(self, msg):
         """Server code 135."""
 
         username = msg.username
-        room = msg.room
-        private_room = self.private_rooms.get(room)
+        room_name = msg.room_name
+        private_room = self.private_rooms.get(room_name)
 
         if private_room is None:
             raise StopEventPropagation()
 
         private_room.members.discard(username)
-        core.pluginhandler.private_room_member_removed_notification(room, username)
+        core.pluginhandler.private_room_member_removed_notification(room_name, username)
 
         if username != core.users.login_username:
             log.add(_("User %(user)s has been removed from private room %(room)s"), {
                 "user": username,
-                "room": room
+                "room": room_name
             })
 
     def _room_membership_granted(self, msg):
         """Server code 139."""
 
-        if msg.room in self.private_rooms:
+        room_name = msg.room_name
+
+        if room_name in self.private_rooms:
             raise StopEventPropagation()
 
-        self._update_private_room(msg.room)
+        self._update_private_room(room_name)
 
-        if msg.room in self.joined_rooms:
+        if room_name in self.joined_rooms:
             # Room tab previously opened, join room now
-            self.show_room(msg.room, is_private=True, switch_page=False)
+            self.show_room(room_name, is_private=True, switch_page=False)
 
-        log.add(_("You have been added to private room %(room)s"), {"room": msg.room})
+        log.add(_("You have been added to private room %(room)s"), {"room": room_name})
 
     def _room_membership_revoked(self, msg):
         """Server code 140."""
 
-        room = msg.room
+        room_name = msg.room_name
 
-        if room not in self.private_rooms:
+        if room_name not in self.private_rooms:
             raise StopEventPropagation()
 
-        core.pluginhandler.private_room_membership_revoked_notification(room)
+        core.pluginhandler.private_room_membership_revoked_notification(room_name)
 
-        self.server_rooms.discard(room)
-        del self.private_rooms[room]
+        self.server_rooms.discard(room_name)
+        del self.private_rooms[room_name]
 
-        log.add(_("You have been removed from private room %(room)s"), {"room": room})
+        log.add(_("You have been removed from private room %(room)s"), {"room": room_name})
 
     def _enable_room_invitations(self, msg):
         """Server code 141."""
@@ -436,70 +440,72 @@ class ChatRooms:
         """Server code 143."""
 
         username = msg.username
-        room = msg.room
-        private_room = self.private_rooms.get(room)
+        room_name = msg.room_name
+        private_room = self.private_rooms.get(room_name)
 
         if private_room is None:
             raise StopEventPropagation()
 
         private_room.operators.add(username)
-        core.pluginhandler.private_room_operator_added_notification(room, username)
+        core.pluginhandler.private_room_operator_added_notification(room_name, username)
 
         if username != core.users.login_username:
             log.add(_("User %(user)s is now an operator of room %(room)s"), {
                 "user": username,
-                "room": room
+                "room": room_name
             })
 
     def _remove_room_operator(self, msg):
         """Server code 144."""
 
         username = msg.username
-        room = msg.room
-        private_room = self.private_rooms.get(room)
+        room_name = msg.room_name
+        private_room = self.private_rooms.get(room_name)
 
         if private_room is None:
             raise StopEventPropagation()
 
         private_room.operators.discard(username)
-        core.pluginhandler.private_room_operator_removed_notification(room, username)
+        core.pluginhandler.private_room_operator_removed_notification(room_name, username)
 
         if username != core.users.login_username:
             log.add(_("User %(user)s is no longer an operator of room %(room)s"), {
                 "user": username,
-                "room": room
+                "room": room_name
             })
 
     def _room_operatorship_granted(self, msg):
         """Server code 145."""
 
-        private_room = self.private_rooms.get(msg.room)
+        room_name = msg.room_name
+        private_room = self.private_rooms.get(room_name)
 
         if private_room is None:
             raise StopEventPropagation()
 
         private_room.operators.add(core.users.login_username)
-        core.pluginhandler.private_room_operatorship_granted_notification(msg.room)
+        core.pluginhandler.private_room_operatorship_granted_notification(room_name)
 
-        log.add(_("You are now an operator of room %(room)s"), {"room": msg.room})
+        log.add(_("You are now an operator of room %(room)s"), {"room": room_name})
 
     def _room_operatorship_revoked(self, msg):
         """Server code 146."""
 
-        private_room = self.private_rooms.get(msg.room)
+        room_name = msg.room_name
+        private_room = self.private_rooms.get(room_name)
 
         if private_room is None:
             raise StopEventPropagation()
 
         private_room.operators.discard(core.users.login_username)
-        core.pluginhandler.private_room_operatorship_revoked_notification(msg.room)
+        core.pluginhandler.private_room_operatorship_revoked_notification(room_name)
 
-        log.add(_("You are no longer an operator of room %(room)s"), {"room": msg.room})
+        log.add(_("You are no longer an operator of room %(room)s"), {"room": room_name})
 
     def _room_operators(self, msg):
         """Server code 148."""
 
-        self._update_private_room(msg.room, operators=msg.operators)
+        self._update_private_room(msg.room_name, operators=msg.operators)
 
     def _global_room_message(self, msg):
         """Server code 152."""
@@ -564,19 +570,19 @@ class ChatRooms:
     def _say_chat_room(self, msg, is_global=False):
         """Server code 13."""
 
-        room = msg.room
+        room_name = msg.room_name
         username = msg.username
 
         if not is_global:
-            if room not in self.joined_rooms:
+            if room_name not in self.joined_rooms:
                 raise StopEventPropagation()
 
-            if username != SERVER_USERNAME and not self.joined_rooms[room].users:
+            if username != SERVER_USERNAME and not self.joined_rooms[room_name].users:
                 raise StopEventPropagation()
 
             log.add_chat(_("Chat message from user '%(user)s' in room '%(room)s': %(message)s"), {
                 "user": username,
-                "room": room,
+                "room": room_name,
                 "message": msg.message
             })
 
@@ -587,13 +593,13 @@ class ChatRooms:
                 if core.network_filter.is_user_ip_ignored(username):
                     raise StopEventPropagation()
 
-            event = core.pluginhandler.incoming_public_chat_event(room, username, msg.message)
+            event = core.pluginhandler.incoming_public_chat_event(room_name, username, msg.message)
             if event is None:
                 raise StopEventPropagation()
 
-            _room, _username, msg.message = event
+            _room_name, _username, msg.message = event
         else:
-            room = self.GLOBAL_ROOM_NAME
+            room_name = self.GLOBAL_ROOM_NAME
 
         message = msg.message
         msg.message_type = self.get_message_type(username, message)
@@ -606,54 +612,56 @@ class ChatRooms:
         if config.sections["words"]["censorwords"] and username != core.users.login_username:
             msg.message = message = censor_text(message, censored_patterns=config.sections["words"]["censored"])
 
-        if config.sections["logging"]["chatrooms"] or room in config.sections["logging"]["rooms"]:
+        if config.sections["logging"]["chatrooms"] or room_name in config.sections["logging"]["rooms"]:
             if is_action_message:
                 formatted_message = f"* {username} {message}"
             else:
                 formatted_message = f"[{username}] {message}"
 
             if is_global:
-                formatted_message = f"{msg.room} | {formatted_message}"
+                formatted_message = f"{msg.room_name} | {formatted_message}"
 
             log.write_log_file(
                 folder_path=log.room_folder_path,
-                basename=room, text=formatted_message
+                basename=room_name, text=formatted_message
             )
 
         if is_global:
-            core.pluginhandler.public_room_message_notification(msg.room, username, msg.message)
+            core.pluginhandler.public_room_message_notification(msg.room_name, username, msg.message)
         else:
-            core.pluginhandler.incoming_public_chat_notification(room, username, msg.message)
+            core.pluginhandler.incoming_public_chat_notification(room_name, username, msg.message)
 
     def _user_joined_room(self, msg):
         """Server code 16."""
 
-        room_obj = self.joined_rooms.get(msg.room)
+        room_name = msg.room_name
+        room_obj = self.joined_rooms.get(room_name)
 
         if room_obj is None or not room_obj.users:
             raise StopEventPropagation()
 
         self._update_room_user(room_obj, msg.user_data)
-        core.pluginhandler.user_join_chatroom_notification(msg.room, msg.user_data.username)
+        core.pluginhandler.user_join_chatroom_notification(room_name, msg.user_data.username)
 
     def _user_left_room(self, msg):
         """Server code 17."""
 
-        room_obj = self.joined_rooms.get(msg.room)
+        room_name = msg.room_name
+        room_obj = self.joined_rooms.get(room_name)
 
         if room_obj is None or not room_obj.users:
             raise StopEventPropagation()
 
         username = msg.username
         room_obj.users.discard(username)
-        core.users.unwatch_user(username, context=f"chatrooms_{msg.room}")
+        core.users.unwatch_user(username, context=f"chatrooms_{room_name}")
 
-        core.pluginhandler.user_leave_chatroom_notification(msg.room, username)
+        core.pluginhandler.user_leave_chatroom_notification(room_name, username)
 
     def _room_tickers(self, msg):
         """Server code 113."""
 
-        room_obj = self.joined_rooms.get(msg.room)
+        room_obj = self.joined_rooms.get(msg.room_name)
 
         if room_obj is None or not room_obj.users:
             raise StopEventPropagation()
@@ -671,7 +679,7 @@ class ChatRooms:
     def _room_ticker_added(self, msg):
         """Server code 114."""
 
-        room_obj = self.joined_rooms.get(msg.room)
+        room_obj = self.joined_rooms.get(msg.room_name)
 
         if room_obj is None or not room_obj.users:
             raise StopEventPropagation()
@@ -687,7 +695,7 @@ class ChatRooms:
     def _room_ticker_removed(self, msg):
         """Server code 115."""
 
-        room_obj = self.joined_rooms.get(msg.room)
+        room_obj = self.joined_rooms.get(msg.room_name)
 
         if room_obj is None or not room_obj.users:
             raise StopEventPropagation()

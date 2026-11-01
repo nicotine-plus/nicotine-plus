@@ -190,18 +190,18 @@ class RoomList(Dialog):
         self.list_container.set_visible(False)
 
     def room_membership_granted(self, msg):
-        self.add_room(msg.room, is_private=True)
+        self.add_room(msg.room_name, is_private=True)
 
     def room_membership_revoked(self, msg):
 
-        iterator = self.list_view.iterators.get(msg.room)
+        iterator = self.list_view.iterators.get(msg.room_name)
 
         if iterator is not None:
             self.list_view.remove_row(iterator)
 
     def join_room(self, msg):
 
-        room = msg.room
+        room = msg.room_name
 
         if room not in core.chatrooms.joined_rooms:
             return
@@ -229,11 +229,11 @@ class RoomList(Dialog):
 
     def user_joined_room(self, msg):
         if msg.user_data.username != core.users.login_username:
-            self.update_room_user_count(msg.room)
+            self.update_room_user_count(msg.room_name)
 
     def user_left_room(self, msg):
         if msg.username != core.users.login_username:
-            self.update_room_user_count(msg.room, decrement=True)
+            self.update_room_user_count(msg.room_name, decrement=True)
 
     def room_list(self, msg):
 

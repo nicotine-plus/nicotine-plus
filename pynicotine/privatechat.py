@@ -162,7 +162,7 @@ class PrivateChat:
 
         first_paragraph, _sep, remaining_message = message.partition("\n")
         room_create_str = "Could not create room. Reason: "
-        redirect_room = None
+        redirect_room_name = None
         translated_message = None
 
         if first_paragraph.startswith(room_create_str):
@@ -170,7 +170,7 @@ class PrivateChat:
             template = _("Could not create room. Reason: %s")
 
             if reason == "Room name empty.":
-                redirect_room = ""
+                redirect_room_name = ""
                 translated_message = template % _("Room name empty.")
             else:
                 for pattern, translated_str in (
@@ -189,18 +189,18 @@ class PrivateChat:
                 ):
                     match = re.fullmatch(pattern, reason)
                     if match:
-                        redirect_room = match.groups()[0]
-                        translated_message = template % (translated_str % {"room": redirect_room})
+                        redirect_room_name = match.groups()[0]
+                        translated_message = template % (translated_str % {"room": redirect_room_name})
                         break
 
                 if translated_message is None:
                     pattern = r"Room name (.*?) longer than (\d+) characters\."
                     match = re.fullmatch(pattern, reason)
                     if match:
-                        redirect_room, num_chars = match.groups()
+                        redirect_room_name, num_chars = match.groups()
                         translated_message = template % (
                             _("Room name %(name)s longer than %(chars)s characters.") % {
-                                "name": redirect_room,
+                                "name": redirect_room_name,
                                 "chars": num_chars
                             }
                         )
@@ -239,8 +239,8 @@ class PrivateChat:
             ):
                 match = re.fullmatch(pattern, first_paragraph)
                 if match:
-                    redirect_room = match.groups()[0]
-                    translated_message = translated_str % {"room": redirect_room}
+                    redirect_room_name = match.groups()[0]
+                    translated_message = translated_str % {"room": redirect_room_name}
                     break
 
         if translated_message is None:
@@ -264,10 +264,10 @@ class PrivateChat:
             ):
                 match = re.fullmatch(pattern, first_paragraph)
                 if match:
-                    username, room = match.groups()
+                    username, room_name = match.groups()
                     translated_message = translated_str % {
                         "user": username,
-                        "room": room
+                        "room": room_name
                     }
                     break
 
@@ -280,10 +280,10 @@ class PrivateChat:
             ):
                 match = re.fullmatch(pattern, first_paragraph)
                 if match:
-                    username, room, operator = match.groups()
+                    username, room_name, operator = match.groups()
                     translated_message = translated_str % {
                         "user": username,
-                        "room": room,
+                        "room": room_name,
                         "operator": operator
                     }
                     break
@@ -292,8 +292,8 @@ class PrivateChat:
             if remaining_message:
                 translated_message += "\n" + remaining_message
 
-            if redirect_room is not None:
-                msg = SayChatroom(room=redirect_room, message=translated_message, username=SERVER_USERNAME)
+            if redirect_room_name is not None:
+                msg = SayChatroom(room_name=redirect_room_name, message=translated_message, username=SERVER_USERNAME)
                 events.emit("say-chat-room", msg)
                 return None
 

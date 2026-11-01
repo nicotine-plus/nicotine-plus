@@ -229,7 +229,7 @@ class SayChatroomMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = SayChatroom(room="room1", message="Wassup?")
+        obj = SayChatroom(room_name="room1", message="Wassup?")
 
         # Act
         message = obj.make_network_message()
@@ -242,8 +242,8 @@ class JoinRoomMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = JoinRoom(room="room2", room_type=RoomType.PUBLIC)
-        obj_private = JoinRoom(room="room2", room_type=RoomType.PRIVATE)
+        obj = JoinRoom(room_name="room2", room_type=RoomType.PUBLIC)
+        obj_private = JoinRoom(room_name="room2", room_type=RoomType.PRIVATE)
 
         # Act
         message = obj.make_network_message()
@@ -258,7 +258,7 @@ class AddRoomMemberMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = AddRoomMember(room="room3", username="admin")
+        obj = AddRoomMember(room_name="room3", username="admin")
 
         # Act
         message = obj.make_network_message()
@@ -271,7 +271,7 @@ class CancelRoomMembershipMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = CancelRoomMembership(room="room4")
+        obj = CancelRoomMembership(room_name="room4")
 
         # Act
         message = obj.make_network_message()
@@ -284,7 +284,7 @@ class CancelRoomOwnershipMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = CancelRoomOwnership(room="room5")
+        obj = CancelRoomOwnership(room_name="room5")
 
         # Act
         message = obj.make_network_message()
@@ -297,7 +297,7 @@ class RoomSomethingMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = RoomSomething(room="room6")
+        obj = RoomSomething(room_name="room6")
 
         # Act
         message = obj.make_network_message()
@@ -310,7 +310,7 @@ class RemoveRoomMemberMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = RemoveRoomMember(room="room7", username="admin")
+        obj = RemoveRoomMember(room_name="room7", username="admin")
 
         # Act
         message = obj.make_network_message()
@@ -327,5 +327,5 @@ class RemoveRoomMemberMessageTest(TestCase):
         obj.parse_network_message()
 
         # Assert
-        self.assertEqual(obj.room, "room7")
+        self.assertEqual(obj.room_name, "room7")
         self.assertEqual(obj.username, "admin")

@@ -930,13 +930,13 @@ class SayChatroom(ServerMessage):
     did.
     """
 
-    __slots__ = ("room", "message", "username", "message_type", "mention_type", "mention_keyword")
+    __slots__ = ("room_name", "message", "username", "message_type", "mention_type", "mention_keyword")
     CODE = 13
     EVENT_NAME = "say-chat-room"
 
-    def __init__(self, room=None, message=None, username=None, *, msg_content=None):
+    def __init__(self, room_name=None, message=None, username=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = room
+        self.room_name = room_name
         self.message = message
         self.username = username
         self.message_type = None
@@ -945,13 +945,13 @@ class SayChatroom(ServerMessage):
 
     def make_network_message(self):
         msg = bytearray()
-        msg += self.pack_string(self.room)
+        msg += self.pack_string(self.room_name)
         msg += self.pack_string(self.message)
 
         return msg
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
         self.username = self.unpack_string()
         self.message = self.unpack_string()
 
@@ -980,13 +980,13 @@ class JoinRoom(ServerMessage):
       - No consecutive spaces
     """
 
-    __slots__ = ("room", "room_type", "owner", "users", "operators")
+    __slots__ = ("room_name", "room_type", "owner", "users", "operators")
     CODE = 14
     EVENT_NAME = "join-room"
 
-    def __init__(self, room=None, room_type=RoomType.PUBLIC, *, msg_content=None):
+    def __init__(self, room_name=None, room_type=RoomType.PUBLIC, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = room
+        self.room_name = room_name
         self.room_type = room_type
         self.owner = None
         self.users = []
@@ -994,13 +994,13 @@ class JoinRoom(ServerMessage):
 
     def make_network_message(self):
         msg = bytearray()
-        msg += self.pack_string(self.room)
+        msg += self.pack_string(self.room_name)
         msg += self.pack_uint32(self.room_type)
 
         return msg
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
         self.users = self.parse_users()
 
         if not self.has_remaining_content():
@@ -1021,19 +1021,19 @@ class LeaveRoom(ServerMessage):
     We send this to the server when we want to leave a room.
     """
 
-    __slots__ = ("room",)
+    __slots__ = ("room_name",)
     CODE = 15
     EVENT_NAME = "leave-room"
 
-    def __init__(self, room=None, *, msg_content=None):
+    def __init__(self, room_name=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = room
+        self.room_name = room_name
 
     def make_network_message(self):
-        return self.pack_string(self.room)
+        return self.pack_string(self.room_name)
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
 
 
 class UserJoinedRoom(ServerMessage):
@@ -1042,17 +1042,17 @@ class UserJoinedRoom(ServerMessage):
     The server tells us someone has just joined a room we're in.
     """
 
-    __slots__ = ("room", "user_data")
+    __slots__ = ("room_name", "user_data")
     CODE = 16
     EVENT_NAME = "user-joined-room"
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = None
+        self.room_name = None
         self.user_data = None
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
         self.user_data = UserData(
             username=self.unpack_string(),
             status=self.unpack_uint32(),
@@ -1072,17 +1072,17 @@ class UserLeftRoom(ServerMessage):
     The server tells us someone has just left a room we're in.
     """
 
-    __slots__ = ("room", "username")
+    __slots__ = ("room_name", "username")
     CODE = 17
     EVENT_NAME = "user-left-room"
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = None
+        self.room_name = None
         self.username = None
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
         self.username = self.unpack_string()
 
 
@@ -1759,15 +1759,15 @@ class RoomAdded(ServerMessage):
     OBSOLETE, no longer sent by the server
     """
 
-    __slots__ = ("room",)
+    __slots__ = ("room_name",)
     CODE = 62
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = None
+        self.room_name = None
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
 
 
 class RoomRemoved(ServerMessage):
@@ -1778,15 +1778,15 @@ class RoomRemoved(ServerMessage):
     OBSOLETE, no longer sent by the server
     """
 
-    __slots__ = ("room",)
+    __slots__ = ("room_name",)
     CODE = 63
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = None
+        self.room_name = None
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
 
 
 class RoomList(ServerMessage):
@@ -1818,12 +1818,12 @@ class RoomList(ServerMessage):
 
         rooms = []
         for i in range(num_rooms):
-            room = self.unpack_string()
+            room_name = self.unpack_string()
 
             if has_count:
-                rooms.append([room, None])
+                rooms.append([room_name, None])
             else:
-                rooms.append(room)
+                rooms.append(room_name)
 
         if not has_count:
             return rooms
@@ -2399,17 +2399,17 @@ class RoomTickers(ServerMessage):
     room walls.
     """
 
-    __slots__ = ("room", "tickers")
+    __slots__ = ("room_name", "tickers")
     CODE = 113
     EVENT_NAME = "room-tickers"
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = None
+        self.room_name = None
         self.tickers = []
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
         num_tickers = self.unpack_uint32()
 
         for _ in range(num_tickers):
@@ -2428,18 +2428,18 @@ class RoomTickerAdded(ServerMessage):
     room walls.
     """
 
-    __slots__ = ("room", "username", "content")
+    __slots__ = ("room_name", "username", "content")
     CODE = 114
     EVENT_NAME = "room-ticker-added"
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = None
+        self.room_name = None
         self.username = None
         self.content = None
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
         self.username = self.unpack_string()
         self.content = self.unpack_string()
 
@@ -2453,17 +2453,17 @@ class RoomTickerRemoved(ServerMessage):
     room walls.
     """
 
-    __slots__ = ("room", "username")
+    __slots__ = ("room_name", "username")
     CODE = 115
     EVENT_NAME = "room-ticker-removed"
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = None
+        self.room_name = None
         self.username = None
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
         self.username = self.unpack_string()
 
 
@@ -2478,17 +2478,17 @@ class SetRoomTicker(ServerMessage):
     room walls.
     """
 
-    __slots__ = ("room", "content")
+    __slots__ = ("room_name", "content")
     CODE = 116
 
-    def __init__(self, room=None, content=""):
+    def __init__(self, room_name=None, content=""):
         ServerMessage.__init__(self)
-        self.room = room
+        self.room_name = room_name
         self.content = content
 
     def make_network_message(self):
         msg = bytearray()
-        msg += self.pack_string(self.room)
+        msg += self.pack_string(self.room_name)
         msg += self.pack_string(self.content)
 
         return msg
@@ -2540,18 +2540,18 @@ class RoomSearch(ServerMessage):
     message.
     """
 
-    __slots__ = ("room", "token", "search_term")
+    __slots__ = ("room_name", "token", "search_term")
     CODE = 120
 
-    def __init__(self, room=None, token=None, search_term=""):
+    def __init__(self, room_name=None, token=None, search_term=""):
         ServerMessage.__init__(self)
-        self.room = room
+        self.room_name = room_name
         self.token = token
         self.search_term = search_term
 
     def make_network_message(self):
         msg = bytearray()
-        msg += self.pack_string(self.room)
+        msg += self.pack_string(self.room_name)
         msg += self.pack_uint32(self.token)
         msg += self.pack_string(self.search_term)
 
@@ -2753,17 +2753,17 @@ class RoomMembers(ServerMessage):
     room we are in.
     """
 
-    __slots__ = ("room", "members")
+    __slots__ = ("room_name", "members")
     CODE = 133
     EVENT_NAME = "room-members"
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = None
+        self.room_name = None
         self.members = []
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
         num_members = self.unpack_uint32()
 
         for _ in range(num_members):
@@ -2780,24 +2780,24 @@ class AddRoomMember(ServerMessage):
     The server tells us a member has been added to a private room we are in.
     """
 
-    __slots__ = ("room", "username")
+    __slots__ = ("room_name", "username")
     CODE = 134
     EVENT_NAME = "add-room-member"
 
-    def __init__(self, room=None, username=None, *, msg_content=None):
+    def __init__(self, room_name=None, username=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = room
+        self.room_name = room_name
         self.username = username
 
     def make_network_message(self):
         msg = bytearray()
-        msg += self.pack_string(self.room)
+        msg += self.pack_string(self.room_name)
         msg += self.pack_string(self.username)
 
         return msg
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
         self.username = self.unpack_string()
 
 
@@ -2811,24 +2811,24 @@ class RemoveRoomMember(ServerMessage):
     The server tells us a member has been removed from a private room we are in.
     """
 
-    __slots__ = ("room", "username")
+    __slots__ = ("room_name", "username")
     CODE = 135
     EVENT_NAME = "remove-room-member"
 
-    def __init__(self, room=None, username=None, *, msg_content=None):
+    def __init__(self, room_name=None, username=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = room
+        self.room_name = room_name
         self.username = username
 
     def make_network_message(self):
         msg = bytearray()
-        msg += self.pack_string(self.room)
+        msg += self.pack_string(self.room_name)
         msg += self.pack_string(self.username)
 
         return msg
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
         self.username = self.unpack_string()
 
 
@@ -2838,15 +2838,15 @@ class CancelRoomMembership(ServerMessage):
     We send this to the server to cancel our own membership of a private room.
     """
 
-    __slots__ = ("room",)
+    __slots__ = ("room_name",)
     CODE = 136
 
-    def __init__(self, room=None):
+    def __init__(self, room_name=None):
         ServerMessage.__init__(self)
-        self.room = room
+        self.room_name = room_name
 
     def make_network_message(self):
-        return self.pack_string(self.room)
+        return self.pack_string(self.room_name)
 
 
 class CancelRoomOwnership(ServerMessage):
@@ -2855,15 +2855,15 @@ class CancelRoomOwnership(ServerMessage):
     We send this to the server to stop owning a private room.
     """
 
-    __slots__ = ("room",)
+    __slots__ = ("room_name",)
     CODE = 137
 
-    def __init__(self, room=None):
+    def __init__(self, room_name=None):
         ServerMessage.__init__(self)
-        self.room = room
+        self.room_name = room_name
 
     def make_network_message(self):
-        return self.pack_string(self.room)
+        return self.pack_string(self.room_name)
 
 
 class RoomSomething(ServerMessage):
@@ -2872,18 +2872,18 @@ class RoomSomething(ServerMessage):
     OBSOLETE, no longer used
     """
 
-    __slots__ = ("room",)
+    __slots__ = ("room_name",)
     CODE = 138
 
-    def __init__(self, room=None, *, msg_content=None):
+    def __init__(self, room_name=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = room
+        self.room_name = room_name
 
     def make_network_message(self):
-        return self.pack_string(self.room)
+        return self.pack_string(self.room_name)
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
 
 
 class RoomMembershipGranted(ServerMessage):
@@ -2892,16 +2892,16 @@ class RoomMembershipGranted(ServerMessage):
     The server tells us we were added to a private room.
     """
 
-    __slots__ = ("room",)
+    __slots__ = ("room_name",)
     CODE = 139
     EVENT_NAME = "room-membership-granted"
 
-    def __init__(self, room=None, *, msg_content=None):
+    def __init__(self, room_name=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = room
+        self.room_name = room_name
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
 
 
 class RoomMembershipRevoked(ServerMessage):
@@ -2910,16 +2910,16 @@ class RoomMembershipRevoked(ServerMessage):
     The server tells us we were removed from a private room.
     """
 
-    __slots__ = ("room",)
+    __slots__ = ("room_name",)
     CODE = 140
     EVENT_NAME = "room-membership-revoked"
 
-    def __init__(self, room=None, *, msg_content=None):
+    def __init__(self, room_name=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = room
+        self.room_name = room_name
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
 
 
 class EnableRoomInvitations(ServerMessage):
@@ -2977,24 +2977,24 @@ class AddRoomOperator(ServerMessage):
     room we are in.
     """
 
-    __slots__ = ("room", "username")
+    __slots__ = ("room_name", "username")
     CODE = 143
     EVENT_NAME = "add-room-operator"
 
-    def __init__(self, room=None, username=None, *, msg_content=None):
+    def __init__(self, room_name=None, username=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = room
+        self.room_name = room_name
         self.username = username
 
     def make_network_message(self):
         msg = bytearray()
-        msg += self.pack_string(self.room)
+        msg += self.pack_string(self.room_name)
         msg += self.pack_string(self.username)
 
         return msg
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
         self.username = self.unpack_string()
 
 
@@ -3008,24 +3008,24 @@ class RemoveRoomOperator(ServerMessage):
     private room we are in.
     """
 
-    __slots__ = ("room", "username")
+    __slots__ = ("room_name", "username")
     CODE = 144
     EVENT_NAME = "remove-room-operator"
 
-    def __init__(self, room=None, username=None, *, msg_content=None):
+    def __init__(self, room_name=None, username=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = room
+        self.room_name = room_name
         self.username = username
 
     def make_network_message(self):
         msg = bytearray()
-        msg += self.pack_string(self.room)
+        msg += self.pack_string(self.room_name)
         msg += self.pack_string(self.username)
 
         return msg
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
         self.username = self.unpack_string()
 
 
@@ -3036,16 +3036,16 @@ class RoomOperatorshipGranted(ServerMessage):
     we are in.
     """
 
-    __slots__ = ("room",)
+    __slots__ = ("room_name",)
     CODE = 145
     EVENT_NAME = "room-operatorship-granted"
 
-    def __init__(self, room=None, *, msg_content=None):
+    def __init__(self, room_name=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = room
+        self.room_name = room_name
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
 
 
 class RoomOperatorshipRevoked(ServerMessage):
@@ -3055,19 +3055,19 @@ class RoomOperatorshipRevoked(ServerMessage):
     we are in.
     """
 
-    __slots__ = ("room",)
+    __slots__ = ("room_name",)
     CODE = 146
     EVENT_NAME = "room-operatorship-revoked"
 
-    def __init__(self, room=None, *, msg_content=None):
+    def __init__(self, room_name=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = room
+        self.room_name = room_name
 
     def make_network_message(self):
-        return self.pack_string(self.room)
+        return self.pack_string(self.room_name)
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
 
 
 class RoomOperators(ServerMessage):
@@ -3076,17 +3076,17 @@ class RoomOperators(ServerMessage):
     The server sends us a list of operators in a private room we are in.
     """
 
-    __slots__ = ("room", "operators")
+    __slots__ = ("room_name", "operators")
     CODE = 148
     EVENT_NAME = "room-operators"
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = None
+        self.room_name = None
         self.operators = []
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
         num_operators = self.unpack_uint32()
 
         for _ in range(num_operators):
@@ -3160,13 +3160,13 @@ class GlobalRoomMessage(ServerMessage):
     public room feed (every single line written in every public room).
     """
 
-    __slots__ = ("room", "username", "message", "message_type", "mention_type", "mention_keyword")
+    __slots__ = ("room_name", "username", "message", "message_type", "mention_type", "mention_keyword")
     CODE = 152
     EVENT_NAME = "global-room-message"
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = None
+        self.room_name = None
         self.username = None
         self.message = None
         self.message_type = None
@@ -3174,7 +3174,7 @@ class GlobalRoomMessage(ServerMessage):
         self.mention_keyword = None
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
         self.username = self.unpack_string()
         self.message = self.unpack_string()
 
@@ -3275,15 +3275,15 @@ class CantCreateRoom(ServerMessage):
     an error message is sent.
     """
 
-    __slots__ = ("room",)
+    __slots__ = ("room_name",)
     CODE = 1003
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.room = None
+        self.room_name = None
 
     def parse_network_message(self):
-        self.room = self.unpack_string()
+        self.room_name = self.unpack_string()
 
 
 # Peer Init Messages #

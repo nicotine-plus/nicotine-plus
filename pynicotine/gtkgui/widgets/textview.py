@@ -267,7 +267,7 @@ class TextView:
     def clear(self):
         self.set_text("")
 
-    # Text Tags (Roomnames, Usernames, URLs)
+    # Text Tags (Room names, Usernames, URLs)
 
     def create_tag(self, color_id=None, primary_callback=None, secondary_callback=None, callback_arg=None, url=None):
 
@@ -376,12 +376,12 @@ class TextView:
 
 class ChatView(TextView):
 
-    def __init__(self, *args, status_users=None, roomname_event=None, username_event=None, **kwargs):
+    def __init__(self, *args, status_users=None, room_name_event=None, username_event=None, **kwargs):
 
         super().__init__(*args, **kwargs)
 
         self.user_tags = self.status_users = {}
-        self.roomname_event = roomname_event
+        self.room_name_event = room_name_event
         self.username_event = username_event
 
         if status_users is not None:
@@ -402,7 +402,7 @@ class ChatView(TextView):
         self.widget.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
 
     def add_line(self, message, prepend=False, timestamp_format=None, message_type=None,
-                 timestamp=None, timestamp_string=None, roomname=None, username=None):
+                 timestamp=None, timestamp_string=None, room_name=None, username=None):
         """Append or prepend a new chat message line with name tags and links."""
 
         line = list(self._generate_chat_line(
@@ -411,13 +411,13 @@ class ChatView(TextView):
             timestamp_string=timestamp_string,
             timestamp=timestamp,
             timestamp_format=timestamp_format,
-            roomname=roomname,
+            room_name=room_name,
             username=username
         ))
         self._insert_line(line, prepend=prepend)
 
     def _generate_chat_line(self, message, timestamp_format=None, message_type=None,
-                            timestamp=None, timestamp_string=None, roomname=None, username=None):
+                            timestamp=None, timestamp_string=None, room_name=None, username=None):
         """Make a list of tuples [(text, tag),] for each element in line."""
 
         tag = self.type_tags.get(message_type)
@@ -428,13 +428,13 @@ class ChatView(TextView):
             yield (" ", tag)
 
         elif timestamp_string:
-            # Use original timestamp string from log file (plus roomname for global feed)
+            # Use original timestamp string from log file (plus room name for global feed)
             yield (timestamp_string, tag)
             yield (" ", tag)
 
-        # Tag roomname, only used in global room feed
-        if roomname:
-            yield (roomname, self.get_room_tag(roomname))
+        # Tag room name, only used in global room feed
+        if room_name:
+            yield (room_name, self.get_room_tag(room_name))
             yield (" | ", tag)
 
         # Tag username with popup menu and away/online/offline colors
@@ -507,8 +507,8 @@ class ChatView(TextView):
         super().clear()
         self.user_tags.clear()
 
-    def get_room_tag(self, roomname):
-        return self.create_tag("urlcolor", primary_callback=self.roomname_event, callback_arg=roomname)
+    def get_room_tag(self, room_name):
+        return self.create_tag("urlcolor", primary_callback=self.room_name_event, callback_arg=room_name)
 
     def get_user_tag(self, username):
 
