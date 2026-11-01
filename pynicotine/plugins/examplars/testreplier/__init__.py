@@ -24,11 +24,11 @@ class Plugin(BasePlugin):
 
         self.throttle = ResponseThrottle(self.core, self.human_name)
 
-    def incoming_public_chat_event(self, room, user, line):
+    def incoming_public_chat_event(self, room, user, message):
 
-        if line.lower() != "test":
+        if message.lower() != "test":
             return
 
-        if self.throttle.ok_to_respond(room, user, line):
+        if self.throttle.ok_to_respond(room, user, message):
             self.throttle.responded()
             self.send_public(room, choice(self.settings["replies"]).lstrip("!"))

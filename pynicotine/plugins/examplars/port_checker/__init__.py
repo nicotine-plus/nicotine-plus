@@ -37,21 +37,22 @@ class Plugin(BasePlugin):
             }
         }
         self.throttle = ResponseThrottle(self.core, self.human_name)
-        self.checkroom = "nicotine"
+        self.check_room = "nicotine"
 
-    def incoming_public_chat_notification(self, room, user, line):
+    def incoming_public_chat_notification(self, room, user, message):
 
-        if room != self.checkroom or not self.settings["keyword_enabled"] or self.core.users.login_username == user:
+        if (room != self.check_room or not self.settings["keyword_enabled"]
+                or self.core.users.login_user == user):
             return
 
-        if not self.throttle.ok_to_respond(room, user, line, 10):
+        if not self.throttle.ok_to_respond(room, user, message, 10):
             return
 
-        if "portscan" in line.lower():
+        if "portscan" in message.lower():
             self.log("%s requested a port scan", user)
-            self.resolve(user, True)
+            self.resolve(user, announce=True)
 
-    def resolve(self, user, announce):
+    def resolve(self, user, announce=False):
 
         user_address = self.core.users.addresses.get(user)
 
@@ -65,7 +66,7 @@ class Plugin(BasePlugin):
 
         if announce and status in {"open", "closed"}:
             self.throttle.responded()
-            self.send_public(self.checkroom, f"{user}: Your port is {status}")
+            self.send_public(self.check_room, f"{user}: Your port is {status}")
 
         self.log("User %s on %s:%s port is %s.", (user, ip_address, port, status))
 
@@ -93,4 +94,4 @@ class Plugin(BasePlugin):
         if args:
             user = args
 
-        self.resolve(user, False)
+        self.resolve(user)

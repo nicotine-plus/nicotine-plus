@@ -44,13 +44,13 @@ class Plugin(BasePlugin):
             "public": {}
         }
 
-    def incoming_public_chat_notification(self, room, user, line):
+    def incoming_public_chat_notification(self, room, user, message):
 
         if (self.core.network_filter.is_user_ignored(user)
                 or self.core.network_filter.is_user_ip_ignored(user)):
             return
 
-        video_id = self.get_video_id("public", room, line)
+        video_id = self.get_video_id("public", room, message)
         if not video_id:
             return
 
@@ -61,13 +61,13 @@ class Plugin(BasePlugin):
         for msg in self.settings["format"]:
             self.echo_public(room, self.str_replace(msg, parsed), self.settings["color"].lower())
 
-    def incoming_private_chat_notification(self, user, line):
+    def incoming_private_chat_notification(self, user, message):
 
         if (self.core.network_filter.is_user_ignored(user)
                 or self.core.network_filter.is_user_ip_ignored(user)):
             return
 
-        video_id = self.get_video_id("private", user, line)
+        video_id = self.get_video_id("private", user, message)
         if not video_id:
             return
 
@@ -78,10 +78,10 @@ class Plugin(BasePlugin):
         for msg in self.settings["format"]:
             self.echo_private(user, self.str_replace(msg, parsed), self.settings["color"].lower())
 
-    def get_video_id(self, mode, source, line):
+    def get_video_id(self, mode, source, message):
 
         match = re.search(r"(https?://((m|music)\.)?|www\.)youtu(\.be/|be\.com/(shorts/|live/|watch\S+v=))"
-                          r"(?P<video_id>[-\w]{11})", line)
+                          r"(?P<video_id>[-\w]{11})", message)
         if not match:
             return None
 

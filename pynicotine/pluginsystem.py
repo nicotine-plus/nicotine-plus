@@ -69,71 +69,71 @@ class BasePlugin:
         # Application is shutting down
         pass
 
-    def public_room_message_notification(self, room, user, line):
+    def public_room_message_notification(self, room, user, message):
         # Override method in plugin
         pass
 
-    def search_request_notification(self, searchterm, user, token):
+    def search_request_notification(self, search_term, user, token):
         # Override method in plugin
         pass
 
-    def distrib_search_notification(self, searchterm, user, token):
+    def distrib_search_notification(self, search_term, user, token):
         # Override method in plugin
         pass
 
-    def incoming_private_chat_event(self, user, line):
+    def incoming_private_chat_event(self, user, message):
         # Override method in plugin
         pass
 
-    def incoming_private_chat_notification(self, user, line):
+    def incoming_private_chat_notification(self, user, message):
         # Override method in plugin
         pass
 
-    def incoming_public_chat_event(self, room, user, line):
+    def incoming_public_chat_event(self, room, user, message):
         # Override method in plugin
         pass
 
-    def incoming_public_chat_notification(self, room, user, line):
+    def incoming_public_chat_notification(self, room, user, message):
         # Override method in plugin
         pass
 
-    def outgoing_private_chat_event(self, user, line):
+    def outgoing_private_chat_event(self, user, message):
         # Override method in plugin
         pass
 
-    def outgoing_private_chat_notification(self, user, line):
+    def outgoing_private_chat_notification(self, user, message):
         # Override method in plugin
         pass
 
-    def outgoing_public_chat_event(self, room, line):
+    def outgoing_public_chat_event(self, room, message):
         # Override method in plugin
         pass
 
-    def outgoing_public_chat_notification(self, room, line):
+    def outgoing_public_chat_notification(self, room, message):
         # Override method in plugin
         pass
 
-    def outgoing_global_search_event(self, text):
+    def outgoing_global_search_event(self, search_term):
         # Override method in plugin
         pass
 
-    def outgoing_room_search_event(self, room, text):
+    def outgoing_room_search_event(self, room, search_term):
         # Override method in plugin
         pass
 
-    def outgoing_buddy_search_event(self, text):
+    def outgoing_buddy_search_event(self, search_term):
         # Override method in plugin
         pass
 
-    def outgoing_user_search_event(self, users, text):
+    def outgoing_user_search_event(self, users, search_term):
         # Override method in plugin
         pass
 
-    def outgoing_wishlist_search_event(self, text):
+    def outgoing_wishlist_search_event(self, search_term):
         # Override method in plugin
         pass
 
-    def user_resolve_notification(self, user, ip_address, port, country):
+    def user_resolve_notification(self, user, ip_address, port, country_code):
         # Override method in plugin
         pass
 
@@ -141,7 +141,7 @@ class BasePlugin:
         # Override method in plugin
         pass
 
-    def server_disconnect_notification(self, userchoice):
+    def server_disconnect_notification(self, is_manual):
         # Override method in plugin
         pass
 
@@ -227,12 +227,12 @@ class BasePlugin:
     def log(self, msg, msg_args=None):
         log.add(f"{self.human_name}: {msg}", msg_args)
 
-    def send_public(self, room, text):
+    def send_public(self, room, message):
         """Send chat message to a room, must already be joined."""
 
-        core.chatrooms.send_message(room, text)
+        core.chatrooms.send_message(room, message)
 
-    def send_private(self, user, text, show_ui=True, switch_page=True):
+    def send_private(self, user, message, show_ui=True, switch_page=True):
         """Send user message in private.
 
         show_ui controls if the UI opens a private chat view for the
@@ -243,18 +243,18 @@ class BasePlugin:
         if show_ui:
             core.privatechat.show_user(user, switch_page)
 
-        core.privatechat.send_message(user, text)
+        core.privatechat.send_message(user, message)
 
-    def echo_public(self, room, text, message_type="local"):
+    def echo_public(self, room, message, message_type="local"):
         """Display a raw message in chat rooms (not sent to others).
 
         message_type changes the type (and color) of the message in the UI.
         available message_type values: action, remote, local, hilite
         """
 
-        core.chatrooms.echo_message(room, text, message_type)
+        core.chatrooms.echo_message(room, message, message_type)
 
-    def echo_private(self, user, text, message_type="local"):
+    def echo_private(self, user, message, message_type="local"):
         """Display a raw message in private (not sent to others).
 
         message_type changes the type (and color) of the message in the UI.
@@ -262,9 +262,9 @@ class BasePlugin:
         """
 
         core.privatechat.show_user(user)
-        core.privatechat.echo_message(user, text, message_type)
+        core.privatechat.echo_message(user, message, message_type)
 
-    def send_message(self, text):
+    def send_message(self, message):
         """Convenience function to send a message to the same user/room a
         plugin command runs for."""
 
@@ -278,9 +278,9 @@ class BasePlugin:
             return
 
         func = self.send_public if command_interface == "chatroom" else self.send_private
-        func(source, text)
+        func(source, message)
 
-    def echo_message(self, text, message_type="local"):
+    def echo_message(self, message, message_type="local"):
         """Convenience function to display a raw message the same window a
         plugin command runs from."""
 
@@ -291,14 +291,14 @@ class BasePlugin:
         command_interface, source = self.parent.command_source
 
         if command_interface == "cli":
-            log.add_command(text)
+            log.add_command(message)
             return
 
         func = self.echo_public if command_interface == "chatroom" else self.echo_private
-        func(source, text, message_type)
+        func(source, message, message_type)
 
-    def output(self, text):
-        self.echo_message(text, message_type="command")
+    def output(self, message):
+        self.echo_message(message, message_type="command")
 
 
 class ResponseThrottle:
@@ -1137,67 +1137,67 @@ class PluginHandler:
 
         return args
 
-    def search_request_notification(self, searchterm, user, token):
-        self._trigger_event("search_request_notification", (searchterm, user, token))
+    def search_request_notification(self, search_term, user, token):
+        self._trigger_event("search_request_notification", (search_term, user, token))
 
-    def distrib_search_notification(self, searchterm, user, token):
-        self._trigger_event("distrib_search_notification", (searchterm, user, token))
+    def distrib_search_notification(self, search_term, user, token):
+        self._trigger_event("distrib_search_notification", (search_term, user, token))
 
-    def public_room_message_notification(self, room, user, line):
-        self._trigger_event("public_room_message_notification", (room, user, line))
+    def public_room_message_notification(self, room, user, message):
+        self._trigger_event("public_room_message_notification", (room, user, message))
 
-    def incoming_private_chat_event(self, user, line):
-        return self._trigger_event("incoming_private_chat_event", (user, line))
+    def incoming_private_chat_event(self, user, message):
+        return self._trigger_event("incoming_private_chat_event", (user, message))
 
-    def incoming_private_chat_notification(self, user, line):
-        self._trigger_event("incoming_private_chat_notification", (user, line))
+    def incoming_private_chat_notification(self, user, message):
+        self._trigger_event("incoming_private_chat_notification", (user, message))
 
-    def incoming_public_chat_event(self, room, user, line):
-        return self._trigger_event("incoming_public_chat_event", (room, user, line))
+    def incoming_public_chat_event(self, room, user, message):
+        return self._trigger_event("incoming_public_chat_event", (room, user, message))
 
-    def incoming_public_chat_notification(self, room, user, line):
-        self._trigger_event("incoming_public_chat_notification", (room, user, line))
+    def incoming_public_chat_notification(self, room, user, message):
+        self._trigger_event("incoming_public_chat_notification", (room, user, message))
 
-    def outgoing_private_chat_event(self, user, line):
-        return self._trigger_event("outgoing_private_chat_event", (user, line))
+    def outgoing_private_chat_event(self, user, message):
+        return self._trigger_event("outgoing_private_chat_event", (user, message))
 
-    def outgoing_private_chat_notification(self, user, line):
-        self._trigger_event("outgoing_private_chat_notification", (user, line))
+    def outgoing_private_chat_notification(self, user, message):
+        self._trigger_event("outgoing_private_chat_notification", (user, message))
 
-    def outgoing_public_chat_event(self, room, line):
-        return self._trigger_event("outgoing_public_chat_event", (room, line))
+    def outgoing_public_chat_event(self, room, message):
+        return self._trigger_event("outgoing_public_chat_event", (room, message))
 
-    def outgoing_public_chat_notification(self, room, line):
-        self._trigger_event("outgoing_public_chat_notification", (room, line))
+    def outgoing_public_chat_notification(self, room, message):
+        self._trigger_event("outgoing_public_chat_notification", (room, message))
 
-    def outgoing_global_search_event(self, text):
-        return self._trigger_event("outgoing_global_search_event", (text,))
+    def outgoing_global_search_event(self, search_term):
+        return self._trigger_event("outgoing_global_search_event", (search_term,))
 
-    def outgoing_room_search_event(self, room, text):
-        return self._trigger_event("outgoing_room_search_event", (room, text))
+    def outgoing_room_search_event(self, room, search_term):
+        return self._trigger_event("outgoing_room_search_event", (room, search_term))
 
-    def outgoing_buddy_search_event(self, text):
-        return self._trigger_event("outgoing_buddy_search_event", (text,))
+    def outgoing_buddy_search_event(self, search_term):
+        return self._trigger_event("outgoing_buddy_search_event", (search_term,))
 
-    def outgoing_user_search_event(self, users, text):
-        return self._trigger_event("outgoing_user_search_event", (users, text))
+    def outgoing_user_search_event(self, users, search_term):
+        return self._trigger_event("outgoing_user_search_event", (users, search_term))
 
-    def outgoing_wishlist_search_event(self, text):
-        return self._trigger_event("outgoing_wishlist_search_event", (text,))
+    def outgoing_wishlist_search_event(self, search_term):
+        return self._trigger_event("outgoing_wishlist_search_event", (search_term,))
 
-    def user_resolve_notification(self, user, ip_address, port, country=None):
+    def user_resolve_notification(self, user, ip_address, port, country_code=None):
         """Notification for user IP:Port resolving.
 
         Note that country is only set when the user requested the
         resolving
         """
-        self._trigger_event("user_resolve_notification", (user, ip_address, port, country))
+        self._trigger_event("user_resolve_notification", (user, ip_address, port, country_code))
 
     def server_connect_notification(self):
         self._trigger_event("server_connect_notification", (),)
 
-    def server_disconnect_notification(self, userchoice):
-        self._trigger_event("server_disconnect_notification", (userchoice, ))
+    def server_disconnect_notification(self, is_manual):
+        self._trigger_event("server_disconnect_notification", (is_manual, ))
 
     def join_chatroom_notification(self, room):
         self._trigger_event("join_chatroom_notification", (room,))

@@ -48,26 +48,26 @@ class Plugin(BasePlugin):
                  "before it's considered ASCII spam.",
                  (self.settings["minlength"], self.settings["maxdiffcharacters"]))
 
-    def check_phrases(self, user, line):
+    def check_phrases(self, user, message):
 
         for phrase in self.settings["badprivatephrases"]:
-            if line.lower().find(phrase.lower()) > -1:
-                self.log("Blocked spam from %s: %s", (user, line))
+            if message.lower().find(phrase.lower()) > -1:
+                self.log("Blocked spam from %s: %s", (user, message))
                 return returncode["zap"]
 
         return None
 
-    def incoming_public_chat_event(self, room, user, line):
+    def incoming_public_chat_event(self, room, user, message):
 
-        if len(line) >= self.settings["minlength"] and len(set(line)) < self.settings["maxdiffcharacters"]:
+        if len(message) >= self.settings["minlength"] and len(set(message)) < self.settings["maxdiffcharacters"]:
             self.log('Filtered ASCII spam from "%s" in room "%s"', (user, room))
             return returncode["zap"]
 
-        if len(line) > self.settings["maxlength"]:
-            self.log('Filtered really long line (%s characters) from "%s" in room "%s"', (len(line), user, room))
+        if len(message) > self.settings["maxlength"]:
+            self.log('Filtered really long line (%s characters) from "%s" in room "%s"', (len(message), user, room))
             return returncode["zap"]
 
-        return self.check_phrases(user, line)
+        return self.check_phrases(user, message)
 
-    def incoming_private_chat_event(self, user, line):
-        return self.check_phrases(user, line)
+    def incoming_private_chat_event(self, user, message):
+        return self.check_phrases(user, message)

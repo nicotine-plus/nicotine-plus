@@ -42,5 +42,5 @@ class Plugin(BasePlugin):
             self.processed_users.add(user)
             events.schedule(delay=30, callback=self.browse_user, callback_args=(user,))
 
-    def server_disconnect_notification(self, userchoice):
+    def server_disconnect_notification(self, is_manual):
         self.processed_users.clear()
