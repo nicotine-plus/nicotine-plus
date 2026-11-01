@@ -291,7 +291,7 @@ class ChatRooms:
 
         # Replace server-provided country with our own
         if username in core.users.countries:
-            user_data.country = core.users.countries[username]
+            user_data.country_code = core.users.countries[username]
 
     def _update_private_room(self, room, owner=None, members=None, operators=None):
 
@@ -430,7 +430,7 @@ class ChatRooms:
     def _enable_room_invitations(self, msg):
         """Server code 141."""
 
-        config.sections["server"]["private_chatrooms"] = msg.enabled
+        config.sections["server"]["private_chatrooms"] = msg.enable
 
     def _add_room_operator(self, msg):
         """Server code 143."""
@@ -660,7 +660,7 @@ class ChatRooms:
 
         room_obj.tickers.clear()
 
-        for username, message in msg.msgs:
+        for username, message in msg.tickers:
             if core.network_filter.is_user_ignored(username) or \
                     core.network_filter.is_user_ip_ignored(username):
                 # User ignored, ignore ticker message
@@ -682,7 +682,7 @@ class ChatRooms:
             # User ignored, ignore Ticker messages
             return
 
-        room_obj.tickers[username] = msg.msg
+        room_obj.tickers[username] = msg.content
 
     def _room_ticker_removed(self, msg):
         """Server code 115."""

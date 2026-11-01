@@ -236,20 +236,20 @@ class UploadFile(InternalMessage):
 class SetUploadLimit(InternalMessage):
     """Sent to the networking thread to indicate changes in bandwidth shaping rules."""
 
-    __slots__ = ("limit", "limitby")
+    __slots__ = ("speed_limit", "limit_by_total")
 
-    def __init__(self, limit, limitby):
-        self.limit = limit
-        self.limitby = limitby
+    def __init__(self, speed_limit, limit_by_total):
+        self.speed_limit = speed_limit
+        self.limit_by_total = limit_by_total
 
 
 class SetDownloadLimit(InternalMessage):
     """Sent to the networking thread to indicate changes in bandwidth shaping rules."""
 
-    __slots__ = ("limit",)
+    __slots__ = ("speed_limit",)
 
-    def __init__(self, limit):
-        self.limit = limit
+    def __init__(self, speed_limit):
+        self.speed_limit = speed_limit
 
 
 class AddAllowedResponse(InternalMessage):
@@ -532,10 +532,10 @@ class UserData:
     user."""
 
     __slots__ = ("username", "status", "upload_speed", "upload_number", "unknown", "num_files", "num_folders",
-                 "slots_full", "country")
+                 "slots_full", "country_code")
 
     def __init__(self, username=None, status=None, upload_speed=None, upload_number=None, unknown=None,
-                 num_files=None, num_folders=None, slots_full=None, country=None):
+                 num_files=None, num_folders=None, slots_full=None, country_code=None):
         self.username = username
         self.status = status
         self.upload_speed = upload_speed
@@ -544,7 +544,7 @@ class UserData:
         self.num_files = num_files
         self.num_folders = num_folders
         self.slots_full = slots_full
-        self.country = country
+        self.country_code = country_code
 
 
 class FileAttributes:
@@ -623,9 +623,9 @@ class ServerMessage(SlskMessage):
         for i in range(num_slots_full):
             users[i].slots_full = self.unpack_uint32()
 
-        num_countries = self.unpack_uint32()
-        for i in range(num_countries):
-            users[i].country = self.unpack_string()
+        num_country_codes = self.unpack_uint32()
+        for i in range(num_country_codes):
+            users[i].country_code = self.unpack_string()
 
         return users
 
@@ -672,23 +672,23 @@ class Login(ServerMessage):
     version number they choose for each project.
     """
 
-    __slots__ = ("username", "passwd", "version", "minorversion", "success", "rejection_reason",
-                 "rejection_detail", "banner", "ip_address", "local_address", "server_address",
+    __slots__ = ("username", "password", "major_version", "minor_version", "success", "rejection_reason",
+                 "rejection_detail", "motd", "ip_address", "local_address", "server_address",
                  "is_supporter")
     CODE = 1
     EVENT_NAME = "server-login"
-    HIDDEN_FIELDS = {"passwd"}
+    HIDDEN_FIELDS = {"password"}
 
-    def __init__(self, username=None, passwd=None, version=None, minorversion=None, *, msg_content=None):
+    def __init__(self, username=None, password=None, major_version=None, minor_version=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.username = username
-        self.passwd = passwd
-        self.version = version
-        self.minorversion = minorversion
+        self.password = password
+        self.major_version = major_version
+        self.minor_version = minor_version
         self.success = None
         self.rejection_reason = None
         self.rejection_detail = None
-        self.banner = None
+        self.motd = None
         self.ip_address = None
         self.local_address = None
         self.server_address = None
@@ -697,15 +697,13 @@ class Login(ServerMessage):
     def make_network_message(self):
 
         msg = bytearray()
+        checksum = md5((self.username + self.password).encode()).hexdigest()
+
         msg += self.pack_string(self.username)
-        msg += self.pack_string(self.passwd)
-        msg += self.pack_uint32(self.version)
-
-        payload = self.username + self.passwd
-        md5hash = md5(payload.encode()).hexdigest()
-        msg += self.pack_string(md5hash)
-
-        msg += self.pack_uint32(self.minorversion)
+        msg += self.pack_string(self.password)
+        msg += self.pack_uint32(self.major_version)
+        msg += self.pack_string(checksum)
+        msg += self.pack_uint32(self.minor_version)
 
         return msg
 
@@ -719,9 +717,9 @@ class Login(ServerMessage):
                 self.rejection_detail = self.unpack_string()
             return
 
-        self.banner = self.unpack_string()
+        self.motd = self.unpack_string()
         self.ip_address = self.unpack_ip()
-        _checksum = self.unpack_string()  # MD5 hexdigest of the password you sent
+        _checksum = self.unpack_string()  # MD5 checksum of the password you sent
         self.is_supporter = self.unpack_bool()
 
 
@@ -795,7 +793,7 @@ class WatchUser(ServerMessage):
     """
 
     __slots__ = ("username", "exists", "status", "upload_speed", "upload_number", "unknown", "num_files",
-                 "num_folders", "country")
+                 "num_folders", "country_code")
     CODE = 5
     EVENT_NAME = "watch-user"
 
@@ -809,7 +807,7 @@ class WatchUser(ServerMessage):
         self.unknown = None
         self.num_files = None
         self.num_folders = None
-        self.country = None
+        self.country_code = None
 
     def make_network_message(self):
         return self.pack_string(self.username)
@@ -832,7 +830,7 @@ class WatchUser(ServerMessage):
             # User is offline
             return
 
-        self.country = self.unpack_string()
+        self.country_code = self.unpack_string()
 
 
 class UnwatchUser(ServerMessage):
@@ -1013,8 +1011,8 @@ class JoinRoom(ServerMessage):
         num_operators = self.unpack_uint32()
 
         for _ in range(num_operators):
-            operator = self.unpack_string()
-            self.operators.append(operator)
+            username = self.unpack_string()
+            self.operators.append(username)
 
 
 class LeaveRoom(ServerMessage):
@@ -1064,7 +1062,7 @@ class UserJoinedRoom(ServerMessage):
             num_files=self.unpack_uint32(),
             num_folders=self.unpack_uint32(),
             slots_full=self.unpack_uint32(),
-            country=self.unpack_string()
+            country_code=self.unpack_string()
         )
 
 
@@ -1176,15 +1174,15 @@ class MessageAcked(ServerMessage):
     phrase to us.
     """
 
-    __slots__ = ("msgid",)
+    __slots__ = ("message_id",)
     CODE = 23
 
-    def __init__(self, msgid=None):
+    def __init__(self, message_id=None):
         ServerMessage.__init__(self)
-        self.msgid = msgid
+        self.message_id = message_id
 
     def make_network_message(self):
-        return self.pack_uint32(self.msgid)
+        return self.pack_uint32(self.message_id)
 
 
 class FileSearchRoom(ServerMessage):
@@ -1830,9 +1828,9 @@ class RoomList(ServerMessage):
         if not has_count:
             return rooms
 
-        num_users = self.unpack_uint32()
+        num_stats = self.unpack_uint32()
 
-        for i in range(num_users):
+        for i in range(num_stats):
             rooms[i][1] = self.unpack_uint32()
 
         return rooms
@@ -1893,16 +1891,16 @@ class AdminMessage(ServerMessage):
     A global message from the server admin has arrived.
     """
 
-    __slots__ = ("msg",)
+    __slots__ = ("message",)
     CODE = 66
     EVENT_NAME = "admin-message"
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.msg = None
+        self.message = None
 
     def parse_network_message(self):
-        self.msg = self.unpack_string()
+        self.message = self.unpack_string()
 
 
 class GlobalUserList(ServerMessage):
@@ -1935,23 +1933,24 @@ class TunneledMessage(ServerMessage):
     OBSOLETE, no longer used
     """
 
-    __slots__ = ("username", "token", "code", "msg", "addr")
+    __slots__ = ("username", "token", "code", "message", "ip_address", "port")
     CODE = 68
 
-    def __init__(self, username=None, token=None, code=None, msg=None, *, msg_content=None):
+    def __init__(self, username=None, token=None, code=None, message=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.username = username
         self.token = token
         self.code = code
-        self.msg = msg
-        self.addr = None
+        self.message = message
+        self.ip_address = None
+        self.port = None
 
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_string(self.username)
         msg += self.pack_uint32(self.token)
         msg += self.pack_uint32(self.code)
-        msg += self.pack_string(self.msg)
+        msg += self.pack_string(self.message)
 
         return msg
 
@@ -1959,12 +1958,9 @@ class TunneledMessage(ServerMessage):
         self.username = self.unpack_string()
         self.code = self.unpack_uint32()
         self.token = self.unpack_uint32()
-
-        ip_address = self.unpack_ip()
-        port = self.unpack_uint32()
-        self.addr = (ip_address, port)
-
-        self.msg = self.unpack_string()
+        self.ip_address = self.unpack_ip()
+        self.port = self.unpack_uint32()
+        self.message = self.unpack_string()
 
 
 class PrivilegedUsers(ServerMessage):
@@ -2000,15 +1996,15 @@ class HaveNoParent(ServerMessage):
     (i.e. the server starts sending us EmbeddedMessage messages).
     """
 
-    __slots__ = ("noparent",)
+    __slots__ = ("no_parent",)
     CODE = 71
 
-    def __init__(self, noparent=None):
+    def __init__(self, no_parent=None):
         ServerMessage.__init__(self)
-        self.noparent = noparent
+        self.no_parent = no_parent
 
     def make_network_message(self):
-        return self.pack_bool(self.noparent)
+        return self.pack_bool(self.no_parent)
 
 
 class ParentIP(ServerMessage):
@@ -2019,12 +2015,12 @@ class ParentIP(ServerMessage):
     DEPRECATED, sent by Soulseek NS but not SoulseekQt
     """
 
-    __slots__ = ("parentip",)
+    __slots__ = ("ip_address",)
     CODE = 73
 
-    def __init__(self, parentip=None):
+    def __init__(self, ip_address=None):
         ServerMessage.__init__(self)
-        self.parentip = parentip
+        self.ip_address = ip_address
 
     @staticmethod
     def strunreverse(string):
@@ -2033,7 +2029,7 @@ class ParentIP(ServerMessage):
         return ".".join(strlist)
 
     def make_network_message(self):
-        return self.pack_uint32(inet_aton(self.strunreverse(self.parentip)))
+        return self.pack_uint32(inet_aton(self.strunreverse(self.ip_address)))
 
 
 class ParentMinSpeed(ServerMessage):
@@ -2223,15 +2219,15 @@ class AcceptChildren(ServerMessage):
     We tell the server if we want to accept child nodes.
     """
 
-    __slots__ = ("enabled",)
+    __slots__ = ("accept",)
     CODE = 100
 
-    def __init__(self, enabled=None):
+    def __init__(self, accept=None):
         ServerMessage.__init__(self)
-        self.enabled = enabled
+        self.accept = accept
 
     def make_network_message(self):
-        return self.pack_bool(self.enabled)
+        return self.pack_bool(self.accept)
 
 
 class PossibleParents(ServerMessage):
@@ -2248,12 +2244,12 @@ class PossibleParents(ServerMessage):
     the server.
     """
 
-    __slots__ = ("list",)
+    __slots__ = ("candidates",)
     CODE = 102
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.list = {}
+        self.candidates = {}
 
     def parse_network_message(self):
         num_candidates = self.unpack_uint32()
@@ -2263,7 +2259,7 @@ class PossibleParents(ServerMessage):
             ip_address = self.unpack_ip()
             port = self.unpack_uint32()
 
-            self.list[username] = ParentCandidate(username, ip_address, port)
+            self.candidates[username] = ParentCandidate(username, ip_address, port)
 
 
 class WishlistSearch(ServerMessage):
@@ -2403,14 +2399,14 @@ class RoomTickers(ServerMessage):
     room walls.
     """
 
-    __slots__ = ("room", "msgs")
+    __slots__ = ("room", "tickers")
     CODE = 113
     EVENT_NAME = "room-tickers"
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.room = None
-        self.msgs = []
+        self.tickers = []
 
     def parse_network_message(self):
         self.room = self.unpack_string()
@@ -2418,9 +2414,9 @@ class RoomTickers(ServerMessage):
 
         for _ in range(num_tickers):
             username = self.unpack_string()
-            msg = self.unpack_string()
+            content = self.unpack_string()
 
-            self.msgs.append((username, msg))
+            self.tickers.append((username, content))
 
 
 class RoomTickerAdded(ServerMessage):
@@ -2432,7 +2428,7 @@ class RoomTickerAdded(ServerMessage):
     room walls.
     """
 
-    __slots__ = ("room", "username", "msg")
+    __slots__ = ("room", "username", "content")
     CODE = 114
     EVENT_NAME = "room-ticker-added"
 
@@ -2440,12 +2436,12 @@ class RoomTickerAdded(ServerMessage):
         ServerMessage.__init__(self, msg_content)
         self.room = None
         self.username = None
-        self.msg = None
+        self.content = None
 
     def parse_network_message(self):
         self.room = self.unpack_string()
         self.username = self.unpack_string()
-        self.msg = self.unpack_string()
+        self.content = self.unpack_string()
 
 
 class RoomTickerRemoved(ServerMessage):
@@ -2482,18 +2478,18 @@ class SetRoomTicker(ServerMessage):
     room walls.
     """
 
-    __slots__ = ("room", "msg")
+    __slots__ = ("room", "content")
     CODE = 116
 
-    def __init__(self, room=None, msg=""):
+    def __init__(self, room=None, content=""):
         ServerMessage.__init__(self)
         self.room = room
-        self.msg = msg
+        self.content = content
 
     def make_network_message(self):
         msg = bytearray()
         msg += self.pack_string(self.room)
-        msg += self.pack_string(self.msg)
+        msg += self.pack_string(self.content)
 
         return msg
 
@@ -2680,15 +2676,15 @@ class BranchLevel(ServerMessage):
     the distributed network.
     """
 
-    __slots__ = ("value",)
+    __slots__ = ("level",)
     CODE = 126
 
-    def __init__(self, value=None):
+    def __init__(self, level=None):
         ServerMessage.__init__(self)
-        self.value = value
+        self.level = level
 
     def make_network_message(self):
-        return self.pack_uint32(self.value)
+        return self.pack_uint32(self.level)
 
 
 class BranchRoot(ServerMessage):
@@ -2725,15 +2721,15 @@ class ChildDepth(ServerMessage):
     OBSOLETE, no longer used
     """
 
-    __slots__ = ("value",)
+    __slots__ = ("depth",)
     CODE = 129
 
-    def __init__(self, value=None):
+    def __init__(self, depth=None):
         ServerMessage.__init__(self)
-        self.value = value
+        self.depth = depth
 
     def make_network_message(self):
-        return self.pack_uint32(self.value)
+        return self.pack_uint32(self.depth)
 
 
 class ResetDistributed(ServerMessage):
@@ -2933,19 +2929,19 @@ class EnableRoomInvitations(ServerMessage):
     private rooms.
     """
 
-    __slots__ = ("enabled",)
+    __slots__ = ("enable",)
     CODE = 141
     EVENT_NAME = "enable-room-invitations"
 
-    def __init__(self, enabled=None, *, msg_content=None):
+    def __init__(self, enable=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.enabled = enabled
+        self.enable = enable
 
     def make_network_message(self):
-        return self.pack_bool(self.enabled)
+        return self.pack_bool(self.enable)
 
     def parse_network_message(self):
-        self.enabled = self.unpack_bool()
+        self.enable = self.unpack_bool()
 
 
 class ChangePassword(ServerMessage):
@@ -3104,13 +3100,13 @@ class MessageUsers(ServerMessage):
     Sends a broadcast private message to the given list of online users.
     """
 
-    __slots__ = ("usernames", "msg")
+    __slots__ = ("usernames", "message")
     CODE = 149
 
-    def __init__(self, usernames=None, msg=None):
+    def __init__(self, usernames=None, message=None):
         ServerMessage.__init__(self)
         self.usernames = usernames
-        self.msg = msg
+        self.message = message
 
     def make_network_message(self):
         msg = bytearray()
@@ -3119,7 +3115,7 @@ class MessageUsers(ServerMessage):
         for username in self.usernames:
             msg += self.pack_string(username)
 
-        msg += self.pack_string(self.msg)
+        msg += self.pack_string(self.message)
         return msg
 
 
@@ -3728,30 +3724,30 @@ class UserInfoResponse(PeerMessage):
     A peer responds with this after we've sent a UserInfoRequest.
     """
 
-    __slots__ = ("descr", "pic", "num_upload_slots", "num_queued_uploads", "slot_available",
-                 "upload_permission", "has_pic")
+    __slots__ = ("description", "picture", "num_upload_slots", "num_queued_uploads", "slot_available",
+                 "upload_permission", "has_picture")
     CODE = 16
     EVENT_NAME = "user-info-response"
-    HIDDEN_FIELDS = {"pic"}
+    HIDDEN_FIELDS = {"picture"}
 
-    def __init__(self, descr=None, pic=None, num_upload_slots=None, num_queued_uploads=None,
+    def __init__(self, description=None, picture=None, num_upload_slots=None, num_queued_uploads=None,
                  slot_available=None, upload_permission=None, *, msg_content=None):
         PeerMessage.__init__(self, msg_content)
-        self.descr = descr
-        self.pic = pic
+        self.description = description
+        self.picture = picture
         self.num_upload_slots = num_upload_slots
         self.num_queued_uploads = num_queued_uploads
         self.slot_available = slot_available
         self.upload_permission = upload_permission
-        self.has_pic = None
+        self.has_picture = None
 
     def make_network_message(self):
         msg = bytearray()
-        msg += self.pack_string(self.descr)
+        msg += self.pack_string(self.description)
 
-        if self.pic is not None:
+        if self.picture is not None:
             msg += self.pack_bool(True)
-            msg += self.pack_bytes(self.pic)
+            msg += self.pack_bytes(self.picture)
         else:
             msg += self.pack_bool(False)
 
@@ -3763,11 +3759,11 @@ class UserInfoResponse(PeerMessage):
         return msg
 
     def parse_network_message(self):
-        self.descr = self.unpack_string()
-        self.has_pic = self.unpack_bool()
+        self.description = self.unpack_string()
+        self.has_picture = self.unpack_bool()
 
-        if self.has_pic:
-            self.pic = self.unpack_bytes()
+        if self.has_picture:
+            self.picture = self.unpack_bytes()
 
         self.num_upload_slots = self.unpack_uint32()
         self.num_queued_uploads = self.unpack_uint32()
@@ -4386,18 +4382,18 @@ class DistribChildDepth(DistribMessage):
     OBSOLETE, no longer used
     """
 
-    __slots__ = ("value",)
+    __slots__ = ("depth",)
     CODE = 7
 
-    def __init__(self, value=None, *, msg_content=None):
+    def __init__(self, depth=None, *, msg_content=None):
         DistribMessage.__init__(self, msg_content)
-        self.value = value
+        self.depth = depth
 
     def make_network_message(self):
-        return self.pack_uint32(self.value)
+        return self.pack_uint32(self.depth)
 
     def parse_network_message(self):
-        self.value = self.unpack_uint32()
+        self.depth = self.unpack_uint32()
 
 
 class DistribEmbeddedMessage(DistribMessage):

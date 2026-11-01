@@ -266,8 +266,8 @@ class Users:
                 self.countries[username] = country_code = core.network_filter.get_country_code(msg.ip_address)
                 events.emit("user-country", username, country_code)
 
-            if msg.banner:
-                log.add(msg.banner)
+            if msg.motd:
+                log.add(msg.motd)
 
             core.pluginhandler.server_connect_notification()
             return
@@ -432,7 +432,7 @@ class Users:
         log.add(
             _("Server Announcement (%(date)s): %(message)s") % {
                 "date": time.strftime("%x"),
-                "message": msg.msg
+                "message": msg.message
             },
             title=_("Server Announcement")
         )

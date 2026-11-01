@@ -296,7 +296,7 @@ class Uploads(Transfers):
         events.emit("update-upload-limits")
 
         use_speed_limit = config.sections["transfers"]["use_upload_speed_limit"]
-        limit_by = config.sections["transfers"]["limitby"]
+        limit_by_total = config.sections["transfers"]["limitby"]
 
         if use_speed_limit == "primary":
             speed_limit = config.sections["transfers"]["uploadlimit"]
@@ -307,7 +307,7 @@ class Uploads(Transfers):
         else:
             speed_limit = 0
 
-        core.send_message_to_network_thread(SetUploadLimit(speed_limit, limit_by))
+        core.send_message_to_network_thread(SetUploadLimit(speed_limit, limit_by_total))
         self._check_upload_queue()
 
     # Transfer Actions #

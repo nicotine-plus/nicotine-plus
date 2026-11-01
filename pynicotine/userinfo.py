@@ -65,22 +65,22 @@ class UserInfo:
 
         if permission_level == PermissionLevel.BANNED:
             # Hide most details from banned users
-            pic = None
-            descr = ""
+            picture = None
+            description = ""
             num_upload_slots = num_queued_uploads = upload_permission = 0
             slot_available = False
 
             if reject_reason:
-                descr = f"You are not allowed to download my shared files.\nReason: {reject_reason}"
+                description = f"You are not allowed to download my shared files.\nReason: {reject_reason}"
         else:
             try:
                 with open(encode_path(os.path.expandvars(config.sections["userinfo"]["pic"])), "rb") as file_handle:
-                    pic = file_handle.read()
+                    picture = file_handle.read()
 
             except Exception:
-                pic = None
+                picture = None
 
-            descr = unescape(config.sections["userinfo"]["descr"])
+            description = unescape(config.sections["userinfo"]["descr"])
 
             num_upload_slots = core.uploads.get_total_uploads_allowed()
             num_queued_uploads = core.uploads.get_upload_queue_size(requesting_username)
@@ -92,8 +92,9 @@ class UserInfo:
                 upload_permission = 0
 
         msg = UserInfoResponse(
-            descr=descr, pic=pic, num_upload_slots=num_upload_slots, num_queued_uploads=num_queued_uploads,
-            slot_available=slot_available, upload_permission=upload_permission
+            description=description, picture=picture, num_upload_slots=num_upload_slots,
+            num_queued_uploads=num_queued_uploads, slot_available=slot_available,
+            upload_permission=upload_permission
         )
         msg.username = core.users.login_username or config.sections["server"]["login"]
         return msg

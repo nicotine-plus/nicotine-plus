@@ -739,7 +739,7 @@ class ChatRoom:
         username = user_data.username
         status = user_data.status
         status_icon_name = USER_STATUS_ICON_NAMES.get(status, "")
-        flag_icon_name = get_flag_icon_name(user_data.country)
+        flag_icon_name = get_flag_icon_name(user_data.country_code)
         upload_speed = user_data.upload_speed or 0
         num_files = user_data.num_files or 0
         num_folders = user_data.num_folders or 0

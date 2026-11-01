@@ -56,7 +56,7 @@ class LoginMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = Login(username="test", passwd="s33cr3t", version=157, minorversion=19)
+        obj = Login(username="test", password="s33cr3t", major_version=157, minor_version=19)
 
         # Act
         message = obj.make_network_message()

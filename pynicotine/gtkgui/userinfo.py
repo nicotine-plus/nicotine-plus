@@ -632,9 +632,9 @@ class UserInfo:
         if msg is None:
             return
 
-        if msg.descr is not None:
+        if msg.description is not None:
             self.description_view.clear()
-            self.description_view.add_line(msg.descr)
+            self.description_view.add_line(msg.description)
 
         self.free_upload_slots_label.set_text(_("Yes") if msg.slot_available else _("No"))
         self.upload_slots_label.set_text(humanize(msg.num_upload_slots))
@@ -642,7 +642,7 @@ class UserInfo:
 
         self.queued_uploads_label.get_parent().set_visible(bool(msg.num_queued_uploads))
 
-        self.picture_bytes = msg.pic
+        self.picture_bytes = msg.picture
         self.picture_data = None
 
         if not self.picture_bytes:

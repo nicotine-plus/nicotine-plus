@@ -1478,8 +1478,8 @@ class NetworkThread(Thread):
             if self._parent is None:
                 self._close_parent_candidate_connections()
 
-                self._potential_parents = msg.list
-                log.add_conn("Server sent us a list of %s possible parents", len(msg.list))
+                self._potential_parents = msg.candidates
+                log.add_conn("Server sent us a list of %s possible parents", len(msg.candidates))
 
                 for username, parent_candidate in self._potential_parents.items():
                     log.add_conn("Attempting parent connection to user %s", username)
@@ -2650,19 +2650,19 @@ class NetworkThread(Thread):
                 self._process_conn_incoming_messages(conn)
 
         elif isinstance(msg, SetDownloadLimit):
-            self._download_limit = msg.limit * 1024
+            self._download_limit = msg.speed_limit * 1024
             self._calc_download_limit()
 
         elif isinstance(msg, SetUploadLimit):
-            if msg.limit > 0:
-                if msg.limitby:
+            if msg.speed_limit > 0:
+                if msg.limit_by_total:
                     self._calc_upload_limit_function = self._calc_upload_limit
                 else:
                     self._calc_upload_limit_function = self._calc_upload_limit_by_transfer
             else:
                 self._calc_upload_limit_function = self._calc_upload_limit_none
 
-            self._upload_limit = msg.limit * 1024
+            self._upload_limit = msg.speed_limit * 1024
             self._calc_upload_limit_function()
 
         elif isinstance(msg, AddAllowedResponse):
