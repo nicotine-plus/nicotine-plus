@@ -125,9 +125,9 @@ class ChatRooms:
 
     def _server_disconnect(self, _msg):
 
-        for room_obj in self.joined_rooms.values():
-            room_obj.tickers.clear()
-            room_obj.users.clear()
+        for room in self.joined_rooms.values():
+            room.tickers.clear()
+            room.users.clear()
 
         self.server_rooms.clear()
         self.private_rooms.clear()
@@ -135,10 +135,10 @@ class ChatRooms:
 
     def show_room(self, room_name, is_private=False, switch_page=True, remembered=False):
 
-        room_obj = self.joined_rooms.get(room_name)
+        room = self.joined_rooms.get(room_name)
 
-        if room_obj is None:
-            self.joined_rooms[room_name] = room_obj = JoinedRoom(name=room_name, is_private=is_private)
+        if room is None:
+            self.joined_rooms[room_name] = room = JoinedRoom(name=room_name, is_private=is_private)
 
             if room_name not in config.sections["server"]["autojoin"]:
                 if room_name == self.GLOBAL_ROOM_NAME:
@@ -146,7 +146,7 @@ class ChatRooms:
                 else:
                     config.sections["server"]["autojoin"].append(room_name)
 
-        if not room_obj.users:
+        if not room.users:
             if room_name == self.GLOBAL_ROOM_NAME:
                 core.send_message_to_server(JoinGlobalRoom())
             else:
@@ -166,9 +166,9 @@ class ChatRooms:
         else:
             core.send_message_to_server(LeaveRoom(room_name))
 
-        room_obj = self.joined_rooms.pop(room_name)
+        room = self.joined_rooms.pop(room_name)
 
-        for username in room_obj.users:
+        for username in room.users:
             core.users.unwatch_user(username, context=f"chatrooms_{room_name}")
 
         if is_permanent:
@@ -273,11 +273,11 @@ class ChatRooms:
     def request_update_ticker(self, room_name, message):
         core.send_message_to_server(SetRoomTicker(room_name, message))
 
-    def _update_room_user(self, room_obj, user_data):
+    def _update_room_user(self, room, user_data):
 
         username = user_data.username
-        room_obj.users.add(username)
-        core.users.watch_user(username, context=f"chatrooms_{room_obj.name}", is_implicit=True)
+        room.users.add(username)
+        core.users.watch_user(username, context=f"chatrooms_{room.name}", is_implicit=True)
 
         watched_user = core.users.watched[username]
         watched_user.upload_speed = user_data.upload_speed
@@ -325,21 +325,21 @@ class ChatRooms:
         """Server code 14."""
 
         room_name = msg.room_name
-        room_obj = self.joined_rooms.get(room_name)
+        room = self.joined_rooms.get(room_name)
 
-        if room_obj is None:
+        if room is None:
             # Reject unsolicited room join messages from the server
             core.send_message_to_server(LeaveRoom(room_name))
             raise StopEventPropagation()
 
-        room_obj.is_private = (msg.room_type == RoomType.PRIVATE)
+        room.is_private = (msg.room_type == RoomType.PRIVATE)
         self.server_rooms.add(room_name)
 
-        if room_obj.is_private:
+        if room.is_private:
             self._update_private_room(room_name, owner=msg.owner, operators=msg.operators)
 
         for user_data in msg.users:
-            self._update_room_user(room_obj, user_data)
+            self._update_room_user(room, user_data)
 
         core.pluginhandler.join_chatroom_notification(room_name)
 
@@ -347,15 +347,15 @@ class ChatRooms:
         """Server code 15."""
 
         room_name = msg.room_name
-        room_obj = self.joined_rooms.get(room_name)
+        room = self.joined_rooms.get(room_name)
 
-        if room_obj is None or not room_obj.users:
+        if room is None or not room.users:
             raise StopEventPropagation()
 
-        for username in room_obj.users:
+        for username in room.users:
             core.users.unwatch_user(username, context=f"chatrooms_{room_name}")
 
-        room_obj.users.clear()
+        room.users.clear()
         core.pluginhandler.leave_chatroom_notification(room_name)
 
     def _room_members(self, msg):
@@ -636,25 +636,25 @@ class ChatRooms:
         """Server code 16."""
 
         room_name = msg.room_name
-        room_obj = self.joined_rooms.get(room_name)
+        room = self.joined_rooms.get(room_name)
 
-        if room_obj is None or not room_obj.users:
+        if room is None or not room.users:
             raise StopEventPropagation()
 
-        self._update_room_user(room_obj, msg.user_data)
+        self._update_room_user(room, msg.user_data)
         core.pluginhandler.user_join_chatroom_notification(room_name, msg.user_data.username)
 
     def _user_left_room(self, msg):
         """Server code 17."""
 
         room_name = msg.room_name
-        room_obj = self.joined_rooms.get(room_name)
+        room = self.joined_rooms.get(room_name)
 
-        if room_obj is None or not room_obj.users:
+        if room is None or not room.users:
             raise StopEventPropagation()
 
         username = msg.username
-        room_obj.users.discard(username)
+        room.users.discard(username)
         core.users.unwatch_user(username, context=f"chatrooms_{room_name}")
 
         core.pluginhandler.user_leave_chatroom_notification(room_name, username)
@@ -662,12 +662,12 @@ class ChatRooms:
     def _room_tickers(self, msg):
         """Server code 113."""
 
-        room_obj = self.joined_rooms.get(msg.room_name)
+        room = self.joined_rooms.get(msg.room_name)
 
-        if room_obj is None or not room_obj.users:
+        if room is None or not room.users:
             raise StopEventPropagation()
 
-        room_obj.tickers.clear()
+        room.tickers.clear()
 
         for username, message in msg.tickers:
             if core.network_filter.is_user_ignored(username) or \
@@ -675,14 +675,14 @@ class ChatRooms:
                 # User ignored, ignore ticker message
                 continue
 
-            room_obj.tickers[username] = message
+            room.tickers[username] = message
 
     def _room_ticker_added(self, msg):
         """Server code 114."""
 
-        room_obj = self.joined_rooms.get(msg.room_name)
+        room = self.joined_rooms.get(msg.room_name)
 
-        if room_obj is None or not room_obj.users:
+        if room is None or not room.users:
             raise StopEventPropagation()
 
         username = msg.username
@@ -691,17 +691,17 @@ class ChatRooms:
             # User ignored, ignore Ticker messages
             return
 
-        room_obj.tickers[username] = msg.content
+        room.tickers[username] = msg.content
 
     def _room_ticker_removed(self, msg):
         """Server code 115."""
 
-        room_obj = self.joined_rooms.get(msg.room_name)
+        room = self.joined_rooms.get(msg.room_name)
 
-        if room_obj is None or not room_obj.users:
+        if room is None or not room.users:
             raise StopEventPropagation()
 
-        room_obj.tickers.pop(msg.username, None)
+        room.tickers.pop(msg.username, None)
 
     def update_completions(self):
 
