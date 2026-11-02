@@ -221,7 +221,7 @@ jobs:
         uses: cross-platform-actions/action@82668f1fbd89d9c99487604f822cbf6716f124d3 # v1.7.0
         with:
           operating_system: openbsd
-          version: '7.9'
+          version: '8.0'
           environment_variables: NICOTINE_NETWORK_TESTS
 
       - name: Install dependencies
