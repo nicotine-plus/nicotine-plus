@@ -17,7 +17,6 @@ import time
 from collections import defaultdict
 from queue import Empty, SimpleQueue
 from threading import Thread
-from typing import Literal
 from typing import TYPE_CHECKING
 
 from pynicotine.events import events

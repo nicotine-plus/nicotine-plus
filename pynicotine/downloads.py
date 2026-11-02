@@ -57,7 +57,6 @@ from pynicotine.utils import safe_path_join
 from pynicotine.utils import truncate_string_byte
 
 if TYPE_CHECKING:
-    from pynicotine.slskmessages import FileTransferInit
     from pynicotine.slskmessages import GetUserStatus
     from pynicotine.slskmessages import Login
     from pynicotine.slskmessages import PlaceInQueueResponse

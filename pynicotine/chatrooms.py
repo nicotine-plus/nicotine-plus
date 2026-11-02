@@ -296,7 +296,7 @@ class ChatRooms:
     def request_update_ticker(self, room_name, message) -> None:
         core.send_message_to_server(SetRoomTicker(room_name, message))
 
-    def _update_room_user(self, room, user_data) -> None:
+    def _update_room_user(self, room, user_data: UserData) -> None:
 
         username = user_data.username
         room.users.add(username)

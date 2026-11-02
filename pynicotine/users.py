@@ -27,8 +27,6 @@ from pynicotine.utils import human_duration_approx
 from pynicotine.utils import open_uri
 
 if TYPE_CHECKING:
-    from typing import Literal
-
     from pynicotine.slskmessages import AdminMessage
     from pynicotine.slskmessages import ConnectToPeer
     from pynicotine.slskmessages import Login

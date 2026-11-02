@@ -331,7 +331,7 @@ class PrivateChat:
 
         self.send_message(username, reply)
 
-    def _get_peer_address(self, msg) -> None:
+    def _get_peer_address(self, msg: GetPeerAddress) -> None:
         """Server code 3.
 
         Received a user's IP address, process any queued private
