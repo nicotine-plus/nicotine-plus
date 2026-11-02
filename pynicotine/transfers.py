@@ -15,6 +15,7 @@ import time
 
 from ast import literal_eval
 from collections import defaultdict
+from enum import StrEnum
 from os.path import normpath
 
 from pynicotine.config import config
@@ -30,7 +31,7 @@ from pynicotine.utils import load_file
 from pynicotine.utils import write_file_and_backup
 
 
-class TransferStatus:
+class TransferStatus(StrEnum):
     QUEUED = "Queued"
     GETTING_STATUS = "Getting status"
     TRANSFERRING = "Transferring"
