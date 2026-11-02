@@ -1,6 +1,9 @@
 # SPDX-FileCopyrightText: 2020-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from dataclasses import dataclass
+from dataclasses import field
+
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -28,26 +31,20 @@ from pynicotine.utils import find_whole_word
 from pynicotine.utils import replace_text
 
 
+@dataclass(slots=True, eq=False)
 class JoinedRoom:
-    __slots__ = ("name", "is_private", "users", "tickers")
-
-    def __init__(self, name, is_private=False):
-
-        self.name = name
-        self.is_private = is_private
-        self.users = set()
-        self.tickers = {}
+    name: str
+    is_private: bool = False
+    users: set[str] = field(default_factory=set)
+    tickers: dict[str, str] = field(default_factory=dict)
 
 
+@dataclass(slots=True, eq=False)
 class PrivateRoom:
-    __slots__ = ("name", "owner", "members", "operators")
-
-    def __init__(self, name):
-
-        self.name = name
-        self.owner = None
-        self.members = set()
-        self.operators = set()
+    name: str
+    owner: str | None = None
+    members: set[str] = field(default_factory=set)
+    operators: set[str] = field(default_factory=set)
 
 
 class ChatRooms:

@@ -11,6 +11,7 @@ import os
 import re
 
 from collections import deque
+from dataclasses import dataclass
 from itertools import islice
 
 from gi.repository import GLib
@@ -42,6 +43,7 @@ from pynicotine.gtkgui.widgets.treeview import create_grouping_menu
 from pynicotine.logfacility import log
 from pynicotine.search import ResultFilterMode
 from pynicotine.shares import FileTypes
+from pynicotine.slskmessages import FileAttributes
 from pynicotine.slskmessages import FileListMessage
 from pynicotine.utils import factorize
 from pynicotine.utils import humanize
@@ -49,13 +51,11 @@ from pynicotine.utils import human_size
 from pynicotine.utils import human_speed
 
 
+@dataclass(slots=True, eq=False)
 class SearchResultFile:
-    __slots__ = ("path", "attributes", "is_downloading")
-
-    def __init__(self, path, attributes=None, is_downloading=False):
-        self.path = path
-        self.attributes = attributes
-        self.is_downloading = is_downloading
+    path: str
+    attributes: FileAttributes | None = None
+    is_downloading: bool = False
 
 
 class Searches(IconNotebook):

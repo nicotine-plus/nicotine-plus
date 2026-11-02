@@ -3,6 +3,8 @@
 
 import time
 
+from dataclasses import dataclass
+
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -10,21 +12,16 @@ from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 
 
+@dataclass(slots=True, eq=False)
 class Buddy:
-    __slots__ = ("username", "note", "notify_status", "is_prioritized", "is_trusted", "last_seen",
-                 "country", "status")
-
-    def __init__(self, username, note, notify_status, is_prioritized, is_trusted, last_seen,
-                 country, status):
-
-        self.username = username
-        self.note = note
-        self.notify_status = notify_status
-        self.is_prioritized = is_prioritized
-        self.is_trusted = is_trusted
-        self.last_seen = last_seen
-        self.country = country
-        self.status = status
+    username: str
+    note: str
+    notify_status: bool
+    is_prioritized: bool
+    is_trusted: bool
+    last_seen: str
+    country: str
+    status: UserStatus
 
 
 class Buddies:
