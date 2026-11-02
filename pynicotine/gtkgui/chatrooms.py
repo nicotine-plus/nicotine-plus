@@ -393,8 +393,8 @@ class ChatRooms(IconNotebook):
         self.join_room_combobox.freeze()
         self.join_room_combobox.clear()
 
-        for room_name, _user_count in chain(msg.rooms, msg.rooms_owner, msg.rooms_member):
-            self.join_room_combobox.append(room_name)
+        for room_stats in chain(msg.rooms, msg.rooms_owner, msg.rooms_member):
+            self.join_room_combobox.append(room_stats.name)
 
         self.join_room_combobox.unfreeze()
 
