@@ -6,6 +6,8 @@ from __future__ import annotations
 import re
 import time
 
+from enum import StrEnum
+
 import pynicotine
 from pynicotine.config import config
 from pynicotine.core import core
@@ -28,6 +30,11 @@ from pynicotine.utils import (
     find_whole_word,
     replace_text
 )
+
+
+class MessageTarget(StrEnum):
+    BUDDIES = "buddies"
+    DOWNLOADING = "downloading"
 
 
 class PrivateChat:
@@ -141,17 +148,17 @@ class PrivateChat:
 
         events.emit("message-user", MessageUser(username=username, message=message))
 
-    def send_message_users(self, target: str, message: str) -> None:
+    def send_message_users(self, target: MessageTarget, message: str) -> None:
 
         if not message:
             return
 
         users = None
 
-        if target == "buddies":
+        if target == MessageTarget.BUDDIES:
             users = set(core.buddies.users)
 
-        elif target == "downloading":
+        elif target == MessageTarget.DOWNLOADING:
             users = core.uploads.get_downloading_users()
 
         if users:

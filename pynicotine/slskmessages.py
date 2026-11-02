@@ -17,6 +17,7 @@ except ImportError:
 
 from collections.abc import Callable
 from dataclasses import dataclass, field, fields
+from enum import IntEnum, StrEnum
 from operator import attrgetter, itemgetter
 from random import randint
 from socket import inet_aton, inet_ntoa, socket
@@ -80,7 +81,7 @@ def increment_token(token: int) -> int:
 # Constants #
 
 
-class MessageType:
+class MessageType(StrEnum):
     INTERNAL = "N"
     INIT = "I"
     SERVER = "S"
@@ -89,18 +90,18 @@ class MessageType:
     DISTRIBUTED = "D"
 
 
-class ConnectionType:
+class ConnectionType(StrEnum):
     PEER = "P"
     FILE = "F"
     DISTRIBUTED = "D"
 
 
-class ObfuscationType:
+class ObfuscationType(IntEnum):
     NONE = 0
     ROTATED = 1
 
 
-class LoginRejectReason:
+class LoginRejectReason(StrEnum):
     INVALID_USERNAME = "INVALIDUSERNAME"
     EMPTY_PASSWORD = "EMPTYPASSWORD"
     INVALID_PASSWORD = "INVALIDPASS"
@@ -109,23 +110,23 @@ class LoginRejectReason:
     SERVER_PRIVATE = "SVRPRIVATE"
 
 
-class UserStatus:
+class UserStatus(IntEnum):
     OFFLINE = 0
     AWAY = 1
     ONLINE = 2
 
 
-class RoomType:
+class RoomType(IntEnum):
     PUBLIC = 0
     PRIVATE = 1
 
 
-class TransferDirection:
+class TransferDirection(IntEnum):
     DOWNLOAD = 0
     UPLOAD = 1
 
 
-class TransferRejectReason:
+class TransferRejectReason(StrEnum):
     QUEUED = "Queued"
     COMPLETE = "Complete"
     CANCELLED = "Cancelled"
@@ -138,7 +139,7 @@ class TransferRejectReason:
     DISALLOWED_EXTENSION = "Disallowed extension"
 
 
-class FileAttribute:
+class FileAttribute(IntEnum):
     BITRATE = 0
     LENGTH = 1
     VBR = 2
@@ -147,7 +148,7 @@ class FileAttribute:
     BIT_DEPTH = 5
 
 
-class ParentStatus:
+class ParentStatus(IntEnum):
     ACCEPTED = 0
     WAITING = 1
     REJECTED = 2

@@ -15,7 +15,7 @@ from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.search import ResultFilterMode
+from pynicotine.search import ResultFilterMode, SearchMode
 from pynicotine.utils import human_duration_approx
 
 
@@ -335,7 +335,7 @@ class WishList(Dialog):
             old_filters_visible = config.sections["searches"]["filters_visible"]
 
             config.sections["searches"]["filters_visible"] = True
-            core.search.do_search(wish, mode="wishlist")
+            core.search.do_search(wish, mode=SearchMode.WISHLIST)
 
             config.sections["searches"]["filters_visible"] = old_filters_visible
             self.close()
@@ -345,7 +345,7 @@ class WishList(Dialog):
 
         for iterator in self.list_view.get_selected_rows():
             wish = self.list_view.get_row_value(iterator, "wish")
-            core.search.do_search(wish, mode="wishlist")
+            core.search.do_search(wish, mode=SearchMode.WISHLIST)
             return
 
     def on_reset_filters(self, *_args):

@@ -13,6 +13,7 @@ import os
 import time
 
 from dataclasses import dataclass, field
+from enum import StrEnum
 from itertools import islice
 from operator import itemgetter
 from shlex import shlex
@@ -49,7 +50,15 @@ from pynicotine.utils import (
 )
 
 
-class ResultFilterMode:
+class SearchMode(StrEnum):
+    GLOBAL = "global"
+    ROOMS = "rooms"
+    BUDDIES = "buddies"
+    USER = "user"
+    WISHLIST = "wishlist"
+
+
+class ResultFilterMode(StrEnum):
     NONE = "none"
     CUSTOM = "custom"
 
@@ -62,7 +71,7 @@ class SearchRequest:
     term_transmitted: str
     included_words: list[str]
     excluded_words: list[str]
-    mode: str
+    mode: SearchMode
     room: str | None = None
     users: list[str] = field(default_factory=list)
 
@@ -74,8 +83,8 @@ class WishSearchRequest(SearchRequest):
     time_added: int
     custom_filters: list[str | bool] = field(default_factory=list)
     ignored_users: set[str] = field(default_factory=set)
-    mode: str = "wishlist"
     is_ignored: bool = True
+    mode: SearchMode = field(init=False, default=SearchMode.WISHLIST)
 
     @property
     def num_active_filters(self) -> int:
@@ -222,7 +231,8 @@ class Search:
         core.send_message_to_network_thread(RemoveAllowedResponse(FileSearchResponse, token))
 
     def do_search(
-        self, search_term: str, mode, room: str | None = None, users: list[str] | None = None, switch_page: bool = True
+        self, search_term: str, mode: SearchMode, room: str | None = None, users: list[str] | None = None,
+        switch_page: bool = True
     ) -> None:
 
         # Validate search term and run it through plugins
@@ -260,16 +270,16 @@ class Search:
 
         self.add_allowed_token(token)
 
-        if search.mode in {"global", "wishlist"}:
+        if search.mode in {SearchMode.GLOBAL, SearchMode.WISHLIST}:
             self._send_global_search_request(search)
 
-        elif search.mode == "rooms":
+        elif search.mode == SearchMode.ROOMS:
             self._send_rooms_search_request(search)
 
-        elif search.mode == "buddies":
+        elif search.mode == SearchMode.BUDDIES:
             self._send_buddies_search_request(search)
 
-        elif search.mode == "user":
+        elif search.mode == SearchMode.USER:
             self._send_peer_search_request(search)
 
     def remove_search(self, token: int) -> None:
@@ -357,7 +367,7 @@ class Search:
     def is_wish(self, wish) -> bool:
         return wish in self.wishlist
 
-    def _add_search(self, token: int, search_term: str, mode, room=None, users=None) -> SearchRequest:
+    def _add_search(self, token: int, search_term: str, mode: SearchMode, room=None, users=None) -> SearchRequest:
 
         term_sanitized, term_transmitted, included_words, excluded_words = self._sanitize_search_term(search_term)
 
@@ -376,8 +386,9 @@ class Search:
         return search
 
     def _add_wish_search(
-        self, token: int, search_term: str, auto_search: bool = True, filter_mode=ResultFilterMode.NONE,
-        time_added=None, custom_filters=None, ignored_users=None
+        self, token: int, search_term: str, auto_search: bool = True,
+        filter_mode: ResultFilterMode = ResultFilterMode.NONE, time_added=None,
+        custom_filters=None, ignored_users=None
     ) -> WishSearchRequest:
 
         term_sanitized, term_transmitted, included_words, excluded_words = self._sanitize_search_term(search_term)
@@ -470,17 +481,17 @@ class Search:
 
         return search_term, search_term_transmitted, included_words, excluded_words
 
-    def _process_search_term(self, search_term: str, mode, room=None, users=None):
+    def _process_search_term(self, search_term: str, mode: SearchMode, room=None, users=None):
 
         search_term = search_term.strip()
 
-        if mode == "global":
+        if mode == SearchMode.GLOBAL:
             feedback = core.pluginhandler.outgoing_global_search_event(search_term)
 
             if feedback is not None:
                 search_term = feedback[0]
 
-        elif mode == "rooms":
+        elif mode == SearchMode.ROOMS:
             if not room:
                 room = next(iter(config.defaults["server"]["autojoin"]), None)
 
@@ -489,13 +500,13 @@ class Search:
             if feedback is not None:
                 room, search_term = feedback
 
-        elif mode == "buddies":
+        elif mode == SearchMode.BUDDIES:
             feedback = core.pluginhandler.outgoing_buddy_search_event(search_term)
 
             if feedback is not None:
                 search_term = feedback[0]
 
-        elif mode == "user":
+        elif mode == SearchMode.USER:
             if not users:
                 users = [core.users.login_username or config.sections["server"]["login"]]
 
@@ -504,14 +515,11 @@ class Search:
             if feedback is not None:
                 users, search_term = feedback
 
-        elif mode == "wishlist":
+        elif mode == SearchMode.WISHLIST:
             feedback = core.pluginhandler.outgoing_wishlist_search_event(search_term)
 
             if feedback is not None:
                 search_term = feedback[0]
-
-        else:
-            log.add("Unknown search mode, not using plugin system. Fix me!")
 
         return search_term, room, users
 
@@ -548,7 +556,7 @@ class Search:
 
     def _do_wishlist_search(self, search: SearchRequest) -> None:
 
-        search_term, _room, _users = self._process_search_term(search.term_transmitted, mode="wishlist")
+        search_term, _room, _users = self._process_search_term(search.term_transmitted, mode=SearchMode.WISHLIST)
 
         if not search_term:
             return

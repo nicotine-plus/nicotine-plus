@@ -365,11 +365,6 @@ class NetworkThread(Thread):
     TCP_BUFFER_SIZE_MEDIUM = 208896              # 204 KiB, maximum limit NetBSD accepts by default
     TCP_BUFFER_SIZE_SMALL = 16384                # 16 KiB
     MAX_ACCEPTED_USERNAME_SIZE = 256             # 256 bytes, for future flexibility beyond the actual 30 byte limit
-    ALLOWED_PEER_CONN_TYPES = {
-        ConnectionType.PEER,
-        ConnectionType.FILE,
-        ConnectionType.DISTRIBUTED
-    }
 
     # Looping max ~240 times per second (SLEEP_MIN_IDLE) on high activity
     # ~20 (SLEEP_MAX_IDLE + SLEEP_MIN_IDLE) by default
@@ -1444,7 +1439,7 @@ class NetworkThread(Thread):
             log.add_conn("Received indirect connection request of type %s from user %s, "
                          "token %s, address %s", (conn_type, username, pierce_token, addr))
 
-            if conn_type in self.ALLOWED_PEER_CONN_TYPES:
+            if conn_type in ConnectionType.__members__.values():
                 init = PeerInit(target_username=username, conn_type=conn_type)
                 self._connect_to_peer(username, addr, init, pierce_token=pierce_token)
             else:
@@ -1741,7 +1736,7 @@ class NetworkThread(Thread):
                              "due to invalid username: %r", (addr, username))
                 return None
 
-            if conn_type not in self.ALLOWED_PEER_CONN_TYPES:
+            if conn_type not in ConnectionType.__members__.values():
                 log.add_conn("Rejected incoming direct connection from address %s due to "
                              "unknown connection type: %r", (addr, conn_type))
                 return None

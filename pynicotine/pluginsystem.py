@@ -14,6 +14,7 @@ import time
 
 from ast import literal_eval
 from collections import defaultdict
+from enum import StrEnum
 from zipfile import ZipFile
 
 from pynicotine.config import config
@@ -21,6 +22,12 @@ from pynicotine.core import Core, core
 from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.utils import encode_path
+
+
+class CommandInterface(StrEnum):
+    CHATROOM = "chatroom"
+    PRIVATE_CHAT = "private_chat"
+    CLI = "cli"
 
 
 returncode = {
@@ -276,10 +283,10 @@ class BasePlugin:
 
         command_interface, source = self.parent.command_source
 
-        if command_interface == "cli":
+        if command_interface == CommandInterface.CLI:
             return
 
-        func = self.send_public if command_interface == "chatroom" else self.send_private
+        func = self.send_public if command_interface == CommandInterface.CHATROOM else self.send_private
         func(source, message)
 
     def echo_message(self, message: str, message_type: str = "local") -> None:
@@ -292,11 +299,11 @@ class BasePlugin:
 
         command_interface, source = self.parent.command_source
 
-        if command_interface == "cli":
+        if command_interface == CommandInterface.CLI:
             log.add_command(message)
             return
 
-        func = self.echo_public if command_interface == "chatroom" else self.echo_private
+        func = self.echo_public if command_interface == CommandInterface.CHATROOM else self.echo_private
         func(source, message, message_type)
 
     def output(self, message: str) -> None:
@@ -401,9 +408,9 @@ class PluginHandler:
         self.loaded_plugins = {}
         self.command_source = None
         self.commands = {
-            "chatroom": {},
-            "private_chat": {},
-            "cli": {}
+            CommandInterface.CHATROOM: {},
+            CommandInterface.PRIVATE_CHAT: {},
+            CommandInterface.CLI: {}
         }
         self._load_now_playing_sender = (
             not isolated_mode
@@ -459,7 +466,7 @@ class PluginHandler:
 
     def update_completions(self, plugin) -> None:
 
-        events.emit("cli-completions", self.get_command_list("private_chat"))
+        events.emit("cli-completions", self.get_command_list(CommandInterface.PRIVATE_CHAT))
 
         if not config.sections["words"]["commands"]:
             return
@@ -704,8 +711,8 @@ class PluginHandler:
 
             # Legacy commands
             for command_interface, attribute_name, plugin_commands in (
-                ("chatroom", "__publiccommands__", plugin.__publiccommands__),
-                ("private_chat", "__privatecommands__", plugin.__privatecommands__)
+                (CommandInterface.CHATROOM, "__publiccommands__", plugin.__publiccommands__),
+                (CommandInterface.PRIVATE_CHAT, "__privatecommands__", plugin.__privatecommands__)
             ):
                 interface_commands = self.commands.get(command_interface)
 
@@ -753,8 +760,8 @@ class PluginHandler:
 
             # Legacy commands
             for command_interface, plugin_commands in (
-                ("chatroom", plugin.__publiccommands__),
-                ("private_chat", plugin.__privatecommands__)
+                (CommandInterface.CHATROOM, plugin.__publiccommands__),
+                (CommandInterface.PRIVATE_CHAT, plugin.__privatecommands__)
             ):
                 interface_commands = self.commands.get(command_interface)
 
@@ -1001,15 +1008,15 @@ class PluginHandler:
                 continue
 
             if room is not None:
-                self.command_source = ("chatroom", room)
+                self.command_source = (CommandInterface.CHATROOM, room)
                 legacy_commands = plugin.__publiccommands__
 
             elif user is not None:
-                self.command_source = ("private_chat", user)
+                self.command_source = (CommandInterface.PRIVATE_CHAT, user)
                 legacy_commands = plugin.__privatecommands__
 
             else:
-                self.command_source = ("cli", None)
+                self.command_source = (CommandInterface.CLI, None)
                 legacy_commands = []
 
             try:

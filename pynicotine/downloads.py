@@ -58,7 +58,12 @@ from pynicotine.slskmessages import (
     increment_token,
     initial_token
 )
-from pynicotine.transfers import Transfer, Transfers, TransferStatus
+from pynicotine.transfers import (
+    StatType,
+    Transfer,
+    Transfers,
+    TransferStatus
+)
 from pynicotine.utils import (
     REPLACEMENTCHAR,
     execute_command,
@@ -528,7 +533,7 @@ class Downloads(Transfers):
             log.add_transfer("File %s is already downloaded", virtual_path)
             return
 
-        core.statistics.append_stat_value("completed_downloads", 1)
+        core.statistics.append_stat_value(StatType.COMPLETED_DOWNLOADS, 1)
 
         # Attempt to show notification and execute commands
         self._file_downloaded_actions(username, download_file_path)
@@ -1231,7 +1236,7 @@ class Downloads(Transfers):
             download.last_byte_offset = offset
             download.start_time = time.monotonic() - download.time_elapsed
 
-            core.statistics.append_stat_value("started_downloads", 1)
+            core.statistics.append_stat_value(StatType.STARTED_DOWNLOADS, 1)
 
             log.add_download(
                 _("Download started: user %(user)s, file %(file)s"), {
@@ -1271,7 +1276,7 @@ class Downloads(Transfers):
         if download is None:
             return
 
-        if reason in TransferStatus.__dict__.values():
+        if reason in TransferStatus.__members__.values():
             # Don't allow internal statuses as reason
             reason = TransferRejectReason.CANCELLED
 
@@ -1354,7 +1359,7 @@ class Downloads(Transfers):
             return
 
         if self._update_transfer_progress(
-            download, sock=sock, stat_id="downloaded_size",
+            download, sock=sock, stat_id=StatType.DOWNLOADED_SIZE,
             current_byte_offset=(download.size - bytes_left), speed=speed
         ):
             self._update_transfer(download)
