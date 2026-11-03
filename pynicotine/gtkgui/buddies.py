@@ -316,7 +316,6 @@ class Buddies:
         upload_speed = stats.upload_speed or 0
         num_files = stats.num_files or 0
         num_folders = stats.num_folders or 0
-        h_num_files = humanize(num_files)
         column_ids = []
         column_values = []
 
@@ -326,7 +325,9 @@ class Buddies:
             column_ids.extend(("speed", "speed_data"))
             column_values.extend((h_upload_speed, upload_speed))
 
-        if h_num_files != self.list_view.get_row_value(iterator, "files"):
+        if num_files != self.list_view.get_row_value(iterator, "files_data"):
+            h_num_files = humanize(num_files)
+
             column_ids.extend(("files", "files_data"))
             column_values.extend((h_num_files, num_files))
 
