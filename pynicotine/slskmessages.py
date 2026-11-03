@@ -20,6 +20,7 @@ from operator import itemgetter
 from random import randint
 from socket import inet_aton, inet_ntoa, socket
 from struct import Struct
+from typing import NamedTuple
 
 from pynicotine.utils import (
     UINT32_LIMIT,
@@ -141,7 +142,12 @@ class ParentStatus:
     REJECTED = 2
 
 
-# Data Classes #
+# Structures #
+
+
+class Address(NamedTuple):
+    ip: str
+    port: int
 
 
 @dataclass(slots=True, eq=False)
@@ -231,7 +237,7 @@ class SharedFile:
 @dataclass(slots=True, eq=False)
 class ParentCandidate:
     username: str
-    addr: tuple[str, int]
+    addr: Address
     sock: socket | None = None
     branch_root: str | None = None
     branch_level: int | None = None
@@ -2262,12 +2268,13 @@ class PossibleParents(ServerMessage):
 
         for _ in range(num_candidates):
             username = self.unpack_string()
-            ip_address = self.unpack_ip()
-            port = self.unpack_uint32()
 
             self.candidates[username] = ParentCandidate(
                 username=username,
-                addr=(ip_address, port)
+                addr=Address(
+                    ip=self.unpack_ip(),
+                    port=self.unpack_uint32()
+                )
             )
 
 

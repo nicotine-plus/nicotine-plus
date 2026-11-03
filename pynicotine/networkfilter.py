@@ -420,8 +420,7 @@ class NetworkFilter:
             online_address = core.users.addresses.get(username)
 
             if online_address:
-                online_ip_address, _port = online_address
-                ip_addresses.add(online_ip_address)
+                ip_addresses.add(online_address.ip)
 
         elif request_action == "remove":
             # Remove all known IP addresses for user
@@ -505,7 +504,7 @@ class NetworkFilter:
                 # Username not listed and is offline, so we can't filter it
                 return False
 
-            ip_address, _port = address
+            ip_address = address.ip
 
         if ip_address in ip_list:
             # IP filtered

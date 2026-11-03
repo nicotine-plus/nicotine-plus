@@ -18,6 +18,7 @@ from pynicotine.events import events
 from pynicotine.i18n import LOCALE_PATH
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import (
+    Address,
     InternalMessage,
     ServerConnect,
     ServerDisconnect,
@@ -283,7 +284,7 @@ class Core:
         events.emit("enable-message-queue")
 
         self.send_message_to_network_thread(ServerConnect(
-            addr=config.sections["server"]["server"],
+            addr=Address(*config.sections["server"]["server"]),
             username=config.sections["server"]["login"],
             password=config.sections["server"]["passw"],
             interface_name=config.sections["server"]["interface"],

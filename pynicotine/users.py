@@ -13,6 +13,7 @@ from pynicotine.core import core
 from pynicotine.events import StopEventPropagation, events
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import (
+    Address,
     AdminMessage,
     ChangePassword,
     CheckPrivileges,
@@ -63,7 +64,7 @@ class Users:
         self.privileges_left = None
         self._should_open_privileges_url = False
 
-        self.addresses = {}
+        self.addresses: dict[str, Address] = {}
         self.countries = {}
         self.statuses = {}
         self.watched = {}
@@ -317,7 +318,7 @@ class Users:
             # address.
 
             if username != self.login_username:
-                self.addresses[username] = (ip_address, msg.port)
+                self.addresses[username] = Address(ip_address, msg.port)
 
             self.countries[username] = watched_user.stats.country_code = country_code
             events.emit("user-country", username, country_code)
