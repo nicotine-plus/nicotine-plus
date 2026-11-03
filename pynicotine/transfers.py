@@ -32,6 +32,8 @@ from pynicotine.utils import write_file_and_backup
 
 class TransferStatus:
     QUEUED = "Queued"
+    QUEUED_PRIORITIZED = "Queued (prioritized)"
+    QUEUED_PRIVILEGED = "Queued (privileged)"
     GETTING_STATUS = "Getting status"
     TRANSFERRING = "Transferring"
     PAUSED = "Paused"
@@ -51,7 +53,7 @@ class Transfer:
     __slots__ = ("sock", "username", "virtual_path",
                  "folder_path", "token", "size", "file_handle", "start_time",
                  "current_byte_offset", "last_byte_offset", "transferred_bytes_total",
-                 "speed", "avg_speed", "time_elapsed", "time_left", "modifier",
+                 "speed", "avg_speed", "time_elapsed", "time_left",
                  "queue_position", "file_attributes", "iterator", "status",
                  "legacy_attempt", "retry_attempt", "size_changed", "is_backslash_path",
                  "is_lowercase_path", "request_timer_id")
@@ -70,7 +72,6 @@ class Transfer:
         self.file_handle = None
         self.token = None
         self.queue_position = 0
-        self.modifier = None
         self.request_timer_id = None
         self.start_time = None
         self.last_byte_offset = None

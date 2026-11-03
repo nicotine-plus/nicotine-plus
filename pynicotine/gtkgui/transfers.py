@@ -44,8 +44,8 @@ class Transfers:
 
     STATUSES = {
         TransferStatus.QUEUED: _("Queued"),
-        f"{TransferStatus.QUEUED} (prioritized)": _("Queued (prioritized)"),
-        f"{TransferStatus.QUEUED} (privileged)": _("Queued (privileged)"),
+        TransferStatus.QUEUED_PRIORITIZED: _("Queued (prioritized)"),
+        TransferStatus.QUEUED_PRIVILEGED: _("Queued (privileged)"),
         TransferStatus.GETTING_STATUS: _("Getting status"),
         TransferStatus.TRANSFERRING: _("Transferring"),
         TransferStatus.CONNECTION_CLOSED: _("Connection closed"),
@@ -68,8 +68,8 @@ class Transfers:
         TransferStatus.PAUSED: 2,
         TransferStatus.CANCELLED: 3,
         TransferStatus.QUEUED: 4,
-        f"{TransferStatus.QUEUED} (prioritized)": 4,
-        f"{TransferStatus.QUEUED} (privileged)": 4,
+        TransferStatus.QUEUED_PRIORITIZED: 4,
+        TransferStatus.QUEUED_PRIVILEGED: 4,
         TransferStatus.USER_LOGGED_OFF: 5,
         TransferStatus.CONNECTION_CLOSED: 6,
         TransferStatus.CONNECTION_TIMEOUT: 7,
@@ -650,11 +650,6 @@ class Transfers:
         current_byte_offset = transfer.current_byte_offset or 0
         queue_position = transfer.queue_position
         status = transfer.status or ""
-
-        if transfer.modifier and status == TransferStatus.QUEUED:
-            # Priority status
-            status += f" ({transfer.modifier})"
-
         translated_status = self.translate_status(status)
         size = transfer.size
         speed = transfer.speed
