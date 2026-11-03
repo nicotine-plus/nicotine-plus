@@ -153,7 +153,7 @@ class SimilarUser:
 @dataclass(slots=True, eq=False)
 class UserStats:
     username: str
-    status: UserStatus = UserStatus.OFFLINE
+    status: UserStatus | None = None
     upload_speed: int = 0
     upload_number: int = 0
     unknown: int = 0

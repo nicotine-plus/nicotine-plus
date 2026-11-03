@@ -740,7 +740,7 @@ class ChatRoom:
         if stats is None:
             stats = UserStats()
 
-        status = stats.status
+        status = stats.status or UserStatus.OFFLINE
         status_icon_name = USER_STATUS_ICON_NAMES.get(status, "")
         flag_icon_name = get_flag_icon_name(stats.country_code)
         upload_speed = stats.upload_speed or 0
