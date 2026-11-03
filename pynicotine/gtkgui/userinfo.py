@@ -662,9 +662,10 @@ class UserInfo:
 
     def user_stats(self, msg):
 
-        upload_speed = msg.upload_speed or 0
-        num_files = msg.num_files or 0
-        num_folders = msg.num_folders or 0
+        stats = msg.stats
+        upload_speed = stats.upload_speed or 0
+        num_files = stats.num_files or 0
+        num_folders = stats.num_folders or 0
 
         h_upload_speed = human_speed(upload_speed) if upload_speed > 0 else _("Unknown")
         h_num_files = humanize(num_files)

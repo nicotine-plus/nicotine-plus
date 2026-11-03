@@ -20,6 +20,7 @@ try:
 except ImportError:
     from hashlib import md5
 
+from dataclasses import dataclass
 from collections import defaultdict
 from typing import TYPE_CHECKING
 
@@ -66,15 +67,13 @@ if TYPE_CHECKING:
     from pynicotine.slskmessages import UploadFailed
 
 
+@dataclass(slots=True, eq=False)
 class RequestedFolder:
-    __slots__ = ("username", "folder_path", "request_timer_id", "has_retried", "legacy_attempt")
-
-    def __init__(self, username: str, folder_path: str):
-        self.username = username
-        self.folder_path = folder_path
-        self.request_timer_id = None
-        self.has_retried = False
-        self.legacy_attempt = False
+    username: str
+    folder_path: str
+    request_timer_id: int | None = None
+    has_retried: bool = False
+    legacy_attept: bool = False
 
 
 class Downloads(Transfers):

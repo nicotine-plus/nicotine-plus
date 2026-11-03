@@ -5,6 +5,9 @@ from typing import TYPE_CHECKING
 
 import time
 
+from dataclasses import dataclass
+from dataclasses import field
+
 import pynicotine
 from pynicotine.config import config
 from pynicotine.core import core
@@ -34,18 +37,14 @@ if TYPE_CHECKING:
     from pynicotine.slskmessages import ServerDisconnect
 
 
+@dataclass(slots=True, eq=False)
 class WatchedUser:
-
-    __slots__ = ("username", "upload_speed", "num_files", "num_folders", "contexts", "is_implicit")
-
-    def __init__(self, username: str):
-
-        self.username = username
-        self.upload_speed = None
-        self.num_files = None
-        self.num_folders = None
-        self.contexts = set()
-        self.is_implicit = True
+    username: str
+    upload_speed: int | None = None
+    num_files: int | None = None
+    num_folders: int | None = None
+    is_implicit: bool = True
+    contexts: set[str] = field(default_factory=set)
 
 
 class Users:
@@ -342,12 +341,14 @@ class Users:
     def _watch_user(self, msg: WatchUser) -> None:
         """Server code 5."""
 
+        username = msg.username
+
         if not msg.exists:
-            log.add_conn("Unwatching non-existent user %s", msg.username)
-            self.watched.pop(msg.username, None)
+            log.add_conn("Unwatching non-existent user %s", username)
+            self.watched.pop(username, None)
             return
 
-        events.emit("user-stats", msg)
+        events.emit("user-stats", GetUserStats(username, msg.stats))
 
     def _user_status(self, msg: GetUserStatus) -> None:
         """Server code 7."""
@@ -415,9 +416,10 @@ class Users:
         """Server code 36."""
 
         username = msg.username
-        upload_speed = msg.upload_speed
-        num_files = msg.num_files
-        num_folders = msg.num_folders
+        stats = msg.stats
+        upload_speed = stats.upload_speed
+        num_files = stats.num_files
+        num_folders = stats.num_folders
 
         stats = self.watched.get(username)
 
@@ -426,7 +428,7 @@ class Users:
             stats.num_files = num_files
             stats.num_folders = num_folders
 
-        core.pluginhandler.user_stats_notification(msg.username, stats={
+        core.pluginhandler.user_stats_notification(username, stats={
             "avgspeed": upload_speed,
             "files": num_files,
             "dirs": num_folders,

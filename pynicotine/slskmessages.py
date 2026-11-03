@@ -13,10 +13,12 @@ try:
 except ImportError:
     from hashlib import md5
 
+from dataclasses import dataclass
 from operator import itemgetter
 from random import randint
 from socket import inet_aton
 from socket import inet_ntoa
+from socket import socket
 from struct import Struct
 
 from pynicotine.logfacility import log
@@ -137,6 +139,67 @@ class ParentStatus:
     ACCEPTED = 0
     WAITING = 1
     REJECTED = 2
+
+
+# Data Classes #
+
+
+@dataclass(slots=True, eq=False)
+class SimilarUser:
+    username: str
+    rating: int | None = None
+
+
+@dataclass(slots=True, eq=False)
+class UserStats:
+    username: str
+    status: UserStatus = UserStatus.OFFLINE
+    upload_speed: int = 0
+    upload_number: int = 0
+    unknown: int = 0
+    num_files: int = 0
+    num_folders: int = 0
+    slots_full: int = 0
+    country_code: str = ""
+
+
+@dataclass(slots=True, eq=False)
+class FileAttributes:
+    bitrate: int | None = None
+    length: int | None = None
+    vbr: int | None = None
+    sample_rate: int | None = None
+    bit_depth: int | None = None
+
+    def as_dict(self):
+        attributes = {}
+
+        if self.bitrate is not None:
+            attributes[FileAttribute.BITRATE] = self.bitrate
+
+        if self.length is not None:
+            attributes[FileAttribute.LENGTH] = self.length
+
+        if self.vbr is not None:
+            attributes[FileAttribute.VBR] = self.vbr
+
+        if self.sample_rate is not None:
+            attributes[FileAttribute.SAMPLE_RATE] = self.sample_rate
+
+        if self.bit_depth is not None:
+            attributes[FileAttribute.BIT_DEPTH] = self.bit_depth
+
+        return attributes
+
+
+@dataclass(slots=True, eq=False)
+class ParentCandidate:
+    username: str
+    ip_address: str
+    port: int
+    sock: socket | None = None
+    branch_root: str | None = None
+    branch_level: int | None = None
 
 
 # Internal Messages #
@@ -516,82 +579,6 @@ class FileListMessage(SlskMessage):
         return h_quality, bitrate, h_length, length
 
 
-class SimilarUser:
-    __slots__ = ("username", "rating")
-
-    def __init__(self, username: str, rating=None):
-        self.username = username
-        self.rating = rating
-
-    def __repr__(self):
-        return f"({self.username!r}, {self.rating!r})"
-
-
-class UserData:
-    """When we join a room, the server sends us a bunch of these for each
-    user."""
-
-    __slots__ = ("username", "status", "upload_speed", "upload_number", "unknown", "num_files", "num_folders",
-                 "slots_full", "country_code")
-
-    def __init__(self, username=None, status=None, upload_speed=None, upload_number=None, unknown=None,
-                 num_files=None, num_folders=None, slots_full=None, country_code=None):
-        self.username = username
-        self.status = status
-        self.upload_speed = upload_speed
-        self.upload_number = upload_number
-        self.unknown = unknown
-        self.num_files = num_files
-        self.num_folders = num_folders
-        self.slots_full = slots_full
-        self.country_code = country_code
-
-
-class FileAttributes:
-    __slots__ = ("bitrate", "length", "vbr", "sample_rate", "bit_depth")
-
-    def __init__(self, bitrate=None, length=None, vbr=None, sample_rate=None, bit_depth=None):
-        self.bitrate = bitrate
-        self.length = length
-        self.vbr = vbr
-        self.sample_rate = sample_rate
-        self.bit_depth = bit_depth
-
-    def as_dict(self):
-        attributes = {}
-
-        if self.bitrate is not None:
-            attributes[FileAttribute.BITRATE] = self.bitrate
-
-        if self.length is not None:
-            attributes[FileAttribute.LENGTH] = self.length
-
-        if self.vbr is not None:
-            attributes[FileAttribute.VBR] = self.vbr
-
-        if self.sample_rate is not None:
-            attributes[FileAttribute.SAMPLE_RATE] = self.sample_rate
-
-        if self.bit_depth is not None:
-            attributes[FileAttribute.BIT_DEPTH] = self.bit_depth
-
-        return attributes
-
-
-class ParentCandidate:
-
-    __slots__ = ("username", "ip_address", "port", "sock", "branch_root", "branch_level")
-
-    def __init__(self, username: str, ip_address: str, port: int):
-        self.username = username
-        self.ip_address = ip_address
-        self.port = port
-
-        self.sock = None
-        self.branch_root = None
-        self.branch_level = None
-
-
 # Server Messages #
 
 
@@ -604,8 +591,7 @@ class ServerMessage(SlskMessage):
 
         users = []
         for i in range(num_users):
-            users.append(UserData())
-            users[i].username = self.unpack_string()
+            users.append(UserStats(username=self.unpack_string()))
 
         num_statuses = self.unpack_uint32()
         for i in range(num_statuses):
@@ -792,8 +778,7 @@ class WatchUser(ServerMessage):
     As a consequence, stats can be outdated.
     """
 
-    __slots__ = ("username", "exists", "status", "upload_speed", "upload_number", "unknown", "num_files",
-                 "num_folders", "country_code")
+    __slots__ = ("username", "exists", "stats")
     CODE = 5
     EVENT_NAME = "watch-user"
 
@@ -801,13 +786,7 @@ class WatchUser(ServerMessage):
         ServerMessage.__init__(self, msg_content)
         self.username = username
         self.exists = None
-        self.status = None
-        self.upload_speed = None
-        self.upload_number = None
-        self.unknown = None
-        self.num_files = None
-        self.num_folders = None
-        self.country_code = None
+        self.stats = None
 
     def make_network_message(self) -> bytes:
         return self.pack_string(self.username)
@@ -819,18 +798,21 @@ class WatchUser(ServerMessage):
         if not self.exists:
             return
 
-        self.status = self.unpack_uint32()
-        self.upload_speed = self.unpack_uint32()
-        self.upload_number = self.unpack_uint32()
-        self.unknown = self.unpack_uint32()
-        self.num_files = self.unpack_uint32()
-        self.num_folders = self.unpack_uint32()
+        self.stats = UserStats(
+            username=self.username,
+            status=self.unpack_uint32(),
+            upload_speed=self.unpack_uint32(),
+            upload_number=self.unpack_uint32(),
+            unknown=self.unpack_uint32(),
+            num_files=self.unpack_uint32(),
+            num_folders=self.unpack_uint32()
+        )
 
         if not self.has_remaining_content():
             # User is offline
             return
 
-        self.country_code = self.unpack_string()
+        self.stats.country_code = self.unpack_string()
 
 
 class UnwatchUser(ServerMessage):
@@ -1042,19 +1024,21 @@ class UserJoinedRoom(ServerMessage):
     The server tells us someone has just joined a room we're in.
     """
 
-    __slots__ = ("room_name", "user_data")
+    __slots__ = ("room_name", "username", "stats")
     CODE = 16
     EVENT_NAME = "user-joined-room"
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.room_name = None
-        self.user_data = None
+        self.username = None
+        self.stats = None
 
     def parse_network_message(self):
         self.room_name = self.unpack_string()
-        self.user_data = UserData(
-            username=self.unpack_string(),
+        self.username = self.unpack_string()
+        self.stats = UserStats(
+            username=self.username,
             status=self.unpack_uint32(),
             upload_speed=self.unpack_uint32(),
             upload_number=self.unpack_uint32(),
@@ -1383,29 +1367,28 @@ class GetUserStats(ServerMessage):
     the message to the server.
     """
 
-    __slots__ = ("username", "upload_speed", "upload_number", "unknown", "num_files", "num_folders")
+    __slots__ = ("username", "stats")
     CODE = 36
     EVENT_NAME = "user-stats"
 
-    def __init__(self, username=None, upload_speed=None, num_files=None, num_folders=None, *, msg_content=None):
+    def __init__(self, username=None, stats=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.username = username
-        self.upload_speed = upload_speed
-        self.num_files = num_files
-        self.num_folders = num_folders
-        self.upload_number = None
-        self.unknown = None
+        self.stats = stats
 
     def make_network_message(self) -> bytes:
         return self.pack_string(self.username)
 
     def parse_network_message(self) -> None:
         self.username = self.unpack_string()
-        self.upload_speed = self.unpack_uint32()
-        self.upload_number = self.unpack_uint32()
-        self.unknown = self.unpack_uint32()
-        self.num_files = self.unpack_uint32()
-        self.num_folders = self.unpack_uint32()
+        self.stats = UserStats(
+            username=self.username,
+            upload_speed=self.unpack_uint32(),
+            upload_number=self.unpack_uint32(),
+            unknown=self.unpack_uint32(),
+            num_files=self.unpack_uint32(),
+            num_folders=self.unpack_uint32()
+        )
 
 
 class UploadSlotsFull(ServerMessage):
