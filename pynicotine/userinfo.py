@@ -182,6 +182,7 @@ class UserInfo:
         """Peer code 15."""
 
         username = msg.username
+        ip_address, _port = msg.addr
         request_time = time.monotonic()
 
         if username in self._requested_info_times and request_time < self._requested_info_times[username] + 0.4:
@@ -190,7 +191,7 @@ class UserInfo:
             raise StopEventPropagation()
 
         self._requested_info_times[username] = request_time
-        msg = self._get_user_info_response(username, msg.ip_address)
+        msg = self._get_user_info_response(username, ip_address)
 
         log.add(_("User %(user)s is viewing your profile"), {"user": username})
         core.send_message_to_peer(username, msg)

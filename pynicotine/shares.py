@@ -1381,7 +1381,8 @@ class Shares:
 
         log.add(_("User %(user)s is browsing your list of shared files"), {"user": username})
 
-        permission_level, _reject_reason = self.check_user_permission(username, msg.ip_address)
+        ip_address, _port = msg.addr
+        permission_level, _reject_reason = self.check_user_permission(username, ip_address)
         shares_list = self.compressed_shares.get(permission_level)
         shares_list.username = shares_list.sock = None  # Reset previous connection
 
@@ -1390,9 +1391,10 @@ class Shares:
     def _folder_contents_request(self, msg):
         """Peer code 36."""
 
+        ip_address, _port = msg.addr
         username = msg.username
         folder_path = msg.folder_path
-        permission_level, _reject_reason = self.check_user_permission(username, msg.ip_address)
+        permission_level, _reject_reason = self.check_user_permission(username, ip_address)
         folder_data = None
 
         if permission_level != PermissionLevel.BANNED:

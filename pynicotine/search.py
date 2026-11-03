@@ -616,10 +616,12 @@ class Search:
         if isinstance(search, WishSearchRequest) and (search.is_ignored or username in search.ignored_users):
             raise StopEventPropagation()
 
+        ip_address, _port = msg.addr
+
         if core.network_filter.is_user_ignored(username):
             raise StopEventPropagation()
 
-        if core.network_filter.is_user_ip_ignored(username, msg.ip_address):
+        if core.network_filter.is_user_ip_ignored(username, ip_address):
             raise StopEventPropagation()
 
     def _file_search_request_server(self, msg):
