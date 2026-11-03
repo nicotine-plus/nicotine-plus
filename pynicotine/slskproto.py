@@ -698,7 +698,7 @@ class NetworkThread(Thread):
                 msg.sock = sock
 
             if addr is not None:
-                msg.addr = addr
+                msg.ip_address, msg.port = addr
 
             if username is not None:
                 msg.username = username

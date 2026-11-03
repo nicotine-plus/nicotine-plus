@@ -3344,14 +3344,15 @@ class PeerInit(PeerInitMessage):
 
 class PeerMessage(SlskMessage):
 
-    __slots__ = ("username", "sock", "addr", "allowed_responses")
+    __slots__ = ("username", "sock", "ip_address", "port", "allowed_responses")
     TYPE = MessageType.PEER
 
     def __init__(self, msg_content=None):
         SlskMessage.__init__(self, msg_content)
         self.username = None
         self.sock = None
-        self.addr = None
+        self.ip_address = None
+        self.port = None
         self.allowed_responses = set()
 
     def unpack_file_size(self):
