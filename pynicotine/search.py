@@ -12,6 +12,7 @@ import time
 
 from dataclasses import dataclass
 from dataclasses import field
+from enum import StrEnum
 from itertools import islice
 from operator import itemgetter
 from shlex import shlex
@@ -40,7 +41,7 @@ from pynicotine.utils import load_file
 from pynicotine.utils import write_file_and_backup
 
 
-class ResultFilterMode:
+class ResultFilterMode(StrEnum):
     NONE = "none"
     CUSTOM = "custom"
 

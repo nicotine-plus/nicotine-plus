@@ -1,11 +1,13 @@
 # SPDX-FileCopyrightText: 2022-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from enum import StrEnum
+
 from pynicotine.pluginsystem import BasePlugin
 from pynicotine.slskmessages import UserStatus
 
 
-class _CommandGroup:
+class _CommandGroup(StrEnum):
     CHAT = _("Chat")
     CHAT_ROOMS = _("Chat Rooms")
     PLUGINS = _("Plugins")

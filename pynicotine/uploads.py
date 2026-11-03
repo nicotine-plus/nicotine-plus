@@ -1089,7 +1089,7 @@ class Uploads(Transfers):
             return
 
         if not msg.allowed:
-            if reason in TransferStatus.__dict__.values() or reason == TransferRejectReason.DISALLOWED_EXTENSION:
+            if reason in TransferStatus.__members__.values() or reason == TransferRejectReason.DISALLOWED_EXTENSION:
                 # Don't allow internal statuses as reason
                 reason = TransferRejectReason.CANCELLED
 

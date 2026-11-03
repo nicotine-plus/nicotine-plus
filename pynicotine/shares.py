@@ -17,6 +17,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime
 from datetime import timedelta
+from enum import StrEnum
 from itertools import chain
 from os import SEEK_END
 from os import SEEK_SET
@@ -77,14 +78,14 @@ class FileTypes:
     }
 
 
-class PermissionLevel:
+class PermissionLevel(StrEnum):
     PUBLIC = "public"
     BUDDY = "buddy"
     TRUSTED = "trusted"
     BANNED = "banned"
 
 
-class ScannerState:
+class ScannerState(StrEnum):
     INITIALIZED = "initialized"
     SUCCESS = "success"
 

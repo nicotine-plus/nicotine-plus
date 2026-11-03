@@ -1248,7 +1248,7 @@ class Downloads(Transfers):
         if download is None:
             return
 
-        if reason in TransferStatus.__dict__.values():
+        if reason in TransferStatus.__members__.values():
             # Don't allow internal statuses as reason
             reason = TransferRejectReason.CANCELLED
 
