@@ -847,10 +847,11 @@ class Search:
         # any), so set the end row id to the maximum possible number of new rows.
         end_row_id = self.row_id = self.row_id + (len(result_list) * 2) + 1
 
-        for _code, file_path, size, _file_extension, file_attributes, *_unused in reversed(result_list):
+        for file_data in reversed(result_list):
             if self.num_results_found >= config.sections["searches"]["max_displayed_results"]:
                 break
 
+            file_path = file_data.path
             file_path_lower = file_path.lower()
 
             if any(word in file_path_lower for word in search.excluded_words):
@@ -879,6 +880,8 @@ class Search:
             # Join the resulting items into a folder path
             folder_path = "\\".join(file_path_split)
 
+            file_attributes = file_data.attributes
+            size = file_data.size
             h_size = human_size(size, config.sections["ui"]["file_size_unit"])
             h_quality, bitrate, h_length, length = FileListMessage.parse_audio_quality_length(size, file_attributes)
             private_icon_name = "changes-prevent-symbolic" if is_private else ""

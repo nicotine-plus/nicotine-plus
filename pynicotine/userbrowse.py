@@ -20,6 +20,7 @@ from pynicotine.slskmessages import ConnectionType
 from pynicotine.slskmessages import FileAttribute
 from pynicotine.slskmessages import FileAttributes
 from pynicotine.slskmessages import RemoveAllowedResponse
+from pynicotine.slskmessages import SharedFile
 from pynicotine.slskmessages import SharedFileListRequest
 from pynicotine.slskmessages import SharedFileListResponse
 from pynicotine.slskmessages import UploadQueueNotification
@@ -40,8 +41,8 @@ class BrowsedUser:
     num_folders: int | None = None
     num_files: int | None = None
     shared_size: int | None = None
-    public_folders: dict = field(default_factory=dict)
-    private_folders: dict = field(default_factory=dict)
+    public_folders: dict[str, list[SharedFile]] = field(default_factory=dict)
+    private_folders: dict[str, list[SharedFile]] = field(default_factory=dict)
 
     def clear(self) -> None:
 
@@ -236,18 +237,25 @@ class UserBrowse:
             vbr_key = str(FileAttribute.VBR)
             sample_rate_key = str(FileAttribute.SAMPLE_RATE)
             bit_depth_key = str(FileAttribute.BIT_DEPTH)
-            ext = None
 
             for _folder_path, files in shares_list:
-                # Sanitization
-                for file_info in files:
-                    if not isinstance(file_info[1], str):
+                for i, file_data in enumerate(files):
+                    code = file_data[0]
+
+                    if not isinstance(code, int):
+                        code = 1
+
+                    basename = file_data[1]
+
+                    if not isinstance(basename, str):
                         raise TypeError(_("Invalid file name in shares"))
 
-                    if not isinstance(file_info[2], int):
+                    size = file_data[2]
+
+                    if not isinstance(size, int):
                         raise TypeError(_("Invalid file size in shares"))
 
-                    attributes = file_info[4]
+                    attributes = file_data[4]
 
                     if isinstance(attributes, dict):
                         bitrate = attributes.get(bitrate_key)
@@ -287,8 +295,12 @@ class UserBrowse:
                                 bitrate = attribute1
                                 length = attribute2
 
-                    file_info[3] = ext
-                    file_info[4] = FileAttributes(bitrate, length, vbr, sample_rate, bit_depth)
+                    files[i] = SharedFile(
+                        code=code,
+                        path=basename,
+                        size=size,
+                        attributes=FileAttributes(bitrate, length, vbr, sample_rate, bit_depth)
+                    )
 
         except Exception as error:
             log.add(_("Loading shares from disk failed: %(error)s"), {"error": error})
@@ -326,7 +338,7 @@ class UserBrowse:
             with open(encode_path(file_path), "w", encoding="utf-8") as file_handle:
                 # Dump every folder to the file individually to avoid large memory usage
                 json_encoder = json.JSONEncoder(
-                    check_circular=False, ensure_ascii=False, default=lambda attributes: attributes.as_dict()
+                    check_circular=False, ensure_ascii=False, default=lambda x: x.serialize()
                 )
                 is_first_item = True
 
@@ -353,11 +365,10 @@ class UserBrowse:
         self, username: str, folder_path: str, file_data, download_folder_path: str | None = None
     ) -> None:
 
-        _code, basename, file_size, _file_extension, file_attributes, *_unused = file_data
-        file_path = "\\".join([folder_path, basename])
-
         core.downloads.enqueue_download(
-            username, file_path, folder_path=download_folder_path, size=file_size, file_attributes=file_attributes)
+            username, virtual_path="\\".join([folder_path, file_data.path]),
+            folder_path=download_folder_path, size=file_data.size, file_attributes=file_data.attributes
+        )
 
     def download_folder(
         self, username: str, requested_folder_path, download_folder_path: str | None = None,
@@ -395,20 +406,15 @@ class UserBrowse:
                 username, folder_path, root_folder_path=requested_folder_path,
                 download_folder_path=download_folder_path)
 
-            if files:
-                for _code, basename, file_size, _file_extension, file_attributes, *_unused in files:
-                    file_path = "\\".join([folder_path, basename])
+            for file_data in files:
+                core.downloads.enqueue_download(
+                    username, virtual_path="\\".join([folder_path, file_data.path]),
+                    folder_path=destination_folder_path, size=file_data.size,
+                    file_attributes=file_data.attributes
+                )
 
-                    core.downloads.enqueue_download(
-                        username, file_path, folder_path=destination_folder_path, size=file_size,
-                        file_attributes=file_attributes)
-
-    def upload_file(self, username: str, folder_path: str, file_data) -> None:
-
-        _code, basename, *_unused = file_data
-        file_path = "\\".join([folder_path, basename])
-
-        core.uploads.enqueue_upload(username, file_path)
+    def upload_file(self, username: str, folder_path: str, basename) -> None:
+        core.uploads.enqueue_upload(username, virtual_path="\\".join([folder_path, basename]))
 
     def upload_folder(
         self, username: str, requested_folder_path: str, local_browsed_user: BrowsedUser, recurse: bool = False
@@ -420,9 +426,8 @@ class UserBrowse:
         for folder_path, files in self.iter_matching_folders(
             requested_folder_path, browsed_user=local_browsed_user, recurse=recurse
         ):
-            for _code, basename, *_unused in files:
-                file_path = "\\".join([folder_path, basename])
-                core.uploads.enqueue_upload(username, file_path)
+            for file_data in files:
+                core.uploads.enqueue_upload(username, virtual_path="\\".join([folder_path, file_data.path]))
 
     def show_user_statistics(self, username: str) -> None:
 
@@ -482,8 +487,8 @@ class UserBrowse:
         shared_size = 0
 
         for _folder_path, files in chain(msg.list, msg.private_list):
-            for file_info in files:
-                shared_size += file_info[2]
+            for file_data in files:
+                shared_size += file_data.size
 
             num_files += len(files)
 

@@ -194,7 +194,7 @@ class FileAttributes:
     sample_rate: int | None = None
     bit_depth: int | None = None
 
-    def as_dict(self):
+    def serialize(self):
         attributes = {}
 
         if self.bitrate is not None:
@@ -213,6 +213,18 @@ class FileAttributes:
             attributes[FileAttribute.BIT_DEPTH] = self.bit_depth
 
         return attributes
+
+
+@dataclass(slots=True, eq=False)
+class SharedFile:
+    code: int
+    path: str
+    size: int
+    attributes: FileAttributes
+
+    def serialize(self):
+        file_extension = None  # Obsolete, kept for compatibility
+        return (self.code, self.path, self.size, file_extension, self.attributes)
 
 
 @dataclass(slots=True, eq=False)
@@ -3526,7 +3538,6 @@ class SharedFileListResponse(PeerMessage):
 
     def _parse_result_list(self):
         num_folders = self.unpack_uint32()
-        file_extension = None
         shares = []
 
         for _ in range(num_folders):
@@ -3542,10 +3553,17 @@ class SharedFileListResponse(PeerMessage):
                 self._offset += file_extension_len
                 file_attributes = self.unpack_file_attributes()
 
-                files.append((code, basename, file_size, file_extension, file_attributes))
+                files.append(
+                    SharedFile(
+                        code=code,
+                        path=basename,
+                        size=file_size,
+                        attributes=file_attributes
+                    )
+                )
 
             if num_files > 1:
-                files.sort(key=itemgetter(1))
+                files.sort(key=lambda x: x.path)
 
             shares.append((folder_path, files))
 
@@ -3654,7 +3672,6 @@ class FileSearchResponse(PeerMessage):
 
     def _parse_result_list(self):
         num_files = self.unpack_uint32()
-        file_extension = None
         results = []
 
         for _ in range(num_files):
@@ -3665,10 +3682,17 @@ class FileSearchResponse(PeerMessage):
             self._offset += file_extension_len
             file_attributes = self.unpack_file_attributes()
 
-            results.append((code, file_path, file_size, file_extension, file_attributes))
+            results.append(
+                SharedFile(
+                    code=code,
+                    path=file_path,
+                    size=file_size,
+                    attributes=file_attributes
+                )
+            )
 
         if num_files > 1:
-            results.sort(key=itemgetter(1))
+            results.sort(key=lambda x: x.path)
 
         return results
 
@@ -3882,7 +3906,6 @@ class FolderContentsResponse(PeerMessage):
         for _ in range(num_folders):
             folder_path = self.unpack_string()
             num_files = self.unpack_uint32()
-            file_extension = None
             folders[folder_path] = []
 
             for _ in range(num_files):
@@ -3893,10 +3916,17 @@ class FolderContentsResponse(PeerMessage):
                 self._offset += file_extension_len
                 file_attributes = self.unpack_file_attributes()
 
-                folders[folder_path].append((code, basename, file_size, file_extension, file_attributes))
+                folders[folder_path].append(
+                    SharedFile(
+                        code=code,
+                        path=basename,
+                        size=file_size,
+                        attributes=file_attributes
+                    )
+                )
 
             if num_files > 1:
-                folders[folder_path].sort(key=itemgetter(1))
+                folders[folder_path].sort(key=lambda x: x.path)
 
         self.list = folders
 
