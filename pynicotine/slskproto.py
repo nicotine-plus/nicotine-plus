@@ -1473,8 +1473,7 @@ class NetworkThread(Thread):
                 for username, parent_candidate in self._potential_parents.items():
                     log.add_conn("Attempting parent connection to user %s", username)
                     self._initiate_connection_to_peer(
-                        username, ConnectionType.DISTRIBUTED,
-                        in_address=(parent_candidate.ip_address, parent_candidate.port)
+                        username, ConnectionType.DISTRIBUTED, in_address=parent_candidate.addr
                     )
 
         elif isinstance(msg, ParentMinSpeed):

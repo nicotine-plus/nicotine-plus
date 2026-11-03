@@ -195,8 +195,7 @@ class FileAttributes:
 @dataclass(slots=True, eq=False)
 class ParentCandidate:
     username: str
-    ip_address: str
-    port: int
+    addr: tuple[str, int]
     sock: socket | None = None
     branch_root: str | None = None
     branch_level: int | None = None
@@ -2242,7 +2241,10 @@ class PossibleParents(ServerMessage):
             ip_address = self.unpack_ip()
             port = self.unpack_uint32()
 
-            self.candidates[username] = ParentCandidate(username, ip_address, port)
+            self.candidates[username] = ParentCandidate(
+                username=username,
+                addr=(ip_address, port)
+            )
 
 
 class WishlistSearch(ServerMessage):
