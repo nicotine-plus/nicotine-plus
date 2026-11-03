@@ -15,7 +15,11 @@ import time
 
 from ast import literal_eval
 from collections import defaultdict
+from dataclasses import dataclass
+from dataclasses import field
+from io import BufferedRandom
 from os.path import normpath
+from socket import socket
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -47,48 +51,34 @@ class TransferStatus:
     LOCAL_FILE_ERROR = "Local file error"
 
 
+@dataclass(slots=True, eq=False)
 class Transfer:
-    """This class holds information about a single transfer."""
+    username: str
+    virtual_path: str | None = None
+    folder_path: str | None = None
+    size: int = 0
+    file_attributes: FileAttributes = field(default_factory=FileAttributes)
+    status: str | None = None
+    current_byte_offset: int | None = None
 
-    __slots__ = ("sock", "username", "virtual_path",
-                 "folder_path", "token", "size", "file_handle", "start_time",
-                 "current_byte_offset", "last_byte_offset", "transferred_bytes_total",
-                 "speed", "avg_speed", "time_elapsed", "time_left",
-                 "queue_position", "file_attributes", "iterator", "status",
-                 "legacy_attempt", "retry_attempt", "size_changed", "is_backslash_path",
-                 "is_lowercase_path", "request_timer_id")
-
-    def __init__(self, username, virtual_path=None, folder_path=None, size=0, file_attributes=None,
-                 status=None, current_byte_offset=None):
-        self.username = username
-        self.virtual_path = virtual_path
-        self.folder_path = folder_path
-        self.size = size
-        self.status = status
-        self.current_byte_offset = current_byte_offset
-        self.file_attributes = file_attributes
-
-        self.sock = None
-        self.file_handle = None
-        self.token = None
-        self.queue_position = 0
-        self.request_timer_id = None
-        self.start_time = None
-        self.last_byte_offset = None
-        self.transferred_bytes_total = 0
-        self.speed = 0
-        self.avg_speed = 0
-        self.time_elapsed = 0
-        self.time_left = 0
-        self.iterator = None
-        self.legacy_attempt = False
-        self.retry_attempt = False
-        self.size_changed = False
-        self.is_backslash_path = False
-        self.is_lowercase_path = False
-
-        if file_attributes is None:
-            self.file_attributes = FileAttributes()
+    sock: socket | None = None
+    file_handle: BufferedRandom | None = None
+    token: int | None = None
+    queue_position: int = 0
+    request_timer_id: int | None = None
+    start_time: float | None = None
+    last_byte_offset: int | None = None
+    transferred_bytes_total: int = 0
+    speed: float = 0
+    avg_speed: int = 0
+    time_elapsed: float = 0
+    time_left: int = 0
+    iterator: int | None = None
+    legacy_attempt: bool = False
+    retry_attempt: bool = False
+    size_changed: bool = False
+    is_backslash_path: bool = False
+    is_lowercase_path: bool = False
 
 
 class Transfers:
