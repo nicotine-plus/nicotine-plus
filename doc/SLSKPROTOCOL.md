@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on October 31, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on November 3, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -470,10 +470,10 @@ version `177` and any minor version number they choose for each project.
 
 #### ...continued
 
-| Data      | Major Version | Hash Length   | Hash of Username + Password                                                                       | Minor Version |
-|-----------|---------------|---------------|---------------------------------------------------------------------------------------------------|---------------|
-| **Human** | 177           | 32            | d51c9a7e9353746a6020f9602d452929                                                                  | 1             |
-| **Hex**   | `b1 00 00 00` | `20 00 00 00` | `64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39` | `01 00 00 00` |
+| Data      | Major Version | Checksum Length | Checksum of Username + Password                                                                   | Minor Version |
+|-----------|---------------|-----------------|---------------------------------------------------------------------------------------------------|---------------|
+| **Human** | 177           | 32              | d51c9a7e9353746a6020f9602d452929                                                                  | 1             |
+| **Hex**   | `b1 00 00 00` | `20 00 00 00`   | `64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39` | `01 00 00 00` |
 
 #### Message as Hex Stream
 
@@ -488,18 +488,17 @@ version `177` and any minor version number they choose for each project.
     2.  **string** *password*
     3.  **uint32** *major version*  
         See [Major Versions](#major-versions)
-    4.  **string** *hash*  
-        MD5 hex digest of concatenated username and password
+    4.  **string** *checksum*  
+        MD5 checksum of concatenated username and password
     5.  **uint32** *minor version*  
         See [Minor Versions](#minor-versions)
   - Receive
     1.  **bool** *success*
     2.  If *success* is true
-        1.  **string** *greet*  
-            MOTD string
+        1.  **string** *motd*
         2.  **uint32** *own IP address*
-        3.  **string** *hash*  
-            MD5 hex digest of the password string
+        3.  **string** *checksum*  
+            MD5 checksum of the password string
         4.  **bool** *is supporter*  
             If we have donated to Soulseek at some point in the past
     3.  If *success* is false
@@ -550,7 +549,7 @@ given the peer's username.
     1.  **string** *username*
   - Receive
     1.  **string** *username*
-    2.  **uint32** *ip*
+    2.  **uint32** *IP address*
     3.  **uint32** *port*
     4.  **uint32** *obfuscation type*  
         See [Obfuscation Types](#obfuscation-types)
@@ -668,10 +667,10 @@ Either we want to say something in the chatroom, or someone else did.
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
     3.  **string** *message*
 
@@ -704,11 +703,11 @@ Requirements include:
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **uint32** *room type*  
         See [Room Types](#room-types). Type of room to create if nonexistent.
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **uint32** *number of users in room*  
         For private rooms, also contain owner and operators
     3.  Iterate for *number of users*
@@ -735,7 +734,7 @@ Requirements include:
         1.  **string** *owner*
         2.  **uint32** *number of operators in room*
         3.  Iterate for *number of operators*
-            1.  **string** *operator*
+            1.  **string** *username*
 
 
 ## Server Code 15
@@ -747,9 +746,9 @@ We send this to the server when we want to leave a room.
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
 
 
 ## Server Code 16
@@ -763,7 +762,7 @@ The server tells us someone has just joined a room we're in.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
     3.  **uint32** *status*
     4.  **uint32** *upload speed*
@@ -788,7 +787,7 @@ The server tells us someone has just left a room we're in.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
 
 
@@ -807,13 +806,13 @@ See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
   - Send
     1.  **uint32** *token*
     2.  **string** *username*
-    3.  **string** *type*  
+    3.  **string** *connection type*  
         See [Connection Types](#connection-types)
   - Receive
     1.  **string** *username*
-    2.  **string** *type*  
+    2.  **string** *connection type*  
         See [Connection Types](#connection-types)
-    3.  **uint32** *ip*
+    3.  **uint32** *IP address*
     4.  **uint32** *port*
     5.  **uint32** *token*  
         Use this token for [PierceFireWall](#peer-init-code-0)
@@ -835,11 +834,11 @@ Chat phrase sent to someone or received by us in private.
     1.  **string** *username*
     2.  **string** *message*
   - Receive
-    1.  **uint32** *ID*
+    1.  **uint32** *message ID*
     2.  **uint32** *timestamp*
     3.  **string** *username*
     4.  **string** *message*
-    5.  **bool** *new message*  
+    5.  **bool** *is new message*  
         True if message is new, false if message is re-sent (e.g. if recipient was offline)
 
 
@@ -870,7 +869,7 @@ We send this to the server when we search for something in a room.
 
   - Send
     1. **uint32** *token*
-    2. **uint32** *room id*
+    2. **uint32** *room ID*
     3. **string** *search term*
   - Receive
     -   *No Message*
@@ -1215,12 +1214,12 @@ with a list of interests.
     1.  **string** *username*
   - Receive
     1.  **string** *username*
-    2.  **uint32** *number of liked interests*
-    3.  Iterate for *number of liked interests*
-        1.  **string** *interest*
-    4.  **uint32** *number of hated interests*
-    5.  Iterate for *number of hated interests*
-        1.  **string** *interest*
+    2.  **uint32** *number of liked items*
+    3.  Iterate for *number of liked items*
+        1.  **string** *item*
+    4.  **uint32** *number of hated items*
+    5.  Iterate for *number of hated items*
+        1.  **string** *item*
 
 
 ## Server Code 58
@@ -1293,7 +1292,7 @@ The server tells us a new room has been added.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
 
 
 ## Server Code 63
@@ -1309,7 +1308,7 @@ The server tells us a room has been removed.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
 
 
 ## Server Code 64
@@ -1328,7 +1327,7 @@ Requesting the room list yields a response containing the missing rooms.
   - Receive
     1.  **uint32** *number of rooms*
     2.  Iterate for *number of rooms*
-        1.  **string** *room*
+        1.  **string** *room name*
     3.  **uint32** *number of rooms*
     4.  Iterate for *number of rooms*
         1.  **uint32** *number of users in room*
@@ -1445,7 +1444,7 @@ Server message for tunneling a chat message.
     1.  **string** *username*
     2.  **uint32** *code*
     3.  **uint32** *token*
-    4.  **uint32** *ip*
+    4.  **uint32** *IP address*
     5.  **uint32** *port*
     6.  **string** *message*
 
@@ -1495,7 +1494,7 @@ We tell the server the IP address of our parent in the distributed network.
 ### Data Order
 
   - Send
-    1.  **uint32** *ip*
+    1.  **uint32** *IP address*
   - Receive
     -   *No Message*
 
@@ -1616,7 +1615,7 @@ responds with the remaining time, in seconds.
   - Send
     -   Empty Message
   - Receive
-    1.  **uint32** *time left*
+    1.  **uint32** *seconds*
 
 
 ## Server Code 93
@@ -1687,7 +1686,7 @@ from the server.
     1.  **uint32** *number of parents*
     2.  Iterate for *number of parents*
         1.  **string** *username*
-        2.  **uint32** *ip*
+        2.  **uint32** *IP address*
         3.  **uint32** *port*
 
 
@@ -1719,7 +1718,7 @@ This interval is almost always 12 minutes, or 2 minutes for privileged users.
   - Send
     -   *No Message*
   - Receive
-    1.  **uint32** *interval*
+    1.  **uint32** *seconds*
 
 
 ## Server Code 110
@@ -1755,7 +1754,7 @@ is usually present in the like/dislike list or an existing recommendation list.
     2.  **uint32** *number of recommendations*
     3.  Iterate for *number of recommendations*
         1.  **string** *recommendation*
-        2.  **uint32** *number of recommendations for this recommendation (can be negative)*
+        2.  **int32** *number of recommendations for this recommendation (can be negative)*
 
 
 ## Server Code 112
@@ -1790,11 +1789,11 @@ walls.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
-    2.  **uint32** *number of users*
-    3.  Iterate for *number of users*
+    1.  **string** *room name*
+    2.  **uint32** *number of tickers*
+    3.  Iterate for *number of tickers*
         1.  **string** *username*
-        2.  **string** *tickers*
+        2.  **string** *content*
 
 
 ## Server Code 114
@@ -1811,9 +1810,9 @@ walls.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
-    3.  **string** *ticker*
+    3.  **string** *content*
 
 
 ## Server Code 115
@@ -1830,7 +1829,7 @@ walls.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
 
 
@@ -1847,8 +1846,8 @@ walls.
 ### Data Order
 
   - Send
-    1.  **string** *room*
-    2.  **string** *ticker*
+    1.  **string** *room name*
+    2.  **string** *content*
   - Receive
     -   *No Message*
 
@@ -1895,7 +1894,7 @@ message.
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **uint32** *token*
     3.  **string** *search term*
   - Receive
@@ -1991,7 +1990,7 @@ distributed network.
 ### Data Order
 
   - Send
-    1.  **uint32** *branch level*
+    1.  **uint32** *level*
   - Receive
     -   *No Message*
 
@@ -2006,7 +2005,7 @@ distributed network.
 ### Data Order
 
   - Send
-    1.  **string** *branch root*
+    1.  **string** *username*
   - Receive
     -   *No Message*
 
@@ -2029,7 +2028,7 @@ depths on its own, based on branch level/root information sent by peers.
 ### Data Order
 
   - Send
-    1.  **uint32** *child depth*
+    1.  **uint32** *depth*
   - Receive
     -   *No Message*
 
@@ -2060,10 +2059,10 @@ room we are in.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **uint32** *number of members*
     3.  Iterate for *number of members*
-        1.  **string** *members*
+        1.  **string** *username*
 
 
 ## Server Code 134
@@ -2078,10 +2077,10 @@ The server tells us a member has been added to a private room we are in.
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
 
 
@@ -2098,10 +2097,10 @@ The server tells us a member has been removed from a private room we are in.
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
 
 
@@ -2114,7 +2113,7 @@ We send this to the server to cancel our own membership of a private room.
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
   - Receive
     -   *No Message*
 
@@ -2128,7 +2127,7 @@ We send this to the server to stop owning a private room.
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
   - Receive
     -   *No Message*
 
@@ -2144,9 +2143,9 @@ Unknown purpose
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
 
 
 ## Server Code 139
@@ -2160,7 +2159,7 @@ The server tells us we were added to a private room.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
 
 
 ## Server Code 140
@@ -2174,7 +2173,7 @@ The server tells us we were removed from a private room.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
 
 
 ## Server Code 141
@@ -2201,9 +2200,9 @@ password changes.
 ### Data Order
 
   - Send
-    1.  **string** *pass*
+    1.  **string** *password*
   - Receive
-    1.  **string** *pass*
+    1.  **string** *password*
 
 
 ## Server Code 143
@@ -2219,10 +2218,10 @@ room we are in.
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
 
 
@@ -2239,10 +2238,10 @@ private room we are in.
 ### Data Order
 
   - Send
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
 
 
@@ -2258,7 +2257,7 @@ we are in.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
 
 
 ## Server Code 146
@@ -2273,7 +2272,7 @@ we are in.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
 
 
 ## Server Code 148
@@ -2287,10 +2286,10 @@ The server sends us a list of operators in a private room we are in.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **uint32** *number of operators in room*
     3.  Iterate for *number of operators*
-        1.  **string** *operator*
+        1.  **string** *username*
 
 
 ## Server Code 149
@@ -2352,7 +2351,7 @@ feed (every single line written in every public room).
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
     2.  **string** *username*
     3.  **string** *message*
 
@@ -2434,7 +2433,7 @@ message is sent.
   - Send
     -   *No Message*
   - Receive
-    1.  **string** *room*
+    1.  **string** *room name*
 
 
 # Peer Init Messages
@@ -2551,13 +2550,13 @@ See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 
   - Send
     1.  **string** *own username*  
-    2.  **string** *type*  
+    2.  **string** *connection type*  
         See [Connection Types](#connection-types)
     3.  **uint32** *token*  
         Value is always `0`
   - Receive
     1.  **string** *remote username*
-    2.  **string** *type*  
+    2.  **string** *connection type*  
         See [Connection Types](#connection-types)
     3.  **uint32** *token*  
         Value is always `0`
@@ -3313,9 +3312,9 @@ message in this case.
 ### Data Order
 
   - Send
-    1.  **int32** *branch level*
+    1.  **int32** *level*
   - Receive
-    1.  **int32** *branch level*
+    1.  **int32** *level*
 
 
 ## Distributed Code 5
@@ -3337,9 +3336,9 @@ regardless of our status in the distributed network.
 ### Data Order
 
   - Send
-    1.  **string** *branch root*
+    1.  **string** *username*
   - Receive
-    1.  **string** *branch root*
+    1.  **string** *username*
 
 
 ## Distributed Code 7
@@ -3360,9 +3359,9 @@ level/root information sent by peers.
 ### Data Order
 
   - Send
-    1.  **uint32** *child depth*
+    1.  **uint32** *depth*
   - Receive
-    1.  **uint32** *child depth*
+    1.  **uint32** *depth*
 
 
 ## Distributed Code 93

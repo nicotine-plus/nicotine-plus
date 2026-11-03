@@ -36,6 +36,8 @@ from pynicotine.utils import write_file_and_backup
 
 class TransferStatus:
     QUEUED = "Queued"
+    QUEUED_PRIORITIZED = "Queued (prioritized)"
+    QUEUED_PRIVILEGED = "Queued (privileged)"
     GETTING_STATUS = "Getting status"
     TRANSFERRING = "Transferring"
     PAUSED = "Paused"
@@ -63,7 +65,6 @@ class Transfer:
     file_handle: BufferedRandom | None = None
     token: int | None = None
     queue_position: int = 0
-    modifier: None = None
     request_timer_id: int | None = None
     start_time: float | None = None
     last_byte_offset: int | None = None

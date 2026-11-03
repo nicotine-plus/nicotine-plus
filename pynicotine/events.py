@@ -4,7 +4,11 @@
 import time
 
 from collections import defaultdict
-from queue import Empty, SimpleQueue
+from collections.abc import Callable
+from dataclasses import dataclass
+from dataclasses import field
+from queue import Empty
+from queue import SimpleQueue
 from threading import Thread
 
 
@@ -198,30 +202,21 @@ EVENT_NAMES = {
 }
 
 
+@dataclass(slots=True, eq=False)
 class SchedulerEvent:
-
-    __slots__ = ("event_id", "next_time", "delay", "repeat", "callback", "callback_args")
-
-    def __init__(self, event_id, next_time=None, delay=None, repeat=None,
-                 callback=None, callback_args=None):
-
-        self.event_id = event_id
-        self.next_time = next_time
-        self.delay = delay
-        self.repeat = repeat
-        self.callback = callback
-        self.callback_args = callback_args
+    event_id: int
+    next_time: float | None
+    delay: int | None = None
+    repeat: bool = False
+    callback: Callable | None = None
+    callback_args: tuple = field(default_factory=tuple)
 
 
+@dataclass(slots=True, eq=False)
 class ThreadEvent:
-
-    __slots__ = ("event_name", "args", "kwargs")
-
-    def __init__(self, event_name, args, kwargs):
-
-        self.event_name = event_name
-        self.args = args
-        self.kwargs = kwargs
+    event_name: str
+    args: tuple
+    kwargs: dict
 
 
 class StopEventPropagation(Exception):

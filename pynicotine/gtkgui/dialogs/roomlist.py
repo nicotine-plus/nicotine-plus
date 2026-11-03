@@ -228,7 +228,7 @@ class RoomList(Dialog):
         self.update_room_user_count(room_name, decrement=True)
 
     def user_joined_room(self, msg):
-        if msg.user_data.username != core.users.login_username:
+        if msg.username != core.users.login_username:
             self.update_room_user_count(msg.room_name)
 
     def user_left_room(self, msg):

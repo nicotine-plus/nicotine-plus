@@ -35,16 +35,16 @@ class Plugin(BasePlugin):
 
         return text.capitalize()
 
-    def incoming_private_chat_event(self, user, line):
-        return user, self.antishout(line)
+    def incoming_private_chat_event(self, user, message):
+        return user, self.anti_shout(message)
 
-    def incoming_public_chat_event(self, room, user, line):
-        return room, user, self.antishout(line)
+    def incoming_public_chat_event(self, room, user, message):
+        return room, user, self.anti_shout(message)
 
-    def antishout(self, line):
+    def anti_shout(self, message):
 
-        lowers = len([x for x in line if x.islower()])
-        uppers = len([x for x in line if x.isupper()])
+        lowers = len([x for x in message if x.islower()])
+        uppers = len([x for x in message if x.isupper()])
         score = -2  # unknown state (could be: no letters at all)
 
         if uppers > 0:
@@ -53,12 +53,12 @@ class Plugin(BasePlugin):
         if lowers > 0:
             score = uppers / float(lowers)
 
-        newline = line
+        new_message = message
 
-        if len(line) > self.settings["minlength"] and (score == -1 or score > self.settings["maxscore"]):
-            newline = ". ".join([self.capitalize(x) for x in line.split(". ")])
+        if len(message) > self.settings["minlength"] and (score == -1 or score > self.settings["maxscore"]):
+            new_message = ". ".join([self.capitalize(x) for x in message.split(". ")])
 
-        if newline == line:
-            return newline
+        if new_message == message:
+            return new_message
 
-        return newline + " [as]"
+        return new_message + " [as]"
