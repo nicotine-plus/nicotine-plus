@@ -270,18 +270,18 @@ class ChatRooms:
     def request_update_ticker(self, room_name, message):
         core.send_message_to_server(SetRoomTicker(room_name, message))
 
-    def _update_room_user(self, room, user_data):
+    def _update_room_user(self, room, user_stats):
 
-        username = user_data.username
+        username = user_stats.username
         room.users.add(username)
         core.users.watch_user(username, context=f"chatrooms_{room.name}", is_implicit=True)
 
         watched_user = core.users.watched[username]
-        watched_user.upload_speed = user_data.upload_speed
-        watched_user.num_files = user_data.num_files
-        watched_user.num_folders = user_data.num_folders
+        watched_user.upload_speed = user_stats.upload_speed
+        watched_user.num_files = user_stats.num_files
+        watched_user.num_folders = user_stats.num_folders
 
-        core.users.statuses[username] = user_data.status
+        core.users.statuses[username] = user_stats.status
 
         # Request user's IP address, so we can get the country and ignore messages by IP
         if username not in core.users.addresses:
@@ -289,7 +289,7 @@ class ChatRooms:
 
         # Replace server-provided country with our own
         if username in core.users.countries:
-            user_data.country_code = core.users.countries[username]
+            user_stats.country_code = core.users.countries[username]
 
     def _update_private_room(self, room_name, owner=None, members=None, operators=None):
 
@@ -335,8 +335,8 @@ class ChatRooms:
         if room.is_private:
             self._update_private_room(room_name, owner=msg.owner, operators=msg.operators)
 
-        for user_data in msg.users:
-            self._update_room_user(room, user_data)
+        for user_stats in msg.users:
+            self._update_room_user(room, user_stats)
 
         core.pluginhandler.join_chatroom_notification(room_name)
 
@@ -638,8 +638,8 @@ class ChatRooms:
         if room is None or not room.users:
             raise StopEventPropagation()
 
-        self._update_room_user(room, msg.user_data)
-        core.pluginhandler.user_join_chatroom_notification(room_name, msg.user_data.username)
+        self._update_room_user(room, msg.stats)
+        core.pluginhandler.user_join_chatroom_notification(room_name, msg.username)
 
     def _user_left_room(self, msg):
         """Server code 17."""

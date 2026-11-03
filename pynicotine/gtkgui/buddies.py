@@ -312,9 +312,10 @@ class Buddies:
         if iterator is None:
             return
 
-        upload_speed = msg.upload_speed or 0
-        num_files = msg.num_files or 0
-        num_folders = msg.num_folders or 0
+        stats = msg.stats
+        upload_speed = stats.upload_speed or 0
+        num_files = stats.num_files or 0
+        num_folders = stats.num_folders or 0
         h_num_files = humanize(num_files)
         column_ids = []
         column_values = []

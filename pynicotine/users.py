@@ -332,12 +332,14 @@ class Users:
     def _watch_user(self, msg):
         """Server code 5."""
 
+        username = msg.username
+
         if not msg.exists:
-            log.add_conn("Unwatching non-existent user %s", msg.username)
-            self.watched.pop(msg.username, None)
+            log.add_conn("Unwatching non-existent user %s", username)
+            self.watched.pop(username, None)
             return
 
-        events.emit("user-stats", msg)
+        events.emit("user-stats", GetUserStats(username, msg.stats))
 
     def _user_status(self, msg):
         """Server code 7."""
@@ -405,9 +407,10 @@ class Users:
         """Server code 36."""
 
         username = msg.username
-        upload_speed = msg.upload_speed
-        num_files = msg.num_files
-        num_folders = msg.num_folders
+        stats = msg.stats
+        upload_speed = stats.upload_speed
+        num_files = stats.num_files
+        num_folders = stats.num_folders
 
         stats = self.watched.get(username)
 
@@ -416,7 +419,7 @@ class Users:
             stats.num_files = num_files
             stats.num_folders = num_folders
 
-        core.pluginhandler.user_stats_notification(msg.username, stats={
+        core.pluginhandler.user_stats_notification(username, stats={
             "avgspeed": upload_speed,
             "files": num_files,
             "dirs": num_folders,

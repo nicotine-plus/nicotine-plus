@@ -39,6 +39,7 @@ from pynicotine.slskmessages import FolderContentsResponse
 from pynicotine.slskmessages import GetUserStats
 from pynicotine.slskmessages import SharedFileListResponse
 from pynicotine.slskmessages import SharedFoldersFiles
+from pynicotine.slskmessages import UserStats
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 from pynicotine.utils import UINT32_LIMIT
 from pynicotine.utils import encode_path
@@ -1136,7 +1137,12 @@ class Shares:
             "user-stats",
             GetUserStats(
                 username=local_username,
-                upload_speed=core.uploads.upload_speed, num_files=num_shared_files, num_folders=num_shared_folders
+                stats=UserStats(
+                    username=local_username,
+                    upload_speed=core.uploads.upload_speed,
+                    num_files=num_shared_files,
+                    num_folders=num_shared_folders
+                )
             )
         )
 

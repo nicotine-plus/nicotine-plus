@@ -151,9 +151,9 @@ class SimilarUser:
 
 
 @dataclass(slots=True, eq=False)
-class UserData:
+class UserStats:
     username: str
-    status: UserStatus = UserStatus.ONLINE
+    status: UserStatus = UserStatus.OFFLINE
     upload_speed: int = 0
     upload_number: int = 0
     unknown: int = 0
@@ -591,7 +591,7 @@ class ServerMessage(SlskMessage):
 
         users = []
         for i in range(num_users):
-            users.append(UserData(username=self.unpack_string()))
+            users.append(UserStats(username=self.unpack_string()))
 
         num_statuses = self.unpack_uint32()
         for i in range(num_statuses):
@@ -778,8 +778,7 @@ class WatchUser(ServerMessage):
     As a consequence, stats can be outdated.
     """
 
-    __slots__ = ("username", "exists", "status", "upload_speed", "upload_number", "unknown", "num_files",
-                 "num_folders", "country_code")
+    __slots__ = ("username", "exists", "stats")
     CODE = 5
     EVENT_NAME = "watch-user"
 
@@ -787,13 +786,7 @@ class WatchUser(ServerMessage):
         ServerMessage.__init__(self, msg_content)
         self.username = username
         self.exists = None
-        self.status = None
-        self.upload_speed = None
-        self.upload_number = None
-        self.unknown = None
-        self.num_files = None
-        self.num_folders = None
-        self.country_code = None
+        self.stats = None
 
     def make_network_message(self):
         return self.pack_string(self.username)
@@ -805,18 +798,21 @@ class WatchUser(ServerMessage):
         if not self.exists:
             return
 
-        self.status = self.unpack_uint32()
-        self.upload_speed = self.unpack_uint32()
-        self.upload_number = self.unpack_uint32()
-        self.unknown = self.unpack_uint32()
-        self.num_files = self.unpack_uint32()
-        self.num_folders = self.unpack_uint32()
+        self.stats = UserStats(
+            username=self.username,
+            status=self.unpack_uint32(),
+            upload_speed=self.unpack_uint32(),
+            upload_number=self.unpack_uint32(),
+            unknown=self.unpack_uint32(),
+            num_files=self.unpack_uint32(),
+            num_folders=self.unpack_uint32()
+        )
 
         if not self.has_remaining_content():
             # User is offline
             return
 
-        self.country_code = self.unpack_string()
+        self.stats.country_code = self.unpack_string()
 
 
 class UnwatchUser(ServerMessage):
@@ -1028,19 +1024,21 @@ class UserJoinedRoom(ServerMessage):
     The server tells us someone has just joined a room we're in.
     """
 
-    __slots__ = ("room_name", "user_data")
+    __slots__ = ("room_name", "username", "stats")
     CODE = 16
     EVENT_NAME = "user-joined-room"
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.room_name = None
-        self.user_data = None
+        self.username = None
+        self.stats = None
 
     def parse_network_message(self):
         self.room_name = self.unpack_string()
-        self.user_data = UserData(
-            username=self.unpack_string(),
+        self.username = self.unpack_string()
+        self.stats = UserStats(
+            username=self.username,
             status=self.unpack_uint32(),
             upload_speed=self.unpack_uint32(),
             upload_number=self.unpack_uint32(),
@@ -1369,29 +1367,28 @@ class GetUserStats(ServerMessage):
     the message to the server.
     """
 
-    __slots__ = ("username", "upload_speed", "upload_number", "unknown", "num_files", "num_folders")
+    __slots__ = ("username", "stats")
     CODE = 36
     EVENT_NAME = "user-stats"
 
-    def __init__(self, username=None, upload_speed=None, num_files=None, num_folders=None, *, msg_content=None):
+    def __init__(self, username=None, stats=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.username = username
-        self.upload_speed = upload_speed
-        self.num_files = num_files
-        self.num_folders = num_folders
-        self.upload_number = None
-        self.unknown = None
+        self.stats = stats
 
     def make_network_message(self):
         return self.pack_string(self.username)
 
     def parse_network_message(self):
         self.username = self.unpack_string()
-        self.upload_speed = self.unpack_uint32()
-        self.upload_number = self.unpack_uint32()
-        self.unknown = self.unpack_uint32()
-        self.num_files = self.unpack_uint32()
-        self.num_folders = self.unpack_uint32()
+        self.stats = UserStats(
+            username=self.username,
+            upload_speed=self.unpack_uint32(),
+            upload_number=self.unpack_uint32(),
+            unknown=self.unpack_uint32(),
+            num_files=self.unpack_uint32(),
+            num_folders=self.unpack_uint32()
+        )
 
 
 class UploadSlotsFull(ServerMessage):
