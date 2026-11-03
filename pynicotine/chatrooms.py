@@ -35,25 +35,6 @@ from pynicotine.utils import replace_text
 
 if TYPE_CHECKING:
     from pynicotine.slskmessages import Login
-    from pynicotine.slskmessages import UserData
-    from pynicotine.slskmessages import RoomMembers
-    from pynicotine.slskmessages import RoomMembershipGranted
-    from pynicotine.slskmessages import RoomMembershipRevoked
-    from pynicotine.slskmessages import RoomOperatorshipGranted
-    from pynicotine.slskmessages import RoomOperatorshipRevoked
-    from pynicotine.slskmessages import RoomOperators
-    from pynicotine.slskmessages import GlobalRoomMessage
-    from pynicotine.slskmessages import UserJoinedRoom
-    from pynicotine.slskmessages import UserLeftRoom
-    from pynicotine.slskmessages import RoomTickers
-    from pynicotine.slskmessages import RoomTickerAdded
-    from pynicotine.slskmessages import RoomTickerRemoved
-    from pynicotine.slskmessages import ServerDisconnect
-
-
-if TYPE_CHECKING:
-    from pynicotine.slskmessages import Login
-    from pynicotine.slskmessages import UserData
     from pynicotine.slskmessages import RoomMembers
     from pynicotine.slskmessages import RoomMembershipGranted
     from pynicotine.slskmessages import RoomMembershipRevoked

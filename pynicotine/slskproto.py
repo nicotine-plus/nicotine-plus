@@ -88,7 +88,7 @@ if TYPE_CHECKING:
 
 @dataclass(slots=True, eq=False)
 class Connection:
-    sock: socket
+    sock: socket.socket
     addr: tuple[str, int]
     io_events: int
     recv_size: int = 51200
