@@ -145,12 +145,6 @@ class ParentStatus:
 
 
 @dataclass(slots=True, eq=False)
-class SimilarUser:
-    username: str
-    rating: int | None = None
-
-
-@dataclass(slots=True, eq=False)
 class UserStats:
     username: str
     status: UserStatus | None = None
@@ -161,6 +155,36 @@ class UserStats:
     num_folders: int = 0
     slots_full: int = 0
     country_code: str = ""
+
+
+@dataclass(slots=True, eq=False)
+class RoomStats:
+    name: str
+    num_users: int = 0
+
+
+@dataclass(slots=True, eq=False)
+class RoomTicker:
+    username: str
+    content: str
+
+
+@dataclass(slots=True, eq=False)
+class Recommendation:
+    item: str
+    rating: int
+
+
+@dataclass(slots=True, eq=False)
+class SimilarUser:
+    username: str
+    rating: int | None = None
+
+
+@dataclass(slots=True, eq=False)
+class RelatedSearchTerm:
+    term: str
+    score: int
 
 
 @dataclass(slots=True, eq=False)
@@ -586,9 +610,8 @@ class ServerMessage(SlskMessage):
     TYPE = MessageType.SERVER
 
     def parse_users(self):
-        num_users = self.unpack_uint32()
-
         users = []
+        num_users = self.unpack_uint32()
         for i in range(num_users):
             users.append(UserStats(username=self.unpack_string()))
 
@@ -618,14 +641,14 @@ class ServerMessage(SlskMessage):
         num_recommendations = self.unpack_uint32()
 
         for _ in range(num_recommendations):
-            recommendation = self.unpack_string()
-            rating = self.unpack_int32()
+            recommendation = Recommendation(
+                item=self.unpack_string(),
+                rating=self.unpack_int32()
+            )
+            lst = recommendations if recommendation.rating >= 0 else unrecommendations
 
-            lst = recommendations if rating >= 0 else unrecommendations
-            item = (recommendation, rating)
-
-            if item not in lst:
-                lst.append(item)
+            if recommendation not in lst:
+                lst.append(recommendation)
 
     def parse_recommendations(self):
         recommendations = []
@@ -1795,33 +1818,32 @@ class RoomList(ServerMessage):
     def make_network_message(self):
         return b""
 
-    def parse_rooms(self, has_count=True):
-        num_rooms = self.unpack_uint32()
-
+    def parse_room_names(self):
         rooms = []
-        for i in range(num_rooms):
+        num_rooms = self.unpack_uint32()
+        for _ in range(num_rooms):
             room_name = self.unpack_string()
+            rooms.append(room_name)
 
-            if has_count:
-                rooms.append([room_name, None])
-            else:
-                rooms.append(room_name)
+        return rooms
 
-        if not has_count:
-            return rooms
+    def parse_room_stats(self):
+        rooms = []
+        num_rooms = self.unpack_uint32()
+        for _ in range(num_rooms):
+            rooms.append(RoomStats(name=self.unpack_string()))
 
         num_stats = self.unpack_uint32()
-
         for i in range(num_stats):
-            rooms[i][1] = self.unpack_uint32()
+            rooms[i].num_users = self.unpack_uint32()
 
         return rooms
 
     def parse_network_message(self):
-        self.rooms = self.parse_rooms()
-        self.rooms_owner = self.parse_rooms()
-        self.rooms_member = self.parse_rooms()
-        self.rooms_operator = self.parse_rooms(has_count=False)
+        self.rooms = self.parse_room_stats()
+        self.rooms_owner = self.parse_room_stats()
+        self.rooms_member = self.parse_room_stats()
+        self.rooms_operator = self.parse_room_names()
 
 
 class ExactFileSearch(ServerMessage):
@@ -2398,10 +2420,12 @@ class RoomTickers(ServerMessage):
         num_tickers = self.unpack_uint32()
 
         for _ in range(num_tickers):
-            username = self.unpack_string()
-            content = self.unpack_string()
-
-            self.tickers.append((username, content))
+            self.tickers.append(
+                RoomTicker(
+                    username=self.unpack_string(),
+                    content=self.unpack_string()
+                )
+            )
 
 
 class RoomTickerAdded(ServerMessage):
@@ -2413,20 +2437,21 @@ class RoomTickerAdded(ServerMessage):
     room walls.
     """
 
-    __slots__ = ("room_name", "username", "content")
+    __slots__ = ("room_name", "ticker")
     CODE = 114
     EVENT_NAME = "room-ticker-added"
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.room_name = None
-        self.username = None
-        self.content = None
+        self.ticker = None
 
     def parse_network_message(self):
         self.room_name = self.unpack_string()
-        self.username = self.unpack_string()
-        self.content = self.unpack_string()
+        self.ticker = RoomTicker(
+            username=self.unpack_string(),
+            content=self.unpack_string()
+        )
 
 
 class RoomTickerRemoved(ServerMessage):
@@ -3189,10 +3214,12 @@ class RelatedSearch(ServerMessage):
         num_related_terms = self.unpack_uint32()
 
         for _ in range(num_related_terms):
-            term = self.unpack_string()
-            score = self.unpack_uint32()
-
-            self.related_terms.append((term, score))
+            self.related_terms.append(
+                RelatedSearchTerm(
+                    term=self.unpack_string(),
+                    score=self.unpack_uint32()
+                )
+            )
 
 
 class ExcludedSearchPhrases(ServerMessage):
