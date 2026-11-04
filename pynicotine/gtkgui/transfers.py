@@ -1248,7 +1248,7 @@ class Transfers:
             folder_path, _separator, basename = file_path.rpartition("\\")
 
             if watched_user is not None:
-                speed = watched_user.upload_speed or 0
+                speed = watched_user.stats.upload_speed or 0
 
             data.append({
                 "user": transfer.username,
