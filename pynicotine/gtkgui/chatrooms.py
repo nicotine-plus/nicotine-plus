@@ -738,7 +738,7 @@ class ChatRoom:
     def add_user(self, username, stats=None):
 
         if stats is None:
-            stats = UserStats()
+            stats = UserStats(username=username)
 
         status = stats.status or UserStatus.OFFLINE
         status_icon_name = USER_STATUS_ICON_NAMES.get(status, "")
