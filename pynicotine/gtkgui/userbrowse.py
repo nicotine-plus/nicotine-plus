@@ -1234,7 +1234,7 @@ class UserBrowse:
         speed = 0
 
         if watched_user is not None:
-            speed = watched_user.upload_speed or 0
+            speed = watched_user.stats.upload_speed or 0
 
         if all_files:
             prev_folder_path = None
