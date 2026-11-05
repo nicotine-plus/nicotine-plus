@@ -48,6 +48,7 @@ if TYPE_CHECKING:
     from pynicotine.slskmessages import RoomTickerAdded
     from pynicotine.slskmessages import RoomTickerRemoved
     from pynicotine.slskmessages import ServerDisconnect
+    from pynicotine.slskmessages import UserStats
 
 
 @dataclass(slots=True, eq=False)
@@ -203,7 +204,7 @@ class ChatRooms:
             self.remove_room(room_name, is_permanent)
 
     @classmethod
-    def sanitize_room_name(cls, room_name):
+    def sanitize_room_name(cls, room_name) -> str:
         """Sanitize room name according to server requirements."""
 
         # Replace non-ASCII characters
@@ -257,28 +258,28 @@ class ChatRooms:
     def request_remove_room_member(self, room_name, username) -> None:
         core.send_message_to_server(RemoveRoomMember(room_name, username))
 
-    def is_room_owner(self, room_name):
+    def is_room_owner(self, room_name) -> bool:
         private_room = self.private_rooms.get(room_name)
         return private_room is not None and private_room.owner == core.users.login_username
 
-    def is_room_member(self, room_name):
+    def is_room_member(self, room_name) -> bool:
         return room_name in self.private_rooms
 
-    def is_room_operator(self, room_name):
+    def is_room_operator(self, room_name) -> bool:
         private_room = self.private_rooms.get(room_name)
         return private_room is not None and core.users.login_username in private_room.operators
 
     def request_room_list(self) -> None:
         core.send_message_to_server(RoomList())
 
-    def request_cancel_room_ownership(self, room_name):
+    def request_cancel_room_ownership(self, room_name) -> None:
 
         if not self.is_room_owner(room_name):
             return
 
         core.send_message_to_server(CancelRoomOwnership(room_name))
 
-    def request_cancel_room_membership(self, room_name):
+    def request_cancel_room_membership(self, room_name) -> None:
 
         if not self.is_room_member(room_name):
             return
@@ -291,7 +292,7 @@ class ChatRooms:
     def request_update_ticker(self, room_name, message) -> None:
         core.send_message_to_server(SetRoomTicker(room_name, message))
 
-    def _update_room_user(self, room, user_stats):
+    def _update_room_user(self, room, user_stats: UserStats) -> None:
 
         username = user_stats.username
         room.users.add(username)
@@ -336,7 +337,7 @@ class ChatRooms:
 
         self.server_rooms.add(room_name)
 
-    def _room_invitation_rejected(self, username):
+    def _room_invitation_rejected(self, username: str) -> None:
         log.add(_("User %(user)s has not enabled private room invitations"), {"user": username})
 
     def _join_room(self, msg: JoinRoom) -> None:

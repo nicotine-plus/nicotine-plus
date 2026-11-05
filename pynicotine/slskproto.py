@@ -446,12 +446,12 @@ class NetworkThread(Thread):
         ):
             events.connect(event_name, callback)
 
-    def _schedule_quit(self):
+    def _schedule_quit(self) -> None:
         self._want_abort = True
 
     # Message Queue #
 
-    def _enable_message_queue(self):
+    def _enable_message_queue(self) -> None:
 
         if self._should_process_queue:
             return
@@ -459,7 +459,7 @@ class NetworkThread(Thread):
         self._clear_message_queue()
         self._should_process_queue = True
 
-    def _disable_message_queue(self):
+    def _disable_message_queue(self) -> None:
 
         if not self._should_process_queue:
             return
@@ -467,7 +467,7 @@ class NetworkThread(Thread):
         self._should_process_queue = False
         self._clear_message_queue()
 
-    def _clear_message_queue(self):
+    def _clear_message_queue(self) -> None:
 
         while True:
             try:
@@ -475,11 +475,11 @@ class NetworkThread(Thread):
             except Empty:
                 break
 
-    def _queue_network_message(self, msg: InternalMessage):
+    def _queue_network_message(self, msg: InternalMessage) -> None:
         if self._should_process_queue:
             self._message_queue.put_nowait(msg)
 
-    def _process_queue_messages(self):
+    def _process_queue_messages(self) -> None:
 
         msgs = []
 
@@ -899,7 +899,7 @@ class NetworkThread(Thread):
         log.add_conn("Direct connection of type %s to user %s failed: %s",
                      (conn_type, username, error))
 
-    def _connect_to_peer_indirect(self, init):
+    def _connect_to_peer_indirect(self, init) -> None:
         """Send a message to the server to ask the peer to connect to us
         (indirect connection)"""
 
@@ -914,7 +914,7 @@ class NetworkThread(Thread):
 
         log.add_conn("Requesting indirect connection to user %s with token %s", (username, init.indirect_token))
 
-    def _establish_outgoing_peer_connection(self, conn: PeerConnection):
+    def _establish_outgoing_peer_connection(self, conn: PeerConnection) -> None:
 
         conn.is_established = True
         init = conn.init
@@ -2007,10 +2007,10 @@ class NetworkThread(Thread):
 
         self._upload_limit_split = int(limit)
 
-    def _calc_upload_limit_by_transfer(self):
+    def _calc_upload_limit_by_transfer(self) -> None:
         return self._calc_upload_limit(limit_per_transfer=True)
 
-    def _calc_upload_limit_none(self):
+    def _calc_upload_limit_none(self) -> None:
         return self._calc_upload_limit(limit_disabled=True)
 
     def _calc_download_limit(self) -> None:
@@ -2030,7 +2030,7 @@ class NetworkThread(Thread):
 
         self._download_limit_split = int(limit)
 
-    def _process_file_init_message(self, conn: PeerConnection, in_buffer: bytearray):
+    def _process_file_init_message(self, conn: PeerConnection, in_buffer: bytearray) -> int:
 
         msg_size = 4
         idx = 0

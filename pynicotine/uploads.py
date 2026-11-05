@@ -744,7 +744,7 @@ class Uploads(Transfers):
         for upload in uploads:
             self.retry_upload(upload)
 
-    def abort_uploads(self, uploads, denied_message=None, status=TransferStatus.CANCELLED):
+    def abort_uploads(self, uploads, denied_message=None, status=TransferStatus.CANCELLED) -> None:
 
         ignored_statuses = {status, TransferStatus.FINISHED}
 

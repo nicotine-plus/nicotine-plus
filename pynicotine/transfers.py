@@ -18,9 +18,7 @@ from ast import literal_eval
 from collections import defaultdict
 from dataclasses import dataclass
 from dataclasses import field
-from io import BufferedRandom
 from os.path import normpath
-from socket import socket
 from typing import TYPE_CHECKING
 
 from pynicotine.config import config
@@ -36,6 +34,8 @@ from pynicotine.utils import load_file
 from pynicotine.utils import write_file_and_backup
 
 if TYPE_CHECKING:
+    from io import BufferedRandom
+    from socket import socket
     from pynicotine.slskmessages import Login
     from pynicotine.slskmessages import ServerDisconnect
 
@@ -192,7 +192,7 @@ class Transfers:
     def _load_transfers(self):
         raise NotImplementedError
 
-    def _load_file_attributes(self, num_attributes: int, transfer_row):
+    def _load_file_attributes(self, num_attributes: int, transfer_row) -> FileAttributes:
 
         if num_attributes < 7:
             return FileAttributes()
@@ -430,7 +430,9 @@ class Transfers:
     def _update_transfer(self, transfer: Transfer):
         raise NotImplementedError
 
-    def _update_transfer_progress(self, transfer: Transfer, sock, stat_id: str, current_byte_offset=None, speed=None):
+    def _update_transfer_progress(
+        self, transfer: Transfer, sock, stat_id: str, current_byte_offset=None, speed=None
+    ) -> bool:
 
         error = None
 

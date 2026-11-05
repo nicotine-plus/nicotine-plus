@@ -33,13 +33,10 @@ class Buddy:
 class Buddies:
     __slots__ = ("users", "_allow_saving_buddies")
 
-    users: dict[str, Buddy]
-    _allow_saving_buddies: bool
-
     def __init__(self):
 
-        self.users = {}
-        self._allow_saving_buddies = False
+        self.users: dict[str, Buddy] = {}
+        self._allow_saving_buddies: bool = False
 
         for event_name, callback in (
             ("quit", self._quit),

@@ -476,14 +476,14 @@ class Users:
 
         log.add(_("Your password has been changed"), title=_("Password Changed"))
 
-    def _user_ip_address_offline(self, username):
+    def _user_ip_address_offline(self, username: str) -> None:
 
         log.add(
             _("Cannot retrieve the IP of user %(user)s, since this user is offline"), {"user": username},
             title=_("User IP Address")
         )
 
-    def _user_login_required(self, username):
+    def _user_login_required(self, username: str) -> None:
 
         log.add(
             _("User %(user)s needs to be logged in first"), {"user": username},

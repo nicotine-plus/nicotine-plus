@@ -20,8 +20,8 @@ try:
 except ImportError:
     from hashlib import md5
 
-from dataclasses import dataclass
 from collections import defaultdict
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from pynicotine.config import config

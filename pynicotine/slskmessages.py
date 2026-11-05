@@ -496,7 +496,7 @@ class FileListMessage(SlskMessage):
     __slots__ = ()
 
     @classmethod
-    def pack_file_info(cls, fileinfo):
+    def pack_file_info(cls, fileinfo) -> bytearray:
 
         msg = bytearray()
         virtual_file_path, size, quality, duration = fileinfo
@@ -609,11 +609,9 @@ class ServerMessage(SlskMessage):
     __slots__ = ()
     TYPE = MessageType.SERVER
 
-    def parse_users(self):
-        users = []
+    def parse_users(self) -> list[UserStats]:
         num_users = self.unpack_uint32()
-        for i in range(num_users):
-            users.append(UserStats(username=self.unpack_string()))
+        users = [UserStats(username=self.unpack_string()) for _ in range(num_users)]
 
         num_statuses = self.unpack_uint32()
         for i in range(num_statuses):
@@ -637,7 +635,9 @@ class ServerMessage(SlskMessage):
 
         return users
 
-    def populate_recommendations(self, recommendations, unrecommendations) -> None:
+    def populate_recommendations(
+        self, recommendations: list[Recommendation], unrecommendations: list[Recommendation]
+    ) -> None:
         num_recommendations = self.unpack_uint32()
 
         for _ in range(num_recommendations):
@@ -650,7 +650,7 @@ class ServerMessage(SlskMessage):
             if recommendation not in lst:
                 lst.append(recommendation)
 
-    def parse_recommendations(self):
+    def parse_recommendations(self) -> tuple[list[Recommendation], list[Recommendation]]:
         recommendations = []
         unrecommendations = []
 
@@ -1056,7 +1056,7 @@ class UserJoinedRoom(ServerMessage):
         self.username = None
         self.stats = None
 
-    def parse_network_message(self):
+    def parse_network_message(self) -> None:
         self.room_name = self.unpack_string()
         self.username = self.unpack_string()
         self.stats = UserStats(
@@ -1087,7 +1087,7 @@ class UserLeftRoom(ServerMessage):
         self.room_name = None
         self.username = None
 
-    def parse_network_message(self):
+    def parse_network_message(self) -> None:
         self.room_name = self.unpack_string()
         self.username = self.unpack_string()
 
@@ -1124,7 +1124,7 @@ class ConnectToPeer(ServerMessage):
 
         return msg
 
-    def parse_network_message(self):
+    def parse_network_message(self) -> None:
         self.username = self.unpack_string()
         self.conn_type = self.unpack_string()
         self.ip_address = self.unpack_ip()
@@ -1818,7 +1818,7 @@ class RoomList(ServerMessage):
     def make_network_message(self) -> bytes:
         return b""
 
-    def parse_room_names(self):
+    def parse_room_names(self) -> list[str]:
         rooms = []
         num_rooms = self.unpack_uint32()
         for _ in range(num_rooms):
@@ -1827,11 +1827,9 @@ class RoomList(ServerMessage):
 
         return rooms
 
-    def parse_room_stats(self):
-        rooms = []
+    def parse_room_stats(self) -> list[RoomStats]:
         num_rooms = self.unpack_uint32()
-        for _ in range(num_rooms):
-            rooms.append(RoomStats(name=self.unpack_string()))
+        rooms = [RoomStats(name=self.unpack_string()) for _ in range(num_rooms)]
 
         num_stats = self.unpack_uint32()
         for i in range(num_stats):
@@ -1839,7 +1837,7 @@ class RoomList(ServerMessage):
 
         return rooms
 
-    def parse_network_message(self):
+    def parse_network_message(self) -> None:
         self.rooms = self.parse_room_stats()
         self.rooms_owner = self.parse_room_stats()
         self.rooms_member = self.parse_room_stats()
@@ -2535,7 +2533,7 @@ class RemoveThingIHate(ServerMessage):
         ServerMessage.__init__(self)
         self.item = item
 
-    def make_network_message(self):
+    def make_network_message(self) -> bytes:
         return self.pack_string(self.item)
 
 

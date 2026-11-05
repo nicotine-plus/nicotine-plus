@@ -310,7 +310,7 @@ class Core:
         """Sends message to the server."""
         events.emit("queue-network-message", message)
 
-    def send_message_to_peer(self, username: str, message: PeerMessage) -> None:
+    def send_message_to_peer(self, username: str, message) -> None:
         """Sends message to a peer."""
 
         message.username = username

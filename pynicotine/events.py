@@ -253,7 +253,7 @@ class Events:
         ):
             self.connect(event_name, callback)
 
-    def connect(self, event_name: str, function) -> None:
+    def connect(self, event_name: str, function: Callable) -> None:
 
         if event_name not in EVENT_NAMES:
             raise ValueError(f"Unknown event {event_name}")
@@ -265,7 +265,7 @@ class Events:
 
         self._callbacks[event_name].append(function)
 
-    def disconnect(self, event_name: str, function) -> None:
+    def disconnect(self, event_name: str, function: Callable) -> None:
         self._callbacks[event_name].remove(function)
 
     def emit(self, event_name: str, *args, **kwargs) -> None:
@@ -283,7 +283,7 @@ class Events:
 
                 if core.pluginhandler is None or not core.pluginhandler.is_plugin_loaded(module_name):
                     core.quit()
-                    raise error
+                    raise
 
                 # Exception occurred in a plugin, log a message and continue
                 core.pluginhandler.show_plugin_error(module_name, error)
@@ -291,10 +291,10 @@ class Events:
     def emit_main_thread(self, event_name: str, *args, **kwargs) -> None:
         self._thread_events.put_nowait(ThreadEvent(event_name, args, kwargs))
 
-    def invoke_main_thread(self, callback, *args, **kwargs) -> None:
+    def invoke_main_thread(self, callback: Callable, *args, **kwargs) -> None:
         self.emit_main_thread("thread-callback", callback, *args, **kwargs)
 
-    def schedule(self, delay: int, callback, callback_args=None, repeat: bool = False):
+    def schedule(self, delay: int, callback: Callable, callback_args=None, repeat: bool = False):
 
         if delay <= 0:
             return None
@@ -310,11 +310,11 @@ class Events:
         )
         return self._scheduler_event_id
 
-    def schedule_at(self, timestamp: float, callback, callback_args=None):
+    def schedule_at(self, timestamp: float, callback: Callable, callback_args=None):
         delay = (timestamp - time.time())
         return self.schedule(delay, callback, callback_args, repeat=False)
 
-    def cancel_scheduled(self, event_id) -> None:
+    def cancel_scheduled(self, event_id: int) -> None:
         self._pending_scheduler_events.put_nowait(SchedulerEvent(event_id, next_time=None))
 
     def process_thread_events(self) -> bool:
@@ -334,10 +334,7 @@ class Events:
                 break
 
         if not event_list:
-            if not self._is_active:
-                return False
-
-            return True
+            return self._is_active
 
         for event in event_list:
             self.emit(event.event_name, *event.args, **event.kwargs)
@@ -391,7 +388,7 @@ class Events:
         self._scheduler_thread = Thread(target=self._run_scheduler, name="SchedulerThread")
         self._scheduler_thread.start()
 
-    def _thread_callback(self, callback, *args, **kwargs) -> None:
+    def _thread_callback(self, callback: Callable, *args, **kwargs) -> None:
         callback(*args, **kwargs)
 
     def _quit(self) -> None:
