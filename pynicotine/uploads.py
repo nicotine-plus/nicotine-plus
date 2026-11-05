@@ -330,7 +330,10 @@ class Uploads(Transfers):
         super()._enqueue_transfer(transfer)
 
         if self.is_privileged(username):
-            transfer.modifier = "privileged" if username in core.users.privileged else "prioritized"
+            transfer.status = (
+                TransferStatus.QUEUED_PRIVILEGED if username in core.users.privileged else
+                TransferStatus.QUEUED_PRIORITIZED
+            )
 
         # Clear queue position cache until next position request
         self._queue_positions.clear()
@@ -350,8 +353,6 @@ class Uploads(Transfers):
 
         if username not in self.queued_users:
             self._user_update_counters.pop(username, None)
-
-        transfer.modifier = None
 
         # Clear queue position cache until next position request
         self._queue_positions.clear()

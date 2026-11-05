@@ -417,21 +417,17 @@ class Users:
 
         username = msg.username
         stats = msg.stats
-        upload_speed = stats.upload_speed
-        num_files = stats.num_files
-        num_folders = stats.num_folders
+        watched_user = self.watched.get(username)
 
-        stats = self.watched.get(username)
-
-        if stats is not None:
-            stats.upload_speed = upload_speed
-            stats.num_files = num_files
-            stats.num_folders = num_folders
+        if watched_user is not None:
+            watched_user.upload_speed = stats.upload_speed
+            watched_user.num_files = stats.num_files
+            watched_user.num_folders = stats.num_folders
 
         core.pluginhandler.user_stats_notification(username, stats={
-            "avgspeed": upload_speed,
-            "files": num_files,
-            "dirs": num_folders,
+            "avgspeed": stats.upload_speed,
+            "files": stats.num_files,
+            "dirs": stats.num_folders,
             "shared_size": None,
             "source": "server"
         })

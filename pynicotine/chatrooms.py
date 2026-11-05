@@ -537,14 +537,14 @@ class ChatRooms:
     def _room_list(self, msg: RoomList) -> None:
         """Server code 64."""
 
-        for room_name, _user_count in msg.rooms:
-            self.server_rooms.add(room_name)
+        for room_stats in msg.rooms:
+            self.server_rooms.add(room_stats.name)
 
-        for room_name, _user_count in msg.rooms_owner:
-            self._update_private_room(room_name, owner=core.users.login_username)
+        for room_stats in msg.rooms_owner:
+            self._update_private_room(room_stats.name, owner=core.users.login_username)
 
-        for room_name, _user_count in msg.rooms_member:
-            self._update_private_room(room_name)
+        for room_stats in msg.rooms_member:
+            self._update_private_room(room_stats.name)
 
         if config.sections["words"]["roomnames"]:
             self.update_completions()
@@ -687,13 +687,13 @@ class ChatRooms:
 
         room.tickers.clear()
 
-        for username, message in msg.tickers:
-            if core.network_filter.is_user_ignored(username) or \
-                    core.network_filter.is_user_ip_ignored(username):
+        for ticker in msg.tickers:
+            if core.network_filter.is_user_ignored(ticker.username) or \
+                    core.network_filter.is_user_ip_ignored(ticker.username):
                 # User ignored, ignore ticker message
                 continue
 
-            room.tickers[username] = message
+            room.tickers[ticker.username] = ticker.content
 
     def _room_ticker_added(self, msg: RoomTickerAdded) -> None:
         """Server code 114."""
@@ -703,13 +703,14 @@ class ChatRooms:
         if room is None or not room.users:
             raise StopEventPropagation()
 
-        username = msg.username
+        ticker = msg.ticker
+        username = ticker.username
 
         if core.network_filter.is_user_ignored(username) or core.network_filter.is_user_ip_ignored(username):
             # User ignored, ignore Ticker messages
             return
 
-        room.tickers[username] = msg.content
+        room.tickers[username] = ticker.content
 
     def _room_ticker_removed(self, msg: RoomTickerRemoved) -> None:
         """Server code 115."""

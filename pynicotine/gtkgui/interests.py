@@ -442,17 +442,23 @@ class Interests:
             widget.clear()
             widget.freeze()
 
-        for recommendation, rating in recommendations:
-            if recommendation not in self.likes_list_view.iterators:
-                self.add_like_combobox.append(recommendation)
+        for recommendation in recommendations:
+            item = recommendation.item
+            rating = recommendation.rating
 
-            self.recommendations_list_view.add_row([humanize(rating), recommendation, rating], select_row=False)
+            if item not in self.likes_list_view.iterators:
+                self.add_like_combobox.append(item)
 
-        for unrecommendation, rating in unrecommendations:
-            if unrecommendation not in self.dislikes_list_view.iterators:
-                self.add_dislike_combobox.append(unrecommendation)
+            self.recommendations_list_view.add_row([humanize(rating), item, rating], select_row=False)
 
-            self.recommendations_list_view.add_row([humanize(rating), unrecommendation, rating], select_row=False)
+        for unrecommendation in unrecommendations:
+            item = unrecommendation.item
+            rating = unrecommendation.rating
+
+            if item not in self.dislikes_list_view.iterators:
+                self.add_dislike_combobox.append(item)
+
+            self.recommendations_list_view.add_row([humanize(rating), item, rating], select_row=False)
 
         for widget in widgets:
             widget.unfreeze()

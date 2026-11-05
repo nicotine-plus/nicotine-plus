@@ -393,8 +393,8 @@ class ChatRooms(IconNotebook):
         self.join_room_combobox.freeze()
         self.join_room_combobox.clear()
 
-        for room_name, _user_count in chain(msg.rooms, msg.rooms_owner, msg.rooms_member):
-            self.join_room_combobox.append(room_name)
+        for room_stats in chain(msg.rooms, msg.rooms_owner, msg.rooms_member):
+            self.join_room_combobox.append(room_stats.name)
 
         self.join_room_combobox.unfreeze()
 
@@ -738,9 +738,9 @@ class ChatRoom:
     def add_user(self, username, stats=None):
 
         if stats is None:
-            stats = UserStats()
+            stats = UserStats(username=username)
 
-        status = stats.status
+        status = stats.status or UserStatus.OFFLINE
         status_icon_name = USER_STATUS_ICON_NAMES.get(status, "")
         flag_icon_name = get_flag_icon_name(stats.country_code)
         upload_speed = stats.upload_speed or 0

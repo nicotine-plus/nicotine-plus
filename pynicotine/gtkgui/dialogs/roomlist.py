@@ -240,14 +240,14 @@ class RoomList(Dialog):
         self.list_view.freeze()
         self.clear()
 
-        for room_name, user_count in msg.rooms_owner:
-            self.add_room(room_name, user_count, is_private=True, is_owner=True)
+        for room_stats in msg.rooms_owner:
+            self.add_room(room_stats.name, room_stats.num_users, is_private=True, is_owner=True)
 
-        for room_name, user_count in msg.rooms_member:
-            self.add_room(room_name, user_count, is_private=True)
+        for room_stats in msg.rooms_member:
+            self.add_room(room_stats.name, room_stats.num_users, is_private=True)
 
-        for room_name, user_count in msg.rooms:
-            self.add_room(room_name, user_count)
+        for room_stats in msg.rooms:
+            self.add_room(room_stats.name, room_stats.num_users)
 
         self.list_view.unfreeze()
 
