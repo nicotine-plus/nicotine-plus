@@ -427,11 +427,11 @@ class Transfers:
         # Only attempt to unwatch user after the transfer status is fully set
         self._unwatch_stale_user(username)
 
-    def _update_transfer(self, transfer: Transfer):
+    def _update_transfer(self, transfer: Transfer) -> None:
         raise NotImplementedError
 
     def _update_transfer_progress(
-        self, transfer: Transfer, sock, stat_id: str, current_byte_offset=None, speed=None
+        self, transfer: Transfer, sock: socket, stat_id: str, current_byte_offset=None, speed=None
     ) -> bool:
 
         error = None

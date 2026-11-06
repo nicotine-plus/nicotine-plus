@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: 2022-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
+from __future__ import annotations
 
 try:
     # Enable line editing and history
@@ -21,8 +22,12 @@ import time
 from collections import deque
 from getpass import getpass
 from threading import Thread
+from typing import TYPE_CHECKING
 
 from pynicotine.events import events
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 class CLIInputProcessor(Thread):
@@ -135,7 +140,7 @@ class CLI:
         ):
             events.connect(event_name, callback)
 
-    def prompt(self, message: str, callback, is_silent: bool = False) -> None:
+    def prompt(self, message: str, callback: Callable[[str], None], is_silent: bool = False) -> None:
 
         if not self._has_tty:
             return

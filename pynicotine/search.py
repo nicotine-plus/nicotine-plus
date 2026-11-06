@@ -219,7 +219,9 @@ class Search:
         """Disallow parsing search result messages for a search ID."""
         core.send_message_to_network_thread(RemoveAllowedResponse(FileSearchResponse, token))
 
-    def do_search(self, search_term: str, mode, room=None, users=None, switch_page: bool = True) -> None:
+    def do_search(
+        self, search_term: str, mode, room: str | None = None, users: list[str] | None = None, switch_page: bool = True
+    ) -> None:
 
         # Validate search term and run it through plugins
         search_term, room, users = self._process_search_term(search_term, mode, room, users)

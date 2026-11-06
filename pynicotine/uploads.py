@@ -46,13 +46,15 @@ from pynicotine.utils import encode_path
 from pynicotine.utils import human_size
 
 if TYPE_CHECKING:
-    from pynicotine.slskmessages import Login
-    from pynicotine.slskmessages import ServerDisconnect
-    from pynicotine.slskmessages import QueueUpload
-    from pynicotine.slskmessages import PlaceInQueueRequest
+    import socket
+
     from pynicotine.slskmessages import GetUserStats
     from pynicotine.slskmessages import GetUserStatus
+    from pynicotine.slskmessages import Login
+    from pynicotine.slskmessages import PlaceInQueueRequest
     from pynicotine.slskmessages import PrivilegedUsers
+    from pynicotine.slskmessages import QueueUpload
+    from pynicotine.slskmessages import ServerDisconnect
 
 
 class Uploads(Transfers):
@@ -75,7 +77,7 @@ class Uploads(Transfers):
         self._privileged_position_requested = False
         self._pending_network_msgs = []
         self._user_update_counter = 0
-        self._user_update_counters = {}
+        self._user_update_counters: dict[str, int] = {}
 
         self._queue_notification_timer_id = None
         self._upload_queue_timer_id = None
@@ -570,7 +572,7 @@ class Uploads(Transfers):
             self._user_update_counter += 1
             self._user_update_counters[username] = self._user_update_counter
 
-    def _check_upload_queue(self, upload_candidate=None) -> None:
+    def _check_upload_queue(self, upload_candidate: Transfer | None = None) -> None:
         """Find next file to upload."""
 
         final_upload_candidate = None
@@ -1217,7 +1219,7 @@ class Uploads(Transfers):
             # Must be be emitted after the final update to prevent inconsistent state
             core.pluginhandler.upload_started_notification(username, virtual_path, real_path)
 
-    def _file_upload_progress(self, username: str, token: int, sock, offset, bytes_sent, speed=None) -> None:
+    def _file_upload_progress(self, username: str, token: int, sock: socket.socket, offset, bytes_sent, speed=None) -> None:
         """A file upload is in progress."""
 
         upload = self.active_users.get(username, {}).get(token)

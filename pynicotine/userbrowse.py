@@ -82,7 +82,9 @@ class UserBrowse:
 
         core.send_message_to_peer(username, UploadQueueNotification())
 
-    def _show_user(self, username: str, path=None, new_request: bool = False, switch_page: bool = True) -> None:
+    def _show_user(
+        self, username: str, path: str | None = None, new_request: bool = False, switch_page: bool = True
+    ) -> None:
 
         if username not in self.users:
             self.users[username] = BrowsedUser(username)
@@ -103,7 +105,7 @@ class UserBrowse:
         for username in self.users.copy():
             self.remove_user(username)
 
-    def _parse_local_shares(self, username: str, msg) -> None:
+    def _parse_local_shares(self, username: str, msg: SharedFileListResponse) -> None:
         """Parse a local shares list and show it in the UI."""
 
         msg.username = username
@@ -151,7 +153,7 @@ class UserBrowse:
         core.send_message_to_network_thread(AddAllowedResponse(SharedFileListResponse, username))
         core.send_message_to_peer(username, SharedFileListRequest())
 
-    def browse_user(self, username, path=None, new_request=False, switch_page=True) -> None:
+    def browse_user(self, username: str, path=None, new_request=False, switch_page=True) -> None:
         """Browse a user's shares."""
 
         if not username:
@@ -192,7 +194,7 @@ class UserBrowse:
 
         return shares_folder
 
-    def iter_matching_folders(self, requested_folder_path, browsed_user, recurse: bool = False):
+    def iter_matching_folders(self, requested_folder_path: str, browsed_user: BrowsedUser, recurse: bool = False):
 
         for folders in (browsed_user.public_folders, browsed_user.private_folders):
             for folder_path, files in folders.items():
@@ -393,7 +395,9 @@ class UserBrowse:
 
         core.uploads.enqueue_upload(username, file_path)
 
-    def upload_folder(self, username: str, requested_folder_path, local_browsed_user, recurse: bool = False) -> None:
+    def upload_folder(
+        self, username: str, requested_folder_path: str, local_browsed_user: BrowsedUser, recurse: bool = False
+    ) -> None:
 
         if not requested_folder_path or not username:
             return

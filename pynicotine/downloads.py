@@ -58,6 +58,8 @@ from pynicotine.utils import safe_path_join
 from pynicotine.utils import truncate_string_byte
 
 if TYPE_CHECKING:
+    import socket
+
     from pynicotine.slskmessages import GetUserStatus
     from pynicotine.slskmessages import Login
     from pynicotine.slskmessages import PlaceInQueueResponse
@@ -1332,7 +1334,7 @@ class Downloads(Transfers):
         log.add_transfer("Upload attempt by user %s for file %s failed. Reason: %s",
                          (virtual_path, username, download.status))
 
-    def _file_download_progress(self, username: str, token: int, sock, bytes_left, speed=None) -> None:
+    def _file_download_progress(self, username: str, token: int, sock: socket.socket, bytes_left: int, speed=None) -> None:
         """A file download is in progress."""
 
         download = self.active_users.get(username, {}).get(token)

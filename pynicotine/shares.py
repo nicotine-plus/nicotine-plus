@@ -952,7 +952,7 @@ class Shares:
             cls.close_shares(share_dbs)
             raise exception
 
-    def file_is_shared(self, username: str, virtual_path: str, real_path):
+    def file_is_shared(self, username: str, virtual_path: str, real_path: str):
 
         log.add_transfer("Checking if file is shared: %s with real path %s",
                          (virtual_path, real_path))
@@ -987,7 +987,7 @@ class Shares:
 
         return True, size
 
-    def check_user_permission(self, username: str, ip_address=None):
+    def check_user_permission(self, username: str, ip_address: str | None = None):
         """Check if this user is banned, geoip-blocked, and which shares it is
         allowed to access based on transfer and shares settings."""
 

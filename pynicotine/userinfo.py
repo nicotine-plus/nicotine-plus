@@ -106,7 +106,7 @@ class UserInfo:
         msg.username = core.users.login_username or config.sections["server"]["login"]
         return msg
 
-    def show_user(self, username=None, refresh: bool = False, switch_page: bool = True) -> None:
+    def show_user(self, username: str | None = None, refresh: bool = False, switch_page: bool = True) -> None:
 
         local_username = core.users.login_username or config.sections["server"]["login"]
 
