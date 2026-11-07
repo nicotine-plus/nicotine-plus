@@ -1219,7 +1219,9 @@ class Uploads(Transfers):
             # Must be be emitted after the final update to prevent inconsistent state
             core.pluginhandler.upload_started_notification(username, virtual_path, real_path)
 
-    def _file_upload_progress(self, username: str, token: int, sock: socket.socket, offset, bytes_sent, speed=None) -> None:
+    def _file_upload_progress(
+        self, username: str, token: int, sock: socket.socket, offset, bytes_sent, speed=None
+    ) -> None:
         """A file upload is in progress."""
 
         upload = self.active_users.get(username, {}).get(token)
