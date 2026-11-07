@@ -9,9 +9,11 @@
 import os
 import sys
 
-from collections.abc import Iterable
-from typing import Literal
+from collections.abc import Callable, Iterable
+from typing import Any, Literal, ParamSpec, TextIO, TypeVar
 
+T = TypeVar("T")
+P = ParamSpec("P")
 
 UINT32_LIMIT = 4294967295
 UINT64_LIMIT = 18446744073709551615
@@ -152,7 +154,7 @@ def clean_file(part: str) -> str:
     return part_stripped
 
 
-def safe_path_join(base_path: str, *parts) -> str:
+def safe_path_join(base_path: str, *parts: str) -> str:
     """Safely joins a path, by removing illegal path characters and path
     traversal components from provided parts."""
 
@@ -524,7 +526,8 @@ def _try_open_uri(uri: str) -> None:
         raise webbrowser.Error(_("No known URI provider available"))
 
 
-def _open_path(path, is_folder: bool = False, create_folder: bool = False, create_file: bool = False) -> bool:
+def _open_path(path: str | None, is_folder: bool = False, create_folder: bool = False,
+               create_file: bool = False) -> bool:
     """Currently used to either open a folder or play an audio file.
 
     Tries to run a user-specified command first, and falls back to the system
@@ -652,7 +655,7 @@ def open_uri(uri: str) -> bool:
     return False
 
 
-def load_file(file_path: str, load_func, use_old_file: bool = False):
+def load_file(file_path: str, load_func: Callable[[str], T], use_old_file: bool = False) -> T | None:
 
     try:
         if use_old_file:
@@ -683,7 +686,7 @@ def load_file(file_path: str, load_func, use_old_file: bool = False):
     return None
 
 
-def write_file_and_backup(path: str, callback, protect: bool = False) -> None:
+def write_file_and_backup(path: str, callback: Callable[[TextIO], Any], protect: bool = False) -> None:
 
     from pynicotine.logfacility import log
 
@@ -742,7 +745,7 @@ def write_file_and_backup(path: str, callback, protect: bool = False) -> None:
 # Debugging #
 
 
-def debug(*args) -> None:
+def debug(*args: object) -> None:
     """Prints debugging info."""
 
     from pynicotine.logfacility import log
@@ -751,13 +754,13 @@ def debug(*args) -> None:
     log.add("*" * 8, truncated_args)
 
 
-def strace(function):
+def strace(function: Callable[P, T]) -> Callable[P, T]:
     """Decorator for debugging."""
 
     from itertools import chain
     from pynicotine.logfacility import log
 
-    def newfunc(*args, **kwargs):
+    def newfunc(*args: P.args, **kwargs: P.kwargs) -> T:
         name = function.__name__
         log.add(f"{name}({', '.join(repr(x) for x in chain(args, list(kwargs.values())))})")
         retvalue = function(*args, **kwargs)
