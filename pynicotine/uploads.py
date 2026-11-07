@@ -893,7 +893,7 @@ class Uploads(Transfers):
             if isinstance(msg, (TransferRequest, FileTransferInit)):
                 self._cant_connect_upload(username, msg.token, is_offline, is_timeout)
 
-    def _peer_connection_closed(self, username: str, conn_type, msgs, is_offline=False) -> None:
+    def _peer_connection_closed(self, username: str, conn_type: ConnectionType, msgs, is_offline=False) -> None:
         self._peer_connection_error(username, conn_type, msgs, is_offline, is_timeout=False)
 
     def _cant_connect_upload(self, username: str, token: int, is_offline: bool, is_timeout: bool) -> None:

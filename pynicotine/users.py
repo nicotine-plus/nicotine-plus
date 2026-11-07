@@ -154,7 +154,7 @@ class Users:
         self._ip_requested[username] = notify
         core.send_message_to_server(GetPeerAddress(username))
 
-    def request_set_status(self, status) -> None:
+    def request_set_status(self, status: UserStatus) -> None:
         core.send_message_to_server(SetStatus(status))
 
     def request_user_stats(self, username: str) -> None:

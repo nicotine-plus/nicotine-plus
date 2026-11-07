@@ -985,7 +985,7 @@ class Downloads(Transfers):
         self.total_bandwidth = download_bandwidth
 
     def _peer_connection_error(
-        self, username: str, conn_type, msgs, is_offline: bool = False, is_timeout: bool = True
+        self, username: str, conn_type: ConnectionType, msgs, is_offline: bool = False, is_timeout: bool = True
     ) -> None:
 
         if not msgs:
@@ -1004,7 +1004,7 @@ class Downloads(Transfers):
                 if requested_folder is not None:
                     self._requested_folder_timeout(requested_folder, is_offline)
 
-    def _peer_connection_closed(self, username: str, conn_type, msgs, is_offline=False) -> None:
+    def _peer_connection_closed(self, username: str, conn_type: ConnectionType, msgs, is_offline=False) -> None:
         self._peer_connection_error(username, conn_type, msgs, is_offline, is_timeout=False)
 
     def _cant_connect_queue_file(self, username: str, virtual_path, is_offline: bool, is_timeout: bool) -> None:

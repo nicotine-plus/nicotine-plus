@@ -410,7 +410,7 @@ class Scanner:
         if folder_filters:
             self.folder_filter_regex = re.compile("(\\\\(" + "|".join(folder_filters) + ")$)", flags=re.IGNORECASE)
 
-    def create_compressed_shares_message(self, permission_level) -> None:
+    def create_compressed_shares_message(self, permission_level: PermissionLevel) -> None:
         """Create a message that will later contain a compressed list of our
         shares."""
 
@@ -507,7 +507,7 @@ class Scanner:
                 if share_db is not None:
                     share_db.close()
 
-    def rescan_dirs(self, permission_level: Literal["public", "buddy", "trusted", "banned"]) -> None:
+    def rescan_dirs(self, permission_level: PermissionLevel) -> None:
 
         shared_public_folders, shared_buddy_folders, shared_trusted_folders = self.share_groups
 

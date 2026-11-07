@@ -30,6 +30,7 @@ from pynicotine.utils import humanize
 from pynicotine.utils import safe_path_join
 
 if TYPE_CHECKING:
+    from pynicotine.shares import PermissionLevel
     from pynicotine.slskmessages import Login
 
 
@@ -118,7 +119,7 @@ class UserBrowse:
         events.emit_main_thread("shared-file-list-response", msg)
 
     def browse_local_shares(
-        self, path=None, permission_level=None, new_request: bool = False, switch_page: bool = True
+        self, path: str | None = None, permission_level: PermissionLevel | None = None, new_request: bool = False, switch_page: bool = True
     ) -> None:
         """Browse your own shares."""
 
@@ -444,7 +445,7 @@ class UserBrowse:
 
         self.browse_user(username, path=file_path)
 
-    def _peer_connection_error(self, username: str, conn_type, msgs, is_offline: bool = False) -> None:
+    def _peer_connection_error(self, username: str, conn_type: ConnectionType, msgs, is_offline: bool = False) -> None:
 
         if not msgs:
             return

@@ -80,7 +80,7 @@ class Logger:
         for level in config.sections["logging"]["debugmodes"]:
             self._log_levels.add(level)
 
-    def add_log_level(self, log_level, is_permanent: bool = True) -> None:
+    def add_log_level(self, log_level: LogLevel, is_permanent: bool = True) -> None:
 
         self._log_levels.add(log_level)
 
