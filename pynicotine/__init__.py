@@ -14,8 +14,6 @@ __port_checker_url__ = "https://www.slsknet.org/porttest.php?port=%s"
 __issue_tracker_url__ = "https://github.com/nicotine-plus/nicotine-plus/issues"
 __translations_url__ = "https://nicotine-plus.org/doc/TRANSLATIONS"
 
-import io
-import os
 import sys
 
 from pynicotine.config import config
@@ -125,7 +123,7 @@ You should install Python %(min_version)s or newer.""") % {
     return None
 
 
-def set_up_python():
+def set_up_python() -> None:
 
     if sys.stdout is not None:
         # Always use UTF-8 and enable line buffering
@@ -140,7 +138,7 @@ def set_up_python():
         faulthandler.enable()
 
 
-def rename_process(new_name, debug_info=False):
+def rename_process(new_name: bytes, debug_info: bool = False) -> None:
 
     errors = []
 

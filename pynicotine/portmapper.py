@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
+from __future__ import annotations
 
 import re
 import socket
@@ -29,7 +30,7 @@ class BaseImplementation:
         self.port = None
         self.local_ip_address = None
 
-    def set_port(self, port, local_ip_address):
+    def set_port(self, port: int, local_ip_address) -> None:
         self.port = port
         self.local_ip_address = local_ip_address
 
@@ -51,7 +52,7 @@ class NATPMP(BaseImplementation):
     class PortmapResponse:
         __slots__ = ("message", "result")
 
-        def __init__(self, message):
+        def __init__(self, message: bytes):
 
             self.message = message
             (
@@ -74,13 +75,13 @@ class NATPMP(BaseImplementation):
         TCP_OP_CODE = 2
         VERSION = 0
 
-        def __init__(self, public_port, private_port, lease_duration):
+        def __init__(self, public_port: int, private_port: int, lease_duration: int):
 
             self._public_port = public_port
             self._private_port = private_port
             self._lease_duration = lease_duration
 
-        def sendto(self, sock, addr, num_attempt):
+        def sendto(self, sock: socket.socket, addr, num_attempt: int) -> None:
 
             msg = bytes(self)
             ip_address, port = addr
@@ -156,7 +157,7 @@ class NATPMP(BaseImplementation):
         output = execute_command("netstat -rn", returnoutput=True, hidden=True)
         return gateway_pattern.search(output).group(1)
 
-    def _request_port_mapping(self, public_port, private_port, lease_duration):
+    def _request_port_mapping(self, public_port: int, private_port: int, lease_duration: int):
 
         with socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP) as sock:
             log.add_debug("NAT-PMP: Binding socket to local IP address %s", self.local_ip_address)
@@ -180,7 +181,7 @@ class NATPMP(BaseImplementation):
 
         return None
 
-    def add_port_mapping(self, lease_duration):
+    def add_port_mapping(self, lease_duration: int) -> None:
 
         self._gateway_address = self._get_gateway_address()
         result = self._request_port_mapping(
@@ -192,7 +193,7 @@ class NATPMP(BaseImplementation):
         if result != self.SUCCESS_RESULT:
             raise PortmapError(f"NAT-PMP error code {result}")
 
-    def remove_port_mapping(self):
+    def remove_port_mapping(self) -> None:
 
         result = self._request_port_mapping(
             public_port=0,
@@ -225,7 +226,7 @@ class UPnP(BaseImplementation):
     class Service:
         __slots__ = ("service_type", "control_url")
 
-        def __init__(self, service_type, control_url):
+        def __init__(self, service_type: str, control_url: str):
             self.service_type = service_type
             self.control_url = control_url
 
@@ -234,7 +235,7 @@ class UPnP(BaseImplementation):
 
         __slots__ = ("message", "headers")
 
-        def __init__(self, message):
+        def __init__(self, message: str):
 
             import email.parser
 
@@ -259,7 +260,7 @@ class UPnP(BaseImplementation):
                 "USER-AGENT": UPnP.USER_AGENT
             }
 
-        def sendto(self, sock, addr):
+        def sendto(self, sock: socket.socket, addr) -> None:
 
             msg = bytes(self)
             sock.sendto(msg, addr)
@@ -278,7 +279,7 @@ class UPnP(BaseImplementation):
     class SSDP:
 
         @staticmethod
-        def get_service_control_url(location_url):
+        def get_service_control_url(location_url: str):
 
             service_type = None
             control_url = None
@@ -336,7 +337,7 @@ class UPnP(BaseImplementation):
             return service_type, control_url
 
         @staticmethod
-        def add_service(services, locations, ssdp_response):
+        def add_service(services, locations, ssdp_response: UPnP.SSDPResponse) -> None:
 
             response_headers = {k.upper(): v for k, v in ssdp_response.headers}
             log.add_debug("UPnP: Device search response: %s", bytes(ssdp_response))
@@ -434,7 +435,9 @@ class UPnP(BaseImplementation):
 
         return service
 
-    def _request_port_mapping(self, public_port, private_ip, private_port, mapping_description, lease_duration):
+    def _request_port_mapping(
+        self, public_port: int, private_ip, private_port: int, mapping_description, lease_duration: int
+    ):
         """Function that adds a port mapping to the router.
 
         If a port mapping already exists, it is updated with a lease
@@ -504,7 +507,7 @@ class UPnP(BaseImplementation):
 
         return error_code, error_description
 
-    def add_port_mapping(self, lease_duration):
+    def add_port_mapping(self, lease_duration: int) -> None:
         """This function supports creating a Port Mapping via the UPnP IGDv1
         and IGDv2 protocol.
 
@@ -540,7 +543,7 @@ class UPnP(BaseImplementation):
         if error_code or error_description:
             raise PortmapError(f"Error code {error_code}: {error_description}")
 
-    def remove_port_mapping(self):
+    def remove_port_mapping(self) -> None:
 
         if not self._service:
             return
@@ -607,13 +610,13 @@ class PortMapper:
         self._natpmp = NATPMP()
         self._upnp = UPnP()
 
-    def _wait_until_ready(self):
+    def _wait_until_ready(self) -> None:
 
         while self._is_mapping_port:
             # Port mapping in progress, wait until it's finished
             time.sleep(0.1)
 
-    def _add_port_mapping(self):
+    def _add_port_mapping(self) -> None:
 
         self._wait_until_ready()
 
@@ -658,7 +661,7 @@ class PortMapper:
         })
         self._is_mapping_port = False
 
-    def _remove_port_mapping(self):
+    def _remove_port_mapping(self) -> None:
 
         self._wait_until_ready()
 
@@ -676,21 +679,21 @@ class PortMapper:
         self._active_implementation = None
         self._is_mapping_port = False
 
-    def _start_renewal_timer(self):
+    def _start_renewal_timer(self) -> None:
         self._cancel_renewal_timer()
         self._timer = events.schedule(delay=self.RENEWAL_INTERVAL, callback=self.add_port_mapping)
 
-    def _cancel_renewal_timer(self):
+    def _cancel_renewal_timer(self) -> None:
         events.cancel_scheduled(self._timer)
 
-    def set_port(self, port, local_ip_address):
+    def set_port(self, port: int, local_ip_address) -> None:
 
         self._natpmp.set_port(port, local_ip_address)
         self._upnp.set_port(port, local_ip_address)
 
         self._has_port = (port is not None)
 
-    def add_port_mapping(self, blocking=False):
+    def add_port_mapping(self, blocking: bool = False) -> None:
 
         # Check if we want to do a port mapping
         if not config.sections["server"]["upnp"]:
@@ -708,7 +711,7 @@ class PortMapper:
         # Renew port mapping entry regularly
         self._start_renewal_timer()
 
-    def remove_port_mapping(self, blocking=False):
+    def remove_port_mapping(self, blocking: bool = False) -> None:
 
         self._cancel_renewal_timer()
 
