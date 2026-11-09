@@ -472,14 +472,14 @@ class ChatRooms(IconNotebook):
         page = self.pages.get(msg.room_name)
 
         if page is not None:
-            page.room_ticker_added(msg)
+            page.room_ticker_added(msg.ticker)
 
     def room_ticker_removed(self, msg):
 
         page = self.pages.get(msg.room_name)
 
         if page is not None:
-            page.room_ticker_removed(msg)
+            page.room_ticker_removed(msg.ticker)
 
     def update_completions(self, completions):
 
@@ -1117,16 +1117,16 @@ class ChatRoom:
             values=[Pango.Weight.NORMAL, Pango.Underline.NONE]
         )
 
-    def room_ticker_added(self, msg):
+    def room_ticker_added(self, ticker):
 
-        if msg.username == core.users.login_username:
+        if ticker.username == core.users.login_username:
             return
 
-        self.unread_room_wall_users.add(msg.username)
+        self.unread_room_wall_users.add(ticker.username)
         self.update_room_wall_label()
 
-    def room_ticker_removed(self, msg):
-        self.unread_room_wall_users.discard(msg.username)
+    def room_ticker_removed(self, ticker):
+        self.unread_room_wall_users.discard(ticker.username)
         self.update_room_wall_label()
 
     def update_user_count(self):
