@@ -63,7 +63,7 @@ class RequestedFolder:
     folder_path: str
     request_timer_id: int | None = None
     has_retried: bool = False
-    legacy_attept: bool = False
+    legacy_attempt: bool = False
 
 
 class Downloads(Transfers):
