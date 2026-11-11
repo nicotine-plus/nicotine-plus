@@ -119,7 +119,8 @@ class UserBrowse:
         events.emit_main_thread("shared-file-list-response", msg)
 
     def browse_local_shares(
-        self, path: str | None = None, permission_level: PermissionLevel | None = None, new_request: bool = False, switch_page: bool = True
+        self, path: str | None = None, permission_level: PermissionLevel | None = None,
+        new_request: bool = False, switch_page: bool = True
     ) -> None:
         """Browse your own shares."""
 

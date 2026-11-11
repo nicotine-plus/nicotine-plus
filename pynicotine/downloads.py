@@ -1334,7 +1334,9 @@ class Downloads(Transfers):
         log.add_transfer("Upload attempt by user %s for file %s failed. Reason: %s",
                          (virtual_path, username, download.status))
 
-    def _file_download_progress(self, username: str, token: int, sock: socket.socket, bytes_left: int, speed=None) -> None:
+    def _file_download_progress(
+        self, username: str, token: int, sock: socket.socket, bytes_left: int, speed=None
+    ) -> None:
         """A file download is in progress."""
 
         download = self.active_users.get(username, {}).get(token)
