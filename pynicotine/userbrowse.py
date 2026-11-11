@@ -341,7 +341,7 @@ class UserBrowse:
         except Exception as error:
             log.add(_("Cannot save shares for user %(user)s: %(error)s"), {"user": username, "error": error})
 
-    def download_file(self, username, folder_path, file_data, download_folder_path=None) -> None:
+    def download_file(self, username: str, folder_path: str, file_data, download_folder_path: str | None = None) -> None:
 
         _code, basename, file_size, _file_extension, file_attributes, *_unused = file_data
         file_path = "\\".join([folder_path, basename])
@@ -349,8 +349,10 @@ class UserBrowse:
         core.downloads.enqueue_download(
             username, file_path, folder_path=download_folder_path, size=file_size, file_attributes=file_attributes)
 
-    def download_folder(self, username: str, requested_folder_path, download_folder_path=None, recurse: bool = False,
-                        check_num_files: bool = True) -> None:
+    def download_folder(
+        self, username: str, requested_folder_path, download_folder_path: str | None = None,
+        recurse: bool = False, check_num_files: bool = True
+    ) -> None:
 
         if requested_folder_path is None:
             return

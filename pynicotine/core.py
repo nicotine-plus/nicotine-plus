@@ -16,7 +16,6 @@ from pynicotine.events import events
 from pynicotine.i18n import LOCALE_PATH
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import InternalMessage
-from pynicotine.slskmessages import PeerMessage
 from pynicotine.slskmessages import ServerConnect
 from pynicotine.slskmessages import ServerDisconnect
 from pynicotine.slskmessages import ServerMessage
