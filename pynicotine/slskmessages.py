@@ -2033,7 +2033,7 @@ class ParentIP(ServerMessage):
         return ".".join(strlist)
 
     def make_network_message(self):
-        return self.pack_uint32(inet_aton(self.strunreverse(self.ip_address)))
+        return inet_aton(self.strunreverse(self.ip_address))
 
 
 class ParentMinSpeed(ServerMessage):
