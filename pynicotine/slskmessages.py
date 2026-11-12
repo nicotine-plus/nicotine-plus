@@ -77,7 +77,6 @@ class MessageType:
 
 
 class ConnectionType:
-    SERVER = "S"
     PEER = "P"
     FILE = "F"
     DISTRIBUTED = "D"
