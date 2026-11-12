@@ -548,7 +548,7 @@ class Search:
                     "width": 200,
                     "expand_column": True,
                     "sensitive_column": "public_data",
-                    "tooltip_callback": self.on_file_path_tooltip
+                    "tooltip_callback": self.on_folder_path_tooltip
                 },
                 "file_type": {
                     "column_type": "icon",
@@ -1567,11 +1567,25 @@ class Search:
 
         self.results_label.set_text(humanize(self.num_results_visible) + str_plus)
 
-    def on_file_path_tooltip(self, treeview, iterator):
+    def on_folder_path_tooltip(self, treeview, iterator):
 
         file_data = treeview.get_row_value(iterator, "file_data")
 
         if not file_data:
+            return None
+
+        folder_path = file_data.path
+
+        if treeview.get_row_value(iterator, "filename"):
+            folder_path, _separator, _basename = file_data.path.rpartition("\\")
+
+        return folder_path
+
+    def on_file_path_tooltip(self, treeview, iterator):
+
+        file_data = treeview.get_row_value(iterator, "file_data")
+
+        if not file_data or not treeview.get_row_value(iterator, "filename"):
             return None
 
         return file_data.path

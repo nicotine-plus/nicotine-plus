@@ -147,6 +147,9 @@ class UserInfo:
 
     def remove_user(self, username: str) -> None:
 
+        if username not in self.users:
+            return
+
         self.users.remove(username)
         core.send_message_to_network_thread(RemoveAllowedResponse(UserInfoResponse, username))
         core.users.unwatch_user(username, context="userinfo")

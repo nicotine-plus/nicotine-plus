@@ -97,6 +97,9 @@ class UserBrowse:
 
     def remove_user(self, username: str) -> None:
 
+        if username not in self.users:
+            return
+
         del self.users[username]
         core.send_message_to_network_thread(RemoveAllowedResponse(SharedFileListResponse, username))
         core.users.unwatch_user(username, context="userbrowse")
@@ -307,15 +310,19 @@ class UserBrowse:
 
     def save_shares_list_to_disk(self, username: str) -> None:
 
+        browsed_user = self.users.get(username)
+
+        if browsed_user is None:
+            return
+
         folder_path = self.create_user_shares_folder()
 
         if not folder_path:
             return
 
-        try:
-            file_path = safe_path_join(folder_path, username)
-            browsed_user = self.users[username]
+        file_path = safe_path_join(folder_path, username)
 
+        try:
             with open(encode_path(file_path), "w", encoding="utf-8") as file_handle:
                 # Dump every folder to the file individually to avoid large memory usage
                 json_encoder = json.JSONEncoder(
@@ -357,13 +364,15 @@ class UserBrowse:
         recurse: bool = False, check_num_files: bool = True
     ) -> None:
 
-        if requested_folder_path is None:
+        browsed_user = self.users.get(username)
+
+        if browsed_user is None:
             return
 
         num_files = 0
 
         for folder_path, files in self.iter_matching_folders(
-            requested_folder_path, browsed_user=self.users[username], recurse=recurse
+            requested_folder_path, browsed_user=browsed_user, recurse=recurse
         ):
             num_files += len(files)
 
@@ -379,7 +388,7 @@ class UserBrowse:
             return
 
         for folder_path, files in self.iter_matching_folders(
-            requested_folder_path, browsed_user=self.users[username], recurse=recurse
+            requested_folder_path, browsed_user=browsed_user, recurse=recurse
         ):
             # Get final download destination
             destination_folder_path = core.downloads.get_folder_destination(
