@@ -140,7 +140,7 @@ class Transfers:
                     "title": _("Folder"),
                     "width": 200,
                     "expand_column": True,
-                    "tooltip_callback": self.on_file_path_tooltip,
+                    "tooltip_callback": self.on_folder_path_tooltip,
                     "sensitive_column": "is_sensitive_data"
                 },
                 "file_type": {
@@ -1124,9 +1124,13 @@ class Transfers:
 
         return username
 
+    def on_folder_path_tooltip(self, treeview, iterator):
+        transfer = treeview.get_row_value(iterator, "transfer_data")
+        return self.get_transfer_folder_path(transfer)
+
     def on_file_path_tooltip(self, treeview, iterator):
         transfer = treeview.get_row_value(iterator, "transfer_data")
-        return transfer.virtual_path or self.get_transfer_folder_path(transfer)
+        return transfer.virtual_path
 
     def on_row_activated(self, _treeview, iterator, _column_id):
 
