@@ -54,9 +54,9 @@ class TransferStatus:
 @dataclass(slots=True, eq=False)
 class Transfer:
     username: str
-    virtual_path: str | None = None
-    folder_path: str | None = None
-    size: int = 0
+    virtual_path: str
+    folder_path: str
+    size: int
     file_attributes: FileAttributes = field(default_factory=FileAttributes)
     status: str | None = None
     current_byte_offset: int | None = None
