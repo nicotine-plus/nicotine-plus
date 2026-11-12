@@ -574,7 +574,7 @@ class Transfers:
                 if status_priority > parent_status_priority:
                     parent_status = status
 
-            if status == TransferStatus.FILTERED and transfer.virtual_path:
+            if status == TransferStatus.FILTERED and transfer.virtual_path is not None:
                 # We don't want to count filtered files when calculating the progress
                 continue
 
