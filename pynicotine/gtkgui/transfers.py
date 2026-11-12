@@ -9,6 +9,7 @@
 
 import os
 
+from dataclasses import dataclass
 from itertools import islice
 
 from gi.repository import GObject
@@ -38,6 +39,17 @@ from pynicotine.utils import human_length
 from pynicotine.utils import human_size
 from pynicotine.utils import human_speed
 from pynicotine.utils import humanize
+
+
+@dataclass(slots=True, eq=False)
+class TransferParent:
+    username: str
+    folder_path: str | None = None
+    status: str | None = None
+    current_byte_offset: int | None = None
+    size: int = 0
+    speed: float = 0
+    time_elapsed: float = 0
 
 
 class Transfers:
@@ -330,10 +342,9 @@ class Transfers:
 
     def select_child_transfers(self, transfer):
 
-        if transfer.virtual_path is not None:
+        if not isinstance(transfer, TransferParent):
             return
 
-        # Dummy Transfer object for user/folder rows
         username = transfer.username
         folder_path = self.get_transfer_folder_path(transfer)
 
@@ -350,7 +361,7 @@ class Transfers:
 
     def select_transfer(self, transfer, select_user=False):
 
-        if transfer.virtual_path is not None and transfer not in self.selected_transfers:
+        if isinstance(transfer, Transfer) and transfer not in self.selected_transfers:
             self.selected_transfers[transfer] = None
 
         if select_user and transfer.username not in self.selected_users:
@@ -574,7 +585,7 @@ class Transfers:
                 if status_priority > parent_status_priority:
                     parent_status = status
 
-            if status == TransferStatus.FILTERED and transfer.virtual_path is not None:
+            if status == TransferStatus.FILTERED and isinstance(transfer, Transfer):
                 # We don't want to count filtered files when calculating the progress
                 continue
 
@@ -762,7 +773,7 @@ class Transfers:
                         empty_int,
                         is_sensitive,
                         username_underline_data,
-                        Transfer(username, status=status),  # Dummy Transfer object
+                        TransferParent(username, status=status),
                         self.row_id
                     ], select_row=False
                 )
@@ -786,7 +797,7 @@ class Transfers:
                 user_folder_path = username + original_folder_path
 
                 if user_folder_path not in self.paths:
-                    path_transfer = Transfer(  # Dummy Transfer object
+                    path_transfer = TransferParent(
                         username, folder_path=original_folder_path, status=status
                     )
                     iterator = self.tree_view.add_row(
@@ -897,10 +908,8 @@ class Transfers:
 
     def get_transfer_folder_path(self, transfer):
 
-        virtual_path = transfer.virtual_path
-
-        if virtual_path is not None:
-            folder_path, _separator, _basename = virtual_path.rpartition("\\")
+        if isinstance(transfer, Transfer):
+            folder_path, _separator, _basename = transfer.virtual_path.rpartition("\\")
             return folder_path
 
         return transfer.folder_path
@@ -971,10 +980,8 @@ class Transfers:
             self.tree_view.set_row_value(user_iterator, column_key, underline_data)
 
         for transfer in user_child_transfers:
-            iterator = transfer.iterator
-
-            if iterator is not None:
-                self.tree_view.set_row_value(iterator, column_key, underline_data)
+            if isinstance(transfer, Transfer):
+                self.tree_view.set_row_value(transfer.iterator, column_key, underline_data)
                 continue
 
             user_folder_path = transfer.username + self.get_transfer_folder_path(transfer)
@@ -1130,7 +1137,7 @@ class Transfers:
 
     def on_file_path_tooltip(self, treeview, iterator):
         transfer = treeview.get_row_value(iterator, "transfer_data")
-        return transfer.virtual_path
+        return transfer.virtual_path if isinstance(transfer, Transfer) else None
 
     def on_row_activated(self, _treeview, iterator, _column_id):
 
@@ -1178,13 +1185,10 @@ class Transfers:
         self.tree_view.unselect_all_rows()
 
         for transfer in user_child_transfers:
-            iterator = transfer.iterator
-
-            if iterator:
-                self.tree_view.select_row(iterator, should_scroll=False)
+            if isinstance(transfer, Transfer):
+                self.tree_view.select_row(transfer.iterator, should_scroll=False)
                 continue
 
-            # Dummy Transfer object for folder rows
             user_folder_path = transfer.username + self.get_transfer_folder_path(transfer)
             user_folder_path_data = self.paths.get(user_folder_path)
 
