@@ -702,7 +702,7 @@ class Login(ServerMessage):
         self.server_address = None
         self.is_supporter = None
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
 
         msg = bytearray()
         checksum = md5((self.username + self.password).encode()).hexdigest()
@@ -947,7 +947,7 @@ class SayChatroom(ServerMessage):
         self.mention_type = None
         self.mention_keyword = None
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_string(self.room_name)
         msg += self.pack_string(self.message)
@@ -996,7 +996,7 @@ class JoinRoom(ServerMessage):
         self.users = []
         self.operators = []
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_string(self.room_name)
         msg += self.pack_uint32(self.room_type)
@@ -1116,7 +1116,7 @@ class ConnectToPeer(ServerMessage):
         self.obfuscation_type = None
         self.obfuscated_port = None
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_uint32(self.token)
         msg += self.pack_string(self.username)
@@ -1157,7 +1157,7 @@ class MessageUser(ServerMessage):
         self.mention_type = None
         self.mention_keyword = None
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_string(self.username)
         msg += self.pack_string(self.message)
@@ -1208,7 +1208,7 @@ class FileSearchRoom(ServerMessage):
         self.room_id = room_id
         self.search_term = search_term
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_uint32(self.token)
         msg += self.pack_uint32(self.room_id)
@@ -1239,7 +1239,7 @@ class FileSearch(ServerMessage):
         self.search_term = search_term
         self.search_username = None
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_uint32(self.token)
         msg += self.pack_string(self.search_term)
@@ -1321,7 +1321,7 @@ class SendConnectToken(ServerMessage):
         self.username = username
         self.token = token
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_string(self.username)
         msg += self.pack_uint32(self.token)
@@ -1350,7 +1350,7 @@ class SendDownloadSpeed(ServerMessage):
         self.username = username
         self.speed = speed
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_string(self.username)
         msg += self.pack_uint32(self.speed)
@@ -1373,7 +1373,7 @@ class SharedFoldersFiles(ServerMessage):
         self.num_folders = num_folders
         self.num_files = num_files
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_uint32(self.num_folders)
         msg += self.pack_uint32(self.num_files)
@@ -1477,7 +1477,7 @@ class UserSearch(ServerMessage):
         self.token = token
         self.search_term = search_term
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_string(self.username)
         msg += self.pack_uint32(self.token)
@@ -1687,7 +1687,7 @@ class AdminCommand(ServerMessage):
         self.command = command
         self.command_args = command_args
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_string(self.command)
         msg += self.pack_uint32(len(self.command_args))
@@ -1712,7 +1712,7 @@ class PlaceInLineRequest(ServerMessage):
         self.token = token
         self.username = username
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_string(self.username)
         msg += self.pack_uint32(self.token)
@@ -1742,7 +1742,7 @@ class PlaceInLineResponse(ServerMessage):
         self.username = username
         self.place = place
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_string(self.username)
         msg += self.pack_uint32(self.token)
@@ -1867,7 +1867,7 @@ class ExactFileSearch(ServerMessage):
         self.unknown = unknown
         self.username = None
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_uint32(self.token)
         msg += self.pack_string(self.file_path)
@@ -1947,7 +1947,7 @@ class TunneledMessage(ServerMessage):
         self.ip_address = None
         self.port = None
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_string(self.username)
         msg += self.pack_uint32(self.token)
@@ -2282,7 +2282,7 @@ class WishlistSearch(ServerMessage):
         self.token = token
         self.search_term = search_term
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_uint32(self.token)
         msg += self.pack_string(self.search_term)
@@ -2494,7 +2494,7 @@ class SetRoomTicker(ServerMessage):
         self.room_name = room_name
         self.content = content
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_string(self.room_name)
         msg += self.pack_string(self.content)
@@ -2557,7 +2557,7 @@ class RoomSearch(ServerMessage):
         self.token = token
         self.search_term = search_term
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_string(self.room_name)
         msg += self.pack_uint32(self.token)
@@ -2623,7 +2623,7 @@ class GivePrivileges(ServerMessage):
         self.username = username
         self.days = days
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_string(self.username)
         msg += self.pack_uint32(self.days)
@@ -2645,7 +2645,7 @@ class NotifyPrivileges(ServerMessage):
         self.token = token
         self.username = username
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_uint32(self.token)
         msg += self.pack_string(self.username)
@@ -2797,7 +2797,7 @@ class AddRoomMember(ServerMessage):
         self.room_name = room_name
         self.username = username
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_string(self.room_name)
         msg += self.pack_string(self.username)
@@ -2828,7 +2828,7 @@ class RemoveRoomMember(ServerMessage):
         self.room_name = room_name
         self.username = username
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_string(self.room_name)
         msg += self.pack_string(self.username)
@@ -2994,7 +2994,7 @@ class AddRoomOperator(ServerMessage):
         self.room_name = room_name
         self.username = username
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_string(self.room_name)
         msg += self.pack_string(self.username)
@@ -3025,7 +3025,7 @@ class RemoveRoomOperator(ServerMessage):
         self.room_name = room_name
         self.username = username
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_string(self.room_name)
         msg += self.pack_string(self.username)
@@ -3116,7 +3116,7 @@ class MessageUsers(ServerMessage):
         self.usernames = usernames
         self.message = message
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_uint32(len(self.usernames))
 
@@ -3264,7 +3264,7 @@ class CantConnectToPeer(ServerMessage):
         self.token = token
         self.username = username
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_uint32(self.token)
         msg += self.pack_string(self.username)
@@ -3352,7 +3352,7 @@ class PeerInit(PeerInitMessage):
         self.indirect_request_time = None
         self.outgoing_msgs = []
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_string(self.init_username)
         msg += self.pack_string(self.conn_type)
@@ -3595,7 +3595,7 @@ class FileSearchRequest(PeerMessage):
         self.token = token
         self.search_term = search_term
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_uint32(self.token)
         msg += self.pack_string(self.search_term)
@@ -3751,7 +3751,7 @@ class UserInfoResponse(PeerMessage):
         self.upload_permission = upload_permission
         self.has_picture = None
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_string(self.description)
 
@@ -3801,7 +3801,7 @@ class FolderContentsRequest(PeerMessage):
         self.token = token
         self.legacy_client = legacy_client
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_uint32(self.token)
         msg += self.pack_string(self.folder_path, is_legacy=self.legacy_client)
@@ -3927,7 +3927,7 @@ class TransferRequest(PeerMessage):
         self.file_path = file_path
         self.file_size = file_size
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_uint32(self.direction)
         msg += self.pack_uint32(self.token)
@@ -3972,7 +3972,7 @@ class TransferResponse(PeerMessage):
         self.reason = reason
         self.file_size = file_size
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_uint32(self.token)
         msg += self.pack_bool(self.allowed)
@@ -4056,7 +4056,7 @@ class PlaceInQueueResponse(PeerMessage):
         self.file_path = file_path
         self.place = place
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_string(self.file_path)
         msg += self.pack_uint32(self.place)
@@ -4109,7 +4109,7 @@ class UploadDenied(PeerMessage):
         self.file_path = file_path
         self.reason = reason
 
-    def make_network_message(self) -> bytes:
+    def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_string(self.file_path)
         msg += self.pack_string(self.reason)
