@@ -342,7 +342,9 @@ class UserBrowse:
         except Exception as error:
             log.add(_("Cannot save shares for user %(user)s: %(error)s"), {"user": username, "error": error})
 
-    def download_file(self, username: str, folder_path: str, file_data, download_folder_path: str | None = None) -> None:
+    def download_file(
+        self, username: str, folder_path: str, file_data, download_folder_path: str | None = None
+    ) -> None:
 
         _code, basename, file_size, _file_extension, file_attributes, *_unused = file_data
         file_path = "\\".join([folder_path, basename])
