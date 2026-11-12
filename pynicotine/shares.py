@@ -543,24 +543,11 @@ class Scanner:
         gc.collect()
 
     @classmethod
-    def is_hidden(cls, folder_path, basename=None, entry=None):
+    def is_hidden(cls, entry):
         """Stop sharing any hidden folders/files."""
 
-        # Check if file is marked as hidden on Windows
         if sys.platform == "win32":
-            if len(folder_path) == 3 and folder_path[1] == ":" and folder_path[2] == os.sep:
-                # Root folders are marked as hidden, but we allow scanning them
-                return False
-
-            if entry is None:
-                if basename is not None:
-                    entry_stat = os.stat(encode_path(os.path.join(folder_path, basename)))
-                else:
-                    entry_stat = os.stat(encode_path(folder_path))
-            else:
-                entry_stat = entry.stat()
-
-            return entry_stat.st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN
+            return bool(entry.stat().st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN)
 
         return False
 
@@ -591,6 +578,9 @@ class Scanner:
             try:
                 with os.scandir(encode_path(folder_path, prefix=False)) as entries:
                     for entry in entries:
+                        if self.is_hidden(entry):
+                            continue
+
                         basename = basename_escaped = entry.name.decode("utf-8", "replace")
 
                         if "\\" in basename:
@@ -603,9 +593,6 @@ class Scanner:
                         path = os.path.join(folder_path, basename)
 
                         if entry.is_dir():
-                            if self.is_hidden(path, entry=entry):
-                                continue
-
                             folder_paths.append(path)
                             continue
 
@@ -613,9 +600,6 @@ class Scanner:
                             if path in self.files:
                                 # Two files with slightly different names, but utf-8 decoded paths become
                                 # identical. Only process one of the files to prevent corrupting the file index.
-                                continue
-
-                            if self.is_hidden(folder_path, basename, entry):
                                 continue
 
                             virtual_file_path = f"{virtual_folder_path}\\{basename_escaped}"
