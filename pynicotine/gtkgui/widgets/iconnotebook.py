@@ -210,12 +210,9 @@ class TabLabel:
 
     def set_status_icon(self, status):
 
-        icon_name = USER_STATUS_ICON_NAMES.get(status)
-
-        if not icon_name:
-            return
-
+        icon_name = USER_STATUS_ICON_NAMES.get(status, "")
         self.set_start_icon_name(icon_name)
+
         add_css_class(self.start_icon, "colored-icon")
         add_css_class(self.start_icon, "user-status")
 

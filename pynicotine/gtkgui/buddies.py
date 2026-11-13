@@ -299,10 +299,9 @@ class Buddies:
         if iterator is None:
             return
 
-        status = msg.status
-        status_icon_name = USER_STATUS_ICON_NAMES.get(status)
+        status_icon_name = USER_STATUS_ICON_NAMES.get(msg.status, "")
 
-        if status_icon_name and status_icon_name != self.list_view.get_row_value(iterator, "status"):
+        if status_icon_name != self.list_view.get_row_value(iterator, "status"):
             self.list_view.set_row_value(iterator, "status", status_icon_name)
 
     def user_stats(self, msg):

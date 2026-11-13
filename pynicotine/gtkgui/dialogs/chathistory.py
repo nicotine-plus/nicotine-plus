@@ -230,7 +230,8 @@ class ChatHistory(Dialog):
         # We don't watch all historic users for status updates due to
         # the amount of server traffic a large history would generate
         if username in core.privatechat.users:
-            status_icon_name = USER_STATUS_ICON_NAMES[core.users.statuses.get(username, UserStatus.OFFLINE)]
+            status = core.users.statuses.get(username, UserStatus.OFFLINE)
+            status_icon_name = USER_STATUS_ICON_NAMES.get(status, "")
         else:
             status_icon_name = ""  # Blank icon to indicate chat tab closed
 
