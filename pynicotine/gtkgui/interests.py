@@ -508,7 +508,7 @@ class Interests:
             h_num_files = humanize(num_files)
 
             self.similar_users_list_view.add_row([
-                USER_STATUS_ICON_NAMES[status],
+                USER_STATUS_ICON_NAMES.get(status, ""),
                 get_flag_icon_name(country_code),
                 username,
                 h_upload_speed,
@@ -546,9 +546,9 @@ class Interests:
         if iterator is None:
             return
 
-        status_icon_name = USER_STATUS_ICON_NAMES.get(msg.status)
+        status_icon_name = USER_STATUS_ICON_NAMES.get(msg.status, "")
 
-        if status_icon_name and status_icon_name != self.similar_users_list_view.get_row_value(iterator, "status"):
+        if status_icon_name != self.similar_users_list_view.get_row_value(iterator, "status"):
             self.similar_users_list_view.set_row_value(iterator, "status", status_icon_name)
 
     def user_stats(self, msg):

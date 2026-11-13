@@ -77,7 +77,6 @@ class MessageType:
 
 
 class ConnectionType:
-    SERVER = "S"
     PEER = "P"
     FILE = "F"
     DISTRIBUTED = "D"
@@ -147,7 +146,7 @@ class ParentStatus:
 @dataclass(slots=True, eq=False)
 class UserStats:
     username: str
-    status: UserStatus | None = None
+    status: int | None = None
     upload_speed: int = 0
     upload_number: int = 0
     unknown: int = 0
@@ -2031,7 +2030,7 @@ class ParentIP(ServerMessage):
         return ".".join(strlist)
 
     def make_network_message(self) -> bytes:
-        return self.pack_uint32(inet_aton(self.strunreverse(self.ip_address)))
+        return inet_aton(self.strunreverse(self.ip_address))
 
 
 class ParentMinSpeed(ServerMessage):

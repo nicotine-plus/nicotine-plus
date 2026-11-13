@@ -1217,9 +1217,9 @@ class ChatRoom:
             return
 
         status = msg.status
-        status_icon_name = USER_STATUS_ICON_NAMES.get(status)
+        status_icon_name = USER_STATUS_ICON_NAMES.get(status, "")
 
-        if not status_icon_name or status_icon_name == self.users_list_view.get_row_value(iterator, "status"):
+        if status_icon_name == self.users_list_view.get_row_value(iterator, "status"):
             return
 
         if status == UserStatus.AWAY:

@@ -562,7 +562,7 @@ class NetworkThread(Thread):
 
     # Connections #
 
-    def _set_tcp_buffer_size(self, sock: socket.socket, conn_type) -> None:
+    def _set_tcp_buffer_size(self, sock: socket.socket, conn_type=None) -> None:
         """Set a sane TCP buffer size limit for connections, to prevent boundless message
         flooding. The limit is smaller for distributed connections due to the larger attack
         surface and messages always remaining small. File connections use the OS limit,
@@ -1274,7 +1274,7 @@ class NetworkThread(Thread):
 
         sock.setblocking(False)
         sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-        self._set_tcp_buffer_size(sock, ConnectionType.SERVER)
+        self._set_tcp_buffer_size(sock)
 
         # Detect if our connection to the server is still alive
         self._set_server_socket_keepalive(sock)
