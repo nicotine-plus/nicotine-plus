@@ -146,7 +146,7 @@ class ParentStatus:
 @dataclass(slots=True, eq=False)
 class UserStats:
     username: str
-    status: UserStatus | None = None
+    status: int | None = None
     upload_speed: int = 0
     upload_number: int = 0
     unknown: int = 0

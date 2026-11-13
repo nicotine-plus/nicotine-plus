@@ -21,7 +21,7 @@ class Buddy:
     is_trusted: bool
     last_seen: str
     country: str
-    status: UserStatus
+    status: int
 
 
 class Buddies:
