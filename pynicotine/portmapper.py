@@ -63,7 +63,7 @@ class NATPMP(BaseImplementation):
                 _private_port,
                 _public_port,
                 _lease_duration
-            ) = struct.unpack('!BBHIHHI', message)
+            ) = struct.unpack("!BBHIHHI", message)
 
         def __bytes__(self):
             return self.message
@@ -95,7 +95,7 @@ class NATPMP(BaseImplementation):
         def __bytes__(self):
 
             return struct.pack(
-                '!BBHHHI',
+                "!BBHHHI",
                 self.VERSION,
                 self.TCP_OP_CODE,
                 self.RESERVED_VALUE,
@@ -250,7 +250,7 @@ class UPnP(BaseImplementation):
 
         __slots__ = ("headers",)
 
-        def __init__(self, search_target):
+        def __init__(self, search_target: str):
 
             self.headers = {
                 "HOST": f"{UPnP.MULTICAST_HOST}:{UPnP.MULTICAST_PORT}",
@@ -337,7 +337,7 @@ class UPnP(BaseImplementation):
             return service_type, control_url
 
         @staticmethod
-        def add_service(services, locations, ssdp_response: UPnP.SSDPResponse) -> None:
+        def add_service(services: dict[str, UPnP.Service], locations, ssdp_response: UPnP.SSDPResponse) -> None:
 
             response_headers = {k.upper(): v for k, v in ssdp_response.headers}
             log.add_debug("UPnP: Device search response: %s", bytes(ssdp_response))
@@ -371,7 +371,7 @@ class UPnP(BaseImplementation):
             log.add_debug("UPnP: Added service to list")
 
         @staticmethod
-        def get_services(private_ip):
+        def get_services(private_ip) -> dict[str, UPnP.Service]:
 
             log.add_debug("UPnP: Discovering… delay=%s seconds", UPnP.MX_RESPONSE_DELAY)
 

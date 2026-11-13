@@ -86,7 +86,7 @@ def _set_system_language(language=None) -> None:
         os.environ["LANGUAGE"] = language
 
 
-def bindtextdomain_c(domain, locale_path, set_current=False):
+def bindtextdomain_c(domain: str, locale_path: str, set_current: bool = False) -> None:
 
     libintl_path = None
     codeset = "UTF-8"
@@ -100,7 +100,7 @@ def bindtextdomain_c(domain, locale_path, set_current=False):
     if libintl_path is not None:
         import ctypes
 
-        if getattr(sys, 'frozen', False):
+        if getattr(sys, "frozen", False):
             # Use absolute path in frozen binaries (cx_Freeze)
             libintl_path = os.path.join(os.path.dirname(sys.executable), "lib", libintl_path)
 

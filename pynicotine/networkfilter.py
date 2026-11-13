@@ -16,6 +16,8 @@ from pynicotine.events import events
 UINT32_UNPACK = Struct(">I").unpack_from
 
 if TYPE_CHECKING:
+    from typing import Literal
+
     from pynicotine.slskmessages import GetPeerAddress
     from pynicotine.slskmessages import ServerDisconnect
 
@@ -281,8 +283,8 @@ class NetworkFilter:
 
     def __init__(self):
 
-        self._banned_users = set()
-        self._ignored_users = set()
+        self._banned_users: set[str] = set()
+        self._ignored_users: set[str] = set()
         self._ip_ban_requested = {}
         self._ip_ignore_requested = {}
         self._ip_range_values = ()
@@ -344,7 +346,7 @@ class NetworkFilter:
 
     # IP Filter List Management #
 
-    def _request_ip(self, username: str, action, request_list) -> None:
+    def _request_ip(self, username: str, action: Literal["add", "remove"], request_list) -> None:
         """Ask for the IP address of an unknown user.
 
         Once a GetPeerAddress response arrives, either
@@ -410,7 +412,7 @@ class NetworkFilter:
 
         return ip_addresses
 
-    def _get_user_ip_addresses(self, username: str, ip_list, request_action):
+    def _get_user_ip_addresses(self, username: str, ip_list, request_action: Literal["add", "remove"]):
         """Returns the known IP addresses of a user, requests one otherwise."""
 
         ip_addresses = set()

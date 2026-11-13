@@ -49,6 +49,9 @@ from pynicotine.utils import encode_path
 from pynicotine.utils import humanize
 
 if TYPE_CHECKING:
+    from multiprocessing.connection import PipeConnection
+    from multiprocessing.context import SpawnProcess
+    from os import DirEntry
     from typing import Literal
     from typing import NoReturn
 
@@ -56,7 +59,6 @@ if TYPE_CHECKING:
     from pynicotine.slskmessages import Login
     from pynicotine.slskmessages import ServerDisconnect
     from pynicotine.slskmessages import SharedFileListRequest
-    from multiprocessing.context import SpawnProcess
 
 
 class FileTypes:
@@ -158,9 +160,9 @@ class Database:
         self._file_offset = self._file_handle.seek(0, SEEK_END)
         self._overwrite = overwrite
 
-    def _parse_content(self, content, total_size: int):
+    def _parse_content(self, content: memoryview, total_size: int) -> dict[str, int]:
 
-        value_offsets = {}
+        value_offsets: dict[str, int] = {}
         file_signature_length = len(self.FILE_SIGNATURE)
 
         if content[:file_signature_length] != self.FILE_SIGNATURE:
@@ -182,9 +184,9 @@ class Database:
 
         return value_offsets
 
-    def _load_value_offsets(self, file_path: bytes, mode: Literal["ab+", "rb"]):
+    def _load_value_offsets(self, file_path: bytes, mode: Literal["ab+", "rb"]) -> dict[str, int]:
 
-        value_offsets = {}
+        value_offsets: dict[str, int] = {}
 
         with open(file_path, mode) as file_handle:  # pylint: disable=unspecified-encoding
             file_size = os.fstat(file_handle.fileno()).st_size
@@ -201,7 +203,7 @@ class Database:
 
         return value_offsets
 
-    def __contains__(self, key):
+    def __contains__(self, key: str):
         return key in self._value_offsets
 
     def __iter__(self):
@@ -210,14 +212,14 @@ class Database:
     def __len__(self):
         return len(self._value_offsets)
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str):
 
         value_offset = self._value_offsets[key]
 
         self._file_handle.seek(value_offset, SEEK_SET)
         return RestrictedUnpickler(self._file_handle).load()
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: str, value):
 
         encoded_key = key.encode("utf-8")
         pickled_value = dumps(value, protocol=self.PICKLE_PROTOCOL)
@@ -231,7 +233,7 @@ class Database:
         self._value_offsets[key] = self._file_offset + self.LENGTH_DATA_SIZE + key_length
         self._file_offset += len(item_data)
 
-    def get(self, key, default=None):
+    def get(self, key: str, default=None):
 
         if key in self._value_offsets:
             return self[key]
@@ -556,7 +558,7 @@ class Scanner:
         gc.collect()
 
     @classmethod
-    def is_hidden(cls, entry) -> bool:
+    def is_hidden(cls, entry: DirEntry[bytes]) -> bool:
         """Stop sharing any hidden folders/files."""
 
         if sys.platform == "win32":
@@ -1075,7 +1077,7 @@ class Shares:
         shares.append((virtual_name, os.path.normpath(folder_path)))
         return virtual_name
 
-    def remove_share(self, virtual_name_or_folder_path, share_groups=None) -> bool:
+    def remove_share(self, virtual_name_or_folder_path: str, share_groups=None) -> bool:
 
         if share_groups is None:
             share_groups = self.get_shared_folders()
@@ -1259,7 +1261,9 @@ class Shares:
         self._rescan_daily_timer_id = events.schedule_at(
             timestamp=target_time.timestamp(), callback=self.rescan_shares)
 
-    def _build_scanner_process(self, share_groups=None, init: bool = False, rescan: bool = True, rebuild: bool = False):
+    def _build_scanner_process(
+        self, share_groups=None, init: bool = False, rescan: bool = True, rebuild: bool = False
+    ) -> tuple[SpawnProcess, PipeConnection, PipeConnection]:
 
         import multiprocessing
 
@@ -1283,7 +1287,7 @@ class Shares:
         scanner_process = context.Process(target=scanner.run, daemon=True)
         return scanner_process, reader, writer
 
-    def _process_scanner(self, process: SpawnProcess, reader, emit_event=None) -> bool:
+    def _process_scanner(self, process: SpawnProcess, reader: PipeConnection, emit_event=None) -> bool:
 
         successful = False
         current_folder_count = None

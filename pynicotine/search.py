@@ -79,7 +79,7 @@ class WishSearchRequest(SearchRequest):
     def num_active_filters(self) -> int:
 
         return (
-            sum(1 for filter in self.custom_filters if filter)
+            sum(1 for custom_filter in self.custom_filters if custom_filter)
             if self.filter_mode == ResultFilterMode.CUSTOM else 0
         )
 
@@ -746,7 +746,10 @@ class Search:
 
         return results
 
-    def _create_search_result_list(self, included_words, excluded_words, partial_words, max_results, word_index):
+    def _create_search_result_list(
+        self, included_words: set[str], excluded_words: set[str], partial_words: set[str],
+        max_results: int, word_index: dict[str, list[int]]
+    ):
         """Returns a list of common file indices for each word in a search
         term."""
 
@@ -868,8 +871,8 @@ class Search:
         search_term = search_term.lower()
 
         # Extract included/excluded/partial words from search term
-        excluded_words = set()
-        partial_words = set()
+        excluded_words: set[str] = set()
+        partial_words: set[str] = set()
 
         excluded_char = "-"
         partial_char = "*"

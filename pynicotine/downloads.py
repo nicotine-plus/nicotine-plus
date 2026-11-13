@@ -206,7 +206,7 @@ class Downloads(Transfers):
 
     # File Actions #
 
-    def _open_incomplete_transfer(self, transfer):
+    def _open_incomplete_transfer(self, transfer: Transfer):
 
         username = transfer.username
         virtual_path = transfer.virtual_path
@@ -251,7 +251,7 @@ class Downloads(Transfers):
 
         return incomplete_file_path, offset
 
-    def _move_finished_transfer(self, transfer, incomplete_file_path):
+    def _move_finished_transfer(self, transfer: Transfer, incomplete_file_path):
 
         download_folder_path = transfer.folder_path or self.get_default_download_folder(transfer.username)
         download_folder_path_encoded = encode_path(download_folder_path)

@@ -66,7 +66,7 @@ class Logger:
         self.private_chat_folder_path = None
 
         self._log_levels = {LogLevel.DEFAULT}
-        self._log_files = {}
+        self._log_files: dict[str, LogFile] = {}
 
         events.connect("quit", self._close_log_files)
         events.schedule(delay=10, callback=self._close_inactive_log_files, repeat=True)
@@ -106,7 +106,7 @@ class Logger:
 
     # Log Files #
 
-    def _get_log_file(self, folder_path, basename: str, should_create_file: bool = True):
+    def _get_log_file(self, folder_path: str, basename: str, should_create_file: bool = True):
 
         file_path = safe_path_join(folder_path, f"{basename}.log")
         log_file = self._log_files.get(file_path)
@@ -132,7 +132,7 @@ class Logger:
 
         return log_file
 
-    def write_log_file(self, folder_path, basename: str, text: str, timestamp=None) -> None:
+    def write_log_file(self, folder_path: str, basename: str, text: str, timestamp: int | None = None) -> None:
 
         folder_path = os.path.normpath(folder_path)
 
@@ -183,7 +183,7 @@ class Logger:
             if (current_time - log_file.last_active) >= 10:
                 self._close_log_file(log_file)
 
-    def _normalize_folder_path(self, folder_path):
+    def _normalize_folder_path(self, folder_path: str) -> str:
         return os.path.normpath(os.path.expandvars(folder_path))
 
     def update_folder_paths(self) -> None:
@@ -193,10 +193,10 @@ class Logger:
         self.room_folder_path = self._normalize_folder_path(config.sections["logging"]["roomlogsdir"])
         self.private_chat_folder_path = self._normalize_folder_path(config.sections["logging"]["privatelogsdir"])
 
-    def open_log(self, folder_path, basename: str) -> None:
+    def open_log(self, folder_path: str, basename: str) -> None:
         self._log_file_operation(folder_path, basename, self.open_log_callback)
 
-    def _get_log_lines(self, log_file, num_lines):
+    def _get_log_lines(self, log_file: LogFile, num_lines: int) -> list[bytes]:
 
         file_handle = log_file.handle
         file_handle.seek(0, os.SEEK_END)
@@ -222,10 +222,10 @@ class Logger:
                 # Fewer lines in file than our limit, stop here
                 break
 
-            lines_left -= block.count(b'\n')
+            lines_left -= block.count(b"\n")
 
         file_handle.seek(0, os.SEEK_END)
-        return b''.join(blocks).splitlines()[-num_lines:]
+        return b"".join(blocks).splitlines()[-num_lines:]
 
     def read_log(self, folder_path, basename: str, num_lines: int):
 
@@ -252,7 +252,7 @@ class Logger:
     def delete_log(self, folder_path, basename: str) -> None:
         self._log_file_operation(folder_path, basename, self.delete_log_callback)
 
-    def _log_file_operation(self, folder_path, basename: str, callback) -> None:
+    def _log_file_operation(self, folder_path: str, basename: str, callback) -> None:
 
         folder_path_encoded = encode_path(folder_path)
         file_path = safe_path_join(folder_path, f"{basename}.log")
@@ -266,7 +266,7 @@ class Logger:
         except Exception as error:
             self._add(_("Cannot access log file %(path)s: %(error)s"), {"path": file_path, "error": error})
 
-    def open_log_callback(self, file_path) -> None:
+    def open_log_callback(self, file_path: str) -> None:
         open_file_path(file_path, create_file=True)
 
     def delete_log_callback(self, file_path: str) -> None:
@@ -313,10 +313,10 @@ class Logger:
 
         events.emit("log-message", timestamp_format, msg, title, level)
 
-    def add(self, msg, msg_args=None, title=None):
+    def add(self, msg, msg_args=None, title=None) -> None:
         self._add(msg, msg_args, title)
 
-    def add_download(self, msg, msg_args=None):
+    def add_download(self, msg, msg_args=None) -> None:
 
         level = LogLevel.DOWNLOAD
 
@@ -325,7 +325,7 @@ class Logger:
         if level in self._log_levels:
             self._add(msg, msg_args, level=level)
 
-    def add_upload(self, msg, msg_args=None):
+    def add_upload(self, msg, msg_args=None) -> None:
 
         level = LogLevel.UPLOAD
 
@@ -334,28 +334,28 @@ class Logger:
         if level in self._log_levels:
             self._add(msg, msg_args, level=level)
 
-    def add_search(self, msg, msg_args=None):
+    def add_search(self, msg, msg_args=None) -> None:
 
         level = LogLevel.SEARCH
 
         if level in self._log_levels:
             self._add(msg, msg_args, level=level)
 
-    def add_chat(self, msg, msg_args=None):
+    def add_chat(self, msg, msg_args=None) -> None:
 
         level = LogLevel.CHAT
 
         if level in self._log_levels:
             self._add(msg, msg_args, level=level)
 
-    def add_conn(self, msg, msg_args=None):
+    def add_conn(self, msg, msg_args=None) -> None:
 
         level = LogLevel.CONNECTION
 
         if level in self._log_levels:
             self._add(msg, msg_args, level=level)
 
-    def add_msg_contents(self, msg, is_outgoing: bool = False):
+    def add_msg_contents(self, msg, is_outgoing: bool = False) -> None:
 
         level = LogLevel.MESSAGE
 
@@ -372,21 +372,21 @@ class Logger:
 
         self._add(msg, msg_args, level=level)
 
-    def add_transfer(self, msg, msg_args=None):
+    def add_transfer(self, msg, msg_args=None) -> None:
 
         level = LogLevel.TRANSFER
 
         if level in self._log_levels:
             self._add(msg, msg_args, level=level)
 
-    def add_debug(self, msg, msg_args=None):
+    def add_debug(self, msg, msg_args=None) -> None:
 
         level = LogLevel.MISCELLANEOUS
 
         if level in self._log_levels:
             self._add(msg, msg_args, level=level)
 
-    def add_command(self, msg):
+    def add_command(self, msg) -> None:
         self._add(msg, level=LogLevel.COMMAND)
 
 

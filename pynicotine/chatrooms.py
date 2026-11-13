@@ -76,10 +76,10 @@ class ChatRooms:
 
     def __init__(self):
 
-        self.completions = set()
-        self.server_rooms = set()
+        self.completions: set[str] = set()
+        self.server_rooms: set[str] = set()
         self.joined_rooms: dict[str, JoinedRoom] = {}
-        self.private_rooms = {}
+        self.private_rooms: dict[str, PrivateRoom] = {}
 
         for event_name, callback in (
             ("add-room-operator", self._add_room_operator),

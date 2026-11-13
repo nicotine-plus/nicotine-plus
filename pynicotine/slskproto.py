@@ -200,7 +200,7 @@ class NetworkInterfaces:
         SIOCGIFADDR = 0xc0206921   # macOS, *BSD
 
     @classmethod
-    def _get_interface_addresses_win32(cls):
+    def _get_interface_addresses_win32(cls) -> dict[str, str]:
         """Returns a dictionary of network interface names and IP addresses (Win32).
 
         https://learn.microsoft.com/en-us/windows/win32/api/iphlpapi/nf-iphlpapi-getadaptersaddresses
@@ -210,7 +210,7 @@ class NetworkInterfaces:
 
         from ctypes import POINTER, byref, cast, create_string_buffer, windll, wintypes
 
-        interface_addresses = {}
+        interface_addresses: dict[str, str] = {}
         p_adapter_addresses = None
         adapter_addresses_size = wintypes.ULONG()
         return_value = cls.ERROR_BUFFER_OVERFLOW
@@ -244,11 +244,11 @@ class NetworkInterfaces:
         return interface_addresses
 
     @classmethod
-    def _get_interface_addresses_posix(cls):
+    def _get_interface_addresses_posix(cls) -> dict[str, str]:
         """Returns a dictionary of network interface names and IP addresses
         (POSIX)"""
 
-        interface_addresses = {}
+        interface_addresses: dict[str, str] = {}
 
         try:
             interface_name_index = socket.if_nameindex()
@@ -276,7 +276,7 @@ class NetworkInterfaces:
         return interface_addresses
 
     @classmethod
-    def get_interface_addresses(cls):
+    def get_interface_addresses(cls) -> dict[str, str]:
         """Returns a dictionary of network interface names and IP addresses."""
 
         if sys.platform == "win32":
@@ -294,7 +294,7 @@ class NetworkInterfaces:
         return cls.get_interface_addresses().get(interface_name)
 
     @classmethod
-    def bind_to_interface(cls, sock: socket.socket, interface_name: str, address) -> None:
+    def bind_to_interface(cls, sock: socket.socket, interface_name: str, address: str) -> None:
         """Bind socket to the specified network interface name, if required on
         the current platform. Otherwise bind to the IP address of the network
         interface, retrieved from get_interface_addresses().
@@ -690,8 +690,10 @@ class NetworkThread(Thread):
         return None
 
     @staticmethod
-    def _unpack_network_message(msg_class, msg_content, msg_size, conn_type, sock=None, addr=None, username=None,
-                                allowed_responses=None):
+    def _unpack_network_message(
+        msg_class, msg_content: memoryview, msg_size: int, conn_type,
+        sock=None, addr=None, username=None, allowed_responses=None
+    ):
 
         msg = None
 
@@ -765,7 +767,11 @@ class NetworkThread(Thread):
         if msg.EVENT_NAME is not None:
             events.emit_main_thread(msg.EVENT_NAME, msg)
 
-    def _modify_connection_events(self, conn: Connection, io_events) -> None:
+    def _modify_connection_events(
+        self,
+        conn: Connection,
+        io_events: int  # Bitmask of selectors.EVENT_* flags
+    ) -> None:
 
         if conn.io_events != io_events:
             self._selector.modify(conn.sock, io_events)

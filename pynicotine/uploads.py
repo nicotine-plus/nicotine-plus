@@ -202,7 +202,7 @@ class Uploads(Transfers):
     def get_downloading_users(self):
         return set(self.active_users).union(self.queued_users)
 
-    def get_total_uploads_allowed(self):
+    def get_total_uploads_allowed(self) -> int:
 
         if config.sections["transfers"]["useupslots"]:
             upload_slots = config.sections["transfers"]["uploadslots"]
@@ -742,11 +742,13 @@ class Uploads(Transfers):
             # No active upload, transfer a queued upload immediately
             self._check_upload_queue(transfer)
 
-    def retry_uploads(self, uploads) -> None:
+    def retry_uploads(self, uploads: dict[Transfer, None]) -> None:
         for upload in uploads:
             self.retry_upload(upload)
 
-    def abort_uploads(self, uploads, denied_message=None, status=TransferStatus.CANCELLED) -> None:
+    def abort_uploads(
+        self, uploads: dict[Transfer, None], denied_message=None, status=TransferStatus.CANCELLED
+    ) -> None:
 
         ignored_statuses = {status, TransferStatus.FINISHED}
 
@@ -794,7 +796,7 @@ class Uploads(Transfers):
 
     # Events #
 
-    def _shares_ready(self, _successful) -> None:
+    def _shares_ready(self, _successful: bool) -> None:
         """Process any file transfer queue requests that arrived while
         scanning shares.
         """
@@ -880,7 +882,7 @@ class Uploads(Transfers):
         self._check_upload_queue()
 
     def _peer_connection_error(
-        self, username: str, conn_type, msgs, is_offline: bool = False, is_timeout: bool = True
+        self, username: str, conn_type: ConnectionType, msgs, is_offline: bool = False, is_timeout: bool = True
     ) -> None:
 
         if not msgs:
@@ -1019,7 +1021,7 @@ class Uploads(Transfers):
         if response.reason == TransferRejectReason.QUEUED:
             self._check_upload_queue()
 
-    def _transfer_request_uploads(self, msg: TransferRequest):
+    def _transfer_request_uploads(self, msg: TransferRequest) -> TransferResponse | None:
         """Remote peer is requesting to download a file through your upload
         queue.
 

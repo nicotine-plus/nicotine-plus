@@ -86,7 +86,7 @@ class PrivateChat:
 
         self.update_completions()
 
-    def show_user(self, username: str, switch_page=True, remembered=False):
+    def show_user(self, username: str, switch_page: bool = True, remembered: bool = False) -> None:
 
         self.users.add(username)
 
@@ -96,7 +96,7 @@ class PrivateChat:
         events.emit("private-chat-show-user", username, switch_page, remembered)
         core.users.watch_user(username, context="privatechat")
 
-    def remove_user(self, username, is_permanent=True):
+    def remove_user(self, username: str, is_permanent: bool = True) -> None:
 
         if is_permanent and username in config.sections["privatechat"]["users"]:
             config.sections["privatechat"]["users"].remove(username)
@@ -112,7 +112,7 @@ class PrivateChat:
     def clear_private_messages(self, username: str) -> None:
         events.emit("clear-private-messages", username)
 
-    def send_automatic_message(self, username: str, message) -> None:
+    def send_automatic_message(self, username: str, message: str) -> None:
         self.send_message(username, f"[Automatic Message] {message}")
 
     def echo_message(self, username: str, message: str, message_type: str = "local") -> None:
@@ -141,7 +141,7 @@ class PrivateChat:
 
         events.emit("message-user", MessageUser(username, message))
 
-    def send_message_users(self, target: str, message) -> None:
+    def send_message_users(self, target: str, message: str) -> None:
 
         if not message:
             return
@@ -167,7 +167,7 @@ class PrivateChat:
         else:
             self._private_message_queue[username].append(msg)
 
-    def _process_server_message(self, message):
+    def _process_server_message(self, message: str):
 
         first_paragraph, _sep, remaining_message = message.partition("\n")
         room_create_str = "Could not create room. Reason: "
@@ -310,7 +310,7 @@ class PrivateChat:
 
         return message
 
-    def _process_ctcp_query(self, username: str, query) -> None:
+    def _process_ctcp_query(self, username: str, query: str) -> None:
 
         if not config.sections["ctcp"]["enable"]:
             return

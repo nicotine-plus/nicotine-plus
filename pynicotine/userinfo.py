@@ -61,7 +61,9 @@ class UserInfo:
     def _server_disconnect(self, _msg: ServerDisconnect) -> None:
         self._requested_info_times.clear()
 
-    def _get_user_info_response(self, requesting_username=None, requesting_ip_address=None) -> UserInfoResponse:
+    def _get_user_info_response(
+        self, requesting_username: str | None = None, requesting_ip_address: str | None = None
+    ) -> UserInfoResponse:
 
         if requesting_username is not None and requesting_ip_address is not None:
             permission_level, reject_reason = core.shares.check_user_permission(
@@ -174,7 +176,7 @@ class UserInfo:
                 "error": error
             })
 
-    def _peer_connection_error(self, username: str, conn_type, msgs, is_offline=False) -> None:
+    def _peer_connection_error(self, username: str, conn_type: ConnectionType, msgs, is_offline: bool = False) -> None:
 
         if not msgs:
             return
@@ -201,10 +203,10 @@ class UserInfo:
             raise StopEventPropagation()
 
         self._requested_info_times[username] = request_time
-        msg = self._get_user_info_response(username, ip_address)
+        user_info_response = self._get_user_info_response(username, ip_address)
 
         log.add(_("User %(user)s is viewing your profile"), {"user": username})
-        core.send_message_to_peer(username, msg)
+        core.send_message_to_peer(username, user_info_response)
 
     def _user_info_response(self, msg: UserInfoResponse) -> None:
         core.send_message_to_network_thread(RemoveAllowedResponse(UserInfoResponse, msg.username))

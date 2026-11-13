@@ -183,7 +183,7 @@ class UserBrowse:
         if new_request:
             self.request_user_shares(username)
 
-    def create_user_shares_folder(self):
+    def create_user_shares_folder(self) -> str | None:
 
         shares_folder = os.path.join(config.data_folder_path, "usershares")
         shares_folder_encoded = encode_path(shares_folder)

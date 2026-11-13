@@ -4,6 +4,7 @@
 # SPDX-FileCopyrightText: 2008-2011 quinox <quinox@users.sf.net>
 # SPDX-FileCopyrightText: 2009 daelstorm <daelstorm@gmail.com>
 # SPDX-License-Identifier: GPL-3.0-or-later
+from __future__ import annotations
 
 import os
 import shutil
@@ -13,12 +14,16 @@ import zipfile
 
 from ast import literal_eval
 from collections import defaultdict
+from typing import TYPE_CHECKING
 
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.utils import encode_path
+
+if TYPE_CHECKING:
+    from core import Core
 
 
 returncode = {
@@ -227,12 +232,12 @@ class BasePlugin:
     def log(self, msg: str, msg_args=None) -> None:
         log.add(f"{self.human_name}: {msg}", msg_args)
 
-    def send_public(self, room: str, message: str):
+    def send_public(self, room: str, message: str) -> None:
         """Send chat message to a room, must already be joined."""
 
         core.chatrooms.send_message(room, message)
 
-    def send_private(self, user, message: str, show_ui: bool = True, switch_page: bool = True):
+    def send_private(self, user: str, message: str, show_ui: bool = True, switch_page: bool = True) -> None:
         """Send user message in private.
 
         show_ui controls if the UI opens a private chat view for the
@@ -245,7 +250,7 @@ class BasePlugin:
 
         core.privatechat.send_message(user, message)
 
-    def echo_public(self, room: str, message: str, message_type="local"):
+    def echo_public(self, room: str, message: str, message_type="local") -> None:
         """Display a raw message in chat rooms (not sent to others).
 
         message_type changes the type (and color) of the message in the UI.
@@ -254,7 +259,7 @@ class BasePlugin:
 
         core.chatrooms.echo_message(room, message, message_type)
 
-    def echo_private(self, user, message: str, message_type: str = "local"):
+    def echo_private(self, user: str, message: str, message_type: str = "local") -> None:
         """Display a raw message in private (not sent to others).
 
         message_type changes the type (and color) of the message in the UI.
@@ -264,7 +269,7 @@ class BasePlugin:
         core.privatechat.show_user(user)
         core.privatechat.echo_message(user, message, message_type)
 
-    def send_message(self, message: str):
+    def send_message(self, message: str) -> None:
         """Convenience function to send a message to the same user/room a
         plugin command runs for."""
 
@@ -280,7 +285,7 @@ class BasePlugin:
         func = self.send_public if command_interface == "chatroom" else self.send_private
         func(source, message)
 
-    def echo_message(self, message: str, message_type: str = "local"):
+    def echo_message(self, message: str, message_type: str = "local") -> None:
         """Convenience function to display a raw message the same window a
         plugin command runs from."""
 
@@ -297,7 +302,7 @@ class BasePlugin:
         func = self.echo_public if command_interface == "chatroom" else self.echo_private
         func(source, message, message_type)
 
-    def output(self, message: str):
+    def output(self, message: str) -> None:
         self.echo_message(message, message_type="command")
 
 
@@ -314,7 +319,7 @@ class ResponseThrottle:
     Some of the throttle logic is guesswork as server code is closed source, but works adequately.
     """
 
-    def __init__(self, core, plugin_name: str, logging: bool = False):  # pylint: disable=redefined-outer-name
+    def __init__(self, core: Core, plugin_name: str, logging: bool = False):  # pylint: disable=redefined-outer-name
 
         self.core = core
         self.plugin_name = plugin_name
@@ -456,7 +461,7 @@ class PluginHandler:
         for plugin in self.list_installed_plugins():
             self.disable_plugin(plugin, is_permanent=False)
 
-    def _cli_command(self, command, args) -> None:
+    def _cli_command(self, command: str, args) -> None:
         self.trigger_cli_command_event(command, args)
 
     def update_completions(self, plugin) -> None:
@@ -472,7 +477,7 @@ class PluginHandler:
         if plugin.commands or plugin.__privatecommands__:
             core.privatechat.update_completions()
 
-    def install_plugin(self, file_path):
+    def install_plugin(self, file_path: str):
 
         plugin_name = None
         max_uncompressed_size = 1024 * 1024 * 1024  # 1 GB
@@ -529,7 +534,7 @@ class PluginHandler:
 
         return plugin_name
 
-    def uninstall_plugin(self, plugin_name: str):
+    def uninstall_plugin(self, plugin_name: str) -> bool:
 
         if self.is_internal_plugin(plugin_name):
             return False
@@ -557,9 +562,9 @@ class PluginHandler:
         log.add(_("Uninstalled plugin %(name)s"), {"name": plugin_human_name})
         return True
 
-    def list_installed_plugins(self):
+    def list_installed_plugins(self) -> list[str]:
 
-        plugin_list = []
+        plugin_list: list[str] = []
 
         for folder_path in self.plugin_folders:
             try:
@@ -592,7 +597,7 @@ class PluginHandler:
 
         return None
 
-    def is_internal_plugin(self, plugin_name: str):
+    def is_internal_plugin(self, plugin_name: str) -> bool:
 
         plugin_path = self.get_plugin_path(plugin_name)
 
@@ -654,7 +659,7 @@ class PluginHandler:
 
         return instance
 
-    def enable_plugin(self, plugin_name: str) -> bool:
+    def enable_plugin(self, plugin_name: str) -> None:
 
         # Our config file doesn't play nicely with some characters
         if "=" in plugin_name:
@@ -824,10 +829,10 @@ class PluginHandler:
         self.disable_plugin(plugin_name)
         self.enable_plugin(plugin_name)
 
-    def is_plugin_loaded(self, plugin_name: str):
+    def is_plugin_loaded(self, plugin_name: str) -> bool:
         return plugin_name in self.loaded_plugins
 
-    def is_plugin_failed(self, plugin_name: str):
+    def is_plugin_failed(self, plugin_name: str) -> bool:
 
         if not config.sections["plugins"]["enable"]:
             return False
@@ -876,7 +881,7 @@ class PluginHandler:
 
         return plugin_info
 
-    def get_plugin_human_name(self, plugin_name: str):
+    def get_plugin_human_name(self, plugin_name: str) -> str:
 
         try:
             info = self.get_plugin_info(plugin_name)
@@ -888,7 +893,7 @@ class PluginHandler:
         return plugin_human_name
 
     @staticmethod
-    def show_plugin_error(plugin_name: str, error) -> None:
+    def show_plugin_error(plugin_name: str, error: Exception) -> None:
 
         from traceback import format_tb
 
@@ -899,7 +904,7 @@ class PluginHandler:
             "trace": "".join(format_tb(error.__traceback__))
         })
 
-    def load_plugin_settings(self, plugin) -> None:
+    def load_plugin_settings(self, plugin: BasePlugin) -> None:
 
         plugin_name = plugin.internal_name.lower()
 
@@ -919,7 +924,7 @@ class PluginHandler:
         # Persist plugin settings in the config
         config.sections["plugins"][plugin_name] = plugin.settings
 
-    def reset_plugin_settings(self, plugin_name):
+    def reset_plugin_settings(self, plugin_name: str):
 
         plugin_human_name = self.get_plugin_human_name(plugin_name)
 
@@ -932,13 +937,13 @@ class PluginHandler:
 
         log.add(_("Restored default settings for plugin %(name)s"), {"name": plugin_human_name})
 
-    def get_command_list(self, command_interface):
+    def get_command_list(self, command_interface) -> list[str]:
         """Returns a list of every command and alias available.
 
         Currently used for auto-completion in chats.
         """
 
-        commands = []
+        commands: list[str] = []
 
         for command, data in self.commands.get(command_interface).items():
             commands.append(f"/{command} ")
@@ -1137,37 +1142,37 @@ class PluginHandler:
 
         return args
 
-    def search_request_notification(self, search_term, user, token: int):
+    def search_request_notification(self, search_term, user, token: int) -> None:
         self._trigger_event("search_request_notification", (search_term, user, token))
 
-    def distrib_search_notification(self, search_term, user, token: int):
+    def distrib_search_notification(self, search_term, user, token: int) -> None:
         self._trigger_event("distrib_search_notification", (search_term, user, token))
 
-    def public_room_message_notification(self, room, user, message):
+    def public_room_message_notification(self, room, user, message) -> None:
         self._trigger_event("public_room_message_notification", (room, user, message))
 
     def incoming_private_chat_event(self, user, message):
         return self._trigger_event("incoming_private_chat_event", (user, message))
 
-    def incoming_private_chat_notification(self, user, message):
+    def incoming_private_chat_notification(self, user, message) -> None:
         self._trigger_event("incoming_private_chat_notification", (user, message))
 
     def incoming_public_chat_event(self, room, user, message):
         return self._trigger_event("incoming_public_chat_event", (room, user, message))
 
-    def incoming_public_chat_notification(self, room, user, message):
+    def incoming_public_chat_notification(self, room, user, message) -> None:
         self._trigger_event("incoming_public_chat_notification", (room, user, message))
 
     def outgoing_private_chat_event(self, user, message):
         return self._trigger_event("outgoing_private_chat_event", (user, message))
 
-    def outgoing_private_chat_notification(self, user, message):
+    def outgoing_private_chat_notification(self, user, message) -> None:
         self._trigger_event("outgoing_private_chat_notification", (user, message))
 
     def outgoing_public_chat_event(self, room, message):
         return self._trigger_event("outgoing_public_chat_event", (room, message))
 
-    def outgoing_public_chat_notification(self, room, message):
+    def outgoing_public_chat_notification(self, room, message) -> None:
         self._trigger_event("outgoing_public_chat_notification", (room, message))
 
     def outgoing_global_search_event(self, search_term):
@@ -1185,7 +1190,7 @@ class PluginHandler:
     def outgoing_wishlist_search_event(self, search_term):
         return self._trigger_event("outgoing_wishlist_search_event", (search_term,))
 
-    def user_resolve_notification(self, user, ip_address, port, country_code=None):
+    def user_resolve_notification(self, user, ip_address, port, country_code=None) -> None:
         """Notification for user IP:Port resolving.
 
         Note that country is only set when the user requested the
@@ -1196,7 +1201,7 @@ class PluginHandler:
     def server_connect_notification(self) -> None:
         self._trigger_event("server_connect_notification", (),)
 
-    def server_disconnect_notification(self, is_manual):
+    def server_disconnect_notification(self, is_manual) -> None:
         self._trigger_event("server_disconnect_notification", (is_manual, ))
 
     def join_chatroom_notification(self, room) -> None:
@@ -1244,17 +1249,17 @@ class PluginHandler:
     def upload_queued_notification(self, user, virtual_path: str, real_path) -> None:
         self._trigger_event("upload_queued_notification", (user, virtual_path, real_path))
 
-    def upload_started_notification(self, user, virtual_path: str, real_path) -> None:
+    def upload_started_notification(self, user, virtual_path: str, real_path: str) -> None:
         self._trigger_event("upload_started_notification", (user, virtual_path, real_path))
 
-    def upload_finished_notification(self, user, virtual_path: str, real_path) -> None:
+    def upload_finished_notification(self, user, virtual_path: str, real_path: str) -> None:
         self._trigger_event("upload_finished_notification", (user, virtual_path, real_path))
 
-    def download_started_notification(self, user, virtual_path: str, real_path) -> None:
+    def download_started_notification(self, user, virtual_path: str, real_path: str) -> None:
         self._trigger_event("download_started_notification", (user, virtual_path, real_path))
 
     def download_finished_notification(self, user, virtual_path: str, real_path) -> None:
         self._trigger_event("download_finished_notification", (user, virtual_path, real_path))
 
     def shutdown_notification(self) -> None:
-        self._trigger_event("shutdown_notification", (),)
+        self._trigger_event("shutdown_notification", ())
