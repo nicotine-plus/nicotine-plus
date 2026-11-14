@@ -83,7 +83,7 @@ class WishSearchRequest(SearchRequest):
             if self.filter_mode == ResultFilterMode.CUSTOM else 0
         )
 
-    def as_dict(self):
+    def serialize(self):
 
         return {
             "term": self.term,
@@ -563,7 +563,7 @@ class Search:
             else:
                 file_handle.write(",\n")
 
-            file_handle.write(json_encoder.encode(search.as_dict()))
+            file_handle.write(json_encoder.encode(search.serialize()))
 
         file_handle.write("]")
 

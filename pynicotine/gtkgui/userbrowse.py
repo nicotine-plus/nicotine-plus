@@ -503,8 +503,8 @@ class UserBrowse:
             skip_folder = (query and query not in folder_path.lower())
 
             if skip_folder:
-                for file_info in files:
-                    if query in file_info[1].lower():
+                for file_data in files:
+                    if query in file_data.path.lower():
                         skip_folder = False
 
             if skip_folder:
@@ -761,7 +761,10 @@ class UserBrowse:
         # Temporarily disable sorting for increased performance
         self.file_list_view.freeze()
 
-        for _code, basename, size, _file_extension, file_attributes, *_unused in reversed(files):
+        for file_data in reversed(files):
+            basename = file_data.path
+            size = file_data.size
+            file_attributes = file_data.attributes
             h_size = human_size(size, config.sections["ui"]["file_size_unit"])
             h_quality, bitrate, h_length, length = FileListMessage.parse_audio_quality_length(size, file_attributes)
 
@@ -945,10 +948,17 @@ class UserBrowse:
             for folder_path, files in core.userbrowse.iter_matching_folders(
                 selected_folder_path, browsed_user=core.userbrowse.users[self.username], recurse=True
             ):
-                for _code, basename, file_size, _file_extension, file_attributes, *_unused in files:
-                    file_path = "\\".join([folder_path, basename])
+                for file_data in files:
+                    file_path = "\\".join([folder_path, file_data.path])
 
-                    data.append((self.username, file_path, file_size, file_attributes, selected, selected_folder_path))
+                    data.append((
+                        self.username,
+                        file_path,
+                        file_data.size,
+                        file_data.attributes,
+                        selected,
+                        selected_folder_path
+                    ))
 
             prev_folder_path = selected_folder_path
 
@@ -1153,10 +1163,8 @@ class UserBrowse:
                 return
 
         for file_data in files:
-            _code, basename, *_unused = file_data
-
             # Find the wanted file
-            if self.selected_files and basename not in self.selected_files:
+            if self.selected_files and file_data.path not in self.selected_files:
                 continue
 
             core.userbrowse.download_file(
@@ -1197,8 +1205,8 @@ class UserBrowse:
 
         core.userbrowse.send_upload_attempt_notification(username)
 
-        for basename, size in self.selected_files.items():
-            core.userbrowse.upload_file(username, folder_path, (None, basename, size))
+        for basename in self.selected_files:
+            core.userbrowse.upload_file(username, folder_path, basename)
 
     def on_upload_files(self, *_args):
 
@@ -1250,8 +1258,10 @@ class UserBrowse:
                     selected_folder_path, browsed_user=core.userbrowse.users[self.username], recurse=True
                 ):
                     for file_data in files:
-                        _code, basename, file_size, _file_extension, file_attributes, *_unused = file_data
+                        basename = file_data.path
                         file_path = "\\".join([folder_path, basename])
+                        file_size = file_data.size
+                        file_attributes = file_data.attributes
                         selected_size += file_size
 
                         if file_attributes.length:
