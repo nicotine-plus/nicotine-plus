@@ -263,7 +263,7 @@ class NowPlaying:
             ("xesam:comment", "comment"),
             ("xesam:audioBitrate", "bitrate"),
             ("xesam:url", "filename"),
-            ("xesam:trackNumber", "track")
+            ("xesak:trackNumber", "track")
         ]
 
         for source, dest in mapping:
