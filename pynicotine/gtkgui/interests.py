@@ -490,19 +490,22 @@ class Interests:
 
         for index, similar_user in enumerate(reversed(users)):
             username = similar_user.username
-            status = core.users.statuses.get(username, UserStatus.OFFLINE)
-            country_code = core.users.countries.get(username, "")
-            stats = core.users.watched.get(username)
+            watched_user = core.users.watched.get(username)
             rating = index + (1000 * (similar_user.rating or 0))  # Preserve default sort order
 
-            if stats is not None:
+            if watched_user is not None:
+                stats = watched_user.stats
+                status = stats.status or UserStatus.OFFLINE
                 upload_speed = stats.upload_speed or 0
                 num_files = stats.num_files or 0
                 num_folders = stats.num_folders or 0
+                country_code = stats.country_code
             else:
+                status = UserStatus.OFFLINE
                 upload_speed = 0
                 num_files = 0
                 num_folders = 0
+                country_code = ""
 
             h_upload_speed = human_speed(upload_speed) if upload_speed > 0 else ""
             h_num_files = humanize(num_files)

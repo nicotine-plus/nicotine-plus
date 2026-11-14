@@ -345,9 +345,10 @@ class Buddies:
         if country_code:
             country_code = country_code.replace("flag_", "")
 
-        stats = core.users.watched.get(username)
+        watched_user = core.users.watched.get(username)
 
-        if stats is not None:
+        if watched_user is not None:
+            stats = watched_user.stats
             upload_speed = stats.upload_speed or 0
             num_files = stats.num_files
             num_folders = stats.num_folders

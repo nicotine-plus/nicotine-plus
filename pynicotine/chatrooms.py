@@ -298,20 +298,16 @@ class ChatRooms:
         room.users.add(username)
         core.users.watch_user(username, context=f"chatrooms_{room.name}", is_implicit=True)
 
-        watched_user = core.users.watched[username]
-        watched_user.upload_speed = user_stats.upload_speed
-        watched_user.num_files = user_stats.num_files
-        watched_user.num_folders = user_stats.num_folders
+        # Replace server-provided country with our own
+        if username in core.users.countries:
+            user_stats.country_code = core.users.countries[username]
 
+        core.users.watched[username].stats = user_stats
         core.users.statuses[username] = user_stats.status
 
         # Request user's IP address, so we can get the country and ignore messages by IP
         if username not in core.users.addresses:
             core.users.request_ip_address(username)
-
-        # Replace server-provided country with our own
-        if username in core.users.countries:
-            user_stats.country_code = core.users.countries[username]
 
     def _update_private_room(self, room_name, owner=None, members=None, operators=None) -> None:
 

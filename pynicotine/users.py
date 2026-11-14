@@ -23,6 +23,7 @@ from pynicotine.slskmessages import GivePrivileges
 from pynicotine.slskmessages import LoginRejectReason
 from pynicotine.slskmessages import SetStatus
 from pynicotine.slskmessages import UnwatchUser
+from pynicotine.slskmessages import UserStats
 from pynicotine.slskmessages import UserStatus
 from pynicotine.slskmessages import WatchUser
 from pynicotine.utils import UINT32_LIMIT
@@ -40,9 +41,7 @@ if TYPE_CHECKING:
 @dataclass(slots=True, eq=False)
 class WatchedUser:
     username: str
-    upload_speed: int | None = None
-    num_files: int | None = None
-    num_folders: int | None = None
+    stats: UserStats
     is_implicit: bool = True
     contexts: set[str] = field(default_factory=set)
 
@@ -179,7 +178,10 @@ class Users:
         watched_user = self.watched.get(username)
 
         if watched_user is None:
-            self.watched[username] = watched_user = WatchedUser(username)
+            self.watched[username] = watched_user = WatchedUser(
+                username=username,
+                stats=UserStats(username=username)
+            )
 
         if not context:
             log.add("Calling watch_user() without providing a 'context' argument is deprecated.")
@@ -270,9 +272,10 @@ class Users:
             self.watch_user(username, context="login")
 
             if msg.ip_address is not None:
+                stats = self.watched[username].stats
                 self.public_ip_address = msg.ip_address
-                self.countries[username] = country_code = core.network_filter.get_country_code(msg.ip_address)
-                events.emit("user-country", username, country_code)
+                self.countries[username] = stats.country_code = core.network_filter.get_country_code(msg.ip_address)
+                events.emit("user-country", username, stats.country_code)
 
             if msg.motd:
                 log.add(msg.motd)
@@ -298,12 +301,16 @@ class Users:
         ip_address = msg.ip_address
         user_offline = (ip_address == "0.0.0.0")
         country_code = core.network_filter.get_country_code(ip_address)
+        watched_user = self.watched.get(username)
 
         if user_offline:
             self.addresses.pop(username, None)
             self.countries.pop(username, None)
 
-        elif username in self.watched:
+            if watched_user is not None:
+                watched_user.stats.country_code = ""
+
+        elif watched_user is not None:
             # Only cache IP address of watched users, otherwise we won't know if
             # a user reconnects and changes their IP address.
             # Don't update our own IP address, since we already store a local IP
@@ -312,7 +319,7 @@ class Users:
             if username != self.login_username:
                 self.addresses[username] = (ip_address, msg.port)
 
-            self.countries[username] = country_code
+            self.countries[username] = watched_user.stats.country_code = country_code
             events.emit("user-country", username, country_code)
 
         if not notify:
@@ -373,14 +380,17 @@ class Users:
         if username == self.login_username and status != self.login_status:
             raise StopEventPropagation()
 
-        is_watched = (username in self.watched)
+        watched_user = self.watched.get(username)
 
         # User went offline, reset stored IP address and country
         if status == UserStatus.OFFLINE:
             self.addresses.pop(username, None)
             self.countries.pop(username, None)
 
-        elif is_watched:
+            if watched_user is not None:
+                watched_user.stats.country_code = ""
+
+        elif watched_user is not None:
             user_status = self.statuses.get(username)
 
             # Online user seen for the first time, request IP address and country
@@ -392,8 +402,8 @@ class Users:
                 self.request_user_stats(username)
                 self.request_ip_address(username)
 
-        if is_watched:
-            self.statuses[username] = status
+        if watched_user is not None:
+            self.statuses[username] = watched_user.stats.status = status
 
         core.pluginhandler.user_status_notification(username, status, msg.privileged)
 
@@ -420,9 +430,17 @@ class Users:
         watched_user = self.watched.get(username)
 
         if watched_user is not None:
-            watched_user.upload_speed = stats.upload_speed
-            watched_user.num_files = stats.num_files
-            watched_user.num_folders = stats.num_folders
+            # Carry over stats that are not included in stat update messages
+            previous_stats = watched_user.stats
+            stats.slots_full = previous_stats.slots_full
+
+            if previous_stats.status is not None:
+                stats.status = previous_stats.status
+
+            if previous_stats.country_code:
+                stats.country_code = previous_stats.country_code
+
+            watched_user.stats = stats
 
         core.pluginhandler.user_stats_notification(username, stats={
             "avgspeed": stats.upload_speed,
