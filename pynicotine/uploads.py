@@ -1218,7 +1218,7 @@ class Uploads(Transfers):
             self._update_transfer(upload)
 
         if upload_started:
-            # Must be be emitted after the final update to prevent inconsistent state
+            # Must be emitted after the final update to prevent inconsistent state
             core.pluginhandler.upload_started_notification(username, virtual_path, real_path)
 
     def _file_upload_progress(

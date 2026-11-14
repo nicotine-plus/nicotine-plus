@@ -203,10 +203,10 @@ class UserInfo:
             raise StopEventPropagation()
 
         self._requested_info_times[username] = request_time
-        user_info_response = self._get_user_info_response(username, ip_address)
+        response_msg = self._get_user_info_response(username, ip_address)
 
         log.add(_("User %(user)s is viewing your profile"), {"user": username})
-        core.send_message_to_peer(username, user_info_response)
+        core.send_message_to_peer(username, response_msg)
 
     def _user_info_response(self, msg: UserInfoResponse) -> None:
         core.send_message_to_network_thread(RemoveAllowedResponse(UserInfoResponse, msg.username))

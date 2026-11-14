@@ -95,7 +95,7 @@ class Transfers:
 
     def __init__(self, name: str):
 
-        self.transfers = {}
+        self.transfers: dict[str, Transfer] = {}
         self.queued_transfers: dict[Transfer, None] = {}
         self.queued_users = defaultdict(dict)
         self.active_users = defaultdict(dict)

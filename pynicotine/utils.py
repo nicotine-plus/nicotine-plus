@@ -171,7 +171,7 @@ def safe_path_join(base_path: str, *parts: str) -> str:
 def encode_path(path: str, prefix: bool = True) -> bytes:
     """Converts a file path to bytes for processing by the system.
 
-    On Windows, also append prefix to enable extended-length path.
+    On Windows, also prepend prefix to enable extended-length path.
     """
 
     if sys.platform == "win32" and prefix:
