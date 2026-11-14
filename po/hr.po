@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-13 07:08+0300\n"
-"PO-Revision-Date: 2026-03-22 18:54+0000\n"
-"Last-Translator: Tko Toradi <random.mongoose052@passinbox.com>\n"
+"PO-Revision-Date: 2026-11-12 16:21+0000\n"
+"Last-Translator: Loc Diki <locdiki@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hr/>\n"
 "Language: hr\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 2026.11.2.dev0\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -128,14 +128,12 @@ msgid "start the program without showing window"
 msgstr "pokreni bez prikazivanja prozora"
 
 #: pynicotine/__init__.py:54
-#, fuzzy
 msgid "address"
-msgstr "IP adresa"
+msgstr "adresa"
 
 #: pynicotine/__init__.py:55
-#, fuzzy
 msgid "bind connections to the given IP address"
-msgstr "Blokiraj korisnika ili IP adresu"
+msgstr "poveži veze na zadanu IP adresu"
 
 #: pynicotine/__init__.py:58
 msgid "port"
@@ -186,9 +184,9 @@ msgid "Buddy Status"
 msgstr "Status prijatelja"
 
 #: pynicotine/chatrooms.py:316
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s has not enabled private room invitations"
-msgstr "%(user)s su dodani u privatnu sobu %(room)s"
+msgstr "%(user)s nisu umogućili pozive u privatne sobe"
 
 #: pynicotine/chatrooms.py:371
 #, python-format
@@ -203,17 +201,17 @@ msgstr "%(user)s su uklonjeni iz privatne sobe %(room)s"
 #: pynicotine/chatrooms.py:407
 #, python-format
 msgid "You have been added to private room %(room)s"
-msgstr "Dodalo te u privatnu sobu %(room)s"
+msgstr "Dodani ste u privatnu sobu %(room)s"
 
 #: pynicotine/chatrooms.py:422
 #, python-format
 msgid "You have been removed from private room %(room)s"
-msgstr "Uklonilo te iz privatne sobe %(room)s"
+msgstr "Uklonjeni ste iz privatne sobe %(room)s"
 
 #: pynicotine/chatrooms.py:443 pynicotine/privatechat.py:258
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is now an operator of room %(room)s"
-msgstr "%(user)s više nisu operatori/ce sobe %(room)s"
+msgstr "%(user)s je sada operater sobe %(room)s"
 
 #: pynicotine/chatrooms.py:462 pynicotine/privatechat.py:262
 #, python-format
@@ -221,9 +219,9 @@ msgid "User %(user)s is no longer an operator of room %(room)s"
 msgstr "%(user)s više nisu operatori/ce sobe %(room)s"
 
 #: pynicotine/chatrooms.py:478
-#, fuzzy, python-format
+#, python-format
 msgid "You are now an operator of room %(room)s"
-msgstr "Nisi više operator/ica sobe %(room)s"
+msgstr "Ti si sada operator/ica sobe %(room)s"
 
 #: pynicotine/chatrooms.py:491
 #, python-format
