@@ -472,14 +472,14 @@ class ChatRooms(IconNotebook):
         page = self.pages.get(msg.room_name)
 
         if page is not None:
-            page.room_ticker_added(msg.ticker)
+            page.room_ticker_added(msg)
 
     def room_ticker_removed(self, msg):
 
         page = self.pages.get(msg.room_name)
 
         if page is not None:
-            page.room_ticker_removed(msg.ticker)
+            page.room_ticker_removed(msg)
 
     def update_completions(self, completions):
 
@@ -1117,16 +1117,18 @@ class ChatRoom:
             values=[Pango.Weight.NORMAL, Pango.Underline.NONE]
         )
 
-    def room_ticker_added(self, ticker):
+    def room_ticker_added(self, msg):
 
-        if ticker.username == core.users.login_username:
+        username = msg.ticker.username
+
+        if username == core.users.login_username:
             return
 
-        self.unread_room_wall_users.add(ticker.username)
+        self.unread_room_wall_users.add(username)
         self.update_room_wall_label()
 
-    def room_ticker_removed(self, ticker):
-        self.unread_room_wall_users.discard(ticker.username)
+    def room_ticker_removed(self, msg):
+        self.unread_room_wall_users.discard(msg.username)
         self.update_room_wall_label()
 
     def update_user_count(self):
@@ -1215,9 +1217,9 @@ class ChatRoom:
             return
 
         status = msg.status
-        status_icon_name = USER_STATUS_ICON_NAMES.get(status)
+        status_icon_name = USER_STATUS_ICON_NAMES.get(status, "")
 
-        if not status_icon_name or status_icon_name == self.users_list_view.get_row_value(iterator, "status"):
+        if status_icon_name == self.users_list_view.get_row_value(iterator, "status"):
             return
 
         if status == UserStatus.AWAY:
