@@ -256,31 +256,31 @@ class DownloadsTest(TestCase):
         browsed_user = core.userbrowse.users[username] = BrowsedUser(username)
         browsed_user.public_folders = dict([
             ("share", [
-                SharedFile(1, "root1.mp3", 1000, FileAttributes())
+                SharedFile(code=1, path="root1.mp3", size=1000, extension=None, attributes=FileAttributes())
             ]),
             ("share\\Music", [
-                SharedFile(1, "music1.mp3", 1000000, FileAttributes()),
-                SharedFile(1, "music2.mp3", 2000000, FileAttributes())
+                SharedFile(code=1, path="music1.mp3", size=1000000, extension=None, attributes=FileAttributes()),
+                SharedFile(code=1, path="music2.mp3", size=2000000, extension=None, attributes=FileAttributes())
             ]),
             ("share\\Soulseek", [
-                SharedFile(1, "file1.mp3", 3000000, FileAttributes()),
-                SharedFile(1, "file2.mp3", 4000000, FileAttributes())
+                SharedFile(code=1, path="file1.mp3", size=3000000, extension=None, attributes=FileAttributes()),
+                SharedFile(code=1, path="file2.mp3", size=4000000, extension=None, attributes=FileAttributes())
             ]),
             ("share\\Soulseek\\folder1", [
-                SharedFile(1, "file3.mp3", 5000000, FileAttributes())
+                SharedFile(code=1, path="file3.mp3", size=5000000, extension=None, attributes=FileAttributes())
             ]),
             ("share\\Soulseek\\folder1\\sub1", [
-                SharedFile(1, "file4.mp3", 6000000, FileAttributes())
+                SharedFile(code=1, path="file4.mp3", size=6000000, extension=None, attributes=FileAttributes())
             ]),
             ("share\\Soulseek\\folder2", [
-                SharedFile(1, "file5.mp3", 7000000, FileAttributes())
+                SharedFile(code=1, path="file5.mp3", size=7000000, extension=None, attributes=FileAttributes())
             ]),
             ("share\\Soulseek\\folder2\\sub2", [
-                SharedFile(1, "file6.mp3", 8000000, FileAttributes())
+                SharedFile(code=1, path="file6.mp3", size=8000000, extension=None, attributes=FileAttributes())
             ]),
             ("share\\SoulseekSecond", [
-                SharedFile(1, "file7.mp3", 9000000, FileAttributes()),
-                SharedFile(1, "file8.mp3", 10000000, FileAttributes())
+                SharedFile(code=1, path="file7.mp3", size=9000000, extension=None, attributes=FileAttributes()),
+                SharedFile(code=1, path="file8.mp3", size=10000000, extension=None, attributes=FileAttributes())
             ])
         ])
 

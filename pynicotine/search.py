@@ -642,7 +642,7 @@ class Search:
     def _file_search_response(self, msg: FileSearchResponse) -> None:
         """Peer code 9."""
 
-        if msg.public_files is None:
+        if msg.is_rejected:
             # Response was rejected
             raise StopEventPropagation()
 

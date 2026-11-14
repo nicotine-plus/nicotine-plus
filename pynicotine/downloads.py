@@ -1063,7 +1063,7 @@ class Downloads(Transfers):
     def _folder_contents_response(self, msg: FolderContentsResponse) -> None:
         """Peer code 37."""
 
-        if msg.folders is None:
+        if msg.is_rejected:
             # Response was rejected
             raise StopEventPropagation()
 
