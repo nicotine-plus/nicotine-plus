@@ -785,9 +785,9 @@ class NetworkThread(Thread):
         sock = init.sock
         msgs = init.outgoing_msgs
 
-        for j in msgs:
-            j.username = username
-            j.sock = sock
+        for msg in msgs:
+            msg.username = username
+            msg.sock = sock
 
         self._process_outgoing_messages(msgs)
         msgs.clear()
