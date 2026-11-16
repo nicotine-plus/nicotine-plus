@@ -1398,20 +1398,20 @@ class Shares:
         username = msg.username
         folder_path = msg.folder_path
         permission_level, _reject_reason = self.check_user_permission(username, ip_address)
-        folder_data = None
+        stream = None
 
         if permission_level != PermissionLevel.BANNED:
-            folder_data = self.share_dbs.get("public_streams", {}).get(folder_path)
+            stream = self.share_dbs.get("public_streams", {}).get(folder_path)
 
-            if (folder_data is None
+            if (stream is None
                     and (config.sections["transfers"]["reveal_buddy_shares"]
                          or permission_level in {PermissionLevel.BUDDY, PermissionLevel.TRUSTED})):
-                folder_data = self.share_dbs.get("buddy_streams", {}).get(folder_path)
+                stream = self.share_dbs.get("buddy_streams", {}).get(folder_path)
 
-            if (folder_data is None
+            if (stream is None
                     and (config.sections["transfers"]["reveal_trusted_shares"]
                          or permission_level == PermissionLevel.TRUSTED)):
-                folder_data = self.share_dbs.get("trusted_streams", {}).get(folder_path)
+                stream = self.share_dbs.get("trusted_streams", {}).get(folder_path)
 
         core.send_message_to_peer(
-            username, FolderContentsResponse(folder_path=folder_path, token=msg.token, shares=folder_data))
+            username, FolderContentsResponse(folder_path=folder_path, token=msg.token, stream=stream))

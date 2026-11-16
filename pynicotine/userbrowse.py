@@ -317,7 +317,7 @@ class UserBrowse:
 
         msg = SharedFileListResponse()
         msg.username = username
-        msg.list = shares_list
+        msg.public_folders = shares_list
 
         events.emit("shared-file-list-response", msg)
 
@@ -483,19 +483,19 @@ class UserBrowse:
 
         username = msg.username
         browsed_user = self.users.get(username)
-        num_folders = len(msg.list) + len(msg.private_list)
+        num_folders = len(msg.public_folders) + len(msg.private_folders)
         num_files = 0
         shared_size = 0
 
-        for _folder_path, files in chain(msg.list, msg.private_list):
+        for _folder_path, files in chain(msg.public_folders, msg.private_folders):
             for file_data in files:
                 shared_size += file_data.size
 
             num_files += len(files)
 
         if browsed_user is not None:
-            browsed_user.public_folders.update(msg.list)
-            browsed_user.private_folders.update(msg.private_list)
+            browsed_user.public_folders.update(msg.public_folders)
+            browsed_user.private_folders.update(msg.private_folders)
             browsed_user.num_folders = num_folders
             browsed_user.num_files = num_files
             browsed_user.shared_size = shared_size

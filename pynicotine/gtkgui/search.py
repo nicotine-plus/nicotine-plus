@@ -948,14 +948,14 @@ class Search:
 
         update_ui_private = False
 
-        if msg.private_list and config.sections["searches"]["private_search_results"]:
+        if msg.private_files and config.sections["searches"]["private_search_results"]:
             update_ui_private = self.add_result_list(
-                msg.private_list, username, country_code, num_queued_uploads, upload_speed, h_upload_speed,
+                msg.private_files, username, country_code, num_queued_uploads, upload_speed, h_upload_speed,
                 h_num_queued_uploads, is_private=True
             )
 
         update_ui = self.add_result_list(
-            msg.list, username, country_code, num_queued_uploads, upload_speed, h_upload_speed,
+            msg.public_files, username, country_code, num_queued_uploads, upload_speed, h_upload_speed,
             h_num_queued_uploads) or update_ui_private
 
         if update_ui:

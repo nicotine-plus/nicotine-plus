@@ -1063,7 +1063,7 @@ class Downloads(Transfers):
     def _folder_contents_response(self, msg: FolderContentsResponse) -> None:
         """Peer code 37."""
 
-        if msg.list is None:
+        if msg.folders is None:
             # Response was rejected
             raise StopEventPropagation()
 
@@ -1089,7 +1089,7 @@ class Downloads(Transfers):
             events.cancel_scheduled(requested_folder.request_timer_id)
             requested_folder.request_timer_id = None
 
-        if not msg.list and not requested_folder.legacy_attempt:
+        if not msg.folders and not requested_folder.legacy_attempt:
             log.add_transfer("Folder content response is empty. Trying legacy latin-1 request.")
             requested_folder.legacy_attempt = True
             self.request_folder(username, folder_path)

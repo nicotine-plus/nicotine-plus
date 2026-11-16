@@ -3462,11 +3462,12 @@ class SharedFileListResponse(PeerMessage):
     SharedFileListRequest.
     """
 
-    __slots__ = ("list", "unknown", "private_list", "built", "permission_level",
+    __slots__ = ("public_folders", "unknown", "private_folders", "cached_response", "permission_level",
                  "public_shares", "buddy_shares", "trusted_shares")
     CODE = 5
     EVENT_NAME = "shared-file-list-response"
-    HIDDEN_FIELDS = {"list", "private_list", "built"}
+    HIDDEN_FIELDS = {"public_shares", "buddy_shares", "trusted_shares", "public_folders",
+                     "private_folders", "cached_response"}
 
     def __init__(self, public_shares=None, buddy_shares=None, trusted_shares=None,
                  permission_level=None, *, msg_content=None):
@@ -3475,10 +3476,10 @@ class SharedFileListResponse(PeerMessage):
         self.buddy_shares = buddy_shares
         self.trusted_shares = trusted_shares
         self.permission_level = permission_level
-        self.list = []
-        self.private_list = []
+        self.public_folders = []
+        self.private_folders = []
         self.unknown = 0
-        self.built = None
+        self.cached_response = None
 
     def _make_shares_list(self, share_groups):
 
@@ -3498,10 +3499,8 @@ class SharedFileListResponse(PeerMessage):
         return msg_list
 
     def make_network_message(self) -> bytes:
-        # Elaborate hack to save CPU
-        # Store packed message contents in self.built, and use instead of repacking it
-        if self.built is not None:
-            return self.built
+        if self.cached_response is not None:
+            return self.cached_response
 
         from pynicotine.shares import PermissionLevel
 
@@ -3529,8 +3528,8 @@ class SharedFileListResponse(PeerMessage):
 
         msg += self._make_shares_list(share_groups=private_share_groups)
 
-        self.built = zlib.compress(msg, ZLIB_COMPRESSION_LEVEL)
-        return self.built
+        self.cached_response = zlib.compress(msg, ZLIB_COMPRESSION_LEVEL)
+        return self.cached_response
 
     def _parse_result_list(self):
         num_folders = self.unpack_uint32()
@@ -3576,13 +3575,13 @@ class SharedFileListResponse(PeerMessage):
         if not decompressor.eof:
             raise ValueError("Compressed message invalid or too large")
 
-        self.list = self._parse_result_list()
+        self.public_folders = self._parse_result_list()
 
         if self.has_remaining_content():
             self.unknown = self.unpack_uint32()
 
         if self.has_remaining_content():
-            self.private_list = self._parse_result_list()
+            self.private_folders = self._parse_result_list()
 
     def parse_local_message(self) -> None:
         self._message = memoryview(self.make_network_message())
@@ -3628,40 +3627,42 @@ class FileSearchResponse(PeerMessage):
     message.
     """
 
-    __slots__ = ("search_username", "token", "list", "private_list", "slot_available",
-                 "upload_speed", "num_queued_uploads", "unknown")
+    __slots__ = ("search_username", "token", "public_shares", "private_shares", "slot_available",
+                 "upload_speed", "num_queued_uploads", "unknown", "public_files", "private_files")
     CODE = 9
     EVENT_NAME = "file-search-response"
-    HIDDEN_FIELDS = {"list", "private_list"}
+    HIDDEN_FIELDS = {"public_shares", "private_shares", "public_files", "private_files"}
 
-    def __init__(self, search_username=None, token=None, shares=None, slot_available=None,
+    def __init__(self, search_username=None, token=None, public_shares=None, slot_available=None,
                  upload_speed=None, num_queued_uploads=None, private_shares=None, *, msg_content=None):
         PeerMessage.__init__(self, msg_content)
         self.search_username = search_username
         self.token = token
-        self.list = shares
-        self.private_list = private_shares
+        self.public_shares = public_shares
+        self.private_shares = private_shares
         self.slot_available = slot_available
         self.upload_speed = upload_speed
         self.num_queued_uploads = num_queued_uploads
         self.unknown = 0
+        self.public_files = None
+        self.private_files = None
 
     def make_network_message(self) -> bytes:
         msg = bytearray()
         msg += self.pack_string(self.search_username)
         msg += self.pack_uint32(self.token)
-        msg += self.pack_uint32(len(self.list))
+        msg += self.pack_uint32(len(self.public_shares))
 
-        for fileinfo in self.list:
+        for fileinfo in self.public_shares:
             msg += FileListMessage.pack_file_info(fileinfo)
 
         msg += self.pack_bool(self.slot_available)
         msg += self.pack_uint32(self.upload_speed)
         msg += self.pack_uint32(self.num_queued_uploads)
         msg += self.pack_uint32(self.unknown)
-        msg += self.pack_uint32(len(self.private_list))
+        msg += self.pack_uint32(len(self.private_shares))
 
-        for fileinfo in self.private_list:
+        for fileinfo in self.private_shares:
             msg += FileListMessage.pack_file_info(fileinfo)
 
         return zlib.compress(msg, ZLIB_COMPRESSION_LEVEL)
@@ -3716,7 +3717,7 @@ class FileSearchResponse(PeerMessage):
         if not decompressor.eof:
             raise ValueError("Compressed message invalid or too large")
 
-        self.list = self._parse_result_list()
+        self.public_files = self._parse_result_list()
         self.slot_available = self.unpack_bool()
         self.upload_speed = self.unpack_uint32()
         self.num_queued_uploads = self.unpack_uint32()
@@ -3725,7 +3726,7 @@ class FileSearchResponse(PeerMessage):
             self.unknown = self.unpack_uint32()
 
         if self.has_remaining_content():
-            self.private_list = self._parse_result_list()
+            self.private_files = self._parse_result_list()
 
 
 class UserInfoRequest(PeerMessage):
@@ -3839,28 +3840,29 @@ class FolderContentsResponse(PeerMessage):
     subfolders) after we've sent a FolderContentsRequest.
     """
 
-    __slots__ = ("folder_path", "token", "list")
+    __slots__ = ("folder_path", "token", "stream", "folders")
     CODE = 37
     EVENT_NAME = "folder-contents-response"
-    HIDDEN_FIELDS = {"list"}
+    HIDDEN_FIELDS = {"stream", "folders"}
 
-    def __init__(self, folder_path=None, token=None, shares=None, *, msg_content=None):
+    def __init__(self, folder_path=None, token=None, stream=None, *, msg_content=None):
         PeerMessage.__init__(self, msg_content)
         self.folder_path = folder_path
         self.token = token
-        self.list = shares
+        self.stream = stream
+        self.folders = None
 
     def make_network_message(self) -> bytes:
         msg = bytearray()
         msg += self.pack_uint32(self.token)
         msg += self.pack_string(self.folder_path)
 
-        if self.list is not None:
+        if self.stream is not None:
             msg += self.pack_uint32(1)
             msg += self.pack_string(self.folder_path)
 
             # We already saved the folder contents as a bytearray when scanning our shares
-            msg += self.list
+            msg += self.stream
         else:
             # No folder contents
             msg += self.pack_uint32(0)
@@ -3924,7 +3926,7 @@ class FolderContentsResponse(PeerMessage):
             if num_files > 1:
                 folders[folder_path].sort(key=lambda x: x.path)
 
-        self.list = folders
+        self.folders = folders
 
 
 class TransferRequest(PeerMessage):

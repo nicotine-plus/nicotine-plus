@@ -573,7 +573,7 @@ class UserBrowse:
 
     def shared_file_list(self, msg):
 
-        is_empty = (not msg.list and not msg.private_list)
+        is_empty = (not msg.public_folders and not msg.private_folders)
         self.local_permission_level = msg.permission_level
 
         self.rebuild_model()
