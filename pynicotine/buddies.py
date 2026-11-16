@@ -1,21 +1,22 @@
 # SPDX-FileCopyrightText: 2021-2025 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
+
 from __future__ import annotations
+
 import time
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import UserStatus
-
-if TYPE_CHECKING:
-    from pynicotine.slskmessages import GetUserStatus
-    from pynicotine.slskmessages import Login
-    from pynicotine.slskmessages import ServerDisconnect
+from pynicotine.slskmessages import (
+    GetUserStatus,
+    Login,
+    ServerDisconnect,
+    UserStatus
+)
 
 
 @dataclass(slots=True, eq=False)

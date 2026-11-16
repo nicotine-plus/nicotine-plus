@@ -1,14 +1,14 @@
 # SPDX-FileCopyrightText: 2022-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from __future__ import annotations
+
 import time
 
 from collections import defaultdict
 from collections.abc import Callable
-from dataclasses import dataclass
-from dataclasses import field
-from queue import Empty
-from queue import SimpleQueue
+from dataclasses import dataclass, field
+from queue import Empty, SimpleQueue
 from threading import Thread
 
 

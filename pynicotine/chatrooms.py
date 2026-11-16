@@ -1,54 +1,53 @@
 # SPDX-FileCopyrightText: 2020-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
+
 from __future__ import annotations
 
-from dataclasses import dataclass
-from dataclasses import field
-from typing import TYPE_CHECKING
+from dataclasses import dataclass, field
 
 from pynicotine.config import config
 from pynicotine.core import core
-from pynicotine.events import events
-from pynicotine.events import StopEventPropagation
+from pynicotine.events import StopEventPropagation, events
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import SERVER_USERNAME
-from pynicotine.slskmessages import AddRoomMember
-from pynicotine.slskmessages import AddRoomOperator
-from pynicotine.slskmessages import CancelRoomMembership
-from pynicotine.slskmessages import CancelRoomOwnership
-from pynicotine.slskmessages import EnableRoomInvitations
-from pynicotine.slskmessages import JoinGlobalRoom
-from pynicotine.slskmessages import JoinRoom
-from pynicotine.slskmessages import LeaveGlobalRoom
-from pynicotine.slskmessages import LeaveRoom
-from pynicotine.slskmessages import RemoveRoomOperator
-from pynicotine.slskmessages import RemoveRoomMember
-from pynicotine.slskmessages import RoomList
-from pynicotine.slskmessages import RoomType
-from pynicotine.slskmessages import SayChatroom
-from pynicotine.slskmessages import SetRoomTicker
-from pynicotine.slskmessages import UserStatus
-from pynicotine.utils import censor_text
-from pynicotine.utils import find_whole_word
-from pynicotine.utils import replace_text
-
-
-if TYPE_CHECKING:
-    from pynicotine.slskmessages import Login
-    from pynicotine.slskmessages import RoomMembers
-    from pynicotine.slskmessages import RoomMembershipGranted
-    from pynicotine.slskmessages import RoomMembershipRevoked
-    from pynicotine.slskmessages import RoomOperatorshipGranted
-    from pynicotine.slskmessages import RoomOperatorshipRevoked
-    from pynicotine.slskmessages import RoomOperators
-    from pynicotine.slskmessages import GlobalRoomMessage
-    from pynicotine.slskmessages import UserJoinedRoom
-    from pynicotine.slskmessages import UserLeftRoom
-    from pynicotine.slskmessages import RoomTickers
-    from pynicotine.slskmessages import RoomTickerAdded
-    from pynicotine.slskmessages import RoomTickerRemoved
-    from pynicotine.slskmessages import ServerDisconnect
-    from pynicotine.slskmessages import UserStats
+from pynicotine.slskmessages import (
+    SERVER_USERNAME,
+    AddRoomMember,
+    AddRoomOperator,
+    CancelRoomMembership,
+    CancelRoomOwnership,
+    EnableRoomInvitations,
+    GlobalRoomMessage,
+    JoinGlobalRoom,
+    JoinRoom,
+    LeaveGlobalRoom,
+    LeaveRoom,
+    Login,
+    RemoveRoomOperator,
+    RemoveRoomMember,
+    RoomList,
+    RoomMembers,
+    RoomMembershipGranted,
+    RoomMembershipRevoked,
+    RoomOperatorshipGranted,
+    RoomOperatorshipRevoked,
+    RoomOperators,
+    RoomTickers,
+    RoomTickerAdded,
+    RoomTickerRemoved,
+    RoomType,
+    SayChatroom,
+    ServerDisconnect,
+    SetRoomTicker,
+    UserJoinedRoom,
+    UserLeftRoom,
+    UserStats,
+    UserStatus
+)
+from pynicotine.utils import (
+    censor_text,
+    find_whole_word,
+    replace_text
+)
 
 
 @dataclass(slots=True, eq=False)

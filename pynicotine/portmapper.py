@@ -1,18 +1,31 @@
 # SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
+
 from __future__ import annotations
 
 import re
-import socket
 import struct
 import sys
 import time
 
+from socket import (
+    AF_INET,
+    IP_MULTICAST_IF,
+    IP_MULTICAST_TTL,
+    IPPROTO_IP,
+    IPPROTO_UDP,
+    SO_BROADCAST,
+    SOCK_DGRAM,
+    SOL_SOCKET,
+    inet_aton,
+    inet_ntoa,
+    socket,
+    timeout
+)
 from threading import Thread
 from urllib.parse import urlsplit
 
 import pynicotine
-
 from pynicotine.config import config
 from pynicotine.events import events
 from pynicotine.logfacility import log
@@ -81,7 +94,7 @@ class NATPMP(BaseImplementation):
             self._private_port = private_port
             self._lease_duration = lease_duration
 
-        def sendto(self, sock: socket.socket, addr, num_attempt: int) -> None:
+        def sendto(self, sock: socket, addr, num_attempt: int) -> None:
 
             msg = bytes(self)
             ip_address, port = addr
@@ -119,12 +132,12 @@ class NATPMP(BaseImplementation):
 
                 for line in file_handle:
                     routes = line.strip().split()
-                    destination_address = socket.inet_ntoa(struct.pack("<L", int(routes[1], 16)))
+                    destination_address = inet_ntoa(struct.pack("<L", int(routes[1], 16)))
 
                     if destination_address != "0.0.0.0":
                         continue
 
-                    gateway_address = socket.inet_ntoa(struct.pack("<L", int(routes[2], 16)))
+                    gateway_address = inet_ntoa(struct.pack("<L", int(routes[2], 16)))
                     break
 
             return gateway_address
@@ -159,23 +172,23 @@ class NATPMP(BaseImplementation):
 
     def _request_port_mapping(self, public_port: int, private_port: int, lease_duration: int):
 
-        with socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP) as sock:
+        with socket(family=AF_INET, type=SOCK_DGRAM, proto=IPPROTO_UDP) as sock:
             log.add_debug("NAT-PMP: Binding socket to local IP address %s", self.local_ip_address)
 
             sock.bind((self.local_ip_address, 0))
             request = self.PortmapRequest(public_port, private_port, lease_duration)
-            timeout = self.REQUEST_INIT_TIMEOUT
+            timeout_seconds = self.REQUEST_INIT_TIMEOUT
 
             for i in range(1, self.REQUEST_ATTEMPTS + 1):
-                sock.settimeout(timeout)
+                sock.settimeout(timeout_seconds)
                 request.sendto(sock, (self._gateway_address, self.REQUEST_PORT), i)
 
                 try:
                     response = self.PortmapResponse(message=sock.recv(16))
                     return response.result
 
-                except socket.timeout:
-                    timeout *= 2
+                except timeout:
+                    timeout_seconds *= 2
 
         log.add_debug("NAT-PMP: Giving up, all %s portmap requests timed out", self.REQUEST_ATTEMPTS)
 
@@ -260,7 +273,7 @@ class UPnP(BaseImplementation):
                 "USER-AGENT": UPnP.USER_AGENT
             }
 
-        def sendto(self, sock: socket.socket, addr) -> None:
+        def sendto(self, sock: socket, addr) -> None:
 
             msg = bytes(self)
             sock.sendto(msg, addr)
@@ -376,12 +389,12 @@ class UPnP(BaseImplementation):
             log.add_debug("UPnP: Discovering… delay=%s seconds", UPnP.MX_RESPONSE_DELAY)
 
             # Create a UDP socket and set its timeout
-            with socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP) as sock:
+            with socket(family=AF_INET, type=SOCK_DGRAM, proto=IPPROTO_UDP) as sock:
                 log.add_debug("UPnP: Binding socket to local IP address %s", private_ip)
 
-                sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_IF, socket.inet_aton(private_ip))
-                sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, struct.pack("B", UPnP.MULTICAST_TTL))
-                sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+                sock.setsockopt(IPPROTO_IP, IP_MULTICAST_IF, inet_aton(private_ip))
+                sock.setsockopt(IPPROTO_IP, IP_MULTICAST_TTL, struct.pack("B", UPnP.MULTICAST_TTL))
+                sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
                 sock.settimeout(UPnP.MX_RESPONSE_DELAY + 0.1)  # Larger timeout in case data arrives at the last moment
                 sock.bind((private_ip, 0))
 
@@ -410,7 +423,7 @@ class UPnP(BaseImplementation):
                         UPnP.SSDP.add_service(
                             services, locations, UPnP.SSDPResponse(message.decode("utf-8", "replace")))
 
-                    except socket.timeout:
+                    except timeout:
                         break
 
                 log.add_debug("UPnP: %s service(s) detected", len(services))

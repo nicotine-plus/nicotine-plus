@@ -8,6 +8,7 @@
 # SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
 # SPDX-FileCopyrightText: 2001-2003 Alexander Kanavin
 # SPDX-License-Identifier: GPL-3.0-or-later
+
 from __future__ import annotations
 
 import os
@@ -15,46 +16,44 @@ import sys
 import time
 
 from collections import defaultdict
-from typing import TYPE_CHECKING
+from socket import socket
 
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.shares import PermissionLevel
-from pynicotine.slskmessages import CloseConnection
-from pynicotine.slskmessages import ConnectionType
-from pynicotine.slskmessages import EmitNetworkMessageEvents
-from pynicotine.slskmessages import FileTransferInit
-from pynicotine.slskmessages import increment_token
-from pynicotine.slskmessages import initial_token
-from pynicotine.slskmessages import PlaceInQueueResponse
-from pynicotine.slskmessages import SendUploadSpeed
-from pynicotine.slskmessages import SetUploadLimit
-from pynicotine.slskmessages import TransferDirection
-from pynicotine.slskmessages import TransferRejectReason
-from pynicotine.slskmessages import TransferRequest
-from pynicotine.slskmessages import TransferResponse
-from pynicotine.slskmessages import UploadDenied
-from pynicotine.slskmessages import UploadFailed
-from pynicotine.slskmessages import UploadFile
-from pynicotine.slskmessages import UserStatus
-from pynicotine.transfers import Transfer
-from pynicotine.transfers import Transfers
-from pynicotine.transfers import TransferStatus
-from pynicotine.utils import encode_path
-from pynicotine.utils import human_size
-
-if TYPE_CHECKING:
-    import socket
-
-    from pynicotine.slskmessages import GetUserStats
-    from pynicotine.slskmessages import GetUserStatus
-    from pynicotine.slskmessages import Login
-    from pynicotine.slskmessages import PlaceInQueueRequest
-    from pynicotine.slskmessages import PrivilegedUsers
-    from pynicotine.slskmessages import QueueUpload
-    from pynicotine.slskmessages import ServerDisconnect
+from pynicotine.slskmessages import (
+    CloseConnection,
+    ConnectionType,
+    EmitNetworkMessageEvents,
+    FileTransferInit,
+    GetUserStats,
+    GetUserStatus,
+    Login,
+    PlaceInQueueRequest,
+    PlaceInQueueResponse,
+    PrivilegedUsers,
+    QueueUpload,
+    SendUploadSpeed,
+    ServerDisconnect,
+    SetUploadLimit,
+    TransferDirection,
+    TransferRejectReason,
+    TransferRequest,
+    TransferResponse,
+    UploadDenied,
+    UploadFailed,
+    UploadFile,
+    UserStatus,
+    increment_token,
+    initial_token
+)
+from pynicotine.transfers import Transfer, Transfers, TransferStatus
+from pynicotine.utils import (
+    encode_path,
+    human_size
+)
 
 
 class Uploads(Transfers):
@@ -1239,7 +1238,7 @@ class Uploads(Transfers):
             core.pluginhandler.upload_started_notification(username, virtual_path, real_path)
 
     def _file_upload_progress(
-        self, username: str, token: int, sock: socket.socket, offset, bytes_sent, speed=None
+        self, username: str, token: int, sock: socket, offset, bytes_sent, speed=None
     ) -> None:
         """A file upload is in progress."""
 

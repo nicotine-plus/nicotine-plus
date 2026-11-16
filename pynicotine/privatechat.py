@@ -1,8 +1,7 @@
 # SPDX-FileCopyrightText: 2020-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
-from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from __future__ import annotations
 
 import re
 import time
@@ -10,24 +9,25 @@ import time
 import pynicotine
 from pynicotine.config import config
 from pynicotine.core import core
-from pynicotine.events import events
-from pynicotine.events import StopEventPropagation
+from pynicotine.events import StopEventPropagation, events
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import SERVER_USERNAME
-from pynicotine.slskmessages import MessageAcked
-from pynicotine.slskmessages import MessageUser
-from pynicotine.slskmessages import MessageUsers
-from pynicotine.slskmessages import SayChatroom
-from pynicotine.slskmessages import UserStatus
-from pynicotine.utils import censor_text
-from pynicotine.utils import find_whole_word
-from pynicotine.utils import replace_text
-
-if TYPE_CHECKING:
-    from pynicotine.slskmessages import GetPeerAddress
-    from pynicotine.slskmessages import GetUserStatus
-    from pynicotine.slskmessages import Login
-    from pynicotine.slskmessages import ServerDisconnect
+from pynicotine.slskmessages import (
+    SERVER_USERNAME,
+    GetPeerAddress,
+    GetUserStatus,
+    Login,
+    MessageAcked,
+    MessageUser,
+    MessageUsers,
+    SayChatroom,
+    ServerDisconnect,
+    UserStatus
+)
+from pynicotine.utils import (
+    censor_text,
+    find_whole_word,
+    replace_text
+)
 
 
 class PrivateChat:

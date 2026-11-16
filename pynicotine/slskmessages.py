@@ -5,6 +5,8 @@
 # SPDX-FileCopyrightText: 2001-2003 Alexander Kanavin
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from __future__ import annotations
+
 import zlib
 
 try:
@@ -16,14 +18,14 @@ except ImportError:
 from dataclasses import dataclass
 from operator import itemgetter
 from random import randint
-from socket import inet_aton
-from socket import inet_ntoa
-from socket import socket
+from socket import inet_aton, inet_ntoa, socket
 from struct import Struct
 
 from pynicotine.logfacility import log
-from pynicotine.utils import UINT32_LIMIT
-from pynicotine.utils import human_length
+from pynicotine.utils import (
+    UINT32_LIMIT,
+    human_length
+)
 
 # This module contains message classes, that networking and UI thread
 # exchange. Basically there are three types of messages: internal messages,

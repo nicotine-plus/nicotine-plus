@@ -5,46 +5,47 @@
 # SPDX-FileCopyrightText: 2006-2009 daelstorm <daelstorm@gmail.com>
 # SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
 # SPDX-License-Identifier: GPL-3.0-or-later
+
 from __future__ import annotations
+
 import json
 import os
 import time
 
-from dataclasses import dataclass
-from dataclasses import field
+from dataclasses import dataclass, field
 from itertools import islice
 from operator import itemgetter
 from shlex import shlex
-from typing import TYPE_CHECKING
 
 from pynicotine.config import config
 from pynicotine.core import core
-from pynicotine.events import events
-from pynicotine.events import StopEventPropagation
+from pynicotine.events import StopEventPropagation, events
 from pynicotine.logfacility import log
 from pynicotine.shares import PermissionLevel
-from pynicotine.slskmessages import AddAllowedResponse
-from pynicotine.slskmessages import FileSearch
-from pynicotine.slskmessages import FileSearchResponse
-from pynicotine.slskmessages import increment_token
-from pynicotine.slskmessages import initial_token
-from pynicotine.slskmessages import RemoveAllowedResponse
-from pynicotine.slskmessages import RoomSearch
-from pynicotine.slskmessages import UserSearch
-from pynicotine.slskmessages import UserStatus
-from pynicotine.slskmessages import WishlistSearch
-from pynicotine.utils import TRANSLATE_PUNCTUATION
-from pynicotine.utils import encode_path
-from pynicotine.utils import human_duration_approx
-from pynicotine.utils import humanize
-from pynicotine.utils import load_file
-from pynicotine.utils import write_file_and_backup
-
-if TYPE_CHECKING:
-    from pynicotine.slskmessages import DistribSearch
-    from pynicotine.slskmessages import ExcludedSearchPhrases
-    from pynicotine.slskmessages import Login
-    from pynicotine.slskmessages import WishlistInterval
+from pynicotine.slskmessages import (
+    AddAllowedResponse,
+    DistribSearch,
+    ExcludedSearchPhrases,
+    FileSearch,
+    FileSearchResponse,
+    Login,
+    RemoveAllowedResponse,
+    RoomSearch,
+    UserSearch,
+    UserStatus,
+    WishlistInterval,
+    WishlistSearch,
+    increment_token,
+    initial_token
+)
+from pynicotine.utils import (
+    TRANSLATE_PUNCTUATION,
+    encode_path,
+    human_duration_approx,
+    humanize,
+    load_file,
+    write_file_and_backup
+)
 
 
 class ResultFilterMode:

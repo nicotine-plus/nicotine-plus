@@ -5,14 +5,18 @@
 # SPDX-FileCopyrightText: 2006-2009 daelstorm <daelstorm@gmail.com>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from __future__ import annotations
+
 import json
 import os
 import sys
 
 from pynicotine.config import config
 from pynicotine.logfacility import log
-from pynicotine.utils import execute_command
-from pynicotine.utils import human_length
+from pynicotine.utils import (
+    execute_command,
+    human_length
+)
 
 
 class AudioscrobblerError(Exception):

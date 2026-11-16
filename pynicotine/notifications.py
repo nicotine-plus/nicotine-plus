@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2020-2025 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from __future__ import annotations
+
 from pynicotine.events import events
 
 

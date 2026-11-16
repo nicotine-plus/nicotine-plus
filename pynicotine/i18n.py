@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2020-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from __future__ import annotations
+
 import gettext
 import locale
 import os

@@ -1,38 +1,39 @@
 # SPDX-FileCopyrightText: 2020-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
+
 from __future__ import annotations
 
 import json
 import os
 
-from dataclasses import dataclass
-from dataclasses import field
+from dataclasses import dataclass, field
 from itertools import chain
 from threading import Thread
-from typing import TYPE_CHECKING
 
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import AddAllowedResponse
-from pynicotine.slskmessages import ConnectionType
-from pynicotine.slskmessages import FileAttribute
-from pynicotine.slskmessages import FileAttributes
-from pynicotine.slskmessages import RemoveAllowedResponse
-from pynicotine.slskmessages import SharedFile
-from pynicotine.slskmessages import SharedFileListRequest
-from pynicotine.slskmessages import SharedFileListResponse
-from pynicotine.slskmessages import UploadQueueNotification
-from pynicotine.slskmessages import UserStatus
-from pynicotine.utils import encode_path
-from pynicotine.utils import human_size
-from pynicotine.utils import humanize
-from pynicotine.utils import safe_path_join
-
-if TYPE_CHECKING:
-    from pynicotine.shares import PermissionLevel
-    from pynicotine.slskmessages import Login
+from pynicotine.shares import PermissionLevel
+from pynicotine.slskmessages import (
+    AddAllowedResponse,
+    ConnectionType,
+    FileAttribute,
+    FileAttributes,
+    Login,
+    RemoveAllowedResponse,
+    SharedFile,
+    SharedFileListRequest,
+    SharedFileListResponse,
+    UploadQueueNotification,
+    UserStatus
+)
+from pynicotine.utils import (
+    encode_path,
+    human_size,
+    humanize,
+    safe_path_join
+)
 
 
 @dataclass(slots=True, eq=False)

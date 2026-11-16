@@ -9,6 +9,8 @@
 # SPDX-FileCopyrightText: 2001-2003 Alexander Kanavin
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from __future__ import annotations
+
 import os
 import sys
 
@@ -16,9 +18,11 @@ from collections import defaultdict
 
 from pynicotine.events import events
 from pynicotine.i18n import apply_translations
-from pynicotine.utils import encode_path
-from pynicotine.utils import load_file
-from pynicotine.utils import write_file_and_backup
+from pynicotine.utils import (
+    encode_path,
+    load_file,
+    write_file_and_backup
+)
 
 
 class Config:

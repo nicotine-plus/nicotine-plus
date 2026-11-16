@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: 2022-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
+
 from __future__ import annotations
 
 try:
@@ -20,14 +21,11 @@ import sys
 import time
 
 from collections import deque
+from collections.abc import Callable
 from getpass import getpass
 from threading import Thread
-from typing import TYPE_CHECKING
 
 from pynicotine.events import events
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
 
 
 class CLIInputProcessor(Thread):

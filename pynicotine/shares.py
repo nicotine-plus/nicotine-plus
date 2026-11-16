@@ -4,61 +4,59 @@
 # SPDX-FileCopyrightText: 2009-2011 quinox <quinox@users.sf.net>
 # SPDX-FileCopyrightText: 2009 daelstorm <daelstorm@gmail.com>
 # SPDX-License-Identifier: GPL-3.0-or-later
+
 from __future__ import annotations
 
 import gc
-import mmap
+import multiprocessing
 import os
+import pickle
 import re
-import stat
 import sys
 import time
 
 from collections import defaultdict
 from dataclasses import dataclass
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 from itertools import chain
-from os import SEEK_END
-from os import SEEK_SET
-from os import stat_result
-from pickle import HIGHEST_PROTOCOL
-from pickle import dumps
-from pickle import Unpickler
-from pickle import UnpicklingError
+from mmap import ACCESS_READ, mmap
+from multiprocessing.connection import Connection
+from multiprocessing.process import BaseProcess
+from os import (
+    DirEntry,
+    SEEK_END,
+    SEEK_SET,
+    stat_result
+)
+from stat import FILE_ATTRIBUTE_HIDDEN
 from struct import Struct
 from threading import Thread
-from typing import TYPE_CHECKING
+from typing import Literal, NoReturn
 
 from pynicotine import rename_process
 from pynicotine.config import config
 from pynicotine.core import core
-from pynicotine.events import events
-from pynicotine.events import StopEventPropagation
+from pynicotine.events import StopEventPropagation, events
 from pynicotine.external.tinytag import TinyTag, UnsupportedFormatError
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import FileListMessage
-from pynicotine.slskmessages import FolderContentsResponse
-from pynicotine.slskmessages import GetUserStats
-from pynicotine.slskmessages import SharedFileListResponse
-from pynicotine.slskmessages import SharedFoldersFiles
-from pynicotine.slskmessages import UserStats
-from pynicotine.utils import TRANSLATE_PUNCTUATION
-from pynicotine.utils import UINT32_LIMIT
-from pynicotine.utils import encode_path
-from pynicotine.utils import humanize
-
-if TYPE_CHECKING:
-    from multiprocessing.connection import PipeConnection
-    from multiprocessing.context import SpawnProcess
-    from os import DirEntry
-    from typing import Literal
-    from typing import NoReturn
-
-    from pynicotine.slskmessages import FolderContentsRequest
-    from pynicotine.slskmessages import Login
-    from pynicotine.slskmessages import ServerDisconnect
-    from pynicotine.slskmessages import SharedFileListRequest
+from pynicotine.slskmessages import (
+    FileListMessage,
+    FolderContentsRequest,
+    FolderContentsResponse,
+    GetUserStats,
+    Login,
+    ServerDisconnect,
+    SharedFileListRequest,
+    SharedFileListResponse,
+    SharedFoldersFiles,
+    UserStats
+)
+from pynicotine.utils import (
+    TRANSLATE_PUNCTUATION,
+    UINT32_LIMIT,
+    encode_path,
+    humanize
+)
 
 
 class FileTypes:
@@ -110,12 +108,12 @@ class ScannerLogMessage:
     msg_args: dict | None = None
 
 
-class RestrictedUnpickler(Unpickler):
+class RestrictedUnpickler(pickle.Unpickler):
     """Don't allow code execution from pickles."""
 
     def find_class(self, module: str, name: str) -> NoReturn:
         # Forbid all globals
-        raise UnpicklingError(f"global '{module}.{name}' is forbidden")
+        raise pickle.UnpicklingError(f"global '{module}.{name}' is forbidden")
 
 
 class DatabaseError(Exception):
@@ -136,7 +134,7 @@ class Database:
     LENGTH_DATA_SIZE = 8
     PACK_LENGTHS = Struct("!II").pack
     UNPACK_LENGTHS = Struct("!II").unpack_from
-    PICKLE_PROTOCOL = min(HIGHEST_PROTOCOL, 5)  # Use version 5 when available
+    PICKLE_PROTOCOL = min(pickle.HIGHEST_PROTOCOL, 5)  # Use version 5 when available
 
     def __init__(self, file_path: bytes, overwrite: bool = True):
 
@@ -155,7 +153,7 @@ class Database:
             self._file_handle = open(file_path, mode)  # pylint: disable=consider-using-with
         else:
             with open(file_path, mode) as file_handle:
-                self._file_handle = mmap.mmap(file_handle.fileno(), length=0, access=mmap.ACCESS_READ)
+                self._file_handle = mmap(file_handle.fileno(), length=0, access=ACCESS_READ)
 
         self._file_offset = self._file_handle.seek(0, SEEK_END)
         self._overwrite = overwrite
@@ -198,7 +196,7 @@ class Database:
 
             file_handle.seek(0)
 
-            with mmap.mmap(file_handle.fileno(), length=0, access=mmap.ACCESS_READ) as content:
+            with mmap(file_handle.fileno(), length=0, access=ACCESS_READ) as content:
                 value_offsets = self._parse_content(memoryview(content), file_size)
 
         return value_offsets
@@ -222,7 +220,7 @@ class Database:
     def __setitem__(self, key: str, value):
 
         encoded_key = key.encode("utf-8")
-        pickled_value = dumps(value, protocol=self.PICKLE_PROTOCOL)
+        pickled_value = pickle.dumps(value, protocol=self.PICKLE_PROTOCOL)
 
         key_length = len(encoded_key)
         length_data = self.PACK_LENGTHS(key_length, len(pickled_value))
@@ -562,7 +560,7 @@ class Scanner:
         """Stop sharing any hidden folders/files."""
 
         if sys.platform == "win32":
-            return bool(entry.stat().st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN)
+            return bool(entry.stat().st_file_attributes & FILE_ATTRIBUTE_HIDDEN)
 
         return False
 
@@ -1266,9 +1264,7 @@ class Shares:
 
     def _build_scanner_process(
         self, share_groups=None, init: bool = False, rescan: bool = True, rebuild: bool = False
-    ) -> tuple[SpawnProcess, PipeConnection, PipeConnection]:
-
-        import multiprocessing
+    ) -> tuple[BaseProcess, Connection, Connection]:
 
         context = multiprocessing.get_context(method="spawn")
         reader, writer = context.Pipe(duplex=False)
@@ -1290,7 +1286,7 @@ class Shares:
         scanner_process = context.Process(target=scanner.run, daemon=True)
         return scanner_process, reader, writer
 
-    def _process_scanner(self, process: SpawnProcess, reader: PipeConnection, emit_event=None) -> bool:
+    def _process_scanner(self, process: BaseProcess, reader: Connection, emit_event=None) -> bool:
 
         successful = False
         current_folder_count = None

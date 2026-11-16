@@ -1,31 +1,31 @@
 # SPDX-FileCopyrightText: 2021-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
+
 from __future__ import annotations
 
 import os
 import time
 
-from typing import TYPE_CHECKING
-
 from pynicotine.config import config
 from pynicotine.core import core
-from pynicotine.events import events
-from pynicotine.events import StopEventPropagation
+from pynicotine.events import StopEventPropagation, events
 from pynicotine.logfacility import log
 from pynicotine.shares import PermissionLevel
-from pynicotine.slskmessages import AddAllowedResponse
-from pynicotine.slskmessages import ConnectionType
-from pynicotine.slskmessages import RemoveAllowedResponse
-from pynicotine.slskmessages import UserInfoRequest
-from pynicotine.slskmessages import UserInfoResponse
-from pynicotine.slskmessages import UserInterests
-from pynicotine.slskmessages import UserStatus
-from pynicotine.utils import encode_path
-from pynicotine.utils import unescape
-
-if TYPE_CHECKING:
-    from pynicotine.slskmessages import Login
-    from pynicotine.slskmessages import ServerDisconnect
+from pynicotine.slskmessages import (
+    AddAllowedResponse,
+    ConnectionType,
+    Login,
+    RemoveAllowedResponse,
+    ServerDisconnect,
+    UserInfoRequest,
+    UserInfoResponse,
+    UserInterests,
+    UserStatus
+)
+from pynicotine.utils import (
+    encode_path,
+    unescape
+)
 
 
 class UserInfo:

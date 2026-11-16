@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2020-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from __future__ import annotations
+
 __application_name__ = "Nicotine+"
 __application_id__ = "org.nicotine_plus.Nicotine"
 __version__ = "3.4.0.dev2"

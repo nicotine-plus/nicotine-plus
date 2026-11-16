@@ -8,6 +8,7 @@
 # SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
 # SPDX-FileCopyrightText: 2001-2003 Alexander Kanavin
 # SPDX-License-Identifier: GPL-3.0-or-later
+
 from __future__ import annotations
 
 import json
@@ -16,28 +17,27 @@ import time
 
 from ast import literal_eval
 from collections import defaultdict
-from dataclasses import dataclass
-from dataclasses import field
-from os.path import normpath
-from typing import TYPE_CHECKING
+from dataclasses import dataclass, field
+from socket import socket
+from typing import BinaryIO
 
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import CloseConnection
-from pynicotine.slskmessages import FileAttribute
-from pynicotine.slskmessages import FileAttributes
-from pynicotine.slskmessages import UploadDenied
-from pynicotine.utils import encode_path
-from pynicotine.utils import load_file
-from pynicotine.utils import write_file_and_backup
-
-if TYPE_CHECKING:
-    from io import BufferedRandom
-    from socket import socket
-    from pynicotine.slskmessages import Login
-    from pynicotine.slskmessages import ServerDisconnect
+from pynicotine.slskmessages import (
+    CloseConnection,
+    FileAttribute,
+    FileAttributes,
+    Login,
+    ServerDisconnect,
+    UploadDenied
+)
+from pynicotine.utils import (
+    encode_path,
+    load_file,
+    write_file_and_backup
+)
 
 
 class TransferStatus:
@@ -68,7 +68,7 @@ class Transfer:
     current_byte_offset: int | None = None
 
     sock: socket | None = None
-    file_handle: BufferedRandom | None = None
+    file_handle: BinaryIO | None = None
     token: int | None = None
     queue_position: int = 0
     request_timer_id: int | None = None
@@ -291,7 +291,7 @@ class Transfers:
             if folder_path:
                 # Normalize and cache path
                 if folder_path not in normalized_paths:
-                    folder_path = normalized_paths[folder_path] = normpath(folder_path)
+                    folder_path = normalized_paths[folder_path] = os.path.normpath(folder_path)
                 else:
                     folder_path = normalized_paths[folder_path]
 

@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: 2020-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
+
 from __future__ import annotations
 
 import os
@@ -8,6 +9,7 @@ import sys
 import threading
 
 from threading import Thread
+from typing import BinaryIO
 from typing import TYPE_CHECKING
 
 import pynicotine
@@ -15,15 +17,15 @@ from pynicotine.config import config
 from pynicotine.events import events
 from pynicotine.i18n import LOCALE_PATH
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import InternalMessage
-from pynicotine.slskmessages import ServerConnect
-from pynicotine.slskmessages import ServerDisconnect
-from pynicotine.slskmessages import ServerMessage
-from pynicotine.slskmessages import ServerReconnect
+from pynicotine.slskmessages import (
+    InternalMessage,
+    ServerConnect,
+    ServerDisconnect,
+    ServerMessage,
+    ServerReconnect
+)
 
 if TYPE_CHECKING:
-    from types import FrameType
-    from typing import IO
     from pynicotine.buddies import Buddies
     from pynicotine.chatrooms import ChatRooms
     from pynicotine.downloads import Downloads
@@ -43,8 +45,6 @@ if TYPE_CHECKING:
     from pynicotine.userbrowse import UserBrowse
     from pynicotine.userinfo import UserInfo
     from pynicotine.users import Users
-
-__all__ = ["Core", "UpdateChecker", "core"]
 
 
 class Core:
@@ -211,7 +211,7 @@ class Core:
             signals.append(signal.SIGHUP)  # Terminal was closed
 
         for signal_type in signals:
-            signal.signal(signal_type, self.quit)
+            signal.signal(signal_type, lambda signal_type, _frame: self.quit(signal_type))
 
     def _init_error_handler(self) -> None:
 
@@ -250,7 +250,7 @@ class Core:
     def confirm_quit(self) -> None:
         events.emit("confirm-quit")
 
-    def quit(self, signal_type: int | None = None, _frame: FrameType | None = None) -> None:
+    def quit(self, signal_type: int | None = None) -> None:
 
         log.add(_("Quitting %(program)s %(version)s, %(status)s…"), {
             "program": pynicotine.__application_name__,
@@ -363,7 +363,7 @@ class UpdateChecker:
         import json
         from urllib.request import urlopen
 
-        response: IO[bytes]
+        response: BinaryIO
         with urlopen("https://pypi.org/pypi/nicotine-plus/json", timeout=5) as response:
             response_body = response.read().decode("utf-8", "replace")
 

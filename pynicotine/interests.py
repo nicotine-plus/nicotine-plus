@@ -1,24 +1,23 @@
 # SPDX-FileCopyrightText: 2021-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
-from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from __future__ import annotations
 
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
-from pynicotine.slskmessages import AddThingIHate
-from pynicotine.slskmessages import AddThingILike
-from pynicotine.slskmessages import GlobalRecommendations
-from pynicotine.slskmessages import ItemRecommendations
-from pynicotine.slskmessages import ItemSimilarUsers
-from pynicotine.slskmessages import Recommendations
-from pynicotine.slskmessages import RemoveThingILike
-from pynicotine.slskmessages import RemoveThingIHate
-from pynicotine.slskmessages import SimilarUsers
-
-if TYPE_CHECKING:
-    from pynicotine.slskmessages import Login
+from pynicotine.slskmessages import (
+    AddThingIHate,
+    AddThingILike,
+    GlobalRecommendations,
+    ItemRecommendations,
+    ItemSimilarUsers,
+    Login,
+    Recommendations,
+    RemoveThingILike,
+    RemoveThingIHate,
+    SimilarUsers
+)
 
 
 class Interests:

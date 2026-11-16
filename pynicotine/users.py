@@ -1,41 +1,41 @@
 # SPDX-FileCopyrightText: 2020-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
+
 from __future__ import annotations
-from typing import TYPE_CHECKING
 
 import time
 
-from dataclasses import dataclass
-from dataclasses import field
+from dataclasses import dataclass, field
 
 import pynicotine
 from pynicotine.config import config
 from pynicotine.core import core
-from pynicotine.events import events
-from pynicotine.events import StopEventPropagation
+from pynicotine.events import StopEventPropagation, events
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import ChangePassword
-from pynicotine.slskmessages import CheckPrivileges
-from pynicotine.slskmessages import GetPeerAddress
-from pynicotine.slskmessages import GetUserStats
-from pynicotine.slskmessages import GetUserStatus
-from pynicotine.slskmessages import GivePrivileges
-from pynicotine.slskmessages import LoginRejectReason
-from pynicotine.slskmessages import SetStatus
-from pynicotine.slskmessages import UnwatchUser
-from pynicotine.slskmessages import UserStats
-from pynicotine.slskmessages import UserStatus
-from pynicotine.slskmessages import WatchUser
-from pynicotine.utils import UINT32_LIMIT
-from pynicotine.utils import human_duration_approx
-from pynicotine.utils import open_uri
-
-if TYPE_CHECKING:
-    from pynicotine.slskmessages import AdminMessage
-    from pynicotine.slskmessages import ConnectToPeer
-    from pynicotine.slskmessages import Login
-    from pynicotine.slskmessages import PrivilegedUsers
-    from pynicotine.slskmessages import ServerDisconnect
+from pynicotine.slskmessages import (
+    AdminMessage,
+    ChangePassword,
+    CheckPrivileges,
+    GetPeerAddress,
+    GetUserStats,
+    GetUserStatus,
+    GivePrivileges,
+    ConnectToPeer,
+    Login,
+    LoginRejectReason,
+    PrivilegedUsers,
+    ServerDisconnect,
+    SetStatus,
+    UnwatchUser,
+    UserStats,
+    UserStatus,
+    WatchUser
+)
+from pynicotine.utils import (
+    UINT32_LIMIT,
+    human_duration_approx,
+    open_uri
+)
 
 
 @dataclass(slots=True, eq=False)

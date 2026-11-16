@@ -1,25 +1,23 @@
 # SPDX-FileCopyrightText: 2020-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
+
 from __future__ import annotations
+
 import os
 
 from bisect import bisect_left
 from socket import inet_aton
 from struct import Struct
 from sys import intern
-from typing import TYPE_CHECKING
+from typing import Literal
 
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
+from pynicotine.slskmessages import GetPeerAddress
+from pynicotine.slskmessages import ServerDisconnect
 
 UINT32_UNPACK = Struct(">I").unpack_from
-
-if TYPE_CHECKING:
-    from typing import Literal
-
-    from pynicotine.slskmessages import GetPeerAddress
-    from pynicotine.slskmessages import ServerDisconnect
 
 
 class NetworkFilter:

@@ -8,7 +8,9 @@
 # SPDX-FileCopyrightText: 2003-2004 Hyriand <hyriand@thegraveyard.org>
 # SPDX-FileCopyrightText: 2001-2003 Alexander Kanavin
 # SPDX-License-Identifier: GPL-3.0-or-later
+
 from __future__ import annotations
+
 import os
 import re
 import shutil
@@ -22,51 +24,49 @@ except ImportError:
 
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from socket import socket
 
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.events import StopEventPropagation
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import AddAllowedResponse
-from pynicotine.slskmessages import ConnectionType
-from pynicotine.slskmessages import CloseConnection
-from pynicotine.slskmessages import DownloadFile
-from pynicotine.slskmessages import FileAttributes
-from pynicotine.slskmessages import FileOffset
-from pynicotine.slskmessages import FolderContentsRequest
-from pynicotine.slskmessages import FolderContentsResponse
-from pynicotine.slskmessages import increment_token
-from pynicotine.slskmessages import initial_token
-from pynicotine.slskmessages import PlaceInQueueRequest
-from pynicotine.slskmessages import QueueUpload
-from pynicotine.slskmessages import RemoveAllowedResponse
-from pynicotine.slskmessages import SetDownloadLimit
-from pynicotine.slskmessages import TransferDirection
-from pynicotine.slskmessages import TransferRejectReason
-from pynicotine.slskmessages import TransferResponse
-from pynicotine.slskmessages import UserStatus
-from pynicotine.transfers import Transfer
-from pynicotine.transfers import Transfers
-from pynicotine.transfers import TransferStatus
-from pynicotine.utils import execute_command
-from pynicotine.utils import clean_file
-from pynicotine.utils import encode_path
-from pynicotine.utils import REPLACEMENTCHAR
-from pynicotine.utils import safe_path_join
-from pynicotine.utils import truncate_string_byte
-
-if TYPE_CHECKING:
-    import socket
-
-    from pynicotine.slskmessages import GetUserStatus
-    from pynicotine.slskmessages import Login
-    from pynicotine.slskmessages import PlaceInQueueResponse
-    from pynicotine.slskmessages import ServerDisconnect
-    from pynicotine.slskmessages import TransferRequest
-    from pynicotine.slskmessages import UploadDenied
-    from pynicotine.slskmessages import UploadFailed
+from pynicotine.slskmessages import (
+    AddAllowedResponse,
+    ConnectionType,
+    CloseConnection,
+    DownloadFile,
+    FileAttributes,
+    FileOffset,
+    FolderContentsRequest,
+    FolderContentsResponse,
+    GetUserStatus,
+    Login,
+    PlaceInQueueRequest,
+    PlaceInQueueResponse,
+    QueueUpload,
+    RemoveAllowedResponse,
+    SetDownloadLimit,
+    ServerDisconnect,
+    TransferDirection,
+    TransferRejectReason,
+    TransferRequest,
+    TransferResponse,
+    UploadDenied,
+    UploadFailed,
+    UserStatus,
+    increment_token,
+    initial_token
+)
+from pynicotine.transfers import Transfer, Transfers, TransferStatus
+from pynicotine.utils import (
+    REPLACEMENTCHAR,
+    execute_command,
+    clean_file,
+    encode_path,
+    safe_path_join,
+    truncate_string_byte
+)
 
 
 @dataclass(slots=True, eq=False)
@@ -1344,7 +1344,7 @@ class Downloads(Transfers):
                          (virtual_path, username, download.status))
 
     def _file_download_progress(
-        self, username: str, token: int, sock: socket.socket, bytes_left: int, speed=None
+        self, username: str, token: int, sock: socket, bytes_left: int, speed=None
     ) -> None:
         """A file download is in progress."""
 

@@ -4,26 +4,23 @@
 # SPDX-FileCopyrightText: 2008-2011 quinox <quinox@users.sf.net>
 # SPDX-FileCopyrightText: 2009 daelstorm <daelstorm@gmail.com>
 # SPDX-License-Identifier: GPL-3.0-or-later
+
 from __future__ import annotations
 
 import os
 import shutil
 import sys
 import time
-import zipfile
 
 from ast import literal_eval
 from collections import defaultdict
-from typing import TYPE_CHECKING
+from zipfile import ZipFile
 
 from pynicotine.config import config
-from pynicotine.core import core
+from pynicotine.core import Core, core
 from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.utils import encode_path
-
-if TYPE_CHECKING:
-    from core import Core
 
 
 returncode = {
@@ -484,7 +481,7 @@ class PluginHandler:
         total_size = 0
 
         try:
-            with zipfile.ZipFile(file_path, "r") as zip_file:
+            with ZipFile(file_path, "r") as zip_file:
                 plugin_folder_path = None
 
                 for info in zip_file.infolist():
