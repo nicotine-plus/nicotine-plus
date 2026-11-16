@@ -289,7 +289,7 @@ class Events:
                 core.pluginhandler.show_plugin_error(module_name, error)
 
     def emit_main_thread(self, event_name: str, *args, **kwargs) -> None:
-        self._thread_events.put_nowait(ThreadEvent(event_name, args, kwargs))
+        self._thread_events.put_nowait(ThreadEvent(event_name=event_name, args=args, kwargs=kwargs))
 
     def invoke_main_thread(self, callback: Callable, *args, **kwargs) -> None:
         self.emit_main_thread("thread-callback", callback, *args, **kwargs)
@@ -306,7 +306,14 @@ class Events:
             callback_args = ()
 
         self._pending_scheduler_events.put_nowait(
-            SchedulerEvent(self._scheduler_event_id, next_time, delay, repeat, callback, callback_args)
+            SchedulerEvent(
+                event_id=self._scheduler_event_id,
+                next_time=next_time,
+                delay=delay,
+                repeat=repeat,
+                callback=callback,
+                callback_args=callback_args
+            )
         )
         return self._scheduler_event_id
 
@@ -315,7 +322,7 @@ class Events:
         return self.schedule(delay, callback, callback_args, repeat=False)
 
     def cancel_scheduled(self, event_id: int) -> None:
-        self._pending_scheduler_events.put_nowait(SchedulerEvent(event_id, next_time=None))
+        self._pending_scheduler_events.put_nowait(SchedulerEvent(event_id=event_id, next_time=None))
 
     def process_thread_events(self) -> bool:
         """Called by the main loop 10 times per second to emit thread events in

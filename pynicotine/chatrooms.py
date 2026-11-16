@@ -243,20 +243,20 @@ class ChatRooms:
         # Server rejects messages containing newlines, filter them
         message = message.replace("\r", "").replace("\n", " ")
 
-        core.send_message_to_server(SayChatroom(room_name, message))
+        core.send_message_to_server(SayChatroom(room_name=room_name, message=message))
         core.pluginhandler.outgoing_public_chat_notification(room_name, message)
 
     def request_remove_room_operator(self, room_name, username) -> None:
-        core.send_message_to_server(RemoveRoomOperator(room_name, username))
+        core.send_message_to_server(RemoveRoomOperator(room_name=room_name, username=username))
 
     def request_add_room_member(self, room_name, username) -> None:
-        core.send_message_to_server(AddRoomMember(room_name, username))
+        core.send_message_to_server(AddRoomMember(room_name=room_name, username=username))
 
     def request_add_room_operator(self, room_name, username) -> None:
-        core.send_message_to_server(AddRoomOperator(room_name, username))
+        core.send_message_to_server(AddRoomOperator(room_name=room_name, username=username))
 
     def request_remove_room_member(self, room_name, username) -> None:
-        core.send_message_to_server(RemoveRoomMember(room_name, username))
+        core.send_message_to_server(RemoveRoomMember(room_name=room_name, username=username))
 
     def is_room_owner(self, room_name) -> bool:
         private_room = self.private_rooms.get(room_name)
@@ -290,7 +290,7 @@ class ChatRooms:
         core.send_message_to_server(EnableRoomInvitations(enabled))
 
     def request_update_ticker(self, room_name, message) -> None:
-        core.send_message_to_server(SetRoomTicker(room_name, message))
+        core.send_message_to_server(SetRoomTicker(room_name=room_name, content=message))
 
     def _update_room_user(self, room, user_stats: UserStats) -> None:
 

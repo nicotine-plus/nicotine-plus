@@ -360,8 +360,14 @@ class Search:
         term_sanitized, term_transmitted, included_words, excluded_words = self._sanitize_search_term(search_term)
 
         self.searches[token] = search = SearchRequest(
-            token=token, term=search_term, term_sanitized=term_sanitized, term_transmitted=term_transmitted,
-            included_words=included_words, excluded_words=excluded_words, mode=mode, room=room,
+            token=token,
+            term=search_term,
+            term_sanitized=term_sanitized,
+            term_transmitted=term_transmitted,
+            included_words=included_words,
+            excluded_words=excluded_words,
+            mode=mode,
+            room=room,
             users=users or []
         )
 
@@ -375,9 +381,16 @@ class Search:
         term_sanitized, term_transmitted, included_words, excluded_words = self._sanitize_search_term(search_term)
 
         self.wishlist[search_term] = self.searches[token] = search = WishSearchRequest(
-            token=token, term=search_term, term_sanitized=term_sanitized, term_transmitted=term_transmitted,
-            included_words=included_words, excluded_words=excluded_words, auto_search=auto_search,
-            filter_mode=filter_mode, time_added=time_added or int(time.time()), custom_filters=custom_filters or [],
+            token=token,
+            term=search_term,
+            term_sanitized=term_sanitized,
+            term_transmitted=term_transmitted,
+            included_words=included_words,
+            excluded_words=excluded_words,
+            auto_search=auto_search,
+            filter_mode=filter_mode,
+            time_added=time_added or int(time.time()),
+            custom_filters=custom_filters or [],
             ignored_users=ignored_users or set()
         )
 
@@ -501,14 +514,23 @@ class Search:
         return search_term, room, users
 
     def _send_global_search_request(self, search: SearchRequest) -> None:
-        core.send_message_to_server(FileSearch(search.token, search.term_transmitted))
+        core.send_message_to_server(FileSearch(token=search.token, search_term=search.term_transmitted))
 
     def _send_rooms_search_request(self, search: SearchRequest) -> None:
-        core.send_message_to_server(RoomSearch(search.room, search.token, search.term_transmitted))
+
+        core.send_message_to_server(RoomSearch(
+            room_name=search.room,
+            token=search.token,
+            search_term=search.term_transmitted
+        ))
 
     def _send_buddies_search_request(self, search: SearchRequest) -> None:
         for username in core.buddies.users:
-            core.send_message_to_server(UserSearch(username, search.token, search.term_transmitted))
+            core.send_message_to_server(UserSearch(
+                username=username,
+                token=search.token,
+                search_term=search.term_transmitted
+            ))
 
     def _send_peer_search_request(self, search: SearchRequest) -> None:
 
@@ -516,19 +538,23 @@ class Search:
             if username == core.users.login_username:
                 self._own_tokens.add(search.token)
 
-            core.send_message_to_server(UserSearch(username, search.token, search.term_transmitted))
+            core.send_message_to_server(UserSearch(
+                username=username,
+                token=search.token,
+                search_term=search.term_transmitted
+            ))
 
     def _do_wishlist_search(self, search: SearchRequest) -> None:
 
-        text, _room, _users = self._process_search_term(search.term_transmitted, mode="wishlist")
+        search_term, _room, _users = self._process_search_term(search.term_transmitted, mode="wishlist")
 
-        if not text:
+        if not search_term:
             return
 
-        log.add_search(_('Searching for wishlist item "%s"'), text)
+        log.add_search(_('Searching for wishlist item "%s"'), search_term)
 
         self.add_allowed_token(search.token)
-        core.send_message_to_server(WishlistSearch(search.token, text))
+        core.send_message_to_server(WishlistSearch(token=search.token, search_term=search_term))
 
     def _do_next_wishlist_search(self) -> None:
 

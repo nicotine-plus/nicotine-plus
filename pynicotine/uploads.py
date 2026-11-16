@@ -643,10 +643,12 @@ class Uploads(Transfers):
         self._unfail_transfer(final_upload_candidate)
         self._activate_transfer(final_upload_candidate, self._token)
 
-        core.send_message_to_peer(
-            username, TransferRequest(
-                direction=TransferDirection.UPLOAD, token=self._token, file_path=virtual_path,
-                file_size=final_upload_candidate.size))
+        core.send_message_to_peer(username, TransferRequest(
+            direction=TransferDirection.UPLOAD,
+            token=self._token,
+            file_path=virtual_path,
+            file_size=final_upload_candidate.size
+        ))
 
         self._update_transfer(final_upload_candidate)
 
@@ -699,7 +701,12 @@ class Uploads(Transfers):
 
         if transfer is None:
             folder_path = os.path.dirname(real_path)
-            transfer = Transfer(username, virtual_path, folder_path, size)
+            transfer = Transfer(
+                username=username,
+                virtual_path=virtual_path,
+                folder_path=folder_path,
+                size=size
+            )
             self._append_transfer(transfer)
         else:
             if transfer in self.active_users.get(username, {}).values():
@@ -967,7 +974,7 @@ class Uploads(Transfers):
 
         if not allowed:
             if reason and reason != TransferRejectReason.QUEUED:
-                core.send_message_to_peer(username, UploadDenied(virtual_path, reason))
+                core.send_message_to_peer(username, UploadDenied(file_path=virtual_path, reason=reason))
 
             return
 
@@ -985,7 +992,12 @@ class Uploads(Transfers):
                 transfer.transferred_bytes_total = 0
                 transfer.speed = transfer.avg_speed = transfer.time_elapsed = transfer.time_left = 0
         else:
-            transfer = Transfer(username, virtual_path, folder_path, size)
+            transfer = Transfer(
+                username=username,
+                virtual_path=virtual_path,
+                folder_path=folder_path,
+                size=size
+            )
             self._append_transfer(transfer)
 
         transfer.is_backslash_path = is_backslash_path
@@ -1070,7 +1082,12 @@ class Uploads(Transfers):
                 transfer.transferred_bytes_total = 0
                 transfer.speed = transfer.avg_speed = transfer.time_elapsed = transfer.time_left = 0
         else:
-            transfer = Transfer(username, virtual_path, folder_path, size)
+            transfer = Transfer(
+                username=username,
+                virtual_path=virtual_path,
+                folder_path=folder_path,
+                size=size
+            )
             self._append_transfer(transfer)
 
         transfer.is_backslash_path = is_backslash_path
@@ -1123,7 +1140,7 @@ class Uploads(Transfers):
             self._check_upload_queue()
             return
 
-        core.send_message_to_peer(upload.username, FileTransferInit(token=token))
+        core.send_message_to_peer(upload.username, FileTransferInit(token))
         self._check_upload_queue()
 
     def _transfer_timeout(self, transfer: Transfer) -> None:
@@ -1333,8 +1350,10 @@ class Uploads(Transfers):
         self._privileged_position_requested = is_privileged_queue
 
         if queue_position > 0:
-            core.send_message_to_peer(
-                username, PlaceInQueueResponse(virtual_path, queue_position))
+            core.send_message_to_peer(username, PlaceInQueueResponse(
+                file_path=virtual_path,
+                place=queue_position
+            ))
 
         # Update queue position in our list of uploads
         upload.queue_position = queue_position

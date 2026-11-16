@@ -138,7 +138,7 @@ class Users:
 
     def request_give_privileges(self, username: str, days: int) -> None:
         if UINT32_LIMIT >= days > 0:
-            core.send_message_to_server(GivePrivileges(username, days))
+            core.send_message_to_server(GivePrivileges(username=username, days=days))
 
     def request_ip_address(self, username: str, notify: bool = False) -> None:
 

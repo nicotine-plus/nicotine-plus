@@ -392,7 +392,7 @@ class Downloads(Transfers):
 
         super()._enqueue_transfer(transfer)
 
-        msg = QueueUpload(virtual_path, transfer.legacy_attempt)
+        msg = QueueUpload(file_path=virtual_path, legacy_client=transfer.legacy_attempt)
 
         if not core.shares.initialized:
             # Remain queued locally until our shares have initialized, to prevent invalid
@@ -615,10 +615,10 @@ class Downloads(Transfers):
     def _request_queue_positions(self) -> None:
 
         for download in self.queued_transfers:
-            core.send_message_to_peer(
-                download.username,
-                PlaceInQueueRequest(download.virtual_path, download.legacy_attempt)
-            )
+            core.send_message_to_peer(download.username, PlaceInQueueRequest(
+                file_path=download.virtual_path,
+                legacy_client=download.legacy_attempt
+            ))
 
     def _retry_failed_connection_downloads(self) -> None:
 
@@ -821,7 +821,8 @@ class Downloads(Transfers):
 
         if requested_folder is None:
             self._requested_folders[username][folder_path] = requested_folder = RequestedFolder(
-                username, folder_path
+                username=username,
+                folder_path=folder_path
             )
 
         if requested_folder.request_timer_id is not None:
@@ -839,11 +840,11 @@ class Downloads(Transfers):
         core.send_message_to_network_thread(
             AddAllowedResponse(FolderContentsResponse, username + folder_path)
         )
-        core.send_message_to_peer(
-            username, FolderContentsRequest(
-                folder_path, self._requested_folder_token, legacy_client=requested_folder.legacy_attempt
-            )
-        )
+        core.send_message_to_peer(username, FolderContentsRequest(
+            token=self._requested_folder_token,
+            folder_path=folder_path,
+            legacy_client=requested_folder.legacy_attempt
+        ))
 
     def enqueue_download(self, username: str, virtual_path: str, folder_path=None, size: int = 0, file_attributes=None,
                          bypass_filter=False, paused=False) -> None:
@@ -863,8 +864,12 @@ class Downloads(Transfers):
             return
 
         transfer = Transfer(
-            username, virtual_path, folder_path, size, file_attributes or FileAttributes(),
-            TransferStatus.PAUSED
+            username=username,
+            virtual_path=virtual_path,
+            folder_path=folder_path,
+            size=size,
+            file_attributes=file_attributes or FileAttributes(),
+            status=TransferStatus.PAUSED
         )
         self._append_transfer(transfer)
 
@@ -1165,8 +1170,12 @@ class Downloads(Transfers):
                 parent_folder_name = virtual_folder_path.rpartition("\\")[-1]
                 folder_path = safe_path_join(received_folder_path, username, parent_folder_name)
 
-                transfer = Transfer(username, virtual_path, folder_path, file_size)
-
+                transfer = Transfer(
+                    username=username,
+                    virtual_path=virtual_path,
+                    folder_path=folder_path,
+                    size=file_size
+                )
                 self._append_transfer(transfer)
                 self._activate_transfer(transfer, token)
                 self._update_transfer(transfer)
@@ -1237,7 +1246,7 @@ class Downloads(Transfers):
                     sock=sock, token=token, file_handle=download.file_handle,
                     num_bytes_left=(download.size - offset)
                 ))
-                core.send_message_to_peer(username, FileOffset(sock, offset))
+                core.send_message_to_peer(username, FileOffset(offset=offset, sock=sock))
                 need_update = True
             else:
                 core.send_message_to_network_thread(CloseConnection(sock))

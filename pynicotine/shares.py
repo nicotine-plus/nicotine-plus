@@ -1120,7 +1120,10 @@ class Shares:
             num_shared_folders += len(self.share_dbs.get("trusted_streams", {}))
             num_shared_files += len(self.share_dbs.get("trusted_files", {}))
 
-        core.send_message_to_server(SharedFoldersFiles(num_shared_folders, num_shared_files))
+        core.send_message_to_server(SharedFoldersFiles(
+            num_folders=num_shared_folders,
+            num_files=num_shared_files
+        ))
 
         if not local_username:
             # The shares module is initialized before the users module (to send updated share

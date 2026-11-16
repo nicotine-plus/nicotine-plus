@@ -339,8 +339,13 @@ class Transfers:
 
             yield (
                 Transfer(
-                    username, virtual_path, folder_path, size, file_attributes, status,
-                    current_byte_offset
+                    username=username,
+                    virtual_path=virtual_path,
+                    folder_path=folder_path,
+                    size=size,
+                    file_attributes=file_attributes,
+                    status=status,
+                    current_byte_offset=current_byte_offset
                 )
             )
 
@@ -411,8 +416,10 @@ class Transfers:
             self._close_file(transfer)
 
         elif denied_message and virtual_path in self.queued_users.get(username, {}):
-            core.send_message_to_peer(
-                username, UploadDenied(virtual_path, denied_message))
+            core.send_message_to_peer(username, UploadDenied(
+                file_path=virtual_path,
+                reason=denied_message
+            ))
 
         self._deactivate_transfer(transfer)
         self._dequeue_transfer(transfer)

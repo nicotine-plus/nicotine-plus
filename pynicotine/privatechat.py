@@ -136,10 +136,10 @@ class PrivateChat:
         # Server rejects messages containing newlines, filter them
         message = message.replace("\r", "").replace("\n", " ")
 
-        core.send_message_to_server(MessageUser(username, message))
+        core.send_message_to_server(MessageUser(username=username, message=message))
         core.pluginhandler.outgoing_private_chat_notification(username, message)
 
-        events.emit("message-user", MessageUser(username, message))
+        events.emit("message-user", MessageUser(username=username, message=message))
 
     def send_message_users(self, target: str, message: str) -> None:
 
@@ -155,7 +155,7 @@ class PrivateChat:
             users = core.uploads.get_downloading_users()
 
         if users:
-            core.send_message_to_server(MessageUsers(users, message))
+            core.send_message_to_server(MessageUsers(usernames=users, message=message))
 
     def _private_message_queue_add(self, msg: MessageUser) -> None:
         """Queue a private message until we've received a user's IP address."""

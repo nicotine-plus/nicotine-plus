@@ -899,7 +899,7 @@ class NetworkThread(Thread):
         if pierce_token is not None:
             log.add_conn("Cannot respond to indirect connection request of type %s from user %s, "
                          "token %s: %s", (conn_type, username, pierce_token, error))
-            self._send_message_to_server(CantConnectToPeer(pierce_token, username))
+            self._send_message_to_server(CantConnectToPeer(token=pierce_token, username=username))
             return
 
         log.add_conn("Direct connection of type %s to user %s failed: %s",
@@ -916,8 +916,9 @@ class NetworkThread(Thread):
         init.indirect_request_time = time.monotonic()
 
         self._indirect_token_init_msgs[init.indirect_token] = init
-        self._send_message_to_server(ConnectToPeer(init.indirect_token, username, conn_type))
-
+        self._send_message_to_server(
+            ConnectToPeer(token=init.indirect_token, username=username, conn_type=conn_type)
+        )
         log.add_conn("Requesting indirect connection to user %s with token %s", (username, init.indirect_token))
 
     def _establish_outgoing_peer_connection(self, conn: PeerConnection) -> None:
@@ -1274,7 +1275,10 @@ class NetworkThread(Thread):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         io_events = selectors.EVENT_READ | selectors.EVENT_WRITE
         conn = ServerConnection(
-            sock=sock, addr=msg.addr, io_events=io_events, username=msg.username,
+            sock=sock,
+            addr=msg.addr,
+            io_events=io_events,
+            username=msg.username,
             password=msg.password
         )
 
@@ -1322,18 +1326,20 @@ class NetworkThread(Thread):
 
         self._send_message_to_server(
             Login(
-                username, password,
+                username=username,
+                password=password,
+
                 # Soulseek client major version
                 # NS and SoulseekQt use 157, Soulseek.NET and slskd use 170
                 # We use our reserved major version number for Nicotine+
-                160,
+                major_version=160,
 
                 # Soulseek client minor version
                 # 17 stands for 157 ns 13c, 19 for 157 ns 13e
                 # SoulseekQt seems to go higher than this
                 # Nicotine+ increments the number for new network capabilities
                 # 1 was >=2.2.1, 2 was >=3.3.0, 3 since >=3.4.0
-                3
+                minor_version=3
             )
         )
 
@@ -1824,7 +1830,9 @@ class NetworkThread(Thread):
             io_events = selectors.EVENT_READ
 
             conn = self._conns[incoming_sock] = PeerConnection(
-                sock=incoming_sock, addr=incoming_addr, io_events=io_events
+                sock=incoming_sock,
+                addr=incoming_addr,
+                io_events=io_events
             )
             self._num_sockets += 1
 
@@ -1869,7 +1877,11 @@ class NetworkThread(Thread):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         io_events = selectors.EVENT_READ | selectors.EVENT_WRITE
         conn = PeerConnection(
-            sock=sock, addr=addr, io_events=io_events, init=init, pierce_token=pierce_token
+            sock=sock,
+            addr=addr,
+            io_events=io_events,
+            init=init,
+            pierce_token=pierce_token
         )
 
         sock.setblocking(False)
