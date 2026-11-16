@@ -21,7 +21,6 @@ from random import randint
 from socket import inet_aton, inet_ntoa, socket
 from struct import Struct
 
-from pynicotine.logfacility import log
 from pynicotine.utils import (
     UINT32_LIMIT,
     human_length
@@ -3483,23 +3482,18 @@ class SharedFileListResponse(PeerMessage):
 
     def _make_shares_list(self, share_groups):
 
-        try:
-            msg_list = bytearray()
-            num_folders = 0
+        msg_list = bytearray()
+        num_folders = 0
 
-            for shares in share_groups:
-                num_folders += len(shares)
+        for shares in share_groups:
+            num_folders += len(shares)
 
-            msg_list += self.pack_uint32(num_folders)
+        msg_list += self.pack_uint32(num_folders)
 
-            for shares in share_groups:
-                for key in shares:
-                    msg_list += self.pack_string(key)
-                    msg_list += shares[key]
-
-        except Exception as error:
-            msg_list = self.pack_uint32(0)
-            log.add(_("Unable to read shares database. Please rescan your shares. Error: %s"), error)
+        for shares in share_groups:
+            for key in shares:
+                msg_list += self.pack_string(key)
+                msg_list += shares[key]
 
         return msg_list
 
