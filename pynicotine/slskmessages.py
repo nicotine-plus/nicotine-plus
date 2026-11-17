@@ -397,10 +397,6 @@ class SlskMessage:
         self._offset = 0
 
     @staticmethod
-    def pack_bytes(content: bytes) -> bytes:
-        return UINT32_PACK(len(content)) + content
-
-    @staticmethod
     def pack_string(content: str, is_legacy: bool = False) -> bytes:
 
         if is_legacy:
@@ -3777,7 +3773,8 @@ class UserInfoResponse(PeerMessage):
 
         if self.picture is not None:
             msg += self.pack_bool(True)
-            msg += self.pack_bytes(self.picture)
+            msg += self.pack_uint32(len(self.picture))
+            msg += self.picture
         else:
             msg += self.pack_bool(False)
 
