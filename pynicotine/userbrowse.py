@@ -96,6 +96,7 @@ class UserBrowse:
             "user-browse-show-user", username, path=path, new_request=new_request,
             switch_page=switch_page
         )
+        core.users.watch_user(username, context="userbrowse")
 
     def remove_user(self, username: str) -> None:
 
@@ -149,7 +150,6 @@ class UserBrowse:
             Thread(target=self._parse_local_shares, args=(username, msg), name="LocalShareParser").start()
 
         self._show_user(username, path=path, new_request=new_request, switch_page=switch_page)
-        core.users.watch_user(username, context="userbrowse")
 
     def request_user_shares(self, username: str) -> None:
 
@@ -180,7 +180,6 @@ class UserBrowse:
             return
 
         self._show_user(username, path=path, new_request=new_request, switch_page=switch_page)
-        core.users.watch_user(username, context="userbrowse")
 
         if new_request:
             self.request_user_shares(username)
