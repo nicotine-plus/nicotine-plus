@@ -513,51 +513,47 @@ class FileListMessage(SlskMessage):
         if quality is not None:
             bitrate, is_vbr, samplerate, bitdepth = quality
 
+        is_lossless = bitdepth is not None
+
         msg += cls.pack_uint8(1)
         msg += cls.pack_string(virtual_file_path)
         msg += cls.pack_uint64(size)
         msg += cls.pack_uint32(0)  # empty ext
 
-        num_attrs = 0
-        msg_attrs = bytearray()
-
-        is_lossless = bitdepth is not None
-
         if is_lossless:
+            num_attrs = (
+                (duration is not None) + (samplerate is not None) + (bitdepth is not None)
+            )
+            msg += cls.pack_uint32(num_attrs)
+
             if duration is not None:
-                msg_attrs += cls.pack_uint32(1)
-                msg_attrs += cls.pack_uint32(duration)
-                num_attrs += 1
+                msg += cls.pack_uint32(1)
+                msg += cls.pack_uint32(duration)
 
             if samplerate is not None:
-                msg_attrs += cls.pack_uint32(4)
-                msg_attrs += cls.pack_uint32(samplerate)
-                num_attrs += 1
+                msg += cls.pack_uint32(4)
+                msg += cls.pack_uint32(samplerate)
 
             if bitdepth is not None:
-                msg_attrs += cls.pack_uint32(5)
-                msg_attrs += cls.pack_uint32(bitdepth)
-                num_attrs += 1
+                msg += cls.pack_uint32(5)
+                msg += cls.pack_uint32(bitdepth)
         else:
+            num_attrs = (
+                (bitrate is not None) + (duration is not None) + (bitrate is not None)
+            )
+            msg += cls.pack_uint32(num_attrs)
+
             if bitrate is not None:
-                msg_attrs += cls.pack_uint32(0)
-                msg_attrs += cls.pack_uint32(bitrate)
-                num_attrs += 1
+                msg += cls.pack_uint32(0)
+                msg += cls.pack_uint32(bitrate)
 
             if duration is not None:
-                msg_attrs += cls.pack_uint32(1)
-                msg_attrs += cls.pack_uint32(duration)
-                num_attrs += 1
+                msg += cls.pack_uint32(1)
+                msg += cls.pack_uint32(duration)
 
             if bitrate is not None:
-                msg_attrs += cls.pack_uint32(2)
-                msg_attrs += cls.pack_uint32(is_vbr)
-                num_attrs += 1
-
-        msg += cls.pack_uint32(num_attrs)
-
-        if msg_attrs:
-            msg += msg_attrs
+                msg += cls.pack_uint32(2)
+                msg += cls.pack_uint32(is_vbr)
 
         return msg
 
