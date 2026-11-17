@@ -3477,52 +3477,46 @@ class SharedFileListResponse(PeerMessage):
         self.unknown = 0
         self.cached_response = None
 
-    def _make_shares_list(self, share_groups):
-
-        msg_list = bytearray()
-        num_folders = 0
-
-        for shares in share_groups:
-            num_folders += len(shares)
-
-        msg_list += self.pack_uint32(num_folders)
-
-        for shares in share_groups:
-            for key in shares:
-                msg_list += self.pack_string(key)
-                msg_list += shares[key]
-
-        return msg_list
-
     def make_network_message(self) -> bytes:
         if self.cached_response is not None:
             return self.cached_response
 
         from pynicotine.shares import PermissionLevel
 
-        msg = bytearray()
-        share_groups = []
+        public_share_groups = []
         private_share_groups = []
 
         if self.permission_level and self.public_shares:
-            share_groups.append(self.public_shares)
+            public_share_groups.append(self.public_shares)
 
         if self.permission_level in {PermissionLevel.BUDDY, PermissionLevel.TRUSTED} and self.buddy_shares:
-            share_groups.append(self.buddy_shares)
+            public_share_groups.append(self.buddy_shares)
 
         if self.permission_level == PermissionLevel.TRUSTED and self.trusted_shares:
-            share_groups.append(self.trusted_shares)
-
-        msg += self._make_shares_list(share_groups)
-
-        # Unknown purpose, but official clients always send a value of 0
-        msg += self.pack_uint32(self.unknown)
+            public_share_groups.append(self.trusted_shares)
 
         for shares in (self.buddy_shares, self.trusted_shares):
-            if shares and shares not in share_groups:
+            if shares and shares not in public_share_groups:
                 private_share_groups.append(shares)
 
-        msg += self._make_shares_list(share_groups=private_share_groups)
+        num_public_folders = sum(len(shares) for shares in public_share_groups)
+        num_private_folders = sum(len(shares) for shares in private_share_groups)
+
+        msg = bytearray()
+        msg += self.pack_uint32(num_public_folders)
+
+        for shares in public_share_groups:
+            for folder_path in shares:
+                msg += self.pack_string(folder_path)
+                msg += shares[folder_path]
+
+        msg += self.pack_uint32(self.unknown)
+        msg += self.pack_uint32(num_private_folders)
+
+        for shares in private_share_groups:
+            for folder_path in shares:
+                msg += self.pack_string(folder_path)
+                msg += shares[folder_path]
 
         self.cached_response = zlib.compress(msg, ZLIB_COMPRESSION_LEVEL)
         return self.cached_response
