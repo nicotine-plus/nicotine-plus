@@ -85,20 +85,13 @@ class UserBrowse:
         if not username:
             return
 
-        browsed_user = self.users.get(username)
         local_username = core.users.login_username or config.sections["server"]["login"]
-
-        if browsed_user is None:
-            new_request = True
-
-        elif new_request:
-            browsed_user.clear()
 
         if username == local_username:
             self.browse_local_shares(path, new_request=new_request, switch_page=switch_page)
             return
 
-        self._show_user(username, path=path, new_request=new_request, switch_page=switch_page)
+        new_request = self._show_user(username, path=path, new_request=new_request, switch_page=switch_page)
 
         if new_request:
             self.request_user_shares(username)
@@ -115,20 +108,19 @@ class UserBrowse:
             core.setup()
             return
 
-        if username not in self.users:
-            new_request = True
+        new_request = self._show_user(username, path=path, new_request=new_request, switch_page=switch_page)
 
-        if new_request:
-            if not permission_level:
-                # Check our own permission level, and show relevant shares for it
-                current_permission_level, _reason = core.shares.check_user_permission(username)
-            else:
-                current_permission_level = permission_level
+        if not new_request:
+            return
 
-            msg = core.shares.compressed_shares.get(current_permission_level)
-            Thread(target=self._parse_local_shares, args=(username, msg), name="LocalShareParser").start()
+        if not permission_level:
+            # Check our own permission level, and show relevant shares for it
+            current_permission_level, _reason = core.shares.check_user_permission(username)
+        else:
+            current_permission_level = permission_level
 
-        self._show_user(username, path=path, new_request=new_request, switch_page=switch_page)
+        msg = core.shares.compressed_shares.get(current_permission_level)
+        Thread(target=self._parse_local_shares, args=(username, msg), name="LocalShareParser").start()
 
     def remove_user(self, username: str) -> None:
 
@@ -263,12 +255,7 @@ class UserBrowse:
             return
 
         username = os.path.basename(file_path)
-        browsed_user = self.users.get(username)
-
-        if browsed_user is not None:
-            browsed_user.clear()
-
-        self._show_user(username)
+        self._show_user(username, new_request=True)
 
         msg = SharedFileListResponse()
         msg.username = username
@@ -443,14 +430,21 @@ class UserBrowse:
         self, username: str, path: str | None = None, new_request: bool = False, switch_page: bool = True
     ) -> None:
 
-        if username not in self.users:
+        browsed_user = self.users.get(username)
+
+        if browsed_user is None:
             self.users[username] = BrowsedUser(username)
+            new_request = True
+
+        elif new_request:
+            browsed_user.clear()
 
         events.emit(
             "user-browse-show-user", username, path=path, new_request=new_request,
             switch_page=switch_page
         )
         core.users.watch_user(username, context="userbrowse")
+        return new_request
 
     def _parse_local_shares(self, username: str, msg: SharedFileListResponse) -> None:
         """Parse a local shares list and show it in the UI."""
