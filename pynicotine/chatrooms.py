@@ -289,7 +289,7 @@ class ChatRooms:
         core.send_message_to_server(EnableRoomInvitations(enabled))
 
     def request_update_ticker(self, room_name, message) -> None:
-        core.send_message_to_server(SetRoomTicker(room_name=room_name, content=message))
+        core.send_message_to_server(SetRoomTicker(room_name=room_name, message=message))
 
     def _update_room_user(self, room, user_stats: UserStats) -> None:
 
@@ -689,7 +689,7 @@ class ChatRooms:
                 # User ignored, ignore ticker message
                 continue
 
-            room.tickers[ticker.username] = ticker.content
+            room.tickers[ticker.username] = ticker.message
 
     def _room_ticker_added(self, msg: RoomTickerAdded) -> None:
         """Server code 114."""
@@ -706,7 +706,7 @@ class ChatRooms:
             # User ignored, ignore Ticker messages
             return
 
-        room.tickers[username] = ticker.content
+        room.tickers[username] = ticker.message
 
     def _room_ticker_removed(self, msg: RoomTickerRemoved) -> None:
         """Server code 115."""

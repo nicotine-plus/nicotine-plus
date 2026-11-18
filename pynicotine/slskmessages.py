@@ -166,7 +166,7 @@ class RoomStats:
 @dataclass(slots=True, eq=False)
 class RoomTicker:
     username: str
-    content: str
+    message: str
 
 
 @dataclass(slots=True, eq=False)
@@ -2425,7 +2425,7 @@ class RoomTickers(ServerMessage):
             self.tickers.append(
                 RoomTicker(
                     username=self.unpack_string(),
-                    content=self.unpack_string()
+                    message=self.unpack_string()
                 )
             )
 
@@ -2452,7 +2452,7 @@ class RoomTickerAdded(ServerMessage):
         self.room_name = self.unpack_string()
         self.ticker = RoomTicker(
             username=self.unpack_string(),
-            content=self.unpack_string()
+            message=self.unpack_string()
         )
 
 
@@ -2490,18 +2490,18 @@ class SetRoomTicker(ServerMessage):
     room walls.
     """
 
-    __slots__ = ("room_name", "content")
+    __slots__ = ("room_name", "message")
     CODE = 116
 
-    def __init__(self, room_name=None, content=""):
+    def __init__(self, room_name=None, message=""):
         ServerMessage.__init__(self)
         self.room_name = room_name
-        self.content = content
+        self.message = message
 
     def make_network_message(self) -> bytearray:
         msg = bytearray()
         msg += self.pack_string(self.room_name)
-        msg += self.pack_string(self.content)
+        msg += self.pack_string(self.message)
 
         return msg
 

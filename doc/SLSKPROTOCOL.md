@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on November 3, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on November 18, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -1793,7 +1793,7 @@ walls.
     2.  **uint32** *number of tickers*
     3.  Iterate for *number of tickers*
         1.  **string** *username*
-        2.  **string** *content*
+        2.  **string** *message*
 
 
 ## Server Code 114
@@ -1812,7 +1812,7 @@ walls.
   - Receive
     1.  **string** *room name*
     2.  **string** *username*
-    3.  **string** *content*
+    3.  **string** *message*
 
 
 ## Server Code 115
@@ -1847,7 +1847,7 @@ walls.
 
   - Send
     1.  **string** *room name*
-    2.  **string** *content*
+    2.  **string** *message*
   - Receive
     -   *No Message*
 
