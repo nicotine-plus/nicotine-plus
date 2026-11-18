@@ -11,7 +11,7 @@
 
  - [python3](https://www.python.org/) >= 3.11
       for runtime language;
- - [gtk4](https://gtk.org/) >= 4.6.9 or [gtk3](https://gtk.org/) >= 3.24.24
+ - [gtk4](https://gtk.org/) >= 4.8.3 or [gtk3](https://gtk.org/) >= 3.24.38
       for graphical interface;
  - [pygobject](https://pygobject.gnome.org/)
       for Python bindings for GTK.
