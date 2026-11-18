@@ -15,6 +15,7 @@ import time
 from datetime import datetime
 
 from gi.repository import Gdk
+from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Pango
@@ -2907,6 +2908,9 @@ class SearchesPage:
         self.filter_help = SearchFilterHelp(application.preferences)
         self.filter_help.set_menu_button(self.filter_help_button)
 
+        self.search_button_timer_id = None
+        self.filter_button_timer_id = None
+
         self.options = {
             "searches": {
                 "maxresults": self.max_sent_results_spinner,
@@ -2920,7 +2924,23 @@ class SearchesPage:
             }
         }
 
+    def remove_search_history_timer(self):
+
+        if self.search_button_timer_id is not None:
+            GLib.Source.remove(self.search_button_timer_id)
+            self.search_button_timer_id = None
+
+    def remove_filter_history_timer(self):
+
+        if self.filter_button_timer_id is not None:
+            GLib.Source.remove(self.filter_button_timer_id)
+            self.filter_button_timer_id = None
+
     def destroy(self):
+
+        self.remove_search_history_timer()
+        self.remove_filter_history_timer()
+
         self.filter_help.destroy()
         self.__dict__.clear()
 
@@ -2989,17 +3009,31 @@ class SearchesPage:
 
     def on_clear_search_history(self, *_args):
 
+        self.remove_search_history_timer()
         self.application.window.search.clear_search_history()
 
         stack = self.clear_search_history_success_icon.get_parent()
         stack.set_visible_child(self.clear_search_history_success_icon)
 
+        def reset_button(stack):
+            self.search_button_timer_id = None
+            stack.set_visible_child(self.clear_search_history_icon)
+
+        self.search_button_timer_id = GLib.timeout_add(2000, reset_button, stack)
+
     def on_clear_filter_history(self, *_args):
 
+        self.remove_filter_history_timer()
         self.application.window.search.clear_filter_history()
 
         stack = self.clear_filter_history_success_icon.get_parent()
         stack.set_visible_child(self.clear_filter_history_success_icon)
+
+        def reset_button(stack):
+            self.filter_button_timer_id = None
+            stack.set_visible_child(self.clear_filter_history_icon)
+
+        self.filter_button_timer_id = GLib.timeout_add(2000, reset_button, stack)
 
 
 class UrlHandlersPage:
