@@ -171,9 +171,28 @@
                         <property name="visible">True</property>
                         <signal name="clicked" handler="on_save"/>
                         <child>
-                          <object class="GtkImage">
-                            <property name="icon-name">media-floppy-symbolic</property>
+                          <object class="GtkStack">
+                            <property name="transition-type">crossfade</property>
                             <property name="visible">True</property>
+                            <child>
+                              <object class="GtkImage" id="save_icon">
+                                <property name="icon-name">media-floppy-symbolic</property>
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkSpinner" id="save_spinner">
+                                <property name="valign">center</property>
+                                <property name="valign">center</property>
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkImage" id="save_success_icon">
+                                <property name="icon-name">object-select-symbolic</property>
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
                         <style>
