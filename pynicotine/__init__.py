@@ -113,7 +113,7 @@ def check_arguments():
 def check_python_version():
 
     # Require minimum Python version
-    python_version = (3, 10)
+    python_version = (3, 11)
 
     if sys.version_info < python_version:
         return _("""You are using an unsupported version of Python (%(old_version)s).

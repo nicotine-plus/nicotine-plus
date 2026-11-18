@@ -45,7 +45,7 @@ load-plugins = [
     "pylint.extensions.set_membership",
     "pylint.extensions.typing"
 ]
-py-version = "3.10"
+py-version = "3.11"
 
 [tool.pylint.design]
 max-args = 18
