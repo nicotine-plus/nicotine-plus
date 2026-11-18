@@ -299,10 +299,9 @@ class Buddies:
         if iterator is None:
             return
 
-        status = msg.status
-        status_icon_name = USER_STATUS_ICON_NAMES.get(status)
+        status_icon_name = USER_STATUS_ICON_NAMES.get(msg.status, "")
 
-        if status_icon_name and status_icon_name != self.list_view.get_row_value(iterator, "status"):
+        if status_icon_name != self.list_view.get_row_value(iterator, "status"):
             self.list_view.set_row_value(iterator, "status", status_icon_name)
 
     def user_stats(self, msg):
@@ -312,10 +311,10 @@ class Buddies:
         if iterator is None:
             return
 
-        upload_speed = msg.upload_speed or 0
-        num_files = msg.num_files or 0
-        num_folders = msg.num_folders or 0
-        h_num_files = humanize(num_files)
+        stats = msg.stats
+        upload_speed = stats.upload_speed or 0
+        num_files = stats.num_files or 0
+        num_folders = stats.num_folders or 0
         column_ids = []
         column_values = []
 
@@ -325,7 +324,9 @@ class Buddies:
             column_ids.extend(("speed", "speed_data"))
             column_values.extend((h_upload_speed, upload_speed))
 
-        if h_num_files != self.list_view.get_row_value(iterator, "files"):
+        if num_files != self.list_view.get_row_value(iterator, "files_data"):
+            h_num_files = humanize(num_files)
+
             column_ids.extend(("files", "files_data"))
             column_values.extend((h_num_files, num_files))
 
@@ -344,9 +345,10 @@ class Buddies:
         if country_code:
             country_code = country_code.replace("flag_", "")
 
-        stats = core.users.watched.get(username)
+        watched_user = core.users.watched.get(username)
 
-        if stats is not None:
+        if watched_user is not None:
+            stats = watched_user.stats
             upload_speed = stats.upload_speed or 0
             num_files = stats.num_files
             num_folders = stats.num_folders

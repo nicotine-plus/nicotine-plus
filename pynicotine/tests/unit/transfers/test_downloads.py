@@ -8,6 +8,8 @@ from unittest import TestCase
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.slskmessages import FileAttributes
+from pynicotine.slskmessages import SharedFile
 from pynicotine.transfers import TransferStatus
 from pynicotine.userbrowse import BrowsedUser
 
@@ -254,31 +256,31 @@ class DownloadsTest(TestCase):
         browsed_user = core.userbrowse.users[username] = BrowsedUser(username)
         browsed_user.public_folders = dict([
             ("share", [
-                (1, "root1.mp3", 1000, "", {})
+                SharedFile(1, "root1.mp3", 1000, FileAttributes())
             ]),
             ("share\\Music", [
-                (1, "music1.mp3", 1000000, "", {}),
-                (1, "music2.mp3", 2000000, "", {})
+                SharedFile(1, "music1.mp3", 1000000, FileAttributes()),
+                SharedFile(1, "music2.mp3", 2000000, FileAttributes())
             ]),
             ("share\\Soulseek", [
-                (1, "file1.mp3", 3000000, "", {}),
-                (1, "file2.mp3", 4000000, "", {})
+                SharedFile(1, "file1.mp3", 3000000, FileAttributes()),
+                SharedFile(1, "file2.mp3", 4000000, FileAttributes())
             ]),
             ("share\\Soulseek\\folder1", [
-                (1, "file3.mp3", 5000000, "", {})
+                SharedFile(1, "file3.mp3", 5000000, FileAttributes())
             ]),
             ("share\\Soulseek\\folder1\\sub1", [
-                (1, "file4.mp3", 6000000, "", {})
+                SharedFile(1, "file4.mp3", 6000000, FileAttributes())
             ]),
             ("share\\Soulseek\\folder2", [
-                (1, "file5.mp3", 7000000, "", {})
+                SharedFile(1, "file5.mp3", 7000000, FileAttributes())
             ]),
             ("share\\Soulseek\\folder2\\sub2", [
-                (1, "file6.mp3", 8000000, "", {})
+                SharedFile(1, "file6.mp3", 8000000, FileAttributes())
             ]),
             ("share\\SoulseekSecond", [
-                (1, "file7.mp3", 9000000, "", {}),
-                (1, "file8.mp3", 10000000, "", {})
+                SharedFile(1, "file7.mp3", 9000000, FileAttributes()),
+                SharedFile(1, "file8.mp3", 10000000, FileAttributes())
             ])
         ])
 

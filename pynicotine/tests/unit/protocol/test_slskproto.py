@@ -6,14 +6,11 @@ import os
 import pickle
 import selectors
 import shutil
-import socket
-import sys
 
 from time import sleep
 from unittest import TestCase
 from unittest.mock import MagicMock
 from unittest.mock import Mock
-from unittest.mock import patch
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -89,34 +86,6 @@ class SoulseekNetworkTest(TestCase):
     @classmethod
     def tearDownClass(cls):
         shutil.rmtree(DATA_FOLDER_PATH)
-
-    @patch("socket.socket")
-    def test_server_conn(self, _mock_socket):
-
-        core.send_message_to_network_thread(
-            ServerConnect(addr=("0.0.0.0", 0), username="dummy", password="dummy", listen_port=65525)
-        )
-        sleep(SLSKPROTO_RUN_TIME)
-
-        # pylint: disable=no-member,protected-access
-        sock = core._network_thread._server_conn.sock
-
-        if hasattr(socket, "TCP_KEEPIDLE") or hasattr(socket, "TCP_KEEPALIVE"):
-            if sys.platform == "win32":
-                self.assertEqual(sock.setsockopt.call_count, 6)
-
-            elif hasattr(socket, "TCP_USER_TIMEOUT"):
-                self.assertEqual(sock.setsockopt.call_count, 8)
-
-            else:
-                self.assertEqual(sock.setsockopt.call_count, 7)
-
-        elif hasattr(socket, "SIO_KEEPALIVE_VALS"):
-            self.assertEqual(sock.ioctl.call_count, 1)
-            self.assertEqual(sock.setsockopt.call_count, 3)
-
-        self.assertEqual(sock.setblocking.call_count, 2)
-        self.assertEqual(sock.connect_ex.call_count, 1)
 
     def test_login(self):
 

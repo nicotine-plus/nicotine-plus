@@ -1,42 +1,49 @@
 # SPDX-FileCopyrightText: 2020-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from __future__ import annotations
+
 import time
+
+from dataclasses import dataclass, field
 
 import pynicotine
 from pynicotine.config import config
 from pynicotine.core import core
-from pynicotine.events import events
-from pynicotine.events import StopEventPropagation
+from pynicotine.events import StopEventPropagation, events
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import ChangePassword
-from pynicotine.slskmessages import CheckPrivileges
-from pynicotine.slskmessages import GetPeerAddress
-from pynicotine.slskmessages import GetUserStats
-from pynicotine.slskmessages import GetUserStatus
-from pynicotine.slskmessages import GivePrivileges
-from pynicotine.slskmessages import LoginRejectReason
-from pynicotine.slskmessages import SetStatus
-from pynicotine.slskmessages import UnwatchUser
-from pynicotine.slskmessages import UserStatus
-from pynicotine.slskmessages import WatchUser
-from pynicotine.utils import UINT32_LIMIT
-from pynicotine.utils import human_duration_approx
-from pynicotine.utils import open_uri
+from pynicotine.slskmessages import (
+    AdminMessage,
+    ChangePassword,
+    CheckPrivileges,
+    GetPeerAddress,
+    GetUserStats,
+    GetUserStatus,
+    GivePrivileges,
+    ConnectToPeer,
+    Login,
+    LoginRejectReason,
+    PrivilegedUsers,
+    ServerDisconnect,
+    SetStatus,
+    UnwatchUser,
+    UserStats,
+    UserStatus,
+    WatchUser
+)
+from pynicotine.utils import (
+    UINT32_LIMIT,
+    human_duration_approx,
+    open_uri
+)
 
 
+@dataclass(slots=True, eq=False)
 class WatchedUser:
-
-    __slots__ = ("username", "upload_speed", "num_files", "num_folders", "contexts", "is_implicit")
-
-    def __init__(self, username):
-
-        self.username = username
-        self.upload_speed = None
-        self.num_files = None
-        self.num_folders = None
-        self.contexts = set()
-        self.is_implicit = True
+    username: str
+    stats: UserStats
+    is_implicit: bool = True
+    contexts: set[str] = field(default_factory=set)
 
 
 class Users:
@@ -79,7 +86,7 @@ class Users:
         ):
             events.connect(event_name, callback)
 
-    def log_in_as(self, username, password):
+    def log_in_as(self, username: str, password: str) -> None:
 
         config.sections["server"]["login"] = username
         config.sections["server"]["passw"] = password
@@ -93,7 +100,7 @@ class Users:
 
         core.connect()
 
-    def set_away_mode(self, is_away, save_state=False):
+    def set_away_mode(self, is_away: bool, save_state: bool = False) -> None:
 
         if save_state:
             config.sections["server"]["away"] = is_away
@@ -108,7 +115,7 @@ class Users:
         # disable away mode
         events.emit("user-status", GetUserStatus(self.login_username, self.login_status))
 
-    def open_privileges_url(self):
+    def open_privileges_url(self) -> None:
 
         default_server_hostname, _port = config.defaults["server"]["server"]
         default_server_domain = default_server_hostname.split(".", maxsplit=1)[-1]
@@ -122,18 +129,18 @@ class Users:
         login = urllib.parse.quote(self.login_username)
         open_uri(pynicotine.__privileges_url__ % login)
 
-    def request_change_password(self, password):
+    def request_change_password(self, password: str) -> None:
         core.send_message_to_server(ChangePassword(password))
 
-    def request_check_privileges(self, should_open_url=False):
+    def request_check_privileges(self, should_open_url: bool = False) -> None:
         self._should_open_privileges_url = should_open_url
         core.send_message_to_server(CheckPrivileges())
 
-    def request_give_privileges(self, username, days):
+    def request_give_privileges(self, username: str, days: int) -> None:
         if UINT32_LIMIT >= days > 0:
-            core.send_message_to_server(GivePrivileges(username, days))
+            core.send_message_to_server(GivePrivileges(username=username, days=days))
 
-    def request_ip_address(self, username, notify=False):
+    def request_ip_address(self, username: str, notify: bool = False) -> None:
 
         if self.login_status == UserStatus.OFFLINE:
             if notify:
@@ -146,13 +153,13 @@ class Users:
         self._ip_requested[username] = notify
         core.send_message_to_server(GetPeerAddress(username))
 
-    def request_set_status(self, status):
+    def request_set_status(self, status: UserStatus) -> None:
         core.send_message_to_server(SetStatus(status))
 
-    def request_user_stats(self, username):
+    def request_user_stats(self, username: str) -> None:
         core.send_message_to_server(GetUserStats(username))
 
-    def watch_user(self, username, context=None, is_implicit=False):
+    def watch_user(self, username: str, context=None, is_implicit: bool = False) -> None:
         """Tells the server we want to be notified of status updates for a
         user.
 
@@ -171,7 +178,10 @@ class Users:
         watched_user = self.watched.get(username)
 
         if watched_user is None:
-            self.watched[username] = watched_user = WatchedUser(username)
+            self.watched[username] = watched_user = WatchedUser(
+                username=username,
+                stats=UserStats(username=username)
+            )
 
         if not context:
             log.add("Calling watch_user() without providing a 'context' argument is deprecated.")
@@ -189,7 +199,7 @@ class Users:
         log.add_conn("Watching user %s in context '%s'. Active contexts: %s",
                      (username, context, watched_user.contexts))
 
-    def unwatch_user(self, username, context):
+    def unwatch_user(self, username: str, context: str) -> None:
         """Tells the server we no longer wish to receive status updates for a
         user.
 
@@ -222,7 +232,7 @@ class Users:
 
         del self.watched[username]
 
-    def _server_disconnect(self, msg):
+    def _server_disconnect(self, msg: ServerDisconnect) -> None:
 
         self.login_status = UserStatus.OFFLINE
 
@@ -245,7 +255,7 @@ class Users:
         self.privileges_left = None
         self._should_open_privileges_url = False
 
-    def _server_login(self, msg):
+    def _server_login(self, msg: Login) -> None:
         """Server code 1."""
 
         self._should_open_privileges_url = False
@@ -262,9 +272,10 @@ class Users:
             self.watch_user(username, context="login")
 
             if msg.ip_address is not None:
+                stats = self.watched[username].stats
                 self.public_ip_address = msg.ip_address
-                self.countries[username] = country_code = core.network_filter.get_country_code(msg.ip_address)
-                events.emit("user-country", username, country_code)
+                self.countries[username] = stats.country_code = core.network_filter.get_country_code(msg.ip_address)
+                events.emit("user-country", username, stats.country_code)
 
             if msg.motd:
                 log.add(msg.motd)
@@ -282,7 +293,7 @@ class Users:
 
         log.add(_("Unable to connect to the server. Reason: %s"), msg.rejection_reason, title=_("Cannot Connect"))
 
-    def _get_peer_address(self, msg):
+    def _get_peer_address(self, msg: GetPeerAddress) -> None:
         """Server code 3."""
 
         username = msg.username
@@ -290,12 +301,16 @@ class Users:
         ip_address = msg.ip_address
         user_offline = (ip_address == "0.0.0.0")
         country_code = core.network_filter.get_country_code(ip_address)
+        watched_user = self.watched.get(username)
 
         if user_offline:
             self.addresses.pop(username, None)
             self.countries.pop(username, None)
 
-        elif username in self.watched:
+            if watched_user is not None:
+                watched_user.stats.country_code = ""
+
+        elif watched_user is not None:
             # Only cache IP address of watched users, otherwise we won't know if
             # a user reconnects and changes their IP address.
             # Don't update our own IP address, since we already store a local IP
@@ -304,7 +319,7 @@ class Users:
             if username != self.login_username:
                 self.addresses[username] = (ip_address, msg.port)
 
-            self.countries[username] = country_code
+            self.countries[username] = watched_user.stats.country_code = country_code
             events.emit("user-country", username, country_code)
 
         if not notify:
@@ -330,17 +345,19 @@ class Users:
             "country": country
         }, title=_("User IP Address"))
 
-    def _watch_user(self, msg):
+    def _watch_user(self, msg: WatchUser) -> None:
         """Server code 5."""
 
+        username = msg.username
+
         if not msg.exists:
-            log.add_conn("Unwatching non-existent user %s", msg.username)
-            self.watched.pop(msg.username, None)
+            log.add_conn("Unwatching non-existent user %s", username)
+            self.watched.pop(username, None)
             return
 
-        events.emit("user-stats", msg)
+        events.emit("user-stats", GetUserStats(username, msg.stats))
 
-    def _user_status(self, msg):
+    def _user_status(self, msg: GetUserStatus) -> None:
         """Server code 7."""
 
         username = msg.username
@@ -363,14 +380,17 @@ class Users:
         if username == self.login_username and status != self.login_status:
             raise StopEventPropagation()
 
-        is_watched = (username in self.watched)
+        watched_user = self.watched.get(username)
 
         # User went offline, reset stored IP address and country
         if status == UserStatus.OFFLINE:
             self.addresses.pop(username, None)
             self.countries.pop(username, None)
 
-        elif is_watched:
+            if watched_user is not None:
+                watched_user.stats.country_code = ""
+
+        elif watched_user is not None:
             user_status = self.statuses.get(username)
 
             # Online user seen for the first time, request IP address and country
@@ -382,12 +402,12 @@ class Users:
                 self.request_user_stats(username)
                 self.request_ip_address(username)
 
-        if is_watched:
-            self.statuses[username] = status
+        if watched_user is not None:
+            self.statuses[username] = watched_user.stats.status = status
 
         core.pluginhandler.user_status_notification(username, status, msg.privileged)
 
-    def _connect_to_peer(self, msg):
+    def _connect_to_peer(self, msg: ConnectToPeer) -> None:
         """Server code 18."""
 
         username = msg.username
@@ -402,31 +422,36 @@ class Users:
         elif username in self.privileged:
             self.privileged.remove(username)
 
-    def _user_stats(self, msg):
+    def _user_stats(self, msg: GetUserStats) -> None:
         """Server code 36."""
 
         username = msg.username
-        upload_speed = msg.upload_speed
-        num_files = msg.num_files
-        num_folders = msg.num_folders
+        stats = msg.stats
+        watched_user = self.watched.get(username)
 
-        stats = self.watched.get(username)
+        if watched_user is not None:
+            # Carry over stats that are not included in stat update messages
+            previous_stats = watched_user.stats
+            stats.slots_full = previous_stats.slots_full
 
-        if stats is not None:
-            stats.upload_speed = upload_speed
-            stats.num_files = num_files
-            stats.num_folders = num_folders
+            if previous_stats.status is not None:
+                stats.status = previous_stats.status
 
-        core.pluginhandler.user_stats_notification(msg.username, stats={
-            "avgspeed": upload_speed,
-            "files": num_files,
-            "dirs": num_folders,
+            if previous_stats.country_code:
+                stats.country_code = previous_stats.country_code
+
+            watched_user.stats = stats
+
+        core.pluginhandler.user_stats_notification(username, stats={
+            "avgspeed": stats.upload_speed,
+            "files": stats.num_files,
+            "dirs": stats.num_folders,
             "shared_size": None,
             "source": "server"
         })
 
     @staticmethod
-    def _admin_message(msg):
+    def _admin_message(msg: AdminMessage) -> None:
         """Server code 66."""
 
         log.add(
@@ -437,13 +462,13 @@ class Users:
             title=_("Server Announcement")
         )
 
-    def _privileged_users(self, msg):
+    def _privileged_users(self, msg: PrivilegedUsers) -> None:
         """Server code 69."""
 
         for username in msg.usernames:
             self.privileged.add(username)
 
-    def _check_privileges(self, msg):
+    def _check_privileges(self, msg: CheckPrivileges) -> None:
         """Server code 92."""
 
         seconds = msg.seconds
@@ -461,7 +486,7 @@ class Users:
         self._should_open_privileges_url = False
 
     @staticmethod
-    def _change_password(msg):
+    def _change_password(msg: ChangePassword) -> None:
         """Server code 142."""
 
         config.sections["server"]["passw"] = msg.password
@@ -469,14 +494,14 @@ class Users:
 
         log.add(_("Your password has been changed"), title=_("Password Changed"))
 
-    def _user_ip_address_offline(self, username):
+    def _user_ip_address_offline(self, username: str) -> None:
 
         log.add(
             _("Cannot retrieve the IP of user %(user)s, since this user is offline"), {"user": username},
             title=_("User IP Address")
         )
 
-    def _user_login_required(self, username):
+    def _user_login_required(self, username: str) -> None:
 
         log.add(
             _("User %(user)s needs to be logged in first"), {"user": username},

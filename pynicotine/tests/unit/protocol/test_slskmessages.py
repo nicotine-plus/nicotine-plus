@@ -39,7 +39,6 @@ class SlskMessageTest(TestCase):
         unsigned_int32_message = obj.pack_uint32(123)
         signed_int32_message = obj.pack_int32(123)
         unsigned_int64_message = obj.pack_uint64(123)
-        bytes_message = obj.pack_bytes(b"testbytes")
         str_message = obj.pack_string("teststring")
 
         # Assert
@@ -48,7 +47,6 @@ class SlskMessageTest(TestCase):
         self.assertEqual(unsigned_int32_message, b"\x7B\x00\x00\x00")
         self.assertEqual(signed_int32_message, b"\x7B\x00\x00\x00")
         self.assertEqual(unsigned_int64_message, b"\x7B\x00\x00\x00\x00\x00\x00\x00")
-        self.assertEqual(bytes_message, b"\t\x00\x00\x00testbytes")
         self.assertEqual(str_message, b"\n\x00\x00\x00teststring")
 
 

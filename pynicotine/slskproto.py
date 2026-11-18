@@ -5,124 +5,134 @@
 # SPDX-FileCopyrightText: 2001-2003 Alexander Kanavin
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import errno
-import random
-import selectors
-import socket
+from __future__ import annotations
+
 import struct
 import sys
 import time
 
 from collections import defaultdict
+from dataclasses import dataclass, field
+from errno import ENOTCONN, EWOULDBLOCK
 from queue import Empty, SimpleQueue
+from random import randint
+from selectors import (
+    DefaultSelector,
+    EVENT_READ,
+    EVENT_WRITE
+)
+from socket import (
+    AF_INET,
+    IPPROTO_TCP,
+    SHUT_RDWR,
+    SO_RCVBUF,
+    SO_REUSEADDR,
+    SOCK_DGRAM,
+    SOCK_STREAM,
+    SOL_IP,
+    SOL_SOCKET,
+    TCP_NODELAY,
+    if_nameindex,
+    inet_ntoa,
+    socket
+)
 from threading import Thread
 
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import DISTRIBUTED_MESSAGE_CLASSES
-from pynicotine.slskmessages import PEER_MESSAGE_CLASSES
-from pynicotine.slskmessages import PEER_INIT_MESSAGE_CLASSES
-from pynicotine.slskmessages import SERVER_MESSAGE_CLASSES
-from pynicotine.slskmessages import SERVER_USERNAME
-from pynicotine.slskmessages import DOUBLE_UINT32_UNPACK
-from pynicotine.slskmessages import UINT32_UNPACK
-from pynicotine.slskmessages import AcceptChildren
-from pynicotine.slskmessages import AddAllowedResponse
-from pynicotine.slskmessages import BranchLevel
-from pynicotine.slskmessages import BranchRoot
-from pynicotine.slskmessages import CantConnectToPeer
-from pynicotine.slskmessages import CloseConnection
-from pynicotine.slskmessages import ConnectionType
-from pynicotine.slskmessages import ConnectToPeer
-from pynicotine.slskmessages import DistribBranchLevel
-from pynicotine.slskmessages import DistribBranchRoot
-from pynicotine.slskmessages import DistribEmbeddedMessage
-from pynicotine.slskmessages import DistribSearch
-from pynicotine.slskmessages import DownloadFile
-from pynicotine.slskmessages import EmbeddedMessage
-from pynicotine.slskmessages import EmitNetworkMessageEvents
-from pynicotine.slskmessages import FileOffset
-from pynicotine.slskmessages import FileSearchResponse
-from pynicotine.slskmessages import FileTransferInit
-from pynicotine.slskmessages import FolderContentsResponse
-from pynicotine.slskmessages import GetPeerAddress
-from pynicotine.slskmessages import GetUserStats
-from pynicotine.slskmessages import GetUserStatus
-from pynicotine.slskmessages import HaveNoParent
-from pynicotine.slskmessages import Login
-from pynicotine.slskmessages import MessageType
-from pynicotine.slskmessages import PossibleParents
-from pynicotine.slskmessages import ParentMinSpeed
-from pynicotine.slskmessages import ParentSpeedRatio
-from pynicotine.slskmessages import ParentStatus
-from pynicotine.slskmessages import PeerInit
-from pynicotine.slskmessages import PierceFireWall
-from pynicotine.slskmessages import Relogged
-from pynicotine.slskmessages import RemoveAllowedResponse
-from pynicotine.slskmessages import ResetDistributed
-from pynicotine.slskmessages import ServerConnect
-from pynicotine.slskmessages import ServerDisconnect
-from pynicotine.slskmessages import ServerReconnect
-from pynicotine.slskmessages import SetDownloadLimit
-from pynicotine.slskmessages import SetUploadLimit
-from pynicotine.slskmessages import SetWaitPort
-from pynicotine.slskmessages import SharedFileListResponse
-from pynicotine.slskmessages import UnwatchUser
-from pynicotine.slskmessages import UploadFile
-from pynicotine.slskmessages import UserInfoResponse
-from pynicotine.slskmessages import UserStatus
-from pynicotine.slskmessages import WatchUser
-from pynicotine.slskmessages import increment_token
-from pynicotine.slskmessages import initial_token
-from pynicotine.utils import human_duration_approx
-from pynicotine.utils import human_speed
+from pynicotine.slskmessages import (
+    DISTRIBUTED_MESSAGE_CLASSES,
+    PEER_MESSAGE_CLASSES,
+    PEER_INIT_MESSAGE_CLASSES,
+    SERVER_MESSAGE_CLASSES,
+    SERVER_USERNAME,
+    DOUBLE_UINT32_UNPACK,
+    UINT32_UNPACK,
+    AcceptChildren,
+    AddAllowedResponse,
+    BranchLevel,
+    BranchRoot,
+    CantConnectToPeer,
+    CloseConnection,
+    ConnectionType,
+    ConnectToPeer,
+    DistribBranchLevel,
+    DistribBranchRoot,
+    DistribEmbeddedMessage,
+    DistribSearch,
+    DownloadFile,
+    EmbeddedMessage,
+    EmitNetworkMessageEvents,
+    FileOffset,
+    FileSearchResponse,
+    FileTransferInit,
+    FolderContentsResponse,
+    GetPeerAddress,
+    GetUserStats,
+    GetUserStatus,
+    HaveNoParent,
+    InternalMessage,
+    Login,
+    MessageType,
+    PossibleParents,
+    ParentMinSpeed,
+    ParentSpeedRatio,
+    ParentStatus,
+    PeerInit,
+    PierceFireWall,
+    Relogged,
+    RemoveAllowedResponse,
+    ResetDistributed,
+    ServerConnect,
+    ServerDisconnect,
+    ServerReconnect,
+    SetDownloadLimit,
+    SetUploadLimit,
+    SetWaitPort,
+    SharedFileListResponse,
+    UnwatchUser,
+    UploadFile,
+    UserInfoResponse,
+    UserStatus,
+    WatchUser,
+    increment_token,
+    initial_token
+)
+from pynicotine.utils import (
+    human_duration_approx,
+    human_speed
+)
 
 
+@dataclass(slots=True, eq=False)
 class Connection:
-    __slots__ = ("sock", "addr", "io_events", "is_established", "in_buffer", "out_buffer",
-                 "last_active", "recv_size")
-
-    def __init__(self, sock=None, addr=None, io_events=None):
-
-        self.sock = sock
-        self.addr = addr
-        self.io_events = io_events
-        self.in_buffer = bytearray()
-        self.out_buffer = bytearray()
-        self.last_active = time.monotonic()
-        self.recv_size = 51200
-        self.is_established = False
+    sock: socket
+    addr: tuple[str, int]
+    io_events: int
+    recv_size: int = 51200
+    is_established: bool = False
+    in_buffer: bytearray = field(default_factory=bytearray)
+    out_buffer: bytearray = field(default_factory=bytearray)
+    last_active: float = field(default_factory=time.monotonic)
 
 
+@dataclass(slots=True, eq=False, kw_only=True)
 class ServerConnection(Connection):
-    __slots__ = ("username", "password")
-
-    def __init__(self, *args, username=None, password=None, **kwargs):
-
-        Connection.__init__(self, *args, **kwargs)
-
-        self.username = username
-        self.password = password
+    username: str
+    password: str
 
 
+@dataclass(slots=True, eq=False, kw_only=True)
 class PeerConnection(Connection):
-    __slots__ = ("init", "pierce_token", "has_post_init_activity")
-
-    def __init__(self, *args, init=None, pierce_token=None, **kwargs):
-
-        Connection.__init__(self, *args, **kwargs)
-
-        self.init = init
-        self.pierce_token = pierce_token
-        self.has_post_init_activity = False
+    init: PeerInit | None = None
+    pierce_token: int | None = None
+    has_post_init_activity: bool = False
 
 
+@dataclass(slots=True, eq=False)
 class UserAddress:
-    __slots__ = ("addr", "last_update")
-
-    def __init__(self, addr):
-        self.addr = addr
-        self.last_update = time.monotonic()
+    addr: tuple[str, int]
+    last_update: float = field(default_factory=time.monotonic)
 
 
 class ConnectionInitTimeoutError(Exception):
@@ -208,7 +218,7 @@ class NetworkInterfaces:
         SIOCGIFADDR = 0xc0206921   # macOS, *BSD
 
     @classmethod
-    def _get_interface_addresses_win32(cls):
+    def _get_interface_addresses_win32(cls) -> dict[str, str]:
         """Returns a dictionary of network interface names and IP addresses (Win32).
 
         https://learn.microsoft.com/en-us/windows/win32/api/iphlpapi/nf-iphlpapi-getadaptersaddresses
@@ -218,7 +228,7 @@ class NetworkInterfaces:
 
         from ctypes import POINTER, byref, cast, create_string_buffer, windll, wintypes
 
-        interface_addresses = {}
+        interface_addresses: dict[str, str] = {}
         p_adapter_addresses = None
         adapter_addresses_size = wintypes.ULONG()
         return_value = cls.ERROR_BUFFER_OVERFLOW
@@ -245,21 +255,21 @@ class NetworkInterfaces:
             if adapter_addresses.first_unicast_address:
                 interface_name = adapter_addresses.friendly_name
                 socket_address = adapter_addresses.first_unicast_address[0].address
-                interface_addresses[interface_name] = socket.inet_ntoa(socket_address.lp_sockaddr[0].sin_addr)
+                interface_addresses[interface_name] = inet_ntoa(socket_address.lp_sockaddr[0].sin_addr)
 
             p_adapter_addresses = adapter_addresses.next
 
         return interface_addresses
 
     @classmethod
-    def _get_interface_addresses_posix(cls):
+    def _get_interface_addresses_posix(cls) -> dict[str, str]:
         """Returns a dictionary of network interface names and IP addresses
         (POSIX)"""
 
-        interface_addresses = {}
+        interface_addresses: dict[str, str] = {}
 
         try:
-            interface_name_index = socket.if_nameindex()
+            interface_name_index = if_nameindex()
 
         except (AttributeError, OSError) as error:
             log.add_debug("Failed to get list of network interfaces: %s", error)
@@ -269,12 +279,12 @@ class NetworkInterfaces:
             try:
                 import fcntl
 
-                with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
+                with socket(AF_INET, SOCK_DGRAM) as sock:
                     ip_interface = fcntl.ioctl(sock.fileno(),
                                                cls.SIOCGIFADDR,
                                                struct.pack("256s", interface_name.encode()))
 
-                    ip_address = socket.inet_ntoa(ip_interface[20:24])
+                    ip_address = inet_ntoa(ip_interface[20:24])
                     interface_addresses[interface_name] = ip_address
 
             except (ImportError, OSError) as error:
@@ -284,7 +294,7 @@ class NetworkInterfaces:
         return interface_addresses
 
     @classmethod
-    def get_interface_addresses(cls):
+    def get_interface_addresses(cls) -> dict[str, str]:
         """Returns a dictionary of network interface names and IP addresses."""
 
         if sys.platform == "win32":
@@ -293,7 +303,7 @@ class NetworkInterfaces:
         return cls._get_interface_addresses_posix()
 
     @classmethod
-    def get_interface_address(cls, interface_name):
+    def get_interface_address(cls, interface_name: str):
         """Returns the IP address of a specific network interface."""
 
         if not interface_name:
@@ -302,7 +312,7 @@ class NetworkInterfaces:
         return cls.get_interface_addresses().get(interface_name)
 
     @classmethod
-    def bind_to_interface(cls, sock, interface_name, address):
+    def bind_to_interface(cls, sock: socket, interface_name: str, address: str) -> None:
         """Bind socket to the specified network interface name, if required on
         the current platform. Otherwise bind to the IP address of the network
         interface, retrieved from get_interface_addresses().
@@ -312,7 +322,7 @@ class NetworkInterfaces:
             try:
                 # We need to use SO_BINDTODEVICE on Linux, since socket.bind() has no
                 # effect on routing (weak host model).
-                sock.setsockopt(socket.SOL_SOCKET, cls.SO_BINDTODEVICE, interface_name.encode())
+                sock.setsockopt(SOL_SOCKET, cls.SO_BINDTODEVICE, interface_name.encode())
                 return
 
             except PermissionError as error:
@@ -322,7 +332,7 @@ class NetworkInterfaces:
                 # We only need to bind to the interface address, not a port.
                 # Set IP_BIND_ADDRESS_NO_PORT to avoid reserving an ephemeral port in bind(),
                 # and let connect() select one instead later.
-                sock.setsockopt(socket.SOL_IP, cls.IP_BIND_ADDRESS_NO_PORT, 1)
+                sock.setsockopt(SOL_IP, cls.IP_BIND_ADDRESS_NO_PORT, 1)
 
         sock.bind((address, 0))
 
@@ -430,7 +440,7 @@ class NetworkThread(Thread):
         self._num_sockets = 0
         self._last_cycle_time = 0
 
-        self._conns = {}
+        self._conns: dict[socket, Connection] = {}
         self._indirect_token = initial_token()
 
         self._file_init_msgs = {}
@@ -454,12 +464,12 @@ class NetworkThread(Thread):
         ):
             events.connect(event_name, callback)
 
-    def _schedule_quit(self):
+    def _schedule_quit(self) -> None:
         self._want_abort = True
 
     # Message Queue #
 
-    def _enable_message_queue(self):
+    def _enable_message_queue(self) -> None:
 
         if self._should_process_queue:
             return
@@ -467,7 +477,7 @@ class NetworkThread(Thread):
         self._clear_message_queue()
         self._should_process_queue = True
 
-    def _disable_message_queue(self):
+    def _disable_message_queue(self) -> None:
 
         if not self._should_process_queue:
             return
@@ -475,7 +485,7 @@ class NetworkThread(Thread):
         self._should_process_queue = False
         self._clear_message_queue()
 
-    def _clear_message_queue(self):
+    def _clear_message_queue(self) -> None:
 
         while True:
             try:
@@ -483,11 +493,11 @@ class NetworkThread(Thread):
             except Empty:
                 break
 
-    def _queue_network_message(self, msg):
+    def _queue_network_message(self, msg: InternalMessage) -> None:
         if self._should_process_queue:
             self._message_queue.put_nowait(msg)
 
-    def _process_queue_messages(self):
+    def _process_queue_messages(self) -> None:
 
         msgs = []
 
@@ -501,9 +511,9 @@ class NetworkThread(Thread):
 
     # Listening Socket #
 
-    def _create_listen_socket(self):
+    def _create_listen_socket(self) -> bool:
 
-        self._listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._listen_socket = socket(AF_INET, SOCK_STREAM)
         self._listen_socket.setblocking(False)
         self._num_sockets += 1
 
@@ -512,16 +522,16 @@ class NetworkThread(Thread):
         # on Windows, allowing other programs to hijack the port, so don't set it there.
 
         if sys.platform != "win32":
-            self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            self._listen_socket.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
 
         if not self._bind_listen_port():
             self._close_listen_socket()
             return False
 
-        self._selector.register(self._listen_socket, selectors.EVENT_READ)
+        self._selector.register(self._listen_socket, EVENT_READ)
         return True
 
-    def _close_listen_socket(self):
+    def _close_listen_socket(self) -> None:
 
         if self._listen_socket is None:
             return
@@ -538,7 +548,7 @@ class NetworkThread(Thread):
         self._listen_port = None
         self._num_sockets -= 1
 
-    def _bind_listen_port(self):
+    def _bind_listen_port(self) -> bool:
 
         if not self._bind_socket_interface(self._listen_socket):
             self._set_server_timer(use_fixed_timeout=True)
@@ -570,7 +580,7 @@ class NetworkThread(Thread):
 
     # Connections #
 
-    def _set_tcp_buffer_size(self, sock, conn_type):
+    def _set_tcp_buffer_size(self, sock: socket, conn_type=None) -> None:
         """Set a sane TCP buffer size limit for connections, to prevent boundless message
         flooding. The limit is smaller for distributed connections due to the larger attack
         surface and messages always remaining small. File connections use the OS limit,
@@ -581,12 +591,12 @@ class NetworkThread(Thread):
             return
 
         if conn_type == ConnectionType.DISTRIBUTED:
-            sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.TCP_BUFFER_SIZE_SMALL)
+            sock.setsockopt(SOL_SOCKET, SO_RCVBUF, self.TCP_BUFFER_SIZE_SMALL)
             return
 
-        sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.TCP_BUFFER_SIZE_MEDIUM)
+        sock.setsockopt(SOL_SOCKET, SO_RCVBUF, self.TCP_BUFFER_SIZE_MEDIUM)
 
-    def _indirect_request_error(self, init):
+    def _indirect_request_error(self, init: PeerInit) -> None:
 
         username = init.target_username
         conn_type = init.conn_type
@@ -606,7 +616,7 @@ class NetworkThread(Thread):
         init.outgoing_msgs.clear()
         self._username_init_msgs.pop(username + conn_type, None)
 
-    def _check_indirect_request_timeouts(self, current_time=None, expire_all=False):
+    def _check_indirect_request_timeouts(self, current_time=None, expire_all: bool = False) -> None:
 
         if not self._indirect_token_init_msgs:
             return
@@ -628,7 +638,7 @@ class NetworkThread(Thread):
 
         timed_out_requests.clear()
 
-    def _is_connection_still_active(self, conn):
+    def _is_connection_still_active(self, conn) -> bool:
 
         init = conn.init
 
@@ -639,7 +649,7 @@ class NetworkThread(Thread):
 
         return len(conn.out_buffer) > 0 or len(conn.in_buffer) > 0
 
-    def _bind_socket_interface(self, sock):
+    def _bind_socket_interface(self, sock: socket) -> bool:
         """Attempt to bind socket to an IP address, if provided with the
         --bindip CLI argument. Otherwise retrieve the IP address of the
         requested interface name, cache it for later, and bind to it.
@@ -659,7 +669,7 @@ class NetworkThread(Thread):
     def _find_local_ip_address(self):
 
         # Create a UDP socket
-        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as local_socket:
+        with socket(AF_INET, SOCK_DGRAM) as local_socket:
 
             # Send a broadcast packet on a local address (doesn't need to be reachable,
             # but MacOS requires port to be non-zero)
@@ -670,8 +680,7 @@ class NetworkThread(Thread):
 
         return ip_address
 
-    def _add_init_message(self, init):
-
+    def _add_init_message(self, init: PeerInit) -> bool:
         conn_type = init.conn_type
 
         if conn_type == ConnectionType.FILE:
@@ -699,8 +708,10 @@ class NetworkThread(Thread):
         return None
 
     @staticmethod
-    def _unpack_network_message(msg_class, msg_content, msg_size, conn_type, sock=None, addr=None, username=None,
-                                allowed_responses=None):
+    def _unpack_network_message(
+        msg_class, msg_content: memoryview, msg_size: int, conn_type,
+        sock=None, addr=None, username=None, allowed_responses=None
+    ):
 
         msg = None
 
@@ -764,7 +775,7 @@ class NetworkThread(Thread):
 
         return unpacked_msg
 
-    def _emit_network_message_event(self, msg):
+    def _emit_network_message_event(self, msg) -> None:
 
         if msg is None:
             return
@@ -774,13 +785,17 @@ class NetworkThread(Thread):
         if msg.EVENT_NAME is not None:
             events.emit_main_thread(msg.EVENT_NAME, msg)
 
-    def _modify_connection_events(self, conn, io_events):
+    def _modify_connection_events(
+        self,
+        conn: Connection,
+        io_events: int  # Bitmask of selectors.EVENT_* flags
+    ) -> None:
 
         if conn.io_events != io_events:
             self._selector.modify(conn.sock, io_events)
             conn.io_events = io_events
 
-    def _process_conn_messages(self, init):
+    def _process_conn_messages(self, init: PeerInit) -> None:
         """A connection is established with the peer, time to queue up our peer
         messages for delivery."""
 
@@ -788,14 +803,14 @@ class NetworkThread(Thread):
         sock = init.sock
         msgs = init.outgoing_msgs
 
-        for j in msgs:
-            j.username = username
-            j.sock = sock
+        for msg in msgs:
+            msg.username = username
+            msg.sock = sock
 
         self._process_outgoing_messages(msgs)
         msgs.clear()
 
-    def _send_message_to_peer(self, username, msg):
+    def _send_message_to_peer(self, username: str, msg) -> None:
 
         init = None
         conn_type = msg.TYPE
@@ -829,7 +844,7 @@ class NetworkThread(Thread):
             # This is a new peer, initiate a connection
             self._initiate_connection_to_peer(username, conn_type, msg)
 
-    def _initiate_connection_to_peer(self, username, conn_type, msg=None, in_address=None):
+    def _initiate_connection_to_peer(self, username: str, conn_type, msg=None, in_address=None) -> None:
         """Prepare to initiate a connection with a peer."""
 
         init = PeerInit(init_username=self._login_username, target_username=username, conn_type=conn_type)
@@ -868,7 +883,7 @@ class NetworkThread(Thread):
         else:
             self._connect_to_peer(username, addr, init)
 
-    def _connect_to_peer(self, username, addr, init, pierce_token=None):
+    def _connect_to_peer(self, username: str, addr, init: PeerInit, pierce_token=None) -> None:
         """Initiate a connection with a peer."""
 
         conn_type = init.conn_type
@@ -880,7 +895,7 @@ class NetworkThread(Thread):
 
         self._init_peer_connection(addr, init, pierce_token=pierce_token)
 
-    def _connect_error(self, error, conn):
+    def _connect_error(self, error, conn) -> None:
 
         if isinstance(conn, ServerConnection):
             server_address, port = conn.addr
@@ -902,13 +917,13 @@ class NetworkThread(Thread):
         if pierce_token is not None:
             log.add_conn("Cannot respond to indirect connection request of type %s from user %s, "
                          "token %s: %s", (conn_type, username, pierce_token, error))
-            self._send_message_to_server(CantConnectToPeer(pierce_token, username))
+            self._send_message_to_server(CantConnectToPeer(token=pierce_token, username=username))
             return
 
         log.add_conn("Direct connection of type %s to user %s failed: %s",
                      (conn_type, username, error))
 
-    def _connect_to_peer_indirect(self, init):
+    def _connect_to_peer_indirect(self, init) -> None:
         """Send a message to the server to ask the peer to connect to us
         (indirect connection)"""
 
@@ -919,11 +934,12 @@ class NetworkThread(Thread):
         init.indirect_request_time = time.monotonic()
 
         self._indirect_token_init_msgs[init.indirect_token] = init
-        self._send_message_to_server(ConnectToPeer(init.indirect_token, username, conn_type))
-
+        self._send_message_to_server(
+            ConnectToPeer(token=init.indirect_token, username=username, conn_type=conn_type)
+        )
         log.add_conn("Requesting indirect connection to user %s with token %s", (username, init.indirect_token))
 
-    def _establish_outgoing_peer_connection(self, conn):
+    def _establish_outgoing_peer_connection(self, conn: PeerConnection) -> None:
 
         conn.is_established = True
         init = conn.init
@@ -946,7 +962,7 @@ class NetworkThread(Thread):
 
         self._process_conn_messages(init)
 
-    def _replace_existing_connection(self, init):
+    def _replace_existing_connection(self, init: PeerInit) -> None:
 
         username = init.target_username
         conn_type = init.conn_type
@@ -967,15 +983,15 @@ class NetworkThread(Thread):
         self._close_connection(self._conns[prev_init.sock])
 
     @staticmethod
-    def _close_socket(sock):
+    def _close_socket(sock: socket) -> None:
 
         try:
             log.add_conn("Shutting down socket %s", sock)
-            sock.shutdown(socket.SHUT_RDWR)
+            sock.shutdown(SHUT_RDWR)
 
         except OSError as error:
             # Can't call shutdown if connection wasn't established, ignore error
-            if error.errno != errno.ENOTCONN:
+            if error.errno != ENOTCONN:
                 log.add_conn("Failed to shut down socket %s: %s", (sock, error))
 
         try:
@@ -985,7 +1001,7 @@ class NetworkThread(Thread):
         except OSError as error:
             log.add_conn("Failed to close socket %s: %s", (sock, error))
 
-    def _close_connection(self, conn):
+    def _close_connection(self, conn) -> None:
 
         if conn is None:
             return
@@ -1096,7 +1112,7 @@ class NetworkThread(Thread):
 
         del self._username_init_msgs[init_key]
 
-    def _is_connection_inactive(self, conn, current_time, num_sockets):
+    def _is_connection_inactive(self, conn, current_time, num_sockets: int) -> bool:
 
         if conn is self._server_conn:
             return False
@@ -1121,11 +1137,11 @@ class NetworkThread(Thread):
 
         return False
 
-    def _check_connections(self, current_time):
+    def _check_connections(self, current_time: float) -> None:
 
         num_sockets = self._num_sockets
-        init_timeout_conns = set()
-        inactive_conns = set()
+        init_timeout_conns: set[Connection] = set()
+        inactive_conns: set[Connection] = set()
 
         for conn in self._conns.values():
             if not conn.is_established:
@@ -1177,7 +1193,7 @@ class NetworkThread(Thread):
 
     # Server Connection #
 
-    def _set_server_timer(self, use_fixed_timeout=False):
+    def _set_server_timer(self, use_fixed_timeout: bool = False) -> None:
 
         if use_fixed_timeout:
             self._server_timeout_value = 5
@@ -1185,7 +1201,7 @@ class NetworkThread(Thread):
         elif self._server_timeout_value == -1:
             # Add jitter to spread out connection attempts from Nicotine+ clients
             # in case server goes down
-            self._server_timeout_value = random.randint(5, 15)
+            self._server_timeout_value = randint(5, 15)
 
         elif 0 < self._server_timeout_value < 300:
             # Exponential backoff, max 5 minute wait
@@ -1196,7 +1212,7 @@ class NetworkThread(Thread):
                 {"duration": human_duration_approx(self._server_timeout_value)})
 
     @staticmethod
-    def _set_server_socket_keepalive(sock, idle=10, interval=2):
+    def _set_server_socket_keepalive(sock: socket, idle: int = 10, interval: int = 2) -> None:
         """Ensure we are disconnected from the server in case of connectivity
         issues, by sending TCP keepalive pings.
 
@@ -1209,42 +1225,63 @@ class NetworkThread(Thread):
         count = 10
         timeout_seconds = (idle + (interval * count))
 
-        if hasattr(socket, "SO_KEEPALIVE"):
-            sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)  # pylint: disable=no-member
+        try:
+            from socket import SO_KEEPALIVE
+            sock.setsockopt(SOL_SOCKET, SO_KEEPALIVE, 1)
 
-        if hasattr(socket, "TCP_KEEPINTVL"):
-            sock.setsockopt(socket.IPPROTO_TCP,
-                            socket.TCP_KEEPINTVL, interval)  # pylint: disable=no-member
+        except ImportError:
+            pass
 
-        if hasattr(socket, "TCP_KEEPCNT"):
-            sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPCNT, count)  # pylint: disable=no-member
+        try:
+            from socket import TCP_KEEPINTVL
+            sock.setsockopt(IPPROTO_TCP, TCP_KEEPINTVL, interval)
 
-        if hasattr(socket, "TCP_KEEPIDLE"):
-            sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, idle)  # pylint: disable=no-member
+        except ImportError:
+            pass
 
-        elif hasattr(socket, "TCP_KEEPALIVE"):
-            # macOS fallback
+        try:
+            from socket import TCP_KEEPCNT
+            sock.setsockopt(IPPROTO_TCP, TCP_KEEPCNT, count)
 
-            sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPALIVE, idle)  # pylint: disable=no-member
+        except ImportError:
+            pass
 
-        elif hasattr(socket, "SIO_KEEPALIVE_VALS"):
-            # Windows fallback
-            # Probe count is set to 10 on a system level, and can't be modified.
-            # https://docs.microsoft.com/en-us/windows/win32/winsock/so-keepalive
+        try:
+            from socket import TCP_KEEPIDLE
+            sock.setsockopt(IPPROTO_TCP, TCP_KEEPIDLE, idle)
 
-            sock.ioctl(
-                socket.SIO_KEEPALIVE_VALS,  # pylint: disable=no-member
-                (
-                    1,
-                    idle * 1000,
-                    interval * 1000
-                )
-            )
+        except ImportError:
+            try:
+                # macOS fallback
+                from socket import TCP_KEEPALIVE
+                sock.setsockopt(IPPROTO_TCP, TCP_KEEPALIVE, idle)
 
-        if hasattr(socket, "TCP_USER_TIMEOUT"):
-            sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_USER_TIMEOUT, timeout_seconds * 1000)
+            except ImportError:
+                try:
+                    # Windows fallback
+                    # Probe count is set to 10 on a system level, and can't be modified.
+                    # https://docs.microsoft.com/en-us/windows/win32/winsock/so-keepalive
+                    from socket import SIO_KEEPALIVE_VALS
+                    sock.ioctl(
+                        SIO_KEEPALIVE_VALS,
+                        (
+                            1,
+                            idle * 1000,
+                            interval * 1000
+                        )
+                    )
 
-    def _server_connect(self, msg):
+                except ImportError:
+                    pass
+
+        try:
+            from socket import TCP_USER_TIMEOUT
+            sock.setsockopt(IPPROTO_TCP, TCP_USER_TIMEOUT, timeout_seconds * 1000)
+
+        except ImportError:
+            pass
+
+    def _server_connect(self, msg: ServerConnect) -> None:
         """We're connecting to the server."""
 
         if self._server_conn is not None:
@@ -1272,18 +1309,21 @@ class NetworkThread(Thread):
 
         self._init_server_conn(msg)
 
-    def _init_server_conn(self, msg):
+    def _init_server_conn(self, msg: ServerConnect) -> None:
 
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        io_events = selectors.EVENT_READ | selectors.EVENT_WRITE
+        sock = socket(AF_INET, SOCK_STREAM)
+        io_events = EVENT_READ | EVENT_WRITE
         conn = ServerConnection(
-            sock=sock, addr=msg.addr, io_events=io_events, username=msg.username,
+            sock=sock,
+            addr=msg.addr,
+            io_events=io_events,
+            username=msg.username,
             password=msg.password
         )
 
         sock.setblocking(False)
-        sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-        self._set_tcp_buffer_size(sock, ConnectionType.SERVER)
+        sock.setsockopt(IPPROTO_TCP, TCP_NODELAY, 1)
+        self._set_tcp_buffer_size(sock)
 
         # Detect if our connection to the server is still alive
         self._set_server_socket_keepalive(sock)
@@ -1302,7 +1342,7 @@ class NetworkThread(Thread):
         self._selector.register(sock, io_events)
         self._num_sockets += 1
 
-    def _establish_outgoing_server_connection(self, conn):
+    def _establish_outgoing_server_connection(self, conn) -> None:
 
         conn.is_established = True
         server_hostname, server_port = conn.addr
@@ -1325,24 +1365,26 @@ class NetworkThread(Thread):
 
         self._send_message_to_server(
             Login(
-                username, password,
+                username=username,
+                password=password,
+
                 # Soulseek client major version
                 # NS and SoulseekQt use 157, Soulseek.NET and slskd use 170
                 # We use our reserved major version number for Nicotine+
-                160,
+                major_version=160,
 
                 # Soulseek client minor version
                 # 17 stands for 157 ns 13c, 19 for 157 ns 13e
                 # SoulseekQt seems to go higher than this
                 # Nicotine+ increments the number for new network capabilities
                 # 1 was >=2.2.1, 2 was >=3.3.0, 3 since >=3.4.0
-                3
+                minor_version=3
             )
         )
 
         self._send_message_to_server(SetWaitPort(self._listen_port))
 
-    def _is_outgoing_server_message_permitted(self, msg):
+    def _is_outgoing_server_message_permitted(self, msg) -> bool:
         """Only permit sending login message when not authenticated."""
         return self._server_address is not None or isinstance(msg, Login)
 
@@ -1459,9 +1501,11 @@ class NetworkThread(Thread):
 
         elif isinstance(msg, (WatchUser, GetUserStats)):
             if msg.username == self._login_username:
-                if msg.upload_speed is not None:
-                    self._upload_speed = msg.upload_speed
-                    log.add_conn("Server reported our upload speed as %s", human_speed(msg.upload_speed))
+                upload_speed = msg.stats.upload_speed
+
+                if upload_speed is not None:
+                    self._upload_speed = upload_speed
+                    log.add_conn("Server reported our upload speed as %s", human_speed(upload_speed))
                     self._update_maximum_distributed_children()
 
             elif isinstance(msg, WatchUser) and not msg.exists:
@@ -1484,8 +1528,7 @@ class NetworkThread(Thread):
                 for username, parent_candidate in self._potential_parents.items():
                     log.add_conn("Attempting parent connection to user %s", username)
                     self._initiate_connection_to_peer(
-                        username, ConnectionType.DISTRIBUTED,
-                        in_address=(parent_candidate.ip_address, parent_candidate.port)
+                        username, ConnectionType.DISTRIBUTED, in_address=parent_candidate.addr
                     )
 
         elif isinstance(msg, ParentMinSpeed):
@@ -1512,7 +1555,7 @@ class NetworkThread(Thread):
         self._emit_network_message_event(msg)
         return True
 
-    def _process_server_input(self, conn):
+    def _process_server_input(self, conn) -> None:
         """Reads messages from the input buffer of a server connection."""
 
         in_buffer = conn.in_buffer
@@ -1577,9 +1620,9 @@ class NetworkThread(Thread):
         out_buffer += msg.pack_uint32(msg.CODE)
         out_buffer += msg_content
 
-        self._modify_connection_events(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
+        self._modify_connection_events(conn, EVENT_READ | EVENT_WRITE)
 
-    def _server_disconnect(self):
+    def _server_disconnect(self) -> None:
         """We're disconnecting from the server, clean up."""
 
         self._disable_message_queue()
@@ -1646,7 +1689,7 @@ class NetworkThread(Thread):
             ServerDisconnect(manual_disconnect=self._manual_server_disconnect)
         )
 
-    def _send_message_to_server(self, msg):
+    def _send_message_to_server(self, msg) -> None:
         self._process_outgoing_messages([msg])
 
     # Peer Init #
@@ -1783,7 +1826,7 @@ class NetworkThread(Thread):
         self._accept_child_peer_connection(conn)
         return init
 
-    def _process_peer_init_output(self, conn, msg):
+    def _process_peer_init_output(self, conn, msg) -> None:
 
         # Pack peer init messages
         msg_content = self._pack_network_message(msg)
@@ -1797,11 +1840,11 @@ class NetworkThread(Thread):
         out_buffer += msg.pack_uint8(msg.CODE)
         out_buffer += msg_content
 
-        self._modify_connection_events(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
+        self._modify_connection_events(conn, EVENT_READ | EVENT_WRITE)
 
     # Peer Connection #
 
-    def _accept_incoming_peer_connections(self):
+    def _accept_incoming_peer_connections(self) -> None:
 
         while self._num_sockets < self.MAX_SOCKETS:
             incoming_sock = None
@@ -1809,10 +1852,10 @@ class NetworkThread(Thread):
             try:
                 incoming_sock, incoming_addr = self._listen_socket.accept()
                 incoming_sock.setblocking(False)
-                incoming_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+                incoming_sock.setsockopt(IPPROTO_TCP, TCP_NODELAY, 1)
 
             except OSError as error:
-                if error.errno == errno.EWOULDBLOCK:
+                if error.errno == EWOULDBLOCK:
                     # No more incoming connections
                     break
 
@@ -1823,10 +1866,12 @@ class NetworkThread(Thread):
 
                 continue
 
-            io_events = selectors.EVENT_READ
+            io_events = EVENT_READ
 
             conn = self._conns[incoming_sock] = PeerConnection(
-                sock=incoming_sock, addr=incoming_addr, io_events=io_events
+                sock=incoming_sock,
+                addr=incoming_addr,
+                io_events=io_events
             )
             self._num_sockets += 1
 
@@ -1837,7 +1882,7 @@ class NetworkThread(Thread):
 
             log.add_conn("Incoming connection from address %s", (incoming_addr,))
 
-    def _init_peer_connection(self, addr, init, pierce_token=None):
+    def _init_peer_connection(self, addr, init, pierce_token=None) -> None:
 
         if self._num_sockets >= self.MAX_SOCKETS:
             # Connection limit reached, re-queue
@@ -1868,14 +1913,18 @@ class NetworkThread(Thread):
         log.add_conn("Attempting direct connection of type %s to user %s, address %s",
                      (init.conn_type, init.target_username, addr))
 
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        io_events = selectors.EVENT_READ | selectors.EVENT_WRITE
+        sock = socket(AF_INET, SOCK_STREAM)
+        io_events = EVENT_READ | EVENT_WRITE
         conn = PeerConnection(
-            sock=sock, addr=addr, io_events=io_events, init=init, pierce_token=pierce_token
+            sock=sock,
+            addr=addr,
+            io_events=io_events,
+            init=init,
+            pierce_token=pierce_token
         )
 
         sock.setblocking(False)
-        sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+        sock.setsockopt(IPPROTO_TCP, TCP_NODELAY, 1)
         self._set_tcp_buffer_size(sock, init.conn_type)
 
         try:
@@ -1892,7 +1941,7 @@ class NetworkThread(Thread):
         self._selector.register(sock, io_events)
         self._num_sockets += 1
 
-    def _process_peer_input(self, conn):
+    def _process_peer_input(self, conn) -> None:
         """Reads messages from the input buffer of a 'P' connection."""
 
         in_buffer = conn.in_buffer
@@ -1980,7 +2029,7 @@ class NetworkThread(Thread):
 
             self._close_connection(conn)
 
-    def _process_peer_output(self, conn, msg):
+    def _process_peer_output(self, conn, msg) -> None:
 
         # Pack peer messages
         msg_content = self._pack_network_message(msg)
@@ -1995,11 +2044,11 @@ class NetworkThread(Thread):
         out_buffer += msg_content
 
         conn.has_post_init_activity = True
-        self._modify_connection_events(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
+        self._modify_connection_events(conn, EVENT_READ | EVENT_WRITE)
 
     # File Connection #
 
-    def _calc_upload_limit(self, limit_disabled=False, limit_per_transfer=False):
+    def _calc_upload_limit(self, limit_disabled: bool = False, limit_per_transfer: bool = False) -> None:
 
         limit = self._upload_limit
         loop_limit = 1024  # 1 KB/s is the minimum upload speed per transfer
@@ -2015,13 +2064,13 @@ class NetworkThread(Thread):
 
         self._upload_limit_split = int(limit)
 
-    def _calc_upload_limit_by_transfer(self):
+    def _calc_upload_limit_by_transfer(self) -> None:
         return self._calc_upload_limit(limit_per_transfer=True)
 
-    def _calc_upload_limit_none(self):
+    def _calc_upload_limit_none(self) -> None:
         return self._calc_upload_limit(limit_disabled=True)
 
-    def _calc_download_limit(self):
+    def _calc_download_limit(self) -> None:
 
         limit = self._download_limit
         loop_limit = 1024  # 1 KB/s is the minimum download speed per transfer
@@ -2038,7 +2087,7 @@ class NetworkThread(Thread):
 
         self._download_limit_split = int(limit)
 
-    def _process_file_init_message(self, conn, in_buffer):
+    def _process_file_init_message(self, conn: PeerConnection, in_buffer: bytearray) -> int:
 
         msg_size = 4
         idx = 0
@@ -2068,7 +2117,7 @@ class NetworkThread(Thread):
 
         return idx
 
-    def _process_file_offset_message(self, conn, in_buffer):
+    def _process_file_offset_message(self, conn: PeerConnection, in_buffer: bytearray):
 
         file_upload = self._file_upload_msgs[conn]
 
@@ -2106,7 +2155,7 @@ class NetworkThread(Thread):
 
         try:
             file_upload.file_handle.seek(msg.offset)
-            self._modify_connection_events(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
+            self._modify_connection_events(conn, EVENT_READ | EVENT_WRITE)
 
         except (OSError, ValueError) as error:
             events.emit_main_thread(
@@ -2118,7 +2167,7 @@ class NetworkThread(Thread):
 
         return idx
 
-    def _write_download_file(self, file_download, data, data_len):
+    def _write_download_file(self, file_download: DownloadFile, data, data_len) -> None:
 
         if not data:
             return
@@ -2129,7 +2178,7 @@ class NetworkThread(Thread):
         file_download.file_handle.write(data)
         file_download.num_bytes_left -= data_len
 
-    def _process_download(self, conn, data, data_len):
+    def _process_download(self, conn, data, data_len) -> bool:
 
         file_download = self._file_download_msgs[conn]
         idx = file_download.num_bytes_left
@@ -2158,7 +2207,7 @@ class NetworkThread(Thread):
 
         return True
 
-    def _process_upload(self, conn, num_bytes_sent, current_time):
+    def _process_upload(self, conn, num_bytes_sent, current_time) -> bool:
 
         file_upload = self._file_upload_msgs[conn]
 
@@ -2179,7 +2228,7 @@ class NetworkThread(Thread):
                 )
                 if num_bytes_to_read > 0:
                     out_buffer += file_upload.file_handle.read(num_bytes_to_read)
-                    self._modify_connection_events(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
+                    self._modify_connection_events(conn, EVENT_READ | EVENT_WRITE)
 
         except (OSError, ValueError) as error:
             events.emit_main_thread(
@@ -2200,7 +2249,7 @@ class NetworkThread(Thread):
             )
         return True
 
-    def _process_file_input(self, conn):
+    def _process_file_input(self, conn: PeerConnection) -> None:
         """Reads file messages from the input buffer of a 'F' connection."""
 
         in_buffer = conn.in_buffer
@@ -2216,7 +2265,7 @@ class NetworkThread(Thread):
             del in_buffer[:idx]
             conn.has_post_init_activity = True
 
-    def _process_file_output(self, conn, msg):
+    def _process_file_output(self, conn, msg) -> None:
 
         # Pack file messages
         if isinstance(msg, FileTransferInit):
@@ -2242,11 +2291,11 @@ class NetworkThread(Thread):
             conn.out_buffer += msg_content
 
         conn.has_post_init_activity = True
-        self._modify_connection_events(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
+        self._modify_connection_events(conn, EVENT_READ | EVENT_WRITE)
 
     # Distributed Connection #
 
-    def _accept_child_peer_connection(self, conn):
+    def _accept_child_peer_connection(self, conn) -> None:
 
         if conn.init.conn_type != ConnectionType.DISTRIBUTED:
             return
@@ -2292,7 +2341,7 @@ class NetworkThread(Thread):
                          "no longer accepting new connections", self._max_distrib_children)
             self._send_message_to_server(AcceptChildren(False))
 
-    def _remove_child_peer_connection(self, username):
+    def _remove_child_peer_connection(self, username: str) -> None:
 
         self._child_peers.pop(username, None)
 
@@ -2305,7 +2354,7 @@ class NetworkThread(Thread):
 
         log.add_conn("Number of current child peers: %s", len(self._child_peers))
 
-    def _send_message_to_child_peers(self, msg, msg_content=None):
+    def _send_message_to_child_peers(self, msg, msg_content=None) -> None:
 
         if msg_content is None:
             msg_content = self._pack_network_message(msg)
@@ -2326,7 +2375,7 @@ class NetworkThread(Thread):
                      "Closing connection.", (msg_class.__name__, conn.init.target_username))
         return ParentStatus.REJECTED
 
-    def _send_have_no_parent(self):
+    def _send_have_no_parent(self) -> None:
         """Inform the server we have no parent.
 
         The server should either send us a PossibleParents message, or
@@ -2350,7 +2399,7 @@ class NetworkThread(Thread):
         self._send_message_to_server(BranchLevel(self._branch_level))
         self._send_message_to_server(AcceptChildren(False))
 
-    def _adopt_parent(self, username):
+    def _adopt_parent(self, username: str) -> None:
 
         if self._parent is not None:
             return
@@ -2393,7 +2442,7 @@ class NetworkThread(Thread):
         log.add_conn("Our branch root is user %s", self._branch_root)
         log.add_conn("Our branch level is %s", self._branch_level)
 
-    def _close_parent_candidate_connections(self):
+    def _close_parent_candidate_connections(self) -> None:
 
         for parent_candidate in self._potential_parents.values():
             sock = parent_candidate.sock
@@ -2407,7 +2456,7 @@ class NetworkThread(Thread):
             self._close_connection(self._conns[sock])
             parent_candidate.sock = None
 
-    def _update_maximum_distributed_children(self):
+    def _update_maximum_distributed_children(self) -> None:
 
         prev_max_distrib_children = self._max_distrib_children
         num_child_peers = len(self._child_peers)
@@ -2426,7 +2475,7 @@ class NetworkThread(Thread):
                          "accepting new connections", num_child_peers)
             self._send_message_to_server(AcceptChildren(False))
 
-    def _process_distrib_message(self, conn, msg_type, msg_size, msg_content):
+    def _process_distrib_message(self, conn, msg_type, msg_size, msg_content) -> bool:
 
         msg_class = DISTRIBUTED_MESSAGE_CLASSES[msg_type]
         msg = self._unpack_network_message(
@@ -2549,7 +2598,7 @@ class NetworkThread(Thread):
 
         return True
 
-    def _process_distrib_input(self, conn):
+    def _process_distrib_input(self, conn) -> None:
         """Reads messages from the input buffer of a 'D' connection."""
 
         in_buffer = conn.in_buffer
@@ -2595,7 +2644,7 @@ class NetworkThread(Thread):
             del in_buffer[:idx]
             conn.has_post_init_activity = True
 
-    def _process_distrib_output(self, conn, msg, msg_content=None):
+    def _process_distrib_output(self, conn, msg, msg_content=None) -> None:
 
         # Pack distributed messages
         if msg_content is None:
@@ -2611,11 +2660,11 @@ class NetworkThread(Thread):
         out_buffer += msg_content
 
         conn.has_post_init_activity = True
-        self._modify_connection_events(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
+        self._modify_connection_events(conn, EVENT_READ | EVENT_WRITE)
 
     # Internal Messages #
 
-    def _process_internal_messages(self, msg):
+    def _process_internal_messages(self, msg) -> None:
 
         if isinstance(msg, CloseConnection):
             self._close_connection(self._conns.get(msg.sock))
@@ -2677,7 +2726,7 @@ class NetworkThread(Thread):
 
     # Input/Output #
 
-    def _process_ready_input_socket(self, sock, current_time):
+    def _process_ready_input_socket(self, sock: socket, current_time: float) -> None:
 
         if sock in self._conns:
             conn = self._conns[sock]
@@ -2711,7 +2760,7 @@ class NetworkThread(Thread):
 
         self._close_connection(conn)
 
-    def _process_ready_output_socket(self, sock, current_time):
+    def _process_ready_output_socket(self, sock: socket, current_time: float) -> None:
 
         if sock in self._conns:
             conn = self._conns[sock]
@@ -2744,7 +2793,7 @@ class NetworkThread(Thread):
 
         self._close_connection(conn)
 
-    def _process_ready_sockets(self, current_time):
+    def _process_ready_sockets(self, current_time: float) -> None:
 
         if self._listen_socket is None:
             # We can't call select() when no sockets are registered (WinError 10022)
@@ -2753,17 +2802,17 @@ class NetworkThread(Thread):
         for key, io_events in self._selector.select(timeout=self.SLEEP_MAX_IDLE):
             sock = key.fileobj
 
-            if io_events & selectors.EVENT_READ:
+            if io_events & EVENT_READ:
                 if sock is self._listen_socket:
                     self._accept_incoming_peer_connections()
                     continue
 
                 self._process_ready_input_socket(sock, current_time)
 
-            if io_events & selectors.EVENT_WRITE:
+            if io_events & EVENT_WRITE:
                 self._process_ready_output_socket(sock, current_time)
 
-    def _process_conn_incoming_messages(self, conn):
+    def _process_conn_incoming_messages(self, conn) -> None:
 
         if not conn.in_buffer:
             return
@@ -2794,7 +2843,7 @@ class NetworkThread(Thread):
                          "promoting to primary connection", (init.conn_type, init.target_username))
             init.sock = conn.sock
 
-    def _process_outgoing_messages(self, msgs):
+    def _process_outgoing_messages(self, msgs) -> None:
 
         for msg in msgs:
             if not self._should_process_queue:
@@ -2859,7 +2908,7 @@ class NetworkThread(Thread):
             conn = self._conns[sock]
             process_func(conn, msg)
 
-    def _read_data(self, conn, current_time):
+    def _read_data(self, conn: Connection, current_time: float) -> bool:
 
         sock = conn.sock
         current_recv_size = conn.recv_size
@@ -2899,7 +2948,7 @@ class NetworkThread(Thread):
         conn.last_active = current_time
         return True
 
-    def _write_data(self, conn, current_time):
+    def _write_data(self, conn: Connection, current_time: float) -> bool:
 
         sock = conn.sock
         out_buffer = conn.out_buffer
@@ -2924,14 +2973,14 @@ class NetworkThread(Thread):
 
         if not out_buffer:
             # Nothing else to send, stop watching connection for writes
-            self._modify_connection_events(conn, selectors.EVENT_READ)
+            self._modify_connection_events(conn, EVENT_READ)
 
         conn.last_active = current_time
         return True
 
     # Networking Loop #
 
-    def _loop(self):
+    def _loop(self) -> None:
 
         while not self._want_abort:
             current_time = time.monotonic()
@@ -2975,13 +3024,13 @@ class NetworkThread(Thread):
             # Don't exhaust the CPU
             time.sleep(self.SLEEP_MIN_IDLE)
 
-    def run(self):
+    def run(self) -> None:
 
         events.emit_main_thread("set-connection-stats")
 
         # Watch sockets for I/0 readiness with the selectors module. Only call register() after a socket
         # is bound, otherwise watching the socket not guaranteed to work (breaks on OpenBSD at least)
-        self._selector = selectors.DefaultSelector()
+        self._selector = DefaultSelector()
 
         try:
             self._loop()

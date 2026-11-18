@@ -2,8 +2,8 @@
 # SPDX-FileCopyrightText: 2008-2011 quinox <quinox@users.sf.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import socket
-import threading
+from socket import AF_INET, SOCK_STREAM, socket
+from threading import Thread
 
 from pynicotine.pluginsystem import BasePlugin, ResponseThrottle
 
@@ -58,7 +58,7 @@ class Plugin(BasePlugin):
 
         if user_address is not None:
             ip_address, port = user_address
-            threading.Thread(target=self.check_port, args=(user, ip_address, port, announce)).start()
+            Thread(target=self.check_port, args=(user, ip_address, port, announce)).start()
 
     def check_port(self, user, ip_address, port, announce):
 
@@ -78,7 +78,7 @@ class Plugin(BasePlugin):
         timeout = self.settings["socket_timeout"]
         self.log("Scanning %s:%d (socket timeout %d seconds)…", (ip_address, port, timeout))
 
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock = socket(AF_INET, SOCK_STREAM)
         sock.settimeout(timeout)
 
         result = sock.connect_ex((ip_address, port))

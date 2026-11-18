@@ -276,21 +276,19 @@ class TextView:
         tag.secondary_callback = secondary_callback
         tag.callback_arg = callback_arg
         tag.url = url
+        tag.color_id = None
 
         if color_id:
-            self.update_tag(tag, color_id=color_id)
+            self.set_tag_color(tag, color_id)
 
         return tag
 
-    def update_tag(self, tag, color_id=None):
-
-        if color_id is not None:
-            tag.color_id = color_id
-
+    def set_tag_color(self, tag, color_id):
+        tag.color_id = color_id
         update_tag_visuals(tag)
 
     def update_tags(self):
-        self.textbuffer.get_tag_table().foreach(self.update_tag)
+        self.textbuffer.get_tag_table().foreach(update_tag_visuals)
 
     # Events #
 
@@ -531,7 +529,7 @@ class ChatView(TextView):
             status = core.users.statuses.get(username, UserStatus.OFFLINE)
 
         color = USER_STATUS_COLORS.get(status)
-        self.update_tag(self.user_tags[username], color)
+        self.set_tag_color(self.user_tags[username], color)
 
     def update_user_tags(self):
         for username in self.user_tags:

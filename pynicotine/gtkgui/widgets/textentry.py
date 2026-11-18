@@ -250,10 +250,11 @@ class MessageEntry:
         cmd, _separator, args = text.partition(" ")
         args = args.strip()
 
-        if self.entity is not None and not self.command_callback(self.entity, cmd[1:], args):
-            return
+        if self.entity is not None:
+            if not self.command_callback(self.entity, cmd[1:], args):
+                return
 
-        if not self.command_callback(cmd[1:] if is_single_slash_cmd else cmd, args):
+        elif not self.command_callback(cmd[1:] if is_single_slash_cmd else cmd, args):
             return
 
         # Clear chat entry

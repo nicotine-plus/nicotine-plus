@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on November 1, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on November 3, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -1754,7 +1754,7 @@ is usually present in the like/dislike list or an existing recommendation list.
     2.  **uint32** *number of recommendations*
     3.  Iterate for *number of recommendations*
         1.  **string** *recommendation*
-        2.  **uint32** *number of recommendations for this recommendation (can be negative)*
+        2.  **int32** *number of recommendations for this recommendation (can be negative)*
 
 
 ## Server Code 112

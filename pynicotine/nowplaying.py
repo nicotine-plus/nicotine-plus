@@ -5,14 +5,18 @@
 # SPDX-FileCopyrightText: 2006-2009 daelstorm <daelstorm@gmail.com>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from __future__ import annotations
+
 import json
 import os
 import sys
 
 from pynicotine.config import config
 from pynicotine.logfacility import log
-from pynicotine.utils import execute_command
-from pynicotine.utils import human_length
+from pynicotine.utils import (
+    execute_command,
+    human_length
+)
 
 
 class AudioscrobblerError(Exception):
@@ -28,7 +32,7 @@ class NowPlaying:
     def __init__(self):
         self.title_clear()
 
-    def title_clear(self):
+    def title_clear(self) -> None:
         self.title = {
             "title": "",
             "artist": "",
@@ -42,7 +46,7 @@ class NowPlaying:
             "filename": ""
         }
 
-    def display_now_playing(self, _obj=None, callback=None, get_player=None, get_command=None, get_format=None):
+    def display_now_playing(self, _obj=None, callback=None, get_player=None, get_command=None, get_format=None) -> None:
 
         self.get_np(callback, get_player, get_command, get_format)
 
@@ -112,7 +116,7 @@ class NowPlaying:
 
         return None
 
-    def _parse_audioscrobbler_response(self, response_body):
+    def _parse_audioscrobbler_response(self, response_body: str) -> None:
 
         json_response = json.loads(response_body)
 
@@ -137,7 +141,7 @@ class NowPlaying:
         self.title["album"] = last_played.get("album", {}).get("#text") or "?"
         self.title["nowplaying"] = f"{artist} - {title}"
 
-    def _lastfm(self, username):
+    def _lastfm(self, username: str):
         """Function to get the last song played via Last.fm API."""
 
         try:
@@ -168,7 +172,7 @@ class NowPlaying:
 
         return True
 
-    def _librefm(self, username):
+    def _librefm(self, username: str):
         """Function to get the last song played via Libre.fm API."""
 
         try:
@@ -263,7 +267,7 @@ class NowPlaying:
             ("xesam:comment", "comment"),
             ("xesam:audioBitrate", "bitrate"),
             ("xesam:url", "filename"),
-            ("xesak:trackNumber", "track")
+            ("xesam:trackNumber", "track")
         ]
 
         for source, dest in mapping:
@@ -286,7 +290,7 @@ class NowPlaying:
 
         return True
 
-    def _listenbrainz(self, username):
+    def _listenbrainz(self, username: str):
         """Function to get the currently playing song via ListenBrainz API."""
 
         if not username:
@@ -325,7 +329,7 @@ class NowPlaying:
                     {"error": error}, title=_("Now Playing Error"))
         return None
 
-    def _other(self, command):
+    def _other(self, command: str):
 
         if not command:
             return None

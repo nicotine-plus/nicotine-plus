@@ -11,6 +11,7 @@ import os
 import re
 
 from collections import deque
+from dataclasses import dataclass
 from itertools import islice
 
 from gi.repository import GLib
@@ -42,6 +43,7 @@ from pynicotine.gtkgui.widgets.treeview import create_grouping_menu
 from pynicotine.logfacility import log
 from pynicotine.search import ResultFilterMode
 from pynicotine.shares import FileTypes
+from pynicotine.slskmessages import FileAttributes
 from pynicotine.slskmessages import FileListMessage
 from pynicotine.utils import factorize
 from pynicotine.utils import humanize
@@ -49,13 +51,11 @@ from pynicotine.utils import human_size
 from pynicotine.utils import human_speed
 
 
+@dataclass(slots=True, eq=False)
 class SearchResultFile:
-    __slots__ = ("path", "attributes", "is_downloading")
-
-    def __init__(self, path, attributes=None, is_downloading=False):
-        self.path = path
-        self.attributes = attributes
-        self.is_downloading = is_downloading
+    path: str
+    attributes: FileAttributes | None = None
+    is_downloading: bool = False
 
 
 class Searches(IconNotebook):
@@ -548,7 +548,7 @@ class Search:
                     "width": 200,
                     "expand_column": True,
                     "sensitive_column": "public_data",
-                    "tooltip_callback": self.on_file_path_tooltip
+                    "tooltip_callback": self.on_folder_path_tooltip
                 },
                 "file_type": {
                     "column_type": "icon",
@@ -847,10 +847,11 @@ class Search:
         # any), so set the end row id to the maximum possible number of new rows.
         end_row_id = self.row_id = self.row_id + (len(result_list) * 2) + 1
 
-        for _code, file_path, size, _file_extension, file_attributes, *_unused in reversed(result_list):
+        for file_data in reversed(result_list):
             if self.num_results_found >= config.sections["searches"]["max_displayed_results"]:
                 break
 
+            file_path = file_data.path
             file_path_lower = file_path.lower()
 
             if any(word in file_path_lower for word in search.excluded_words):
@@ -879,6 +880,8 @@ class Search:
             # Join the resulting items into a folder path
             folder_path = "\\".join(file_path_split)
 
+            file_attributes = file_data.attributes
+            size = file_data.size
             h_size = human_size(size, config.sections["ui"]["file_size_unit"])
             h_quality, bitrate, h_length, length = FileListMessage.parse_audio_quality_length(size, file_attributes)
             private_icon_name = "changes-prevent-symbolic" if is_private else ""
@@ -945,14 +948,14 @@ class Search:
 
         update_ui_private = False
 
-        if msg.private_list and config.sections["searches"]["private_search_results"]:
+        if msg.private_files and config.sections["searches"]["private_search_results"]:
             update_ui_private = self.add_result_list(
-                msg.private_list, username, country_code, num_queued_uploads, upload_speed, h_upload_speed,
+                msg.private_files, username, country_code, num_queued_uploads, upload_speed, h_upload_speed,
                 h_num_queued_uploads, is_private=True
             )
 
         update_ui = self.add_result_list(
-            msg.list, username, country_code, num_queued_uploads, upload_speed, h_upload_speed,
+            msg.public_files, username, country_code, num_queued_uploads, upload_speed, h_upload_speed,
             h_num_queued_uploads) or update_ui_private
 
         if update_ui:
@@ -1567,11 +1570,25 @@ class Search:
 
         self.results_label.set_text(humanize(self.num_results_visible) + str_plus)
 
-    def on_file_path_tooltip(self, treeview, iterator):
+    def on_folder_path_tooltip(self, treeview, iterator):
 
         file_data = treeview.get_row_value(iterator, "file_data")
 
         if not file_data:
+            return None
+
+        folder_path = file_data.path
+
+        if treeview.get_row_value(iterator, "filename"):
+            folder_path, _separator, _basename = file_data.path.rpartition("\\")
+
+        return folder_path
+
+    def on_file_path_tooltip(self, treeview, iterator):
+
+        file_data = treeview.get_row_value(iterator, "file_data")
+
+        if not file_data or not treeview.get_row_value(iterator, "filename"):
             return None
 
         return file_data.path
