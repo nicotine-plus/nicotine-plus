@@ -284,7 +284,8 @@ class FileChooserButton:
         self.label = Gtk.Label(label=_("(None)"), ellipsize=Pango.EllipsizeMode.END, width_chars=3,
                                mnemonic_widget=self.chooser_button, xalign=0, visible=True)
 
-        self.open_folder_button = Gtk.Button(tooltip_text=_("Open in File Manager"), visible=False)
+        self.open_folder_button = Gtk.Button(
+            tooltip_text=_("Open in File Manager"), sensitive=False, visible=show_open_external_button)
 
         if GTK_API_VERSION >= 4:
             container.append(widget)                        # pylint: disable=no-member
@@ -394,7 +395,7 @@ class FileChooserButton:
 
         self.chooser_button.set_tooltip_text(path)
         self.label.set_label(basename)
-        self.open_folder_button.set_visible(self.show_open_external_button)
+        self.open_folder_button.set_sensitive(True)
 
     def clear(self):
 
@@ -402,4 +403,4 @@ class FileChooserButton:
 
         self.chooser_button.set_tooltip_text(None)
         self.label.set_label(_("(None)"))
-        self.open_folder_button.set_visible(False)
+        self.open_folder_button.set_sensitive(False)
