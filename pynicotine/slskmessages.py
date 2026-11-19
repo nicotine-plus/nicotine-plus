@@ -267,19 +267,17 @@ class CloseConnection(InternalMessage):
 class ServerConnect(InternalMessage):
     """Sent to the networking thread to establish a server connection."""
 
-    __slots__ = ("addr", "username", "password", "interface_name", "interface_address", "listen_port",
-                 "portmapper")
+    __slots__ = ("addr", "username", "password", "interface_name", "interface_address", "listen_port")
     HIDDEN_FIELDS = {"username", "password"}
 
     def __init__(self, addr=None, username=None, password=None, interface_name=None, interface_address=None,
-                 listen_port=None, portmapper=None):
+                 listen_port=None):
         self.addr = addr
         self.username = username
         self.password = password
         self.interface_name = interface_name
         self.interface_address = interface_address
         self.listen_port = listen_port
-        self.portmapper = portmapper
 
 
 class ServerDisconnect(InternalMessage):

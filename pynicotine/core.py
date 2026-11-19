@@ -126,7 +126,7 @@ class Core:
 
         if "network_thread" in enabled_components:
             from pynicotine.slskproto import NetworkThread
-            self._network_thread = NetworkThread()
+            self._network_thread = NetworkThread(portmapper=self.portmapper)
         else:
             events.connect("schedule-quit", self._schedule_quit)
 
@@ -289,8 +289,7 @@ class Core:
             password=config.sections["server"]["passw"],
             interface_name=config.sections["server"]["interface"],
             interface_address=self.cli_interface_address,
-            listen_port=self.cli_listen_port or config.sections["server"]["portrange"][0],
-            portmapper=self.portmapper
+            listen_port=self.cli_listen_port or config.sections["server"]["portrange"][0]
         ))
 
     def disconnect(self) -> None:

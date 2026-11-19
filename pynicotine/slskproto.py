@@ -40,6 +40,7 @@ from threading import Thread
 
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.portmapper import PortMapper
 from pynicotine.slskmessages import (
     DISTRIBUTED_MESSAGE_CLASSES,
     PEER_MESSAGE_CLASSES,
@@ -396,10 +397,11 @@ class NetworkThread(Thread):
 
         MAX_SOCKETS = 512
 
-    def __init__(self):
+    def __init__(self, portmapper: PortMapper | None):
 
         super().__init__(name="NetworkThread")
 
+        self._portmapper = portmapper
         self._message_queue = SimpleQueue()
         self._pending_peer_conns = {}
         self._pending_init_msgs = defaultdict(list)
@@ -415,7 +417,6 @@ class NetworkThread(Thread):
         self._listen_port = None
         self._interface_name = None
         self._interface_address = None
-        self._portmapper = None
         self._local_ip_address = ""
 
         self._server_conn = None
@@ -1296,8 +1297,6 @@ class NetworkThread(Thread):
             events.emit_main_thread("set-connection-stats")  # Reset connection stats
             return
 
-        self._portmapper = msg.portmapper
-
         self._manual_server_disconnect = False
         self._manual_server_reconnect = False
         self._server_timeout_time = None
@@ -1632,7 +1631,6 @@ class NetworkThread(Thread):
         if self._portmapper is not None:
             self._portmapper.remove_port_mapping(blocking=True)
             self._portmapper.set_port(port=None, local_ip_address=None)
-            self._portmapper = None
 
         self._parent = None
         self._potential_parents.clear()
