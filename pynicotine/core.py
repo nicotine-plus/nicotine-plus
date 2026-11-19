@@ -4,10 +4,10 @@
 from __future__ import annotations
 
 import os
-import signal
 import sys
 import threading
 
+from signal import SIGINT, SIGTERM, signal
 from threading import Thread
 from typing import BinaryIO
 from typing import TYPE_CHECKING
@@ -206,13 +206,17 @@ class Core:
     def _init_signal_handler(self) -> None:
         """Handle Ctrl+C and "kill" exit gracefully."""
 
-        signals = [signal.SIGINT, signal.SIGTERM]
+        signals = [SIGINT, SIGTERM]
 
-        if hasattr(signal, "SIGHUP"):
-            signals.append(signal.SIGHUP)  # Terminal was closed
+        try:
+            from signal import SIGHUP
+            signals.append(SIGHUP)  # Terminal was closed
+
+        except ImportError:
+            pass
 
         for signal_type in signals:
-            signal.signal(signal_type, lambda signal_type, _frame: self.quit(signal_type))
+            signal(signal_type, lambda signal_type, _frame: self.quit(signal_type))
 
     def _init_error_handler(self) -> None:
 
@@ -256,7 +260,7 @@ class Core:
         log.add(_("Quitting %(program)s %(version)s, %(status)s…"), {
             "program": pynicotine.__application_name__,
             "version": pynicotine.__version__,
-            "status": _("terminating") if signal_type == signal.SIGTERM else _("application closing")
+            "status": _("terminating") if signal_type == SIGTERM else _("application closing")
         })
 
         # Allow the networking thread to finish up before quitting
