@@ -79,7 +79,6 @@ class Core:
         self.notifications: Notifications | None = None
         self.port_checker: PortChecker | None = None
         self.update_checker: UpdateChecker | None = None
-        self._network_thread: NetworkThread | None = None
 
         self.cli_interface_address: str | None = None
         self.cli_listen_port: int | None = None
@@ -126,7 +125,7 @@ class Core:
 
         if "network_thread" in enabled_components:
             from pynicotine.slskproto import NetworkThread
-            self._network_thread = NetworkThread(portmapper=self.portmapper)
+            NetworkThread(portmapper=self.portmapper)
         else:
             events.connect("schedule-quit", self._schedule_quit)
 
