@@ -94,11 +94,10 @@ class NATPMP(BaseImplementation):
             self._private_port = private_port
             self._lease_duration = lease_duration
 
-        def sendto(self, sock: socket, addr, num_attempt: int) -> None:
+        def sendto(self, sock: socket, ip_address: str, port: int, num_attempt: int) -> None:
 
             msg = bytes(self)
-            ip_address, port = addr
-            sock.sendto(msg, addr)
+            sock.sendto(msg, (ip_address, port))
 
             log.add_debug(
                 "NAT-PMP: Portmap request attempt %s of %s to gateway %s, port %s: %s",
@@ -181,7 +180,7 @@ class NATPMP(BaseImplementation):
 
             for i in range(1, self.REQUEST_ATTEMPTS + 1):
                 sock.settimeout(timeout_seconds)
-                request.sendto(sock, (self._gateway_address, self.REQUEST_PORT), i)
+                request.sendto(sock, self._gateway_address, self.REQUEST_PORT, i)
 
                 try:
                     response = self.PortmapResponse(message=sock.recv(16))
@@ -273,10 +272,10 @@ class UPnP(BaseImplementation):
                 "USER-AGENT": UPnP.USER_AGENT
             }
 
-        def sendto(self, sock: socket, addr) -> None:
+        def sendto(self, sock: socket, ip_address: str, port: int) -> None:
 
             msg = bytes(self)
-            sock.sendto(msg, addr)
+            sock.sendto(msg, (ip_address, port))
 
             log.add_debug("UPnP: SSDP request sent: %s", msg)
 
@@ -402,17 +401,17 @@ class UPnP(BaseImplementation):
                 wan_igd2 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:2")
                 wan_ip2 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:2")
 
-                wan_igd2.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
-                wan_ip2.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                wan_igd2.sendto(sock, UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT)
+                wan_ip2.sendto(sock, UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT)
 
                 # Protocol 1
                 wan_igd1 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:1")
                 wan_ip1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:1")
                 wan_ppp1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANPPPConnection:1")
 
-                wan_igd1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
-                wan_ip1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
-                wan_ppp1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                wan_igd1.sendto(sock, UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT)
+                wan_ip1.sendto(sock, UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT)
+                wan_ppp1.sendto(sock, UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT)
 
                 locations = set()
                 services = {}
