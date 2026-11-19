@@ -9,13 +9,16 @@ import shutil
 
 from time import sleep
 from unittest import TestCase
-from unittest.mock import MagicMock
-from unittest.mock import Mock
+from unittest.mock import MagicMock, Mock
 
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
-from pynicotine.slskmessages import ServerConnect, SetWaitPort
+from pynicotine.slskmessages import (
+    Address,
+    ServerConnect,
+    SetWaitPort
+)
 from pynicotine.utils import encode_path
 
 DATA_FOLDER_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), "temp_data")
@@ -90,7 +93,9 @@ class SoulseekNetworkTest(TestCase):
     def test_login(self):
 
         core.send_message_to_network_thread(
-            ServerConnect(addr=("0.0.0.0", 0), username="dummy", password="dummy", listen_port=65525)
+            ServerConnect(
+                addr=Address("0.0.0.0", 0), username="dummy", password="dummy", listen_port=65525
+            )
         )
         sleep(SLSKPROTO_RUN_TIME / 2)
 

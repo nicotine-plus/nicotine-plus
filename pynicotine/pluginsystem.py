@@ -336,6 +336,7 @@ class ResponseThrottle:
         willing_to_respond = True
         reason = None
         current_time = time.monotonic()
+        addr = self.core.users.addresses.get(nick)
 
         if room not in self.plugin_usage:
             self.plugin_usage[room] = {"last_time": 0, "last_request": "", "last_nick": ""}
@@ -344,18 +345,13 @@ class ResponseThrottle:
         last_nick = self.plugin_usage[room]["last_nick"]
         last_request = self.plugin_usage[room]["last_request"]
 
-        try:
-            _ip_address, port = self.core.users.addresses[nick]
-        except Exception:
-            port = True
-
         if self.core.network_filter.is_user_ignored(nick):
             willing_to_respond, reason = False, "The nick is ignored"
 
         elif self.core.network_filter.is_user_ip_ignored(nick):
             willing_to_respond, reason = False, "The nick's Ip is ignored"
 
-        elif not port:
+        elif addr is not None and not addr.port:
             willing_to_respond, reason = False, "Request likely from simple PHP based griefer bot"
 
         elif [nick, request] == [last_nick, last_request]:
