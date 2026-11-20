@@ -560,7 +560,7 @@ class NetworkFilter:
         """Server code 3."""
 
         username = msg.username
-        ip_address = msg.ip_address
+        ip_address = msg.addr.ip
 
         if ip_address == "0.0.0.0":
             # User is offline

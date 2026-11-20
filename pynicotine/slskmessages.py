@@ -779,15 +779,14 @@ class GetPeerAddress(ServerMessage):
     and port), given the peer's username.
     """
 
-    __slots__ = ("username", "ip_address", "port", "obfuscation_type", "obfuscated_port")
+    __slots__ = ("username", "addr", "obfuscation_type", "obfuscated_port")
     CODE = 3
     EVENT_NAME = "peer-address"
 
     def __init__(self, username=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.username = username
-        self.ip_address = None
-        self.port = None
+        self.addr = None
         self.obfuscation_type = None
         self.obfuscated_port = None
 
@@ -796,8 +795,10 @@ class GetPeerAddress(ServerMessage):
 
     def parse_network_message(self) -> None:
         self.username = self.unpack_string()
-        self.ip_address = self.unpack_ip()
-        self.port = self.unpack_uint32()
+        self.addr = Address(
+            ip=self.unpack_ip(),
+            port=self.unpack_uint32()
+        )
         self.obfuscation_type = self.unpack_uint32()
         self.obfuscated_port = self.unpack_uint16()
 
@@ -1113,7 +1114,7 @@ class ConnectToPeer(ServerMessage):
     a connection to our IP address and port from their end.
     """
 
-    __slots__ = ("token", "username", "conn_type", "ip_address", "port", "privileged", "obfuscation_type",
+    __slots__ = ("token", "username", "conn_type", "addr", "privileged", "obfuscation_type",
                  "obfuscated_port")
     CODE = 18
     EVENT_NAME = "connect-to-peer"
@@ -1123,8 +1124,7 @@ class ConnectToPeer(ServerMessage):
         self.token = token
         self.username = username
         self.conn_type = conn_type
-        self.ip_address = None
-        self.port = None
+        self.addr = None
         self.privileged = None
         self.obfuscation_type = None
         self.obfuscated_port = None
@@ -1140,8 +1140,10 @@ class ConnectToPeer(ServerMessage):
     def parse_network_message(self) -> None:
         self.username = self.unpack_string()
         self.conn_type = self.unpack_string()
-        self.ip_address = self.unpack_ip()
-        self.port = self.unpack_uint32()
+        self.addr = Address(
+            ip=self.unpack_ip(),
+            port=self.unpack_uint32()
+        )
         self.token = self.unpack_uint32()
         self.privileged = self.unpack_bool()
         self.obfuscation_type = self.unpack_uint32()
@@ -1948,7 +1950,7 @@ class TunneledMessage(ServerMessage):
     OBSOLETE, no longer used
     """
 
-    __slots__ = ("username", "token", "code", "message", "ip_address", "port")
+    __slots__ = ("username", "token", "code", "message", "addr")
     CODE = 68
 
     def __init__(self, username=None, token=None, code=None, message=None, *, msg_content=None):
@@ -1957,8 +1959,7 @@ class TunneledMessage(ServerMessage):
         self.token = token
         self.code = code
         self.message = message
-        self.ip_address = None
-        self.port = None
+        self.addr = None
 
     def make_network_message(self) -> bytearray:
         msg = bytearray()
@@ -1973,8 +1974,10 @@ class TunneledMessage(ServerMessage):
         self.username = self.unpack_string()
         self.code = self.unpack_uint32()
         self.token = self.unpack_uint32()
-        self.ip_address = self.unpack_ip()
-        self.port = self.unpack_uint32()
+        self.addr = Address(
+            ip=self.unpack_ip(),
+            port=self.unpack_uint32()
+        )
         self.message = self.unpack_string()
 
 

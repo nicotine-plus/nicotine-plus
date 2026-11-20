@@ -1442,7 +1442,7 @@ class NetworkThread(Thread):
 
         elif isinstance(msg, ConnectToPeer):
             username = msg.username
-            addr = Address(msg.ip_address, msg.port)
+            addr = msg.addr
             conn_type = msg.conn_type
             pierce_token = msg.token
 
@@ -1470,12 +1470,12 @@ class NetworkThread(Thread):
         elif isinstance(msg, GetPeerAddress):
             username = msg.username
             pending_init_msgs = self._pending_init_msgs.pop(msg.username, [])
+            addr = msg.addr
+            ip_address, port = addr
+            user_offline = (ip_address == "0.0.0.0")
 
-            if not msg.port:
+            if not port:
                 log.add_conn("Server reported port 0 for user %s", username)
-
-            addr = Address(msg.ip_address, msg.port)
-            user_offline = (msg.ip_address == "0.0.0.0")
 
             for init in pending_init_msgs:
                 # We now have the IP address for a user we previously didn't know,
@@ -1489,7 +1489,7 @@ class NetworkThread(Thread):
 
             # We already store a local IP address for our username
             if username != self._login_username and username in self._user_addresses:
-                if user_offline or not msg.port:
+                if user_offline or not port:
                     self._user_addresses[username] = None
                 else:
                     self._user_addresses[username] = UserAddress(addr)

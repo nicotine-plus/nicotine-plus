@@ -299,7 +299,8 @@ class Users:
 
         username = msg.username
         notify = self._ip_requested.pop(username, None)
-        ip_address = msg.ip_address
+        addr = msg.addr
+        ip_address, port = addr
         user_offline = (ip_address == "0.0.0.0")
         country_code = core.network_filter.get_country_code(ip_address)
         watched_user = self.watched.get(username)
@@ -318,16 +319,16 @@ class Users:
             # address.
 
             if username != self.login_username:
-                self.addresses[username] = Address(ip_address, msg.port)
+                self.addresses[username] = Address(ip_address, port)
 
             self.countries[username] = watched_user.stats.country_code = country_code
             events.emit("user-country", username, country_code)
 
         if not notify:
-            core.pluginhandler.user_resolve_notification(username, ip_address, msg.port)
+            core.pluginhandler.user_resolve_notification(username, ip_address, port)
             return
 
-        core.pluginhandler.user_resolve_notification(username, ip_address, msg.port, country_code)
+        core.pluginhandler.user_resolve_notification(username, ip_address, port, country_code)
 
         if user_offline:
             self._user_ip_address_offline(username)
@@ -341,8 +342,8 @@ class Users:
 
         log.add(_("IP address of user %(user)s: %(ip)s, port %(port)i%(country)s"), {
             "user": username,
-            "ip": msg.ip_address,
-            "port": msg.port,
+            "ip": ip_address,
+            "port": port,
             "country": country
         }, title=_("User IP Address"))
 
