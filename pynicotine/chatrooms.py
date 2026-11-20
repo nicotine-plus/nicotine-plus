@@ -54,16 +54,16 @@ from pynicotine.utils import (
 class JoinedRoom:
     name: str
     is_private: bool = False
-    users: set[str] = field(default_factory=set)
-    tickers: dict[str, str] = field(default_factory=dict)
+    users: set[str] = field(default_factory=set[str])
+    tickers: dict[str, str] = field(default_factory=dict[str, str])
 
 
 @dataclass(slots=True, eq=False)
 class PrivateRoom:
     name: str
     owner: str | None = None
-    members: set[str] = field(default_factory=set)
-    operators: set[str] = field(default_factory=set)
+    members: set[str] = field(default_factory=set[str])
+    operators: set[str] = field(default_factory=set[str])
 
 
 class ChatRooms:
@@ -203,7 +203,7 @@ class ChatRooms:
             self.remove_room(room_name, is_permanent)
 
     @classmethod
-    def sanitize_room_name(cls, room_name) -> str:
+    def sanitize_room_name(cls, room_name: str) -> str:
         """Sanitize room name according to server requirements."""
 
         # Replace non-ASCII characters
@@ -216,13 +216,13 @@ class ChatRooms:
         room_name = room_name[:cls.ROOM_NAME_MAX_LENGTH]
         return room_name
 
-    def clear_room_messages(self, room_name) -> None:
+    def clear_room_messages(self, room_name: str) -> None:
         events.emit("clear-room-messages", room_name)
 
-    def echo_message(self, room_name, message, message_type="local") -> None:
+    def echo_message(self, room_name: str, message, message_type="local") -> None:
         events.emit("echo-room-message", room_name, message, message_type)
 
-    def send_message(self, room_name, message) -> None:
+    def send_message(self, room_name: str, message) -> None:
 
         if core.users.login_status == UserStatus.OFFLINE:
             return
@@ -245,40 +245,40 @@ class ChatRooms:
         core.send_message_to_server(SayChatroom(room_name=room_name, message=message))
         core.pluginhandler.outgoing_public_chat_notification(room_name, message)
 
-    def request_remove_room_operator(self, room_name, username) -> None:
+    def request_remove_room_operator(self, room_name: str, username: str) -> None:
         core.send_message_to_server(RemoveRoomOperator(room_name=room_name, username=username))
 
-    def request_add_room_member(self, room_name, username) -> None:
+    def request_add_room_member(self, room_name: str, username: str) -> None:
         core.send_message_to_server(AddRoomMember(room_name=room_name, username=username))
 
-    def request_add_room_operator(self, room_name, username) -> None:
+    def request_add_room_operator(self, room_name: str, username: str) -> None:
         core.send_message_to_server(AddRoomOperator(room_name=room_name, username=username))
 
-    def request_remove_room_member(self, room_name, username) -> None:
+    def request_remove_room_member(self, room_name: str, username: str) -> None:
         core.send_message_to_server(RemoveRoomMember(room_name=room_name, username=username))
 
-    def is_room_owner(self, room_name) -> bool:
+    def is_room_owner(self, room_name: str) -> bool:
         private_room = self.private_rooms.get(room_name)
         return private_room is not None and private_room.owner == core.users.login_username
 
-    def is_room_member(self, room_name) -> bool:
+    def is_room_member(self, room_name: str) -> bool:
         return room_name in self.private_rooms
 
-    def is_room_operator(self, room_name) -> bool:
+    def is_room_operator(self, room_name: str) -> bool:
         private_room = self.private_rooms.get(room_name)
         return private_room is not None and core.users.login_username in private_room.operators
 
     def request_room_list(self) -> None:
         core.send_message_to_server(RoomList())
 
-    def request_cancel_room_ownership(self, room_name) -> None:
+    def request_cancel_room_ownership(self, room_name: str) -> None:
 
         if not self.is_room_owner(room_name):
             return
 
         core.send_message_to_server(CancelRoomOwnership(room_name))
 
-    def request_cancel_room_membership(self, room_name) -> None:
+    def request_cancel_room_membership(self, room_name: str) -> None:
 
         if not self.is_room_member(room_name):
             return
@@ -288,10 +288,10 @@ class ChatRooms:
     def request_enable_room_invitations(self, enabled: bool) -> None:
         core.send_message_to_server(EnableRoomInvitations(enabled))
 
-    def request_update_ticker(self, room_name, message) -> None:
+    def request_update_ticker(self, room_name: str, message) -> None:
         core.send_message_to_server(SetRoomTicker(room_name=room_name, message=message))
 
-    def _update_room_user(self, room, user_stats: UserStats) -> None:
+    def _update_room_user(self, room: JoinedRoom, user_stats: UserStats) -> None:
 
         username = user_stats.username
         room.users.add(username)
@@ -308,7 +308,7 @@ class ChatRooms:
         if username not in core.users.addresses:
             core.users.request_ip_address(username)
 
-    def _update_private_room(self, room_name, owner=None, members=None, operators=None) -> None:
+    def _update_private_room(self, room_name: str, owner=None, members=None, operators=None) -> None:
 
         private_room = self.private_rooms.get(room_name)
 

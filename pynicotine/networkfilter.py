@@ -283,8 +283,8 @@ class NetworkFilter:
 
         self._banned_users: set[str] = set()
         self._ignored_users: set[str] = set()
-        self._ip_ban_requested = {}
-        self._ip_ignore_requested = {}
+        self._ip_ban_requested: dict[str, Literal["add", "remove"]] = {}
+        self._ip_ignore_requested: dict[str, Literal["add", "remove"]] = {}
         self._ip_range_values = ()
         self._ip_range_countries = ()
         self._loaded_ip_country_data = False
@@ -451,7 +451,7 @@ class NetworkFilter:
 
         return None
 
-    def get_country_code(self, ip_address):
+    def get_country_code(self, ip_address: str) -> str:
 
         if not self._loaded_ip_country_data:
             self._populate_ip_country_data()
