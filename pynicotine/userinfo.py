@@ -33,8 +33,8 @@ class UserInfo:
 
     def __init__(self):
 
-        self.users = set()
-        self._requested_info_times = {}
+        self.users: set[str] = set()
+        self._requested_info_times: dict[str, float] = {}
 
         for event_name, callback in (
             ("peer-connection-closed", self._peer_connection_error),

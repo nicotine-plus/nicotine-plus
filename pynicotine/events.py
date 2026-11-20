@@ -234,9 +234,9 @@ class Events:
     def __init__(self):
 
         self._callbacks = defaultdict(list)
-        self._thread_events = SimpleQueue()
-        self._pending_scheduler_events = SimpleQueue()
-        self._scheduler_events = {}
+        self._thread_events: SimpleQueue[ThreadEvent] = SimpleQueue()
+        self._pending_scheduler_events: SimpleQueue[SchedulerEvent] = SimpleQueue()
+        self._scheduler_events: dict[int, SchedulerEvent] = {}
         self._scheduler_event_id = 0
         self._scheduler_thread = None
         self._is_active = False

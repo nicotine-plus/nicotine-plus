@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 import os
 
+from collections.abc import Iterator
 from concurrent.futures import Future, ProcessPoolExecutor, ThreadPoolExecutor
 from dataclasses import dataclass, field
 from enum import StrEnum
@@ -49,8 +50,8 @@ class BrowsedUser:
     num_folders: int | None = None
     num_files: int | None = None
     shared_size: int | None = None
-    public_folders: dict[str, list[SharedFile]] = field(default_factory=dict)
-    private_folders: dict[str, list[SharedFile]] = field(default_factory=dict)
+    public_folders: dict[str, list[SharedFile]] = field(default_factory=dict[str, list[SharedFile]])
+    private_folders: dict[str, list[SharedFile]] = field(default_factory=dict[str, list[SharedFile]])
     saving: bool = False
 
     def clear(self) -> None:
@@ -65,7 +66,7 @@ class UserBrowse:
 
     def __init__(self):
 
-        self.users = {}
+        self.users: dict[str, BrowsedUser] = {}
         self.user_shares_folder = os.path.join(config.data_folder_path, "usershares")
         self._task_pools: dict[TaskType, ProcessPoolExecutor | ThreadPoolExecutor] = {}
 
@@ -96,7 +97,7 @@ class UserBrowse:
         for username in self.users:
             core.users.watch_user(username, context="userbrowse")  # Get notified of user status
 
-    def browse_user(self, username: str, path=None, new_request=False, switch_page=True) -> None:
+    def browse_user(self, username: str, path=None, new_request: bool = False, switch_page: bool = True) -> None:
         """Browse a user's shares."""
 
         if not username:
@@ -233,7 +234,9 @@ class UserBrowse:
         )
         future.add_done_callback(finish_task)
 
-    def iter_matching_folders(self, requested_folder_path: str, browsed_user: BrowsedUser, recurse: bool = False):
+    def iter_matching_folders(
+        self, requested_folder_path: str, browsed_user: BrowsedUser, recurse: bool = False
+    ) -> Iterator[tuple[str, list[SharedFile]]]:
 
         for folders in (browsed_user.public_folders, browsed_user.private_folders):
             for folder_path, files in folders.items():
@@ -247,7 +250,7 @@ class UserBrowse:
                     return
 
     def download_file(
-        self, username: str, folder_path: str, file_data, download_folder_path: str | None = None
+        self, username: str, folder_path: str, file_data: SharedFile, download_folder_path: str | None = None
     ) -> None:
 
         core.downloads.enqueue_download(
@@ -256,7 +259,7 @@ class UserBrowse:
         )
 
     def download_folder(
-        self, username: str, requested_folder_path, download_folder_path: str | None = None,
+        self, username: str, requested_folder_path: str, download_folder_path: str | None = None,
         recurse: bool = False, check_num_files: bool = True
     ) -> None:
 
@@ -267,7 +270,7 @@ class UserBrowse:
 
         num_files = 0
 
-        for folder_path, files in self.iter_matching_folders(
+        for _folder_path, files in self.iter_matching_folders(
             requested_folder_path, browsed_user=browsed_user, recurse=recurse
         ):
             num_files += len(files)
@@ -298,7 +301,7 @@ class UserBrowse:
                     file_attributes=file_data.attributes
                 )
 
-    def upload_file(self, username: str, folder_path: str, basename) -> None:
+    def upload_file(self, username: str, folder_path: str, basename: str) -> None:
         core.uploads.enqueue_upload(username, virtual_path="\\".join([folder_path, basename]))
 
     def upload_folder(

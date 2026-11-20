@@ -75,11 +75,11 @@ class Uploads(Transfers):
         self.upload_speed = 0
 
         self._token = initial_token()
-        self._queue_positions = {}
-        self._queue_position_users = defaultdict(dict)
-        self._queue_notification_users = defaultdict(list)
+        self._queue_positions: dict[Transfer, int] = {}
+        self._queue_position_users: defaultdict[str, dict[Transfer, int]] = defaultdict(dict)
+        self._queue_notification_users: defaultdict[str, list[Transfer]] = defaultdict(list)
         self._privileged_position_requested = False
-        self._pending_network_msgs = []
+        self._pending_network_msgs: list[QueueUpload] = []
         self._user_update_counter = 0
         self._user_update_counters: dict[str, int] = {}
 
@@ -203,7 +203,7 @@ class Uploads(Transfers):
 
         return new_size
 
-    def get_downloading_users(self):
+    def get_downloading_users(self) -> set[str]:
         return set(self.active_users).union(self.queued_users)
 
     def get_total_uploads_allowed(self) -> int:
@@ -498,7 +498,7 @@ class Uploads(Transfers):
 
         return True, None, real_path, size
 
-    def _check_backslash_path_exists(self, username: str, virtual_path):
+    def _check_backslash_path_exists(self, username: str, virtual_path: str):
         """Replace a backslash sentinel with an actual backslash in a file path, and check
         if a file for the resulting path exists and is shared."""
 
@@ -905,7 +905,9 @@ class Uploads(Transfers):
             if isinstance(msg, (TransferRequest, FileTransferInit)):
                 self._cant_connect_upload(username, msg.token, is_offline, is_timeout)
 
-    def _peer_connection_closed(self, username: str, conn_type: ConnectionType, msgs, is_offline=False) -> None:
+    def _peer_connection_closed(
+        self, username: str, conn_type: ConnectionType, msgs, is_offline: bool = False
+    ) -> None:
         self._peer_connection_error(username, conn_type, msgs, is_offline, is_timeout=False)
 
     def _cant_connect_upload(self, username: str, token: int, is_offline: bool, is_timeout: bool) -> None:
@@ -1176,7 +1178,7 @@ class Uploads(Transfers):
         log.add(_("Upload I/O error: %s"), error)
         self._check_upload_queue()
 
-    def _file_upload_init(self, username: str, token: int, sock) -> None:
+    def _file_upload_init(self, username: str, token: int, sock: socket) -> None:
         """We are requesting to start uploading a file to a peer."""
 
         upload = self.active_users.get(username, {}).get(token)
@@ -1258,7 +1260,7 @@ class Uploads(Transfers):
         ):
             self._update_transfer(upload)
 
-    def _file_connection_closed(self, username: str, token: int, sock, timed_out) -> None:
+    def _file_connection_closed(self, username: str, token: int, sock, timed_out: bool) -> None:
         """A file upload connection has closed for any reason."""
 
         upload = self.active_users.get(username, {}).get(token)

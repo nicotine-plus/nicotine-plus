@@ -43,11 +43,11 @@ class PrivateChat:
 
     def __init__(self):
 
-        self.completions = set()
-        self.users = set()
-        self._away_message_users = set()
-        self._private_message_queue = {}
-        self._ctcp_query_times = {}
+        self.completions: set[str] = set()
+        self.users: set[str] = set()
+        self._away_message_users: set[str] = set()
+        self._private_message_queue: dict[str, list[MessageUser]] = {}
+        self._ctcp_query_times: dict[str, float] = {}
 
         for event_name, callback in (
             ("message-user", self._message_user),
