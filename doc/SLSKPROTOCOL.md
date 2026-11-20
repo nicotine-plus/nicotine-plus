@@ -200,7 +200,7 @@ please report them.
 | `User limit of x files exceeded`     | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
 
 
-## Reserved File/Folder Path Specifiers
+## Reserved Path Specifiers
 
 | Specifier | Description                                       |
 |-----------|---------------------------------------------------|
@@ -1369,16 +1369,20 @@ sources.
 
   - Send
     1.  **uint32** *token*
-    2.  **string** *file path*
-    3.  **string** *folder path*
+    2.  **string** *file path*  
+        See [Reserved Path Specifiers](#reserved-path-specifiers)
+    3.  **string** *folder path*  
+        See [Reserved Path Specifiers](#reserved-path-specifiers)
     4.  **uint64** *file size*
     5.  **uint32** *checksum*
     6.  **uint8** *unknown*
   - Receive
     1.  **string** *username*
     2.  **uint32** *token*
-    3.  **string** *file path*
-    4.  **string** *folder path*
+    3.  **string** *file path*  
+        See [Reserved Path Specifiers](#reserved-path-specifiers)
+    4.  **string** *folder path*  
+        See [Reserved Path Specifiers](#reserved-path-specifiers)
     5.  **uint64** *file size*
     6.  **uint32** *checksum*
 
@@ -2641,7 +2645,8 @@ A peer responds with a list of shared files after we've sent a
   - Send
     1.  **uint32** *number of folders*
     2.  Iterate *number of folders*
-        1.  **string** *folder path*
+        1.  **string** *folder path*  
+            See [Reserved Path Specifiers](#reserved-path-specifiers)
         2.  **uint32** *number of files*
         3.  Iterate *number of files*
             1.  **uint8** *code*  
@@ -2658,7 +2663,8 @@ A peer responds with a list of shared files after we've sent a
         Official clients always send a value of `0`
     4.  **uint32** *number of private folders*
     5.  Iterate *number of private folders*
-        1.  **string** *folder path*
+        1.  **string** *folder path*  
+            See [Reserved Path Specifiers](#reserved-path-specifiers)
         2.  **uint32** *number of files*
         3.  Iterate *number of files*
             1.  **uint8** *code*  
@@ -2676,7 +2682,8 @@ A peer responds with a list of shared files after we've sent a
     1.  zlib decompress
     2.  **uint32** *number of folders*
     3.  Iterate *number of folders*
-        1.  **string** *folder path*
+        1.  **string** *folder path*  
+            See [Reserved Path Specifiers](#reserved-path-specifiers)
         2.  **uint32** *number of files*
         3.  Iterate *number of files*
             1.  **uint8** *code*  
@@ -2695,7 +2702,8 @@ A peer responds with a list of shared files after we've sent a
     5.  Optional
         1.  **uint32** *number of private folders*
         2.  Iterate *number of private folders*
-            1.  **string** *folder path*
+            1.  **string** *folder path*  
+                See [Reserved Path Specifiers](#reserved-path-specifiers)
             2.  **uint32** *number of files*
             3.  Iterate *number of files*
                 1.  **uint8** *code*  
@@ -2746,7 +2754,8 @@ from original [FileSearch](#server-code-26), [UserSearch](#server-code-42) or
     4.  Iterate for *number of results*
         1.  **uint8** *code*  
             Value is always `1`
-        2.  **string** *file path*
+        2.  **string** *file path*  
+            See [Reserved Path Specifiers](#reserved-path-specifiers)
         3.  **uint64** *file size*
         4.  **string** *file extension*  
             SoulseekNS requires `mp3` to show attributes
@@ -2764,7 +2773,8 @@ from original [FileSearch](#server-code-26), [UserSearch](#server-code-42) or
     10. Iterate for *number of privately shared results*
         1.  **uint8** *code*
             Value is always `1`
-        2.  **string** *file path*
+        2.  **string** *file path*  
+            See [Reserved Path Specifiers](#reserved-path-specifiers)
         3.  **uint64** *file size*
         4.  **string** *file extension*  
             SoulseekNS requires `mp3` to show attributes
@@ -2782,7 +2792,8 @@ from original [FileSearch](#server-code-26), [UserSearch](#server-code-42) or
     5.  Iterate for *number of results*
         1.  **uint8** *code*
             Value is always `1`
-        2.  **string** *file path*
+        2.  **string** *file path*  
+            See [Reserved Path Specifiers](#reserved-path-specifiers)
         3.  **uint64** *file size*
         4.  **string** *file extension*  
             Always blank from SoulseekQt clients
@@ -2802,7 +2813,8 @@ from original [FileSearch](#server-code-26), [UserSearch](#server-code-42) or
         2.  Iterate for *number of privately shared results*
             1.  **uint8** *code*  
                 Value is always `1`
-            2.  **string** *file path*
+            2.  **string** *file path*  
+                See [Reserved Path Specifiers](#reserved-path-specifiers)
             3.  **uint64** *file size*
             4.  **string** *file extension*  
                 Always blank from SoulseekQt clients
@@ -2890,10 +2902,12 @@ after we've sent a [FolderContentsRequest](#peer-code-36).
 
   - Send
     1.  **uint32** *token*
-    2.  **string** *folder path*
+    2.  **string** *folder path*  
+        See [Reserved Path Specifiers](#reserved-path-specifiers)
     3.  **uint32** *number of folders*
     4.  Iterate for *number of folders*
-        1.  **string** *folder path*
+        1.  **string** *folder path*  
+            See [Reserved Path Specifiers](#reserved-path-specifiers)
         2.  **uint32** *number of files*
         3.  Iterate *number of files*
             1.  **uint8** *code*
@@ -2911,10 +2925,12 @@ after we've sent a [FolderContentsRequest](#peer-code-36).
   - Receive
     1.  zlib decompress
     2.  **uint32** *token*
-    3.  **string** *folder path*
+    3.  **string** *folder path*  
+        See [Reserved Path Specifiers](#reserved-path-specifiers)
     4.  **uint32** *number of folders*
     5.  Iterate for *number of folders*
-        1.  **string** *folder path*
+        1.  **string** *folder path*  
+            See [Reserved Path Specifiers](#reserved-path-specifiers)
         2.  **uint32** *number of files*
         3.  Iterate *number of files*
             1.  **uint8** *code*  
@@ -2950,14 +2966,16 @@ still understand such requests.
     1.  **uint32** *direction*  
         See [Transfer Directions](#transfer-directions)
     2.  **uint32** *token*
-    3.  **string** *file path*
+    3.  **string** *file path*  
+        See [Reserved Path Specifiers](#reserved-path-specifiers)
     4.  If direction == 1 (upload)
         1.  **uint64** *file size*
   - Receive
     1.  **uint32** *direction*  
         See [Transfer Directions](#transfer-directions)
     2.  **uint32** *token*
-    3.  **string** *file path*
+    3.  **string** *file path*  
+        See [Reserved Path Specifiers](#reserved-path-specifiers)
     4.  If direction == 1 (upload)
         1.  **uint64** *file size*
 
@@ -3031,9 +3049,11 @@ We either accept the upload request, or tell the reason for rejecting it.
 ### Data Order
 
   - Send
-    1.  **string** *file path*
+    1.  **string** *file path*  
+        See [Reserved Path Specifiers](#reserved-path-specifiers)
   - Receive
-    1.  **string** *file path*
+    1.  **string** *file path*  
+        See [Reserved Path Specifiers](#reserved-path-specifiers)
 
 
 ## Peer Code 43
@@ -3047,9 +3067,11 @@ send a [TransferRequest](#peer-code-40) to us.
 ### Data Order
 
   - Send
-    1.  **string** *file path*
+    1.  **string** *file path*  
+        See [Reserved Path Specifiers](#reserved-path-specifiers)
   - Receive
-    1.  **string** *file path*
+    1.  **string** *file path*  
+        See [Reserved Path Specifiers](#reserved-path-specifiers)
 
 
 ## Peer Code 44
@@ -3061,10 +3083,12 @@ The peer replies with the upload queue placement of the requested file.
 ### Data Order
 
   - Send
-    1.  **string** *file path*
+    1.  **string** *file path*  
+        See [Reserved Path Specifiers](#reserved-path-specifiers)
     2.  **uint32** *place*
   - Receive
-    1.  **string** *file path*
+    1.  **string** *file path*  
+        See [Reserved Path Specifiers](#reserved-path-specifiers)
     2.  **uint32** *place*
 
 
@@ -3080,9 +3104,11 @@ the message if the transfer finished.
 ### Data Order
 
   - Send
-    1.  **string** *file path*
+    1.  **string** *file path*  
+        See [Reserved Path Specifiers](#reserved-path-specifiers)
   - Receive
-    1.  **string** *file path*
+    1.  **string** *file path*  
+        See [Reserved Path Specifiers](#reserved-path-specifiers)
 
 
 ## Peer Code 50
@@ -3096,11 +3122,13 @@ list of the recipient.
 ### Data Order
 
   - Send
-    1.  **string** *file path*
+    1.  **string** *file path*  
+        See [Reserved Path Specifiers](#reserved-path-specifiers)
     2.  **string** *reason*  
         See [Transfer Rejection Reasons](#transfer-rejection-reasons)
   - Receive
-    1.  **string** *file path*
+    1.  **string** *file path*  
+        See [Reserved Path Specifiers](#reserved-path-specifiers)
     2.  **string** *reason*  
         See [Transfer Rejection Reasons](#transfer-rejection-reasons)
 
@@ -3114,9 +3142,11 @@ This message is sent when asking for the upload queue placement of a file.
 ### Data Order
 
   - Send
-    1.  **string** *file path*
+    1.  **string** *file path*  
+        See [Reserved Path Specifiers](#reserved-path-specifiers)
   - Receive
-    1.  **string** *file path*
+    1.  **string** *file path*  
+        See [Reserved Path Specifiers](#reserved-path-specifiers)
 
 
 ## Peer Code 52
