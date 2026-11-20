@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on November 18, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on November 20, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -198,6 +198,14 @@ please report them.
 | `Remote file error`                  | Sent by Soulseek NS in response to legacy download requests |
 | `User limit of x megabytes exceeded` | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
 | `User limit of x files exceeded`     | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
+
+
+## Reserved File/Folder Path Specifiers
+
+| Specifier | Description                                       |
+|-----------|---------------------------------------------------|
+| `\`       | Path separator, only backslash is valid           |
+| `@@abcde` | Randomized share root prefix (used by SoulseekQt) |
 
 
 ## File Attribute Types
