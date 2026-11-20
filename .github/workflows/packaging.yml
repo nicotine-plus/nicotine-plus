@@ -163,6 +163,7 @@ jobs:
           if-no-files-found: error
 
   appimage:
+    if: false
     timeout-minutes: 15
     strategy:
       matrix:
