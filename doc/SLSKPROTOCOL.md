@@ -586,17 +586,14 @@ response. As a consequence, stats can be outdated.
         1.  **uint32** *status*  
             See [User Status Codes](#user-status-codes)
         2.  **uint32** *upload speed*
-        3.  **uint32** *upload number*  
-            Number of uploaded files, previously used for number of downloaded
-            files in old versions of Soulseek. Used to grow indefinitely, but
-            now rolls over after a certain point. The value increments when
-            sending a [SendUploadSpeed](#server-code-121) server message.
-        4.  **uint32** *unknown*
+        3.  **uint32** *upload number* `DEPRECATED`
+        4.  **uint32** *unknown* `OBSOLETE`  
+            Value is always `0`
         5.  **uint32** *number of files*
         6.  **uint32** *number of folders*
         7.  If *status* is away/online
-            1.  **string** *country code*  
-                Uppercase country code
+            1.  **string** *country code* `DEPRECATED`  
+                Uppercase country code (discouraged due to outdated country data)
 
 
 ## Server Code 6
@@ -726,18 +723,19 @@ Requirements include:
     6.  **uint32** *number of user stats*
     7.  Iterate for *number of user stats*
         1.  **uint32** *upload speed*
-        2.  **uint32** *upload number*
-        3.  **uint32** *unknown*
+        2.  **uint32** *upload number* `DEPRECATED`
+        3.  **uint32** *unknown* `OBSOLETE`  
+            Value is always `0`
         4.  **uint32** *number of files*
         5.  **uint32** *number of folders*
     8.  **uint32** *number of slots full*
     9.  Iterate for *number of slots full*
-        1.  **uint32** *slots full*  
+        1.  **uint32** *slots full* `OBSOLETE`  
             Boolean value `1` or `0`, see [UploadSlotsFull](#server-code-40)
     10. **uint32** *number of user country codes*
     11. Iterate for *number of user country codes*
-        1.  **string** *country code*  
-            Uppercase country code
+        1.  **string** *country code* `DEPRECATED`  
+            Uppercase country code (discouraged due to outdated country data)
     12. If private room
         1.  **string** *owner*
         2.  **uint32** *number of operators in room*
@@ -774,14 +772,15 @@ The server tells us someone has just joined a room we're in.
     2.  **string** *username*
     3.  **uint32** *status*
     4.  **uint32** *upload speed*
-    5.  **uint32** *upload number*
-    6.  **uint32** *unknown*
+    5.  **uint32** *upload number* `DEPRECATED`
+    6.  **uint32** *unknown* `OBSOLETE`  
+        Value is always `0`
     7.  **uint32** *number of files*
     8.  **uint32** *number of folders*
-    9.  **uint32** *slots full*  
+    9.  **uint32** *slots full* `OBSOLETE`  
         Boolean value `1` or `0`, see [UploadSlotsFull](#server-code-40)
-    10. **string** *country code*  
-        Uppercase country code
+    10. **string** *country code* `DEPRECATED`  
+        Uppercase country code (discouraged due to outdated country data)
 
 
 ## Server Code 17
@@ -1016,6 +1015,12 @@ The server sends this to indicate a change in a user's stats, if we have
 joined the same chat room. We can also request a user's stats by sending
 the message to the server.
 
+The server increments the value of the upload number attribute when
+receiving a [SendUploadSpeed](#server-code-121) message, and rolls it over
+after a certain point. In old versions of Soulseek, the attribute was
+connected to the [SendDownloadSpeed](#server-code-34) message instead,
+and never rolled over.
+
 ### Data Order
 
   - Send
@@ -1023,8 +1028,9 @@ the message to the server.
   - Receive
     1.  **string** *username*
     2.  **uint32** *upload speed*
-    3.  **uint32** *upload number*
-    4.  **uint32** *unknown*
+    3.  **uint32** *upload number* `DEPRECATED`  
+    4.  **uint32** *unknown* `OBSOLETE`  
+        Value is always `0`
     5.  **uint32** *number of files*
     6.  **uint32** *number of folders*
 
@@ -1423,18 +1429,19 @@ We send this to get a global list of all users online.
     5.  **uint32** *number of user stats*
     6.  Iterate for *number of user stats*
         1.  **uint32** *upload speed*
-        2.  **uint32** *upload number*
-        3.  **uint32** *unknown*
+        2.  **uint32** *upload number* `DEPRECATED`
+        3.  **uint32** *unknown* `OBSOLETE`  
+            Value is always `0`
         4.  **uint32** *number of files*
         5.  **uint32** *number of folders*
     7.  **uint32** *number of slots full*
     8.  Iterate for *number of slots full*
-        1.  **uint32** *slots full*  
+        1.  **uint32** *slots full* `OBSOLETE`  
             Boolean value `1` or `0`, see [UploadSlotsFull](#server-code-40)
     9. **uint32** *number of user country codes*
     10. Iterate for *number of user country codes*
-        1.  **string** *country code*  
-            Uppercase country code
+        1.  **string** *country code* `DEPRECATED`  
+            Uppercase country code (discouraged due to outdated country data)
 
 
 ## Server Code 68
@@ -2653,14 +2660,15 @@ A peer responds with a list of shared files after we've sent a
                 Value is always `1`
             2.  **string** *basename*
             3.  **uint64** *file size*
-            4.  **string** *file extension*
+            4.  **string** *file extension* `DEPRECATED`  
+                Always empty in modern clients (historically `mp3` in Soulseek NS)
             5.  **uint32** *number of attributes*
             6.  Iterate for *number of attributes*
                 1.  **uint32** *attribute code*  
                     See [File Attribute Types](#file-attribute-types)
                 2.  **uint32** *attribute value*
-    3.  **uint32** *unknown*  
-        Official clients always send a value of `0`
+    3.  **uint32** *unknown* `OBSOLETE`  
+        Value is always `0`
     4.  **uint32** *number of private folders*
     5.  Iterate *number of private folders*
         1.  **string** *folder path*  
@@ -2671,7 +2679,8 @@ A peer responds with a list of shared files after we've sent a
                 Value is always `1`
             2.  **string** *basename*
             3.  **uint64** *file size*
-            4.  **string** *file extension*
+            4.  **string** *file extension* `DEPRECATED`  
+                Always empty in modern clients (historically `mp3` in Soulseek NS)
             5.  **uint32** *number of attributes*
             6.  Iterate for *number of attributes*
                 1.  **uint32** *attribute code*  
@@ -2690,15 +2699,16 @@ A peer responds with a list of shared files after we've sent a
                 Value is always `1`
             2.  **string** *basename*
             3.  **uint64** *file size*
-            4.  **string** *file extension*
+            4.  **string** *file extension* `DEPRECATED`  
+                Always empty in modern clients (historically `mp3` in Soulseek NS)
             5.  **uint32** *number of attributes*
             6.  Iterate for *number of attributes*
                 1.  **uint32** *attribute code*  
                     See [File Attribute Types](#file-attribute-types)
                 2.  **uint32** *attribute value*
     4.  Optional
-        1.  **uint32** *unknown*  
-            Official clients always send a value of `0`
+        1.  **uint32** *unknown* `OBSOLETE`  
+            Value is always `0`
     5.  Optional
         1.  **uint32** *number of private folders*
         2.  Iterate *number of private folders*
@@ -2710,7 +2720,8 @@ A peer responds with a list of shared files after we've sent a
                     Value is always `1`
                 2.  **string** *basename*
                 3.  **uint64** *file size*
-                4.  **string** *file extension*
+                4.  **string** *file extension* `DEPRECATED`  
+                    Always empty in modern clients (historically `mp3` in Soulseek NS)
                 5.  **uint32** *number of attributes*
                 6.  Iterate for *number of attributes*
                     1.  **uint32** *attribute code*  
@@ -2757,8 +2768,8 @@ from original [FileSearch](#server-code-26), [UserSearch](#server-code-42) or
         2.  **string** *file path*  
             See [Reserved Path Specifiers](#reserved-path-specifiers)
         3.  **uint64** *file size*
-        4.  **string** *file extension*  
-            SoulseekNS requires `mp3` to show attributes
+        4.  **string** *file extension* `DEPRECATED`  
+            Always empty in modern clients (historically `mp3` in Soulseek NS)
         5.  **uint32** *number of attributes*
         6.  Iterate for *number of attributes*
             1.  **uint32** *attribute code*  
@@ -2767,17 +2778,17 @@ from original [FileSearch](#server-code-26), [UserSearch](#server-code-42) or
     5.  **bool** *slot available*
     6.  **uint32** *upload speed*
     7.  **uint32** *number of queued uploads*
-    8.  **uint32** *unknown*
-        Official clients always send a value of `0`
+    8.  **uint32** *unknown* `OBSOLETE`  
+        Value is always `0`
     9.  **uint32** *number of privately shared results*
     10. Iterate for *number of privately shared results*
-        1.  **uint8** *code*
+        1.  **uint8** *code*  
             Value is always `1`
         2.  **string** *file path*  
             See [Reserved Path Specifiers](#reserved-path-specifiers)
         3.  **uint64** *file size*
-        4.  **string** *file extension*  
-            SoulseekNS requires `mp3` to show attributes
+        4.  **string** *file extension* `DEPRECATED`  
+            Always empty in modern clients (historically `mp3` in Soulseek NS)
         5.  **uint32** *number of attributes*
         6.  Iterate for *number of attributes*
             1.  **uint32** *attribute code*  
@@ -2790,13 +2801,13 @@ from original [FileSearch](#server-code-26), [UserSearch](#server-code-42) or
     3.  **uint32** *token*
     4.  **uint32** *number of results*
     5.  Iterate for *number of results*
-        1.  **uint8** *code*
+        1.  **uint8** *code*  
             Value is always `1`
         2.  **string** *file path*  
             See [Reserved Path Specifiers](#reserved-path-specifiers)
         3.  **uint64** *file size*
-        4.  **string** *file extension*  
-            Always blank from SoulseekQt clients
+        4.  **string** *file extension* `DEPRECATED`  
+            Always empty in modern clients (historically `mp3` in Soulseek NS)
         5.  **uint32** *number of attributes*
         6.  Iterate for *number of attributes*
             1.  **uint32** *attribute code*  
@@ -2806,8 +2817,8 @@ from original [FileSearch](#server-code-26), [UserSearch](#server-code-42) or
     7.  **uint32** *upload speed*
     8.  **uint32** *number of queued uploads*
     9.  Optional
-        1.  **uint32** *unknown*  
-            Official clients always send a value of `0`
+        1.  **uint32** *unknown* `OBSOLETE`  
+            Value is always `0`
     10. Optional
         1.  **uint32** *number of privately shared results*
         2.  Iterate for *number of privately shared results*
@@ -2816,8 +2827,8 @@ from original [FileSearch](#server-code-26), [UserSearch](#server-code-42) or
             2.  **string** *file path*  
                 See [Reserved Path Specifiers](#reserved-path-specifiers)
             3.  **uint64** *file size*
-            4.  **string** *file extension*  
-                Always blank from SoulseekQt clients
+            4.  **string** *file extension* `DEPRECATED`  
+                Always empty in modern clients (historically `mp3` in Soulseek NS)
             5.  **uint32** *number of attributes*
             6.  Iterate for *number of attributes*
                 1.  **uint32** *attribute code*  
@@ -2910,12 +2921,12 @@ after we've sent a [FolderContentsRequest](#peer-code-36).
             See [Reserved Path Specifiers](#reserved-path-specifiers)
         2.  **uint32** *number of files*
         3.  Iterate *number of files*
-            1.  **uint8** *code*
+            1.  **uint8** *code*  
                 Value is always `1`
             2.  **string** *basename*
             3.  **uint64** *file size*
-            4.  **string** *file extension*  
-                Always blank from SoulseekQt clients
+            4.  **string** *file extension* `DEPRECATED`  
+                Always empty in modern clients (historically `mp3` in Soulseek NS)
             5.  **uint32** *number of attributes*
             6.  Iterate for *number of attributes*
                 1.  **uint32** *attribute code*  
@@ -2937,8 +2948,8 @@ after we've sent a [FolderContentsRequest](#peer-code-36).
                 Value is always `1`
             2.  **string** *basename*
             3.  **uint64** *file size*
-            4.  **string** *file extension*  
-                Always blank from SoulseekQt clients
+            4.  **string** *file extension* `DEPRECATED`  
+                Always empty in modern clients (historically `mp3` in Soulseek NS)
             5.  **uint32** *number of attributes*
             6.  Iterate for *number of attributes*
                 1.  **uint32** *attribute code*  
