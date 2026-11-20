@@ -107,6 +107,35 @@ jobs:
       - name: Build without isolation
         run: python3 -m build --no-isolation
 
+  archlinux:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        container: ['archlinux']
+    container: ${{ matrix.container }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install dependencies
+        run: |
+          pacman -Suy --noconfirm
+          pacman -S --noconfirm gettext gtk4 python-build python-gobject \
+            python-setuptools python-wheel
+
+      - name: Integration and unit tests
+        run: python3 -m unittest -v
+
+      - name: Build
+        run: python3 -m build
+
+      - name: Build without isolation
+        run: python3 -m build --no-isolation
+
   opensuse:
     runs-on: ubuntu-26.04
     timeout-minutes: 15
