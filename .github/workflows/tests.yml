@@ -124,6 +124,7 @@ jobs:
       - name: Install dependencies
         run: |
           zypper refresh
+          zypper -n dup
           zypper -n install dejavu-fonts gettext-tools python314-build python314-gobject \
             python314-gobject-Gdk python314-setuptools python314-wheel typelib-1_0-Gtk-4_0
 
@@ -152,7 +153,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          apk update
+          apk upgrade -U
           apk add font-dejavu gettext gtk4.0 py3-build py3-gobject3 py3-setuptools py3-wheel
 
       - name: Integration and unit tests
@@ -185,6 +186,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          sudo pkg upgrade -y
           sudo pkg install -y cage dejavu gettext gtk4 py312-build py312-pygobject \
             py312-setuptools py312-wheel
 
@@ -224,7 +226,9 @@ jobs:
           environment_variables: NICOTINE_NETWORK_TESTS
 
       - name: Install dependencies
-        run: sudo pkg_add gettext-tools gtk+4 py3-build py3-gobject3 py3-setuptools py3-wheel
+        run: |
+          sudo pkg_add -u
+          sudo pkg_add gettext-tools gtk+4 py3-build py3-gobject3 py3-setuptools py3-wheel
 
       - name: Integration and unit tests
         run: |
@@ -260,6 +264,8 @@ jobs:
 
       - name: Install dependencies
         run: |
+          sudo pkgin -y update
+          sudo pkgin -y upgrade
           sudo pkgin -y install gettext-tools python314 py314-build py314-gobject3 \
             py314-setuptools
 
@@ -341,6 +347,7 @@ jobs:
           # Use a more reliable mirror
           sudo mport config set mirror_region uk
           sudo mport index
+          sudo mport upgrade
           sudo mport install dejavu gettext gtk4 python311 py311-build py311-pygobject \
             py311-setuptools py311-wheel || true
 
