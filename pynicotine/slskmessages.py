@@ -7,6 +7,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 import zlib
 
 try:
@@ -32,17 +33,17 @@ from pynicotine.utils import (
 # server messages and p2p messages (between clients).
 
 
-INT32_UNPACK = Struct("<i").unpack_from
-DOUBLE_UINT32_UNPACK = Struct("<II").unpack_from
-UINT16_UNPACK = Struct("<H").unpack_from
-UINT32_UNPACK = Struct("<I").unpack_from
-UINT64_UNPACK = Struct("<Q").unpack_from
+INT32_UNPACK: Callable[[memoryview, int], tuple[int]] = Struct("<i").unpack_from
+DOUBLE_UINT32_UNPACK: Callable[[memoryview, int], tuple[int]] = Struct("<II").unpack_from
+UINT16_UNPACK: Callable[[memoryview, int], tuple[int]] = Struct("<H").unpack_from
+UINT32_UNPACK: Callable[[memoryview, int], tuple[int]] = Struct("<I").unpack_from
+UINT64_UNPACK: Callable[[memoryview, int], tuple[int]] = Struct("<Q").unpack_from
 
-BOOL_PACK = Struct("?").pack
-UINT8_PACK = Struct("B").pack
-INT32_PACK = Struct("<i").pack
-UINT32_PACK = Struct("<I").pack
-UINT64_PACK = Struct("<Q").pack
+BOOL_PACK: Callable[[bool], bytes] = Struct("?").pack
+UINT8_PACK: Callable[[int], bytes] = Struct("B").pack
+INT32_PACK: Callable[[int], bytes] = Struct("<i").pack
+UINT32_PACK: Callable[[int], bytes] = Struct("<I").pack
+UINT64_PACK: Callable[[int], bytes] = Struct("<Q").pack
 
 SERVER_USERNAME = "server"
 ZLIB_COMPRESSION_LEVEL = 4
@@ -659,8 +660,8 @@ class ServerMessage(SlskMessage):
                 lst.append(recommendation)
 
     def parse_recommendations(self) -> tuple[list[Recommendation], list[Recommendation]]:
-        recommendations = []
-        unrecommendations = []
+        recommendations: list[Recommendation] = []
+        unrecommendations: list[Recommendation] = []
 
         self.populate_recommendations(recommendations, unrecommendations)
 
@@ -1001,7 +1002,7 @@ class JoinRoom(ServerMessage):
         self.room_name = room_name
         self.room_type = room_type
         self.owner = None
-        self.users = []
+        self.users: list[UserStats] = []
         self.operators = []
 
     def make_network_message(self) -> bytearray:
@@ -1515,7 +1516,7 @@ class SimilarRecommendations(ServerMessage):
     def __init__(self, recommendation=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.recommendation = recommendation
-        self.similar_recommendations = []
+        self.similar_recommendations: list[str] = []
 
     def make_network_message(self) -> bytes:
         return self.pack_string(self.recommendation)
@@ -1577,8 +1578,8 @@ class Recommendations(ServerMessage):
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.recommendations = []
-        self.unrecommendations = []
+        self.recommendations: list[Recommendation] = []
+        self.unrecommendations: list[Recommendation] = []
 
     def make_network_message(self) -> bytes:
         return b""
@@ -1607,7 +1608,7 @@ class MyRecommendations(ServerMessage):
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.my_recommendations = []
+        self.my_recommendations: list[str] = []
 
     def make_network_message(self) -> bytes:
         return b""
@@ -1633,8 +1634,8 @@ class GlobalRecommendations(ServerMessage):
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.recommendations = []
-        self.unrecommendations = []
+        self.recommendations: list[Recommendation] = []
+        self.unrecommendations: list[Recommendation] = []
 
     def make_network_message(self) -> bytes:
         return b""
@@ -1657,8 +1658,8 @@ class UserInterests(ServerMessage):
     def __init__(self, username=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.username = username
-        self.likes = []
-        self.hates = []
+        self.likes: list[str] = []
+        self.hates: list[str] = []
 
     def make_network_message(self) -> bytes:
         return self.pack_string(self.username)
@@ -2259,7 +2260,7 @@ class PossibleParents(ServerMessage):
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.candidates = {}
+        self.candidates: dict[str, ParentCandidate] = {}
 
     def parse_network_message(self) -> None:
         num_candidates = self.unpack_uint32()
@@ -2330,7 +2331,7 @@ class SimilarUsers(ServerMessage):
 
     def __init__(self, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
-        self.users = []
+        self.users: list[SimilarUser] = []
 
     def make_network_message(self) -> bytes:
         return b""
@@ -2365,8 +2366,8 @@ class ItemRecommendations(ServerMessage):
     def __init__(self, item=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.item = item
-        self.recommendations = []
-        self.unrecommendations = []
+        self.recommendations: list[Recommendation] = []
+        self.unrecommendations: list[Recommendation] = []
 
     def make_network_message(self) -> bytes:
         return self.pack_string(self.item)
@@ -2391,7 +2392,7 @@ class ItemSimilarUsers(ServerMessage):
     def __init__(self, item=None, *, msg_content=None):
         ServerMessage.__init__(self, msg_content)
         self.item = item
-        self.users = []
+        self.users: list[SimilarUser] = []
 
     def make_network_message(self) -> bytes:
         return self.pack_string(self.item)
@@ -3473,8 +3474,8 @@ class SharedFileListResponse(PeerMessage):
         self.buddy_shares = buddy_shares
         self.trusted_shares = trusted_shares
         self.permission_level = permission_level
-        self.public_folders = []
-        self.private_folders = []
+        self.public_folders: list[tuple[str, list[SharedFile]]] = []
+        self.private_folders: list[tuple[str, list[SharedFile]]] = []
         self.unknown = 0
         self.cached_response = None
 
@@ -3522,14 +3523,14 @@ class SharedFileListResponse(PeerMessage):
         self.cached_response = zlib.compress(msg, ZLIB_COMPRESSION_LEVEL)
         return self.cached_response
 
-    def _parse_result_list(self):
+    def _parse_result_list(self) -> list[tuple[str, list[SharedFile]]]:
         num_folders = self.unpack_uint32()
-        shares = []
+        shares: list[tuple[str, list[SharedFile]]] = []
 
         for _ in range(num_folders):
             folder_path = self.unpack_string()
             num_files = self.unpack_uint32()
-            files = []
+            files: list[SharedFile] = []
 
             for _ in range(num_files):
                 code = self.unpack_uint8()
@@ -3658,9 +3659,9 @@ class FileSearchResponse(PeerMessage):
 
         return zlib.compress(msg, ZLIB_COMPRESSION_LEVEL)
 
-    def _parse_result_list(self):
+    def _parse_result_list(self) -> list[SharedFile]:
         num_files = self.unpack_uint32()
-        results = []
+        results: list[SharedFile] = []
 
         for _ in range(num_files):
             code = self.unpack_uint8()
@@ -4178,8 +4179,8 @@ class UploadQueueNotification(PeerMessage):
     def make_network_message(self) -> bytes:
         return b""
 
-    def parse_network_message(self) -> bytes:
-        return b""
+    def parse_network_message(self) -> None:
+        pass
 
 
 class UnknownPeerMessage(PeerMessage):

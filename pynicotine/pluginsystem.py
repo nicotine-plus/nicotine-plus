@@ -1194,7 +1194,7 @@ class PluginHandler:
     def server_connect_notification(self) -> None:
         self._trigger_event("server_connect_notification", (),)
 
-    def server_disconnect_notification(self, is_manual) -> None:
+    def server_disconnect_notification(self, is_manual: bool) -> None:
         self._trigger_event("server_disconnect_notification", (is_manual, ))
 
     def join_chatroom_notification(self, room) -> None:

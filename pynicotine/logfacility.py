@@ -6,6 +6,7 @@ import os
 import time
 
 from collections import deque
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import BinaryIO
 
@@ -91,7 +92,7 @@ class Logger:
         if log_level not in log_levels:
             log_levels.append(log_level)
 
-    def remove_log_level(self, log_level, is_permanent: bool = True) -> None:
+    def remove_log_level(self, log_level: LogLevel, is_permanent: bool = True) -> None:
 
         self._log_levels.discard(log_level)
 
@@ -105,7 +106,7 @@ class Logger:
 
     # Log Files #
 
-    def _get_log_file(self, folder_path: str, basename: str, should_create_file: bool = True):
+    def _get_log_file(self, folder_path: str, basename: str, should_create_file: bool = True) -> LogFile | None:
 
         file_path = safe_path_join(folder_path, f"{basename}.log")
         log_file = self._log_files.get(file_path)
@@ -116,7 +117,7 @@ class Logger:
         file_path_encoded = encode_path(file_path)
 
         if not should_create_file and not os.path.isfile(file_path_encoded):
-            return log_file
+            return None
 
         folder_path_encoded = encode_path(folder_path)
 
@@ -159,7 +160,7 @@ class Logger:
                 "error": error
             }, should_log_file=should_log_file)
 
-    def _close_log_file(self, log_file) -> None:
+    def _close_log_file(self, log_file: LogFile) -> None:
 
         try:
             log_file.handle.close()
@@ -202,7 +203,7 @@ class Logger:
         file_handle = log_file.handle
         file_handle.seek(0, os.SEEK_END)
 
-        blocks = deque()
+        blocks: deque[bytes] = deque()
         read_offset = file_handle.tell()
         lines_left = num_lines + 1
 
@@ -228,7 +229,7 @@ class Logger:
         file_handle.seek(0, os.SEEK_END)
         return b"".join(blocks).splitlines()[-num_lines:]
 
-    def read_log(self, folder_path, basename: str, num_lines: int):
+    def read_log(self, folder_path: str, basename: str, num_lines: int):
 
         lines = None
         log_file = None
@@ -250,10 +251,10 @@ class Logger:
 
         return lines
 
-    def delete_log(self, folder_path, basename: str) -> None:
+    def delete_log(self, folder_path: str, basename: str) -> None:
         self._log_file_operation(folder_path, basename, self.delete_log_callback)
 
-    def _log_file_operation(self, folder_path: str, basename: str, callback) -> None:
+    def _log_file_operation(self, folder_path: str, basename: str, callback: Callable[[str], None]) -> None:
 
         folder_path_encoded = encode_path(folder_path)
         file_path = safe_path_join(folder_path, f"{basename}.log")
@@ -273,7 +274,7 @@ class Logger:
     def delete_log_callback(self, file_path: str) -> None:
         os.remove(encode_path(file_path))
 
-    def log_transfer(self, basename: str, msg, msg_args=None) -> None:
+    def log_transfer(self, basename: str, msg: str, msg_args=None) -> None:
 
         if not config.sections["logging"]["transfers"]:
             return
@@ -285,7 +286,7 @@ class Logger:
 
     # Log Messages #
 
-    def _format_log_message(self, level, msg, msg_args):
+    def _format_log_message(self, level: LogLevel, msg: str, msg_args) -> str:
 
         prefix = self.PREFIXES.get(level)
 
@@ -297,7 +298,9 @@ class Logger:
 
         return msg
 
-    def _add(self, msg, msg_args=None, title=None, level=LogLevel.DEFAULT, should_log_file: bool = True) -> None:
+    def _add(
+        self, msg: str, msg_args=None, title=None, level: LogLevel = LogLevel.DEFAULT, should_log_file: bool = True
+    ) -> None:
 
         msg = self._format_log_message(level, msg, msg_args)
         timestamp_format = None
@@ -314,10 +317,10 @@ class Logger:
 
         events.emit("log-message", timestamp_format, msg, title, level)
 
-    def add(self, msg, msg_args=None, title=None) -> None:
+    def add(self, msg: str, msg_args=None, title=None) -> None:
         self._add(msg, msg_args, title)
 
-    def add_download(self, msg, msg_args=None) -> None:
+    def add_download(self, msg: str, msg_args=None) -> None:
 
         level = LogLevel.DOWNLOAD
 
@@ -326,7 +329,7 @@ class Logger:
         if level in self._log_levels:
             self._add(msg, msg_args, level=level)
 
-    def add_upload(self, msg, msg_args=None) -> None:
+    def add_upload(self, msg: str, msg_args=None) -> None:
 
         level = LogLevel.UPLOAD
 
@@ -335,21 +338,21 @@ class Logger:
         if level in self._log_levels:
             self._add(msg, msg_args, level=level)
 
-    def add_search(self, msg, msg_args=None) -> None:
+    def add_search(self, msg: str, msg_args=None) -> None:
 
         level = LogLevel.SEARCH
 
         if level in self._log_levels:
             self._add(msg, msg_args, level=level)
 
-    def add_chat(self, msg, msg_args=None) -> None:
+    def add_chat(self, msg: str, msg_args=None) -> None:
 
         level = LogLevel.CHAT
 
         if level in self._log_levels:
             self._add(msg, msg_args, level=level)
 
-    def add_conn(self, msg, msg_args=None) -> None:
+    def add_conn(self, msg: str, msg_args=None) -> None:
 
         level = LogLevel.CONNECTION
 
@@ -373,21 +376,21 @@ class Logger:
 
         self._add(msg, msg_args, level=level)
 
-    def add_transfer(self, msg, msg_args=None) -> None:
+    def add_transfer(self, msg: str, msg_args=None) -> None:
 
         level = LogLevel.TRANSFER
 
         if level in self._log_levels:
             self._add(msg, msg_args, level=level)
 
-    def add_debug(self, msg, msg_args=None) -> None:
+    def add_debug(self, msg: str, msg_args=None) -> None:
 
         level = LogLevel.MISCELLANEOUS
 
         if level in self._log_levels:
             self._add(msg, msg_args, level=level)
 
-    def add_command(self, msg) -> None:
+    def add_command(self, msg: str) -> None:
         self._add(msg, level=LogLevel.COMMAND)
 
 

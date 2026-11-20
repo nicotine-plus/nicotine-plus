@@ -31,6 +31,7 @@ from pynicotine.slskmessages import (
     Login,
     RemoveAllowedResponse,
     RoomSearch,
+    ServerDisconnect,
     UserSearch,
     UserStatus,
     WishlistInterval,
@@ -63,7 +64,7 @@ class SearchRequest:
     excluded_words: list[str]
     mode: str
     room: str | None = None
-    users: list[str] = field(default_factory=list)
+    users: list[str] = field(default_factory=list[str])
 
 
 @dataclass(slots=True, eq=False, kw_only=True)
@@ -71,8 +72,8 @@ class WishSearchRequest(SearchRequest):
     auto_search: bool
     filter_mode: ResultFilterMode
     time_added: int
-    custom_filters: list[str | bool] = field(default_factory=list)
-    ignored_users: set[str] = field(default_factory=set)
+    custom_filters: list[str | bool] = field(default_factory=list[str | bool])
+    ignored_users: set[str] = field(default_factory=set[str])
     mode: str = "wishlist"
     is_ignored: bool = True
 
@@ -112,13 +113,13 @@ class Search:
     def __init__(self):
 
         self.searches: dict[int, SearchRequest] = {}
-        self.excluded_phrases = []
-        self.wishlist = {}
+        self.excluded_phrases: list[str] = []
+        self.wishlist: dict[str, WishSearchRequest] = {}
         self.wishlist_file_path = os.path.join(config.data_folder_path, "wishlist.json")
         self.wishlist_interval = 0
 
         self._token = initial_token()
-        self._own_tokens = set()
+        self._own_tokens: set[int] = set()
         self._allow_saving_wishlist = False
         self._wishlist_timer_id = None
 
@@ -158,7 +159,7 @@ class Search:
             log.add_search(("Search responses disabled in preferences, ignoring search "
                             "requests from other users"))
 
-    def _server_disconnect(self, _msg) -> None:
+    def _server_disconnect(self, _msg: ServerDisconnect) -> None:
 
         self.excluded_phrases.clear()
         self._own_tokens.clear()
@@ -305,8 +306,11 @@ class Search:
 
         events.emit("add-wish", wish)
 
-    def update_wish_filters(self, wish, filter_in="", filter_out="", size="", bitrate="", has_free_slot: bool = False,
-                            country="", file_type="", length="", is_public: bool = False) -> None:
+    def update_wish_filters(
+        self, wish: str, filter_in: str = "", filter_out: str = "", size: str = "", bitrate: str = "",
+        has_free_slot: bool = False, country: str = "", file_type: str = "", length: str = "",
+        is_public: bool = False
+    ) -> None:
 
         search = self.wishlist.get(wish)
 
@@ -329,7 +333,7 @@ class Search:
 
         events.emit("update-wish-filters", wish)
 
-    def clear_wish_filters(self, wish) -> None:
+    def clear_wish_filters(self, wish: str) -> None:
 
         search = self.wishlist.get(wish)
 
@@ -341,7 +345,7 @@ class Search:
 
         events.emit("clear-wish-filters", wish)
 
-    def remove_wish(self, wish) -> None:
+    def remove_wish(self, wish: str) -> None:
 
         if wish not in self.wishlist:
             return
@@ -353,7 +357,7 @@ class Search:
 
         events.emit("remove-wish", wish)
 
-    def is_wish(self, wish) -> bool:
+    def is_wish(self, wish: str) -> bool:
         return wish in self.wishlist
 
     def _add_search(self, token: int, search_term: str, mode, room=None, users=None) -> SearchRequest:
@@ -375,7 +379,8 @@ class Search:
         return search
 
     def _add_wish_search(
-        self, token: int, search_term: str, auto_search: bool = True, filter_mode=ResultFilterMode.NONE,
+        self, token: int, search_term: str, auto_search: bool = True,
+        filter_mode: ResultFilterMode = ResultFilterMode.NONE,
         time_added=None, custom_filters=None, ignored_users=None
     ) -> WishSearchRequest:
 
@@ -399,8 +404,8 @@ class Search:
 
     def _sanitize_search_term(self, search_term: str):
 
-        included_words = []
-        excluded_words = []
+        included_words: list[str] = []
+        excluded_words: list[str] = []
         search_term = search_term_transmitted = search_term.strip()
 
         try:
@@ -416,7 +421,7 @@ class Search:
 
         # Remove certain special characters from search term
         # SoulseekQt doesn't seem to send search results if such characters are included (July 7, 2020)
-        search_term_words_transmitted = []
+        search_term_words_transmitted: list[str] = []
 
         excluded_char = "-"
         partial_char = "*"
@@ -691,7 +696,7 @@ class Search:
 
         file_list.append(fileinfo)
 
-    def _create_file_info_list(self, results, max_results, permission_level):
+    def _create_file_info_list(self, results, max_results: int, permission_level: PermissionLevel):
         """Given a list of file indices, retrieve the file information for each index."""
 
         reveal_buddy_shares = config.sections["transfers"]["reveal_buddy_shares"]
