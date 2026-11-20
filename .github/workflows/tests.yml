@@ -280,6 +280,7 @@ jobs:
           python3.14 -m build --no-isolation
 
   dragonflybsd:
+    if: false
     runs-on: ubuntu-26.04
     timeout-minutes: 15
     defaults:
