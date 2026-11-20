@@ -3433,7 +3433,7 @@ SoulseekQt in early 2026.
 
 This documentation exists thanks to efforts from the following projects:
 
- - Nicotine+ (Hyriand, daelstorm, mathiascode)
+ - Nicotine+ (Hyriand, daelstorm, mathiascode, slook)
  - aioslsk (JurgenR)
  - slskd (jpdillingham)
  - Museek+ (lbponey)
