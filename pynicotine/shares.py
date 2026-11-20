@@ -31,7 +31,7 @@ from os import (
 from stat import FILE_ATTRIBUTE_HIDDEN
 from struct import Struct
 from threading import Thread
-from typing import Literal, NoReturn
+from typing import Any, Literal, NoReturn, TypeAlias
 
 from pynicotine import rename_process
 from pynicotine.config import config
@@ -57,6 +57,9 @@ from pynicotine.utils import (
     encode_path,
     humanize
 )
+
+AudioQuality: TypeAlias = tuple[int | None, int, int | None, int | None]  # (bitrate, is_vbr, samplerate, bitdepth)
+FileInfo: TypeAlias = list[str | int | AudioQuality | None]               # [virtual_file_path, size, quality, duration]
 
 
 class FileTypes:
@@ -210,7 +213,7 @@ class Database:
     def __len__(self):
         return len(self._value_offsets)
 
-    def __getitem__(self, key: str):
+    def __getitem__(self, key: str) -> Any:
 
         value_offset = self._value_offsets[key]
 
@@ -231,7 +234,7 @@ class Database:
         self._value_offsets[key] = self._file_offset + self.LENGTH_DATA_SIZE + key_length
         self._file_offset += len(item_data)
 
-    def get(self, key: str, default=None):
+    def get(self, key: str, default=None) -> Any:
 
         if key in self._value_offsets:
             return self[key]
@@ -679,7 +682,7 @@ class Scanner:
 
         return tag
 
-    def get_file_info(self, virtual_file_path: str, file_path: str, file_stat: stat_result):
+    def get_file_info(self, virtual_file_path: str, file_path: str, file_stat: stat_result) -> FileInfo:
         """Get file metadata."""
 
         tag = None
@@ -735,7 +738,7 @@ class Scanner:
         return [virtual_file_path, size, quality, duration]
 
     @staticmethod
-    def get_folder_stream(file_list) -> bytes:
+    def get_folder_stream(file_list: list[FileInfo]) -> bytes:
         """Pack all files and metadata in folder."""
 
         stream = bytearray()

@@ -16,12 +16,13 @@ from dataclasses import dataclass, field
 from itertools import islice
 from operator import itemgetter
 from shlex import shlex
+from typing import cast
 
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import StopEventPropagation, events
 from pynicotine.logfacility import log
-from pynicotine.shares import PermissionLevel
+from pynicotine.shares import FileInfo, PermissionLevel
 from pynicotine.slskmessages import (
     AddAllowedResponse,
     DistribSearch,
@@ -674,9 +675,9 @@ class Search:
 
     # Incoming Search Requests #
 
-    def _append_file_info(self, file_list, fileinfo) -> None:
+    def _append_file_info(self, file_list: list[FileInfo], fileinfo: FileInfo) -> None:
 
-        file_path, *_unused = fileinfo
+        file_path = cast(str, fileinfo[0])
         file_path_lower = file_path.lower()
         excluded_phrase = next((phrase for phrase in self.excluded_phrases if phrase in file_path_lower), None)
 
@@ -691,7 +692,9 @@ class Search:
 
         file_list.append(fileinfo)
 
-    def _create_file_info_list(self, results, max_results, permission_level):
+    def _create_file_info_list(
+        self, results, max_results, permission_level
+    ) -> tuple[int, list[FileInfo], list[FileInfo]]:
         """Given a list of file indices, retrieve the file information for each index."""
 
         reveal_buddy_shares = config.sections["transfers"]["reveal_buddy_shares"]
@@ -699,8 +702,8 @@ class Search:
         is_buddy = (permission_level == PermissionLevel.BUDDY)
         is_trusted = (permission_level == PermissionLevel.TRUSTED)
 
-        fileinfos = []
-        private_fileinfos = []
+        fileinfos: list[FileInfo] = []
+        private_fileinfos: list[FileInfo] = []
         num_fileinfos = 0
 
         public_files = core.shares.share_dbs["public_files"]
