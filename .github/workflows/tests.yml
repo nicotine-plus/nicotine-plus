@@ -340,23 +340,27 @@ jobs:
           persist-credentials: false
 
       - name: Set up NetBSD
-        uses: cross-platform-actions/action@82668f1fbd89d9c99487604f822cbf6716f124d3 # v1.7.0
+        uses: cross-platform-actions/action@30cde56b87a128507bebea9531205087890ee360 # v1.8.0
         with:
           operating_system: netbsd
-          version: '11.0'
+          version: '11.1'
+          variant: microvm
           environment_variables: NICOTINE_NETWORK_TESTS
 
       - name: Install dependencies
         run: |
           sudo pkgin -y update
           sudo pkgin -y upgrade
-          sudo pkgin -y install gettext-tools python314 py314-build py314-gobject3 \
+          sudo pkgin -y install gettext-tools gtk4 python314 py314-build py314-gobject3 \
             py314-setuptools
 
       - name: Integration and unit tests
         run: |
-          PATH=/usr/pkg/sbin:/usr/pkg/bin:$PATH
-          export NICOTINE_GUI_TESTS=0
+          PATH=/usr/pkg/sbin:/usr/pkg/bin:/usr/X11R7/bin:$PATH
+          export GALLIUM_DRIVER=softpipe
+          export GTK_A11Y=none
+          export DISPLAY=:99
+          Xvfb :99 > /dev/null 2>&1 &
           python3.14 -m unittest -v
 
       - name: Build
