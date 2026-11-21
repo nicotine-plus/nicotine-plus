@@ -17,6 +17,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.privatechat import MessageTarget
 from pynicotine.shares import PermissionLevel
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import open_uri
@@ -840,7 +841,7 @@ class Application:
             message=_("Send private message to all users who are downloading from you:"),
             action_button_label=_("_Send"),
             callback=self.on_message_users_response,
-            callback_data="downloading",
+            callback_data=MessageTarget.DOWNLOADING,
             show_emoji_icon=True
         ).present()
 
@@ -854,7 +855,7 @@ class Application:
             message=_("Send private message to all online buddies:"),
             action_button_label=_("_Send"),
             callback=self.on_message_users_response,
-            callback_data="buddies",
+            callback_data=MessageTarget.BUDDIES,
             show_emoji_icon=True
         ).present()
 

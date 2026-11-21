@@ -1,11 +1,14 @@
 # SPDX-FileCopyrightText: 2022-2026 Nicotine+ Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from enum import StrEnum
+
 from pynicotine.pluginsystem import BasePlugin
+from pynicotine.search import SearchMode
 from pynicotine.slskmessages import UserStatus
 
 
-class _CommandGroup:
+class _CommandGroup(StrEnum):
     CHAT = _("Chat")
     CHAT_ROOMS = _("Chat Rooms")
     PLUGINS = _("Plugins")
@@ -597,17 +600,17 @@ class Plugin(BasePlugin):
     # Search Files #
 
     def search_command(self, args, **_unused):
-        self.core.search.do_search(args, "global")
+        self.core.search.do_search(args, SearchMode.GLOBAL)
 
     def search_rooms_command(self, args, **_unused):
-        self.core.search.do_search(args, "rooms")
+        self.core.search.do_search(args, SearchMode.ROOMS)
 
     def search_buddies_command(self, args, **_unused):
-        self.core.search.do_search(args, "buddies")
+        self.core.search.do_search(args, SearchMode.BUDDIES)
 
     def search_user_command(self, args, **_unused):
         user, query = args.split(maxsplit=1)
-        self.core.search.do_search(query, "user", users=[user])
+        self.core.search.do_search(query, SearchMode.USER, users=[user])
 
     # Plugin Commands #
 

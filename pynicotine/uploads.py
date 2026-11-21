@@ -49,7 +49,12 @@ from pynicotine.slskmessages import (
     increment_token,
     initial_token
 )
-from pynicotine.transfers import Transfer, Transfers, TransferStatus
+from pynicotine.transfers import (
+    StatType,
+    Transfer,
+    Transfers,
+    TransferStatus
+)
 from pynicotine.utils import (
     encode_path,
     human_size
@@ -388,7 +393,7 @@ class Uploads(Transfers):
             self._update_transfer(transfer)
 
         if not already_exists:
-            core.statistics.append_stat_value("completed_uploads", 1)
+            core.statistics.append_stat_value(StatType.COMPLETED_UPLOADS, 1)
 
             real_path = core.shares.virtual2real(
                 virtual_path,
@@ -1122,7 +1127,7 @@ class Uploads(Transfers):
             return
 
         if not msg.allowed:
-            if reason in TransferStatus.__dict__.values() or reason == TransferRejectReason.DISALLOWED_EXTENSION:
+            if reason in TransferStatus.__members__.values() or reason == TransferRejectReason.DISALLOWED_EXTENSION:
                 # Don't allow internal statuses as reason
                 reason = TransferRejectReason.CANCELLED
 
@@ -1208,7 +1213,7 @@ class Uploads(Transfers):
             upload.file_handle = file_handle
             upload.start_time = time.monotonic() - upload.time_elapsed
 
-            core.statistics.append_stat_value("started_uploads", 1)
+            core.statistics.append_stat_value(StatType.STARTED_UPLOADS, 1)
             upload_started = True
 
             log.add_upload(
@@ -1247,7 +1252,7 @@ class Uploads(Transfers):
             return
 
         if self._update_transfer_progress(
-            upload, sock=sock, stat_id="uploaded_size",
+            upload, sock=sock, stat_id=StatType.UPLOADED_SIZE,
             current_byte_offset=(offset + bytes_sent) if offset is not None else None,
             speed=speed
         ):

@@ -9,7 +9,7 @@ from unittest import TestCase
 
 from pynicotine.config import config
 from pynicotine.core import core
-from pynicotine.search import ResultFilterMode
+from pynicotine.search import ResultFilterMode, SearchMode
 from pynicotine.shares import PermissionLevel
 from pynicotine.slskmessages import increment_token
 
@@ -19,7 +19,7 @@ WISHLIST_BASENAME = "wishlist.json"
 WISHLIST_FILE_PATH = os.path.join(CURRENT_FOLDER_PATH, WISHLIST_BASENAME)
 SAVED_WISHLIST_FILE_PATH = os.path.join(DATA_FOLDER_PATH, WISHLIST_BASENAME)
 SEARCH_TEXT = '70 - * Gwen "test" "" -mp3 "what\'s up" don\'t -nothanks a:::b;c+d +++---}[ *ello [[ @@ auto -No yes'
-SEARCH_MODE = "global"
+SEARCH_MODE = SearchMode.GLOBAL
 
 
 class SearchTest(TestCase):

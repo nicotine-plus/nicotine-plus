@@ -7,6 +7,7 @@ import time
 
 from collections import deque
 from dataclasses import dataclass, field
+from enum import StrEnum
 from typing import BinaryIO
 
 from pynicotine.config import config
@@ -23,7 +24,7 @@ class LogFile:
     last_active: float = field(default_factory=time.monotonic)
 
 
-class LogLevel:
+class LogLevel(StrEnum):
     DEFAULT = "default"
     DOWNLOAD = "download"
     UPLOAD = "upload"
