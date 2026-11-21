@@ -148,12 +148,6 @@ class FileAttribute(IntEnum):
     BIT_DEPTH = 5
 
 
-class ParentStatus(IntEnum):
-    ACCEPTED = 0
-    WAITING = 1
-    REJECTED = 2
-
-
 # Structures #
 
 

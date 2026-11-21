@@ -13,6 +13,7 @@ import time
 
 from collections import defaultdict
 from dataclasses import dataclass, field
+from enum import StrEnum
 from errno import ENOTCONN, EWOULDBLOCK
 from queue import Empty, SimpleQueue
 from random import randint
@@ -80,7 +81,6 @@ from pynicotine.slskmessages import (
     PossibleParents,
     ParentMinSpeed,
     ParentSpeedRatio,
-    ParentStatus,
     PeerInit,
     PierceFireWall,
     Relogged,
@@ -107,6 +107,12 @@ from pynicotine.utils import (
     human_duration_approx,
     human_speed
 )
+
+
+class ParentStatus(StrEnum):
+    ACCEPTED = "accepted"
+    WAITING = "waiting"
+    REJECTED = "rejected"
 
 
 @dataclass(slots=True, eq=False)
