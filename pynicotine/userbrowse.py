@@ -21,6 +21,7 @@ from pynicotine.slskmessages import (
     FileAttribute,
     FileAttributes,
     Login,
+    MessageParser,
     RemoveAllowedResponse,
     SharedFile,
     SharedFileListRequest,
@@ -247,6 +248,7 @@ class UserBrowse:
                         code=code,
                         path=basename,
                         size=size,
+                        extension=None,
                         attributes=FileAttributes(bitrate, length, vbr, sample_rate, bit_depth)
                     )
 
@@ -257,9 +259,8 @@ class UserBrowse:
         username = os.path.basename(file_path)
         self._show_user(username, new_request=True)
 
-        msg = SharedFileListResponse()
+        msg = SharedFileListResponse(public_folders=shares_list)
         msg.username = username
-        msg.public_folders = shares_list
 
         events.emit("shared-file-list-response", msg)
 
@@ -449,14 +450,11 @@ class UserBrowse:
     def _parse_local_shares(self, username: str, msg: SharedFileListResponse) -> None:
         """Parse a local shares list and show it in the UI."""
 
-        msg.username = username
+        parser = MessageParser(memoryview(msg.pack()))
+        unpacked_msg = msg.unpack(parser)
+        unpacked_msg.username = username
 
-        try:
-            msg.parse_local_message()
-        finally:
-            msg.finish_parsing()
-
-        events.emit_main_thread("shared-file-list-response", msg)
+        events.emit_main_thread("shared-file-list-response", unpacked_msg)
 
     def _peer_connection_error(self, username: str, conn_type: ConnectionType, msgs, is_offline: bool = False) -> None:
 

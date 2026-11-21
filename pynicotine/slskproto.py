@@ -75,6 +75,7 @@ from pynicotine.slskmessages import (
     HaveNoParent,
     InternalMessage,
     Login,
+    MessageParser,
     MessageType,
     PossibleParents,
     ParentMinSpeed,
@@ -98,7 +99,9 @@ from pynicotine.slskmessages import (
     UserStatus,
     WatchUser,
     increment_token,
-    initial_token
+    initial_token,
+    pack_uint8,
+    pack_uint32
 )
 from pynicotine.utils import (
     human_duration_approx,
@@ -701,7 +704,7 @@ class NetworkThread(Thread):
     def _pack_network_message(msg):
 
         try:
-            return msg.make_network_message()
+            return msg.pack()
 
         except Exception:
             from traceback import format_exc
@@ -712,13 +715,13 @@ class NetworkThread(Thread):
     @staticmethod
     def _unpack_network_message(
         msg_class, msg_content: memoryview, msg_size: int, conn_type,
-        sock=None, addr=None, username=None, allowed_responses=None
+        sock=None, addr=None, username=None, allowed_ids=None
     ):
 
-        msg = None
+        parser = MessageParser(content=msg_content, source=username, allowed_ids=allowed_ids)
 
         try:
-            msg = msg_class(msg_content=msg_content)
+            msg = msg_class.unpack(parser)
 
             if sock is not None:
                 msg.sock = sock
@@ -729,19 +732,11 @@ class NetworkThread(Thread):
             if username is not None:
                 msg.username = username
 
-            if allowed_responses is not None:
-                msg.allowed_responses = allowed_responses
-
-            msg.parse_network_message()
             return msg
 
         except Exception as error:
             log.add_debug("Unable to parse %s message type '%s', size %s, contents %s… Error: %s",
                           (conn_type, msg_class.__name__, msg_size, bytes(msg_content[:50]), error))
-
-        finally:
-            if msg is not None:
-                msg.finish_parsing()
 
         return None
 
@@ -953,7 +948,7 @@ class NetworkThread(Thread):
         if pierce_token is not None:
             log.add_conn("Responding to indirect connection request of type %s from "
                          "user %s, token %s", (conn_type, username, pierce_token))
-            self._process_outgoing_messages([PierceFireWall(sock, pierce_token)])
+            self._process_outgoing_messages([PierceFireWall(pierce_token, sock=sock)])
             self._accept_child_peer_connection(conn)
         else:
             log.add_conn("Sending peer init message of type %s to user %s", (conn_type, username))
@@ -1517,7 +1512,7 @@ class NetworkThread(Thread):
             if self._parent is None:
                 self._close_parent_candidate_connections()
 
-                self._potential_parents = msg.candidates
+                self._potential_parents = {candidate.username: candidate for candidate in msg.candidates}
                 log.add_conn("Server sent us a list of %s possible parents", len(msg.candidates))
 
                 for username, parent_candidate in self._potential_parents.items():
@@ -1611,8 +1606,8 @@ class NetworkThread(Thread):
 
         out_buffer = conn.out_buffer
 
-        out_buffer += msg.pack_uint32(len(msg_content) + 4)
-        out_buffer += msg.pack_uint32(msg.CODE)
+        out_buffer += pack_uint32(len(msg_content) + 4)
+        out_buffer += pack_uint32(msg.CODE)
         out_buffer += msg_content
 
         self._modify_connection_events(conn, EVENT_READ | EVENT_WRITE)
@@ -1828,8 +1823,8 @@ class NetworkThread(Thread):
 
         out_buffer = conn.out_buffer
 
-        out_buffer += msg.pack_uint32(len(msg_content) + 1)
-        out_buffer += msg.pack_uint8(msg.CODE)
+        out_buffer += pack_uint32(len(msg_content) + 1)
+        out_buffer += pack_uint8(msg.CODE)
         out_buffer += msg_content
 
         self._modify_connection_events(conn, EVENT_READ | EVENT_WRITE)
@@ -1995,7 +1990,7 @@ class NetworkThread(Thread):
                     sock=conn.sock,
                     addr=conn.addr,
                     username=conn.init.target_username,
-                    allowed_responses=self._allowed_message_responses.get(msg_class, set())
+                    allowed_ids=self._allowed_message_responses.get(msg_class, set())
                 )
 
                 if msg_class is FileSearchResponse:
@@ -2030,8 +2025,8 @@ class NetworkThread(Thread):
 
         out_buffer = conn.out_buffer
 
-        out_buffer += msg.pack_uint32(len(msg_content) + 4)
-        out_buffer += msg.pack_uint32(msg.CODE)
+        out_buffer += pack_uint32(len(msg_content) + 4)
+        out_buffer += pack_uint32(msg.CODE)
         out_buffer += msg_content
 
         conn.has_post_init_activity = True
@@ -2646,8 +2641,8 @@ class NetworkThread(Thread):
 
         out_buffer = conn.out_buffer
 
-        out_buffer += msg.pack_uint32(len(msg_content) + 1)
-        out_buffer += msg.pack_uint8(msg.CODE)
+        out_buffer += pack_uint32(len(msg_content) + 1)
+        out_buffer += pack_uint8(msg.CODE)
         out_buffer += msg_content
 
         conn.has_post_init_activity = True

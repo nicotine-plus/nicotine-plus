@@ -421,9 +421,6 @@ class Download(Dialog):
 
     def folder_contents_response(self, msg):
 
-        if msg.folder_path is None:
-            return
-
         username = msg.username
 
         if username not in self.pending_folders:
@@ -436,7 +433,7 @@ class Download(Dialog):
 
         selected = True
 
-        for folder_path, files in msg.folders.items():
+        for folder_path, files in msg.folders:
             if folder_path != msg.folder_path:
                 continue
 

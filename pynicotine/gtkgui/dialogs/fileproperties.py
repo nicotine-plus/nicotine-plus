@@ -6,7 +6,6 @@ from gi.repository import Pango
 from pynicotine.core import core
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import Dialog
-from pynicotine.slskmessages import FileListMessage
 from pynicotine.utils import human_length
 from pynicotine.utils import human_size
 from pynicotine.utils import human_speed
@@ -96,8 +95,9 @@ class FileProperties(Dialog):
         self.username_value_label.set_text(properties["user"])
 
         real_folder_path = properties.get("real_folder_path", "")
-        h_quality, _bitrate, h_length, _length = FileListMessage.parse_audio_quality_length(
-            size, properties.get("file_attributes"), always_show_bitrate=True)
+        h_quality, _bitrate, h_length, _length = properties["file_attributes"].parse_quality_length(
+            size, always_show_bitrate=True
+        )
         queue_position = properties.get("queue_position", 0)
         speed = properties.get("speed", 0)
         country_code = properties.get("country_code")

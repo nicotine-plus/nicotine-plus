@@ -44,7 +44,6 @@ from pynicotine.logfacility import log
 from pynicotine.search import ResultFilterMode
 from pynicotine.shares import FileTypes
 from pynicotine.slskmessages import FileAttributes
-from pynicotine.slskmessages import FileListMessage
 from pynicotine.utils import factorize
 from pynicotine.utils import humanize
 from pynicotine.utils import human_size
@@ -883,7 +882,7 @@ class Search:
             file_attributes = file_data.attributes
             size = file_data.size
             h_size = human_size(size, config.sections["ui"]["file_size_unit"])
-            h_quality, bitrate, h_length, length = FileListMessage.parse_audio_quality_length(size, file_attributes)
+            h_quality, bitrate, h_length, length = file_attributes.parse_quality_length(size)
             private_icon_name = "changes-prevent-symbolic" if is_private else ""
             downloading_icon_name = ""
 
@@ -1601,8 +1600,8 @@ class Search:
 
         # Always include bitrate in tooltip
         size = treeview.get_row_value(iterator, "size_data")
-        h_quality, _bitrate, _h_length, _length = FileListMessage.parse_audio_quality_length(
-            size, file_data.attributes, always_show_bitrate=True)
+        h_quality, _bitrate, _h_length, _length = file_data.attributes.parse_quality_length(
+            size, always_show_bitrate=True)
 
         return h_quality
 
