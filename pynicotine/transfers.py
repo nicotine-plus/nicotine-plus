@@ -18,6 +18,7 @@ import time
 from ast import literal_eval
 from collections import defaultdict
 from dataclasses import dataclass, field
+from enum import StrEnum
 from socket import socket
 from typing import BinaryIO
 
@@ -40,7 +41,7 @@ from pynicotine.utils import (
 )
 
 
-class TransferStatus:
+class TransferStatus(StrEnum):
     QUEUED = "Queued"
     QUEUED_PRIORITIZED = "Queued (prioritized)"
     QUEUED_PRIVILEGED = "Queued (privileged)"
@@ -438,7 +439,7 @@ class Transfers:
         raise NotImplementedError
 
     def _update_transfer_progress(
-        self, transfer: Transfer, sock: socket, stat_id: str, current_byte_offset=None, speed=None
+        self, transfer: Transfer, sock: socket, stat_id: StatType, current_byte_offset=None, speed=None
     ) -> bool:
 
         error = None
@@ -662,12 +663,21 @@ class Transfers:
         write_file_and_backup(self.transfers_file_path, self._save_transfers_callback)
 
 
+class StatType(StrEnum):
+    STARTED_DOWNLOADS = "started_downloads"
+    STARTED_UPLOADS = "started_uploads"
+    COMPLETED_DOWNLOADS = "completed_downloads"
+    COMPLETED_UPLOADS = "completed_uploads"
+    DOWNLOADED_SIZE = "downloaded_size"
+    UPLOADED_SIZE = "uploaded_size"
+
+
 class Statistics:
     __slots__ = ("session_stats",)
 
     def __init__(self):
 
-        self.session_stats = {}
+        self.session_stats: dict[StatType, int] = {}
 
         for event_name, callback in (
             ("quit", self._quit),
@@ -688,14 +698,14 @@ class Statistics:
     def _quit(self) -> None:
         self.session_stats.clear()
 
-    def append_stat_value(self, stat_id: str, stat_value: int) -> None:
+    def append_stat_value(self, stat_id: StatType, stat_value: int) -> None:
 
         self.session_stats[stat_id] += stat_value
         config.sections["statistics"][stat_id] += stat_value
 
         self._update_stat(stat_id)
 
-    def _update_stat(self, stat_id: str) -> None:
+    def _update_stat(self, stat_id: StatType) -> None:
 
         session_stat_value = self.session_stats[stat_id]
         total_stat_value = config.sections["statistics"][stat_id]

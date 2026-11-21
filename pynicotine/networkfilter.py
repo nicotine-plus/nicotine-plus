@@ -6,10 +6,10 @@ from __future__ import annotations
 import os
 
 from bisect import bisect_left
+from enum import IntEnum
 from socket import inet_aton
 from struct import Struct
 from sys import intern
-from typing import Literal
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -18,6 +18,11 @@ from pynicotine.slskmessages import GetPeerAddress
 from pynicotine.slskmessages import ServerDisconnect
 
 UINT32_UNPACK = Struct(">I").unpack_from
+
+
+class RequestAction(IntEnum):
+    ADD = 0
+    REMOVE = 1
 
 
 class NetworkFilter:
@@ -344,7 +349,7 @@ class NetworkFilter:
 
     # IP Filter List Management #
 
-    def _request_ip(self, username: str, action: Literal["add", "remove"], request_list) -> None:
+    def _request_ip(self, username: str, action: RequestAction, request_list) -> None:
         """Ask for the IP address of an unknown user.
 
         Once a GetPeerAddress response arrives, either
@@ -366,7 +371,7 @@ class NetworkFilter:
 
         elif not self.is_ip_address(ip_address):
             # Try to get a known address for the user, use username as placeholder otherwise
-            ip_addresses = self._get_user_ip_addresses(username, ip_list, request_action="add")
+            ip_addresses = self._get_user_ip_addresses(username, ip_list, request_action=RequestAction.ADD)
             ip_address = next(iter(ip_addresses), f"? ({username})")
 
         if not ip_address:
@@ -383,7 +388,7 @@ class NetworkFilter:
 
         if not ip_addresses:
             # Try to get a known address for the user
-            ip_addresses = self._get_user_ip_addresses(username, ip_list, request_action="remove")
+            ip_addresses = self._get_user_ip_addresses(username, ip_list, request_action=RequestAction.REMOVE)
 
         for ip_address in ip_addresses:
             if ip_address in ip_list:
@@ -410,19 +415,19 @@ class NetworkFilter:
 
         return ip_addresses
 
-    def _get_user_ip_addresses(self, username: str, ip_list, request_action: Literal["add", "remove"]):
+    def _get_user_ip_addresses(self, username: str, ip_list, request_action: RequestAction):
         """Returns the known IP addresses of a user, requests one otherwise."""
 
         ip_addresses = set()
 
-        if request_action == "add":
+        if request_action == RequestAction.ADD:
             # Get current IP for user, if known
             online_address = core.users.addresses.get(username)
 
             if online_address:
                 ip_addresses.add(online_address.ip)
 
-        elif request_action == "remove":
+        elif request_action == RequestAction.REMOVE:
             # Remove all known IP addresses for user
             ip_addresses = self._get_previous_user_ip_addresses(username, ip_list)
 
@@ -570,7 +575,7 @@ class NetworkFilter:
         self._update_saved_user_ip_addresses(config.sections["server"]["ipblocklist"], username, ip_address)
         self._update_saved_user_ip_addresses(config.sections["server"]["ipignorelist"], username, ip_address)
 
-        # Check pending "add" and "remove" requests for IP-based filtering of previously offline users
+        # Check pending add and remove requests for IP-based filtering of previously offline users
         self._ban_unban_user_ip_callback(username, ip_address)
         self._ignore_unignore_user_ip_callback(username, ip_address)
 
@@ -615,10 +620,10 @@ class NetworkFilter:
 
         request = self._ip_ban_requested.pop(username, None)
 
-        if request == "add":
+        if request == RequestAction.ADD:
             self.ban_user_ip(username, ip_address)
 
-        elif request == "remove":
+        elif request == RequestAction.REMOVE:
             self.unban_user_ip(username, ip_address)
 
     def is_user_banned(self, username: str) -> bool:
@@ -669,10 +674,10 @@ class NetworkFilter:
 
         request = self._ip_ignore_requested.pop(username, None)
 
-        if request == "add":
+        if request == RequestAction.ADD:
             self.ignore_user_ip(username, ip_address)
 
-        elif request == "remove":
+        elif request == RequestAction.REMOVE:
             self.unignore_user_ip(username, ip_address)
 
     def is_user_ignored(self, username: str) -> bool:

@@ -373,7 +373,7 @@ class Users:
             elif username in self.privileged:
                 self.privileged.remove(username)
 
-        if status not in {UserStatus.OFFLINE, UserStatus.ONLINE, UserStatus.AWAY}:
+        if status not in UserStatus.__members__.values():
             log.add_debug("Received an unknown status %s for user %s from the server",
                           (status, username))
 

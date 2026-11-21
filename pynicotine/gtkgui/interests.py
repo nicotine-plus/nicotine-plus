@@ -17,6 +17,7 @@ from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
+from pynicotine.search import SearchMode
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
@@ -419,7 +420,7 @@ class Interests:
         for iterator in list_view.get_selected_rows():
             item = list_view.get_row_value(iterator, column_id)
 
-            core.search.do_search(item, mode="global")
+            core.search.do_search(item, mode=SearchMode.GLOBAL)
             return
 
     def on_refresh_recommendations(self, *_args):

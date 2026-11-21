@@ -41,7 +41,7 @@ from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.treeview import create_grouping_menu
 from pynicotine.logfacility import log
-from pynicotine.search import ResultFilterMode
+from pynicotine.search import ResultFilterMode, SearchMode
 from pynicotine.shares import FileTypes
 from pynicotine.slskmessages import FileAttributes
 from pynicotine.utils import factorize
@@ -76,22 +76,22 @@ class Searches(IconNotebook):
         self.toolbar_default_widget = window.search_entry
 
         self.modes = {
-            "global": _("_Global"),
-            "buddies": _("_Buddies"),
-            "rooms": _("_Rooms"),
-            "user": _("_User")
+            SearchMode.GLOBAL: _("_Global"),
+            SearchMode.BUDDIES: _("_Buddies"),
+            SearchMode.ROOMS: _("_Rooms"),
+            SearchMode.USER: _("_User")
         }
 
         mode_menu = PopupMenu(window.application)
         mode_menu.add_items(
-            ("O" + self.modes["global"], "win.search-mode", "global"),
-            ("O" + self.modes["buddies"], "win.search-mode", "buddies"),
-            ("O" + self.modes["rooms"], "win.search-mode", "rooms"),
-            ("O" + self.modes["user"], "win.search-mode", "user")
+            ("O" + self.modes[SearchMode.GLOBAL], "win.search-mode", SearchMode.GLOBAL),
+            ("O" + self.modes[SearchMode.BUDDIES], "win.search-mode", SearchMode.BUDDIES),
+            ("O" + self.modes[SearchMode.ROOMS], "win.search-mode", SearchMode.ROOMS),
+            ("O" + self.modes[SearchMode.USER], "win.search-mode", SearchMode.USER)
         )
         mode_menu.update_model()
         mode_menu.set_menu_button(window.search_mode_button)
-        window.search_mode_label.set_label(self.modes["global"])
+        window.search_mode_label.set_label(self.modes[SearchMode.GLOBAL])
 
         if GTK_API_VERSION >= 4:
             inner_button = next(iter(window.search_mode_button))
@@ -181,8 +181,8 @@ class Searches(IconNotebook):
 
         self.window.search_mode_label.set_label(self.modes[search_mode])
 
-        self.user_search_combobox.set_visible(search_mode == "user")
-        self.room_search_combobox.set_visible(search_mode == "rooms")
+        self.user_search_combobox.set_visible(search_mode == SearchMode.USER)
+        self.room_search_combobox.set_visible(search_mode == SearchMode.ROOMS)
 
         # Hide popover after click
         self.window.search_mode_button.get_popover().set_visible(False)
@@ -199,7 +199,7 @@ class Searches(IconNotebook):
         username = self.user_search_combobox.get_text()
         users = [username] if username else []
 
-        if mode == "rooms" and not room_name:
+        if mode == SearchMode.ROOMS and not room_name:
             return
 
         self.window.search_entry.set_text("")
@@ -261,13 +261,13 @@ class Searches(IconNotebook):
         room_name = search.room
         users = search.users
 
-        if mode == "rooms":
+        if mode == SearchMode.ROOMS:
             mode_label = room_name.strip() if room_name else ""
 
-        elif mode == "user":
+        elif mode == SearchMode.USER:
             mode_label = ",".join(users)
 
-        elif mode == "buddies":
+        elif mode == SearchMode.BUDDIES:
             mode_label = _("Buddies")
 
         self.create_page(token, search.term_sanitized, mode, mode_label, room_name=room_name, users=users)
@@ -348,7 +348,7 @@ class Searches(IconNotebook):
                 return
 
             search_term = search_item.term
-            mode = "wishlist"
+            mode = SearchMode.WISHLIST
             mode_label = _("Wish")
             page = self.create_page(msg.token, search_term, mode, mode_label, show_page=False)
 
@@ -363,7 +363,7 @@ class Searches(IconNotebook):
     def update_wish_filters(self, wish):
 
         for page in self.pages.values():
-            if page.mode == "wishlist" and page.text == wish:
+            if page.mode == SearchMode.WISHLIST and page.text == wish:
                 page.update_wish_filters()
 
     def update_wish_button(self, wish):
@@ -779,7 +779,7 @@ class Search:
         if config.sections["searches"]["enablefilters"]:
             sfilter = config.sections["searches"]["defilter"]
 
-        if self.mode == "wishlist":
+        if self.mode == SearchMode.WISHLIST:
             search = core.search.wishlist.get(self.text)
 
             if search is not None and search.filter_mode == ResultFilterMode.CUSTOM:
@@ -958,7 +958,7 @@ class Search:
 
         if update_ui:
             # If this search wasn't initiated by us (e.g. wishlist), and the results aren't spoofed, show tab
-            is_wish = (self.mode == "wishlist")
+            is_wish = (self.mode == SearchMode.WISHLIST)
 
             if not self.show_page:
                 self.searches.create_page(self.token, self.text)
@@ -1379,7 +1379,7 @@ class Search:
 
     def update_wish_button(self):
 
-        if self.mode not in {"global", "wishlist"}:
+        if self.mode not in {SearchMode.GLOBAL, SearchMode.WISHLIST}:
             self.add_wish_button.set_visible(False)
             return
 
@@ -1955,7 +1955,7 @@ class Search:
 
     def on_edit_search(self, *_args):
 
-        if self.mode == "wishlist":
+        if self.mode == SearchMode.WISHLIST:
             self.window.application.lookup_action("wishlist").activate()
             return
 
@@ -1964,7 +1964,7 @@ class Search:
         if self.mode == "room":
             self.window.room_search_entry.set_text(self.room_name)
 
-        elif self.mode == "user":
+        elif self.mode == SearchMode.USER:
             self.window.user_search_entry.set_text(self.searched_users[0])
 
         self.window.search_entry.set_text(self.text)

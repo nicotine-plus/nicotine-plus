@@ -18,6 +18,7 @@ import time
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+from enum import StrEnum
 from itertools import chain
 from mmap import ACCESS_READ, mmap
 from multiprocessing.connection import Connection
@@ -94,14 +95,14 @@ class FileTypes:
     }
 
 
-class PermissionLevel:
+class PermissionLevel(StrEnum):
     PUBLIC = "public"
     BUDDY = "buddy"
     TRUSTED = "trusted"
     BANNED = "banned"
 
 
-class ScannerState:
+class ScannerState(StrEnum):
     INITIALIZED = "initialized"
     SUCCESS = "success"
 
