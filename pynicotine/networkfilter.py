@@ -6,7 +6,7 @@ from __future__ import annotations
 import os
 
 from bisect import bisect_left
-from enum import IntEnum
+from enum import StrEnum
 from socket import inet_aton
 from struct import Struct
 from sys import intern
@@ -20,9 +20,9 @@ from pynicotine.slskmessages import ServerDisconnect
 UINT32_UNPACK = Struct(">I").unpack_from
 
 
-class RequestAction(IntEnum):
-    ADD = 0
-    REMOVE = 1
+class RequestAction(StrEnum):
+    ADD = "add"
+    REMOVE = "remove"
 
 
 class NetworkFilter:
