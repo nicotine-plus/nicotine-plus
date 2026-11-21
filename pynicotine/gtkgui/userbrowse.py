@@ -73,6 +73,8 @@ class UserBrowses(IconNotebook):
             ("shared-file-list-failed", self.shared_file_list_failed),
             ("shared-file-list-progress", self.shared_file_list_progress),
             ("shared-file-list-response", self.shared_file_list),
+            ("shared-file-list-save-failed", self.shared_file_list_save_failed),
+            ("shared-file-list-saved", self.shared_file_list_saved),
             ("user-browse-remove-user", self.remove_user),
             ("user-browse-show-user", self.show_user),
             ("user-status", self.user_status)
@@ -170,12 +172,12 @@ class UserBrowses(IconNotebook):
         if page is not None:
             self.set_user_status(page.container, msg.username, msg.status)
 
-    def shared_file_list_failed(self, username, is_offline=False):
+    def shared_file_list_failed(self, username, is_offline=False, disk_error=None):
 
         page = self.pages.get(username)
 
         if page is not None:
-            page.shared_file_list_failed(is_offline)
+            page.shared_file_list_failed(is_offline, disk_error)
 
     def shared_file_list_progress(self, username, _sock, position, total):
 
@@ -183,6 +185,20 @@ class UserBrowses(IconNotebook):
 
         if page is not None:
             page.shared_file_list_progress(position, total)
+
+    def shared_file_list_save_failed(self, username, file_path, error):
+
+        page = self.pages.get(username)
+
+        if page is not None:
+            page.shared_file_list_save_failed(file_path, error)
+
+    def shared_file_list_saved(self, username, file_path):
+
+        page = self.pages.get(username)
+
+        if page is not None:
+            page.shared_file_list_saved(file_path)
 
     def shared_file_list(self, msg):
 
@@ -214,6 +230,9 @@ class UserBrowse:
             self.refresh_button,
             self.retry_button,
             self.save_button,
+            self.save_icon,
+            self.save_spinner,
+            self.save_success_icon,
             self.search_button,
             self.search_entry,
             self.search_entry_revealer,
@@ -227,6 +246,7 @@ class UserBrowse:
         self.refreshing = False
         self.local_permission_level = None
         self.queued_path = None
+        self.save_button_timer_id = None
 
         self.active_folder_path = None
         self.selected_files = {}
@@ -434,6 +454,10 @@ class UserBrowse:
 
     def destroy(self):
 
+        if self.save_button_timer_id is not None:
+            GLib.Source.remove(self.save_button_timer_id)
+            self.save_button_timer_id = None
+
         for menu in self.popup_menus:
             menu.destroy()
 
@@ -589,16 +613,23 @@ class UserBrowse:
 
         self.set_finished()
 
-    def shared_file_list_failed(self, is_offline=False):
+    def shared_file_list_failed(self, is_offline=False, disk_error=None):
 
-        if is_offline:
+        retry_enabled = True
+
+        if disk_error is not None:
+            error_message = _("Failed to load shares from disk: %(error)s") % {"error": disk_error}
+            retry_enabled = False
+
+        elif is_offline:
             error_message = _("Cannot request information from the user, since they are offline")
+
         else:
             error_message = _("Cannot request information from the user, possibly due to "
                               "a closed listening port or temporary connectivity issue")
 
         self.info_bar.show_error_message(error_message)
-        self.retry_button.set_visible(True)
+        self.retry_button.set_visible(retry_enabled)
         self.set_finished()
 
     def pulse_progress(self, repeat=True):
@@ -640,6 +671,32 @@ class UserBrowse:
 
         self.refresh_button.set_sensitive(False)
         self.save_button.set_sensitive(False)
+
+    def shared_file_list_save_failed(self, _file_path, _error):
+
+        stack = self.save_icon.get_parent()
+        stack.set_visible_child(self.save_icon)
+
+        self.save_spinner.stop()
+
+    def shared_file_list_saved(self, _file_path):
+
+        stack = self.save_success_icon.get_parent()
+        stack.set_visible_child(self.save_success_icon)
+
+        self.save_spinner.stop()
+
+        def reset_button():
+
+            self.save_button_timer_id = None
+
+            stack = self.save_icon.get_parent()
+            stack.set_visible_child(self.save_icon)
+
+        if self.save_button_timer_id is not None:
+            GLib.Source.remove(self.save_button_timer_id)
+
+        self.save_button_timer_id = GLib.timeout_add(2000, reset_button)
 
     def set_finishing(self):
 
@@ -1500,6 +1557,16 @@ class UserBrowse:
             self.find_search_matches()
 
     def on_save(self, *_args):
+
+        if self.save_button_timer_id is not None:
+            GLib.Source.remove(self.save_button_timer_id)
+            self.save_button_timer_id = None
+
+        self.save_spinner.start()
+
+        stack = self.save_spinner.get_parent()
+        stack.set_visible_child(self.save_spinner)
+
         core.userbrowse.save_shares_list_to_disk(self.username)
 
     def on_refresh(self, *_args):

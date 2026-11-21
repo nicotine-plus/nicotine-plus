@@ -6,9 +6,10 @@ from __future__ import annotations
 import json
 import os
 
+from concurrent.futures import Future, ProcessPoolExecutor, ThreadPoolExecutor
 from dataclasses import dataclass, field
+from enum import StrEnum
 from itertools import chain
-from threading import Thread
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -37,6 +38,11 @@ from pynicotine.utils import (
 )
 
 
+class TaskType(StrEnum):
+    PROCESS = "process"
+    THREAD = "thread"
+
+
 @dataclass(slots=True, eq=False)
 class BrowsedUser:
     username: str
@@ -45,6 +51,7 @@ class BrowsedUser:
     shared_size: int | None = None
     public_folders: dict[str, list[SharedFile]] = field(default_factory=dict)
     private_folders: dict[str, list[SharedFile]] = field(default_factory=dict)
+    saving: bool = False
 
     def clear(self) -> None:
 
@@ -54,22 +61,31 @@ class BrowsedUser:
 
 
 class UserBrowse:
-    __slots__ = ("users",)
+    __slots__ = ("users", "user_shares_folder", "_task_pools")
 
     def __init__(self):
 
         self.users = {}
+        self.user_shares_folder = os.path.join(config.data_folder_path, "usershares")
+        self._task_pools: dict[TaskType, ProcessPoolExecutor | ThreadPoolExecutor] = {}
 
         for event_name, callback in (
             ("peer-connection-closed", self._peer_connection_error),
             ("peer-connection-error", self._peer_connection_error),
             ("quit", self._quit),
             ("server-login", self._server_login),
-            ("shared-file-list-response", self._shared_file_list_response)
+            ("shared-file-list-response", self._shared_file_list_response),
+            ("shared-file-list-save-failed", self._shared_file_list_save_failed),
+            ("shared-file-list-saved", self._shared_file_list_saved)
         ):
             events.connect(event_name, callback)
 
     def _quit(self) -> None:
+
+        for pool in self._task_pools.values():
+            pool.shutdown(cancel_futures=True)
+
+        self._task_pools.clear()
         self.remove_all_users()
 
     def _server_login(self, msg: Login) -> None:
@@ -121,7 +137,14 @@ class UserBrowse:
             current_permission_level = permission_level
 
         msg = core.shares.compressed_shares.get(current_permission_level)
-        Thread(target=self._parse_local_shares, args=(username, msg), name="LocalShareParser").start()
+
+        def finish_task(future: Future) -> None:
+            msg = future.result()
+            events.emit_main_thread("shared-file-list-response", msg)
+
+        pool = self._create_task_pool(TaskType.THREAD)
+        future = pool.submit(self._run_task_parse_local, username, msg)
+        future.add_done_callback(finish_task)
 
     def remove_user(self, username: str) -> None:
 
@@ -148,121 +171,38 @@ class UserBrowse:
 
     def create_user_shares_folder(self) -> str | None:
 
-        shares_folder = os.path.join(config.data_folder_path, "usershares")
-        shares_folder_encoded = encode_path(shares_folder)
+        folder_path_encoded = encode_path(self.user_shares_folder)
 
         try:
-            if not os.path.isdir(shares_folder_encoded):
-                os.makedirs(shares_folder_encoded)
+            if not os.path.isdir(folder_path_encoded):
+                os.makedirs(folder_path_encoded)
 
         except Exception as error:
             log.add(_("Cannot create folder %(path)s: %(error)s"),
-                    {"path": shares_folder, "error": error})
+                    {"path": self.user_shares_folder, "error": error})
             return None
 
-        return shares_folder
+        return self.user_shares_folder
 
     def load_shares_list_from_disk(self, file_path: str) -> None:
-
-        file_path_encoded = encode_path(file_path)
-
-        try:
-            try:
-                # Try legacy format first
-                import bz2
-
-                with bz2.BZ2File(file_path_encoded) as file_handle:
-                    from pynicotine.shares import RestrictedUnpickler
-                    shares_list = RestrictedUnpickler(file_handle, encoding="utf-8").load()
-
-            except Exception:
-                # Try new format
-
-                with open(file_path_encoded, encoding="utf-8") as file_handle:
-                    shares_list = json.load(file_handle)
-
-            bitrate_key = str(FileAttribute.BITRATE)
-            length_key = str(FileAttribute.LENGTH)
-            vbr_key = str(FileAttribute.VBR)
-            sample_rate_key = str(FileAttribute.SAMPLE_RATE)
-            bit_depth_key = str(FileAttribute.BIT_DEPTH)
-
-            for _folder_path, files in shares_list:
-                for i, file_data in enumerate(files):
-                    code = file_data[0]
-
-                    if not isinstance(code, int):
-                        code = 1
-
-                    basename = file_data[1]
-
-                    if not isinstance(basename, str):
-                        raise TypeError(_("Invalid file name in shares"))
-
-                    size = file_data[2]
-
-                    if not isinstance(size, int):
-                        raise TypeError(_("Invalid file size in shares"))
-
-                    attributes = file_data[4]
-
-                    if isinstance(attributes, dict):
-                        bitrate = attributes.get(bitrate_key)
-                        length = attributes.get(length_key)
-                        vbr = attributes.get(vbr_key)
-                        sample_rate = attributes.get(sample_rate_key)
-                        bit_depth = attributes.get(bit_depth_key)
-                    else:
-                        # Legacy attribute list format used for shares lists saved in Nicotine+ 3.2.2 and earlier
-                        bitrate = length = vbr = sample_rate = bit_depth = None
-
-                        if len(attributes) == 3:
-                            attribute1, attribute2, attribute3 = attributes
-
-                            if attribute3 in {0, 1}:
-                                bitrate = attribute1
-                                length = attribute2
-                                vbr = attribute3
-
-                            elif attribute3 > 1:
-                                length = attribute1
-                                sample_rate = attribute2
-                                bit_depth = attribute3
-
-                        elif len(attributes) == 2:
-                            attribute1, attribute2 = attributes
-
-                            if attribute2 in {0, 1}:
-                                bitrate = attribute1
-                                vbr = attribute2
-
-                            elif attribute1 >= 8000 and attribute2 <= 64:
-                                sample_rate = attribute1
-                                bit_depth = attribute2
-
-                            else:
-                                bitrate = attribute1
-                                length = attribute2
-
-                    files[i] = SharedFile(
-                        code=code,
-                        path=basename,
-                        size=size,
-                        extension=None,
-                        attributes=FileAttributes(bitrate, length, vbr, sample_rate, bit_depth)
-                    )
-
-        except Exception as error:
-            log.add(_("Loading shares from disk failed: %(error)s"), {"error": error})
-            return
 
         username = os.path.basename(file_path)
         self._show_user(username, new_request=True)
 
-        msg = SharedFileListResponse(public_folders=shares_list)
-        msg.username = username
+        def finish_task(future: Future) -> None:
 
-        events.emit("shared-file-list-response", msg)
+            try:
+                msg = future.result()
+
+            except Exception as error:
+                events.emit_main_thread("shared-file-list-failed", username, disk_error=error)
+                return
+
+            events.emit_main_thread("shared-file-list-response", msg)
+
+        pool = self._create_task_pool(TaskType.PROCESS)
+        future = pool.submit(self._run_task_parse_disk, username, file_path)
+        future.add_done_callback(finish_task)
 
     def save_shares_list_to_disk(self, username: str) -> None:
 
@@ -271,39 +211,27 @@ class UserBrowse:
         if browsed_user is None:
             return
 
-        folder_path = self.create_user_shares_folder()
-
-        if not folder_path:
+        if browsed_user.saving:
             return
 
-        file_path = safe_path_join(folder_path, username)
+        file_path = safe_path_join(self.user_shares_folder, username)
+        browsed_user.saving = True
 
-        try:
-            with open(encode_path(file_path), "w", encoding="utf-8") as file_handle:
-                # Dump every folder to the file individually to avoid large memory usage
-                json_encoder = json.JSONEncoder(
-                    check_circular=False, ensure_ascii=False, default=lambda x: x.serialize()
-                )
-                is_first_item = True
+        def finish_task(future: Future) -> None:
 
-                file_handle.write("[")
+            error = future.exception()
 
-                for folders in (browsed_user.public_folders, browsed_user.private_folders):
-                    for item in folders.items():
-                        if is_first_item:
-                            is_first_item = False
-                        else:
-                            file_handle.write(",\n")
+            if error is not None:
+                events.emit_main_thread("shared-file-list-save-failed", username, file_path, error)
+                return
 
-                        file_handle.write(json_encoder.encode(item))
+            events.emit_main_thread("shared-file-list-saved", username, file_path)
 
-                file_handle.write("]")
-
-            log.add(_("Saved list of shared files for user '%(user)s' to %(dir)s"),
-                    {"user": username, "dir": folder_path})
-
-        except Exception as error:
-            log.add(_("Cannot save shares for user %(user)s: %(error)s"), {"user": username, "error": error})
+        pool = self._create_task_pool(TaskType.THREAD)
+        future = pool.submit(
+            self._run_task_save_disk, file_path, browsed_user.public_folders, browsed_user.private_folders
+        )
+        future.add_done_callback(finish_task)
 
     def iter_matching_folders(self, requested_folder_path: str, browsed_user: BrowsedUser, recurse: bool = False):
 
@@ -427,6 +355,18 @@ class UserBrowse:
 
         self.browse_user(username, path=file_path)
 
+    def _create_task_pool(self, task_type: TaskType) -> ProcessPoolExecutor | ThreadPoolExecutor:
+
+        pool = self._task_pools.get(task_type)
+
+        if pool is None:
+            if task_type == TaskType.PROCESS:
+                pool = self._task_pools[task_type] = ProcessPoolExecutor(max_workers=1, max_tasks_per_child=1)
+            else:
+                pool = self._task_pools[task_type] = ThreadPoolExecutor(max_workers=1)
+
+        return pool
+
     def _show_user(
         self, username: str, path: str | None = None, new_request: bool = False, switch_page: bool = True
     ) -> None:
@@ -447,14 +387,164 @@ class UserBrowse:
         core.users.watch_user(username, context="userbrowse")
         return new_request
 
-    def _parse_local_shares(self, username: str, msg: SharedFileListResponse) -> None:
-        """Parse a local shares list and show it in the UI."""
+    @staticmethod
+    def _run_task_parse_local(username: str, msg: SharedFileListResponse) -> SharedFileListResponse:
 
         parser = MessageParser(memoryview(msg.pack()))
         unpacked_msg = msg.unpack(parser)
         unpacked_msg.username = username
 
-        events.emit_main_thread("shared-file-list-response", unpacked_msg)
+        return unpacked_msg
+
+    @staticmethod
+    def _run_task_parse_disk(username: str, file_path: str) -> SharedFileListResponse:
+
+        file_path_encoded = encode_path(file_path)
+        msg = None
+
+        try:
+            # Try legacy format first
+            import bz2
+
+            with bz2.BZ2File(file_path_encoded) as file_handle:
+                from pynicotine.shares import RestrictedUnpickler
+                shares_list = RestrictedUnpickler(file_handle, encoding="utf-8").load()
+
+        except Exception:
+            # Try new format
+            with open(file_path_encoded, encoding="utf-8") as file_handle:
+                shares_list = json.load(file_handle)
+
+        bitrate_key = str(FileAttribute.BITRATE)
+        length_key = str(FileAttribute.LENGTH)
+        vbr_key = str(FileAttribute.VBR)
+        sample_rate_key = str(FileAttribute.SAMPLE_RATE)
+        bit_depth_key = str(FileAttribute.BIT_DEPTH)
+
+        for _folder_path, files in shares_list:
+            for i, file_data in enumerate(files):
+                code = file_data[0]
+
+                if not isinstance(code, int):
+                    code = 1
+
+                basename = file_data[1]
+
+                if not isinstance(basename, str):
+                    raise TypeError(_("Invalid file name in shares"))
+
+                size = file_data[2]
+
+                if not isinstance(size, int):
+                    raise TypeError(_("Invalid file size in shares"))
+
+                attributes = file_data[4]
+
+                if isinstance(attributes, dict):
+                    bitrate = attributes.get(bitrate_key)
+                    length = attributes.get(length_key)
+                    vbr = attributes.get(vbr_key)
+                    sample_rate = attributes.get(sample_rate_key)
+                    bit_depth = attributes.get(bit_depth_key)
+                else:
+                    # Legacy attribute list format used for shares lists saved in Nicotine+ 3.2.2 and earlier
+                    bitrate = length = vbr = sample_rate = bit_depth = None
+
+                    if len(attributes) == 3:
+                        attribute1, attribute2, attribute3 = attributes
+
+                        if attribute3 in {0, 1}:
+                            bitrate = attribute1
+                            length = attribute2
+                            vbr = attribute3
+
+                        elif attribute3 > 1:
+                            length = attribute1
+                            sample_rate = attribute2
+                            bit_depth = attribute3
+
+                    elif len(attributes) == 2:
+                        attribute1, attribute2 = attributes
+
+                        if attribute2 in {0, 1}:
+                            bitrate = attribute1
+                            vbr = attribute2
+
+                        elif attribute1 >= 8000 and attribute2 <= 64:
+                            sample_rate = attribute1
+                            bit_depth = attribute2
+
+                        else:
+                            bitrate = attribute1
+                            length = attribute2
+
+                files[i] = SharedFile(
+                    code=code,
+                    path=basename,
+                    size=size,
+                    extension=None,
+                    attributes=FileAttributes(bitrate, length, vbr, sample_rate, bit_depth)
+                )
+
+        msg = SharedFileListResponse(public_folders=shares_list)
+        msg.username = username
+
+        return msg
+
+    @staticmethod
+    def _run_task_save_disk(
+        file_path: str,
+        public_folders: dict[str, list[SharedFile]], private_folders: dict[str, list[SharedFile]]
+    ) -> None:
+
+        folder_path_encoded = encode_path(os.path.dirname(file_path))
+
+        if not os.path.isdir(folder_path_encoded):
+            os.makedirs(folder_path_encoded)
+
+        with open(encode_path(file_path), "w", encoding="utf-8") as file_handle:
+            # Dump every folder to the file individually to avoid large memory usage
+            json_encoder = json.JSONEncoder(
+                check_circular=False, ensure_ascii=False, default=lambda x: x.serialize()
+            )
+            is_first_item = True
+
+            file_handle.write("[")
+
+            for folders in (public_folders, private_folders):
+                for item in folders.items():
+                    if is_first_item:
+                        is_first_item = False
+                    else:
+                        file_handle.write(",\n")
+
+                    file_handle.write(json_encoder.encode(item))
+
+            file_handle.write("]")
+
+    def _shared_file_list_saved(self, username, file_path):
+
+        browsed_user = self.users.get(username)
+
+        if browsed_user is not None:
+            browsed_user.saving = False
+
+        log.add(_("Saved list of shared files for user '%(user)s' to %(dir)s"), {
+            "user": username,
+            "dir": os.path.dirname(file_path)
+        })
+
+    def _shared_file_list_save_failed(self, username, file_path, error):
+
+        browsed_user = self.users.get(username)
+
+        if browsed_user is not None:
+            browsed_user.saving = False
+
+        log.add(_("Cannot save list of shared files to %(filename)s: %(error)s"), {
+            "filename": file_path,
+            "error": error
+        })
 
     def _peer_connection_error(self, username: str, conn_type: ConnectionType, msgs, is_offline: bool = False) -> None:
 
