@@ -319,7 +319,7 @@ class Users:
             # address.
 
             if username != self.login_username:
-                self.addresses[username] = Address(ip_address, port)
+                self.addresses[username] = addr
 
             self.countries[username] = watched_user.stats.country_code = country_code
             events.emit("user-country", username, country_code)
