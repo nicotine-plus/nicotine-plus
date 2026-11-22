@@ -1244,7 +1244,7 @@ class Uploads(Transfers):
             core.pluginhandler.upload_started_notification(username, virtual_path, real_path)
 
     def _file_upload_progress(
-        self, username: str, token: int, sock: socket, offset, bytes_sent, speed=None
+        self, username: str, token: int, sock: socket, offset, bytes_sent: int, speed=None
     ) -> None:
         """A file upload is in progress."""
 
@@ -1260,7 +1260,7 @@ class Uploads(Transfers):
         ):
             self._update_transfer(upload)
 
-    def _file_connection_closed(self, username: str, token: int, sock, timed_out: bool) -> None:
+    def _file_connection_closed(self, username: str, token: int, sock: socket, timed_out: bool) -> None:
         """A file upload connection has closed for any reason."""
 
         upload = self.active_users.get(username, {}).get(token)

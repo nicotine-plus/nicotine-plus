@@ -169,24 +169,24 @@ class Transfers:
     def _load_transfers_file(transfers_file: str):
         """Loads a file of transfers in json format."""
 
-        transfers_file = encode_path(transfers_file)
+        transfers_file_encoded = encode_path(transfers_file)
 
-        if not os.path.isfile(transfers_file):
+        if not os.path.isfile(transfers_file_encoded):
             return None
 
-        with open(transfers_file, encoding="utf-8") as handle:
+        with open(transfers_file_encoded, encoding="utf-8") as handle:
             return json.load(handle)
 
     @staticmethod
     def _load_legacy_transfers_file(transfers_file: str):
         """Loads a download queue file in pickle format (legacy)"""
 
-        transfers_file = encode_path(transfers_file)
+        transfers_file_encoded = encode_path(transfers_file)
 
-        if not os.path.isfile(transfers_file):
+        if not os.path.isfile(transfers_file_encoded):
             return None
 
-        with open(transfers_file, "rb") as handle:
+        with open(transfers_file_encoded, "rb") as handle:
             from pynicotine.shares import RestrictedUnpickler
             return RestrictedUnpickler(handle, encoding="utf-8").load()
 

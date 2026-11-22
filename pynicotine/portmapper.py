@@ -43,7 +43,7 @@ class BaseImplementation:
         self.port = None
         self.local_ip_address = None
 
-    def set_port(self, port: int, local_ip_address) -> None:
+    def set_port(self, port: int, local_ip_address: str) -> None:
         self.port = port
         self.local_ip_address = local_ip_address
 
@@ -436,7 +436,7 @@ class UPnP(BaseImplementation):
         self._service = None
 
     @staticmethod
-    def _find_service(private_ip):
+    def _find_service(private_ip: str):
 
         services = UPnP.SSDP.get_services(private_ip)
         service = services.get("urn:schemas-upnp-org:service:WANIPConnection:2")
@@ -450,7 +450,7 @@ class UPnP(BaseImplementation):
         return service
 
     def _request_port_mapping(
-        self, public_port: int, private_ip, private_port: int, mapping_description: str, lease_duration: int
+        self, public_port: int, private_ip: str, private_port: int, mapping_description: str, lease_duration: int
     ):
         """Function that adds a port mapping to the router.
 
@@ -700,7 +700,7 @@ class PortMapper:
     def _cancel_renewal_timer(self) -> None:
         events.cancel_scheduled(self._timer)
 
-    def set_port(self, port: int, local_ip_address) -> None:
+    def set_port(self, port: int, local_ip_address: str) -> None:
 
         self._natpmp.set_port(port, local_ip_address)
         self._upnp.set_port(port, local_ip_address)

@@ -372,7 +372,7 @@ class UserBrowse:
 
     def _show_user(
         self, username: str, path: str | None = None, new_request: bool = False, switch_page: bool = True
-    ) -> None:
+    ) -> bool:
 
         browsed_user = self.users.get(username)
 
@@ -525,7 +525,7 @@ class UserBrowse:
 
             file_handle.write("]")
 
-    def _shared_file_list_saved(self, username, file_path):
+    def _shared_file_list_saved(self, username: str, file_path: str) -> None:
 
         browsed_user = self.users.get(username)
 
@@ -537,7 +537,7 @@ class UserBrowse:
             "dir": os.path.dirname(file_path)
         })
 
-    def _shared_file_list_save_failed(self, username, file_path, error):
+    def _shared_file_list_save_failed(self, username: str, file_path: str, error) -> None:
 
         browsed_user = self.users.get(username)
 

@@ -182,12 +182,12 @@ class Search:
     @staticmethod
     def _load_wishlist_file(wishlist_file: str):
 
-        wishlist_file = encode_path(wishlist_file)
+        wishlist_file_encoded = encode_path(wishlist_file)
 
-        if not os.path.isfile(wishlist_file):
+        if not os.path.isfile(wishlist_file_encoded):
             return []
 
-        with open(wishlist_file, encoding="utf-8") as handle:
+        with open(wishlist_file_encoded, encoding="utf-8") as handle:
             return json.load(handle)
 
     def _load_wishlist(self) -> None:
@@ -305,7 +305,7 @@ class Search:
     def show_search(self, token: int) -> None:
         events.emit("show-search", token)
 
-    def add_wish(self, wish, auto_search: bool = True) -> None:
+    def add_wish(self, wish: str, auto_search: bool = True) -> None:
 
         if not wish:
             return
@@ -413,7 +413,7 @@ class Search:
 
         return search
 
-    def _sanitize_search_term(self, search_term: str):
+    def _sanitize_search_term(self, search_term: str) -> tuple[str, str, list[str], list[str]]:
 
         included_words: list[str] = []
         excluded_words: list[str] = []

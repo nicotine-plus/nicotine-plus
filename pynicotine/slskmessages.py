@@ -7,7 +7,6 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
 import zlib
 
 try:
@@ -3282,7 +3281,7 @@ class SharedFileListResponse(PeerMessage):
     )
     unknown: int | None = None
 
-    permission_level: int | None = field(default=None, repr=False)
+    permission_level: str | None = field(default=None, repr=False)
     cached_response: bytes | None = field(default=None, repr=False)
     public_shares: Database | None = field(default=None, repr=False)
     buddy_shares: Database | None = field(default=None, repr=False)

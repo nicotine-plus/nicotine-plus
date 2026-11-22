@@ -16,7 +16,6 @@ from pynicotine.slskmessages import (
     CancelRoomMembership,
     CancelRoomOwnership,
     EnableRoomInvitations,
-    GlobalRoomMessage,
     JoinGlobalRoom,
     JoinRoom,
     LeaveGlobalRoom,
@@ -222,7 +221,7 @@ class ChatRooms:
     def echo_message(self, room_name: str, message, message_type="local") -> None:
         events.emit("echo-room-message", room_name, message, message_type)
 
-    def send_message(self, room_name: str, message) -> None:
+    def send_message(self, room_name: str, message: str) -> None:
 
         if core.users.login_status == UserStatus.OFFLINE:
             return
@@ -288,7 +287,7 @@ class ChatRooms:
     def request_enable_room_invitations(self, enabled: bool) -> None:
         core.send_message_to_server(EnableRoomInvitations(enabled))
 
-    def request_update_ticker(self, room_name: str, message) -> None:
+    def request_update_ticker(self, room_name: str, message: str) -> None:
         core.send_message_to_server(SetRoomTicker(room_name=room_name, message=message))
 
     def _update_room_user(self, room: JoinedRoom, user_stats: UserStats) -> None:
@@ -522,7 +521,7 @@ class ChatRooms:
 
         self._update_private_room(msg.room_name, operators=msg.operators)
 
-    def _global_room_message(self, msg: GlobalRoomMessage) -> None:
+    def _global_room_message(self, msg) -> None:
         """Server code 152."""
 
         if self.GLOBAL_ROOM_NAME not in self.joined_rooms:

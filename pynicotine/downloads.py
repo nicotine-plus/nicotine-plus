@@ -688,7 +688,9 @@ class Downloads(Transfers):
 
         return False
 
-    def get_folder_destination(self, username: str, folder_path: str, root_folder_path=None, download_folder_path=None):
+    def get_folder_destination(
+        self, username: str, folder_path: str, root_folder_path=None, download_folder_path=None
+    ) -> str:
 
         # Remove parent folders of the requested folder from path
         parent_folder_path = root_folder_path if root_folder_path else folder_path

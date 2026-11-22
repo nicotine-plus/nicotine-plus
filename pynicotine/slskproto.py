@@ -1383,7 +1383,7 @@ class NetworkThread(Thread):
         """Only permit sending login message when not authenticated."""
         return self._server_address is not None or isinstance(msg, Login)
 
-    def _process_server_message(self, msg_type, msg_size, msg_content):
+    def _process_server_message(self, msg_type, msg_size: int, msg_content):
 
         msg = self._unpack_network_message(
             SERVER_MESSAGE_CLASSES[msg_type],
@@ -1592,7 +1592,7 @@ class NetworkThread(Thread):
         if idx:
             del in_buffer[:idx]
 
-    def _process_server_output(self, conn, msg):
+    def _process_server_output(self, conn, msg) -> None:
 
         msg_content = self._pack_network_message(msg)
 
@@ -1872,7 +1872,7 @@ class NetworkThread(Thread):
 
             log.add_conn("Incoming connection from address %s", (incoming_addr,))
 
-    def _init_peer_connection(self, addr, init, pierce_token=None) -> None:
+    def _init_peer_connection(self, addr: Address, init, pierce_token=None) -> None:
 
         if self._num_sockets >= self.MAX_SOCKETS:
             # Connection limit reached, re-queue
