@@ -12,7 +12,7 @@ import os
 import sys
 
 from collections.abc import Callable, Iterable
-from typing import Any, Literal, ParamSpec, TextIO, TypeVar
+from typing import Literal, ParamSpec, TextIO, TypeVar
 
 T = TypeVar("T")
 P = ParamSpec("P")
@@ -688,7 +688,7 @@ def load_file(file_path: str, load_func: Callable[[str], T], use_old_file: bool 
     return None
 
 
-def write_file_and_backup(path: str, callback: Callable[[TextIO], Any], protect: bool = False) -> None:
+def write_file_and_backup(path: str, callback: Callable[[TextIO], None], protect: bool = False) -> None:
 
     from pynicotine.logfacility import log
 
