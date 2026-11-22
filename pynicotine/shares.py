@@ -32,7 +32,7 @@ from os import (
 from stat import FILE_ATTRIBUTE_HIDDEN
 from struct import Struct
 from threading import Thread
-from typing import Any, Literal, NoReturn, TypeAlias
+from typing import Literal, NoReturn, TypeAlias
 
 from pynicotine import rename_process
 from pynicotine.config import config
@@ -215,7 +215,7 @@ class Database:
     def __len__(self):
         return len(self._value_offsets)
 
-    def __getitem__(self, key: str) -> Any:
+    def __getitem__(self, key: str) -> object:
 
         value_offset = self._value_offsets[key]
 
@@ -236,7 +236,7 @@ class Database:
         self._value_offsets[key] = self._file_offset + self.LENGTH_DATA_SIZE + key_length
         self._file_offset += len(item_data)
 
-    def get(self, key: str, default=None) -> Any:
+    def get(self, key: str, default=None) -> object:
 
         if key in self._value_offsets:
             return self[key]
