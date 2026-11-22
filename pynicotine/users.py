@@ -114,7 +114,7 @@ class Users:
 
         # Fake a user status message, since server doesn't send updates when we
         # disable away mode
-        events.emit("user-status", GetUserStatus(self.login_username, self.login_status))
+        events.emit("user-status", GetUserStatus(username=self.login_username, status=self.login_status))
 
     def open_privileges_url(self) -> None:
 
@@ -357,7 +357,7 @@ class Users:
             self.watched.pop(username, None)
             return
 
-        events.emit("user-stats", GetUserStats(username, msg.stats))
+        events.emit("user-stats", GetUserStats(username=username, stats=msg.stats))
 
     def _user_status(self, msg: GetUserStatus) -> None:
         """Server code 7."""
