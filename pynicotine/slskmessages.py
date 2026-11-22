@@ -358,7 +358,6 @@ class DownloadFile(InternalMessage):
     token: int
     file_handle: BinaryIO
     num_bytes_left: int
-    offset: int
     speed: int = 0
 
 
