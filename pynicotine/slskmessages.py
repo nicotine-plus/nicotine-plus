@@ -1208,8 +1208,8 @@ class MessageUser(ServerMessage):
 
     username: str
     message: str
-    message_id: int = -1
-    timestamp: int = -1
+    message_id: int | None = None
+    timestamp: int | None = None
     is_new_message: bool = False
     message_type: str | None = None
     mention_type: str | None = None
