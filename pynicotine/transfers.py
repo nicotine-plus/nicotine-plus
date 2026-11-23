@@ -190,7 +190,7 @@ class Transfers:
             from pynicotine.shares import RestrictedUnpickler
             return RestrictedUnpickler(handle, encoding="utf-8").load()
 
-    def _load_transfers(self):
+    def _load_transfers(self) -> None:
         raise NotImplementedError
 
     def _load_file_attributes(self, num_attributes: int, transfer_row) -> FileAttributes:
@@ -385,7 +385,7 @@ class Transfers:
 
     # Limits #
 
-    def update_transfer_limits(self):
+    def update_transfer_limits(self) -> None:
         raise NotImplementedError
 
     # Events #

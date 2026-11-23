@@ -9,7 +9,7 @@ from collections import deque
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import StrEnum
-from typing import BinaryIO
+from typing import BinaryIO, ClassVar
 
 from pynicotine.config import config
 from pynicotine.events import events
@@ -43,7 +43,7 @@ class Logger:
                  "transfer_folder_path", "room_folder_path", "private_chat_folder_path",
                  "_log_levels", "_log_files")
 
-    PREFIXES = {
+    PREFIXES: ClassVar[dict[LogLevel, str]] = {
         LogLevel.DOWNLOAD: "Download",
         LogLevel.UPLOAD: "Upload",
         LogLevel.SEARCH: "Search",

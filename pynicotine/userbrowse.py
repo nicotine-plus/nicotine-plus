@@ -537,7 +537,7 @@ class UserBrowse:
             "dir": os.path.dirname(file_path)
         })
 
-    def _shared_file_list_save_failed(self, username: str, file_path: str, error) -> None:
+    def _shared_file_list_save_failed(self, username: str, file_path: str, error: BaseException) -> None:
 
         browsed_user = self.users.get(username)
 

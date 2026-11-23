@@ -6,11 +6,12 @@ from __future__ import annotations
 import os
 
 from bisect import bisect_left
+from collections.abc import Callable, Buffer
 from enum import StrEnum
 from socket import inet_aton
 from struct import Struct
 from sys import intern
-from typing import Literal
+from typing import ClassVar, Literal
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -18,7 +19,7 @@ from pynicotine.events import events
 from pynicotine.slskmessages import GetPeerAddress
 from pynicotine.slskmessages import ServerDisconnect
 
-UINT32_UNPACK = Struct(">I").unpack_from
+UINT32_UNPACK: Callable[[Buffer], tuple[int]] = Struct(">I").unpack_from
 
 
 class RequestAction(StrEnum):
@@ -32,7 +33,7 @@ class NetworkFilter:
     __slots__ = ("_banned_users", "_ignored_users", "_ip_ban_requested", "_ip_ignore_requested",
                  "_ip_range_values", "_ip_range_countries", "_loaded_ip_country_data")
 
-    COUNTRIES = {
+    COUNTRIES: ClassVar[dict[str, str]] = {
         "AD": _("Andorra"),
         "AE": _("United Arab Emirates"),
         "AF": _("Afghanistan"),
@@ -321,8 +322,8 @@ class NetworkFilter:
         data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "external", "data")
 
         with open(os.path.join(data_path, "ip_country_data.csv"), "r", encoding="utf-8") as file_handle:
-            for line in file_handle:
-                line = line.strip()
+            for line_raw in file_handle:
+                line = line_raw.strip()
 
                 if not line or line.startswith("#"):
                     continue

@@ -32,7 +32,7 @@ from os import (
 from stat import FILE_ATTRIBUTE_HIDDEN
 from struct import Struct
 from threading import Thread
-from typing import Literal, NoReturn, TypeAlias
+from typing import ClassVar, Literal, NoReturn, TypeAlias
 
 from pynicotine import rename_process
 from pynicotine.config import config
@@ -65,31 +65,31 @@ FileInfo: TypeAlias = list[str | int | AudioQuality | None]               # [vir
 
 
 class FileTypes:
-    ARCHIVE = {
+    ARCHIVE: ClassVar[set[str]] = {
         "7z", "br", "bz2", "gz", "iso", "lz", "lzma", "rar", "tar", "tbz", "tbz2", "tgz", "xz", "zip", "zst"
     }
-    AUDIO = {
+    AUDIO: ClassVar[set[str]] = {
         "aac", "ac3", "afc", "aifc", "aif", "aiff", "ape", "au", "bwav", "bwf", "dff", "dsd", "dsf", "dts", "flac",
         "gbs", "gym", "it", "m4a", "m4b", "mid", "midi", "mka", "mod", "mp1", "mp2", "mp3", "mp+", "mpc", "nsf", "nsfe",
         "ofr", "ofs", "oga", "ogg", "opus", "psf", "psf1", "psf2", "s3m", "sid", "spc", "spx", "ssf", "tak", "tta",
         "wav", "vgm", "vgz", "wma", "vqf", "wv", "xm"
     }
-    EXECUTABLE = {
+    EXECUTABLE: ClassVar[set[str]] = {
         "apk", "appimage", "bat", "deb", "dmg", "flatpak", "exe", "jar", "msi", "pkg", "rpm", "sh"
     }
-    IMAGE = {
+    IMAGE: ClassVar[set[str]] = {
         "apng", "avif", "bmp", "gif", "heic", "heif", "ico", "jfif", "jp2", "jpg", "jpe", "jpeg", "jxl", "png", "psd",
         "raw", "svg", "svgz", "tif", "tiff", "webp"
     }
-    DOCUMENT = {
+    DOCUMENT: ClassVar[set[str]] = {
         "doc", "docx", "epub", "mobi", "odp", "ods", "odt", "opf", "oxps", "pdf", "ppt", "pptx", "rtf", "xls", "xlsx",
         "xps"
     }
-    TEXT = {
+    TEXT: ClassVar[set[str]] = {
         "cue", "csv", "htm", "html", "m3u", "m3u8", "md5", "log", "lrc", "md", "mks", "nfo", "ps", "rst", "sfv",
         "sha1", "sha256", "srt", "txt"
     }
-    VIDEO = {
+    VIDEO: ClassVar[set[str]] = {
         "3gp", "amv", "asf", "avi", "f4v", "flv", "m2ts", "m2v", "m4p", "m4v", "mov", "mp4", "mpe", "mpeg", "mpg",
         "mkv", "mts", "ogv", "ts", "vob", "webm", "wmv"
     }
@@ -197,7 +197,7 @@ class Database:
             if not file_size:
                 file_handle.write(self.FILE_SIGNATURE)
                 file_handle.write(bytes([self.VERSION]))
-                return value_offsets
+                return {}
 
             file_handle.seek(0)
 
@@ -1089,7 +1089,7 @@ class Shares:
 
         for shares in share_groups:
             for virtual_name, folder_path in shares:
-                if (virtual_name_or_folder_path in (virtual_name, folder_path)
+                if (virtual_name_or_folder_path in {virtual_name, folder_path}
                         or folder_path == normalized_folder_path):
                     shares.remove((virtual_name, folder_path))
                     return True

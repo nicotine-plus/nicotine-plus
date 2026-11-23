@@ -19,8 +19,7 @@ from socket import (
     SOL_SOCKET,
     inet_aton,
     inet_ntoa,
-    socket,
-    timeout
+    socket
 )
 from threading import Thread
 from urllib.parse import urlsplit
@@ -186,7 +185,7 @@ class NATPMP(BaseImplementation):
                     response = self.PortmapResponse(message=sock.recv(16))
                     return response.result
 
-                except timeout:
+                except TimeoutError:
                     timeout_seconds *= 2
 
         log.add_debug("NAT-PMP: Giving up, all %s portmap requests timed out", self.REQUEST_ATTEMPTS)
@@ -424,7 +423,7 @@ class UPnP(BaseImplementation):
                         UPnP.SSDP.add_service(
                             services, locations, UPnP.SSDPResponse(message.decode("utf-8", "replace")))
 
-                    except timeout:
+                    except TimeoutError:
                         break
 
                 log.add_debug("UPnP: %s service(s) detected", len(services))

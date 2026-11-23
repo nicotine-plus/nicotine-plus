@@ -1383,7 +1383,7 @@ class NetworkThread(Thread):
         """Only permit sending login message when not authenticated."""
         return self._server_address is not None or isinstance(msg, Login)
 
-    def _process_server_message(self, msg_type, msg_size: int, msg_content):
+    def _process_server_message(self, msg_type, msg_size: int, msg_content) -> bool:
 
         msg = self._unpack_network_message(
             SERVER_MESSAGE_CLASSES[msg_type],
