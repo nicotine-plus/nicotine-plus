@@ -27,6 +27,7 @@ from pynicotine.slskmessages import UnwatchUser
 from pynicotine.slskmessages import WatchUser
 from pynicotine.slskmessages import pack_bool
 from pynicotine.slskmessages import pack_int32
+from pynicotine.slskmessages import pack_ip
 from pynicotine.slskmessages import pack_uint8
 from pynicotine.slskmessages import pack_uint32
 from pynicotine.slskmessages import pack_uint64
@@ -43,6 +44,7 @@ class SlskMessageTest(TestCase):
         signed_int32_message = pack_int32(123)
         unsigned_int64_message = pack_uint64(123)
         str_message = pack_string("teststring")
+        ip_message = pack_ip("1.2.3.4")
 
         # Assert
         self.assertEqual(boolean_message, b"\x01")
@@ -51,6 +53,7 @@ class SlskMessageTest(TestCase):
         self.assertEqual(signed_int32_message, b"\x7B\x00\x00\x00")
         self.assertEqual(unsigned_int64_message, b"\x7B\x00\x00\x00\x00\x00\x00\x00")
         self.assertEqual(str_message, b"\n\x00\x00\x00teststring")
+        self.assertEqual(ip_message, b"\x04\x03\x02\x01")
 
 
 class LoginMessageTest(TestCase):
