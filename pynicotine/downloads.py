@@ -1346,7 +1346,7 @@ class Downloads(Transfers):
         download.retry_attempt = False
 
         log.add_transfer("Upload attempt by user %s for file %s failed. Reason: %s",
-                         (virtual_path, username, download.status))
+                         (username, virtual_path, download.status))
 
     def _file_download_progress(
         self, username: str, token: int, sock: socket, bytes_left: int, speed=None
