@@ -6,7 +6,7 @@ from __future__ import annotations
 import os
 
 from bisect import bisect_left
-from collections.abc import Callable, Buffer
+from collections.abc import Callable
 from enum import StrEnum
 from socket import inet_aton
 from struct import Struct
@@ -19,7 +19,7 @@ from pynicotine.events import events
 from pynicotine.slskmessages import GetPeerAddress
 from pynicotine.slskmessages import ServerDisconnect
 
-UINT32_UNPACK: Callable[[Buffer], tuple[int]] = Struct(">I").unpack_from
+UINT32_UNPACK: Callable[[memoryview], tuple[int]] = Struct(">I").unpack_from
 
 
 class RequestAction(StrEnum):
@@ -468,7 +468,7 @@ class NetworkFilter:
         if not self._ip_range_countries:
             return ""
 
-        ip_num, = UINT32_UNPACK(inet_aton(ip_address))
+        ip_num, = UINT32_UNPACK(memoryview(inet_aton(ip_address)))
         ip_index = bisect_left(self._ip_range_values, ip_num)
         country_code = self._ip_range_countries[ip_index]
 
