@@ -674,15 +674,10 @@ class Scanner:
 
     def get_audio_tag(self, file_path: str):
 
-        try:
-            tag = TinyTag.get(
-                encode_path(file_path), tags=False, duration=True, image=False,
-                check_magic_bytes=False
-            )
-        except UnsupportedFormatError:
-            tag = None
-
-        return tag
+        return TinyTag.get(
+            encode_path(file_path), tags=False, duration=True, image=False,
+            check_magic_bytes=False
+        )
 
     def get_file_info(self, virtual_file_path: str, file_path: str, file_stat: stat_result) -> FileInfo:
         """Get file metadata."""
@@ -696,6 +691,9 @@ class Scanner:
         if size > 128:
             try:
                 tag = self.get_audio_tag(file_path)
+
+            except UnsupportedFormatError:
+                pass
 
             except Exception as error:
                 self.writer.send(
