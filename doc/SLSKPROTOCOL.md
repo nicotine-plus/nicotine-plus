@@ -5,7 +5,7 @@
 
 # Soulseek Protocol Documentation
 
-[Last updated on November 20, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on November 24, 2026](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -2687,7 +2687,7 @@ A peer responds with a list of shared files after we've sent a
         2.  **uint32** *number of files*
         3.  Iterate *number of files*
             1.  **uint8** *code*  
-                Value is always `1`
+                Reject message if value is `0`
             2.  **string** *basename*
             3.  **uint64** *file size*
             4.  **string** *file extension*
@@ -2707,7 +2707,7 @@ A peer responds with a list of shared files after we've sent a
             2.  **uint32** *number of files*
             3.  Iterate *number of files*
                 1.  **uint8** *code*  
-                    Value is always `1`
+                    Reject message if value is `0`
                 2.  **string** *basename*
                 3.  **uint64** *file size*
                 4.  **string** *file extension*
@@ -2791,7 +2791,7 @@ from original [FileSearch](#server-code-26), [UserSearch](#server-code-42) or
     4.  **uint32** *number of results*
     5.  Iterate for *number of results*
         1.  **uint8** *code*
-            Value is always `1`
+            Reject message if value is `0`
         2.  **string** *file path*  
             See [Reserved Path Specifiers](#reserved-path-specifiers)
         3.  **uint64** *file size*
@@ -2812,7 +2812,7 @@ from original [FileSearch](#server-code-26), [UserSearch](#server-code-42) or
         1.  **uint32** *number of privately shared results*
         2.  Iterate for *number of privately shared results*
             1.  **uint8** *code*  
-                Value is always `1`
+                Reject message if value is `0`
             2.  **string** *file path*  
                 See [Reserved Path Specifiers](#reserved-path-specifiers)
             3.  **uint64** *file size*
@@ -2934,7 +2934,7 @@ after we've sent a [FolderContentsRequest](#peer-code-36).
         2.  **uint32** *number of files*
         3.  Iterate *number of files*
             1.  **uint8** *code*  
-                Value is always `1`
+                Reject message if value is `0`
             2.  **string** *basename*
             3.  **uint64** *file size*
             4.  **string** *file extension*  

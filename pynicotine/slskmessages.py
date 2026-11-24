@@ -621,11 +621,21 @@ class MessageParser:
 
         return attributes
 
+    def unpack_code(self) -> int:
+
+        result = self.content[self.offset]
+
+        if not result:
+            raise ValueError("Invalid code value")
+
+        self.offset += 1
+        return result
+
     def unpack_files(self) -> list[SharedFile]:
 
         files = [
             SharedFile(
-                code=self.unpack_uint8(),
+                code=self.unpack_code(),
                 path=self.unpack_string(),
                 size=self.unpack_file_size(),
                 extension=self.skip_string(),
