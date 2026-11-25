@@ -162,7 +162,7 @@ class PrivateChat:
             users = core.uploads.get_downloading_users()
 
         if users:
-            core.send_message_to_server(MessageUsers(usernames=users, message=message))
+            core.send_message_to_server(MessageUsers(usernames=list(users), message=message))
 
     def _private_message_queue_add(self, msg: MessageUser) -> None:
         """Queue a private message until we've received a user's IP address."""

@@ -131,7 +131,7 @@ class UserBrowse:
         if not new_request:
             return
 
-        if not permission_level:
+        if permission_level is None:
             # Check our own permission level, and show relevant shares for it
             current_permission_level, _reason = core.shares.check_user_permission(username)
         else:

@@ -297,7 +297,7 @@ class Users:
         """Server code 3."""
 
         username = msg.username
-        notify = self._ip_requested.pop(username, None)
+        notify = self._ip_requested.pop(username, False)
         addr = msg.addr
         ip_address, port = addr
         user_offline = (ip_address == "0.0.0.0")

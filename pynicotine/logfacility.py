@@ -61,10 +61,10 @@ class Logger:
         self.downloads_file_name = f"downloads_{current_date_time}"
         self.uploads_file_name = f"uploads_{current_date_time}"
 
-        self.debug_folder_path = None
-        self.transfer_folder_path = None
-        self.room_folder_path = None
-        self.private_chat_folder_path = None
+        self.debug_folder_path = ""
+        self.transfer_folder_path = ""
+        self.room_folder_path = ""
+        self.private_chat_folder_path = ""
 
         self._log_levels = {LogLevel.DEFAULT}
         self._log_files: dict[str, LogFile] = {}
