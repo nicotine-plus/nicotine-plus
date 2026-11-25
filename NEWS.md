@@ -12,6 +12,104 @@ The current stable version of Nicotine+ is available at [DOWNLOADS.md](doc/DOWNL
 You can run the latest unstable build of Nicotine+ to test recent changes and bug fixes, see [TESTING.md](doc/TESTING.md).
 
 
+## Version 3.4.0rc1 (Release Candidate 1)
+
+### Changes
+
+ * Added the Download Folder dialog
+ * Added the Plugin Debugger Settings dialog
+ * Added the Auto-Buddy Room Members plugin
+ * Added the option to schedule automatic rescanning of shares on a daily basis
+ * Redesigned the account management and shares sections in the Preferences dialog
+ * Support installing/uninstalling plugins within Nicotine+
+ * Notifications now appear for queued file and folder uploads
+ * Pluralization(s) for most of the translatable strings that involve quantities
+ * Implemented clickable room tags in the global public chat room feed
+ * Implemented human readable estimated remaining and elasped time of active transfers
+ * Reworked shares rescanning status bar indicator with a new button to stop processing
+ * Replaced the R keyboard shortcut with Ctrl+S (as in start) for resuming/retrying transfers
+ * Replaced the T keyboard shortcut with Ctrl+T (as in terminate) for pausing/aborting transfers
+ * ...
+ * Bumped protocol client version to 160.3
+ * Bumped minimum Python version from 3.6 to 3.10 and added support up to 3.15
+ * Bumped minimum GTK 3 version to 3.24.24 and default to GTK 4 on all supported platforms
+ * AppImage: Added package installer (currently only supported for x86 architectures)
+ * Flatpak: Added support for ARM64 architecture and bumped runtime to GNOME 50 (Tokyo)
+ * Linux: Added support for Debian 13 and 14 (Trixie and Forky) and Ubuntu 26 (Resolute Raccoon and Stonking Stingray)
+ * Linux: Dropped support for Debian 10 and 11 (Buster and Bullseye) and Ubuntu 20 (Focal Fossa and Groovy Gorilla)
+ * Windows and macOS: Updated Python from 3.12 to 3.13
+ * Windows and macOS: Dropped support for GTK 3 and updated GTK 4 from 4.16 to 4.24
+ * Windows: Removed standalone package in favour of fully portable Nicotine+ package
+
+### Corrections
+
+ * Fixed garbled command prompts on the teletypewriter in headless mode
+ * Abandon requests to disconnected/offline peers without waiting for connection timeout
+ * ...
+
+### Issues closed on GitHub
+
+ * Exclude specific files from shares [#980](https://github.com/nicotine-plus/nicotine-plus/issues/910)
+ * Feature Request: Option to unify column layout for both Downloads and Uploads tabs [#980](https://github.com/nicotine-plus/nicotine-plus/issues/980)
+ * Filenames containg a backward slash confuse share scanner [#1380](https://github.com/nicotine-plus/nicotine-plus/issues/1380)
+ * add libre.fm in Now Playing [#1651](https://github.com/nicotine-plus/nicotine-plus/issues/1651)
+ * implement dialog with download options for folder downloads [#1659](https://github.com/nicotine-plus/nicotine-plus/issues/1659)
+ * implement dialog with download options for folder downloads [#1659](https://github.com/nicotine-plus/nicotine-plus/issues/1659)
+ * Sortable column for private files in Search Files [#1736](https://github.com/nicotine-plus/nicotine-plus/issues/1736)
+ * "Hide private files" button for Search Files [#1737](https://github.com/nicotine-plus/nicotine-plus/issues/1737)
+ * Blacklist export/import [#2033](https://github.com/nicotine-plus/nicotine-plus/issues/2033)
+ * Include remote path as a column in downloads list [#2314](https://github.com/nicotine-plus/nicotine-plus/issues/2314)
+ * Search again function [#2376](https://github.com/nicotine-plus/nicotine-plus/issues/2376)
+ * Public chat room feed: Don't notify on new messages + clickable room names [#2482](https://github.com/nicotine-plus/nicotine-plus/issues/2482)
+ * Specific filters for wishlist search items [#2522](https://github.com/nicotine-plus/nicotine-plus/issues/2522)
+ * Paused Mode Downloads [#2592](https://github.com/nicotine-plus/nicotine-plus/issues/2592)
+ * Highlight buddies in download/upload list [#2616](https://github.com/nicotine-plus/nicotine-plus/issues/2616)
+ * "download folder" sometimes only selects 1 file [#2686](https://github.com/nicotine-plus/nicotine-plus/issues/2686)
+ * Split The Functionality Of Clear CANCELLED & FINISHED [#2753](https://github.com/nicotine-plus/nicotine-plus/issues/2753)
+ * Feature Request: Scheduled scans [#2900](https://github.com/nicotine-plus/nicotine-plus/issues/2900)
+ * Display CONNECTIVITY STATUS in USER PROFILE [#2902](https://github.com/nicotine-plus/nicotine-plus/issues/2902)
+ * Appimage download [#2991](https://github.com/nicotine-plus/nicotine-plus/issues/2991)
+ * Notifications for uploads [#3069](https://github.com/nicotine-plus/nicotine-plus/issues/3069)
+ * Is nicotine+ able to discard repeated results in the wishlist like soulseek does for years now? [#3170](https://github.com/nicotine-plus/nicotine-plus/issues/3170)
+ * username highlighting bug [#3200](https://github.com/nicotine-plus/nicotine-plus/issues/3200)
+ * Replace opening the port check with an internal procedure [#3205](https://github.com/nicotine-plus/nicotine-plus/issues/3205)
+ * GTK/Broadway Contextual Enhancements (aka Broadway Love) [#3219](https://github.com/nicotine-plus/nicotine-plus/issues/3219)
+ * Search enhancement: move to the next query on a dropdown arrow click [#3241](https://github.com/nicotine-plus/nicotine-plus/issues/3241)
+ * Add private gruop users to priority list [#3261](https://github.com/nicotine-plus/nicotine-plus/issues/3261)
+ * Soulseek NS unable to download folder from search results [#3277](https://github.com/nicotine-plus/nicotine-plus/issues/3277)
+ * One very simple but needed feature - Search Again [#3326](https://github.com/nicotine-plus/nicotine-plus/issues/3326)
+ * Chat room userlist pane width should be resizable [#3362](https://github.com/nicotine-plus/nicotine-plus/issues/3362)
+ * Fully portable Nicotine+ [#3365](https://github.com/nicotine-plus/nicotine-plus/issues/3365)
+ * [dev1] Git HEAD breaks uploads on Linux [#3375](https://github.com/nicotine-plus/nicotine-plus/issues/3375)
+ * ctrl+PgUp-PgDn [#3413](https://github.com/nicotine-plus/nicotine-plus/issues/3413)
+ * Download File(s) To... [#3418](https://github.com/nicotine-plus/nicotine-plus/issues/3418)
+ * the last used save path [#3422](https://github.com/nicotine-plus/nicotine-plus/issues/3422)
+ * adding buddies [#3424](https://github.com/nicotine-plus/nicotine-plus/issues/3424)
+ * Wishlist overhaul still urgently needed — power user use case broken [#3441](https://github.com/nicotine-plus/nicotine-plus/issues/3441)
+ * Wishlist search [#3445](https://github.com/nicotine-plus/nicotine-plus/issues/3445)
+ * Room User List Size Fixed [#3448](https://github.com/nicotine-plus/nicotine-plus/issues/3448)
+ * [dev1] 'ComboBox' object has no attribute 'remove' [#3460](https://github.com/nicotine-plus/nicotine-plus/issues/3460)
+ * [dev1] Nightly Dev Build - Quits working (uploading only apparently) when it starts the nightly folder scans [#3477](https://github.com/nicotine-plus/nicotine-plus/issues/3477)
+ * Allow specifying a list of additional words to highlight [#3484](https://github.com/nicotine-plus/nicotine-plus/issues/3484)
+ * Return the download folder options to v4 [#3491](https://github.com/nicotine-plus/nicotine-plus/issues/3491)
+ * Request for multi-level Collapse/Expand [#3497](https://github.com/nicotine-plus/nicotine-plus/issues/3497)
+ * Show "downloading" and "downloaded" icon/status in search results [#3498](https://github.com/nicotine-plus/nicotine-plus/issues/3498)
+ * Auto-resize button [#3524](https://github.com/nicotine-plus/nicotine-plus/issues/3524)
+ * Auto rescan of shares at specific times [#3525](https://github.com/nicotine-plus/nicotine-plus/issues/3525)
+ * saving dowload [#3581](https://github.com/nicotine-plus/nicotine-plus/issues/3581)
+ * QoL Improvements [#3601](https://github.com/nicotine-plus/nicotine-plus/issues/3601)
+ * [dev1] Crash everytime it runs [#3626](https://github.com/nicotine-plus/nicotine-plus/issues/3626)
+ * [dev1] error "Type: <class 'TypeError'> Value: cannot unpack non-iterable NoneType object" [#3630](https://github.com/nicotine-plus/nicotine-plus/issues/3630)
+ * [dev1] Crash in _close_connection: KeyError: None when closing parent candidate connections [#3634](https://github.com/nicotine-plus/nicotine-plus/issues/3634)
+ * Improve visibility of files within directory tree [#3645](https://github.com/nicotine-plus/nicotine-plus/issues/3645)
+ * Add downloads in pause mode [#3697](https://github.com/nicotine-plus/nicotine-plus/issues/3697)
+ * [dev1] Error with ascii nickname only in gtk4 [#3721](https://github.com/nicotine-plus/nicotine-plus/issues/3721)
+ * [dev1] Crash when trying to view my own shares [#3738](https://github.com/nicotine-plus/nicotine-plus/issues/3738)
+ * Only ping wishlist results if they meet filter parameters [#3761](https://github.com/nicotine-plus/nicotine-plus/issues/3761)
+ * Downloads in incomplete get stuck there if they temporarily can't be moved to completed downloads folder [#3769](https://github.com/nicotine-plus/nicotine-plus/issues/3769)
+ * [dev1] Filelist inconsistencies when my share is viewed on QT [#3810](https://github.com/nicotine-plus/nicotine-plus/issues/3810)
+
+
 ## Version 3.3.11 (September 16, 2026)
 
 ### Changes
