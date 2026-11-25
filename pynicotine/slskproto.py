@@ -717,7 +717,7 @@ class NetworkThread(Thread):
 
     @staticmethod
     def _unpack_network_message(
-        msg_class, msg_content: memoryview, msg_size: int, conn_type: ConnectionType,
+        msg_class, msg_content: memoryview, msg_size: int,
         sock=None, addr=None, username=None, allowed_ids=None
     ):
 
@@ -739,7 +739,7 @@ class NetworkThread(Thread):
 
         except Exception as error:
             log.add_debug("Unable to parse %s message type '%s', size %s, contents %s… Error: %s",
-                          (conn_type, msg_class.__name__, msg_size, bytes(msg_content[:50]), error))
+                          (msg_class.TYPE, msg_class.__name__, msg_size, bytes(msg_content[:50]), error))
 
         return None
 
@@ -761,7 +761,6 @@ class NetworkThread(Thread):
             distrib_class,
             msg.distrib_message,
             len(msg.distrib_message),
-            conn_type="distrib",
             sock=sock,
             username=username
         )
@@ -1389,7 +1388,6 @@ class NetworkThread(Thread):
             SERVER_MESSAGE_CLASSES[msg_type],
             msg_content,
             msg_size,
-            conn_type="server"
         )
 
         if msg is None:
@@ -1690,7 +1688,6 @@ class NetworkThread(Thread):
             PEER_INIT_MESSAGE_CLASSES[msg_type],
             msg_content,
             msg_size,
-            conn_type="peer init",
             sock=conn.sock
         )
         init = None
@@ -1989,7 +1986,6 @@ class NetworkThread(Thread):
                     msg_class,
                     memoryview(in_buffer)[idx + msg_content_offset:idx + msg_size_total],
                     msg_size,
-                    conn_type="peer",
                     sock=conn.sock,
                     addr=conn.addr,
                     username=conn.init.target_username,
@@ -2088,7 +2084,6 @@ class NetworkThread(Thread):
             FileTransferInit,
             memoryview(in_buffer)[:msg_size],
             msg_size,
-            conn_type="file",
             sock=conn.sock,
             username=conn.init.target_username
         )
@@ -2125,7 +2120,6 @@ class NetworkThread(Thread):
             FileOffset,
             memoryview(in_buffer)[:msg_size],
             msg_size,
-            conn_type="file",
             sock=conn.sock,
             username=conn.init.target_username
         )
@@ -2471,7 +2465,6 @@ class NetworkThread(Thread):
             msg_class,
             msg_content,
             msg_size,
-            conn_type="distrib",
             sock=conn.sock,
             username=conn.init.target_username
         )
