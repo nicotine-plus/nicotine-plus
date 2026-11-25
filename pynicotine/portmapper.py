@@ -234,6 +234,13 @@ class UPnP(BaseImplementation):
     MX_RESPONSE_DELAY = 1     # At least 1 second is sufficient according to UPnP specification
     HTTP_REQUEST_TIMEOUT = 5
 
+    SERVICE_TYPE_WAN_IP_CONNECTION_1 = "urn:schemas-upnp-org:service:WANIPConnection:1"
+    SERVICE_TYPE_WAN_IP_CONNECTION_2 = "urn:schemas-upnp-org:service:WANIPConnection:2"
+    SERVICE_TYPE_WAN_PPP_CONNECTION_1 = "urn:schemas-upnp-org:service:WANPPPConnection:1"
+
+    DEVICE_TYPE_INTERNET_GATEWAY_1 = "urn:schemas-upnp-org:device:InternetGatewayDevice:1"
+    DEVICE_TYPE_INTERNET_GATEWAY_2 = "urn:schemas-upnp-org:device:InternetGatewayDevice:2"
+
     class Service:
         __slots__ = ("service_type", "control_url")
 
@@ -316,9 +323,9 @@ class UPnP(BaseImplementation):
                     found_service_type = service.find(".//{urn:schemas-upnp-org:device-1-0}serviceType").text
 
                     if found_service_type in {
-                        "urn:schemas-upnp-org:service:WANIPConnection:2",
-                        "urn:schemas-upnp-org:service:WANIPConnection:1",
-                        "urn:schemas-upnp-org:service:WANPPPConnection:1"
+                        UPnP.SERVICE_TYPE_WAN_IP_CONNECTION_2,
+                        UPnP.SERVICE_TYPE_WAN_IP_CONNECTION_1,
+                        UPnP.SERVICE_TYPE_WAN_PPP_CONNECTION_1,
                     }:
                         # We found a router with UPnP enabled
                         location_url_parts = urlsplit(location_url)
@@ -399,16 +406,16 @@ class UPnP(BaseImplementation):
                 sock.bind((private_ip, 0))
 
                 # Protocol 2
-                wan_igd2 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:2")
-                wan_ip2 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:2")
+                wan_igd2 = UPnP.SSDPRequest(UPnP.DEVICE_TYPE_INTERNET_GATEWAY_2)
+                wan_ip2 = UPnP.SSDPRequest(UPnP.SERVICE_TYPE_WAN_IP_CONNECTION_2)
 
                 wan_igd2.sendto(sock, UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT)
                 wan_ip2.sendto(sock, UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT)
 
                 # Protocol 1
-                wan_igd1 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:1")
-                wan_ip1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:1")
-                wan_ppp1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANPPPConnection:1")
+                wan_igd1 = UPnP.SSDPRequest(UPnP.DEVICE_TYPE_INTERNET_GATEWAY_1)
+                wan_ip1 = UPnP.SSDPRequest(UPnP.SERVICE_TYPE_WAN_IP_CONNECTION_1)
+                wan_ppp1 = UPnP.SSDPRequest(UPnP.SERVICE_TYPE_WAN_PPP_CONNECTION_1)
 
                 wan_igd1.sendto(sock, UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT)
                 wan_ip1.sendto(sock, UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT)
@@ -438,13 +445,13 @@ class UPnP(BaseImplementation):
     def _find_service(private_ip: str):
 
         services = UPnP.SSDP.get_services(private_ip)
-        service = services.get("urn:schemas-upnp-org:service:WANIPConnection:2")
+        service = services.get(UPnP.SERVICE_TYPE_WAN_IP_CONNECTION_2)
 
         if not service:
-            service = services.get("urn:schemas-upnp-org:service:WANIPConnection:1")
+            service = services.get(UPnP.SERVICE_TYPE_WAN_IP_CONNECTION_1)
 
         if not service:
-            service = services.get("urn:schemas-upnp-org:service:WANPPPConnection:1")
+            service = services.get(UPnP.SERVICE_TYPE_WAN_PPP_CONNECTION_1)
 
         return service
 
