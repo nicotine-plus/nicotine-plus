@@ -478,15 +478,15 @@ class MessageParser:
         length, = UINT32_UNPACK(self.content, self.offset)
         self.offset += 4 + length
 
-    def unpack_bool(self) -> bool:
-        result = bool(self.content[self.offset])
-        self.offset += 1
-        return result
-
     def unpack_ip(self) -> str:
         start = self.offset
         self.offset += 4
         return inet_ntoa(self.content[start:self.offset].tobytes()[::-1])
+
+    def unpack_bool(self) -> bool:
+        result = bool(self.content[self.offset])
+        self.offset += 1
+        return result
 
     def unpack_uint8(self) -> int:
         result = self.content[self.offset]
@@ -654,6 +654,10 @@ def pack_string(content: str, is_legacy: bool = False) -> bytes:
         encoded = content.encode("utf-8", "replace")
 
     return UINT32_PACK(len(encoded)) + encoded
+
+
+def pack_ip(content: str) -> bytes:
+    return inet_aton(content)[::-1]
 
 
 def pack_bool(content: bool) -> bytes:
@@ -2001,14 +2005,8 @@ class ParentIP(ServerMessage):
 
     ip_address: str
 
-    @staticmethod
-    def strunreverse(string: str) -> str:
-        strlist = string.split(".")
-        strlist.reverse()
-        return ".".join(strlist)
-
     def pack(self) -> bytes:
-        return inet_aton(self.strunreverse(self.ip_address))
+        return pack_ip(self.ip_address)
 
 
 @dataclass(slots=True, eq=False, repr=False)

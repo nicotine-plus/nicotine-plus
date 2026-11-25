@@ -691,8 +691,10 @@ class Scanner:
         if size > 128:
             try:
                 tag = self.get_audio_tag(file_path)
+
             except UnsupportedFormatError:
                 pass
+
             except Exception as error:
                 self.writer.send(
                     ScannerLogMessage(

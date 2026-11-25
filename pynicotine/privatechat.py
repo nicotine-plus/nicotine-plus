@@ -146,7 +146,7 @@ class PrivateChat:
         core.send_message_to_server(MessageUser(username=username, message=message))
         core.pluginhandler.outgoing_private_chat_notification(username, message)
 
-        events.emit("message-user", MessageUser(username=username, message=message))
+        events.emit("message-user", MessageUser(username=username, message=message, is_new_message=True))
 
     def send_message_users(self, target: MessageTarget, message: str) -> None:
 
