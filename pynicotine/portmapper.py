@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 import re
 import struct
 import sys
@@ -241,12 +242,10 @@ class UPnP(BaseImplementation):
     DEVICE_TYPE_INTERNET_GATEWAY_1 = "urn:schemas-upnp-org:device:InternetGatewayDevice:1"
     DEVICE_TYPE_INTERNET_GATEWAY_2 = "urn:schemas-upnp-org:device:InternetGatewayDevice:2"
 
+    @dataclass(slots=True, eq=False)
     class Service:
-        __slots__ = ("service_type", "control_url")
-
-        def __init__(self, service_type: str, control_url: str):
-            self.service_type = service_type
-            self.control_url = control_url
+        service_type: str
+        control_url: str
 
     class SSDPResponse:
         """Simple Service Discovery Protocol (SSDP) response."""
