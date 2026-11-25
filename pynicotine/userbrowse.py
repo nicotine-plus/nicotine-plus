@@ -47,16 +47,16 @@ class TaskType(StrEnum):
 @dataclass(slots=True, eq=False)
 class BrowsedUser:
     username: str
-    num_folders: int | None = None
-    num_files: int | None = None
-    shared_size: int | None = None
+    num_folders: int = 0
+    num_files: int = 0
+    shared_size: int = 0
     public_folders: dict[str, list[SharedFile]] = field(default_factory=dict[str, list[SharedFile]])
     private_folders: dict[str, list[SharedFile]] = field(default_factory=dict[str, list[SharedFile]])
     saving: bool = False
 
     def clear(self) -> None:
 
-        self.num_folders = self.num_files = self.shared_size = None
+        self.num_folders = self.num_files = self.shared_size = 0
         self.public_folders.clear()
         self.private_folders.clear()
 
@@ -333,9 +333,9 @@ class UserBrowse:
         log.add(_("User %(user)s is sharing %(num_files)s files totaling %(shared_size)s across "
                   "%(num_folders)s folders"), {
             "user": username,
-            "num_files": humanize(browsed_user.num_files or 0),
-            "shared_size": human_size(browsed_user.shared_size or 0),
-            "num_folders": humanize(browsed_user.num_folders or 0)
+            "num_files": humanize(browsed_user.num_files),
+            "shared_size": human_size(browsed_user.shared_size),
+            "num_folders": humanize(browsed_user.num_folders)
         }, title=_("User Statistics"))
 
     @staticmethod
