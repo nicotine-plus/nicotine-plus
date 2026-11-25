@@ -262,7 +262,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up FreeBSD
-        uses: cross-platform-actions/action@82668f1fbd89d9c99487604f822cbf6716f124d3 # v1.7.0
+        uses: cross-platform-actions/action@30cde56b87a128507bebea9531205087890ee360 # v1.8.0
         with:
           operating_system: freebsd
           version: '15.1'
@@ -303,7 +303,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up OpenBSD
-        uses: cross-platform-actions/action@82668f1fbd89d9c99487604f822cbf6716f124d3 # v1.7.0
+        uses: cross-platform-actions/action@30cde56b87a128507bebea9531205087890ee360 # v1.8.0
         with:
           operating_system: openbsd
           version: '8.0'
@@ -386,7 +386,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up DragonflyBSD
-        uses: cross-platform-actions/action@82668f1fbd89d9c99487604f822cbf6716f124d3 # v1.7.0
+        uses: cross-platform-actions/action@30cde56b87a128507bebea9531205087890ee360 # v1.8.0
         with:
           operating_system: dragonflybsd
           version: '6.4.2'
@@ -424,7 +424,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up MidnightBSD
-        uses: cross-platform-actions/action@82668f1fbd89d9c99487604f822cbf6716f124d3 # v1.7.0
+        uses: cross-platform-actions/action@30cde56b87a128507bebea9531205087890ee360 # v1.8.0
         with:
           operating_system: midnightbsd
           version: '4.0.4'
@@ -461,7 +461,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up Haiku
-        uses: cross-platform-actions/action@82668f1fbd89d9c99487604f822cbf6716f124d3 # v1.7.0
+        uses: cross-platform-actions/action@30cde56b87a128507bebea9531205087890ee360 # v1.8.0
         with:
           operating_system: haiku
           version: 'r1beta6'
@@ -497,7 +497,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up illumos
-        uses: cross-platform-actions/action@82668f1fbd89d9c99487604f822cbf6716f124d3 # v1.7.0
+        uses: cross-platform-actions/action@30cde56b87a128507bebea9531205087890ee360 # v1.8.0
         with:
           operating_system: omnios
           version: 'r151058'
