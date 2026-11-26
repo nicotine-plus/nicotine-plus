@@ -355,7 +355,11 @@ class Users:
 
         if not msg.exists:
             log.add_conn("Unwatching non-existent user %s", username)
+
             self.watched.pop(username, None)
+            self.addresses.pop(username, None)
+            self.countries.pop(username, None)
+            self.statuses.pop(username, None)
             return
 
         events.emit("user-stats", GetUserStats(username=username, stats=msg.stats))
