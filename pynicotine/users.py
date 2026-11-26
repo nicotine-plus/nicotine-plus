@@ -228,14 +228,9 @@ class Users:
         if not watched_user.is_implicit:
             core.send_message_to_server(UnwatchUser(username))
 
-        if username in self.addresses:
-            del self.addresses[username]
-
-        if username in self.countries:
-            del self.countries[username]
-
-        if username in self.statuses:
-            del self.statuses[username]
+        self.addresses.pop(username, None)
+        self.countries.pop(username, None)
+        self.statuses.pop(username, None)
 
         del self.watched[username]
 
