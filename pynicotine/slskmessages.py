@@ -784,8 +784,8 @@ class Login(ServerMessage):
     motd: str | None = None
     ip_address: str | None = None
     is_supporter: bool | None = None
-    local_address: Address | None = None
-    server_address: Address | None = None
+    local_address: Address = UNSET_ADDR
+    server_address: Address = UNSET_ADDR
 
     def pack(self) -> bytearray:
 

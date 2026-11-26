@@ -1418,16 +1418,15 @@ class NetworkThread(Thread):
             msg = unpacked_msg
 
         elif isinstance(msg, Login):
+            msg.username = self._login_username
+            msg.local_address = self._user_addresses[self._login_username].addr
+            msg.server_address = self._server_address
+
             if msg.success:
                 # Ensure listening port is open
-                msg.local_address = self._user_addresses[self._login_username].addr
-
                 if self._portmapper is not None:
                     self._portmapper.set_port(msg.local_address.port, msg.local_address.ip)
                     self._portmapper.add_port_mapping(blocking=True)
-
-                msg.username = self._login_username
-                msg.server_address = self._server_address
 
                 # Ask for a list of parents to connect to (distributed network)
                 self._send_have_no_parent()
