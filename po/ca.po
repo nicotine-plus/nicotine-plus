@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-13 07:08+0300\n"
-"PO-Revision-Date: 2026-01-30 00:01+0000\n"
-"Last-Translator: HUMET <ressaguer@proton.me>\n"
+"PO-Revision-Date: 2026-11-23 21:25+0000\n"
+"Last-Translator: Aniol <aniol@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ca/>\n"
 "Language: ca\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16-dev\n"
+"X-Generator: Weblate 2026.12.dev0\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 msgid "Soulseek Client"
@@ -45,6 +45,10 @@ msgid ""
 "that focus on usability, while remaining fully compatible with other "
 "Soulseek clients."
 msgstr ""
+"Comparteix fitxers, xateja i troba persones amb interessos similars. "
+"Nicotine+ és fàcil d'utilitzar, ràpid, gratuït i de codi obert. Ofereix "
+"funcionalitats i millores centrades en la usabilitat, tot mantenint una "
+"compatibilitat total amb altres clients de Soulseek."
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:30
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:46
@@ -305,8 +309,8 @@ msgstr "No s'ha pogut moure '%(tempfile)s' a '%(file)s': %(error)s"
 #, python-format
 msgid "%(num)s download filter contains an invalid regular expression"
 msgid_plural "%(num)s download filters contain invalid regular expressions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "El filtre de descàrrega %(num)s conté una expressió regular no vàlida"
+msgstr[1] "%(num)s filtres de descàrrega contenen expressions regulars no vàlides"
 
 #: pynicotine/downloads.py:432
 #, python-format
@@ -365,7 +369,7 @@ msgstr "Descàrrega començada: usuari %(user)s, fitxer %(file)s"
 #: pynicotine/gtkgui/__init__.py:47
 #, python-format
 msgid "%s is not supported on this operating system"
-msgstr ""
+msgstr "%s no és compatible amb aquest sistema operatiu"
 
 #: pynicotine/gtkgui/__init__.py:69 pynicotine/gtkgui/__init__.py:78
 #, fuzzy, python-format
@@ -537,7 +541,7 @@ msgstr "_Força la nova exploració"
 
 #: pynicotine/gtkgui/application.py:599
 msgid "Room Invitation Rejected"
-msgstr ""
+msgstr "Invitació a la sala rebutjada"
 
 #: pynicotine/gtkgui/application.py:600
 #, python-format
@@ -545,6 +549,8 @@ msgid ""
 "User %(user)s has not enabled private room invitations. Message them and ask "
 "them to do so before inviting them again."
 msgstr ""
+"L'usuari %(user)s no ha habilitat les invitacions a sales privades. Envia-li "
+"un missatge i demana-li que ho faci abans de tornar a convidar-lo."
 
 #: pynicotine/gtkgui/application.py:604
 #, fuzzy
@@ -564,7 +570,7 @@ msgstr ""
 #: pynicotine/gtkgui/application.py:810 pynicotine/gtkgui/application.py:824
 #: pynicotine/gtkgui/userinfo.py:844
 msgid "_Send"
-msgstr ""
+msgstr "_Envia"
 
 #: pynicotine/gtkgui/application.py:822
 msgid "Message Buddies"
@@ -718,7 +724,7 @@ msgstr "Eliminar"
 #: pynicotine/gtkgui/interests.py:606
 #, python-format
 msgid "Files: %(num_files)s"
-msgstr ""
+msgstr "Fitxers: %(num_files)s"
 
 #: pynicotine/gtkgui/buddies.py:273 pynicotine/gtkgui/chatrooms.py:1315
 #: pynicotine/gtkgui/interests.py:607
@@ -837,7 +843,7 @@ msgstr "Noms de les sales"
 
 #: pynicotine/gtkgui/chatrooms.py:850
 msgid "Room Operator"
-msgstr ""
+msgstr "Operador de sala"
 
 #: pynicotine/gtkgui/chatrooms.py:893
 #, python-format
@@ -896,7 +902,7 @@ msgstr "%s ha tornat"
 
 #: pynicotine/gtkgui/chatrooms.py:1267
 msgid "Members"
-msgstr ""
+msgstr "Membres"
 
 #: pynicotine/gtkgui/chatrooms.py:1267
 #: pynicotine/gtkgui/dialogs/preferences.py:2471
