@@ -172,8 +172,7 @@ class Buddies:
 
     def remove_buddy(self, username: str) -> None:
 
-        if username in self.users:
-            del self.users[username]
+        self.users.pop(username, None)
 
         if config.sections["words"]["buddies"]:
             core.chatrooms.update_completions()

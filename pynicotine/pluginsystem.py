@@ -813,7 +813,6 @@ class PluginHandler:
                     events.cancel_scheduled(event_id)
 
             del self.loaded_plugins[plugin_name]
-            del plugin
 
     def toggle_plugin(self, plugin_name: str) -> None:
 
@@ -1199,7 +1198,7 @@ class PluginHandler:
         self._trigger_event("user_resolve_notification", (user, ip_address, port, country_code))
 
     def server_connect_notification(self) -> None:
-        self._trigger_event("server_connect_notification", (),)
+        self._trigger_event("server_connect_notification", ())
 
     def server_disconnect_notification(self, is_manual: bool) -> None:
         self._trigger_event("server_disconnect_notification", (is_manual, ))
@@ -1211,10 +1210,10 @@ class PluginHandler:
         self._trigger_event("leave_chatroom_notification", (room,))
 
     def user_join_chatroom_notification(self, room, user) -> None:
-        self._trigger_event("user_join_chatroom_notification", (room, user,))
+        self._trigger_event("user_join_chatroom_notification", (room, user))
 
     def user_leave_chatroom_notification(self, room, user) -> None:
-        self._trigger_event("user_leave_chatroom_notification", (room, user,))
+        self._trigger_event("user_leave_chatroom_notification", (room, user))
 
     def private_room_membership_granted_notification(self, room) -> None:
         self._trigger_event("private_room_membership_granted_notification", (room,))
@@ -1223,10 +1222,10 @@ class PluginHandler:
         self._trigger_event("private_room_membership_revoked_notification", (room,))
 
     def private_room_member_added_notification(self, room, user) -> None:
-        self._trigger_event("private_room_member_added_notification", (room, user,))
+        self._trigger_event("private_room_member_added_notification", (room, user))
 
     def private_room_member_removed_notification(self, room, user) -> None:
-        self._trigger_event("private_room_member_removed_notification", (room, user,))
+        self._trigger_event("private_room_member_removed_notification", (room, user))
 
     def private_room_operatorship_granted_notification(self, room) -> None:
         self._trigger_event("private_room_operatorship_granted_notification", (room,))
@@ -1235,10 +1234,10 @@ class PluginHandler:
         self._trigger_event("private_room_operatorship_revoked_notification", (room,))
 
     def private_room_operator_added_notification(self, room, user) -> None:
-        self._trigger_event("private_room_operator_added_notification", (room, user,))
+        self._trigger_event("private_room_operator_added_notification", (room, user))
 
     def private_room_operator_removed_notification(self, room, user) -> None:
-        self._trigger_event("private_room_operator_removed_notification", (room, user,))
+        self._trigger_event("private_room_operator_removed_notification", (room, user))
 
     def user_stats_notification(self, user, stats) -> None:
         self._trigger_event("user_stats_notification", (user, stats))

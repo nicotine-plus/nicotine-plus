@@ -152,7 +152,7 @@ class UserBrowse:
         if username not in self.users:
             return
 
-        del self.users[username]
+        self.users.pop(username, None)
         core.send_message_to_network_thread(RemoveAllowedResponse(SharedFileListResponse, username))
         core.users.unwatch_user(username, context="userbrowse")
         events.emit("user-browse-remove-user", username)

@@ -33,8 +33,8 @@ from pynicotine.events import StopEventPropagation
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import (
     AddAllowedResponse,
-    ConnectionType,
     CloseConnection,
+    ConnectionType,
     DownloadFile,
     FileAttributes,
     FileOffset,
@@ -46,8 +46,8 @@ from pynicotine.slskmessages import (
     PlaceInQueueResponse,
     QueueUpload,
     RemoveAllowedResponse,
-    SetDownloadLimit,
     ServerDisconnect,
+    SetDownloadLimit,
     TransferDirection,
     TransferRejectReason,
     TransferRequest,
@@ -66,9 +66,9 @@ from pynicotine.transfers import (
 )
 from pynicotine.utils import (
     REPLACEMENTCHAR,
-    execute_command,
     clean_file,
     encode_path,
+    execute_command,
     safe_path_join,
     truncate_string_byte
 )
@@ -439,8 +439,7 @@ class Downloads(Transfers):
         if not super()._dequeue_transfer(transfer):
             return False
 
-        if transfer in self._pending_queue_messages:
-            del self._pending_queue_messages[transfer]
+        self._pending_queue_messages.pop(transfer, None)
 
         return True
 
@@ -693,7 +692,7 @@ class Downloads(Transfers):
     ) -> str:
 
         # Remove parent folders of the requested folder from path
-        parent_folder_path = root_folder_path if root_folder_path else folder_path
+        parent_folder_path = root_folder_path or folder_path
         removed_parent_folders = parent_folder_path.rpartition("\\")[0]
         target_folders = folder_path.replace(removed_parent_folders, "", 1).split("\\")
 

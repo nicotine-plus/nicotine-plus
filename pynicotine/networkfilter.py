@@ -393,8 +393,7 @@ class NetworkFilter:
             ip_addresses = self._get_user_ip_addresses(username, ip_list, request_action=RequestAction.REMOVE)
 
         for ip_address in ip_addresses:
-            if ip_address in ip_list:
-                del ip_list[ip_address]
+            ip_list.pop(ip_address, None)
 
         config.write_configuration()
         return ip_addresses
