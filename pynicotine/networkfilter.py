@@ -6,10 +6,12 @@ from __future__ import annotations
 import os
 
 from bisect import bisect_left
+from collections.abc import Callable
 from enum import StrEnum
 from socket import inet_aton
 from struct import Struct
 from sys import intern
+from typing import ClassVar, Literal
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -17,7 +19,7 @@ from pynicotine.events import events
 from pynicotine.slskmessages import GetPeerAddress
 from pynicotine.slskmessages import ServerDisconnect
 
-UINT32_UNPACK = Struct(">I").unpack_from
+UINT32_UNPACK: Callable[[bytes], tuple[int]] = Struct(">I").unpack_from
 
 
 class RequestAction(StrEnum):
@@ -31,7 +33,7 @@ class NetworkFilter:
     __slots__ = ("_banned_users", "_ignored_users", "_ip_ban_requested", "_ip_ignore_requested",
                  "_ip_range_values", "_ip_range_countries", "_loaded_ip_country_data")
 
-    COUNTRIES = {
+    COUNTRIES: ClassVar[dict[str, str]] = {
         "AD": _("Andorra"),
         "AE": _("United Arab Emirates"),
         "AF": _("Afghanistan"),
@@ -288,8 +290,8 @@ class NetworkFilter:
 
         self._banned_users: set[str] = set()
         self._ignored_users: set[str] = set()
-        self._ip_ban_requested = {}
-        self._ip_ignore_requested = {}
+        self._ip_ban_requested: dict[str, Literal["add", "remove"]] = {}
+        self._ip_ignore_requested: dict[str, Literal["add", "remove"]] = {}
         self._ip_range_values = ()
         self._ip_range_countries = ()
         self._loaded_ip_country_data = False
@@ -320,8 +322,8 @@ class NetworkFilter:
         data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "external", "data")
 
         with open(os.path.join(data_path, "ip_country_data.csv"), "r", encoding="utf-8") as file_handle:
-            for line in file_handle:
-                line = line.strip()
+            for line_raw in file_handle:
+                line = line_raw.strip()
 
                 if not line or line.startswith("#"):
                     continue
@@ -383,7 +385,7 @@ class NetworkFilter:
 
         return username, ip_address
 
-    def _remove_user_ips_from_list(self, ip_list, username=None, ip_addresses=None):
+    def _remove_user_ips_from_list(self, ip_list: dict[str, str], username=None, ip_addresses=None):
         """Remove the previously saved IP address of a user from a list."""
 
         if not ip_addresses:
@@ -391,8 +393,7 @@ class NetworkFilter:
             ip_addresses = self._get_user_ip_addresses(username, ip_list, request_action=RequestAction.REMOVE)
 
         for ip_address in ip_addresses:
-            if ip_address in ip_list:
-                del ip_list[ip_address]
+            ip_list.pop(ip_address, None)
 
         config.write_configuration()
         return ip_addresses
@@ -400,10 +401,10 @@ class NetworkFilter:
     # IP List Lookup Functions #
 
     @staticmethod
-    def _get_previous_user_ip_addresses(username: str, ip_list):
+    def _get_previous_user_ip_addresses(username: str, ip_list: dict[str, str]) -> set[str]:
         """Retrieve IP address of a user previously saved in an IP list."""
 
-        ip_addresses = set()
+        ip_addresses: set[str] = set()
 
         if username not in ip_list.values():
             # User is not listed, skip iteration
@@ -415,10 +416,12 @@ class NetworkFilter:
 
         return ip_addresses
 
-    def _get_user_ip_addresses(self, username: str, ip_list, request_action: RequestAction):
+    def _get_user_ip_addresses(
+        self, username: str, ip_list: dict[str, str], request_action: RequestAction
+    ) -> set[str]:
         """Returns the known IP addresses of a user, requests one otherwise."""
 
-        ip_addresses = set()
+        ip_addresses: set[str] = set()
 
         if request_action == RequestAction.ADD:
             # Get current IP for user, if known
@@ -444,7 +447,7 @@ class NetworkFilter:
         return ip_addresses
 
     @staticmethod
-    def get_online_username(ip_address):
+    def get_online_username(ip_address: str):
         """Try to match a username from watched and known connections, for
         updating an IP list item if the username is unspecified."""
 
@@ -456,7 +459,7 @@ class NetworkFilter:
 
         return None
 
-    def get_country_code(self, ip_address):
+    def get_country_code(self, ip_address: str) -> str:
 
         if not self._loaded_ip_country_data:
             self._populate_ip_country_data()
@@ -495,7 +498,7 @@ class NetworkFilter:
 
     # IP Filter Rule Processing #
 
-    def _check_user_ip_filtered(self, ip_list, username=None, ip_address=None) -> bool:
+    def _check_user_ip_filtered(self, ip_list: dict[str, str], username=None, ip_address=None) -> bool:
         """Check if an IP address is present in a list."""
 
         if username and username in ip_list.values():
@@ -544,7 +547,7 @@ class NetworkFilter:
 
     # Callbacks #
 
-    def _update_saved_user_ip_addresses(self, ip_list, username: str, ip_address) -> None:
+    def _update_saved_user_ip_addresses(self, ip_list: dict[str, str], username: str, ip_address: str) -> None:
         """Check if a user's IP address has changed and update the lists."""
 
         previous_ip_addresses = self._get_previous_user_ip_addresses(username, ip_list)
@@ -616,7 +619,7 @@ class NetworkFilter:
         events.emit("unban-user-ip", username, ip_addresses)
         return ip_addresses
 
-    def _ban_unban_user_ip_callback(self, username: str, ip_address) -> None:
+    def _ban_unban_user_ip_callback(self, username: str, ip_address: str) -> None:
 
         request = self._ip_ban_requested.pop(username, None)
 
@@ -670,7 +673,7 @@ class NetworkFilter:
         events.emit("unignore-user-ip", username, ip_addresses)
         return ip_addresses
 
-    def _ignore_unignore_user_ip_callback(self, username: str, ip_address) -> None:
+    def _ignore_unignore_user_ip_callback(self, username: str, ip_address: str) -> None:
 
         request = self._ip_ignore_requested.pop(username, None)
 

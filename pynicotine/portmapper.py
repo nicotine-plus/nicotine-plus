@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 import re
 import struct
 import sys
@@ -42,7 +43,7 @@ class BaseImplementation:
         self.port = None
         self.local_ip_address = None
 
-    def set_port(self, port: int, local_ip_address) -> None:
+    def set_port(self, port: int, local_ip_address: str) -> None:
         self.port = port
         self.local_ip_address = local_ip_address
 
@@ -234,12 +235,17 @@ class UPnP(BaseImplementation):
     MX_RESPONSE_DELAY = 1     # At least 1 second is sufficient according to UPnP specification
     HTTP_REQUEST_TIMEOUT = 5
 
-    class Service:
-        __slots__ = ("service_type", "control_url")
+    SERVICE_TYPE_WAN_IP_CONNECTION_1 = "urn:schemas-upnp-org:service:WANIPConnection:1"
+    SERVICE_TYPE_WAN_IP_CONNECTION_2 = "urn:schemas-upnp-org:service:WANIPConnection:2"
+    SERVICE_TYPE_WAN_PPP_CONNECTION_1 = "urn:schemas-upnp-org:service:WANPPPConnection:1"
 
-        def __init__(self, service_type: str, control_url: str):
-            self.service_type = service_type
-            self.control_url = control_url
+    DEVICE_TYPE_INTERNET_GATEWAY_1 = "urn:schemas-upnp-org:device:InternetGatewayDevice:1"
+    DEVICE_TYPE_INTERNET_GATEWAY_2 = "urn:schemas-upnp-org:device:InternetGatewayDevice:2"
+
+    @dataclass(slots=True, eq=False)
+    class Service:
+        service_type: str
+        control_url: str
 
     class SSDPResponse:
         """Simple Service Discovery Protocol (SSDP) response."""
@@ -316,9 +322,9 @@ class UPnP(BaseImplementation):
                     found_service_type = service.find(".//{urn:schemas-upnp-org:device-1-0}serviceType").text
 
                     if found_service_type in {
-                        "urn:schemas-upnp-org:service:WANIPConnection:2",
-                        "urn:schemas-upnp-org:service:WANIPConnection:1",
-                        "urn:schemas-upnp-org:service:WANPPPConnection:1"
+                        UPnP.SERVICE_TYPE_WAN_IP_CONNECTION_2,
+                        UPnP.SERVICE_TYPE_WAN_IP_CONNECTION_1,
+                        UPnP.SERVICE_TYPE_WAN_PPP_CONNECTION_1,
                     }:
                         # We found a router with UPnP enabled
                         location_url_parts = urlsplit(location_url)
@@ -348,7 +354,9 @@ class UPnP(BaseImplementation):
             return service_type, control_url
 
         @staticmethod
-        def add_service(services: dict[str, UPnP.Service], locations, ssdp_response: UPnP.SSDPResponse) -> None:
+        def add_service(
+            services: dict[str, UPnP.Service], locations: set[str], ssdp_response: UPnP.SSDPResponse
+        ) -> None:
 
             response_headers = {k.upper(): v for k, v in ssdp_response.headers}
             log.add_debug("UPnP: Device search response: %s", bytes(ssdp_response))
@@ -397,16 +405,16 @@ class UPnP(BaseImplementation):
                 sock.bind((private_ip, 0))
 
                 # Protocol 2
-                wan_igd2 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:2")
-                wan_ip2 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:2")
+                wan_igd2 = UPnP.SSDPRequest(UPnP.DEVICE_TYPE_INTERNET_GATEWAY_2)
+                wan_ip2 = UPnP.SSDPRequest(UPnP.SERVICE_TYPE_WAN_IP_CONNECTION_2)
 
                 wan_igd2.sendto(sock, UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT)
                 wan_ip2.sendto(sock, UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT)
 
                 # Protocol 1
-                wan_igd1 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:1")
-                wan_ip1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:1")
-                wan_ppp1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANPPPConnection:1")
+                wan_igd1 = UPnP.SSDPRequest(UPnP.DEVICE_TYPE_INTERNET_GATEWAY_1)
+                wan_ip1 = UPnP.SSDPRequest(UPnP.SERVICE_TYPE_WAN_IP_CONNECTION_1)
+                wan_ppp1 = UPnP.SSDPRequest(UPnP.SERVICE_TYPE_WAN_PPP_CONNECTION_1)
 
                 wan_igd1.sendto(sock, UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT)
                 wan_ip1.sendto(sock, UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT)
@@ -433,21 +441,21 @@ class UPnP(BaseImplementation):
         self._service = None
 
     @staticmethod
-    def _find_service(private_ip):
+    def _find_service(private_ip: str):
 
         services = UPnP.SSDP.get_services(private_ip)
-        service = services.get("urn:schemas-upnp-org:service:WANIPConnection:2")
+        service = services.get(UPnP.SERVICE_TYPE_WAN_IP_CONNECTION_2)
 
         if not service:
-            service = services.get("urn:schemas-upnp-org:service:WANIPConnection:1")
+            service = services.get(UPnP.SERVICE_TYPE_WAN_IP_CONNECTION_1)
 
         if not service:
-            service = services.get("urn:schemas-upnp-org:service:WANPPPConnection:1")
+            service = services.get(UPnP.SERVICE_TYPE_WAN_PPP_CONNECTION_1)
 
         return service
 
     def _request_port_mapping(
-        self, public_port: int, private_ip, private_port: int, mapping_description, lease_duration: int
+        self, public_port: int, private_ip: str, private_port: int, mapping_description: str, lease_duration: int
     ):
         """Function that adds a port mapping to the router.
 
@@ -697,7 +705,7 @@ class PortMapper:
     def _cancel_renewal_timer(self) -> None:
         events.cancel_scheduled(self._timer)
 
-    def set_port(self, port: int, local_ip_address) -> None:
+    def set_port(self, port: int, local_ip_address: str) -> None:
 
         self._natpmp.set_port(port, local_ip_address)
         self._upnp.set_port(port, local_ip_address)

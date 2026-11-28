@@ -98,17 +98,17 @@ class Transfers:
 
         self.transfers: dict[str, Transfer] = {}
         self.queued_transfers: dict[Transfer, None] = {}
-        self.queued_users = defaultdict(dict)
-        self.active_users = defaultdict(dict)
-        self.failed_users = defaultdict(dict)
+        self.queued_users: defaultdict[str, dict[str, Transfer]] = defaultdict(dict)
+        self.active_users: defaultdict[str, dict[int, Transfer]] = defaultdict(dict)
+        self.failed_users: defaultdict[str, dict[str, Transfer]] = defaultdict(dict)
         self.transfers_file_path = os.path.join(config.data_folder_path, f"{name}.json")
         self.total_bandwidth = 0
 
         self._name = name
         self._allow_saving_transfers = False
-        self._online_users = set()
-        self._user_queue_limits = defaultdict(int)
-        self._user_queue_sizes = defaultdict(int)
+        self._online_users: set[str] = set()
+        self._user_queue_limits: dict[str, int] = defaultdict(int)
+        self._user_queue_sizes: dict[str, int] = defaultdict(int)
 
         for event_name, callback in (
             ("quit", self._quit),
@@ -169,28 +169,28 @@ class Transfers:
     def _load_transfers_file(transfers_file: str):
         """Loads a file of transfers in json format."""
 
-        transfers_file = encode_path(transfers_file)
+        transfers_file_encoded = encode_path(transfers_file)
 
-        if not os.path.isfile(transfers_file):
+        if not os.path.isfile(transfers_file_encoded):
             return None
 
-        with open(transfers_file, encoding="utf-8") as handle:
+        with open(transfers_file_encoded, encoding="utf-8") as handle:
             return json.load(handle)
 
     @staticmethod
     def _load_legacy_transfers_file(transfers_file: str):
         """Loads a download queue file in pickle format (legacy)"""
 
-        transfers_file = encode_path(transfers_file)
+        transfers_file_encoded = encode_path(transfers_file)
 
-        if not os.path.isfile(transfers_file):
+        if not os.path.isfile(transfers_file_encoded):
             return None
 
-        with open(transfers_file, "rb") as handle:
+        with open(transfers_file_encoded, "rb") as handle:
             from pynicotine.shares import RestrictedUnpickler
             return RestrictedUnpickler(handle, encoding="utf-8").load()
 
-    def _load_transfers(self):
+    def _load_transfers(self) -> None:
         raise NotImplementedError
 
     def _load_file_attributes(self, num_attributes: int, transfer_row) -> FileAttributes:
@@ -265,7 +265,7 @@ class Transfers:
             return
 
         allowed_statuses = {TransferStatus.PAUSED, TransferStatus.FILTERED, TransferStatus.FINISHED}
-        normalized_paths = {}
+        normalized_paths: dict[str, str] = {}
 
         for transfer_row in transfer_rows:
             num_attributes = len(transfer_row)
@@ -385,7 +385,7 @@ class Transfers:
 
     # Limits #
 
-    def update_transfer_limits(self):
+    def update_transfer_limits(self) -> None:
         raise NotImplementedError
 
     # Events #

@@ -17,11 +17,11 @@ from pynicotine.slskmessages import (
     AdminMessage,
     ChangePassword,
     CheckPrivileges,
+    ConnectToPeer,
     GetPeerAddress,
     GetUserStats,
     GetUserStatus,
     GivePrivileges,
-    ConnectToPeer,
     Login,
     LoginRejectReason,
     PrivilegedUsers,
@@ -44,7 +44,7 @@ class WatchedUser:
     username: str
     stats: UserStats
     is_implicit: bool = True
-    contexts: set[str] = field(default_factory=set)
+    contexts: set[str] = field(default_factory=set[str])
 
 
 class Users:
@@ -63,13 +63,12 @@ class Users:
         self.server_port = None
         self.privileges_left = None
         self._should_open_privileges_url = False
-
         self.addresses: dict[str, Address] = {}
-        self.countries = {}
-        self.statuses = {}
-        self.watched = {}
-        self.privileged = set()
-        self._ip_requested = {}
+        self.countries: dict[str, str] = {}
+        self.statuses: dict[str, UserStatus] = {}
+        self.watched: dict[str, WatchedUser] = {}
+        self.privileged: set[str] = set()
+        self._ip_requested: dict[str, bool] = {}
 
         for event_name, callback in (
             ("admin-message", self._admin_message),
@@ -299,7 +298,7 @@ class Users:
         """Server code 3."""
 
         username = msg.username
-        notify = self._ip_requested.pop(username, None)
+        notify = self._ip_requested.pop(username, False)
         addr = msg.addr
         ip_address, port = addr
         user_offline = (ip_address == "0.0.0.0")

@@ -11,6 +11,7 @@ import struct
 import sys
 import time
 
+from collections.abc import Callable
 from collections import defaultdict
 from dataclasses import dataclass, field
 from enum import StrEnum
@@ -79,6 +80,7 @@ from pynicotine.slskmessages import (
     MessageParser,
     MessageType,
     PossibleParents,
+    ParentCandidate,
     ParentMinSpeed,
     ParentSpeedRatio,
     PeerInit,
@@ -88,6 +90,7 @@ from pynicotine.slskmessages import (
     ResetDistributed,
     ServerConnect,
     ServerDisconnect,
+    ServerMessage,
     ServerReconnect,
     SetDownloadLimit,
     SetUploadLimit,
@@ -404,14 +407,13 @@ class NetworkThread(Thread):
     def __init__(self, portmapper: PortMapper | None):
 
         super().__init__(name="NetworkThread")
-
         self._portmapper = portmapper
-        self._message_queue = SimpleQueue()
+        self._message_queue: SimpleQueue[InternalMessage] = SimpleQueue()
         self._pending_peer_conns = {}
-        self._pending_init_msgs = defaultdict(list)
+        self._pending_init_msgs: defaultdict[str, list[PeerInit]] = defaultdict(list)
         self._indirect_token_init_msgs = {}
         self._username_init_msgs = {}
-        self._user_addresses = {}
+        self._user_addresses: dict[str, UserAddress] = {}
         self._allowed_message_responses = defaultdict(set)
         self._should_process_queue = False
         self._want_abort = False
@@ -433,8 +435,8 @@ class NetworkThread(Thread):
         self._server_relogged = False
 
         self._parent = None
-        self._potential_parents = {}
-        self._child_peers = {}
+        self._potential_parents: dict[str, ParentCandidate] = {}
+        self._child_peers: dict[str, PeerConnection] = {}
         self._branch_level = 0
         self._branch_root = None
         self._is_server_parent = False
@@ -449,12 +451,12 @@ class NetworkThread(Thread):
         self._conns: dict[socket, Connection] = {}
         self._indirect_token = initial_token()
 
-        self._file_init_msgs = {}
-        self._file_download_msgs = {}
-        self._file_upload_msgs = {}
-        self._conns_downloaded = defaultdict(int)
-        self._conns_uploaded = defaultdict(int)
-        self._calc_upload_limit_function = self._calc_upload_limit_none
+        self._file_init_msgs: dict[PeerConnection, FileTransferInit] = {}
+        self._file_download_msgs: dict[Connection, DownloadFile] = {}
+        self._file_upload_msgs: dict[Connection, UploadFile] = {}
+        self._conns_downloaded: defaultdict[Connection, int] = defaultdict(int)
+        self._conns_uploaded: defaultdict[Connection, int] = defaultdict(int)
+        self._calc_upload_limit_function: Callable[[], None] = self._calc_upload_limit_none
         self._upload_limit = 0
         self._download_limit = 0
         self._upload_limit_split = 0
@@ -715,7 +717,7 @@ class NetworkThread(Thread):
 
     @staticmethod
     def _unpack_network_message(
-        msg_class, msg_content: memoryview, msg_size: int, conn_type,
+        msg_class, msg_content: memoryview, msg_size: int,
         sock=None, addr=None, username=None, allowed_ids=None
     ):
 
@@ -737,7 +739,7 @@ class NetworkThread(Thread):
 
         except Exception as error:
             log.add_debug("Unable to parse %s message type '%s', size %s, contents %s… Error: %s",
-                          (conn_type, msg_class.__name__, msg_size, bytes(msg_content[:50]), error))
+                          (msg_class.TYPE, msg_class.__name__, msg_size, bytes(msg_content[:50]), error))
 
         return None
 
@@ -759,7 +761,6 @@ class NetworkThread(Thread):
             distrib_class,
             msg.distrib_message,
             len(msg.distrib_message),
-            conn_type="distrib",
             sock=sock,
             username=username
         )
@@ -842,7 +843,7 @@ class NetworkThread(Thread):
             # This is a new peer, initiate a connection
             self._initiate_connection_to_peer(username, conn_type, msg)
 
-    def _initiate_connection_to_peer(self, username: str, conn_type, msg=None, in_address=None) -> None:
+    def _initiate_connection_to_peer(self, username: str, conn_type: ConnectionType, msg=None, in_address=None) -> None:
         """Prepare to initiate a connection with a peer."""
 
         init = PeerInit(init_username=self._login_username, target_username=username, conn_type=conn_type)
@@ -1381,13 +1382,12 @@ class NetworkThread(Thread):
         """Only permit sending login message when not authenticated."""
         return self._server_address is not None or isinstance(msg, Login)
 
-    def _process_server_message(self, msg_type, msg_size, msg_content):
+    def _process_server_message(self, msg_type, msg_size: int, msg_content) -> bool:
 
         msg = self._unpack_network_message(
             SERVER_MESSAGE_CLASSES[msg_type],
             msg_content,
             msg_size,
-            conn_type="server"
         )
 
         if msg is None:
@@ -1589,7 +1589,7 @@ class NetworkThread(Thread):
         if idx:
             del in_buffer[:idx]
 
-    def _process_server_output(self, conn, msg):
+    def _process_server_output(self, conn, msg) -> None:
 
         msg_content = self._pack_network_message(msg)
 
@@ -1676,18 +1676,17 @@ class NetworkThread(Thread):
             ServerDisconnect(manual_disconnect=self._manual_server_disconnect)
         )
 
-    def _send_message_to_server(self, msg) -> None:
+    def _send_message_to_server(self, msg: ServerMessage) -> None:
         self._process_outgoing_messages([msg])
 
     # Peer Init #
 
-    def _process_peer_init_message(self, conn, msg_type, msg_size, msg_content):
+    def _process_peer_init_message(self, conn, msg_type, msg_size: int, msg_content):
 
         msg = self._unpack_network_message(
             PEER_INIT_MESSAGE_CLASSES[msg_type],
             msg_content,
             msg_size,
-            conn_type="peer init",
             sock=conn.sock
         )
         init = None
@@ -1869,7 +1868,7 @@ class NetworkThread(Thread):
 
             log.add_conn("Incoming connection from address %s", (incoming_addr,))
 
-    def _init_peer_connection(self, addr, init, pierce_token=None) -> None:
+    def _init_peer_connection(self, addr: Address, init, pierce_token=None) -> None:
 
         if self._num_sockets >= self.MAX_SOCKETS:
             # Connection limit reached, re-queue
@@ -1986,7 +1985,6 @@ class NetworkThread(Thread):
                     msg_class,
                     memoryview(in_buffer)[idx + msg_content_offset:idx + msg_size_total],
                     msg_size,
-                    conn_type="peer",
                     sock=conn.sock,
                     addr=conn.addr,
                     username=conn.init.target_username,
@@ -2085,7 +2083,6 @@ class NetworkThread(Thread):
             FileTransferInit,
             memoryview(in_buffer)[:msg_size],
             msg_size,
-            conn_type="file",
             sock=conn.sock,
             username=conn.init.target_username
         )
@@ -2122,7 +2119,6 @@ class NetworkThread(Thread):
             FileOffset,
             memoryview(in_buffer)[:msg_size],
             msg_size,
-            conn_type="file",
             sock=conn.sock,
             username=conn.init.target_username
         )
@@ -2153,7 +2149,7 @@ class NetworkThread(Thread):
 
         return idx
 
-    def _write_download_file(self, file_download: DownloadFile, data, data_len) -> None:
+    def _write_download_file(self, file_download: DownloadFile, data, data_len: int) -> None:
 
         if not data:
             return
@@ -2164,7 +2160,7 @@ class NetworkThread(Thread):
         file_download.file_handle.write(data)
         file_download.num_bytes_left -= data_len
 
-    def _process_download(self, conn, data, data_len) -> bool:
+    def _process_download(self, conn, data: bytes, data_len: int) -> bool:
 
         file_download = self._file_download_msgs[conn]
         idx = file_download.num_bytes_left
@@ -2193,7 +2189,7 @@ class NetworkThread(Thread):
 
         return True
 
-    def _process_upload(self, conn, num_bytes_sent, current_time) -> bool:
+    def _process_upload(self, conn, num_bytes_sent: int, current_time: float) -> bool:
 
         file_upload = self._file_upload_msgs[conn]
 
@@ -2281,7 +2277,7 @@ class NetworkThread(Thread):
 
     # Distributed Connection #
 
-    def _accept_child_peer_connection(self, conn) -> None:
+    def _accept_child_peer_connection(self, conn: PeerConnection) -> None:
 
         if conn.init.conn_type != ConnectionType.DISTRIBUTED:
             return
@@ -2468,7 +2464,6 @@ class NetworkThread(Thread):
             msg_class,
             msg_content,
             msg_size,
-            conn_type="distrib",
             sock=conn.sock,
             username=conn.init.target_username
         )
@@ -2650,7 +2645,7 @@ class NetworkThread(Thread):
 
     # Internal Messages #
 
-    def _process_internal_messages(self, msg) -> None:
+    def _process_internal_messages(self, msg: InternalMessage) -> None:
 
         if isinstance(msg, CloseConnection):
             self._close_connection(self._conns.get(msg.sock))

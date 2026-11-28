@@ -36,7 +36,7 @@ class CLIInputProcessor(Thread):
 
         self.has_custom_prompt = False
         self.prompt_message = ""
-        self.prompt_callback = None
+        self.prompt_callback: Callable[[str], None] | None = None
         self.prompt_silent = False
 
     def run(self) -> None:
@@ -151,7 +151,7 @@ class CLI:
         self._input_processor.prompt_callback = callback
         self._input_processor.prompt_silent = is_silent
 
-    def _print_log_message(self, log_message, prompt_line=None) -> None:
+    def _print_log_message(self, log_message: str, prompt_line=None) -> None:
 
         try:
             if prompt_line:

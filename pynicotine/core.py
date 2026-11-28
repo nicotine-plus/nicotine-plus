@@ -40,7 +40,6 @@ if TYPE_CHECKING:
     from pynicotine.privatechat import PrivateChat
     from pynicotine.search import Search
     from pynicotine.shares import Shares
-    from pynicotine.slskproto import NetworkThread
     from pynicotine.transfers import Statistics
     from pynicotine.uploads import Uploads
     from pynicotine.userbrowse import UserBrowse

@@ -37,7 +37,7 @@ from pynicotine.utils import (
 )
 
 if TYPE_CHECKING:
-    from pynicotine.shares import AudioQuality, Database, FileInfo
+    from pynicotine.shares import AudioQuality, Database, FileInfo, PermissionLevel
 
 # This module contains message classes, that networking and UI thread
 # exchange. Basically there are three types of messages: internal messages,
@@ -2635,7 +2635,7 @@ class BranchLevel(ServerMessage):
 
 @dataclass(slots=True, eq=False, repr=False)
 class BranchRoot(ServerMessage):
-    """We tell the server the username of the root of the branch we’re in in the
+    """We tell the server the username of the root of the branch we're in in the
     distributed network.
     """
 
@@ -3293,7 +3293,7 @@ class SharedFileListResponse(PeerMessage):
     )
     unknown: int | None = None
 
-    permission_level: int | None = field(default=None, repr=False)
+    permission_level: PermissionLevel | None = field(default=None, repr=False)
     cached_response: bytes | None = field(default=None, repr=False)
     public_shares: Database | None = field(default=None, repr=False)
     buddy_shares: Database | None = field(default=None, repr=False)

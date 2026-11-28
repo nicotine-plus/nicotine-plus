@@ -33,8 +33,8 @@ from pynicotine.events import StopEventPropagation
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import (
     AddAllowedResponse,
-    ConnectionType,
     CloseConnection,
+    ConnectionType,
     DownloadFile,
     FileAttributes,
     FileOffset,
@@ -46,8 +46,8 @@ from pynicotine.slskmessages import (
     PlaceInQueueResponse,
     QueueUpload,
     RemoveAllowedResponse,
-    SetDownloadLimit,
     ServerDisconnect,
+    SetDownloadLimit,
     TransferDirection,
     TransferRejectReason,
     TransferRequest,
@@ -66,9 +66,9 @@ from pynicotine.transfers import (
 )
 from pynicotine.utils import (
     REPLACEMENTCHAR,
-    execute_command,
     clean_file,
     encode_path,
+    execute_command,
     safe_path_join,
     truncate_string_byte
 )
@@ -93,10 +93,10 @@ class Downloads(Transfers):
         super().__init__(name="downloads")
 
         self._download_filter_regex = None
-        self._requested_folders = defaultdict(dict)
+        self._requested_folders: dict[str, dict[str, RequestedFolder]] = defaultdict(dict)
         self._requested_folder_token = initial_token()
-        self._folder_basename_byte_limits = {}
-        self._pending_queue_messages = {}
+        self._folder_basename_byte_limits: dict[str, int] = {}
+        self._pending_queue_messages: dict[Transfer, QueueUpload] = {}
 
         self._download_queue_timer_id = None
         self._retry_connection_downloads_timer_id = None
@@ -439,8 +439,7 @@ class Downloads(Transfers):
         if not super()._dequeue_transfer(transfer):
             return False
 
-        if transfer in self._pending_queue_messages:
-            del self._pending_queue_messages[transfer]
+        self._pending_queue_messages.pop(transfer, None)
 
         return True
 
@@ -509,7 +508,7 @@ class Downloads(Transfers):
                     "error": error
                 })
 
-    def _finish_transfer(self, transfer):
+    def _finish_transfer(self, transfer: Transfer) -> None:
 
         username = transfer.username
         virtual_path = transfer.virtual_path
@@ -688,10 +687,12 @@ class Downloads(Transfers):
 
         return False
 
-    def get_folder_destination(self, username: str, folder_path: str, root_folder_path=None, download_folder_path=None):
+    def get_folder_destination(
+        self, username: str, folder_path: str, root_folder_path=None, download_folder_path=None
+    ) -> str:
 
         # Remove parent folders of the requested folder from path
-        parent_folder_path = root_folder_path if root_folder_path else folder_path
+        parent_folder_path = root_folder_path or folder_path
         removed_parent_folders = parent_folder_path.rpartition("\\")[0]
         target_folders = folder_path.replace(removed_parent_folders, "", 1).split("\\")
 
@@ -702,7 +703,7 @@ class Downloads(Transfers):
         # Merge download path with target folder name
         return safe_path_join(download_folder_path, *target_folders)
 
-    def get_default_download_folder(self, username=None):
+    def get_default_download_folder(self, username=None) -> str:
 
         download_folder_path = os.path.normpath(os.path.expandvars(config.sections["transfers"]["downloaddir"]))
 
@@ -712,7 +713,7 @@ class Downloads(Transfers):
 
         return download_folder_path
 
-    def get_incomplete_download_folder(self):
+    def get_incomplete_download_folder(self) -> str:
         return os.path.normpath(os.path.expandvars(config.sections["transfers"]["incompletedir"]))
 
     def get_basename_byte_limit(self, folder_path: str):
@@ -851,8 +852,10 @@ class Downloads(Transfers):
             legacy_client=requested_folder.legacy_attempt
         ))
 
-    def enqueue_download(self, username: str, virtual_path: str, folder_path=None, size: int = 0, file_attributes=None,
-                         bypass_filter=False, paused=False) -> None:
+    def enqueue_download(
+        self, username: str, virtual_path: str, folder_path=None, size: int = 0,
+        file_attributes=None, bypass_filter=False, paused=False
+    ) -> None:
 
         transfer = self.transfers.get(username + virtual_path)
 
@@ -908,7 +911,9 @@ class Downloads(Transfers):
             bypass_filter = (num_downloads == 1 and download.status == TransferStatus.FILTERED)
             self.retry_download(download, bypass_filter)
 
-    def abort_downloads(self, downloads: dict[Transfer, None], status=TransferStatus.PAUSED) -> None:
+    def abort_downloads(
+        self, downloads: dict[Transfer, None], status: TransferStatus = TransferStatus.PAUSED
+    ) -> None:
 
         ignored_statuses = {status, TransferStatus.FINISHED}
 
@@ -1014,10 +1019,12 @@ class Downloads(Transfers):
                 if requested_folder is not None:
                     self._requested_folder_timeout(requested_folder, is_offline)
 
-    def _peer_connection_closed(self, username: str, conn_type: ConnectionType, msgs, is_offline=False) -> None:
+    def _peer_connection_closed(
+        self, username: str, conn_type: ConnectionType, msgs, is_offline: bool = False
+    ) -> None:
         self._peer_connection_error(username, conn_type, msgs, is_offline, is_timeout=False)
 
-    def _cant_connect_queue_file(self, username: str, virtual_path, is_offline: bool, is_timeout: bool) -> None:
+    def _cant_connect_queue_file(self, username: str, virtual_path: str, is_offline: bool, is_timeout: bool) -> None:
         """We can't connect to the user, either way (QueueUpload, PlaceInQueueRequest)."""
 
         download = self.queued_users.get(username, {}).get(virtual_path)
@@ -1038,7 +1045,7 @@ class Downloads(Transfers):
                          (virtual_path, username, status))
         self._abort_transfer(download, status=status)
 
-    def _requested_folder_timeout(self, requested_folder: RequestedFolder, is_offline=False) -> None:
+    def _requested_folder_timeout(self, requested_folder: RequestedFolder, is_offline: bool = False) -> None:
 
         username = requested_folder.username
         folder_path = requested_folder.folder_path
@@ -1211,7 +1218,7 @@ class Downloads(Transfers):
         self._abort_transfer(download, status=TransferStatus.LOCAL_FILE_ERROR)
         log.add(_("Download I/O error: %s"), error)
 
-    def _file_download_init(self, username: str, token: int, sock) -> None:
+    def _file_download_init(self, username: str, token: int, sock: socket) -> None:
         """A peer is requesting to start uploading a file to us."""
 
         download = self.active_users.get(username, {}).get(token)
@@ -1364,7 +1371,7 @@ class Downloads(Transfers):
         ):
             self._update_transfer(download)
 
-    def _file_connection_closed(self, username: str, token: int, sock, **_unused) -> None:
+    def _file_connection_closed(self, username: str, token: int, sock: socket, **_unused) -> None:
         """A file download connection has closed for any reason."""
 
         download = self.active_users.get(username, {}).get(token)

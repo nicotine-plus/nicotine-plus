@@ -32,7 +32,7 @@ from os import (
 from stat import FILE_ATTRIBUTE_HIDDEN
 from struct import Struct
 from threading import Thread
-from typing import Literal, NoReturn, TypeAlias
+from typing import ClassVar, Literal, NoReturn, TypeAlias
 
 from pynicotine import rename_process
 from pynicotine.config import config
@@ -65,31 +65,31 @@ FileInfo: TypeAlias = list[str | int | AudioQuality | None]               # [vir
 
 
 class FileTypes:
-    ARCHIVE = {
+    ARCHIVE: ClassVar[set[str]] = {
         "7z", "br", "bz2", "gz", "iso", "lz", "lzma", "rar", "tar", "tbz", "tbz2", "tgz", "xz", "zip", "zst"
     }
-    AUDIO = {
+    AUDIO: ClassVar[set[str]] = {
         "aac", "ac3", "afc", "aifc", "aif", "aiff", "ape", "au", "bwav", "bwf", "dff", "dsd", "dsf", "dts", "flac",
         "gbs", "gym", "it", "m4a", "m4b", "mid", "midi", "mka", "mod", "mp1", "mp2", "mp3", "mp+", "mpc", "nsf", "nsfe",
         "ofr", "ofs", "oga", "ogg", "opus", "psf", "psf1", "psf2", "s3m", "sid", "spc", "spx", "ssf", "tak", "tta",
         "wav", "vgm", "vgz", "wma", "vqf", "wv", "xm"
     }
-    EXECUTABLE = {
+    EXECUTABLE: ClassVar[set[str]] = {
         "apk", "appimage", "bat", "deb", "dmg", "flatpak", "exe", "jar", "msi", "pkg", "rpm", "sh"
     }
-    IMAGE = {
+    IMAGE: ClassVar[set[str]] = {
         "apng", "avif", "bmp", "gif", "heic", "heif", "ico", "jfif", "jp2", "jpg", "jpe", "jpeg", "jxl", "png", "psd",
         "raw", "svg", "svgz", "tif", "tiff", "webp"
     }
-    DOCUMENT = {
+    DOCUMENT: ClassVar[set[str]] = {
         "doc", "docx", "epub", "mobi", "odp", "ods", "odt", "opf", "oxps", "pdf", "ppt", "pptx", "rtf", "xls", "xlsx",
         "xps"
     }
-    TEXT = {
+    TEXT: ClassVar[set[str]] = {
         "cue", "csv", "htm", "html", "m3u", "m3u8", "md5", "log", "lrc", "md", "mks", "nfo", "ps", "rst", "sfv",
         "sha1", "sha256", "srt", "txt"
     }
-    VIDEO = {
+    VIDEO: ClassVar[set[str]] = {
         "3gp", "amv", "asf", "avi", "f4v", "flv", "m2ts", "m2v", "m4p", "m4v", "mov", "mp4", "mpe", "mpeg", "mpg",
         "mkv", "mts", "ogv", "ts", "vob", "webm", "wmv"
     }
@@ -197,7 +197,7 @@ class Database:
             if not file_size:
                 file_handle.write(self.FILE_SIGNATURE)
                 file_handle.write(bytes([self.VERSION]))
-                return value_offsets
+                return {}
 
             file_handle.seek(0)
 
@@ -206,13 +206,13 @@ class Database:
 
         return value_offsets
 
-    def __contains__(self, key: str):
+    def __contains__(self, key: str) -> bool:
         return key in self._value_offsets
 
     def __iter__(self):
         yield from self._value_offsets
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self._value_offsets)
 
     def __getitem__(self, key: str) -> object:
@@ -222,7 +222,7 @@ class Database:
         self._file_handle.seek(value_offset, SEEK_SET)
         return RestrictedUnpickler(self._file_handle).load()
 
-    def __setitem__(self, key: str, value):
+    def __setitem__(self, key: str, value) -> None:
 
         encoded_key = key.encode("utf-8")
         pickled_value = pickle.dumps(value, protocol=self.PICKLE_PROTOCOL)
@@ -286,12 +286,12 @@ class Scanner:
         self.num_previous_folders = num_previous_folders
         self.share_filters = share_filters
         self.files = {}
-        self.streams = {}
-        self.mtimes = {}
-        self.lowercase_paths = defaultdict(dict)
-        self.word_index = defaultdict(list)
-        self.processed_share_names = set()
-        self.processed_share_paths = set()
+        self.streams: dict[str, bytes] = {}
+        self.mtimes: dict[str, float] = {}
+        self.lowercase_paths: dict[str, dict[str, int]] = defaultdict(dict)
+        self.word_index: defaultdict[str, list[int]] = defaultdict(list)
+        self.processed_share_names: set[str] = set()
+        self.processed_share_paths: set[str] = set()
         self.current_file_index = 0
         self.current_folder_count = 0
         self.file_filter_regex = None
@@ -464,7 +464,7 @@ class Scanner:
 
         Shares.close_shares(self.share_dbs)
 
-    def real2virtual(self, real_path: str):
+    def real2virtual(self, real_path: str) -> str:
 
         real_path = real_path.replace("/", "\\")
 
@@ -672,7 +672,7 @@ class Scanner:
             self.streams[virtual_folder_path] = self.get_folder_stream(file_list)
             self.current_folder_count += 1
 
-    def get_audio_tag(self, file_path: str):
+    def get_audio_tag(self, file_path: str) -> TinyTag:
 
         return TinyTag.get(
             encode_path(file_path), tags=False, duration=True, image=False,
@@ -785,7 +785,7 @@ class Shares:
         self._scanner_process = None
         self._scanner_reader = None
         self._rescan_daily_timer_id = None
-        self._requested_share_times = {}
+        self._requested_share_times: dict[str, float] = {}
 
         for event_name, callback in (
             ("folder-contents-request", self._folder_contents_request),
@@ -974,7 +974,7 @@ class Shares:
 
         return True, size
 
-    def check_user_permission(self, username: str, ip_address: str | None = None):
+    def check_user_permission(self, username: str, ip_address: str | None = None) -> tuple[PermissionLevel, str]:
         """Check if this user is banned, geoip-blocked, and which shares it is
         allowed to access based on transfer and shares settings."""
 
@@ -1051,7 +1051,7 @@ class Shares:
 
         return new_virtual_name
 
-    def add_share(self, folder_path: str, permission_level=PermissionLevel.PUBLIC, virtual_name=None,
+    def add_share(self, folder_path: str, permission_level: PermissionLevel = PermissionLevel.PUBLIC, virtual_name=None,
                   share_groups=None, validate_path=True):
 
         if validate_path and not os.access(encode_path(folder_path), os.R_OK):
@@ -1087,7 +1087,7 @@ class Shares:
 
         for shares in share_groups:
             for virtual_name, folder_path in shares:
-                if (virtual_name_or_folder_path in (virtual_name, folder_path)
+                if (virtual_name_or_folder_path in {virtual_name, folder_path}
                         or folder_path == normalized_folder_path):
                     shares.remove((virtual_name, folder_path))
                     return True

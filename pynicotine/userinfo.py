@@ -17,6 +17,7 @@ from pynicotine.slskmessages import (
     Login,
     RemoveAllowedResponse,
     ServerDisconnect,
+    SlskMessage,
     UserInfoRequest,
     UserInfoResponse,
     UserInterests,
@@ -33,8 +34,8 @@ class UserInfo:
 
     def __init__(self):
 
-        self.users = set()
-        self._requested_info_times = {}
+        self.users: set[str] = set()
+        self._requested_info_times: dict[str, float] = {}
 
         for event_name, callback in (
             ("peer-connection-closed", self._peer_connection_error),
@@ -176,7 +177,9 @@ class UserInfo:
                 "error": error
             })
 
-    def _peer_connection_error(self, username: str, conn_type: ConnectionType, msgs, is_offline: bool = False) -> None:
+    def _peer_connection_error(
+        self, username: str, conn_type: ConnectionType, msgs: list[SlskMessage], is_offline: bool = False
+    ) -> None:
 
         if not msgs:
             return

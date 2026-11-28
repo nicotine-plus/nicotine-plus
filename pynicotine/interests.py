@@ -16,6 +16,7 @@ from pynicotine.slskmessages import (
     Recommendations,
     RemoveThingILike,
     RemoveThingIHate,
+    SimilarUser,
     SimilarUsers
 )
 
@@ -27,7 +28,7 @@ class Interests:
 
     def __init__(self):
 
-        self.similar_users = {}
+        self.similar_users: dict[str, SimilarUser] = {}
 
         for event_name, callback in (
             ("item-similar-users", self._item_similar_users),

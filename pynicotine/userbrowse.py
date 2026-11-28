@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 import os
 
+from collections.abc import Iterator
 from concurrent.futures import Future, ProcessPoolExecutor, ThreadPoolExecutor
 from dataclasses import dataclass, field
 from enum import StrEnum
@@ -46,16 +47,16 @@ class TaskType(StrEnum):
 @dataclass(slots=True, eq=False)
 class BrowsedUser:
     username: str
-    num_folders: int | None = None
-    num_files: int | None = None
-    shared_size: int | None = None
-    public_folders: dict[str, list[SharedFile]] = field(default_factory=dict)
-    private_folders: dict[str, list[SharedFile]] = field(default_factory=dict)
+    num_folders: int = 0
+    num_files: int = 0
+    shared_size: int = 0
+    public_folders: dict[str, list[SharedFile]] = field(default_factory=dict[str, list[SharedFile]])
+    private_folders: dict[str, list[SharedFile]] = field(default_factory=dict[str, list[SharedFile]])
     saving: bool = False
 
     def clear(self) -> None:
 
-        self.num_folders = self.num_files = self.shared_size = None
+        self.num_folders = self.num_files = self.shared_size = 0
         self.public_folders.clear()
         self.private_folders.clear()
 
@@ -65,7 +66,7 @@ class UserBrowse:
 
     def __init__(self):
 
-        self.users = {}
+        self.users: dict[str, BrowsedUser] = {}
         self.user_shares_folder = os.path.join(config.data_folder_path, "usershares")
         self._task_pools: dict[TaskType, ProcessPoolExecutor | ThreadPoolExecutor] = {}
 
@@ -96,7 +97,7 @@ class UserBrowse:
         for username in self.users:
             core.users.watch_user(username, context="userbrowse")  # Get notified of user status
 
-    def browse_user(self, username: str, path=None, new_request=False, switch_page=True) -> None:
+    def browse_user(self, username: str, path=None, new_request: bool = False, switch_page: bool = True) -> None:
         """Browse a user's shares."""
 
         if not username:
@@ -130,7 +131,7 @@ class UserBrowse:
         if not new_request:
             return
 
-        if not permission_level:
+        if permission_level is None:
             # Check our own permission level, and show relevant shares for it
             current_permission_level, _reason = core.shares.check_user_permission(username)
         else:
@@ -151,7 +152,7 @@ class UserBrowse:
         if username not in self.users:
             return
 
-        del self.users[username]
+        self.users.pop(username, None)
         core.send_message_to_network_thread(RemoveAllowedResponse(SharedFileListResponse, username))
         core.users.unwatch_user(username, context="userbrowse")
         events.emit("user-browse-remove-user", username)
@@ -233,7 +234,9 @@ class UserBrowse:
         )
         future.add_done_callback(finish_task)
 
-    def iter_matching_folders(self, requested_folder_path: str, browsed_user: BrowsedUser, recurse: bool = False):
+    def iter_matching_folders(
+        self, requested_folder_path: str, browsed_user: BrowsedUser, recurse: bool = False
+    ) -> Iterator[tuple[str, list[SharedFile]]]:
 
         for folders in (browsed_user.public_folders, browsed_user.private_folders):
             for folder_path, files in folders.items():
@@ -247,7 +250,7 @@ class UserBrowse:
                     return
 
     def download_file(
-        self, username: str, folder_path: str, file_data, download_folder_path: str | None = None
+        self, username: str, folder_path: str, file_data: SharedFile, download_folder_path: str | None = None
     ) -> None:
 
         core.downloads.enqueue_download(
@@ -256,7 +259,7 @@ class UserBrowse:
         )
 
     def download_folder(
-        self, username: str, requested_folder_path, download_folder_path: str | None = None,
+        self, username: str, requested_folder_path: str, download_folder_path: str | None = None,
         recurse: bool = False, check_num_files: bool = True
     ) -> None:
 
@@ -267,7 +270,7 @@ class UserBrowse:
 
         num_files = 0
 
-        for folder_path, files in self.iter_matching_folders(
+        for _folder_path, files in self.iter_matching_folders(
             requested_folder_path, browsed_user=browsed_user, recurse=recurse
         ):
             num_files += len(files)
@@ -298,7 +301,7 @@ class UserBrowse:
                     file_attributes=file_data.attributes
                 )
 
-    def upload_file(self, username: str, folder_path: str, basename) -> None:
+    def upload_file(self, username: str, folder_path: str, basename: str) -> None:
         core.uploads.enqueue_upload(username, virtual_path="\\".join([folder_path, basename]))
 
     def upload_folder(
@@ -330,9 +333,9 @@ class UserBrowse:
         log.add(_("User %(user)s is sharing %(num_files)s files totaling %(shared_size)s across "
                   "%(num_folders)s folders"), {
             "user": username,
-            "num_files": humanize(browsed_user.num_files or 0),
-            "shared_size": human_size(browsed_user.shared_size or 0),
-            "num_folders": humanize(browsed_user.num_folders or 0)
+            "num_files": humanize(browsed_user.num_files),
+            "shared_size": human_size(browsed_user.shared_size),
+            "num_folders": humanize(browsed_user.num_folders)
         }, title=_("User Statistics"))
 
     @staticmethod
@@ -369,7 +372,7 @@ class UserBrowse:
 
     def _show_user(
         self, username: str, path: str | None = None, new_request: bool = False, switch_page: bool = True
-    ) -> None:
+    ) -> bool:
 
         browsed_user = self.users.get(username)
 
@@ -522,7 +525,7 @@ class UserBrowse:
 
             file_handle.write("]")
 
-    def _shared_file_list_saved(self, username, file_path):
+    def _shared_file_list_saved(self, username: str, file_path: str) -> None:
 
         browsed_user = self.users.get(username)
 
@@ -534,7 +537,7 @@ class UserBrowse:
             "dir": os.path.dirname(file_path)
         })
 
-    def _shared_file_list_save_failed(self, username, file_path, error):
+    def _shared_file_list_save_failed(self, username: str, file_path: str, error: BaseException) -> None:
 
         browsed_user = self.users.get(username)
 
