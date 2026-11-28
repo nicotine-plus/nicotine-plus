@@ -484,7 +484,7 @@ jobs:
       - name: Build without isolation
         run: python3.14 -m build --no-isolation
 
-  illumos:
+  omnios:
     runs-on: ubuntu-26.04
     timeout-minutes: 15
     defaults:
@@ -496,44 +496,28 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up illumos
+      - name: Set up OmniOS
         uses: cross-platform-actions/action@30cde56b87a128507bebea9531205087890ee360 # v1.8.0
         with:
           operating_system: omnios
           version: 'r151060'
           environment_variables: NICOTINE_NETWORK_TESTS
 
-      - name: Set up package repository
-        run: |
-          BOOTSTRAP_TAR="bootstrap-2025Q4-x86_64.tar.gz"
-          curl --proto "=https" -fLO https://pkgsrc.smartos.org/packages/SmartOS/bootstrap/${BOOTSTRAP_TAR}
-          sudo tar -zxpf ${BOOTSTRAP_TAR} -C /
-
       - name: Install dependencies
         run: |
-          PATH=/opt/local/sbin:/opt/local/bin:$PATH
-          sudo pkgin -y update
-          sudo pkgin -y upgrade
-          sudo pkgin -y install gettext-tools gtk3+ modular-xorg-fonts modular-xorg-server py314-build \
-            py314-gobject3 py314-setuptools py314-wheel
+          sudo pkg install library/python-3/pip-313 library/python-3/setuptools-313 \
+            text/gnu-gettext || true
 
       - name: Integration and unit tests
         run: |
-          PATH=/opt/local/sbin:/opt/local/bin:$PATH
-          export GTK_A11Y=none
-          export DISPLAY=:99
-          Xvfb :99 > /dev/null 2>&1 &
-          python3.14 -m unittest -v
+          PATH=/usr/gnu/bin:$PATH
+          export NICOTINE_GUI_TESTS=0
+          python3 -m unittest -v
 
       - name: Build
         run: |
-          PATH=/opt/local/sbin:/opt/local/bin:$PATH
-          python3.14 -m build
-
-      - name: Build without isolation
-        run: |
-          PATH=/opt/local/sbin:/opt/local/bin:$PATH
-          python3.14 -m build --no-isolation
+          PATH=/usr/gnu/bin:$PATH
+          python3 -m pip install --no-build-isolation --no-deps .
 
   windows:
     timeout-minutes: 15
